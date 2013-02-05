@@ -1,0 +1,149 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import sys
+import cProfile
+from timeit import timeit
+from time import time
+from warnings import warn
+import resource
+
+import numpy as np
+import pylab as pl
+from matplotlib.colors import LogNorm
+
+from viscid import readers
+from viscid import field
+from viscid import coordinate
+from viscid.calculator import calc, cycalc
+from viscid.plot import mpl
+
+def timereps(reps, func, *args, **kwargs):
+    arr = [None] * reps
+    for i in range(reps):
+        start = time()
+        func(*args, **kwargs)
+        end = time()
+        arr[i] = end - start
+    return min(arr), max(arr), sum(arr) / reps
+
+if __name__=="__main__":
+    dtype = 'float32'
+
+    t0 = time()
+
+    try:
+        sys.argv.remove("--plot")
+        plot = True
+    except ValueError:
+        plot = False
+
+    if len(sys.argv) > 1:
+        f = readers.load(sys.argv[-1])
+        fld_v = f["b"]
+    else:
+        x = np.array(np.linspace(-5, 5, 512), dtype=dtype)
+        y = np.array(np.linspace(-5, 5, 256), dtype=dtype)
+        z = np.array(np.linspace(-5, 5, 256), dtype=dtype)
+        Z, Y, X = np.ix_(z, y, x)
+
+        crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y),
+                                                    ('x', x)))
+        Zcc, Ycc, Xcc = crds[('Zcc', 'Ycc', 'Xcc')]
+
+        #vx = Xcc**2 + Ycc**3 - np.abs(Zcc)**0.5
+        #vy = Xcc**2 - Ycc**3 + np.abs(Zcc)**0.5
+        #vz = Xcc**2 - Ycc**3 + 2*np.abs(Zcc)**0.5
+
+        vx = 0.5 * Xcc**2 + Ycc# + Zcc
+        vy = 0.5 * Ycc**2# + Xcc# + Zcc
+        vz = 0.5 * Zcc**2# + Xcc# + Ycc
+
+        ### this one is for testing fields in the VectorField constructor
+        # fld_vx = field.wrap_field("Scalar", "vx", crds, vx, center="Cell")
+        # fld_vy = field.wrap_field("Scalar", "vy", crds, vy, center="Cell")
+        # fld_vz = field.wrap_field("Scalar", "vz", crds, vz, center="Cell")
+        # i guess this will always make a copy in memory
+        # fld_v = field.VectorField("v", crds, [fld_vx, fld_vy, fld_vz],
+        #                           force_layout=field.LAYOUT_INTERLACED,
+        #                           center="Cell", forget_source=True)
+
+        ### this one is for ordinary testing
+        # i guess this will always make a copy in memory
+        fld_v = field.VectorField("v", crds, [vx, vy, vz],
+                                  force_layout=field.LAYOUT_INTERLACED,
+                                  center="Cell", forget_source=True)
+    vx, vy, vz = fld_v.component_views()
+    fld_vx, fld_vy, fld_vz = fld_v.component_fields()
+
+    t1 = time()
+    print("field setup time: ", t1 - t0)
+
+    t0 = time()
+    mag_b = calc.magnitude(fld_v, func="numexpr")
+    t1 = time()
+    print("numexpr mag runtime: ", t1 - t0)
+    t0 = time()
+    div_b = calc.div(fld_v, func="numexpr")
+    t1 = time()
+    print("numexpr div runtime: ", t1 - t0)
+
+    # t0 = time()
+    # mag_b = calc.magnitude(fld_v, func="cython")
+    # t1 = time()
+    # print("cython mag runtime: ", t1 - t0)
+    # t0 = time()
+    # div_b = calc.div(fld_v, func="cython")
+    # t1 = time()
+    # print("cython div runtime: ", t1 - t0)
+
+    # diff1 = calc.difference(result_numexpr, result_cython)
+    # absdiff1 = np.abs(diff1.data)
+    # if not (absdiff1 < 1e-14).all():
+    #     warn("numexpr result not exactly cython result")
+    # print("min/max(numexpr - cython): ", np.min(absdiff1), "/",
+    #       np.max(absdiff1))
+    # diff2 = calc.difference(result_numpy, result_cython)
+    # absdiff2 = np.abs(diff2.data)
+    # assert((absdiff2 < 1e-14).all())
+    # print(np.min(absdiff2), np.max(absdiff2))
+
+    # print(result_cython.data.dtype)
+
+    if plot:
+        planes = ["z=0", "y=0"]
+        nrows = 5
+        ncols = len(planes)
+        ax = pl.subplot2grid((nrows, ncols), (0, 0))
+        ax.axis("equal")
+
+        for i, p in enumerate(planes):
+            pl.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
+            mpl.plot(fld_vx, p, show=False, vmin=-100, vmax=100)
+            pl.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
+            mpl.plot(fld_vy, p, show=False, vmin=-100, vmax=100)
+            pl.subplot2grid((nrows, ncols), (2, i), sharex=ax, sharey=ax)
+            mpl.plot(fld_vz, p, show=False, vmin=-100, vmax=100)
+            pl.subplot2grid((nrows, ncols), (3, i), sharex=ax, sharey=ax)
+            mpl.plot(mag_b, p, show=False, vmin=-100, vmax=100)
+            pl.subplot2grid((nrows, ncols), (4, i), sharex=ax, sharey=ax)
+            mpl.plot(div_b, p, show=False, vmin=-100, vmax=100)
+        mpl.mplshow()
+
+    #mpl.plot2d(div, "x=0j,y=0j")
+
+    #divne = Div1ne([fld_vx, fld_vy, fld_vz])
+    #divinline = Div1inline([fld_vx, fld_vy, fld_vz])
+    # print(divne.data)
+    #print(divinline.data)
+    #print(np.max(np.abs(divne.data - divblitz.data)))
+
+    #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2)
+    # print("ne: ", timereps(10, Div1ne, [fld_vx, fld_vy, fld_vz]))
+    #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2)
+    # print("inline: ", timereps(10, Div1inline, [fld_vx, fld_vy, fld_vz]))
+    #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2)
+
+##
+## EOF
+##

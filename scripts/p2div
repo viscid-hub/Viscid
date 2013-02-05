@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+from __future__ import print_function
+import time
+import sys
+from warnings import warn
+
+import numpy as np
+import pylab as pl
+import numexpr as ne
+
+from viscid import vlab, field
+from viscid.calculator import calc
+from viscid.plot import mpl
+
+
+if __name__=='__main__':
+    if len(sys.argv) < 2:
+        sys.argv.append("/Users/kmaynard/dev/src/viscid/sample/"
+            "local_0001.3df.xdmf")
+        #warn("I have nothing to do.")
+        #exit()
+
+    f = vlab.load_vfile(sys.argv[1])
+
+    #rr = f['rr']
+    #mpl.plot2d(rr, 'x=0')
+    #mpl.plot2d(rr, 'y=0')
+    #mpl.plot2d(rr, 'z=0')
+    #bx, by, bz = f['b'].to_scalar_fields()
+    #mpl.plot2d(bx, 'x=0')
+    #mpl.plot2d(bx, 'y=0')
+    #mpl.plot2d(bx, 'z=0')
+
+    div = calc.div1(f['b'])
+    bmag = calc.magnitude(f['b'])
+    jmag = calc.magnitude(f['xj'])
+
+    pl.subplot(211)
+    mpl.plot2d(bmag, "y=0")
+    #pl.caxis([-10, 10])
+    pl.subplot(212)
+    mpl.plot2d(jmag, "y=0")
+    #pl.caxis([-10, 10])
+    pl.show()
+
+##
+## EOF
+##

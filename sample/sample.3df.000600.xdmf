@@ -1,0 +1,63 @@
+<?xml version='1.0' ?>
+<Xdmf xmlns:xi='http://www.w3.org/2001/XInclude' Version='2.0'>
+<Domain>
+<Grid GridType="Collection" CollectionType="Spatial">
+   <Time Type="Single" Value="600.03" />
+   <Grid Name="mesh-3df-0" GridType="Uniform">
+     <Topology TopologyType="3DRectMesh" Dimensions="65 65 129"/>
+     <Geometry GeometryType="VXVYVZ">
+     <DataItem Name="VX" DataType="Float" Dimensions="129" Format="HDF">
+        ././/sample.3df.000600_p000000.h5:/crd/x
+     </DataItem>
+     <DataItem Name="VY" DataType="Float" Dimensions="65" Format="HDF">
+        ././/sample.3df.000600_p000000.h5:/crd/y
+     </DataItem>
+     <DataItem Name="VZ" DataType="Float" Dimensions="65" Format="HDF">
+        ././/sample.3df.000600_p000000.h5:/crd/z
+     </DataItem>
+     </Geometry>
+
+     <Attribute Name="b" AttributeType="Vector" Center="Cell">
+       <DataItem Dimensions="64 64 128 3" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_bz/b/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="v" AttributeType="Vector" Center="Cell">
+       <DataItem Dimensions="64 64 128 3" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_vz/v/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="rr" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="64 64 128" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_rr/rr/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="pp" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="64 64 128" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_pp/pp/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="resis" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="64 64 128" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_resis/resis/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="xj" AttributeType="Vector" Center="Cell">
+       <DataItem Dimensions="64 64 128 3" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_xjz/xj/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="xtra1" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="64 64 128" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_xtra1/xtra1/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="xtra2" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="64 64 128" NumberType="Float" Precision="4" Format="HDF">
+        .//sample.3df.000600_p000000.h5:/mrc_f3_xtra2/xtra2/3d
+       </DataItem>
+     </Attribute>
+   </Grid>
+</Grid>
+</Domain>
+</Xdmf>

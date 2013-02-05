@@ -1,0 +1,14 @@
+build
+dist
+
+MANIFEST
+
+*.pyc
+*.pyo
+*.pyd
+*.o
+*.so
+
+.tags
+.DS_Store
+

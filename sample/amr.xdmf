@@ -1,0 +1,115 @@
+<?xml version='1.0' ?>
+<Xdmf xmlns:xi='http://www.w3.org/2001/XInclude' Version='2.0'>
+    <Domain>
+        <Grid GridType="Collection" CollectionType="Temporal">
+            <Time Type="List" >
+                <DataItem Format="XML" NumberType="Float" Dimensions="2">
+                    0.0 1.0
+                </DataItem>
+            </Time>
+            <Grid GridType="Collection" CollectionType="Spatial">
+                <Grid Name="test-grid0" GridType="Uniform">
+                    <Topology TopologyType="3DRectMesh" Dimensions="4 4 4"/>
+                    <Geometry GeometryType="VXVYVZ">
+                        <DataItem Name="VX" DataType="Float" Dimensions="4" Format="XML">
+                            0.0 0.1 0.2 0.3
+                        </DataItem>
+                        <DataItem Name="VY" DataType="Float" Dimensions="4" Format="XML">
+                            0.0 0.1 0.2 0.3
+                        </DataItem>
+                        <DataItem Name="VZ" DataType="Float" Dimensions="4" Format="XML">
+                            0.0 0.1 0.2 0.3
+                        </DataItem>
+                     </Geometry>
+                     <Attribute Name="f" AttributeType="Scalar" Center="Cell">
+                       <DataItem Dimensions="3 3 3" NumberType="Float" Precision="4" Format="XML">
+                         0.0 0.1 0.2
+                         0.1 0.2 0.3
+                         0.2 0.3 0.4
+
+                         0.1 0.2 0.3
+                         0.3 0.4 0.5
+                         0.3 0.4 0.5
+
+                         0.2 0.3 0.4
+                         0.3 0.4 0.5
+                         0.4 0.5 0.6
+                       </DataItem>
+                     </Attribute>
+
+                </Grid>
+                <Grid Name="test-grid1">
+                    <Topology TopologyType="3DRectMesh" Dimensions="2 2 2"/>
+                    <Geometry GeometryType="VXVYVZ">
+                        <DataItem Name="VX" DataType="Float" Dimensions="2" Format="XML">
+                            0.3 0.6
+                        </DataItem>
+                        <DataItem Name="VY" DataType="Float" Dimensions="2" Format="XML">
+                            0.0 0.3
+                        </DataItem>
+                        <DataItem Name="VZ" DataType="Float" Dimensions="2" Format="XML">
+                            0.0 0.3
+                        </DataItem>
+                     </Geometry>
+                     <Attribute Name="f" AttributeType="Scalar" Center="Cell">
+                       <DataItem Dimensions="1 1 1" NumberType="Float" Precision="4" Format="XML">
+                         0.3                         
+                       </DataItem>
+                     </Attribute>
+                </Grid>
+            </Grid>
+            <Grid GridType="Collection" CollectionType="Spatial">
+                <Grid Name="test-grid0">
+                    <Topology TopologyType="3DRectMesh" Dimensions="4 4 4"/>
+                    <Geometry GeometryType="VXVYVZ">
+                        <DataItem Name="VX" DataType="Float" Dimensions="11" Format="XML">
+                            0.0 0.1 0.2 0.3
+                        </DataItem>
+                        <DataItem Name="VY" DataType="Float" Dimensions="11" Format="XML">
+                            0.0 0.1 0.2 0.3
+                        </DataItem>
+                        <DataItem Name="VZ" DataType="Float" Dimensions="11" Format="XML">
+                            0.0 0.1 0.2 0.3
+                        </DataItem>
+                     </Geometry>
+                     <Attribute Name="f" AttributeType="Scalar" Center="Cell">
+                       <DataItem Dimensions="3 3 3" NumberType="Float" Precision="4" Format="XML">
+                         0.0 0.0 0.0
+                         0.0 0.4 0.0
+                         0.0 0.0 0.0
+
+                         0.0 0.0 0.0
+                         0.4 0.4 0.4
+                         0.0 0.0 0.0
+
+                         0.0 0.0 0.0
+                         0.0 0.4 0.0
+                         0.0 0.0 0.0                         
+                       </DataItem>
+                     </Attribute>
+
+                </Grid>
+                <Grid Name="test-grid1">
+                    <Topology TopologyType="3DRectMesh" Dimensions="2 2 2"/>
+                    <Geometry GeometryType="VXVYVZ">
+                        <DataItem Name="VX" DataType="Float" Dimensions="2" Format="XML">
+                            0.3 0.6
+                        </DataItem>
+                        <DataItem Name="VY" DataType="Float" Dimensions="2" Format="XML">
+                            0.0 0.3
+                        </DataItem>
+                        <DataItem Name="VZ" DataType="Float" Dimensions="2" Format="XML">
+                            0.0 0.3
+                        </DataItem>
+                     </Geometry>
+                     <Attribute Name="f" AttributeType="Scalar" Center="Cell">
+                       <DataItem Dimensions="1 1 1" NumberType="Float" Precision="4" Format="XML">
+                         0.4
+                       </DataItem>
+                     </Attribute>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Domain>
+</Xdmf>
+

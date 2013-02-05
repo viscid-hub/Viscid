@@ -1,0 +1,264 @@
+#!/usr/bin/env python
+""" test docstring """
+
+from __future__ import print_function
+from warnings import warn
+import bisect
+
+from .bucket import Bucket
+
+
+class Dataset(object):
+    """ datasets contain grids or other datasets
+    (GridCollection derrives from Dataset)
+    It is the programmer's responsibility to ensure objects added to a AOEUIDH
+    dataset have __getitem__ and get_fields methods, this is not
+    enforced
+    """
+    name = None
+    time = None
+    children = None  # Bucket or (time, grid)
+    active_child = None
+
+    topology_info = None
+    geometry_info = None
+    crds = None
+
+    def __init__(self, name, time=None):
+        self.name = name
+        self.children = Bucket()
+
+        self.active_child = None
+        self.time = time
+
+    def add(self, child, set_active=True):
+        self.children[child.name] = child
+        if set_active:
+            self.active_child = child
+
+    def unload(self):
+        """ unload is meant to give children a chance to free caches, the idea
+        being that an unload will free memory, but all the functionality is
+        preserved, so data is accessable without an explicit reload
+        """
+        for child in self.children:
+            child.unload()
+        # TODO: does anything else need to be unloaded in here?
+
+    # def remove_all_items(self):
+    #     raise NotImplementedError()
+
+    def activate(self, child_handle):
+        """ it may not look like it, but this will recursively look
+        in my active child for the handle because it uses getitem """
+        self.active_child = self.children[child_handle]
+
+    def activate_time(self, time):
+        """ this is basically 'activate' except it specifically picks out
+        temporal datasets, and does all children, not just the active child """
+        for child in self.children:
+            try:
+                child.activate_time(time)
+            except AttributeError:
+                pass
+
+    def spill(self):
+        for child in self.children:
+            suffix = ""
+            if child is self.active_child:
+                suffix = "  <-- active"
+            print(child, suffix)
+
+    # def get_non_dataset(self):
+    #     """ recurse down datasets until active_grid is not a subclass
+    #         of Dataset """
+    #     if isinstance(self.activate_grid, Dataset):
+    #         return self.active_grid.get_non_dataset()
+    #     else:
+    #         return self.active_grid
+
+    def get_field(self, fldname, time=None):
+        """ recurse down active children to get a field """
+        child = self.active_child
+
+        if child is None:
+            warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.get_field(fldname, time=time)
+
+    def get_child(self, item):
+        """ get a child from this Dataset,  """
+        return self.children[item]
+
+    def __getitem__(self, item):
+        """ if a child exists with handle, return it, else ask
+        the active child if it knows what you want """
+        if item in self:
+            return self.get_child(item)
+        elif self.active_child is not None:
+            return self.active_child[item]
+        else:
+            raise KeyError()
+
+    def __contains__(self, item):
+        return item in self.children
+
+
+class DatasetTemporal(Dataset):
+    _last_ind = 0
+
+    def __init__(self, name, time=None):
+        super(DatasetTemporal, self).__init__(name, time=time)
+        # ok, i want more control over my childen than a bucket can give
+        # TODO: it's kind of a kludge to create a bucket then destroy it
+        # so soon, but it's not a big deal
+        self.children = []
+
+    def add(self, child, set_active=True):
+        if child is None:
+            raise RuntimeError()
+        if child.time is None:
+            child.time = 0.0
+            warn("A child with no time? Something is strange...")
+        # this keeps the children in time order
+        bisect.insort(self.children, (child.time, child))
+        if set_active:
+            self.active_child = child
+
+    def unload(self):
+        """ unload is meant to give children a chance to free caches, the idea
+        being that an unload will free memory, but all the functionality is
+        preserved, so data is accessable without an explicit reload
+        """
+        for child in self.children:
+            child[1].unload()
+        # TODO: does anything else need to be unloaded in here?
+
+    def activate(self, time):
+        self.active_child = self.get_child(time)
+
+    def activate_time(self, time):
+        """ this is basically 'activate' except it specifically picks out
+        temporal datasets """
+        self.activate(time)
+
+    def spill(self):
+        for child in self.children:
+            suffix = ""
+            if child[1] is self.active_child:
+                suffix = "  <-- active"
+            print(child, suffix)
+
+    def get_field(self, fldname, time=None):
+        """ recurse down active children to get a field """
+        if time is not None:
+            child = self.get_child(time)
+        else:
+            child = self.active_child
+
+        if child is None:
+            warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.get_field(fldname, time=time)
+
+    def get_child(self, item):
+        """ if item is an int and < len(children), it is an index in a list,
+        else I will find the cloest time to float(item) """
+        if len(self.children) <= 1:
+            # it's appropriate to get an index error if len == 0
+            self._last_ind = 0
+            return self.children[0][1]
+        elif isinstance(item, int) and item < len(self.children):
+            #print('integering')
+            self._last_ind = item
+            return self.children[item][1]
+        else:
+            # NOTE: this has gone too far
+            time = float(item)
+            last_ind = self._last_ind
+            closest_ind = 0
+            if time >= self.children[last_ind][0]:
+                i = last_ind + 1
+                while i < len(self.children):
+                    this_time = self.children[i][0]
+                    if this_time >= time:
+                        avg = 0.5 * (self.children[i - 1][0] + this_time)
+                        if time >= avg:
+                            closest_ind = i
+                        else:
+                            closest_ind = i - 1
+                        break
+                    i += 1
+                closest_ind = len(self.children) - 1
+            else:
+                i = last_ind - 1
+                while i > 0:
+                    this_time = self.children[i][0]
+                    if self.children[i][0] <= time:
+                        avg = 0.5 * (self.children[i + 1][0] + this_time)
+                        if time >= avg:
+                            closest_ind = i + 1
+                        else:
+                            closest_ind = i
+                        break
+                    i -= 1
+                closest_ind = 0
+
+            self._last_ind = closest_ind
+            return self.children[closest_ind][1]
+
+    def __contains__(self, item):
+        if isinstance(item, int) and item < len(self.children):
+            return True
+        try:
+            float(item)
+            return True
+        except ValueError:
+            return False
+
+
+    # def __getitem__(self, item):
+    #     """ Get a dataitem or list of dataitems based on time, grid, and
+    #         varname. the 'active' components are given by default, but varname
+    #         is manditory, else how am i supposed to know what to serve up for
+    #         you. Examples:
+    #         dataset[time, 'gridhandle', 'varname'] == DataItem
+    #         dataset['time', 'gridhandle', 'varname'] == DataItem
+    #         dataset[timeslice, 'gridhandle', 'varname'] == list of DataItems
+    #         dataset[time, 'varname'] == DataItem using active grid
+    #         dataset['varname'] == DataItem using active time / active grid
+    #         """
+    #     req_grid = None
+
+    #     if not isinstance(item, tuple):
+    #         item = (item,)
+
+    #     varname = item[-1]
+    #     ntimes = len(item) - 1 # -1 for varname
+    #     try:
+    #         if len(item) > 1:
+    #             req_grid = self.grids[item[-2]]
+    #     except KeyError:
+    #         pass
+    #     if not req_grid:
+    #         req_grid = self.active_grid
+    #         ntimes -= 1
+
+    #     if ntimes == 0:
+    #         grids = [self.grid_by_time(self.active_time)]
+    #     else:
+    #         grids = [self.grid_by_time(t) for t in item[:ntimes]]
+
+    #     if len(grids) == 1:
+    #         return grids[0][varname]
+    #     else:
+    #         return [g[varname] for g in grids]
+
+    # def grid_by_time(self, time):
+    #     """ returns grid for this specific time, time can also be a slice """
+    #     if isinstance(time, slice):
+    #         pass
+    #     else:
+    #         pass
