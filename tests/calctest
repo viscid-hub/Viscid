@@ -15,7 +15,7 @@ from matplotlib.colors import LogNorm
 from viscid import readers
 from viscid import field
 from viscid import coordinate
-from viscid.calculator import calc, cycalc
+from viscid.calculator import calc
 from viscid.plot import mpl
 
 def timereps(reps, func, *args, **kwargs):
@@ -80,20 +80,20 @@ if __name__=="__main__":
     print("field setup time: ", t1 - t0)
 
     t0 = time()
-    mag_b = calc.magnitude(fld_v, func="numexpr")
+    mag_b = calc.magnitude(fld_v, backends="numexpr")
     t1 = time()
     print("numexpr mag runtime: ", t1 - t0)
     t0 = time()
-    div_b = calc.div(fld_v, func="numexpr")
+    div_b = calc.div(fld_v, backends="numexpr")
     t1 = time()
     print("numexpr div runtime: ", t1 - t0)
 
     # t0 = time()
-    # mag_b = calc.magnitude(fld_v, func="cython")
+    # mag_b = calc.magnitude(fld_v, backends="cython")
     # t1 = time()
     # print("cython mag runtime: ", t1 - t0)
     # t0 = time()
-    # div_b = calc.div(fld_v, func="cython")
+    # div_b = calc.div(fld_v, backends="cython")
     # t1 = time()
     # print("cython div runtime: ", t1 - t0)
 

@@ -1,6 +1,6 @@
 # Viscid #
 
-Python framework to visualize gridded scientific data. Also 
+Python framework to visualize gridded scientific data.
 
 File types:
 + XDMF + HDF5
@@ -9,18 +9,23 @@ File types:
 ## Install ##
 
 Dependancies:
-+ numpy (required)
++ numpy (required... for everything)
 + lxml (required, for xdmf support)
 + h5py (required, for reading hdf5 files)
 + matplotlib (optional, if you import viscid.plot.mpl)
 + mayavi2 (optional, if you import viscid.plot.mvi)
-+ numexpr (optional, for the calculator.calc module)
-+ cython (optional for development, otherwise the .c files are already checked in)
++ numexpr (optional, for the calculator.necalc module)
++ cython (optional for calculator.cycalc module; in the future, I may check
+          in the .c files so cycalc does not need cython to be available)
+
+The optional calculator modules (necalc and cycalc) are all dispatched through
+calculator.calc, and it is intelligent enough not to use a library that is not
+installed.
 
 Standard distutils
 ```./setup.py build
-./setup.py install``` 
+./setup.py install```
 
-Far a better dev experience, I recommend adding source dir to PYTHONPATH and:
-```./setup.py build_ext -i --with-cython```
-
+For a better dev experience, I recommend adding viscid/viscid to PYTHONPATH,
+viscid/scripts to PATH, and building in-place with
+```./setup.py build_ext -i```

@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+import sys
+
+def warn(message):
+    sys.stderr.write("WARNING: {0}\n".format(message))
 
 def subclass_spider(cls):
     """ return recursive list of subclasses of cls """

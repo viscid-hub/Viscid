@@ -9,14 +9,13 @@ from warnings import warn
 import resource
 
 import numpy as np
-import numexpr as ne
 import pylab as pl
 from matplotlib.colors import LogNorm
 
 from viscid import readers
 from viscid import field
 from viscid import coordinate
-from viscid.calculator import calc, cycalc
+from viscid.calculator import calc
 from viscid.plot import mpl
 
 def timereps(reps, func, *args, **kwargs):
@@ -39,9 +38,9 @@ if __name__=="__main__":
 
     t0 = time()
 
-    x = np.array(np.linspace(-0.5, 0.5, 64), dtype=dtype)
-    y = np.array(np.linspace(-0.5, 0.5, 64), dtype=dtype)
-    z = np.array(np.linspace(-0.5, 0.5, 64), dtype=dtype)
+    x = np.array(np.linspace(-0.5, 0.5, 512), dtype=dtype)
+    y = np.array(np.linspace(-0.5, 0.5, 512), dtype=dtype)
+    z = np.array(np.linspace(-0.5, 0.5, 256), dtype=dtype)
 
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
     Z, Y, X = crds.get_nc(shaped=True)
@@ -69,52 +68,52 @@ if __name__=="__main__":
     print("field setup time: ", t1 - t0)
 
     t0 = time()
-    #result_numexpr = calc.magnitude(fld_v, func="numexpr")
-    result_numexpr = calc.div(fld_v_cc, func="numexpr")
+    #result_numexpr = calc.magnitude(fld_v, backends="numexpr")
+    result_numexpr = calc.div(fld_v_cc, backends="numexpr")
     t1 = time()
     print("numexpr magnitude runtime: ", t1 - t0)
 
     # t0 = time()
-    # result_numpy = calc.magnitude(fld_v, func="numpy")
+    # result_numpy = calc.magnitude(fld_v, backends="numpy")
     # t1 = time()
     # print("numpy runtime: ", t1 - t0)
 
     t0 = time()
     #result_cython = cycalc.magnitude(fld_v)
-    result_cython = calc.div(fld_v_cc, func="cython")
+    result_cython = calc.div(fld_v_cc, backends="cython")
     t1 = time()
     print("cython runtime: ", t1 - t0)
 
     # t0 = time()
-    # result_native = calc.magnitude([fld_vx, fld_vy, fld_vz], func="native")
+    # result_native = calc.magnitude([fld_vx, fld_vy, fld_vz], backends="native")
     # t1 = time()
     # print("native runtime: ", t1 - t0)
 
     # print("numexpr shape: ", result_numexpr.shape)
     # print("cython shape: ", result_cython.shape)
 
-    tolerance = 1e-6
-    diff_ne = calc.difference(result_numexpr, fld_div_cc, slb=[np.s_[1:-1]]*3)
-    abs_diff_ne = np.abs(diff_ne.data)
-    if not (abs_diff_ne < tolerance).all():
-        warn("numexpr result not within {0} of exact".format(tolerance))
-    print("min/max(numexpr - exact): ", np.min(abs_diff_ne), "/",
-          np.max(abs_diff_ne))
+    # tolerance = 1e-6
+    # diff_ne = calc.difference(result_numexpr, fld_div_cc, slb=[np.s_[1:-1]]*3)
+    # abs_diff_ne = np.abs(diff_ne.data)
+    # if not (abs_diff_ne < tolerance).all():
+    #     warn("numexpr result not within {0} of exact".format(tolerance))
+    # print("min/max(numexpr - exact): ", np.min(abs_diff_ne), "/",
+    #       np.max(abs_diff_ne))
 
-    tolerance = 1e-6
-    diff_cy = calc.difference(result_cython, fld_div_cc, slb=[np.s_[1:-1]]*3)
-    abs_diff_cy = np.abs(diff_cy.data)
-    if not (abs_diff_cy < tolerance).all():
-        warn("cython result not within {0} of exact".format(tolerance))
-    print("min/max(cython - exact): ", np.min(abs_diff_cy), "/",
-          np.max(abs_diff_cy))
+    # tolerance = 1e-6
+    # diff_cy = calc.difference(result_cython, fld_div_cc, slb=[np.s_[1:-1]]*3)
+    # abs_diff_cy = np.abs(diff_cy.data)
+    # if not (abs_diff_cy < tolerance).all():
+    #     warn("cython result not within {0} of exact".format(tolerance))
+    # print("min/max(cython - exact): ", np.min(abs_diff_cy), "/",
+    #       np.max(abs_diff_cy))
 
-    diff_ne_cy = calc.difference(result_numexpr, result_cython)
-    abs_diff_ne_cy = np.abs(diff_ne_cy.data)
-    if not (abs_diff_ne_cy < tolerance).all():
-        warn("cython result not within {0} of numexpr".format(tolerance))
-    print("min/max(numexpr - cython): ", np.min(abs_diff_ne_cy), "/",
-          np.max(abs_diff_ne_cy))
+    # diff_ne_cy = calc.difference(result_numexpr, result_cython)
+    # abs_diff_ne_cy = np.abs(diff_ne_cy.data)
+    # if not (abs_diff_ne_cy < tolerance).all():
+    #     warn("cython result not within {0} of numexpr".format(tolerance))
+    # print("min/max(numexpr - cython): ", np.min(abs_diff_ne_cy), "/",
+    #       np.max(abs_diff_ne_cy))
 
 
     if plot:

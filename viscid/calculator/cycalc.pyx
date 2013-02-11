@@ -27,14 +27,16 @@ def magnitude(fld):
     nptype = fld.data.dtype.name
     vect = fld.data.reshape(vector3d_shape(fld))
     mag = np.empty(scalar3d_shape(fld), dtype=nptype)
-    _magnitude3(vect, mag)
+    _py_magnitude3d(vect, mag)
     mag = mag.reshape(fld.shape)
     return field.wrap_field("Scalar", fld.name + " magnitude", fld.crds, mag,
                             center=fld.center, time=fld.time,
                             forget_source=True)
 
-# can't cdef this because real_t is fused and numpy arrays are ducktyped
-def _magnitude3(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
+def _py_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
+    return _c_magnitude3d(vect, mag)
+
+cdef _c_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
     cdef unsigned int nz = vect.shape[0]
     cdef unsigned int ny = vect.shape[1]
     cdef unsigned int nx = vect.shape[2]
@@ -64,26 +66,32 @@ def div(fld):
         crdz, crdy, crdx = fld.crds.get_cc()
         divcenter = "Cell"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
-        div_arr = np.empty([n - 2 for n in fld.crds.shape_cc], dtype=nptype)
+        dest_shape = [n - 2 for n in fld.crds.shape_cc]
+        div_arr = np.empty(dest_shape, dtype=nptype)
     elif fld.center == "Node":
         crdz, crdy, crdx = fld.crds.get_nc()
         divcenter = "Node"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
-        div_arr = np.empty([n - 2 for n in fld.crds.shape_nc], dtype=nptype)
+        dest_shape = [n - 2 for n in fld.crds.shape_nc]
+        div_arr = np.empty(dest_shape, dtype=nptype)
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
 
     if crdx.dtype != nptype or crdy.dtype != nptype or crdz.dtype != nptype:
         raise TypeError("Coords must be same dtype as vector data")
 
-    _div3(vect, crdx, crdy, crdz, div_arr)
+    _py_div3d(vect, crdx, crdy, crdz, div_arr)
 
     return field.wrap_field("Scalar", fld.name + " div", divcrds, div_arr,
                             center=divcenter, time=fld.time,
                             forget_source=True)
 
-def _div3(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
-          real_t[:] crdz, real_t[:,:,:] div_arr):
+def _py_div3d(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
+               real_t[:] crdz, real_t[:,:,:] div_arr):
+    return _c_div3d(vect, crdx, crdy, crdz, div_arr)
+
+cdef _c_div3d(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
+              real_t[:] crdz, real_t[:,:,:] div_arr):
     cdef unsigned int nz = div_arr.shape[0]
     cdef unsigned int ny = div_arr.shape[1]
     cdef unsigned int nx = div_arr.shape[2]
@@ -101,6 +109,17 @@ def _div3(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
                                    (vect[k + 2, j, i, 2] - vect[k, j, i, 2]) / \
                                                      (crdz[k + 2] - crdz[k])
     return None
+
+# def make_real(np.ndarray arr):
+#     return
+
+# def _ind(real_t x, real_t y, real_t z, real_t[:] crdx, real_t[:] crdy,
+#          real_t[:] crdz):
+#     """ """
+#     cdef unsigned int nx = len(crdx)
+#     cdef unsigned int ny = len(crdy)
+#     cdef unsigned int nz = len(crdz)
+
 
 # cdef np.ndarray[real_t, ndim=4] calc_div1(np.ndarray[real_t, ndim=4] arr):# except 0:
 #     cdef unsigned int nz = arr.shape[0]

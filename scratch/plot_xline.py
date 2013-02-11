@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# this script is for GEM 2012 plots... this is planned to be obsolete
 
 from __future__ import print_function
 from os import path

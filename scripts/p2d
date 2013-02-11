@@ -1,17 +1,24 @@
 #!/usr/bin/env python
-# NOTE: this does not work
+# NOTE: this does not work yet
+
+raise NotImplementedError("This is a carry over from old ggcm plotting scripts")
 
 from __future__ import print_function
 
+import sys
+import subprocess as sub
+import multiprocessing as mp
+
+import numpy as np
+from matplotlib.colors import LogNorm
+from matplotlib.image import NonUniformImage
+
+from viscid import readers
+from viscid.plot import mpl
 import vggcm
 import pggcm
 import fggcm
-import sys
-import numpy as np
-import subprocess as sub
-import multiprocessing as mp
-from matplotlib.colors import LogNorm
-from matplotlib.image import NonUniformImage
+
 
 def split_options(opt):
     temp = []

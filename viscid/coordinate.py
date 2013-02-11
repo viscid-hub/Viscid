@@ -53,14 +53,13 @@ class StructuredCrds(Coordinates):
         self.has_cc = has_cc
         if init_clist:
             self._axes = [d[0].lower() for d in init_clist]
-            self._dim = len(self._axes)
         self.clear_crds()
         if init_clist:
             self.set_crds(init_clist)
 
     @property
     def dim(self):
-        return self._dim
+        return len(self._axes)
 
     @property
     def axes(self):
@@ -68,6 +67,10 @@ class StructuredCrds(Coordinates):
 
     @property
     def shape(self):
+        return self.shape_nc
+
+    @property
+    def shape_nc(self):
         return [len(self[ax]) for ax in self.axes]
 
     @property
@@ -155,7 +158,11 @@ class StructuredCrds(Coordinates):
         selection = {'y=12i:14i,z=1i is the slice [:,12:14,1]
         """
         # parse string to dict if necessary
-        if isinstance(selection, str):
+        if isinstance(selection, dict):
+            return selection
+        elif selection is None:
+            return {}
+        elif isinstance(selection, str):
             sel = {}
             for i, s in enumerate(selection.replace('_', ',').split(',')):
                 s = s.split('=')
@@ -166,27 +173,38 @@ class StructuredCrds(Coordinates):
                 slclst = s[1].strip().split(':')
 
                 # if number ends in i or j, cast to int as index, else leave
-                # as float to denote a crd
+                # as float to denote a crd... also, if it's the 3rd value then
+                # it's a stride... cant really have a float stride can we
                 for i, val in enumerate(slclst):
-                    if val[-1] in ['i', 'j']:
+                    if len(val) == 0:
+                        slclst[i] = None
+                    elif val[-1] in ['i', 'j'] or i == 2:
                         slclst[i] = int(val[:-1])
                     else:
                         slclst[i] = float(val)
                 sel[dim] = slclst
             return sel
-        elif isinstance(selection, dict):
-            return selection
+
         else:
             raise TypeError()
 
-    def make_slice(self, selection, use_cc=False):
+    def make_slice(self, selection, use_cc=False, rm_len1_dims=False):
         """ use a selection dict that looks like:
         {'x': (0,12), 'y': 0.0, 'z': (-13.0, 13.0)}
         to get a list of slices and crds that one
-        could use to wrap a new field
+        could use to wrap a new field...
+        return example for "y=3i:6i:2,z=0":
+        ([slice(None), slice(3, 5, 2), 32],
+         [['x', array(1, 2, 3)], ['y', array(0, 1)]],
+        )
+        rm_len1_dims will automatically add directions with only
+        one coord value to the selection dict. the idea is to auto reduce
+        3d to 2d if the data is naturally 2d (one dicection has no depth)
         """
+        # TODO: see if np.s_ could clean this up a bit
         selection = self.parse_slice_str(selection)
         slices = [None] * self.dim
+        # colapse = [None] * self.dim
         slcrds = [None] * self.dim
 
         # if use_cc:
@@ -195,58 +213,75 @@ class StructuredCrds(Coordinates):
         # go through all axes and see if they are selected
         for dind, axis in enumerate(self.axes):
             if not axis in selection:
-                slices[dind] = slice(None)
-                slcrds[dind] = [axis, self[axis]]
+                n = len(self[axis + "cc"]) if use_cc else len(self[axis])
+                if rm_len1_dims and n == 1:
+                    slices[dind] = np.s_[0]
+                    slcrds[dind] = None
+                else:
+                    slices[dind] = slice(None)
+                    slcrds[dind] = [axis, self[axis]]
                 continue
 
-            val = selection[axis]
-            if isinstance(val, slice):
-                sl = val
-                slices[dind] = sl
-                slcrds[dind] = [axis, self[axis][sl]]
-                continue
+            sel = selection[axis]
+
+            if isinstance(sel, slice):
+                slc = sel
 
             # expect val to be a list to describe start, stop, stride
-            if isinstance(val, (int, float)):
-                val = [val]
+            if isinstance(sel, (int, float)):
+                sel = [sel]
 
-            # do plane finding if vals are floats for the first two
-            # elements only, the third would be a stride, no lookup necessary
-            for i, v in enumerate(val[:2]):
-                if isinstance(v, float):
-                    crdarr = self[axis + "cc"] if use_cc else self[axis]
-                    val[i] = np.argmin(np.abs(crdarr - v))
-            #val[0] = min(val[0] - 1, 0)
+            if isinstance(sel, (list, tuple)):
+                # do plane finding if vals are floats for the first two
+                # elements only, the third would be a stride, no lookup
+                # necessary
+                for i, v in enumerate(sel[:2]):
+                    if isinstance(v, float):
+                        # in truth, i have no idea if this would work with
+                        # decreasing coords
+                        # if self[axis][-1] < self[axis][0]:
+                        #     raise ValueError("I will not slice decreasing "
+                        #                      "coords.")
 
-            if len(val) == 1:
-                #sl = slice(val[0], val[0] + 2)
-                sl = val[0]
-            elif len(val) == 2:
-                #sl = slice(val[0], val[1] + 2)
-                sl = slice(val[0], val[1])
-            elif len(val) == 3:
-                #sl = slice(val[0], val[1] + 2, val[2])
-                sl = slice(val[0], val[1], val[2])
+                        # find index of closest node
+                        if use_cc:
+                            diff = v - self[axis + "cc"]
+                        else:
+                            diff = v - self[axis]
+                        closest_ind = np.argmin(np.abs(diff))
+
+                        if i == 0:
+                            sel[i] = closest_ind  # always a node
+                        else:  # i == 1 due to slice sel[:2]
+                            sel[i] = closest_ind + 1
+
+                if len(sel) == 1:
+                    slices[dind] = np.s_[sel[0]]
+                    slcrds[dind] = None
+                    continue
+                elif len(sel) == 2:
+                    slc = np.s_[sel[0]:sel[1]]
+                elif len(sel) == 3:
+                    slc = np.s_[sel[0]:sel[1]:sel[2]]
+                else:
+                    raise ValueError()
+
+            if use_cc and slc.stop is not None:
+                crd_slc = slice(slc.start, slc.stop + 1, slc.step)
             else:
-                raise ValueError()
+                crd_slc = slc
+            slices[dind] = slc
+            slcrds[dind] = [axis, self[axis][crd_slc].reshape(-1)]
 
-            slices[dind] = sl
-            slcrds[dind] = [axis, self._crds[axis][sl].reshape(-1)]
+        # print(slices, slcrds)
 
-        # auto trim last dimension
-        for i in range(self.dim - 1, -1, -1):
-            if slcrds[i][1].size <= 1:
-                # print(slcrds)
-                slcrds.pop(i)
+        # remove len1_dims
+        slcrds = [crd for crd in slcrds if crd is not None]
+
         # print(slices)
+        # print("*** slices: ", slices)
+        # print("*** crds: ", slcrds)
         return tuple(slices), slcrds
-
-    def get_shape(self, axis):
-        """ supports cc as well as normal crds """
-        if isinstance(axis, (list, tuple)):
-            return [len(self[ax]) for ax in axis]
-        else:
-            return len(self[axis])
 
     def get_nc(self, axis=None, shaped=False):
         if axis == None:
@@ -256,7 +291,6 @@ class StructuredCrds(Coordinates):
         else:
             return self._crds[self.axis_name(axis, shaped)]
 
-
     def get_cc(self, axis=None, shaped=False):
         if axis == None:
             axis = self.axes
@@ -264,6 +298,12 @@ class StructuredCrds(Coordinates):
             return [self._crds[self.axis_name(a, shaped) + "cc"] for a in axis]
         else:
             return self._crds[self.axis_name(axis, shaped) + "cc"]
+
+    def get_culled_axes(self, ignore=2):
+        """ return list of axes names, but discard axes whose coords have
+        length <= ignore... useful for 2d fields that only have 1 cell
+        center in the 3rd direction """
+        return [name for name in self.axes if len(self[name]) > ignore]
 
     def get_clist(self, slce=slice(None)):
         """ return a clist of the coordinates sliced if you wish
@@ -299,7 +339,7 @@ class CylindricalCrds(StructuredCrds):
 
 class SphericalCrds(StructuredCrds):
     TYPE = "Spherical"
-    _axes = ["z", "theta", "r"]
+    _axes = ["phi", "theta", "r"]
 
     def __init__(self, init_clist=None, **kwargs):
         super(SphericalCrds, self).__init__(init_clist=init_clist, **kwargs)

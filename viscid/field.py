@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-# Fields belong in grids, or by themselves as a result of a calculation
+# Fields belong in grids, or by themselves as a result of a calculation.
+# Important: The field must be able to reshape itself to the shape of its
+# coordinates, else there will be blood. Also, the order of the coords
+# matters, it is assumed that if the coords are z, y, x then the data
+# is iz, iy, ix. This can be permuted any which way, but order matters.
 
 from __future__ import print_function
 from warnings import warn
@@ -23,7 +27,7 @@ def wrap_field(typ, name, crds, data, **kwargs):
             return cls(name, crds, data, **kwargs)
     raise NotImplementedError("can not decipher field")
 
-def scalar_fields_to_vector(name, data, fldlist, **kwargs):
+def scalar_fields_to_vector(name, fldlist, **kwargs):
     if not name:
         name = fldlist[0].name
     center = fldlist[0].center
@@ -31,7 +35,8 @@ def scalar_fields_to_vector(name, data, fldlist, **kwargs):
     time = fldlist[0].time
     # shape = fldlist[0].data.shape
 
-    vfield = VectorField(name, crds, data, center=center, time=time, **kwargs)
+    vfield = VectorField(name, crds, fldlist, center=center, time=time,
+                         **kwargs)
     return vfield
 
 
@@ -56,27 +61,28 @@ class Field(object):
         self.data = data
 
         if forget_source:
-            self._source_data = self.data
+            self.source_data = self.data
 
     def unload(self):
         self._purge_cache()
 
     @property
     def dim(self):
-        try:
-            return len(self.source_data.shape)
-        except AttributeError:
-            # FIXME
-            return len(self.source_data[0].shape) + 1
+        return self.crds.dim
+        # try:
+        #     return len(self.source_data.shape)
+        # except AttributeError:
+        #     # FIXME
+        #     return len(self.source_data[0].shape) + 1
 
     @property
     def shape(self):
-        # TODO: fix this
+        # it is enforced that the cached data has a shape that agrees with
+        # the coords by _reshape_ndarray_to_crds... actually, that method
+        # requires this method to depend on the crd shape
         if self.center == "Node":
-            # print("crd: node shape")
-            return list(self.crds.shape)
+            return list(self.crds.shape_nc)
         elif self.center == "Cell":
-            # print("crd: cell shape")
             return list(self.crds.shape_cc)
         else:
             warn("Edge/Face vectors not implemented, assuming node shape")
@@ -84,12 +90,15 @@ class Field(object):
 
     @property
     def dtype(self):
-        if isinstance(self._source_data, np.ndarray):
-            return self._source_data.dtype.name
-        elif isinstance(self._source_data, (list, tuple)):
-            return self._source_data[0].dtype.name
+        # print(type(self.source_data))
+        if self._cache is not None:
+            return self._cache.dtype
         else:
-            raise TypeError("Can not decipher source data dtype")
+            # dtype.name is for pruning endianness out of dtype
+            if isinstance(self.source_data, (list, tuple)):
+                return self.source_data[0].dtype.name
+            else:
+                return self.source_data.dtype.name
 
     @property
     def data(self):
@@ -118,41 +127,57 @@ class Field(object):
         # and dat.flags["OWNDATA"]  # might i want this?
         return self._dat_to_ndarray(dat)
 
-    @staticmethod
-    def _dat_to_ndarray(dat):
-        """ if already numpy array, return it, else create new np
-        array... maybe a new np array should be created regardless?
-        probably not, no sense gumming up too much memory
+    def _dat_to_ndarray(self, dat):
+        """ This should be the last thing called for all data that gets put
+        into the cache. It makes dimensions jive correctly. This will translate
+        non-ndarray data structures to a flat ndarray. Also, this function
+        makes damn sure that the dimensionality of the coords matches the
+        dimensionality of the array, which is to say, if the array is only 2d,
+        but the coords have a 3rd dimension with length 1, reshape the array
+        to include that extra dimension.
         """
         if isinstance(dat, np.ndarray):
-            return dat
+            arr = dat
         else:
+            # dtype.name is for pruning endianness out of dtype
             if isinstance(dat, (list, tuple)):
-                # some hoops for performance... this stores flat by default
                 dtype = dat[0].dtype.name
-                shape = [len(dat)] + list(dat[0].shape)
-                datarr = np.empty(shape, dtype=dtype)
-                for i, d in enumerate(dat):
-                    datarr[i, ...] = d
-                return datarr
             else:
-                return np.array(dat, dtype=dat.dtype.name)
+                dtype = dat.dtype.name
+            arr = np.array(dat, dtype=dtype)
+        return self._reshape_ndarray_to_crds(arr)
+
+    def _reshape_ndarray_to_crds(self, arr):
+        """ enforce same dimensionality as coords here!
+        self.shape better still be using the crds shape corrected for
+        node / cell centering
+        """
+        if arr.shape == self.shape:
+            return arr
+        else:
+            # print(">>> arr.shape: ", arr.shape)
+            # print(">>> self.shape: ", self.shape)
+            # print(len(self.crds["xcc"]), ", x = ", self.crds["xcc"])
+            # print("center = ", self.center)
+            return arr.reshape(self.shape)
 
     #TODO: some method that gracefully gets the correct crd arrays for
     # face and edge centered fields
 
-    def slice(self, selection):
-        """ select a slice of the data using selection dictionary
-        returns a new field
+    def slice(self, selection, rm_len1_dims=False):
+        """ Select a slice of the data using selection dictionary.
+        Returns a new field.
         """
         cc = (self.center == "Cell")
-        slices, crdlst = self.crds.make_slice(selection, use_cc=cc)
+        slices, crdlst = self.crds.make_slice(selection, use_cc=cc,
+                                              rm_len1_dims=rm_len1_dims)
 
         # crdlst = [(d, slcrds[i]) for i, d in enumerate(self.crds.dirs)]
         #print(crdlst)
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
         # print(slices, self.data.shape)
         # print(self.data.shape, slices)
+        print(slices)
         return wrap_field(self.TYPE, self.name + "_slice", crds,
                           self.data[slices], center=self.center, time=0.0)
 
@@ -169,36 +194,35 @@ class VectorField(Field):
 
     force_layout = LAYOUT_DEFAULT
     _layout = None
+    _ncomp = None
 
     def __init__(self, name, crds, data, force_layout=LAYOUT_DEFAULT,
                  **kwargs):
         self.force_layout = force_layout
         super(VectorField, self).__init__(name, crds, data, **kwargs)
 
-    @property
-    def dim(self):
-        return super(VectorField, self).dim - 1
+    def _purge_cache(self):
+        """ does not guarentee that the memory will be freed """
+        self._cache = None
+        self._layout = None
 
     @property
     def ncomp(self):
-        # print("LAYOUT: ", self.layout)
-        if self.layout == LAYOUT_FLAT:
+        layout = self.layout
+        if layout == LAYOUT_FLAT:
             return self.data.shape[0]
-        elif self.layout == LAYOUT_INTERLACED:
+        elif layout == LAYOUT_INTERLACED:
             return self.data.shape[-1]
-        elif self.layout == LAYOUT_OTHER:
-            print(self.name, self.layout)
+        elif layout == LAYOUT_OTHER:
+            # print(self.name, self.layout)
             warn("I don't know what your layout is, assuming vectors are "
                 "the last index (interleaved)...")
             return self.data.shape[-1]
-        else:
-            raise RuntimeError("looks like data was never setup")
 
     @property
     def layout(self):
-        """ make sure that the data is translated before you inquire
-        about the layout
-        """
+        # make sure that the data is translated before you inquire
+        # about the layout
         if self._cache is None:
             self._fill_cache()
         return self._layout
@@ -210,9 +234,9 @@ class VectorField(Field):
             # dat = [d.source_data if isinstance(d, Field) else d for d in dat]
             for i in range(len(dat)):
                 if isinstance(dat[i], Field):
-                    # use _source_data so that things don't get auto cached
+                    # use source_data so that things don't get auto cached
                     # since we are caching own copy of the data anyway
-                    dat[i] = dat[i]._source_data  # pylint: disable=W0212
+                    dat[i] = dat[i].source_data  # pylint: disable=W0212
 
         dat_layout = self.detect_layout(dat)
 
@@ -245,7 +269,7 @@ class VectorField(Field):
                 # NOTE: no special case for lists, they are not
                 # interpreted this way
             self._layout = LAYOUT_FLAT
-            return dat_dest
+            return self._dat_to_ndarray(dat_dest)
 
         # ok, we demand INTERLACED arrays, make it so
         elif self.force_layout == LAYOUT_INTERLACED:
@@ -264,7 +288,7 @@ class VectorField(Field):
                 dat_dest[..., i] = dat[i]
 
             self._layout = LAYOUT_INTERLACED
-            return dat_dest
+            return self._dat_to_ndarray(dat_dest)
 
         # catch the remaining cases
         elif self.force_layout == LAYOUT_OTHER:
@@ -272,13 +296,36 @@ class VectorField(Field):
         else:
             raise ValueError("Bad argument for layout forcing")
 
+    def _reshape_ndarray_to_crds(self, arr):
+        """ enforce same dimensionality as coords here!
+        self.shape better still be using the crds shape corrected for
+        node / cell centering
+        """
+        target_shape = list(self.shape)
+        # can't use self.ncomp or self.layout because we're in a weird
+        # place and self.data hasn't been set yet, because this has to happen
+        # first... like an ouroboros
+        # NOTE: this logic is hideous, there must be a better way
+        if self._layout == LAYOUT_FLAT:
+            target_shape = [arr.shape[0]] + target_shape
+        elif self._layout == LAYOUT_INTERLACED:
+            target_shape = target_shape + [arr.shape[-1]]
+        else:
+            # assuming flat?
+            target_shape = [arr.shape[0]] + target_shape
+
+        if arr.shape == target_shape:
+            return arr
+        else:
+            return arr.reshape(target_shape)
+
     def component_views(self):
         """ return numpy views to components individually, memory layout
         of the original field is maintained """
         ncomp = self.ncomp
-        if self._layout == LAYOUT_FLAT:
+        if self.layout == LAYOUT_FLAT:
             return [self.data[i, ...] for i in range(ncomp)]
-        elif self._layout == LAYOUT_INTERLACED:
+        elif self.layout == LAYOUT_INTERLACED:
             return [self.data[..., i] for i in range(ncomp)]
         else:
             return [self.data[..., i] for i in range(ncomp)]
@@ -297,10 +344,21 @@ class VectorField(Field):
 
     def detect_layout(self, dat):
         """ returns LAYOUT_XXX """
+        # if i receive a list, then i suppose i have a list of
+        # arrays, one for each component... this is a flat layout
         if isinstance(dat, (list, tuple)):
             return LAYOUT_FLAT
 
         shape = self.shape
+
+        # if the crds shape has more values than the dat.shape
+        # then try trimmeng the directions that have 1 element
+        # this can happen when crds are 3d, but field is only 2d
+        while len(shape) > len(dat.shape) - 1:
+            try:
+                shape.remove(1)
+            except ValueError:
+                break
 
         if list(dat.shape[1:]) == shape:
             return LAYOUT_FLAT

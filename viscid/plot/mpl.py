@@ -1,25 +1,30 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import sys
 
 import numpy as np
 import pylab as pl
 
-def warn(message):
-    sys.stderr.write("WARNING: {0}\n".format(message))
+from .. import field
+from .. import vutil
 
 def plot(fld, selection=None, **kwargs):
-    if selection:
-        fld = fld.slice(selection)
-    # print(slcrds)
-    # print(dat)
-    if fld.dim == 1:
-        return plot1d_field(fld, **kwargs)
-    elif fld.dim == 2:
-        return pcolor_field(fld, **kwargs)
+    """ just plot... should generically dispatch to gen the right
+    matplotlib plot given the field. returns the mpl plot and color bar
+    as a tuple """
+    if isinstance(fld, field.ScalarField):
+        fld = fld.slice(selection, rm_len1_dims=True)
+        # print(selection)
+        # print(fld.crds.shape, fld.shape)
+
+        if fld.dim == 1:
+            return plot1d_field(fld, **kwargs)
+        elif fld.dim == 2:
+            return pcolor_field(fld, **kwargs)
+        else:
+            raise ValueError("mpl can only do 1-D or 2-D fields")
     else:
-        raise ValueError("mpl can only do 1-D or 2-D fields")
+        raise TypeError("I can only do scalar fields right now")
 
 def contour2d(fld, selection=None, **kwargs):
     if selection:
@@ -44,7 +49,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     # THIS IS BACKWARD, on account of the convention for
     # Coordinates where z, y, x is used since that is how
     # xdmf data is
-    namey, namex = fld.crds.axes
+    namey, namex = fld.crds.axes # fld.crds.get_culled_axes()
 
     # pcolor mesh uses node coords, and cell data, if we have
     # node data, fake it by using cell centered coords and
@@ -52,7 +57,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     # the coord array somehow to show the edges...
     if fld.center == "Node":
         X, Y = fld.crds[(namex.upper()+'cc', namey.upper()+'cc')]
-        warn("pcolormesh on node centered field... trimming the edges")
+        vutil.warn("pcolormesh on node centered field... trimming the edges")
         dat = fld.data[1:-1, 1:-1]
     elif fld.center == "Cell":
         X, Y = fld.crds[(namex.upper(), namey.upper())]
@@ -73,7 +78,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     if equalaxis:
         ax.axis('equal')
     if earth:
-        pass #plot_earth()
+        plot_earth(namex, namey)
     if show:
         mplshow()
     return plt, cbar
@@ -87,11 +92,11 @@ def contour_field(fld, ax=None, equalaxis=True, earth=None,
     if not ax:
         ax = pl.gca()
 
-    namey, namex = fld.crds.axes
+    namey, namex = fld.crds.axes # fld.crds.get_culled_axes()
     if fld.center == "Node":
         X, Y = fld.crds[(namex, namey)]
     elif fld.center == "Cell":
-        X, Y = fld.crds[(namex+'cc', namey+'cc')]
+        X, Y = fld.crds[(namex + 'cc', namey + 'cc')]
 
     if mod:
         X *= mod[0]
@@ -110,22 +115,28 @@ def contour_field(fld, ax=None, equalaxis=True, earth=None,
     if equalaxis:
         ax.axis('equal')
     if earth:
-        pass #plot_earth()
+        plot_earth(namex, namey)
     if show:
         mplshow()
-    return plt
+    return plt, cbar
 
 def plot1d_field(fld, ax=None, show=False):
+    # print(fld.shape, fld.crds.shape)
+
     if not ax:
         ax = pl.gca()
 
     namex, = fld.crds.axes
-    x = fld.crds[namex]
+    if fld.center == "Node":
+        x = fld.crds[namex]
+    elif fld.center == "Cell":
+        x = fld.crds[namex + "cc"]
+
     plt = pl.plot(x, fld.data)
 
     if show:
         mplshow()
-    return plt, cbar
+    return plt, None
 
 def mplshow():
     # do i need to do anything special before i show?
@@ -133,6 +144,7 @@ def mplshow():
     pl.show()
 
 def plot_earth(pylab, plane, axis=None, rot=0, daycol='w', nightcol='k'):
+    raise NotImplementedError("plotting the earth is broken")
     import matplotlib.patches as mpatches
     import matplotlib.lines as mlines
     p = plane.split('_')

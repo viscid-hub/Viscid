@@ -1,74 +1,128 @@
 #!/usr/bin/env python
+# This has a mechanism to dispatch to different backends. You can change the
+# order of preference of the backend by changing default_backends.
+# TODO: this dispatch mechanism is very simple, maybe something a little more
+# flexable would be useful down the line?
 
 from __future__ import print_function
-# import os
-# from math import sqrt
+from warnings import warn
 
 import numpy as np
-import numexpr as ne
-# import pylab as pl
 
 from .. import field
-from .. import coordinate
-from . import cycalc
-# from weave_helper import wrap_inline
+from .. import vutil
 
-# ne.set_num_threads(1)
+try:
+    from . import cycalc
+    has_cython = True
+except ImportError:
+    has_cython = False
 
-def difference(fld_a, fld_b, func="numexpr", sla=slice(None), slb=slice(None)):
-    if func == "numexpr":
-        a = fld_a.data[sla]  #pylint: disable=W0612
-        b = fld_b.data[slb]  #pylint: disable=W0612
-        diff = ne.evaluate("a-b")
-    else:
-        raise ValueError("Desired backend not found.")
+try:
+    from . import necalc
+    has_numexpr = True
+except ImportError:
+    has_numexpr = False
+
+_installed_backends = {"cython": has_cython,
+                       "numexpr": has_numexpr,
+                       "numpy": True,
+                       "native": True,  # now this is a silly one
+                      }
+
+# list of default backends to use in order of preference
+# this can be changed, with the warning that it will all users of this module
+default_backends = ["cython", "numexpr", "numpy"]
+
+# TODO: this is kind of a silly mechanism
+def _check_backend(preferred, implemented):
+    """ preferred should be a list of backends in order of preference or None
+    to use the default list. The first preferred backend that is in implemented
+    AND is installed is returned. If none of the preferred are usable, the list
+    of implemented backends is checked in order... so the calling function should
+    think about the order of the implemented list too... for instance, try
+    numexpr before numpy
+    """
+    if preferred == None:
+        preferred = default_backends
+    if not isinstance(preferred, (list, tuple)):
+        preferred = [preferred]
+
+    # go through preferred backends
+    for backend in preferred:
+        if backend in implemented:
+            try:
+                if _installed_backends[backend]:
+                    return backend
+            except KeyError:
+                vutil.warn("Unknown backend: {0}".format(backend))
+
+    for backend in implemented:
+        try:
+            if _installed_backends[backend]:
+                vutil.warn("Preferred backends {0} not available, using {1} "
+                           "instead.".format(preferred, backend))
+                return backend
+        except KeyError:
+            warn("Unknown backend (Should not be "
+                 "implemented?): {0}".format(backend))
+
+    raise RuntimeError("No implemented backends are installed "
+                       "for this function.")
+
+def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends)
+
+    if use_backend == "numexpr":
+        diff = necalc.difference(fld_a, fld_b, sla, slb)
+    elif use_backend == "numpy":
+        a = fld_a.data[sla]
+        b = fld_b.data[slb]
+        diff = a - b
 
     return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
                             diff, center=fld_a.center, time=fld_a.time)
 
-def relative_diff(fld_a, fld_b, func="numexpr",
-                  sla=slice(None), slb=slice(None)):
-    if func == "numexpr":
-        a = fld_a.data[sla]  #pylint: disable=W0612
-        b = fld_b.data[slb]  #pylint: disable=W0612
-        diff = ne.evaluate("(a - b) / a")
-    else:
-        raise ValueError("Desired backend not found.")
+def relative_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
+                  backends=None):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends)
+
+    if use_backend == "numexpr":
+        diff = necalc.relative_diff(fld_a, fld_b, sla, slb)
+    elif use_backend == "numpy":
+        a = fld_a.data[sla]
+        b = fld_b.data[slb]
+        diff = (a - b) / a
 
     return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
                             diff, center=fld_a.center, time=fld_a.time)
 
-# def relative_diff(fld_a, fld_b, func="numexpr"):
-#     if func == "numexpr":
-#         a = fld_a.data  #pylint: disable=W0612
-#         b = fld_b.data  #pylint: disable=W0612
-#         diff = ne.evaluate("(a - b) / b")
-#     else:
-#         raise ValueError("Desired backend not found.")
+def abs_val(fld, backends=None):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends)
 
-#     return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
-#                             diff, center=fld_a.center, time=fld_a.time)
-
-def abs(fld, func="numexpr"): #pylint: disable=W0622
-    if func == "numexpr":
-        a = fld.data  #pylint: disable=W0612
-        absarr = ne.evaluate("abs(a)")
-    else:
-        raise ValueError("Desired backend not found.")
+    if use_backend == "numexpr":
+        absarr = necalc.abs_val(fld)
+    elif use_backend == "numpy":
+        absarr = np.abs(fld.data)
 
     return field.wrap_field(fld.TYPE, "abs " + fld.name, fld.crds,
                             absarr, center=fld.center, time=fld.time)
 
-def magnitude(fld, func="numexpr"):
-    if func == "cython":
+def magnitude(fld, backends=None):
+    implemented_backends = ["numexpr", "cython", "numpy", "native"]
+    use_backend = _check_backend(backends, implemented_backends)
+
+    if use_backend == "cython":
         return cycalc.magnitude(fld)
-    elif func == "numexpr":
-        vx, vy, vz = fld.component_views()
-        mag = ne.evaluate("sqrt((vx**2) + (vy**2) + (vz**2))")
-    elif func == "numpy":
+    elif use_backend == "numexpr":
+        mag = necalc.magnitude(fld)
+    elif use_backend == "numpy":
         vx, vy, vz = fld.component_views()
         mag = np.sqrt((vx**2) + (vy**2) + (vz**2))
-    elif func == "native":
+    elif use_backend == "native":
         vx, vy, vz = fld.component_views()
         mag = np.empty_like(vx)
         for i in range(mag.shape[0]):
@@ -76,55 +130,20 @@ def magnitude(fld, func="numexpr"):
                 for k in range(mag.shape[2]):
                     mag[i, j, k] = np.sqrt(vx[i, j, k]**2 + vy[i, j, k]**2 + \
                                            vz[i, j, k]**2)
-    else:
-        raise ValueError("Desired backend not found.")
 
     #print("MMM ", np.max(mag - np.sqrt((vx**2) + (vy**2) + (vz**2))))
     #print(mag[:,128,128])
     return field.wrap_field("Scalar", fld.name + " magnitude", fld.crds,
                             mag, center=fld.center, time=fld.time)
 
-def div(fld, func="cython"):
-    if func == "cython":
+def div(fld, backends=None):
+    implemented_backends = ["numexpr", "cython"]
+    use_backend = _check_backend(backends, implemented_backends)
+
+    if use_backend == "cython":
         return cycalc.div(fld)
-    elif func == "numexpr":
-        return divne(fld)
-    else:
-        raise ValueError("Desired backend not found.")
-
-def divne(fld):
-    """ first order  """
-    vx, vy, vz = fld.component_views()
-
-    if fld.center == "Cell":
-        crdz, crdy, crdx = fld.crds.get_cc(shaped=True)
-        divcenter = "Cell"
-        divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
-    elif fld.center == "Node":
-        crdz, crdy, crdx = fld.crds.get_nc(shaped=True)
-        divcenter = "Node"
-        divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
-    else:
-        raise NotImplementedError("Can only do cell and node centered divs")
-
-    xp = crdx[:,:,2:]; xm = crdx[:,:,:-2] #pylint: disable=W0612,C0321,C0324
-    yp = crdy[:,2:,:]; ym = crdy[:,:-2,:] #pylint: disable=W0612,C0321,C0324
-    zp = crdz[2:,:,:]; zm = crdz[:-2,:,:] #pylint: disable=W0612,C0321,C0324
-
-    vxp = vx[1:-1,1:-1,2:]; vxm = vx[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
-    vyp = vy[1:-1,2:,1:-1]; vym = vy[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
-    vzp = vz[2:,1:-1,1:-1]; vzm = vz[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
-
-    # print(vxp.shape, vyp.shape, vzp.shape)
-    # print(vxm.shape, vym.shape, vzm.shape)
-    # print(xp.shape, yp.shape, zp.shape)
-    # print(xm.shape, ym.shape, zm.shape)
-
-    div_arr = ne.evaluate("(vxp-vxm)/(xp-xm) + (vyp-vym)/(yp-ym) + "
-                          "(vzp-vzm)/(zp-zm)")
-
-    return field.wrap_field("Scalar", "div " + fld.name, divcrds, div_arr,
-                            center=divcenter, time=fld.time)
+    elif use_backend == "numexpr":
+        return necalc.div(fld)
 
 def closest1d_ind(arr, val):
     #i = np.argmin(ne.evaluate("abs(arr - val)"))
