@@ -36,17 +36,21 @@ default_backends = ["cython", "numexpr", "numpy"]
 
 # TODO: this is kind of a silly mechanism
 def _check_backend(preferred, implemented):
-    """ preferred should be a list of backends in order of preference or None
-    to use the default list. The first preferred backend that is in implemented
-    AND is installed is returned. If none of the preferred are usable, the list
-    of implemented backends is checked in order... so the calling function should
-    think about the order of the implemented list too... for instance, try
-    numexpr before numpy
+    """ preferred should be a list of backends in order of preference, "default"
+    to use the default list, or None to just go down the implemented list and
+    use the first one that works. The first preferred backend that is in
+    implemented AND is installed is returned. If none of the preferred are
+    usable, the list of implemented backends is checked in order... so the
+    calling function should think about the order of the implemented list
+    too... for instance, try numexpr before numpy
     """
-    if preferred == None:
+    if preferred == "default":
         preferred = default_backends
     if not isinstance(preferred, (list, tuple)):
-        preferred = [preferred]
+        if preferred is None:
+            preferred = implemented
+        else:
+            preferred = [preferred]
 
     # go through preferred backends
     for backend in preferred:
