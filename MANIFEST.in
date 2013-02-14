@@ -1,0 +1,2 @@
+include test/*.sh
+include viscid/calculator/*.c
