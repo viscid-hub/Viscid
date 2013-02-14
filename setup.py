@@ -16,9 +16,9 @@ import numpy as np
 
 try:
     from Cython.Distutils import build_ext
-    with_cython = True
+    has_cython = True
 except ImportError:
-    with_cython = False
+    has_cython = False
 
 # listing the sources
 cmdclass = {}
@@ -51,7 +51,7 @@ cy_defs.append(["viscid.calculator.cycalc",
 
 # decide which extension to add to cython sources (pyx or c)
 cy_ext = ".c"  # or ".cpp"?
-if with_cython:
+if has_cython:
     cy_ext = ".pyx"
     cmdclass["build_ext"] = build_ext
 
@@ -87,8 +87,8 @@ class Clean(clean):
                         log.info("removing '{0}'".format(fn))
                         os.unlink(fn)
 
-                # remove c files if cleaning --with-cython
-                if with_cython:
+                # remove c files if has_cython
+                if has_cython:
                     for f in ext.sources:
                         if f[-4:] == ".pyx":
                             for rm_ext in ['.c', '.cpp']:
@@ -104,7 +104,7 @@ for d in cy_defs:
     if d is None:
         continue
     src_lst = d[1]
-    if with_cython:
+    if has_cython:
         src_lst += d[2]
     ext_mods += [Extension(d[0], src_lst, extra_compile_args=cy_ccflags,
                            extra_link_args=cy_ldflags)]
