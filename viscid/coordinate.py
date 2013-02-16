@@ -194,8 +194,9 @@ class StructuredCrds(Coordinates):
         to get a list of slices and crds that one
         could use to wrap a new field...
         return example for "y=3i:6i:2,z=0":
-        ([slice(None), slice(3, 5, 2), 32],
-         [['x', array(1, 2, 3)], ['y', array(0, 1)]],
+        ([slice(None), slice(3, 5, 2), 32],  # list of data slices
+         [['x', array(1, 2, 3)], ['y', array(0, 1)]],  # new clist
+         [['z', 0.0]],  # list of coords that are taken out by the slices
         )
         rm_len1_dims will automatically add directions with only
         one coord value to the selection dict. the idea is to auto reduce
@@ -206,6 +207,7 @@ class StructuredCrds(Coordinates):
         slices = [None] * self.dim
         # colapse = [None] * self.dim
         slcrds = [None] * self.dim
+        reduced = []
 
         # if use_cc:
         #     assert(self.has_cc)
@@ -217,6 +219,8 @@ class StructuredCrds(Coordinates):
                 if rm_len1_dims and n == 1:
                     slices[dind] = np.s_[0]
                     slcrds[dind] = None
+                    crdval = self[axis + "cc"][0] if use_cc else self[axis][0]
+                    reduced.append([axis, crdval])
                 else:
                     slices[dind] = slice(None)
                     slcrds[dind] = [axis, self[axis]]
@@ -256,8 +260,11 @@ class StructuredCrds(Coordinates):
                             sel[i] = closest_ind + 1
 
                 if len(sel) == 1:
-                    slices[dind] = np.s_[sel[0]]
+                    ind = sel[0]
+                    slices[dind] = np.s_[ind]
                     slcrds[dind] = None
+                    loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
+                    reduced.append([axis, loc])
                     continue
                 elif len(sel) == 2:
                     slc = np.s_[sel[0]:sel[1]]
@@ -281,7 +288,7 @@ class StructuredCrds(Coordinates):
         # print(slices)
         # print("*** slices: ", slices)
         # print("*** crds: ", slcrds)
-        return tuple(slices), slcrds
+        return tuple(slices), slcrds, reduced
 
     def get_nc(self, axis=None, shaped=False):
         if axis == None:

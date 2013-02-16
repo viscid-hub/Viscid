@@ -48,17 +48,23 @@ class Field(object):
     center = None  # String in CENTERING
     crds = None  # Coordinate object
     time = None  # float
+    info = None  # dict
 
     source_data = None  # numpy-like object (h5py too)
     _cache = None  # this will always be a numpy array
 
     def __init__(self, name, crds, data, center="Node", time=0.0,
-                 forget_source=False):
+                 forget_source=False, info=None):
         self.name = name
         self.center = center
         self.time = time
         self.crds = crds
         self.data = data
+
+        if info:
+            self.info = info
+        else:
+            self.info = {}
 
         if forget_source:
             self.source_data = self.data
@@ -169,17 +175,21 @@ class Field(object):
         Returns a new field.
         """
         cc = (self.center == "Cell")
-        slices, crdlst = self.crds.make_slice(selection, use_cc=cc,
-                                              rm_len1_dims=rm_len1_dims)
+        slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
+                                                    rm_len1_dims=rm_len1_dims)
 
-        # crdlst = [(d, slcrds[i]) for i, d in enumerate(self.crds.dirs)]
-        #print(crdlst)
+        # no slice necessary, just pass the field through
+        if slices == [slice(None)] * len(slices):
+            return self
+
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
-        # print(slices, self.data.shape)
-        # print(self.data.shape, slices)
-        print(slices)
-        return wrap_field(self.TYPE, self.name + "_slice", crds,
-                          self.data[slices], center=self.center, time=0.0)
+        fld = wrap_field(self.TYPE, self.name + "_slice", crds,
+                         self.data[slices], center=self.center, time=0.0)
+        # if there are reduced dims, put them into the info dict
+        if len(reduced) > 0:
+            fld.info["reduced"] = reduced
+        return fld
+
 
     def __getitem__(self, item):
         return self.data[item]

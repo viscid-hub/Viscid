@@ -27,8 +27,7 @@ def plot(fld, selection=None, **kwargs):
         raise TypeError("I can only do scalar fields right now")
 
 def contour2d(fld, selection=None, **kwargs):
-    if selection:
-        fld = fld.slice(selection)
+    fld = fld.slice(selection, rm_len1_dims=True)
 
     if fld.dim != 2:
         raise ValueError("I will only contour a 2d field")
@@ -78,7 +77,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     if equalaxis:
         ax.axis('equal')
     if earth:
-        plot_earth(namex, namey)
+        plot_earth(fld)
     if show:
         mplshow()
     return plt, cbar
@@ -115,7 +114,7 @@ def contour_field(fld, ax=None, equalaxis=True, earth=None,
     if equalaxis:
         ax.axis('equal')
     if earth:
-        plot_earth(namex, namey)
+        plot_earth(fld)
     if show:
         mplshow()
     return plt, cbar
@@ -143,29 +142,43 @@ def mplshow():
     # can't think of anything at this point...
     pl.show()
 
-def plot_earth(pylab, plane, axis=None, rot=0, daycol='w', nightcol='k'):
-    raise NotImplementedError("plotting the earth is broken")
+def plot_earth(fld, axis=None, scale=1.0, rot=0,
+               daycol='w', nightcol='k', crds="mhd"):
+    """ crds = "mhd" (Jimmy crds) or "gsm" (GSM crds)... gsm is the same
+    as rot=180. earth_plane is a string in the format 'y=0.2', this says
+    what the 3rd dimension is and sets the radius that the earth should
+    be """
     import matplotlib.patches as mpatches
-    import matplotlib.lines as mlines
-    p = plane.split('_')
-    p[1] = float(p[1])
-    if np.abs(p[1]) >= 1.0:
-        return None
-    radius = np.sqrt(1.0 - p[1]**2)
-    if not axis:
-        axis = pylab.gca()
 
-    if p[0] == 'y' or p[0] == 'z':
-        axis.add_patch(mpatches.Wedge((0,0), radius, 90+rot, 270+rot,
+    # take only the 1st reduced dim... this should just work
+    try:
+        plane, value = fld.info["reduced"][0]
+    except KeyError:
+        vutil.warn("No reduced dims in the field, i don't know what 2d \n "
+                   "plane, we're in and can't figure out the size of earth.")
+        return None
+
+    if value >= scale * 1.0:
+        return None
+    radius = scale * np.sqrt(1.0 - value**2)
+
+    if not axis:
+        axis = pl.gca()
+
+    if crds == "gsm":
+        rot = 180
+
+    if plane == 'y' or plane == 'z':
+        axis.add_patch(mpatches.Wedge((0, 0), radius, 90 + rot, 270 + rot,
                                       ec=nightcol, fc=daycol))
-        axis.add_patch(mpatches.Wedge((0,0), radius, 270+rot, 450+rot,
+        axis.add_patch(mpatches.Wedge((0, 0), radius, 270 + rot, 450 + rot,
                                       ec=nightcol, fc=nightcol))
-    elif p[0] == 'x':
-        if p[1] < 0:
-            axis.add_patch(mpatches.Circle((0,0), radius, ec=nightcol,
+    elif plane == 'x':
+        if value < 0:
+            axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
                                            fc=daycol))
         else:
-            axis.add_patch(mpatches.Circle((0,0), radius, ec=nightcol,
+            axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
                                            fc=nightcol))
     return None
 
