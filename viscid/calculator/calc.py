@@ -35,7 +35,7 @@ _installed_backends = {"cython": has_cython,
 default_backends = ["cython", "numexpr", "numpy"]
 
 # TODO: this is kind of a silly mechanism
-def _check_backend(preferred, implemented):
+def _check_backend(preferred, implemented, only=False):
     """ preferred should be a list of backends in order of preference, "default"
     to use the default list, or None to just go down the implemented list and
     use the first one that works. The first preferred backend that is in
@@ -61,6 +61,9 @@ def _check_backend(preferred, implemented):
             except KeyError:
                 vutil.warn("Unknown backend: {0}".format(backend))
 
+    if only:
+        raise RuntimeError("No preferred backend usable: {0}".format(preferred))
+
     for backend in implemented:
         try:
             if _installed_backends[backend]:
@@ -74,9 +77,10 @@ def _check_backend(preferred, implemented):
     raise RuntimeError("No implemented backends are installed "
                        "for this function.")
 
-def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None):
+def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None,
+               only=False):
     implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends)
+    use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "numexpr":
         diff = necalc.difference(fld_a, fld_b, sla, slb)
@@ -89,9 +93,9 @@ def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None):
                             diff, center=fld_a.center, time=fld_a.time)
 
 def relative_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
-                  backends=None):
+                  backends=None, only=False):
     implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends)
+    use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "numexpr":
         diff = necalc.relative_diff(fld_a, fld_b, sla, slb)
@@ -103,9 +107,9 @@ def relative_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
     return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
                             diff, center=fld_a.center, time=fld_a.time)
 
-def abs_val(fld, backends=None):
+def abs_val(fld, backends=None, only=False):
     implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends)
+    use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "numexpr":
         absarr = necalc.abs_val(fld)
@@ -115,9 +119,9 @@ def abs_val(fld, backends=None):
     return field.wrap_field(fld.TYPE, "abs " + fld.name, fld.crds,
                             absarr, center=fld.center, time=fld.time)
 
-def magnitude(fld, backends=None):
+def magnitude(fld, backends=None, only=False):
     implemented_backends = ["numexpr", "cython", "numpy", "native"]
-    use_backend = _check_backend(backends, implemented_backends)
+    use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "cython":
         return cycalc.magnitude(fld)
@@ -140,9 +144,9 @@ def magnitude(fld, backends=None):
     return field.wrap_field("Scalar", fld.name + " magnitude", fld.crds,
                             mag, center=fld.center, time=fld.time)
 
-def div(fld, backends=None):
+def div(fld, backends=None, only=False):
     implemented_backends = ["numexpr", "cython"]
-    use_backend = _check_backend(backends, implemented_backends)
+    use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "cython":
         return cycalc.div(fld)
