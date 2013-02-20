@@ -26,6 +26,26 @@ def plot(fld, selection=None, **kwargs):
     else:
         raise TypeError("I can only do scalar fields right now")
 
+# def parse_opts(plot_opts):
+#     """ opts string looks like 'log,x_-20_10', output is
+#     [['log'], ['x', '-20', '10']] """
+#     if isinstance(plot_opts, str):
+#         plot_opts = plot_opts.split(",")
+#     elif plot_opts is None:
+#         plot_opts = []
+
+#     for i, opt in plot_opts:
+#         if isinstance(opt, str):
+#             plot_opts[i] = opt.split("_")
+
+#     return plot_opts
+
+# def do_plot_opts(axis, plot_opts):
+#     plot_opts = parse_opts(plot_opts)
+#     for opt in plot_opts:
+#         if opt == "log":
+#             pass
+
 def contour2d(fld, selection=None, **kwargs):
     fld = fld.slice(selection, rm_len1_dims=True)
 
@@ -158,9 +178,9 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
                    "plane, we're in and can't figure out the size of earth.")
         return None
 
-    if value >= scale * 1.0:
+    if value**2 >= scale**2:
         return None
-    radius = scale * np.sqrt(1.0 - value**2)
+    radius = np.sqrt(scale**2 - value**2)
 
     if not axis:
         axis = pl.gca()
