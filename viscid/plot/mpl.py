@@ -56,7 +56,8 @@ def contour2d(fld, selection=None, **kwargs):
 
 
 def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
-                 show=False, mask_nan=False, mod=None, **kwargs):
+                 show=False, mask_nan=False, mod=None,
+                 plot_opts=None, verb=True, **kwargs):
     #print(slcrds[0][0], slcrds[0][1].shape)
     #print(slcrds[1][0], slcrds[1][1].shape)
     #print(dat.shape)
@@ -75,8 +76,11 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     # trim the edges of the data... maybe i should just be faking
     # the coord array somehow to show the edges...
     if fld.center == "Node":
-        X, Y = fld.crds[(namex.upper()+'cc', namey.upper()+'cc')]
-        vutil.warn("pcolormesh on node centered field... trimming the edges")
+        X, Y = fld.crds[(namex.upper() + 'cc', namey.upper() + 'cc')]
+        if verb:
+            vutil.warn("pcolormesh on node centered field... "
+                       "trimming the edges")
+        # FIXME: this is a little fragile with 2d stuff
         dat = fld.data[1:-1, 1:-1]
     elif fld.center == "Cell":
         X, Y = fld.crds[(namex.upper(), namey.upper())]
@@ -96,6 +100,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
 
     if equalaxis:
         ax.axis('equal')
+    # do_plot_opts(ax, plot_opts)
     if earth:
         plot_earth(fld)
     if show:
@@ -103,7 +108,8 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     return plt, cbar
 
 def contour_field(fld, ax=None, equalaxis=True, earth=None,
-                 show=False, mask_nan=False, colorbar=True, mod=None, **kwargs):
+                  show=False, mask_nan=False, colorbar=True, mod=None,
+                  plot_opts=None, **kwargs):
     #print(slcrds[0][0], slcrds[0][1].shape)
     #print(slcrds[1][0], slcrds[1][1].shape)
     #print(dat.shape)

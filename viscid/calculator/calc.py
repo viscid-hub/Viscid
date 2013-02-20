@@ -107,6 +107,21 @@ def relative_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
     return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
                             diff, center=fld_a.center, time=fld_a.time)
 
+def abs_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
+             backends=None, only=False):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        diff = necalc.abs_diff(fld_a, fld_b, sla, slb)
+    elif use_backend == "numpy":
+        a = fld_a.data[sla]
+        b = fld_b.data[slb]
+        diff = np.abs(a - b)
+
+    return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
+                            diff, center=fld_a.center, time=fld_a.time)
+
 def abs_val(fld, backends=None, only=False):
     implemented_backends = ["numexpr", "numpy"]
     use_backend = _check_backend(backends, implemented_backends, only=only)

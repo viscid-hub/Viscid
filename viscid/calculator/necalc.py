@@ -22,6 +22,12 @@ def relative_diff(fld_a, fld_b, sla=slice(None), slb=slice(None)):
     diff = ne.evaluate("(a - b) / a")
     return diff
 
+def abs_diff(fld_a, fld_b, sla=slice(None), slb=slice(None)):
+    a = fld_a.data[sla]  #pylint: disable=W0612
+    b = fld_b.data[slb]  #pylint: disable=W0612
+    diff = ne.evaluate("abs(a - b)")
+    return diff
+
 def abs_val(fld):
     a = fld.data  #pylint: disable=W0612
     absarr = ne.evaluate("abs(a)")
