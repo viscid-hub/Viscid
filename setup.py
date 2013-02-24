@@ -110,7 +110,7 @@ for d in cy_defs:
                            extra_link_args=cy_ldflags)]
 
 setup(name='viscid',
-      version='0.31',
+      version='0.32',
       description='Visualization in python',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',
