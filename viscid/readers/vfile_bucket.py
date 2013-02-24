@@ -21,35 +21,45 @@ class VFileBucket(Bucket):
     #     absfname = os.path.abspath(fname)
     #     self[(absfname, fname)] = f
 
-    def load(self, fname, **kwargs):
+    def load(self, fnames, **kwargs):
         """ initialize obj before it's put into the list, whatever is returned
             is what gets stored, returning None means object init failed, do
             not add to the _objs list
 
             kwargs is passed to file constructor """
-        absfname = os.path.abspath(fname)
+        ret_as_list = True
+        if not isinstance(fnames, (list, tuple)):
+            fnames = [fnames]
+            ret_as_list = False
+        files = []
 
-        # if the file was already loaded, return it
-        if absfname in self:
-            self._handles[absfname]
-            f = self[absfname]
+        for fname in fnames:
+            absfname = os.path.abspath(fname)
+
+            # if the file was already loaded, return it
+            if absfname in self:
+                # self._handles[absfname]  # "this statement has no effect"
+                f = self[absfname]
+            else:
+                # load a new file
+                ftype = VFile.detect_type(absfname)
+                if not ftype:
+                    raise RuntimeError("Can't determine type "
+                                       "for {0}".format(absfname))
+                try:
+                    # vfilebucket kwarg is ignored by file types that don't care
+                    f = ftype(absfname, vfilebucket=self, **kwargs)
+                except IOError as e:
+                    s = "IOError on file: {0}\n".format(absfname)
+                    s += "File Type: {0}\n".format(ftype)
+                    s += e.message
+                    raise IOError(s)
+
+            if f is not None:
+                self.set_item([absfname, fname], f)
+            files.append(f)
+
+        if ret_as_list:
+            return files
         else:
-            # load a new file
-            ftype = VFile.detect_type(absfname)
-            if not ftype:
-                raise RuntimeError("Can't determine type "
-                                   "for {0}".format(absfname))
-                return None
-            try:
-                # vfilebucket kwarg is ignored by file types that don't care
-                f = ftype(absfname, vfilebucket=self, **kwargs)
-            except IOError as e:
-                s = "IOError on file: {0}\n".format(absfname)
-                s += "File Type: {0}\n".format(ftype)
-                s += e.message
-                raise IOError(s)
-                f = None
-
-        if f is not None:
-            self.set_item([absfname, fname], f)
-        return f
+            return files[0]

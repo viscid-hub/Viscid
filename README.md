@@ -29,3 +29,8 @@ Standard distutils
 For a better dev experience, I recommend adding viscid/viscid to PYTHONPATH,
 viscid/scripts to PATH, and building in-place with
 ```./setup.py build_ext -i```
+
+## Developer Notes ##
+
+I'm trying out the git flow model for this project, so the latest goodies
+will be in the develop branch.

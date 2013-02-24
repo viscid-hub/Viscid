@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# FIXME: the timetype=list does not work for the amr sample, goto line 177
 
 from __future__ import print_function
 import os
@@ -76,7 +77,7 @@ class FileXDMF(vfile.VFile):
             "BaseOffset": 0
              },
         "Time": {
-            "TimeType": "Single",
+            "Type": "Single",
             "Value": None
             }
         }
@@ -151,7 +152,7 @@ class FileXDMF(vfile.VFile):
             t = el.find("./Time")
             if t is not None:
                 pt, tattrs = self._parse_time(t)
-                if tattrs["TimeType"] == "Single":
+                if tattrs["Type"] == "Single":
                     time = pt
         # cascade a parent grid's time
         if time is None and parent_grid and parent_grid.time is not None:
@@ -164,7 +165,7 @@ class FileXDMF(vfile.VFile):
             if ct == "Temporal":
                 grd = dataset.DatasetTemporal(attrs["Name"])
                 ttag = el.find("./Time")
-                if ttag:
+                if ttag is not None:
                     times, tattrs = self._parse_time(ttag)
             elif ct == "Spatial":
                 grd = dataset.Dataset(attrs["Name"])
@@ -172,7 +173,8 @@ class FileXDMF(vfile.VFile):
                 warn("Unknown collection type {0}, ignoring grid".format(ct))
 
             for i, subgrid in enumerate(el.findall("./Grid")):
-                t = times[i] if (times and i < len(times)) else time
+
+                t = times[i] if (times is not None and i < len(times)) else time
                 self._parse_grid(subgrid, parent_grid=grd, time=t)
             grd.activate(0)
 
@@ -339,7 +341,7 @@ class FileXDMF(vfile.VFile):
     def _parse_time(self, timetag):
         """ returns the time(s) as float, or numpy array, time attributes"""
         attrs = self._fill_attrs(timetag)
-        timetype = attrs["TimeType"]
+        timetype = attrs["Type"]
 
         if timetype == 'Single':
             return float(timetag.get('Value')), attrs
