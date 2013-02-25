@@ -71,6 +71,13 @@ class Grid(object):
     def __str__(self):
         return "<Grid name={0}>".format(self.name)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.unload()
+        return None
+
 ##
 ## EOF
 ##

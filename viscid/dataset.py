@@ -104,6 +104,13 @@ class Dataset(object):
     def __contains__(self, item):
         return item in self.children
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.unload()
+        return None
+
 
 class DatasetTemporal(Dataset):
     _last_ind = 0
@@ -233,7 +240,6 @@ class DatasetTemporal(Dataset):
             return True
         except ValueError:
             return False
-
 
     # def __getitem__(self, item):
     #     """ Get a dataitem or list of dataitems based on time, grid, and
