@@ -1,4 +1,7 @@
 #cython: boundscheck=True, wraparound=True
+# Note: a _c_FUNCTION can only be called from another cdef-ed function, or
+# a def-ed _py_FUNCTION function because of the use of the fused real_t
+# to template both float32 and float64 versions
 from __future__ import print_function
 
 import numpy as np
