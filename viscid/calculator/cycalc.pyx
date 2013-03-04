@@ -58,9 +58,9 @@ cdef _c_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
 
 def div(fld):
     if not fld.layout == field.LAYOUT_INTERLACED:
-        raise ValueError("I am only written for interlaced data.")
+        raise ValueError("Div is only written for interlaced data.")
     if fld.dim != 3:
-        raise ValueError("I am only written for 3D divergence.")
+        raise ValueError("Div is only written in 3D.")
 
     nptype = fld.data.dtype.name
     vect = fld.data
@@ -112,6 +112,198 @@ cdef _c_div3d(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
                                    (vect[k + 2, j, i, 2] - vect[k, j, i, 2]) / \
                                                      (crdz[k + 2] - crdz[k])
     return None
+
+def _py_closest_ind(real_t[:] crd, real_t point):
+    """ returns the integer such that crd[i] < point < crd[i+1] """
+    return _c_closest_ind(crd, point)
+
+cdef int _c_closest_ind(real_t[:] crd, real_t point) except -1:
+    cdef int i
+    cdef unsigned int n = crd.shape[0]
+
+    # search linearly... maybe branch prediction makes this better
+    # than bisection for smallish arrays...
+    # TODO: make this work for arrays that go backward
+    for i from 1 <= i < n:
+        if crd[i] >= point:
+            return i - 1
+    if crd.shape[0] >= 2:
+        return crd.shape[0] - 2  # if we've gone too far, pick the last index
+    else:  # crd.shape[0] <= 1
+        return 0
+
+
+def _py_trilin_interp(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+                      real_t[:] crdx, real_t[:] x):
+    """ return the scalar value of 3d scalar array s trilinearly interpolated
+    to the point x (in z, y, x order) """
+    return _c_trilin_interp(s, crdz, crdy, crdx, x)
+
+cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
+                             real_t[:] crdy, real_t[:] crdx, real_t[:] x):
+    cdef int i, ind
+    cdef int[3] ix
+    cdef int[3] p  # increment, used for 2d fields
+    cdef real_t[3] xd
+    cdef real_t[3] xdm  # will be 1 - xd
+    cdef real_t v00, v10, v01, v11
+    cdef real_t c00, c10, c01, c11, c0, c1, c
+
+    zp = 1 if crdz.shape[0] > 1 else 0
+    yp = 1 if crdy.shape[0] > 1 else 0
+    xp = 1 if crdx.shape[0] > 1 else 0
+
+    for i, crd in enumerate([crdz, crdy, crdx]):
+        ind = _c_closest_ind[real_t](crd, x[i])
+        ix[i] = ind
+        # this bit to support 2d fields could probably be handled
+        # more efficiently
+        if crd.shape[0] > 1:
+            p[i] = 1
+            xd[i] = (x[i] - crd[i][ind]) / (crd[i][ind + 1] - crd[i][ind])
+        else:
+            p[i] = 0
+            xd[i] = 1.0
+        xdm[i] = 1.0 - xd[i]
+
+    # this algorithm is shamelessly taken from the trilinear interpolation
+    # wikipedia article
+    c00 = s[ix[0]       , ix[1]       , ix[2]       ] * xdm[0] + \
+          s[ix[0] + p[0], ix[1]       , ix[2]       ] * xd[0]
+    c10 = s[ix[0]       , ix[1] + p[1], ix[2]       ] * xdm[0] + \
+          s[ix[0] + p[0], ix[1] + p[1], ix[2]       ] * xd[0]
+    c01 = s[ix[0]       , ix[1]       , ix[2] + p[2]] * xdm[0] + \
+          s[ix[0] + p[0], ix[1]       , ix[2] + p[2]] * xd[0]
+    c11 = s[ix[0]       , ix[1] + p[1], ix[2] + p[2]] * xdm[0] + \
+          s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]] * xd[0]
+
+    c0 = c00 * xdm[1] + c10 * xd[1]
+    c1 = c01 * xdm[1] + c11 * xd[1]
+
+    c = c0 * xdm[2] + c1 * xd[2]
+    return c
+
+cdef real_t _c_euler1(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+                         real_t[:] crdx, real_t[:] x, real_t ds, int i):
+    v = _c_trilin_interp(s, crdz, crdy, crdx, x)
+    return x[i] + (ds * v)
+
+cdef real_t _c_rk4(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+                      real_t[:] crdx, real_t[:] x):
+    _c_trilin_interp[real_t](s, crdz, crdy, crdx, x)
+    return x[0]
+
+cdef real_t _c_rk45(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+                       real_t[:] crdx, real_t[:] x):
+    return x[0]
+
+def streamlines(fld, x0, *args, **kwargs):
+    if not fld.layout == field.LAYOUT_INTERLACED:
+        raise ValueError("Streamlines only written for interlaced data.")
+    if fld.dim != 3:
+        raise ValueError("Streamlines are only written in 3D.")
+
+    dat = fld.data
+    crdz, crdy, crdx = fld.crds.get_cc()
+    x0 = np.array(x0).reshape((-1, 3))
+    lines = []
+    for start in x0:
+        line = _py_streamline(fld.data, crdz, crdy, crdx,
+                              start, *args, **kwargs)
+        lines.append(line)
+    return lines
+
+def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
+                   real_t[:] crdx, real_t[:] x0, ds0 = None, dir="both",
+                   real_t inner_bound=0.0, real_t[:] cbound0=None,
+                   real_t[:] cbound1 = None, int itmax = 10000):
+    """ Start calculating a streamline at x0
+    dir:         'forward', 'backward', or 'both'
+    inner_bound: stop streamline if within inner_bound of the origin
+                 ignored if 0
+    cbound0:     corner of box beyond which to stop streamline (smallest values)
+    cbound1:     corner of box beyond which to stop streamline (smallest values)
+    ds0:         initial spatial step for the streamline """
+    cdef int i, j
+    cdef int done = 0
+    cdef real_t[3] s
+    cdef real_t px, py, pz
+    cdef real_t d
+    cdef real_t rsq, distsq
+    line = []
+
+    s[0] = x0[0]
+    s[1] = x0[1]
+    s[2] = x0[2]
+
+    if cbound0 is None:
+        cbound0 = np.array([crdz[0], crdy[0], crdx[0]])
+
+    if cbound1 is None:
+        cbound1 = np.array([crdz[-1], crdy[-1], crdx[-1]])
+
+    if ds0 is None:
+        raise NotImplementedError("TODO: calc a reasonable initial step size")
+
+    i = 0
+
+    lseg = [None] * 2
+    for k, d in enumerate([-1.0, 1.0]):
+        lseg[k] = []
+        if d == -1.0 and dir == "forward":
+            continue
+        elif d == 1.0 and dir == "backward":
+            continue
+
+        ds = d * ds0
+
+        while i <= itmax:
+            # components run x, y, z, but coords run z, y, x
+            pz = _c_euler1[real_t](v_arr[...,2], crdz, crdy, crdx, s, ds, 0)
+            py = _c_euler1[real_t](v_arr[...,1], crdz, crdy, crdx, s, ds, 1)
+            px = _c_euler1[real_t](v_arr[...,0], crdz, crdy, crdx, s, ds, 2)
+            s[0] = pz
+            s[1] = py
+            s[2] = px
+
+            lseg[k].append(np.array([pz, py, px]))
+
+            i += 1
+
+            # end conditions
+            rsq = px**2 + py**2 + pz**2
+
+            # hit the inner boundary
+            if rsq <= inner_bound**2:
+                done = 1
+                break
+
+            for j from 0 <= j < 3:
+                # hit the outer boundary
+                if s[j] <= cbound0[j] or s[j] >= cbound1[j]:
+                    done = 1
+                    break
+            if done:
+                break
+
+            # if we are within 0.5 * ds0 of the initial position
+            distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
+            if distsq < (0.5 * ds0)**2:
+                done = 1
+                break
+
+    # reverse the 'backward' line segment
+    line = lseg[0][::-1] + lseg[1]
+    return line
+
+
+    # _c_streamline(v_arr, crdz, crdy, crdx, x, dir, inner_bound, cbound0, cbound1,
+    #               ds0)
+# cdef _c_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
+#                    real_t[:] crdx, real_t[:] x, dir, real_t inner_bound,
+#                    real_t[:] cbound0, real_t[:] cbound1, ds0):
+#     real_t[3] v
+
 
 # def make_real(np.ndarray arr):
 #     return
