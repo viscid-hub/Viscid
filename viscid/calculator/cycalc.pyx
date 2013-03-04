@@ -241,6 +241,8 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         real_t c_obound1_arr[3]
         real_t[:] c_obound0 = c_obound0_arr
         real_t[:] c_obound1 = c_obound1_arr
+        real_t[:] py_obound0
+        real_t[:] py_obound1
         int c_dir = dir
         int c_maxit = maxit
 
@@ -260,14 +262,16 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         c_obound0[1] = crdy[0]
         c_obound0[2] = crdx[0]
     else:
-        c_obound0[:] = obound0
+        py_obound0 = obound0
+        c_obound0[...] = py_obound0
 
     if obound0 is None:
         c_obound1[0] = crdz[-1]
         c_obound1[1] = crdy[-1]
         c_obound1[2] = crdx[-1]
     else:
-        c_obound1[:] = obound1
+        py_obound1 = obound1
+        c_obound1[...] = py_obound1
 
     if c_ds0 <= 0.0:
         # FIXME: calculate something reasonable here
