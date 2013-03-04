@@ -205,7 +205,7 @@ cdef int _c_euler1(real_t[:,:,:,:] s, real_t[:] crdz, real_t[:] crdy,
 #                        real_t[:] crdx, real_t[:] x):
 #     return x[0]
 
-def streamlines(fld, x0, ds0):
+def streamlines(fld, x0, *args, **kwargs):
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.dim != 3:
@@ -218,61 +218,69 @@ def streamlines(fld, x0, ds0):
     lines = []
     for start in x0:
         line = _py_streamline(dat, crdz, crdy, crdx,
-                              start)
+                              start, *args, **kwargs)
         lines.append(line)
     return lines
 
 def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
-                   real_t[:] crdx, real_t[:] x0):
+                   real_t[:] crdx, real_t[:] x0, ds0=-1.0, ibound=0.0,
+                   obound0=None, obound1=None, dir=DIR_BOTH, maxit=10000):
     """ Start calculating a streamline at x0
     dir:         DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
-    inner_bound: stop streamline if within inner_bound of the origin
+    ibound:      stop streamline if within inner_bound of the origin
                  ignored if 0
-    cbound0:     corner of box beyond which to stop streamline (smallest values)
-    cbound1:     corner of box beyond which to stop streamline (smallest values)
+    obound0:     corner of box beyond which to stop streamline (smallest values)
+    obound1:     corner of box beyond which to stop streamline (smallest values)
     ds0:         initial spatial step for the streamline """
     cdef:
-        real_t ds0 = 0.005
-        real_t inner_bound = 0.01
+        # cdefed versions of arguments
+        real_t c_ds0 = ds0
+        real_t c_ibound = ibound
         # real_t[3] temp
-        real_t cbound0_arr[3]
-        real_t cbound1_arr[3]
-        real_t[:] cbound0 = cbound0_arr
-        real_t[:] cbound1 = cbound1_arr
-        int dir = DIR_BOTH
-        int itmax = 100000
-    cdef int i, j, it
-    cdef int done = 0
-    cdef real_t s_arr[3]
-    cdef real_t[:] s = s_arr
-    cdef real_t px, py, pz
-    cdef real_t d
-    cdef real_t rsq, distsq
+        real_t c_obound0_arr[3]
+        real_t c_obound1_arr[3]
+        real_t[:] c_obound0 = c_obound0_arr
+        real_t[:] c_obound1 = c_obound1_arr
+        int c_dir = dir
+        int c_maxit = maxit
+
+        # just for c
+        int i, j, it
+        int done = 0
+        real_t s_arr[3]
+        real_t[:] s = s_arr
+        real_t px, py, pz
+        real_t d
+        real_t rsq, distsq
+
     line = []
 
-    # cbound0 = [crdz[0], crdy[0], crdx[0]]
-    cbound0_arr[0] = crdz[0]
-    cbound0_arr[1] = crdy[0]
-    cbound0_arr[2] = crdx[0]
+    if obound0 is None:
+        c_obound0[0] = crdz[0]
+        c_obound0[1] = crdy[0]
+        c_obound0[2] = crdx[0]
+    else:
+        c_obound0[:] = obound0
 
-    # cbound1 = [crdz[-1], crdy[-1], crdx[-1]]
-    cbound1[0] = crdz[-1]
-    cbound1[1] = crdy[-1]
-    cbound1[2] = crdx[-1]
+    if obound0 is None:
+        c_obound1[0] = crdz[-1]
+        c_obound1[1] = crdy[-1]
+        c_obound1[2] = crdx[-1]
+    else:
+        c_obound1[:] = obound1
 
-    if ds0 <= 0.0:
-        raise NotImplementedError("TODO: calc a reasonable initial step size")
+    if c_ds0 <= 0.0:
+        # FIXME: calculate something reasonable here
+        c_ds0 = 0.01
 
     lseg = [[[x0[0], x0[1], x0[2]]], []]
     for i, d in enumerate([-1.0, 1.0]):
-        # print("here: ", d, dir, dir & DIR_BACKWARD, dir & DIR_FORWARD)
-        if d < 0 and not (dir & DIR_BACKWARD):
+        if d < 0 and not (c_dir & DIR_BACKWARD):
             continue
-        elif d > 0 and not (dir & DIR_FORWARD):
+        elif d > 0 and not (c_dir & DIR_FORWARD):
             continue
-        # print("and again")
 
-        ds = d * ds0
+        ds = d * c_ds0
 
         s[0] = x0[0]
         s[1] = x0[1]
@@ -280,7 +288,7 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
 
         it = 0
         done = 0
-        while it <= itmax:
+        while it <= c_maxit:
             # print("point (x, y, z): ", s[2], s[1], s[0])
             # components run x, y, z, but coords run z, y, x
             _c_euler1[real_t](v_arr, crdz, crdy, crdx, ds, s)
@@ -291,26 +299,30 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
             rsq = s[0]**2 + s[1]**2 + s[2]**2
 
             # hit the inner boundary
-            if rsq <= inner_bound**2:
-                print("inner boundary")
+            if rsq <= c_ibound**2:
+                # print("inner boundary")
                 done = 1
                 break
 
             for j from 0 <= j < 3:
                 # hit the outer boundary
-                if s[j] <= cbound0[j] or s[j] >= cbound1[j]:
-                    print("outer boundary")
+                if s[j] <= c_obound0[j] or s[j] >= c_obound1[j]:
+                    # print("outer boundary")
                     done = 1
                     break
-            if done:
+
+            # if we are within 0.99 * ds0 of the initial position
+            distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
+            if distsq < (0.99 * ds0)**2:
+                # print("cyclic field line")
+                done = 1
                 break
 
-            # if we are within 0.9 * ds0 of the initial position
-            # distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
-            # if distsq < (0.9 * ds0)**2:
-            #     print("almost at start")
-            #     done = 1
-            #     break
+            if done:
+                break
+        if not done:
+            pass
+            # print("maxit")
 
     # reverse the 'backward' line segment
     # print("-- first: ", lseg[0][:4], " last: ", lseg[0][-4:])

@@ -16,24 +16,31 @@ from viscid.plot import mpl
 
 verb = 0
 
-def get_dipole(m=[0.0, 0.0, 1.0]):
-    dtype = 'float32'
-    x = np.array(np.linspace(0.01, 10, 128), dtype=dtype)
-    y = np.array(np.linspace(-10, 10, 256), dtype=dtype)
-    z = np.array(np.linspace(-10, 10, 256), dtype=dtype)
+def get_dipole(m=None, twod=False):
+    dtype = 'float64'
+    x = np.array(np.linspace(-5, 5, 256), dtype=dtype)
+    y = np.array(np.linspace(-5, 5, 256), dtype=dtype)
+    z = np.array(np.linspace(-5, 5, 256), dtype=dtype)
+    if twod:
+        y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
 
     one = np.array([1.0], dtype=dtype) #pylint: disable=W0612
     three = np.array([3.0], dtype=dtype) #pylint: disable=W0612
+    if not m:
+        m = [0.0, 0.0, -1.0]
     m = np.array(m, dtype=dtype)
-    mx, my, mz = m
+    mx, my, mz = m #pylint: disable=W0612
 
     Zcc, Ycc, Xcc = crds.get_cc(shaped=True) #pylint: disable=W0612
 
-    rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2")
-    Bx = ne.evaluate("(three * Xcc * (mx * Xcc + my * Ycc + mz * Zcc) - (mx / rsq)) / rsq**1.5")
-    By = ne.evaluate("(three * Ycc * (mx * Xcc + my * Ycc + mz * Zcc) - (my / rsq)) / rsq**1.5")
-    Bz = ne.evaluate("(three * Zcc * (mx * Xcc + my * Ycc + mz * Zcc) - (mz / rsq)) / rsq**1.5")
+    rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
+    mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
+    Bx = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
+    By = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
+    Bz = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+    if twod:
+        By = np.zeros_like(Bx)
     # hmm = ne.evaluate("one / sqrt(rsq)")
 
     fld = field.VectorField("B_cc", crds, [Bx, By, Bz],
@@ -55,37 +62,29 @@ def main():
     args = parser.parse_args()
     verb = args.v - args.q
 
-    B = get_dipole()
-    bx, by, bz = B.component_fields()
+    # B = get_dipole(twod=True)
+    B = get_dipole(m=[0.2, 0.3, -0.9])
+    # bx, by, bz = B.component_fields()
 
-    # nrows = 3
-    # ncols = 2
-
-    # pl.subplot2grid((nrows, ncols), (0, 0))
-    # mpl.plot(bx, "x=0", show=False)
-    # pl.subplot2grid((nrows, ncols), (1, 0))
-    # mpl.plot(by, "x=0", show=False)
-    # pl.subplot2grid((nrows, ncols), (2, 0))
-    # mpl.plot(bz, "x=0", show=False)
-
-    # pl.subplot2grid((nrows, ncols), (0, 1))
-    # mpl.plot(bx, "z=0", show=False)
-    # pl.subplot2grid((nrows, ncols), (1, 1))
-    # mpl.plot(by, "z=0", show=False)
-    # pl.subplot2grid((nrows, ncols), (2, 1))
-    # mpl.plot(bz, "z=0", show=False)
-    # pl.show()
-
-    lines = cycalc.streamlines(B, [[1.0, -5.0, 5.0],
-                                   [1.0, 0.0, 5.0],
-                                   [1.0, 5.0, 5.0],
-                                   [0.0, -5.0, 5.0],
-                                   [0.0, 0.0, 5.0],
-                                   [0.0, 5.0, 5.0],
-                                   [-1.0, -5.0, 5.0],
-                                   [-1.0, 0.0, 5.0],
-                                   [-1.0, 5.0, 5.0],
-                                  ], 0.05)
+    lines = cycalc.streamlines(B, [[3.0, -3.0, 3.0],
+                                   [3.0, 0.0, 3.0],
+                                   [3.0, 3.0, 3.0],
+                                   [0.0, -3.0, 3.0],
+                                   [0.0, 0.0, 3.0],
+                                   [0.0, 3.0, 3.0],
+                                   [-3.0, -3.0, 3.0],
+                                   [-3.0, 0.0, 3.0],
+                                   [-3.0, 3.0, 3.0],
+                                   [3.0, -3.0, -3.0],
+                                   [3.0, 0.0, -3.0],
+                                   [3.0, 3.0, -3.0],
+                                   [0.0, -3.0, -3.0],
+                                   [0.0, 0.0, -3.0],
+                                   [0.0, 3.0, -3.0],
+                                   [-3.0, -3.0, -3.0],
+                                   [-3.0, 0.0, -3.0],
+                                   [-3.0, 3.0, -3.0],
+                                  ], ds0=0.01, ibound=0.05, maxit=10000)
 
     fig = pl.figure()
     ax = fig.gca(projection='3d')
