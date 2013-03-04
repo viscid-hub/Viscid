@@ -17,6 +17,11 @@ from cycalc_util cimport *
 
 import time
 
+cdef:
+    int DIR_FORWARD = 1
+    int DIR_BACKWARD = 2
+    int DIR_BOTH = 3  # = DIR_FORWARD | DIR_BACKWARD
+
 def scalar3d_shape(fld):
     return list(fld.shape) + [1] * (3 - len(fld.shape))
 
@@ -146,7 +151,6 @@ cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
     cdef int[3] p  # increment, used for 2d fields
     cdef real_t[3] xd
     cdef real_t[3] xdm  # will be 1 - xd
-    cdef real_t v00, v10, v01, v11
     cdef real_t c00, c10, c01, c11, c0, c1, c
 
     zp = 1 if crdz.shape[0] > 1 else 0
@@ -160,7 +164,7 @@ cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
         # more efficiently
         if crd.shape[0] > 1:
             p[i] = 1
-            xd[i] = (x[i] - crd[i][ind]) / (crd[i][ind + 1] - crd[i][ind])
+            xd[i] = (x[i] - crd[ind]) / (crd[ind + 1] - crd[ind])
         else:
             p[i] = 0
             xd[i] = 1.0
@@ -176,124 +180,142 @@ cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
           s[ix[0] + p[0], ix[1]       , ix[2] + p[2]] * xd[0]
     c11 = s[ix[0]       , ix[1] + p[1], ix[2] + p[2]] * xdm[0] + \
           s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]] * xd[0]
-
     c0 = c00 * xdm[1] + c10 * xd[1]
     c1 = c01 * xdm[1] + c11 * xd[1]
-
     c = c0 * xdm[2] + c1 * xd[2]
     return c
 
-cdef real_t _c_euler1(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
-                         real_t[:] crdx, real_t[:] x, real_t ds, int i):
-    v = _c_trilin_interp(s, crdz, crdy, crdx, x)
-    return x[i] + (ds * v)
+cdef int _c_euler1(real_t[:,:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+                         real_t[:] crdx, real_t ds, real_t[:] x) except -1:
+    vx = _c_trilin_interp[real_t](s[...,0], crdz, crdy, crdx, x)
+    vy = _c_trilin_interp[real_t](s[...,1], crdz, crdy, crdx, x)
+    vz = _c_trilin_interp[real_t](s[...,2], crdz, crdy, crdx, x)
+    vmag = sqrt(vx**2 + vy**2 + vz**2)
+    x[0] += ds * vz / vmag
+    x[1] += ds * vy / vmag
+    x[2] += ds * vx / vmag
+    return 0
 
-cdef real_t _c_rk4(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
-                      real_t[:] crdx, real_t[:] x):
-    _c_trilin_interp[real_t](s, crdz, crdy, crdx, x)
-    return x[0]
+# cdef real_t _c_rk4(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+#                       real_t[:] crdx, real_t[:] x):
+#     _c_trilin_interp[real_t](s, crdz, crdy, crdx, x)
+#     return x[0]
 
-cdef real_t _c_rk45(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
-                       real_t[:] crdx, real_t[:] x):
-    return x[0]
+# cdef real_t _c_rk45(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+#                        real_t[:] crdx, real_t[:] x):
+#     return x[0]
 
-def streamlines(fld, x0, *args, **kwargs):
+def streamlines(fld, x0, ds0):
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.dim != 3:
         raise ValueError("Streamlines are only written in 3D.")
+    nptype = fld.data.dtype.name
 
     dat = fld.data
     crdz, crdy, crdx = fld.crds.get_cc()
-    x0 = np.array(x0).reshape((-1, 3))
+    x0 = np.array(x0, dtype=dat.dtype).reshape((-1, 3))
     lines = []
     for start in x0:
-        line = _py_streamline(fld.data, crdz, crdy, crdx,
-                              start, *args, **kwargs)
+        line = _py_streamline(dat, crdz, crdy, crdx,
+                              start)
         lines.append(line)
     return lines
 
 def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
-                   real_t[:] crdx, real_t[:] x0, ds0 = None, dir="both",
-                   real_t inner_bound=0.0, real_t[:] cbound0=None,
-                   real_t[:] cbound1 = None, int itmax = 10000):
+                   real_t[:] crdx, real_t[:] x0):
     """ Start calculating a streamline at x0
-    dir:         'forward', 'backward', or 'both'
+    dir:         DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
     inner_bound: stop streamline if within inner_bound of the origin
                  ignored if 0
     cbound0:     corner of box beyond which to stop streamline (smallest values)
     cbound1:     corner of box beyond which to stop streamline (smallest values)
     ds0:         initial spatial step for the streamline """
-    cdef int i, j
+    cdef:
+        real_t ds0 = 0.005
+        real_t inner_bound = 0.01
+        # real_t[3] temp
+        real_t cbound0_arr[3]
+        real_t cbound1_arr[3]
+        real_t[:] cbound0 = cbound0_arr
+        real_t[:] cbound1 = cbound1_arr
+        int dir = DIR_BOTH
+        int itmax = 100000
+    cdef int i, j, it
     cdef int done = 0
-    cdef real_t[3] s
+    cdef real_t s_arr[3]
+    cdef real_t[:] s = s_arr
     cdef real_t px, py, pz
     cdef real_t d
     cdef real_t rsq, distsq
     line = []
 
-    s[0] = x0[0]
-    s[1] = x0[1]
-    s[2] = x0[2]
+    # cbound0 = [crdz[0], crdy[0], crdx[0]]
+    cbound0_arr[0] = crdz[0]
+    cbound0_arr[1] = crdy[0]
+    cbound0_arr[2] = crdx[0]
 
-    if cbound0 is None:
-        cbound0 = np.array([crdz[0], crdy[0], crdx[0]])
+    # cbound1 = [crdz[-1], crdy[-1], crdx[-1]]
+    cbound1[0] = crdz[-1]
+    cbound1[1] = crdy[-1]
+    cbound1[2] = crdx[-1]
 
-    if cbound1 is None:
-        cbound1 = np.array([crdz[-1], crdy[-1], crdx[-1]])
-
-    if ds0 is None:
+    if ds0 <= 0.0:
         raise NotImplementedError("TODO: calc a reasonable initial step size")
 
-    i = 0
-
-    lseg = [None] * 2
-    for k, d in enumerate([-1.0, 1.0]):
-        lseg[k] = []
-        if d == -1.0 and dir == "forward":
+    lseg = [[[x0[0], x0[1], x0[2]]], []]
+    for i, d in enumerate([-1.0, 1.0]):
+        # print("here: ", d, dir, dir & DIR_BACKWARD, dir & DIR_FORWARD)
+        if d < 0 and not (dir & DIR_BACKWARD):
             continue
-        elif d == 1.0 and dir == "backward":
+        elif d > 0 and not (dir & DIR_FORWARD):
             continue
+        # print("and again")
 
         ds = d * ds0
 
-        while i <= itmax:
+        s[0] = x0[0]
+        s[1] = x0[1]
+        s[2] = x0[2]
+
+        it = 0
+        done = 0
+        while it <= itmax:
+            # print("point (x, y, z): ", s[2], s[1], s[0])
             # components run x, y, z, but coords run z, y, x
-            pz = _c_euler1[real_t](v_arr[...,2], crdz, crdy, crdx, s, ds, 0)
-            py = _c_euler1[real_t](v_arr[...,1], crdz, crdy, crdx, s, ds, 1)
-            px = _c_euler1[real_t](v_arr[...,0], crdz, crdy, crdx, s, ds, 2)
-            s[0] = pz
-            s[1] = py
-            s[2] = px
-
-            lseg[k].append(np.array([pz, py, px]))
-
-            i += 1
+            _c_euler1[real_t](v_arr, crdz, crdy, crdx, ds, s)
+            lseg[i].append([s[0], s[1], s[2]])
+            it += 1
 
             # end conditions
-            rsq = px**2 + py**2 + pz**2
+            rsq = s[0]**2 + s[1]**2 + s[2]**2
 
             # hit the inner boundary
             if rsq <= inner_bound**2:
+                print("inner boundary")
                 done = 1
                 break
 
             for j from 0 <= j < 3:
                 # hit the outer boundary
                 if s[j] <= cbound0[j] or s[j] >= cbound1[j]:
+                    print("outer boundary")
                     done = 1
                     break
             if done:
                 break
 
-            # if we are within 0.5 * ds0 of the initial position
-            distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
-            if distsq < (0.5 * ds0)**2:
-                done = 1
-                break
+            # if we are within 0.9 * ds0 of the initial position
+            # distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
+            # if distsq < (0.9 * ds0)**2:
+            #     print("almost at start")
+            #     done = 1
+            #     break
 
     # reverse the 'backward' line segment
-    line = lseg[0][::-1] + lseg[1]
+    # print("-- first: ", lseg[0][:4], " last: ", lseg[0][-4:])
+    # print("++ first: ", lseg[1][:4], " last: ", lseg[1][-4:])
+    line = (lseg[0][::-1] + lseg[1])
     return line
 
 
