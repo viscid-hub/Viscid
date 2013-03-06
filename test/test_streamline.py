@@ -6,7 +6,6 @@ import argparse
 import numpy as np
 import numexpr as ne
 import pylab as pl
-from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from viscid import field
 from viscid import coordinate
@@ -47,19 +46,6 @@ def get_dipole(m=None, twod=False):
     #                             center="Cell", forget_source=True)
     return fld  # , fld_rsq
 
-def plot_field_lines(lines, show=True):
-    ax = pl.gca(projection='3d')
-    for line in lines:
-        line = np.array(line)
-        z = line[:, 0]
-        y = line[:, 1]
-        x = line[:, 2]
-        ax.plot(x, y, z)
-    pl.xlabel("x")
-    pl.ylabel("y")
-    if show:
-        pl.show()
-
 def main():
     parser = argparse.ArgumentParser(description="Load some data files")
     parser.add_argument('--show', '-s', action='store_true',
@@ -87,7 +73,7 @@ def main():
                                 [0.0, 0.0, -3.0],
                                ], ds0=0.01, ibound=0.05, maxit=10000,
                                obound0=obound0, obound1=obound1)
-    plot_field_lines(lines, show=args.show)
+    mpl.plot_field_lines(lines, show=args.show)
 
     if verb:
         print("Testing field lines on 3d field...")
@@ -113,7 +99,7 @@ def main():
                                 [-3.0, 3.0, -3.0],
                                ],
                                ds0=0.01, ibound=0.05, maxit=10000)
-    plot_field_lines(lines, show=args.show)
+    mpl.plot_field_lines(lines, show=args.show)
 
 
 if __name__ == "__main__":
