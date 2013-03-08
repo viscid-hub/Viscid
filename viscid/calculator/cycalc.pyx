@@ -192,6 +192,8 @@ cdef int _c_euler1(real_t[:,:,:,:] s, real_t[:] crdz, real_t[:] crdy,
     vy = _c_trilin_interp[real_t](s[...,1], crdz, crdy, crdx, x)
     vz = _c_trilin_interp[real_t](s[...,2], crdz, crdy, crdx, x)
     vmag = sqrt(vx**2 + vy**2 + vz**2)
+    if vmag == 0.0:
+        return 1
     x[0] += ds * vz / vmag
     x[1] += ds * vy / vmag
     x[2] += ds * vx / vmag
@@ -242,7 +244,6 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         # cdefed versions of arguments
         real_t c_ds0 = ds0
         real_t c_ibound = ibound
-        # real_t[3] temp
         real_t c_obound0_arr[3]
         real_t c_obound1_arr[3]
         real_t[:] c_obound0 = c_obound0_arr
@@ -254,7 +255,8 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
 
         # just for c
         int i, j, it
-        int done = 0
+        int ret
+        int done
         real_t s_arr[3]
         real_t[:] s = s_arr
         real_t px, py, pz
@@ -301,7 +303,12 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         while it <= c_maxit:
             # print("point (x, y, z): ", s[2], s[1], s[0])
             # components run x, y, z, but coords run z, y, x
-            _c_euler1[real_t](v_arr, crdz, crdy, crdx, ds, s)
+            ret = _c_euler1[real_t](v_arr, crdz, crdy, crdx, ds, s)
+            # ret is non 0 when |varr| == 0
+            if ret != 0:
+                done = 1
+                break
+
             lseg[i].append([s[0], s[1], s[2]])
             it += 1
 
