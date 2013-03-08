@@ -11,6 +11,7 @@ from viscid import field
 from viscid import coordinate
 from viscid import readers
 from viscid.calculator import cycalc
+from viscid.calculator import seed
 from viscid.plot import mpl
 
 verb = 0
@@ -65,13 +66,10 @@ def main():
     obound0 = np.array([-10, -10, -10], dtype=B.data.dtype)
     obound1 = np.array([10, 10, 10], dtype=B.data.dtype)
     lines = cycalc.streamlines(B,
-                               [[0.0, 0.0, 1.0],
-                                [0.0, 0.0, 2.0],
-                                [0.0, 0.0, 3.0],
-                                [0.0, 0.0, -1.0],
-                                [0.0, 0.0, -2.0],
-                                [0.0, 0.0, -3.0],
-                               ], ds0=0.01, ibound=0.05, maxit=10000,
+                               seed.LineSeedGen((0.0, 0.0, -1.0),
+                                                (0.0, 0.0, 1.0),
+                                                20),
+                               ds0=0.01, ibound=0.05, maxit=10000,
                                obound0=obound0, obound1=obound1)
     mpl.plot_field_lines(lines, show=args.show)
 
@@ -79,25 +77,8 @@ def main():
         print("Testing field lines on 3d field...")
     B = get_dipole(m=[0.2, 0.3, -0.9])
     lines = cycalc.streamlines(B,
-                               [[3.0, -3.0, 3.0],
-                                [3.0, 0.0, 3.0],
-                                [3.0, 3.0, 3.0],
-                                [0.0, -3.0, 3.0],
-                                [0.0, 0.0, 3.0],
-                                [0.0, 3.0, 3.0],
-                                [-3.0, -3.0, 3.0],
-                                [-3.0, 0.0, 3.0],
-                                [-3.0, 3.0, 3.0],
-                                [3.0, -3.0, -3.0],
-                                [3.0, 0.0, -3.0],
-                                [3.0, 3.0, -3.0],
-                                [0.0, -3.0, -3.0],
-                                [0.0, 0.0, -3.0],
-                                [0.0, 3.0, -3.0],
-                                [-3.0, -3.0, -3.0],
-                                [-3.0, 0.0, -3.0],
-                                [-3.0, 3.0, -3.0],
-                               ],
+                               seed.SphereSeedGen((0.0, 0.0, 0.0),
+                                                  2.0, 5, 10),
                                ds0=0.01, ibound=0.05, maxit=10000)
     mpl.plot_field_lines(lines, show=args.show)
 

@@ -7,6 +7,7 @@ from __future__ import print_function
 import numpy as np
 from .. import field
 from .. import coordinate
+from . import seed
 
 cimport cython
 cimport numpy as np
@@ -205,7 +206,7 @@ cdef int _c_euler1(real_t[:,:,:,:] s, real_t[:] crdz, real_t[:] crdy,
 #                        real_t[:] crdx, real_t[:] x):
 #     return x[0]
 
-def streamlines(fld, x0, *args, **kwargs):
+def streamlines(fld, seeds, *args, **kwargs):
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.dim != 3:
@@ -214,7 +215,12 @@ def streamlines(fld, x0, *args, **kwargs):
 
     dat = fld.data
     crdz, crdy, crdx = fld.crds.get_cc()
-    x0 = np.array(x0, dtype=dat.dtype).reshape((-1, 3))
+
+    if isinstance(seeds, seed.SeedGen):
+        x0 = seeds.points
+    else:
+        x0 = np.array(seeds, dtype=dat.dtype).reshape((-1, 3))
+
     lines = []
     for start in x0:
         line = _py_streamline(dat, crdz, crdy, crdx,
