@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import numpy as np
 import pylab as pl
+from matplotlib.colors import LogNorm
 from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from .. import field
@@ -27,25 +28,27 @@ def plot(fld, selection=None, **kwargs):
     else:
         raise TypeError("I can only do scalar fields right now")
 
-# def parse_opts(plot_opts):
-#     """ opts string looks like 'log,x_-20_10', output is
-#     [['log'], ['x', '-20', '10']] """
-#     if isinstance(plot_opts, str):
-#         plot_opts = plot_opts.split(",")
-#     elif plot_opts is None:
-#         plot_opts = []
+def parse_opts(plot_opts):
+    """ opts string looks like 'log,x_-20_10', output is
+    [['log'], ['x', '-20', '10']] """
+    if isinstance(plot_opts, str):
+        plot_opts = plot_opts.split(",")
+    elif plot_opts is None:
+        plot_opts = []
 
-#     for i, opt in plot_opts:
-#         if isinstance(opt, str):
-#             plot_opts[i] = opt.split("_")
+    for i, opt in plot_opts:
+        if isinstance(opt, str):
+            plot_opts[i] = opt.split("_")
+        elif not isinstance(plot_opts[i], (list, tuple)):
+            plot_opts[i] = [plot_opts[i]]
 
-#     return plot_opts
+    return plot_opts
 
-# def do_plot_opts(axis, plot_opts):
-#     plot_opts = parse_opts(plot_opts)
-#     for opt in plot_opts:
-#         if opt == "log":
-#             pass
+def do_plot_opts(axis, plot_opts_str):
+    plot_opts = parse_opts(plot_opts_str)
+    for opt in plot_opts:
+        if opt[0] == "log":
+            pass
 
 def contour2d(fld, selection=None, **kwargs):
     fld = fld.slice(selection, rm_len1_dims=True)
@@ -101,7 +104,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
 
     if equalaxis:
         ax.axis('equal')
-    # do_plot_opts(ax, plot_opts)
+    do_plot_opts(ax, plot_opts)
     if earth:
         plot_earth(fld)
     if show:
