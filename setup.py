@@ -44,7 +44,19 @@ cy_ldflags = []
 cy_defs = []
 cy_defs.append(["viscid.calculator.cycalc",
                 ["viscid/calculator/cycalc"],
-                ["viscid/calculator/cycalc_util.pxd"]])
+                ["viscid/calculator/cycalc_util.pxd"]
+               ])
+cy_defs.append(["viscid.calculator.integrate",
+                ["viscid/calculator/integrate"],
+                ["viscid/calculator/cycalc_util.pxd",
+                 "viscid/calculator/cycalc.pxd"]
+               ])
+cy_defs.append(["viscid.calculator.streamline",
+                ["viscid/calculator/streamline"],
+                ["viscid/calculator/cycalc_util.pxd",
+                 "viscid/calculator/cycalc.pxd",
+                 "viscid/calculator/integrate.pxd"]
+               ])
 
 ############################################################################
 # below this line shouldn't need to be changed except for version and stuff

@@ -1,18 +1,28 @@
-#cython: boundscheck=True, wraparound=True
+# cython: boundscheck=True, wraparound=True
+#
+# Note: a _c_FUNCTION can only be called from another cdef-ed function, or
+# a def-ed _py_FUNCTION function because of the use of the fused real_t
+# to template both float32 and float64 versions
+
 from __future__ import print_function
+# import time
 
 import numpy as np
+# from cython.parallel import prange
+
 from .. import field
 from .. import coordinate
+from . import seed
 
-cimport cython
-cimport numpy as np
+###########
+# cimports
 from libc.math cimport sqrt
+
 from cycalc_util cimport *
+from cycalc cimport *
 
-#from cython.parallel import prange
-
-import time
+#####################
+# now the good stuff
 
 def scalar3d_shape(fld):
     return list(fld.shape) + [1] * (3 - len(fld.shape))
@@ -55,9 +65,9 @@ cdef _c_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
 
 def div(fld):
     if not fld.layout == field.LAYOUT_INTERLACED:
-        raise ValueError("I am only written for interlaced data.")
+        raise ValueError("Div is only written for interlaced data.")
     if fld.dim != 3:
-        raise ValueError("I am only written for 3D divergence.")
+        raise ValueError("Div is only written in 3D.")
 
     nptype = fld.data.dtype.name
     vect = fld.data
@@ -110,40 +120,73 @@ cdef _c_div3d(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
                                                      (crdz[k + 2] - crdz[k])
     return None
 
-# def make_real(np.ndarray arr):
-#     return
+def _py_closest_ind(real_t[:] crd, real_t point):
+    """ returns the integer such that crd[i] < point < crd[i+1] """
+    return _c_closest_ind(crd, point)
 
-# def _ind(real_t x, real_t y, real_t z, real_t[:] crdx, real_t[:] crdy,
-#          real_t[:] crdz):
-#     """ """
-#     cdef unsigned int nx = len(crdx)
-#     cdef unsigned int ny = len(crdy)
-#     cdef unsigned int nz = len(crdz)
+cdef int _c_closest_ind(real_t[:] crd, real_t point) except -1:
+    cdef int i
+    cdef unsigned int n = crd.shape[0]
+
+    # search linearly... maybe branch prediction makes this better
+    # than bisection for smallish arrays...
+    # TODO: make this work for arrays that go backward
+    for i from 1 <= i < n:
+        if crd[i] >= point:
+            return i - 1
+    if crd.shape[0] >= 2:
+        return crd.shape[0] - 2  # if we've gone too far, pick the last index
+    else:  # crd.shape[0] <= 1
+        return 0
 
 
-# cdef np.ndarray[real_t, ndim=4] calc_div1(np.ndarray[real_t, ndim=4] arr):# except 0:
-#     cdef unsigned int nz = arr.shape[0]
-#     cdef unsigned int ny = arr.shape[1]
-#     cdef unsigned int nx = arr.shape[2]
-#     cdef unsigned int nc = arr.shape[3]  # number of components
-#     cdef unsigned int i, j, k, c
-#     cdef double val
+def _py_trilin_interp(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+                      real_t[:] crdx, real_t[:] x):
+    """ return the scalar value of 3d scalar array s trilinearly interpolated
+    to the point x (in z, y, x order) """
+    return _c_trilin_interp(s, crdz, crdy, crdx, x)
 
-#     cdef np.ndarray[real_t, ndim=4] div = np.empty([nz, ny, nx, 1], dtype=arr.dtype)
-#     # print(nz, ny, nx, nc)
-#     for i from 0 <= i < nz:
-#         for j from 0 <= j < ny:
-#             for k from 0 <= k < nx:
-#                 val = 0.0
-#                 for c from 0 <= c < nc:
-#                     val += arr[i,j,k,c]**2
-#                 div[i,j,k,0] = sqrt(val)
-#     return div
+cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
+                             real_t[:] crdy, real_t[:] crdx, real_t[:] x):
+    cdef int i, ind
+    cdef int[3] ix
+    cdef int[3] p  # increment, used for 2d fields
+    cdef real_t[3] xd
+    cdef real_t[3] xdm  # will be 1 - xd
+    cdef real_t c00, c10, c01, c11, c0, c1, c
 
-# def print_arr(np.ndarray[np.float64_t, ndim=3] arr):
-#     c_print_arr(<double*>arr.data, arr.size)
-#     print(arr.flags)
+    zp = 1 if crdz.shape[0] > 1 else 0
+    yp = 1 if crdy.shape[0] > 1 else 0
+    xp = 1 if crdx.shape[0] > 1 else 0
 
-# cdef void c_print_arr(double *arr, int N):
-#     for i in range(N):
-#         print("{0} ".format(arr[i]))
+    for i, crd in enumerate([crdz, crdy, crdx]):
+        ind = _c_closest_ind[real_t](crd, x[i])
+        ix[i] = ind
+        # this bit to support 2d fields could probably be handled
+        # more efficiently
+        if crd.shape[0] > 1:
+            p[i] = 1
+            xd[i] = (x[i] - crd[ind]) / (crd[ind + 1] - crd[ind])
+        else:
+            p[i] = 0
+            xd[i] = 1.0
+        xdm[i] = 1.0 - xd[i]
+
+    # this algorithm is shamelessly taken from the trilinear interpolation
+    # wikipedia article
+    c00 = s[ix[0]       , ix[1]       , ix[2]       ] * xdm[0] + \
+          s[ix[0] + p[0], ix[1]       , ix[2]       ] * xd[0]
+    c10 = s[ix[0]       , ix[1] + p[1], ix[2]       ] * xdm[0] + \
+          s[ix[0] + p[0], ix[1] + p[1], ix[2]       ] * xd[0]
+    c01 = s[ix[0]       , ix[1]       , ix[2] + p[2]] * xdm[0] + \
+          s[ix[0] + p[0], ix[1]       , ix[2] + p[2]] * xd[0]
+    c11 = s[ix[0]       , ix[1] + p[1], ix[2] + p[2]] * xdm[0] + \
+          s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]] * xd[0]
+    c0 = c00 * xdm[1] + c10 * xd[1]
+    c1 = c01 * xdm[1] + c11 * xd[1]
+    c = c0 * xdm[2] + c1 * xd[2]
+    return c
+
+##
+## EOF
+##

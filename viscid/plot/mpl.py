@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import numpy as np
 import pylab as pl
+from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from .. import field
 from .. import vutil
@@ -162,6 +163,21 @@ def plot1d_field(fld, ax=None, show=False):
     if show:
         mplshow()
     return plt, None
+
+def plot_field_lines(lines, show=True, equal=False):
+    ax = pl.gca(projection='3d')
+    for line in lines:
+        line = np.array(line)
+        z = line[:, 0]
+        y = line[:, 1]
+        x = line[:, 2]
+        ax.plot(x, y, z)
+    if equal:
+        ax.axis("equal")
+    pl.xlabel("x")
+    pl.ylabel("y")
+    if show:
+        pl.show()
 
 def mplshow():
     # do i need to do anything special before i show?
