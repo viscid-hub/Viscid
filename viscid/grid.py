@@ -13,6 +13,9 @@ class Grid(object):
     geometry_info = None
     crds = None
     fields = None
+    # so... not all grids have times? if we try to access time on a grid
+    # that doesnt have one, there is probably a bug somewhere
+    # time = None
 
     name = None
 

@@ -175,6 +175,7 @@ class FileXDMF(vfile.VFile):
             for i, subgrid in enumerate(el.findall("./Grid")):
 
                 t = times[i] if (times is not None and i < len(times)) else time
+                # print(subgrid, grd, t)
                 self._parse_grid(subgrid, parent_grid=grd, time=t)
             grd.activate(0)
 
@@ -204,15 +205,15 @@ class FileXDMF(vfile.VFile):
         #         grid.add_field(fld)
 
         if grd:
-            if time:
+            if time is not None:
                 grd.time = time
-            if topoattrs:
+            if topoattrs is not None:
                 grd.topology_info = topoattrs
-            if geoattrs:
+            if geoattrs is not None:
                 grd.geometry_info = geoattrs
-            if coords:
+            if coords is not None:
                 grd.set_crds(coords)
-            if parent_grid:
+            if parent_grid is not None:
                 parent_grid.add(grd)
 
         return grd  # can be None

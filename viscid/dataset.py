@@ -107,6 +107,7 @@ class Dataset(object):
 
 class DatasetTemporal(Dataset):
     _last_ind = 0
+    # _all_times = None
 
     def __init__(self, name, time=None):
         super(DatasetTemporal, self).__init__(name, time=time)
@@ -114,6 +115,7 @@ class DatasetTemporal(Dataset):
         # TODO: it's kind of a kludge to create a bucket then destroy it
         # so soon, but it's not a big deal
         self.children = []
+        # self._all_times = []
 
     def add(self, child, set_active=True):
         if child is None:
@@ -122,7 +124,10 @@ class DatasetTemporal(Dataset):
             child.time = 0.0
             warn("A child with no time? Something is strange...")
         # this keeps the children in time order
-        bisect.insort(self.children, (child.time, child))
+        self.children.append((child.time, child))
+        self.children.sort()
+        # binary in sorting... maybe more efficient?
+        #bisect.insort(self.children, (child.time, child))
         if set_active:
             self.active_child = child
 
@@ -178,34 +183,45 @@ class DatasetTemporal(Dataset):
             # NOTE: this has gone too far
             time = float(item)
             last_ind = self._last_ind
-            closest_ind = 0
+            closest_ind = -1
+            # print(time, last_ind)
             if time >= self.children[last_ind][0]:
+                # print("forward")
                 i = last_ind + 1
                 while i < len(self.children):
                     this_time = self.children[i][0]
-                    if this_time >= time:
+                    # print(i, this_time)
+                    if time <= this_time:
                         avg = 0.5 * (self.children[i - 1][0] + this_time)
                         if time >= avg:
+                            # print(">= ", avg)
                             closest_ind = i
                         else:
+                            # print("< ", avg)
                             closest_ind = i - 1
                         break
                     i += 1
-                closest_ind = len(self.children) - 1
+                if closest_ind < 0:
+                    closest_ind = len(self.children) - 1
             else:
+                # print("backward")
                 i = last_ind - 1
-                while i > 0:
+                while i >= 0:
                     this_time = self.children[i][0]
-                    if self.children[i][0] <= time:
+                    # print(i, this_time)
+                    if time >= self.children[i][0]:
                         avg = 0.5 * (self.children[i + 1][0] + this_time)
                         if time >= avg:
+                            # print(">= ", avg)
                             closest_ind = i + 1
                         else:
+                            # print("< ", avg)
                             closest_ind = i
                         break
                     i -= 1
-                closest_ind = 0
-
+                if closest_ind < 0:
+                    closest_ind = 0
+            # print("closest_ind: ", closest_ind)
             self._last_ind = closest_ind
             return self.children[closest_ind][1]
 
