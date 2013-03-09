@@ -10,7 +10,7 @@ import pylab as pl
 from viscid import field
 from viscid import coordinate
 from viscid import readers
-from viscid.calculator import cycalc
+from viscid.calculator import streamline
 from viscid.calculator import seed
 from viscid.plot import mpl
 
@@ -65,7 +65,7 @@ def main():
     B = get_dipole(twod=True)
     obound0 = np.array([-10, -10, -10], dtype=B.data.dtype)
     obound1 = np.array([10, 10, 10], dtype=B.data.dtype)
-    lines = cycalc.streamlines(B,
+    lines = streamline.streamlines(B,
                                seed.LineSeedGen((0.0, 0.0, -1.0),
                                                 (0.0, 0.0, 1.0),
                                                 20),
@@ -76,7 +76,7 @@ def main():
     if verb:
         print("Testing field lines on 3d field...")
     B = get_dipole(m=[0.2, 0.3, -0.9])
-    lines = cycalc.streamlines(B,
+    lines = streamline.streamlines(B,
                                seed.SphereSeedGen((0.0, 0.0, 0.0),
                                                   2.0, 5, 10),
                                ds0=0.01, ibound=0.05, maxit=10000)
