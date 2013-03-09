@@ -1,4 +1,7 @@
+# cython: boundscheck=True, wraparound=True
+#
 # Cython module for euler1 integration, and in the future rk4 and rk45
+
 from __future__ import print_function
 
 ###########

@@ -1,3 +1,5 @@
+# cython: boundscheck=True, wraparound=True
+
 from __future__ import print_function
 
 from .. import field
