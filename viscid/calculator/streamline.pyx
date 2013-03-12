@@ -28,7 +28,8 @@ def streamlines(fld, seeds, *args, **kwargs):
     crdz, crdy, crdx = fld.crds.get_cc()
 
     if isinstance(seeds, seed.SeedGen):
-        x0 = seeds.points
+        # recast the seed data type... this should be done better...
+        x0 = seeds.points.astype(dat.dtype)
     else:
         x0 = np.array(seeds, dtype=dat.dtype).reshape((-1, 3))
 

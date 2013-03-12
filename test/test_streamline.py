@@ -17,7 +17,7 @@ from viscid.plot import mpl
 verb = 0
 
 def get_dipole(m=None, twod=False):
-    dtype = 'float64'
+    dtype = 'float32'
     x = np.array(np.linspace(-5, 5, 256), dtype=dtype)
     y = np.array(np.linspace(-5, 5, 256), dtype=dtype)
     z = np.array(np.linspace(-5, 5, 256), dtype=dtype)
