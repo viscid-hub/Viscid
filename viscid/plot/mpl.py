@@ -169,7 +169,9 @@ def plot1d_field(fld, ax=None, show=False):
     elif fld.center == "Cell":
         x = fld.crds[namex + "cc"]
 
-    plt = plt.plot(x, fld.data)
+    p = plt.plot(x, fld.data)
+    plt.xlabel(namex)
+    plt.ylabel(fld.name)
 
     if show:
         mplshow()
