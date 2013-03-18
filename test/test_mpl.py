@@ -52,6 +52,7 @@ def run_mpl_testA(show=False):
     plt.subplot2grid((nrows, ncols), (3, 0))
     mpl.plot(fld_s, "z=0,x=-20:0", earth=True, show=False)
 
+    mpl.tighten()
     if show:
         mpl.mplshow()
 
@@ -82,6 +83,7 @@ def run_mpl_testB(show=False):
     plt.subplot2grid((nrows, ncols), (3, 0))
     mpl.plot(fld_s, "x=0,y=-5:5", earth=True, verb=verb)
 
+    mpl.tighten()
     if show:
         mpl.mplshow()
 

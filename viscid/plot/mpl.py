@@ -59,8 +59,8 @@ def contour2d(fld, selection=None, **kwargs):
         return contour_field(fld, **kwargs)
 
 
-def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
-                 show=False, mask_nan=False, mod=None,
+def pcolor_field(fld, ax=None, equalaxis=True, earth=None, show=False,
+                 mask_nan=False, colorbar=True, mod=None,
                  plot_opts=None, verb=True, **kwargs):
     #print(slcrds[0][0], slcrds[0][1].shape)
     #print(slcrds[1][0], slcrds[1][1].shape)
@@ -97,8 +97,13 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     # print(x.shape, y.shape, fld.data.shape)
     if mask_nan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
-    plt = plt.pcolormesh(X, Y, dat, **kwargs)
-    cbar = plt.colorbar()
+
+    pcmesh = ax.pcolormesh(X, Y, dat, **kwargs)
+
+    if colorbar:
+        cbar = plt.colorbar(pcmesh, use_gridspec=True)
+        cbar.set_label(fld.name)
+
     plt.xlabel(namex)
     plt.ylabel(namey)
 
@@ -109,7 +114,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
         plot_earth(fld)
     if show:
         mplshow()
-    return plt, cbar
+    return pcmesh, cbar
 
 def contour_field(fld, ax=None, equalaxis=True, earth=None,
                   show=False, mask_nan=False, colorbar=True, mod=None,
@@ -135,9 +140,12 @@ def contour_field(fld, ax=None, equalaxis=True, earth=None,
     dat = fld.data
     if mask_nan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
-    plt = plt.contour(X, Y, dat, **kwargs)
+    ctr = ax.contour(X, Y, dat, **kwargs)
+
     if colorbar:
-        cbar = plt.colorbar()
+        cbar = plt.colorbar(ctr, use_gridspec=True)
+        cbar.set_label(fld.name)
+
     plt.xlabel(namex)
     plt.ylabel(namey)
 
@@ -147,7 +155,7 @@ def contour_field(fld, ax=None, equalaxis=True, earth=None,
         plot_earth(fld)
     if show:
         mplshow()
-    return plt, cbar
+    return ctr, cbar
 
 def plot1d_field(fld, ax=None, show=False):
     # print(fld.shape, fld.crds.shape)
@@ -187,11 +195,15 @@ def mplshow():
     # can't think of anything at this point...
     plt.show()
 
+def tighten():
+    """ tightens the layout so that axis labels dont get plotted over """
+    plt.tight_layout()
+
 def plot_earth(fld, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crds="mhd"):
     """ crds = "mhd" (Jimmy crds) or "gsm" (GSM crds)... gsm is the same
-    as rot=180. earth_plane is a string in the format 'y=0.2', this says
-    what the 3rd dimension is and sets the radius that the earth should
+    as mhd + rot=180. earth_plane is a string in the format 'y=0.2', this
+    says what the 3rd dimension is and sets the radius that the earth should
     be """
     import matplotlib.patches as mpatches
 
