@@ -5,7 +5,7 @@ import argparse
 
 import numpy as np
 import numexpr as ne
-import pylab as pl
+import matplotlib.pyplot as plt
 
 from viscid import field
 from viscid import coordinate

@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
@@ -68,7 +68,7 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     cbar = None
 
     if not ax:
-        ax = pl.gca()
+        ax = plt.gca()
 
     # THIS IS BACKWARD, on account of the convention for
     # Coordinates where z, y, x is used since that is how
@@ -97,10 +97,10 @@ def pcolor_field(fld, ax=None, equalaxis=True, earth=None,
     # print(x.shape, y.shape, fld.data.shape)
     if mask_nan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
-    plt = pl.pcolormesh(X, Y, dat, **kwargs)
-    cbar = pl.colorbar()
-    pl.xlabel(namex)
-    pl.ylabel(namey)
+    plt = plt.pcolormesh(X, Y, dat, **kwargs)
+    cbar = plt.colorbar()
+    plt.xlabel(namex)
+    plt.ylabel(namey)
 
     if equalaxis:
         ax.axis('equal')
@@ -119,7 +119,7 @@ def contour_field(fld, ax=None, equalaxis=True, earth=None,
     #print(dat.shape)
     cbar = None
     if not ax:
-        ax = pl.gca()
+        ax = plt.gca()
 
     namey, namex = fld.crds.axes # fld.crds.get_culled_axes()
     if fld.center == "Node":
@@ -135,11 +135,11 @@ def contour_field(fld, ax=None, equalaxis=True, earth=None,
     dat = fld.data
     if mask_nan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
-    plt = pl.contour(X, Y, dat, **kwargs)
+    plt = plt.contour(X, Y, dat, **kwargs)
     if colorbar:
-        cbar = pl.colorbar()
-    pl.xlabel(namex)
-    pl.ylabel(namey)
+        cbar = plt.colorbar()
+    plt.xlabel(namex)
+    plt.ylabel(namey)
 
     if equalaxis:
         ax.axis('equal')
@@ -153,7 +153,7 @@ def plot1d_field(fld, ax=None, show=False):
     # print(fld.shape, fld.crds.shape)
 
     if not ax:
-        ax = pl.gca()
+        ax = plt.gca()
 
     namex, = fld.crds.axes
     if fld.center == "Node":
@@ -161,14 +161,14 @@ def plot1d_field(fld, ax=None, show=False):
     elif fld.center == "Cell":
         x = fld.crds[namex + "cc"]
 
-    plt = pl.plot(x, fld.data)
+    plt = plt.plot(x, fld.data)
 
     if show:
         mplshow()
-    return plt, None
+    return p, None
 
 def plot_field_lines(lines, show=True, equal=False):
-    ax = pl.gca(projection='3d')
+    ax = plt.gca(projection='3d')
     for line in lines:
         line = np.array(line)
         z = line[:, 0]
@@ -177,15 +177,15 @@ def plot_field_lines(lines, show=True, equal=False):
         ax.plot(x, y, z)
     if equal:
         ax.axis("equal")
-    pl.xlabel("x")
-    pl.ylabel("y")
+    plt.xlabel("x")
+    plt.ylabel("y")
     if show:
-        pl.show()
+        plt.show()
 
 def mplshow():
     # do i need to do anything special before i show?
     # can't think of anything at this point...
-    pl.show()
+    plt.show()
 
 def plot_earth(fld, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crds="mhd"):
@@ -208,7 +208,7 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
     radius = np.sqrt(scale**2 - value**2)
 
     if not axis:
-        axis = pl.gca()
+        axis = plt.gca()
 
     if crds == "gsm":
         rot = 180

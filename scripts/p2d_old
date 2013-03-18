@@ -32,7 +32,7 @@ def split_options(opt):
     return temp
 
 def plot_collections(opt, collections, startind):
-    import pylab as pl
+    import matplotlib.pyplot as plt
     from matplotlib.image import NonUniformImage
     global verb
 
@@ -50,7 +50,7 @@ def plot_collections(opt, collections, startind):
         ax = [None for i in range(nplotx*nploty)]
         shareindglobal = None
         shareindptype = [None for i in opt.plotvars]
-        pl.subplots_adjust(wspace=0.3, left=0.1, right=0.95)
+        plt.subplots_adjust(wspace=0.3, left=0.1, right=0.95)
         if opt.planes: shareindplane = [None for i in opt.planes]
         for i, plotxi in enumerate(plotx):
             if type(plotxi) == type(0):
@@ -138,7 +138,7 @@ def plot_collections(opt, collections, startind):
                     absmax = np.max(np.abs(pdata))
                     autoscale = (-absmax, absmax)
                 if norm == 'lin':
-                    norm = pl.normalize(*autoscale)
+                    norm = plt.normalize(*autoscale)
                 elif norm == 'log':
                     norm = LogNorm()
 
@@ -165,9 +165,9 @@ def plot_collections(opt, collections, startind):
                         shareindptype[j] = ind
                     sharex, sharey = (ax[shareindptype[j]], ax[shareindptype[j]])
                 if not opt.transpose:
-                    ax[ind] = (pl.subplot(nplotx, nploty, 1+j+(nploty*i), sharex=sharex, sharey=sharey))
+                    ax[ind] = (plt.subplot(nplotx, nploty, 1+j+(nploty*i), sharex=sharex, sharey=sharey))
                 else:
-                    ax[ind] = (pl.subplot(nploty, nplotx, 1+ind, sharex=sharex, sharey=sharey))
+                    ax[ind] = (plt.subplot(nploty, nplotx, 1+ind, sharex=sharex, sharey=sharey))
                 if not nequal:
                     ax[ind].axis('equal')
 
@@ -175,23 +175,23 @@ def plot_collections(opt, collections, startind):
                 if len(plot_dims) == 1:
                     if len(coords[0]) == pdata.size + 1:
                         coords[0] = coords[0][:-1]
-                    pl.plot(coords[0], pdata.ravel(), 'k.-', mec='g', mfc='g')
+                    plt.plot(coords[0], pdata.ravel(), 'k.-', mec='g', mfc='g')
                 elif len(plot_dims) == 2:
                     if cmap==None and norm and norm.vmin and \
                        norm.vmax and np.abs(norm.vmax + 1.0*norm.vmin) < 1e-4:
-                        cmap =  pl.get_cmap('seismic')
+                        cmap =  plt.get_cmap('seismic')
                     if ptype == 'pcolormesh':
                         pcm = ax[ind].pcolormesh(coords[0], coords[1], pdata, norm=norm, cmap=cmap, **grid)
-                        pl.colorbar(pcm)
+                        plt.colorbar(pcm)
                     elif ptype == 'contour':
                         pcm = ax[ind].contourf(coords[0], coords[1], pdata, ncontours, norm=norm, cmap=cmap)
-                        pl.colorbar(pcm)
+                        plt.colorbar(pcm)
                     elif ptype == 'im':
                         raise Warning("NonUniformImage is no longer guarenteed to work.")
                         nui = NonUniformImage(ax[ind], interpolation='nearest', norm=norm, cmap=cmap)
                         nui.set_data(coords[0], coords[1], pdata)
                         ax[ind].images.append(nui)
-                        pl.colorbar(nui)
+                        plt.colorbar(nui)
                     #if grid:
                     #    pggcm.grid(pl, x, y, ax[ind], **grid)
                     pggcm.mpl_earth(pl, plane[0], ax[ind])
@@ -215,20 +215,20 @@ def plot_collections(opt, collections, startind):
                     if len(plot_dims)>1: ylabel += "\n{0}".format(0)
                     ax[ind].set_xlabel(xlabel)
                     ax[ind].set_ylabel(ylabel, multialignment='center')
-                    #pl.sca(ax[ind])
+                    #plt.sca(ax[ind])
 
         # handle output here
-        if opt.figsize: pl.gcf().set_size_inches(opt.figsize, forward=False)
+        if opt.figsize: plt.gcf().set_size_inches(opt.figsize, forward=False)
         if shareindglobal != None:
             if opt.xlim: ax[shareindglobal].set_xlim(*opt.xlim)
             if opt.ylim: ax[shareindglobal].set_ylim(*opt.ylim)
         if opt.animate:
-            pl.savefig("{0}_{1:06d}.png".format(opt.prefix, t+1+startind))
+            plt.savefig("{0}_{1:06d}.png".format(opt.prefix, t+1+startind))
         elif opt.out:
-            pl.savefig(opt.out)
+            plt.savefig(opt.out)
         if opt.show:
-            pl.show()
-        pl.clf()
+            plt.show()
+        plt.clf()
 
 if __name__=='__main__':
     parser = vggcm.optargs()
@@ -246,7 +246,7 @@ if __name__=='__main__':
     parser.add_option('-e', dest='earth', type='string', default='w',
                       help="String representing the color that the earth should be drawn (default: w).")
     parser.add_option('-w', '--show', dest='show', action='store', type='int', default=-1,
-                      help="Show plots with pl.show() - 0 for no show, !0 for show (default !0).")
+                      help="Show plots with plt.show() - 0 for no show, !0 for show (default !0).")
     parser.add_option('-a', '--animate', dest='animate', action='store', type='string', default=None,
                       help="Animate in time. Give this argument the name of the output file.")
     parser.add_option('-k', dest='keep', action='store_true',

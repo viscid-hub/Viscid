@@ -12,7 +12,7 @@ import os
 
 import numpy as np
 import numexpr as ne
-import pylab as pl
+import matplotlib.pyplot as plt
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
 if not _viscid_root in sys.path:
@@ -43,13 +43,13 @@ def run_mpl_testA(show=False):
     nrows = 4
     ncols = 1
 
-    pl.subplot2grid((nrows, ncols), (0, 0))
+    plt.subplot2grid((nrows, ncols), (0, 0))
     mpl.plot(fld_s, "y=20", show=False)
-    pl.subplot2grid((nrows, ncols), (1, 0))
+    plt.subplot2grid((nrows, ncols), (1, 0))
     mpl.plot(fld_s, "x=0i:20i,y=0:5", earth=True, show=False)
-    pl.subplot2grid((nrows, ncols), (2, 0))
+    plt.subplot2grid((nrows, ncols), (2, 0))
     mpl.plot(fld_s, "y=0", show=False)
-    pl.subplot2grid((nrows, ncols), (3, 0))
+    plt.subplot2grid((nrows, ncols), (3, 0))
     mpl.plot(fld_s, "z=0,x=-20:0", earth=True, show=False)
 
     if show:
@@ -73,13 +73,13 @@ def run_mpl_testB(show=False):
     nrows = 4
     ncols = 1
 
-    pl.subplot2grid((nrows, ncols), (0, 0))
+    plt.subplot2grid((nrows, ncols), (0, 0))
     mpl.plot(fld_s, "z=0i,x=:30i", earth=True, verb=verb)
-    pl.subplot2grid((nrows, ncols), (1, 0))
+    plt.subplot2grid((nrows, ncols), (1, 0))
     mpl.plot(fld_s, "z=0.75,x=-4i:-1i,y=-3:3", earth=True, verb=verb)
-    pl.subplot2grid((nrows, ncols), (2, 0))
+    plt.subplot2grid((nrows, ncols), (2, 0))
     mpl.plot(fld_s, "x=-0.5:,y=-3:3,z=0", earth=True, verb=verb)
-    pl.subplot2grid((nrows, ncols), (3, 0))
+    plt.subplot2grid((nrows, ncols), (3, 0))
     mpl.plot(fld_s, "x=0,y=-5:5", earth=True, verb=verb)
 
     if show:
