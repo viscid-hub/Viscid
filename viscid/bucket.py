@@ -102,6 +102,9 @@ class Bucket(object):
             key = [key]
         self.set_item(key, value)
 
+    def __delitem__(self, handle):
+        self.remove_item_handle(handle)
+
     def __iter__(self):
         return self._items.__iter__()
 

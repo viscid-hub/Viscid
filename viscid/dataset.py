@@ -3,7 +3,7 @@
 
 from __future__ import print_function
 from warnings import warn
-import bisect
+# import bisect
 
 from .bucket import Bucket
 
@@ -100,6 +100,19 @@ class Dataset(object):
             return self.active_child[item]
         else:
             raise KeyError()
+
+    def __delitem__(self, item):
+        child = self.get_child(item)
+        child.unload()
+        self.children.remove_item(child)
+
+    def __len__(self):
+        return self.children.__len__()
+
+    def __setitem__(self, name, child):
+        # um... is this kosher??
+        child.name = name
+        self.add(child)
 
     def __contains__(self, item):
         return item in self.children
