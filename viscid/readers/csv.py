@@ -7,12 +7,12 @@ from warnings import warn
 
 import numpy as np
 
-import vfile
+from . import vfile
 # from .. import grid
 
 
 class FileASCII(vfile.VFile):
-    _detector = '.*\.(txt|asc)\s*$'  # NOTE: detect type is overridden
+    _detector = r".*\.(txt|asc)\s*$"  # NOTE: detect type is overridden
 
     meta = {'format': 'none',  # or ascii1d, ascii2d, etc.
             'type': 'normal',  # or time-series
@@ -30,14 +30,15 @@ class FileASCII(vfile.VFile):
             line = f.readline().strip().lower()
             if line.startswith('#(meta)'):
                 mdat = re.findall(
-                        "(\S+)\s*=\s*(?:['\"](.*?)['\"]|(.+?))(?:\s|$)",
-                        line)
+                        r"(\S+)\s*=\s*(?:['\"](.*?)['\"]|(.+?))(?:\s|$)",
+                        line,
+                        )
                 for m in mdat:
                     key = m[0]
                     val = m[1] if m[1] is not '' else m[2]
                     try:
                         self.meta[key] = val
-                    except:
+                    except KeyError:
                         warn("Invalid option in {0}: {1} = {2}".format(
                             self.fname, key, val))
 
@@ -66,7 +67,7 @@ class FileASCII(vfile.VFile):
 
 class FileASCII1D(FileASCII):
     """  """
-    _detector = '.*\.(asc1)\s*$'
+    _detector = r".*\.(asc1)\s*$"
 
     time_series = False
 
@@ -114,7 +115,7 @@ class FileASCII1D(FileASCII):
 
 class FileASCII2D(FileASCII):
     """  """
-    _detector = '.*\.(asc2)\s*$'
+    _detector = r".*\.(asc2)\s*$"
 
     def __init__(self, fname, **kwargs):
         super(FileASCII2D, self).__init__(fname, **kwargs)
@@ -126,7 +127,7 @@ class FileASCII2D(FileASCII):
 
 class FileASCII3D(FileASCII):
     """  """
-    _detector = '.*\.(asc3)\s*$'
+    _detector = r".*\.(asc3)\s*$"
 
     def __init__(self, fname, **kwargs):
         super(FileASCII3D, self).__init__(fname, **kwargs)
