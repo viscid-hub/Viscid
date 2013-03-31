@@ -94,7 +94,7 @@ class Dataset(object):
     def __getitem__(self, item):
         """ if a child exists with handle, return it, else ask
         the active child if it knows what you want """
-        if item in self:
+        if item in self.children:
             return self.get_child(item)
         elif self.active_child is not None:
             return self.active_child[item]
@@ -115,7 +115,12 @@ class Dataset(object):
         self.add(child)
 
     def __contains__(self, item):
-        return item in self.children
+        if item in self.children:
+            return True
+        # FIXME: this might cause a bug somewhere someday
+        if item in self.active_child:
+            return True
+        return False
 
     def __enter__(self):
         return self
@@ -252,7 +257,7 @@ class DatasetTemporal(Dataset):
             float(item)
             return True
         except ValueError:
-            return False
+            return item in self.active_child
 
     # def __getitem__(self, item):
     #     """ Get a dataitem or list of dataitems based on time, grid, and
