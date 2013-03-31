@@ -28,8 +28,16 @@ def abs_diff(fld_a, fld_b, sla=slice(None), slb=slice(None)):
     diff = ne.evaluate("abs(a - b)")
     return diff
 
-def abs_val(fld):
-    a = fld.data  #pylint: disable=W0612
+def abs_max(fld, sl=slice(None)):
+    a = fld.data[sl] #pylint: disable=W0612
+    return np.max(ne.evaluate("abs(a)"))
+
+def abs_min(fld, sl=slice(None)):
+    a = fld.data[sl] #pylint: disable=W0612
+    return np.min(ne.evaluate("abs(a)"))
+
+def abs_val(fld, sl=slice(None)):
+    a = fld.data[sl]  #pylint: disable=W0612
     absarr = ne.evaluate("abs(a)")
     return absarr
 

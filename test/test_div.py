@@ -13,7 +13,7 @@ from time import time
 
 import numpy as np
 import numexpr as ne
-import pylab as pl
+import matplotlib.pyplot as plt
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
 if not _viscid_root in sys.path:
@@ -58,17 +58,17 @@ def run_div_test(fld, exact, show=False):
     planes = ["y=0.", "z=0."]
     nrows = 4
     ncols = len(planes)
-    ax = pl.subplot2grid((nrows, ncols), (0, 0))
+    ax = plt.subplot2grid((nrows, ncols), (0, 0))
     ax.axis("equal")
 
     for i, p in enumerate(planes):
-        pl.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
         mpl.plot(result_numexpr, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
         mpl.plot(result_cython, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (2, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (2, i), sharex=ax, sharey=ax)
         mpl.plot(backend_diff, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (3, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (3, i), sharex=ax, sharey=ax)
         mpl.plot(result_diff, p, show=False, verb=verb)
 
     if show:

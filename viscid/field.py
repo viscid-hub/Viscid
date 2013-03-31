@@ -70,6 +70,7 @@ class Field(object):
             self.source_data = self.data
 
     def unload(self):
+        """ does not guarentee that the memory will be freed """
         self._purge_cache()
 
     @property
@@ -194,6 +195,12 @@ class Field(object):
     def __getitem__(self, item):
         return self.data[item]
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.unload()
+        return None
 
 class ScalarField(Field):
     TYPE = "Scalar"

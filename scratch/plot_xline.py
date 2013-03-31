@@ -9,7 +9,7 @@ import sys
 import numpy as np
 import numexpr as ne
 from scipy.interpolate import griddata
-import pylab as pl
+import matplotlib.pyplot as plt
 from mayavi import mlab
 # from tvtk.api import tvtk
 # from mayavi.sources.vtk_data_source import VTKDataSource

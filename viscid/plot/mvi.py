@@ -59,13 +59,15 @@ def field_to_source(fld):
     # TODO: fix up for cell data
     if fld.center == "Cell":
         dat_center = grid.point_data
-        grid.dimensions = tuple(fld.crds.get_shape(['xcc', 'ycc', 'zcc']))
+        # grid.dimensions is x, y, z not z, y, x
+        grid.dimensions = tuple(fld.crds.shape_cc[::-1])
         grid.x_coordinates = fld.crds['xcc']
         grid.y_coordinates = fld.crds['ycc']
         grid.z_coordinates = fld.crds['zcc']
     elif fld.center == "Node":
         dat_center = grid.point_data
-        grid.dimensions = tuple(fld.crds.get_shape(['x', 'y', 'z']))
+        # grid.dimensions is x, y, z not z, y, x
+        grid.dimensions = tuple(fld.crds.shape_nc[::-1])
         grid.x_coordinates = fld.crds['x']
         grid.y_coordinates = fld.crds['y']
         grid.z_coordinates = fld.crds['z']

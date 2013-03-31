@@ -134,6 +134,28 @@ def abs_val(fld, backends=None, only=False):
     return field.wrap_field(fld.TYPE, "abs " + fld.name, fld.crds,
                             absarr, center=fld.center, time=fld.time)
 
+def abs_min(fld, backends=None, only=False):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        absmin = necalc.abs_min(fld)
+    elif use_backend == "numpy":
+        absmin = np.min(np.abs(fld.data))
+
+    return absmin
+
+def abs_max(fld, backends=None, only=False):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        absmax = necalc.abs_max(fld)
+    elif use_backend == "numpy":
+        absmax = np.max(np.abs(fld.data))
+
+    return absmax
+
 def magnitude(fld, backends=None, only=False):
     implemented_backends = ["numexpr", "cython", "numpy", "native"]
     use_backend = _check_backend(backends, implemented_backends, only=only)

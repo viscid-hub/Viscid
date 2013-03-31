@@ -60,6 +60,9 @@ class Grid(object):
     def get_field(self, fldname, time=None): #pylint: disable=W0613
         return self.fields[fldname]
 
+    def __contains__(self, item):
+        return item in self.fields
+
     def __getitem__(self, item):
         if item in self.fields:
             return self.get_field(item)
@@ -70,6 +73,13 @@ class Grid(object):
 
     def __str__(self):
         return "<Grid name={0}>".format(self.name)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.unload()
+        return None
 
 ##
 ## EOF

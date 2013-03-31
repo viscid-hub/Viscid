@@ -10,7 +10,7 @@ from time import time
 # import resource
 
 import numpy as np
-import pylab as pl
+import matplotlib.pyplot as plt
 # from matplotlib.colors import LogNorm
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
@@ -52,19 +52,19 @@ def run_mag_test(fld, show=False):
     planes = ["z=0", "y=0"]
     nrows = 5
     ncols = len(planes)
-    ax = pl.subplot2grid((nrows, ncols), (0, 0))
+    ax = plt.subplot2grid((nrows, ncols), (0, 0))
     ax.axis("equal")
 
     for ind, p in enumerate(planes):
-        pl.subplot2grid((nrows, ncols), (0, ind), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (0, ind), sharex=ax, sharey=ax)
         mpl.plot(fld_vx, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (1, ind), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (1, ind), sharex=ax, sharey=ax)
         mpl.plot(fld_vy, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (2, ind), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (2, ind), sharex=ax, sharey=ax)
         mpl.plot(fld_vz, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (3, ind), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (3, ind), sharex=ax, sharey=ax)
         mpl.plot(mag_ne, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (4, ind), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (4, ind), sharex=ax, sharey=ax)
         mpl.plot(diff1, p, show=False, verb=verb)
 
     if show:

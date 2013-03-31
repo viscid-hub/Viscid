@@ -103,10 +103,10 @@ class SphereSeedGen(SeedGen):
         self._points = np.array([z, y, x]).T
 
 if __name__ == "__main__":
-    import pylab as pl
+    import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
-    ax = pl.gca(projection='3d')
+    ax = plt.gca(projection='3d')
 
     l = LineSeedGen((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points
     ax.plot(l[:, 2], l[:, 1], l[:, 0], 'g.')
@@ -118,10 +118,10 @@ if __name__ == "__main__":
                      2.0, 3.0, 10, 20).points
     ax.plot(p[:, 2], p[:, 1], p[:, 0], 'r')
 
-    pl.xlabel("X")
-    pl.ylabel("Y")
+    plt.xlabel("X")
+    plt.ylabel("Y")
 
-    pl.show()
+    plt.show()
 
 ##
 ## EOF
