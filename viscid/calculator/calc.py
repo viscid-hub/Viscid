@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# This has a mechanism to dispatch to different backends. You can change the
-# order of preference of the backend by changing default_backends.
-# TODO: this dispatch mechanism is very simple, maybe something a little more
-# flexable would be useful down the line?
+""" This has a mechanism to dispatch to different backends. You can change the
+order of preference of the backend by changing default_backends.
+TODO: this dispatch mechanism is very simple, maybe something a little more
+flexable would be useful down the line? """
 
 from __future__ import print_function
 from warnings import warn

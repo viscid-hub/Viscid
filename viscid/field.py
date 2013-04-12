@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# Fields belong in grids, or by themselves as a result of a calculation.
-# Important: The field must be able to reshape itself to the shape of its
-# coordinates, else there will be blood. Also, the order of the coords
-# matters, it is assumed that if the coords are z, y, x then the data
-# is iz, iy, ix. This can be permuted any which way, but order matters.
+""" Fields belong in grids, or by themselves as a result of a calculation.
+Important: The field must be able to reshape itself to the shape of its
+coordinates, else there will be blood. Also, the order of the coords
+matters, it is assumed that if the coords are z, y, x then the data
+is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
 from warnings import warn

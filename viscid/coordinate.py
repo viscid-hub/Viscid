@@ -1,16 +1,16 @@
 #!/usr/bin/env python
-# Coordinates get put into fields
-# The order of coords in the clist should mirror the data layout, as in
-# if data[iz, iy, ix] (C-order, ix is fastest varying index) then list
-# should go z, y, x... this is the default order
-#
-# types:
-#      "Structured":
-#          "Rectilinear"
-#          "Cylindrical"
-#          "Spherical"
-#      "Unstructured":
-#          -> Not Implemented <-
+""" Coordinates get put into fields
+The order of coords in the clist should mirror the data layout, as in
+if data[iz, iy, ix] (C-order, ix is fastest varying index) then list
+should go z, y, x... this is the default order
+
+types:
+     "Structured":
+         "Rectilinear"
+         "Cylindrical"
+         "Spherical"
+     "Unstructured":
+         -> Not Implemented <- """
 
 from __future__ import print_function
 
