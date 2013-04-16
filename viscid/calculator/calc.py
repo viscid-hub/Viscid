@@ -11,6 +11,7 @@ import numpy as np
 
 from .. import field
 from .. import vutil
+from .. import verror
 
 try:
     from . import cycalc
@@ -62,7 +63,8 @@ def _check_backend(preferred, implemented, only=False):
                 vutil.warn("Unknown backend: {0}".format(backend))
 
     if only:
-        raise RuntimeError("No preferred backend usable: {0}".format(preferred))
+        raise verror.BackendNotFound("No preferred backend "
+                                     "usable: {0}".format(preferred))
 
     for backend in implemented:
         try:
@@ -74,8 +76,8 @@ def _check_backend(preferred, implemented, only=False):
             warn("Unknown backend (Should not be "
                  "implemented?): {0}".format(backend))
 
-    raise RuntimeError("No implemented backends are installed "
-                       "for this function.")
+    raise verror.BackendNotFound("No implemented backends are installed "
+                                 "for this function.")
 
 def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None,
                only=False):
