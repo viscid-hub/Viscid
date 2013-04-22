@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 import sys
-from time import time
+from timeit import default_timer as time
 
 from . import verror
 
