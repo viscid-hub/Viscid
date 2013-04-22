@@ -191,8 +191,9 @@ class Field(object):
             fld.info["reduced"] = reduced
         return fld
 
-
     def __getitem__(self, item):
+        if item in self.crds:
+            return self.crds[item]
         return self.data[item]
 
     def __enter__(self):
