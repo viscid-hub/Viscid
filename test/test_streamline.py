@@ -41,8 +41,9 @@ def get_dipole(m=None, twod=False):
     Bz = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
 
     fld = field.VectorField("B_cc", crds, [Bx, By, Bz],
-                            force_layout=field.LAYOUT_INTERLACED,
-                            center="Cell", forget_source=True)
+                            center="Cell", forget_source=True,
+                            info={"force_layout": field.LAYOUT_INTERLACED},
+                           )
     # fld_rsq = field.ScalarField("r", crds, hmm,
     #                             center="Cell", forget_source=True)
     return fld  # , fld_rsq

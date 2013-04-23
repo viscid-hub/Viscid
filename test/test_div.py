@@ -102,8 +102,9 @@ def main():
 
     # cell centered field and exact divergence
     fld_v = field.VectorField("v_cc", crds, [vx, vy, vz],
-                              force_layout=field.LAYOUT_INTERLACED,
-                              center="Cell", forget_source=True)
+                              center="Cell", forget_source=True,
+                              info={"force_layout": field.LAYOUT_INTERLACED},
+                             )
     fld_exact = field.ScalarField("exact div", crds, exact,
                                   center="Cell", forget_source=True)
     run_div_test(fld_v, fld_exact, show=show)
@@ -120,8 +121,9 @@ def main():
 
     # cell centered field and exact divergence
     fld_v = field.VectorField("v_nc", crds, [vx, vy, vz],
-                              force_layout=field.LAYOUT_INTERLACED,
-                              center="Node", forget_source=True)
+                              center="Node", forget_source=True,
+                              info={"force_layout": field.LAYOUT_INTERLACED},
+                             )
     fld_exact = field.ScalarField("exact div", crds, exact,
                                   center="Node", forget_source=True)
     run_div_test(fld_v, fld_exact, show=show)

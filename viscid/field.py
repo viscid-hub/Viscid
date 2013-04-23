@@ -54,17 +54,14 @@ class Field(object):
     _cache = None  # this will always be a numpy array
 
     def __init__(self, name, crds, data, center="Node", time=0.0,
-                 forget_source=False, info=None):
+                 info=None, forget_source=False):
         self.name = name
         self.center = center
         self.time = time
         self.crds = crds
         self.data = data
 
-        if info:
-            self.info = info
-        else:
-            self.info = {}
+        self.info = {} if info is None else info
 
         if forget_source:
             self.source_data = self.data
@@ -210,14 +207,13 @@ class ScalarField(Field):
 class VectorField(Field):
     TYPE = "Vector"
 
-    force_layout = LAYOUT_DEFAULT
     _layout = None
     _ncomp = None
 
-    def __init__(self, name, crds, data, force_layout=LAYOUT_DEFAULT,
-                 **kwargs):
-        self.force_layout = force_layout
+    def __init__(self, name, crds, data, **kwargs):        
         super(VectorField, self).__init__(name, crds, data, **kwargs)
+        if not "force_layout" in self.info:
+            self.info["force_layout"] = LAYOUT_DEFAULT
 
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
@@ -262,8 +258,8 @@ class VectorField(Field):
 
         # we will preserve layout or we already have the correct layout,
         # do no translation... just like Field._translate_data
-        if self.force_layout == LAYOUT_DEFAULT or \
-           self.force_layout == dat_layout:
+        if self.info["force_layout"] == LAYOUT_DEFAULT or \
+           self.info["force_layout"] == dat_layout:
             self._layout = dat_layout
             return self._dat_to_ndarray(dat)
 
@@ -275,7 +271,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat)
 
         # ok, we demand FLAT arrays, make it so
-        elif self.force_layout == LAYOUT_FLAT:
+        elif self.info["force_layout"] == LAYOUT_FLAT:
             if dat_layout != LAYOUT_INTERLACED:
                 raise RuntimeError("should not be here")
 
@@ -290,7 +286,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # ok, we demand INTERLACED arrays, make it so
-        elif self.force_layout == LAYOUT_INTERLACED:
+        elif self.info["force_layout"] == LAYOUT_INTERLACED:
             if dat_layout != LAYOUT_FLAT:
                 raise RuntimeError("should not be here")
 
@@ -309,7 +305,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # catch the remaining cases
-        elif self.force_layout == LAYOUT_OTHER:
+        elif self.info["force_layout"] == LAYOUT_OTHER:
             raise RuntimeError("How should I know how to force other layout?")
         else:
             raise ValueError("Bad argument for layout forcing")

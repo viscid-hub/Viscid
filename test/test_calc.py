@@ -90,8 +90,9 @@ def main():
     vz = 0.5 * Z**2
 
     fld_v = field.VectorField("v", crds, [vx, vy, vz],
-                              force_layout=field.LAYOUT_INTERLACED,
-                              center="Node", forget_source=True)
+                              center="Node", forget_source=True,
+                              info={"force_layout": field.LAYOUT_INTERLACED},
+                             )
     run_mag_test(fld_v, show=show)
 
     if verb:
@@ -103,8 +104,9 @@ def main():
     vz = 0.5 * Z**2
 
     fld_v = field.VectorField("v", crds, [vx, vy, vz],
-                              force_layout=field.LAYOUT_INTERLACED,
-                              center="Cell", forget_source=True)
+                              center="Cell", forget_source=True,
+                              info={"force_layout": field.LAYOUT_INTERLACED},
+                             )
     run_mag_test(fld_v, show=show)
 
     #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2)
