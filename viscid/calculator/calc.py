@@ -87,9 +87,7 @@ def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None,
     if use_backend == "numexpr":
         diff = necalc.difference(fld_a, fld_b, sla, slb)
     elif use_backend == "numpy":
-        a = fld_a.data[sla]
-        b = fld_b.data[slb]
-        diff = a - b
+        return fld_a[sla] - fld_b[slb]
 
     return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
                             diff, center=fld_a.center, time=fld_a.time)
