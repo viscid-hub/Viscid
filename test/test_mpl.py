@@ -33,7 +33,7 @@ def run_mpl_testA(show=False):
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-1, 1, 2), dtype=dtype)
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
-    Zcc, Ycc, Xcc = crds.get_cc(shaped=True) #pylint: disable=W0612
+    Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell")
 
     s = ne.evaluate("(sin(Xcc) + cos(Ycc))")
     fld_s = field.ScalarField("s", crds, s, center="Cell", forget_source=True)
@@ -65,7 +65,7 @@ def run_mpl_testB(show=False):
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-10, 10, 140), dtype=dtype)
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
-    Z, Y, X = crds.get_nc(shaped=True) #pylint: disable=W0612
+    Z, Y, X = crds.get_crd(shaped=True) #pylint: disable=W0612
 
     s = ne.evaluate("(sin(X) + cos(Y) - cos(Z))")
     fld_s = field.ScalarField("s", crds, s, center="Node", forget_source=True)

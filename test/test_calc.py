@@ -83,7 +83,7 @@ def main():
 
     if verb:
         print("Testing Node centered magnitudes")
-    Z, Y, X = crds.get_nc(shaped=True)
+    Z, Y, X = crds.get_crd(shaped=True)
 
     vx = 0.5 * X**2 + Y
     vy = 0.5 * Y**2
@@ -96,7 +96,7 @@ def main():
 
     if verb:
         print("Testing Cell centered magnitudes")
-    Z, Y, X = crds.get_cc(shaped=True)
+    Z, Y, X = crds.get_crd(shaped=True, center="Cell")
 
     vx = 0.5 * X**2 + Y
     vy = 0.5 * Y**2

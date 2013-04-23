@@ -40,6 +40,8 @@ class Coordinates(object):
 
 class StructuredCrds(Coordinates):
     TYPE = "Structured"
+    CENTER = {None: "", "Node": "", "Cell": "cc", "Face": "fc", "Edge": "ec"}
+    sfxIXES = list(CENTER.values())
 
     _axes = ["z", "y", "x"]
     _dim = 3
@@ -80,11 +82,9 @@ class StructuredCrds(Coordinates):
     def clear_crds(self):
         self._crds = {}
         for d in self.axes:
-            self._crds[d] = None
-            self._crds[d.upper()] = None
-            if self.has_cc:
-                self._crds[d + 'cc'] = None
-                self._crds[d.upper() + 'cc'] = None
+            for sfx in self.sfxIXES:
+                self._crds[d + sfx] = None
+                self._crds[d.upper() + sfx] = None
 
     def set_crds(self, clist):
         """ called with a list of lists:
@@ -100,16 +100,45 @@ class StructuredCrds(Coordinates):
             flatarr, openarr = self.ogrid_single(ind, arr)
             self._crds[axis.lower()] = flatarr
             self._crds[axis.upper()] = openarr
-            if self.has_cc:
-                self._calc_cc_crds([axis])
 
-    def _calc_cc_crds(self, axes):
-        for a in axes:
+        # recalculate all cell centers, and refresh face / edges
+        sfx = self.CENTER["Cell"]
+        for a in self.axes:
             a = self.axis_name(a)  # validate input
             ccarr = 0.5 * (self._crds[a][1:] + self._crds[a][:-1])
             flatarr, openarr = self.ogrid_single(a, ccarr)
-            self._crds[a + "cc"] = flatarr
-            self._crds[a.upper() + "cc"] = openarr
+            self._crds[a + sfx] = flatarr
+            self._crds[a.upper() + sfx] = openarr
+
+        crds_nc = self.get_crd()
+        crds_nc_shaped = self.get_crd(shaped=True)
+        crds_cc = self.get_crd(center="Cell")
+        crds_cc_shaped = self.get_crd(shaped=True, center="Cell")
+
+        # store references to face and edge centers while we're here
+        sfx = self.CENTER["Face"]
+        for i, a in enumerate(self.axes):
+            self._crds[a + sfx] = [None] * len(self.axes)
+            self._crds[a.upper() + sfx] = [None] * len(self.axes)
+            for j, d in enumerate(self.axes): #pylint: disable=W0612
+                if i == j:
+                    self._crds[a + sfx][j] = crds_nc[i]
+                    self._crds[a.upper() + sfx][j] = crds_nc_shaped[i]
+                else:
+                    self._crds[a + sfx][j] = crds_cc[i]
+                    self._crds[a.upper() + sfx][j] = crds_cc_shaped[i]
+        # same as face, but swap nc with cc
+        sfx = self.CENTER["Face"]
+        for i, a in enumerate(self.axes):
+            self._crds[a + sfx] = [None] * len(self.axes)
+            self._crds[a.upper() + sfx] = [None] * len(self.axes)
+            for j, d in enumerate(self.axes):
+                if i == j:
+                    self._crds[a + sfx][j] = crds_cc[i]
+                    self._crds[a.upper() + sfx][j] = crds_cc_shaped[i]
+                else:
+                    self._crds[a + sfx][j] = crds_nc[i]
+                    self._crds[a.upper() + sfx][j] = crds_nc_shaped[i]
 
     def ogrid_single(self, axis, arr):
         """ returns (flat array, open array) """
@@ -135,19 +164,14 @@ class StructuredCrds(Coordinates):
         else:
             return self.axes.index(axis)
 
-    def axis_name(self, axis, shaped=False):
+    def axis_name(self, axis):
         if isinstance(axis, str):
             if axis in self._crds:
-                nom = axis
+                return axis
             else:
                 raise KeyError(axis)
         else:
-            nom = self.axes[axis]
-
-        if shaped:
-            return nom.upper()
-        else:
-            return nom
+            return self.axes[axis]
 
     @staticmethod
     def parse_slice_str(selection):
@@ -208,9 +232,6 @@ class StructuredCrds(Coordinates):
         # colapse = [None] * self.dim
         slcrds = [None] * self.dim
         reduced = []
-
-        # if use_cc:
-        #     assert(self.has_cc)
 
         # go through all axes and see if they are selected
         for dind, axis in enumerate(self.axes):
@@ -290,21 +311,20 @@ class StructuredCrds(Coordinates):
         # print("*** crds: ", slcrds)
         return tuple(slices), slcrds, reduced
 
-    def get_nc(self, axis=None, shaped=False):
+    def get_crd(self, axis=None, shaped=False, center=None):
+        """ if axis is not specified, return all coords,
+        shaped makes axis capitalized and returns ogrid like crds
+        shaped is only used if axis == None
+        sfx can be None, Node, Cell, Face, Edge """
+        
         if axis == None:
-            axis = self.axes
-        if isinstance(axis, (list, tuple)):
-            return [self._crds[self.axis_name(a, shaped)] for a in axis]
-        else:
-            return self._crds[self.axis_name(axis, shaped)]
+            axis = [a.upper() if shaped else a for a in self.axes]
 
-    def get_cc(self, axis=None, shaped=False):
-        if axis == None:
-            axis = self.axes
+        sfx = self.CENTER[center]
         if isinstance(axis, (list, tuple)):
-            return [self._crds[self.axis_name(a, shaped) + "cc"] for a in axis]
+            return [self._crds[self.axis_name(a) + sfx] for a in axis]
         else:
-            return self._crds[self.axis_name(axis, shaped) + "cc"]
+            return self._crds[self.axis_name(axis) + sfx]
 
     def get_culled_axes(self, ignore=2):
         """ return list of axes names, but discard axes whose coords have
@@ -315,11 +335,11 @@ class StructuredCrds(Coordinates):
     def get_clist(self, slce=slice(None)):
         """ return a clist of the coordinates sliced if you wish
         I recommend using numpy.s_ for making the slice """
-        return [[axis, self.get_nc(axis)[slce]] for axis in self.axes]
+        return [[axis, self.get_crd(axis)[slce]] for axis in self.axes]
 
     def __getitem__(self, axis):
-        """ returns coord  """
-        return self.get_nc(axis)
+        """ returns coord identified by axis """
+        return self.get_crd(axis)
 
     def __setitem__(self, axis, arr):
         return self.set_crds((axis, arr))

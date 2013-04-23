@@ -25,7 +25,7 @@ def streamlines(fld, seeds, *args, **kwargs):
     nptype = fld.data.dtype.name
 
     dat = fld.data
-    crdz, crdy, crdx = fld.crds.get_cc()
+    crdz, crdy, crdx = fld.crds.get_crd(center="Cell")
 
     if isinstance(seeds, seed.SeedGen):
         # recast the seed data type... this should be done better...

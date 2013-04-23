@@ -51,11 +51,11 @@ def div(fld):
     vx, vy, vz = fld.component_views()
 
     if fld.center == "Cell":
-        crdz, crdy, crdx = fld.crds.get_cc(shaped=True)
+        crdz, crdy, crdx = fld.crds.get_crd(shaped=True, center="Cell")
         divcenter = "Cell"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     elif fld.center == "Node":
-        crdz, crdy, crdx = fld.crds.get_nc(shaped=True)
+        crdz, crdy, crdx = fld.crds.get_crd(shaped=True)
         divcenter = "Node"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     else:

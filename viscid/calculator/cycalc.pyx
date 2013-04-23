@@ -73,13 +73,13 @@ def div(fld):
     vect = fld.data
 
     if fld.center == "Cell":
-        crdz, crdy, crdx = fld.crds.get_cc()
+        crdz, crdy, crdx = fld.crds.get_crd(center="Cell")
         divcenter = "Cell"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
         dest_shape = [n - 2 for n in fld.crds.shape_cc]
         div_arr = np.empty(dest_shape, dtype=nptype)
     elif fld.center == "Node":
-        crdz, crdy, crdx = fld.crds.get_nc()
+        crdz, crdy, crdx = fld.crds.get_crd()
         divcenter = "Node"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
         dest_shape = [n - 2 for n in fld.crds.shape_nc]
