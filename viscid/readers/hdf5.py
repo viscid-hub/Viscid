@@ -3,17 +3,17 @@ from warnings import warn
 
 from . import vfile
 
-HAS_H5PY = False
 try:
     import h5py
     HAS_H5PY = True
 except ImportError:
+    HAS_H5PY = False
     warn("h5py not in use, no hdf5 support.", ImportWarning)
 
 
 class FileHDF5(vfile.VFile):
     """  """
-    _detector = '.*\.h5\s*$'
+    _detector = r".*\.h5\s*$"
 
     def __init__(self, fname, **kwargs):
         assert(HAS_H5PY)

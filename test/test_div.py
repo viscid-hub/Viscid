@@ -13,7 +13,7 @@ from time import time
 
 import numpy as np
 import numexpr as ne
-import pylab as pl
+import matplotlib.pyplot as plt
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
 if not _viscid_root in sys.path:
@@ -58,17 +58,17 @@ def run_div_test(fld, exact, show=False):
     planes = ["y=0.", "z=0."]
     nrows = 4
     ncols = len(planes)
-    ax = pl.subplot2grid((nrows, ncols), (0, 0))
+    ax = plt.subplot2grid((nrows, ncols), (0, 0))
     ax.axis("equal")
 
     for i, p in enumerate(planes):
-        pl.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
         mpl.plot(result_numexpr, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
         mpl.plot(result_cython, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (2, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (2, i), sharex=ax, sharey=ax)
         mpl.plot(backend_diff, p, show=False, verb=verb)
-        pl.subplot2grid((nrows, ncols), (3, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (3, i), sharex=ax, sharey=ax)
         mpl.plot(result_diff, p, show=False, verb=verb)
 
     if show:
@@ -87,8 +87,8 @@ def main():
     half = np.array([0.5], dtype=dtype) #pylint: disable=W0612
     two = np.array([2.0], dtype=dtype) #pylint: disable=W0612
 
-    Z, Y, X = crds.get_nc(shaped=True) #pylint: disable=W0612
-    Zcc, Ycc, Xcc = crds.get_cc(shaped=True) #pylint: disable=W0612
+    Z, Y, X = crds.get_crd(shaped=True)
+    Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell")
 
     if verb:
         print("Cell centered tests")
@@ -102,8 +102,9 @@ def main():
 
     # cell centered field and exact divergence
     fld_v = field.VectorField("v_cc", crds, [vx, vy, vz],
-                              force_layout=field.LAYOUT_INTERLACED,
-                              center="Cell", forget_source=True)
+                              center="Cell", forget_source=True,
+                              info={"force_layout": field.LAYOUT_INTERLACED},
+                             )
     fld_exact = field.ScalarField("exact div", crds, exact,
                                   center="Cell", forget_source=True)
     run_div_test(fld_v, fld_exact, show=show)
@@ -120,8 +121,9 @@ def main():
 
     # cell centered field and exact divergence
     fld_v = field.VectorField("v_nc", crds, [vx, vy, vz],
-                              force_layout=field.LAYOUT_INTERLACED,
-                              center="Node", forget_source=True)
+                              center="Node", forget_source=True,
+                              info={"force_layout": field.LAYOUT_INTERLACED},
+                             )
     fld_exact = field.ScalarField("exact div", crds, exact,
                                   center="Node", forget_source=True)
     run_div_test(fld_v, fld_exact, show=show)

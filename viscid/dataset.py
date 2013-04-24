@@ -3,7 +3,7 @@
 
 from __future__ import print_function
 from warnings import warn
-import bisect
+# import bisect
 
 from .bucket import Bucket
 
@@ -94,19 +94,45 @@ class Dataset(object):
     def __getitem__(self, item):
         """ if a child exists with handle, return it, else ask
         the active child if it knows what you want """
-        if item in self:
+        if item in self.children:
             return self.get_child(item)
         elif self.active_child is not None:
             return self.active_child[item]
         else:
             raise KeyError()
 
+    def __delitem__(self, item):
+        child = self.get_child(item)
+        child.unload()
+        self.children.remove_item(child)
+
+    def __len__(self):
+        return self.children.__len__()
+
+    def __setitem__(self, name, child):
+        # um... is this kosher??
+        child.name = name
+        self.add(child)
+
     def __contains__(self, item):
-        return item in self.children
+        if item in self.children:
+            return True
+        # FIXME: this might cause a bug somewhere someday
+        if item in self.active_child:
+            return True
+        return False
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.unload()
+        return None
 
 
 class DatasetTemporal(Dataset):
     _last_ind = 0
+    # _all_times = None
 
     def __init__(self, name, time=None):
         super(DatasetTemporal, self).__init__(name, time=time)
@@ -114,6 +140,7 @@ class DatasetTemporal(Dataset):
         # TODO: it's kind of a kludge to create a bucket then destroy it
         # so soon, but it's not a big deal
         self.children = []
+        # self._all_times = []
 
     def add(self, child, set_active=True):
         if child is None:
@@ -122,7 +149,10 @@ class DatasetTemporal(Dataset):
             child.time = 0.0
             warn("A child with no time? Something is strange...")
         # this keeps the children in time order
-        bisect.insort(self.children, (child.time, child))
+        self.children.append((child.time, child))
+        self.children.sort()
+        # binary in sorting... maybe more efficient?
+        #bisect.insort(self.children, (child.time, child))
         if set_active:
             self.active_child = child
 
@@ -178,34 +208,45 @@ class DatasetTemporal(Dataset):
             # NOTE: this has gone too far
             time = float(item)
             last_ind = self._last_ind
-            closest_ind = 0
+            closest_ind = -1
+            # print(time, last_ind)
             if time >= self.children[last_ind][0]:
+                # print("forward")
                 i = last_ind + 1
                 while i < len(self.children):
                     this_time = self.children[i][0]
-                    if this_time >= time:
+                    # print(i, this_time)
+                    if time <= this_time:
                         avg = 0.5 * (self.children[i - 1][0] + this_time)
                         if time >= avg:
+                            # print(">= ", avg)
                             closest_ind = i
                         else:
+                            # print("< ", avg)
                             closest_ind = i - 1
                         break
                     i += 1
-                closest_ind = len(self.children) - 1
+                if closest_ind < 0:
+                    closest_ind = len(self.children) - 1
             else:
+                # print("backward")
                 i = last_ind - 1
-                while i > 0:
+                while i >= 0:
                     this_time = self.children[i][0]
-                    if self.children[i][0] <= time:
+                    # print(i, this_time)
+                    if time >= self.children[i][0]:
                         avg = 0.5 * (self.children[i + 1][0] + this_time)
                         if time >= avg:
+                            # print(">= ", avg)
                             closest_ind = i + 1
                         else:
+                            # print("< ", avg)
                             closest_ind = i
                         break
                     i -= 1
-                closest_ind = 0
-
+                if closest_ind < 0:
+                    closest_ind = 0
+            # print("closest_ind: ", closest_ind)
             self._last_ind = closest_ind
             return self.children[closest_ind][1]
 
@@ -216,8 +257,7 @@ class DatasetTemporal(Dataset):
             float(item)
             return True
         except ValueError:
-            return False
-
+            return item in self.active_child
 
     # def __getitem__(self, item):
     #     """ Get a dataitem or list of dataitems based on time, grid, and

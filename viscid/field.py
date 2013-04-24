@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-# Fields belong in grids, or by themselves as a result of a calculation.
-# Important: The field must be able to reshape itself to the shape of its
-# coordinates, else there will be blood. Also, the order of the coords
-# matters, it is assumed that if the coords are z, y, x then the data
-# is iz, iy, ix. This can be permuted any which way, but order matters.
+""" Fields belong in grids, or by themselves as a result of a calculation.
+Important: The field must be able to reshape itself to the shape of its
+coordinates, else there will be blood. Also, the order of the coords
+matters, it is assumed that if the coords are z, y, x then the data
+is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
 from warnings import warn
@@ -54,22 +54,20 @@ class Field(object):
     _cache = None  # this will always be a numpy array
 
     def __init__(self, name, crds, data, center="Node", time=0.0,
-                 forget_source=False, info=None):
+                 info=None, forget_source=False):
         self.name = name
         self.center = center
         self.time = time
         self.crds = crds
         self.data = data
 
-        if info:
-            self.info = info
-        else:
-            self.info = {}
+        self.info = {} if info is None else info
 
         if forget_source:
             self.source_data = self.data
 
     def unload(self):
+        """ does not guarentee that the memory will be freed """
         self._purge_cache()
 
     @property
@@ -183,16 +181,118 @@ class Field(object):
             return self
 
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
-        fld = wrap_field(self.TYPE, self.name + "_slice", crds,
-                         self.data[slices], center=self.center, time=0.0)
+        fld = self.__fld_wrap__(self.data[slices],
+                                {"name": self.name + "_slice",
+                                 "crds": crds,
+                                })
         # if there are reduced dims, put them into the info dict
         if len(reduced) > 0:
             fld.info["reduced"] = reduced
         return fld
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.unload()
+        return None
 
     def __getitem__(self, item):
+        if isinstance(item, str) and item in self.crds:
+            return self.crds[item]
         return self.data[item]
+
+    ## emulate a numeric type
+    def __fld_wrap__(self, arr, context=None, typ=None):
+        """ arr is the data to wrap... context is exta info to pass
+        to the constructor """
+        if arr is NotImplemented:
+            return NotImplemented
+        if context is None:
+            context = {}
+        name = context.get("name", self.name)
+        crds = context.get("crds", self.crds)
+        center = context.get("center", self.center)
+        time = context.get("time", self.time)
+        info = context.get("time", self.info)
+        # should it always return the same type as self?
+        if typ is None:
+            typ = type(self)
+        return typ(name, crds, arr, time=time, center=center, info=info)
+
+    def __add__(self, other):
+        return self.__fld_wrap__(self.data.__add__(other.data))
+    def __sub__(self, other):
+        return self.__fld_wrap__(self.data.__sub__(other.data))
+    def __mul__(self, other):
+        return self.__fld_wrap__(self.data.__mul__(other.data))
+    def __div__(self, other):
+        return self.__fld_wrap__(self.data.__div__(other.data))
+    def __truediv__(self, other):
+        return self.__fld_wrap__(self.data.__truediv__(other.data))
+    def __floordiv__(self, other):
+        return self.__fld_wrap__(self.data.__floordiv__(other.data))
+    def __mod__(self, other):
+        return self.__fld_wrap__(self.data.__mod__(other.data))
+    def __divmod__(self, other):
+        return self.__fld_wrap__(self.data.__divmod__(other.data))
+    def __pow__(self, other):
+        return self.__fld_wrap__(self.data.__pow__(other.data))
+    def __lshift__(self, other):
+        return self.__fld_wrap__(self.data.__lshift__(other.data))
+    def __rshift__(self, other):
+        return self.__fld_wrap__(self.data.__rshift__(other.data))
+    def __and__(self, other):
+        return self.__fld_wrap__(self.data.__rshift__(other.data))
+    def __xor__(self, other):
+        return self.__fld_wrap__(self.data.__rshift__(other.data))
+    def __or__(self, other):
+        return self.__fld_wrap__(self.data.__rshift__(other.data))
+
+    def __radd__(self, other):
+        return self.__fld_wrap__(self.data.__radd__(other.data))
+    def __rsub__(self, other):
+        return self.__fld_wrap__(self.data.__rsub__(other.data))
+    def __rmul__(self, other):
+        return self.__fld_wrap__(self.data.__rmul__(other.data))
+    def __rdiv__(self, other):
+        return self.__fld_wrap__(self.data.__rdiv__(other.data))
+    def __rtruediv__(self, other):
+        return self.__fld_wrap__(self.data.__rtruediv__(other.data))
+    def __rfloordiv__(self, other):
+        return self.__fld_wrap__(self.data.__rfloordiv__(other.data))
+    def __rmod__(self, other):
+        return self.__fld_wrap__(self.data.__rmod__(other.data))
+    def __rdivmod__(self, other):
+        return self.__fld_wrap__(self.data.__rdivmod__(other.data))
+    def __rpow__(self, other):
+        return self.__fld_wrap__(self.data.__rpow__(other.data))
+
+    def __iadd__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+    def __isub__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+    def __imul__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+    def __idiv__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+    def __itruediv__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+    def __ifloordiv__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+    def __imod__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+    def __ipow__(self, other):
+        raise NotImplementedError("Don't touch me like that")
+
+    def __neg__(self):
+        return self.__fld_wrap__(self.data.__neg__())
+    def __pos__(self):
+        return self.__fld_wrap__(self.data.__pos__())
+    def __abs__(self):
+        return self.__fld_wrap__(self.data.__abs__())
+    def __invert__(self):
+        return self.__fld_wrap__(self.data.__invert__())
 
 
 class ScalarField(Field):
@@ -202,14 +302,13 @@ class ScalarField(Field):
 class VectorField(Field):
     TYPE = "Vector"
 
-    force_layout = LAYOUT_DEFAULT
     _layout = None
     _ncomp = None
 
-    def __init__(self, name, crds, data, force_layout=LAYOUT_DEFAULT,
-                 **kwargs):
-        self.force_layout = force_layout
+    def __init__(self, name, crds, data, **kwargs):        
         super(VectorField, self).__init__(name, crds, data, **kwargs)
+        if not "force_layout" in self.info:
+            self.info["force_layout"] = LAYOUT_DEFAULT
 
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
@@ -254,8 +353,8 @@ class VectorField(Field):
 
         # we will preserve layout or we already have the correct layout,
         # do no translation... just like Field._translate_data
-        if self.force_layout == LAYOUT_DEFAULT or \
-           self.force_layout == dat_layout:
+        if self.info["force_layout"] == LAYOUT_DEFAULT or \
+           self.info["force_layout"] == dat_layout:
             self._layout = dat_layout
             return self._dat_to_ndarray(dat)
 
@@ -267,7 +366,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat)
 
         # ok, we demand FLAT arrays, make it so
-        elif self.force_layout == LAYOUT_FLAT:
+        elif self.info["force_layout"] == LAYOUT_FLAT:
             if dat_layout != LAYOUT_INTERLACED:
                 raise RuntimeError("should not be here")
 
@@ -282,7 +381,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # ok, we demand INTERLACED arrays, make it so
-        elif self.force_layout == LAYOUT_INTERLACED:
+        elif self.info["force_layout"] == LAYOUT_INTERLACED:
             if dat_layout != LAYOUT_FLAT:
                 raise RuntimeError("should not be here")
 
@@ -301,7 +400,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # catch the remaining cases
-        elif self.force_layout == LAYOUT_OTHER:
+        elif self.info["force_layout"] == LAYOUT_OTHER:
             raise RuntimeError("How should I know how to force other layout?")
         else:
             raise ValueError("Bad argument for layout forcing")

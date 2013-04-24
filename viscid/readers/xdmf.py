@@ -5,7 +5,14 @@ from __future__ import print_function
 import os
 from warnings import warn
 
-from lxml import etree
+try:
+    from lxml import etree
+    HAS_LXML = True
+except ImportError:
+    HAS_LXML = False
+    warn("lxml not installed, no xpointer support.", ImportWarning)
+
+
 import numpy as np
 
 from . import vfile
@@ -23,6 +30,7 @@ from .. import field
 
 class FileXDMF(vfile.VFile):
     """ on init, parse an xdmf file into datasets, grids, and fields """
+    _detector = r".*\.(xmf|xdmf)\s*$"
     _xdmf_defaults = {
         "Attribute": {
             "Name": None,
@@ -82,7 +90,6 @@ class FileXDMF(vfile.VFile):
             }
         }
 
-    _detector = '.*\.(xmf|xdmf)\s*$'
     tree = None
 
     def __init__(self, fname, vfilebucket=None, **kwargs):
@@ -175,6 +182,7 @@ class FileXDMF(vfile.VFile):
             for i, subgrid in enumerate(el.findall("./Grid")):
 
                 t = times[i] if (times is not None and i < len(times)) else time
+                # print(subgrid, grd, t)
                 self._parse_grid(subgrid, parent_grid=grd, time=t)
             grd.activate(0)
 
@@ -204,15 +212,15 @@ class FileXDMF(vfile.VFile):
         #         grid.add_field(fld)
 
         if grd:
-            if time:
+            if time is not None:
                 grd.time = time
-            if topoattrs:
+            if topoattrs is not None:
                 grd.topology_info = topoattrs
-            if geoattrs:
+            if geoattrs is not None:
                 grd.geometry_info = geoattrs
-            if coords:
+            if coords is not None:
                 grd.set_crds(coords)
-            if parent_grid:
+            if parent_grid is not None:
                 parent_grid.add(grd)
 
         return grd  # can be None
@@ -328,7 +336,7 @@ class FileXDMF(vfile.VFile):
             fname, loc = item.text.strip().split(':')
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
-            h5file = self.vfilebucket.load(fname).file
+            h5file = self.vfilebucket.load(fname).file #pylint: disable=E1103
             arr = h5file[loc]
             return arr, attrs
 

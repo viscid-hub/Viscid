@@ -4,7 +4,7 @@
 from __future__ import print_function
 
 from .bucket import Bucket
-
+from . import verror
 
 class Grid(object):
     """ Grids contain fields... Datasets recurse to grids using __getitem__
@@ -13,6 +13,9 @@ class Grid(object):
     geometry_info = None
     crds = None
     fields = None
+    # so... not all grids have times? if we try to access time on a grid
+    # that doesnt have one, there is probably a bug somewhere
+    # time = None
 
     name = None
 
@@ -55,7 +58,13 @@ class Grid(object):
         return self.crds[handle]
 
     def get_field(self, fldname, time=None): #pylint: disable=W0613
-        return self.fields[fldname]
+        try:
+            return self.fields[fldname]
+        except KeyError:
+            raise verror.FieldNotFound("{0} not found".format(fldname))
+
+    def __contains__(self, item):
+        return item in self.fields
 
     def __getitem__(self, item):
         if item in self.fields:
@@ -63,10 +72,17 @@ class Grid(object):
         elif item in self.crds:
             return self.get_crd(item)
         else:
-            raise KeyError()
+            raise verror.FieldNotFound("{0} not found".format(item))
 
     def __str__(self):
         return "<Grid name={0}>".format(self.name)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self):
+        self.unload()
+        return None
 
 ##
 ## EOF

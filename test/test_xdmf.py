@@ -7,7 +7,7 @@ from __future__ import print_function
 import sys
 import os
 
-import pylab as pl
+import matplotlib.pyplot as plt
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
 if not _viscid_root in sys.path:
@@ -34,22 +34,22 @@ def main():
     ncols = 2
 
 
-    pl.subplot2grid((nrows, ncols), (0, 0))
+    plt.subplot2grid((nrows, ncols), (0, 0))
     mpl.plot(bx, "z=0i,x=:30i", earth=True, show=False)
-    pl.subplot2grid((nrows, ncols), (1, 0))
+    plt.subplot2grid((nrows, ncols), (1, 0))
     mpl.plot(bx, "z=0.5,x=0i:2i,y=-100:100", earth=True, show=False)
-    pl.subplot2grid((nrows, ncols), (2, 0))
+    plt.subplot2grid((nrows, ncols), (2, 0))
     mpl.plot(bx, "z=-1i,x=-10:,y=-100:100", earth=True, show=False)
-    pl.subplot2grid((nrows, ncols), (3, 0))
+    plt.subplot2grid((nrows, ncols), (3, 0))
     mpl.plot(bx, "x=0,y=-5:5,z=-5:5", earth=True, show=False)
 
-    pl.subplot2grid((nrows, ncols), (0, 1))
+    plt.subplot2grid((nrows, ncols), (0, 1))
     mpl.plot(bx2d, "y=20,z=-100:100", earth=True, show=False)
-    pl.subplot2grid((nrows, ncols), (1, 1))
+    plt.subplot2grid((nrows, ncols), (1, 1))
     mpl.plot(bx2d, "x=0i:20i,y=0,z=0", show=False)
-    pl.subplot2grid((nrows, ncols), (2, 1))
+    plt.subplot2grid((nrows, ncols), (2, 1))
     mpl.plot(bx2d, earth=True, show=False)
-    pl.subplot2grid((nrows, ncols), (3, 1))
+    plt.subplot2grid((nrows, ncols), (3, 1))
     mpl.plot(bx2d, "z=0,x=-20:0", show=False)
 
     if show:

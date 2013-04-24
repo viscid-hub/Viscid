@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# This has a mechanism to dispatch to different backends. You can change the
-# order of preference of the backend by changing default_backends.
-# TODO: this dispatch mechanism is very simple, maybe something a little more
-# flexable would be useful down the line?
+""" This has a mechanism to dispatch to different backends. You can change the
+order of preference of the backend by changing default_backends.
+TODO: this dispatch mechanism is very simple, maybe something a little more
+flexable would be useful down the line? """
 
 from __future__ import print_function
 from warnings import warn
@@ -11,6 +11,7 @@ import numpy as np
 
 from .. import field
 from .. import vutil
+from .. import verror
 
 try:
     from . import cycalc
@@ -62,7 +63,8 @@ def _check_backend(preferred, implemented, only=False):
                 vutil.warn("Unknown backend: {0}".format(backend))
 
     if only:
-        raise RuntimeError("No preferred backend usable: {0}".format(preferred))
+        raise verror.BackendNotFound("No preferred backend "
+                                     "usable: {0}".format(preferred))
 
     for backend in implemented:
         try:
@@ -74,8 +76,8 @@ def _check_backend(preferred, implemented, only=False):
             warn("Unknown backend (Should not be "
                  "implemented?): {0}".format(backend))
 
-    raise RuntimeError("No implemented backends are installed "
-                       "for this function.")
+    raise verror.BackendNotFound("No implemented backends are installed "
+                                 "for this function.")
 
 def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None,
                only=False):
@@ -85,9 +87,7 @@ def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None,
     if use_backend == "numexpr":
         diff = necalc.difference(fld_a, fld_b, sla, slb)
     elif use_backend == "numpy":
-        a = fld_a.data[sla]
-        b = fld_b.data[slb]
-        diff = a - b
+        return fld_a[sla] - fld_b[slb]
 
     return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
                             diff, center=fld_a.center, time=fld_a.time)
@@ -133,6 +133,28 @@ def abs_val(fld, backends=None, only=False):
 
     return field.wrap_field(fld.TYPE, "abs " + fld.name, fld.crds,
                             absarr, center=fld.center, time=fld.time)
+
+def abs_min(fld, backends=None, only=False):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        absmin = necalc.abs_min(fld)
+    elif use_backend == "numpy":
+        absmin = np.min(np.abs(fld.data))
+
+    return absmin
+
+def abs_max(fld, backends=None, only=False):
+    implemented_backends = ["numexpr", "numpy"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        absmax = necalc.abs_max(fld)
+    elif use_backend == "numpy":
+        absmax = np.max(np.abs(fld.data))
+
+    return absmax
 
 def magnitude(fld, backends=None, only=False):
     implemented_backends = ["numexpr", "cython", "numpy", "native"]

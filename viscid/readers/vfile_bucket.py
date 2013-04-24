@@ -5,7 +5,7 @@ import os
 # import sys
 
 from ..bucket import Bucket
-from vfile import VFile
+from .vfile import VFile
 
 
 class VFileBucket(Bucket):

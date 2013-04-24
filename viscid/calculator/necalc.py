@@ -28,8 +28,16 @@ def abs_diff(fld_a, fld_b, sla=slice(None), slb=slice(None)):
     diff = ne.evaluate("abs(a - b)")
     return diff
 
-def abs_val(fld):
-    a = fld.data  #pylint: disable=W0612
+def abs_max(fld, sl=slice(None)):
+    a = fld.data[sl] #pylint: disable=W0612
+    return np.max(ne.evaluate("abs(a)"))
+
+def abs_min(fld, sl=slice(None)):
+    a = fld.data[sl] #pylint: disable=W0612
+    return np.min(ne.evaluate("abs(a)"))
+
+def abs_val(fld, sl=slice(None)):
+    a = fld.data[sl]  #pylint: disable=W0612
     absarr = ne.evaluate("abs(a)")
     return absarr
 
@@ -43,11 +51,11 @@ def div(fld):
     vx, vy, vz = fld.component_views()
 
     if fld.center == "Cell":
-        crdz, crdy, crdx = fld.crds.get_cc(shaped=True)
+        crdz, crdy, crdx = fld.crds.get_crd(shaped=True, center="Cell")
         divcenter = "Cell"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     elif fld.center == "Node":
-        crdz, crdy, crdx = fld.crds.get_nc(shaped=True)
+        crdz, crdy, crdx = fld.crds.get_crd(shaped=True)
         divcenter = "Node"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     else:

@@ -44,7 +44,19 @@ cy_ldflags = []
 cy_defs = []
 cy_defs.append(["viscid.calculator.cycalc",
                 ["viscid/calculator/cycalc"],
-                ["viscid/calculator/cycalc_util.pxd"]])
+                ["viscid/calculator/cycalc_util.pxd"]
+               ])
+cy_defs.append(["viscid.calculator.integrate",
+                ["viscid/calculator/integrate"],
+                ["viscid/calculator/cycalc_util.pxd",
+                 "viscid/calculator/cycalc.pxd"]
+               ])
+cy_defs.append(["viscid.calculator.streamline",
+                ["viscid/calculator/streamline"],
+                ["viscid/calculator/cycalc_util.pxd",
+                 "viscid/calculator/cycalc.pxd",
+                 "viscid/calculator/integrate.pxd"]
+               ])
 
 ############################################################################
 # below this line shouldn't need to be changed except for version and stuff
@@ -110,7 +122,7 @@ for d in cy_defs:
                            extra_link_args=cy_ldflags)]
 
 setup(name='viscid',
-      version='0.32',
+      version='0.40',
       description='Visualization in python',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',

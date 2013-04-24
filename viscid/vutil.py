@@ -2,7 +2,9 @@
 
 from __future__ import print_function
 import sys
-from time import time
+from timeit import default_timer as time
+
+from . import verror
 
 def warn(message):
     sys.stderr.write("WARNING: {0}\n".format(message))
@@ -23,6 +25,15 @@ def timereps(reps, func, *args, **kwargs):
         end = time()
         arr[i] = end - start
     return min(arr), max(arr), sum(arr) / reps
+
+def find_field(vfile, fld_name_lst):
+    """ convenience function to get a field that could be called many things
+    returns the first fld_name in the list that is in the file """
+    for fld_name in fld_name_lst:
+        if fld_name in vfile:
+            return vfile[fld_name]
+    raise verror.FieldNotFound("file {0} contains none of "
+                               "{1}".format(vfile, fld_name_lst))
 
 ##
 ## EOF

@@ -68,13 +68,13 @@ class Bucket(object):
         s = ""
         for i, item in enumerate(self._items):
             s += "item: " + str(item) + "\nhandles:\n"
-            for h, onum in self._handles.iteritems():
+            for h, onum in self._handles.items():
                 if onum == i:
                     if isinstance(h, str):
                         s += '    "{0}"\n'.format(h)
                     else:
                         s += '    {0}\n'.format(h)
-            #hs = [h for h, onum in self._handles.iteritems() \
+            #hs = [h for h, onum in self._handles.items() \
             #        if onum == i and isinstance(h, str)]
             #s += "\n    ".join(hs)
             #s += "\n"
@@ -101,6 +101,9 @@ class Bucket(object):
         elif key is not None:
             key = [key]
         self.set_item(key, value)
+
+    def __delitem__(self, handle):
+        self.remove_item_handle(handle)
 
     def __iter__(self):
         return self._items.__iter__()
