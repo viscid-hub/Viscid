@@ -21,7 +21,7 @@ class VFileBucket(Bucket):
     #     absfname = os.path.abspath(fname)
     #     self[(absfname, fname)] = f
 
-    def load(self, fnames, **kwargs):
+    def load(self, fnames, index_handle=True, **kwargs):
         """ initialize obj before it's put into the list, whatever is returned
             is what gets stored, returning None means object init failed, do
             not add to the _objs list
@@ -56,7 +56,7 @@ class VFileBucket(Bucket):
                     raise IOError(s)
 
             if f is not None:
-                self.set_item([absfname, fname], f)
+                self.set_item([absfname, fname], f, index_handle=index_handle)
             files.append(f)
 
         if ret_as_list:

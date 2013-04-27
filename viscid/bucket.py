@@ -7,12 +7,17 @@ class Bucket(object):
     """ This is an interface where  """
     _items = None
     _handles = None
+    # if index handle, set_item adds this number as a handle and increments it
+    # this is useful for hiding loads that are not user initiated, such as
+    # an xdmf file loading an h5 file under the covers
+    _int_counter = None
 
     def __init__(self):
         self._items = []
         self._handles = {}
+        self._int_counter = 0
 
-    def set_item(self, handles, item, warning=True):
+    def set_item(self, handles, item, warning=True, index_handle=True):
         """ if index_handle is true then the index of item will be included as
             a handle making the bucket indexable like a list """
         # found = False
@@ -24,7 +29,9 @@ class Bucket(object):
         try:
             self.index(item)
         except ValueError:
-            handles += [len(self._items)] # handles += [onum]
+            if index_handle:
+                handles += [self._int_counter] # handles += [onum]
+                self._int_counter += 1
             self._items.append(item)
 
         self._set_handles(handles, item, warning=warning)

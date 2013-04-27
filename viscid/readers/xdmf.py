@@ -336,7 +336,7 @@ class FileXDMF(vfile.VFile):
             fname, loc = item.text.strip().split(':')
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
-            h5file = self.vfilebucket.load(fname).file #pylint: disable=E1103
+            h5file = self.vfilebucket.load(fname, index_handle=False).file
             arr = h5file[loc]
             return arr, attrs
 
