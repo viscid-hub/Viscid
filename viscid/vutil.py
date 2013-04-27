@@ -6,6 +6,8 @@ import logging
 
 from . import verror
 
+spill_prefix = ". "
+
 def find_field(vfile, fld_name_lst):
     """ convenience function to get a field that could be called many things
     returns the first fld_name in the list that is in the file """

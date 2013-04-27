@@ -6,7 +6,7 @@ import logging
 # import bisect
 
 from .bucket import Bucket
-
+from .vutil import spill_prefix
 
 class Dataset(object):
     """ datasets contain grids or other datasets
@@ -62,12 +62,14 @@ class Dataset(object):
             except AttributeError:
                 pass
 
-    def spill(self):
+    def spill(self, recursive=False, prefix=""):
         for child in self.children:
             suffix = ""
             if child is self.active_child:
-                suffix = "  <-- active"
-            print(child, suffix)
+                suffix = " <-- active"
+            print("{0}{1}{2}".format(prefix, child, suffix))
+            if recursive:
+                child.spill(recursive=True, prefix=prefix + spill_prefix)
 
     # def get_non_dataset(self):
     #     """ recurse down datasets until active_grid is not a subclass
@@ -129,6 +131,13 @@ class Dataset(object):
         self.unload()
         return None
 
+    # def __iter__(self):
+    #     for child in self.children:
+    #         yield child
+
+    # def __next__(self):
+    #     raise NotImplementedError()
+
 
 class DatasetTemporal(Dataset):
     _last_ind = 0
@@ -173,12 +182,14 @@ class DatasetTemporal(Dataset):
         temporal datasets """
         self.activate(time)
 
-    def spill(self):
+    def spill(self, recursive=False, prefix=""):
         for child in self.children:
             suffix = ""
             if child[1] is self.active_child:
-                suffix = "  <-- active"
-            print(child, suffix)
+                suffix = " <-- active"
+            print("{0}{1}{2}".format(prefix, child, suffix))
+            if recursive:
+                child[1].spill(recursive=True, prefix=prefix + spill_prefix)
 
     def get_field(self, fldname, time=None):
         """ recurse down active children to get a field """

@@ -17,11 +17,14 @@ def main():
     # logging.warn(args)
     # logging.info(args)
     # logging.debug(args)
+    print()
 
     files = readers.load(args.files)
+    readers.__filebucket__.spill()
+    print()
     
-    print(files)
-    # files.spill()
+    for f in files:
+        f.spill(recursive=True)
 
 if __name__ == "__main__":
     main()

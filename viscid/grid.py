@@ -5,6 +5,7 @@ from __future__ import print_function
 
 from .bucket import Bucket
 from . import verror
+from .vutil import spill_prefix
 
 class Grid(object):
     """ Grids contain fields... Datasets recurse to grids using __getitem__
@@ -40,8 +41,8 @@ class Grid(object):
             fld.unload()
         # TODO: does anything else need to be unloaded in here?
 
-    def spill(self):
-        print(self.fields)
+    def spill(self, recursive=False, prefix=""):
+        self.fields.spill(prefix=prefix + spill_prefix)
 
     # def add_fields(self, name_field_list):
     #     """ input: [(name, data), (name1, name2, data), ...] """

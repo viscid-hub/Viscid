@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+from .vutil import spill_prefix
 import logging
 
 class Bucket(object):
@@ -69,23 +70,18 @@ class Bucket(object):
                 return i
         raise ValueError("item's object id not in list")
 
-    def handle_string(self):
+    def handle_string(self, prefix=""):
         """ return string representation of handles and items """
         # this is inefficient, but probably doesn't matter
         s = ""
         for i, item in enumerate(self._items):
-            s += "item: " + str(item) + "\nhandles:\n"
-            for h, onum in self._handles.items():
-                if onum == i:
-                    if isinstance(h, str):
-                        s += '    "{0}"\n'.format(h)
-                    else:
-                        s += '    {0}\n'.format(h)
-            #hs = [h for h, onum in self._handles.items() \
-            #        if onum == i and isinstance(h, str)]
-            #s += "\n    ".join(hs)
-            #s += "\n"
+            hands = [repr(h) for h, onum in self._handles.items() if onum == i]
+            s += "{0}handles: {1}\n".format(prefix, ", ".join(hands))
+            s += "{0}  item: {1}\n".format(prefix, str(item))
         return s
+
+    def spill(self, prefix=""):
+        print(self.handle_string(prefix=prefix), end='')
 
     def _set_handles(self, handles, item):
         """ this should only be called for items that are in _items...
