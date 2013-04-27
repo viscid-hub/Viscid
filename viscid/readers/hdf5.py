@@ -1,5 +1,5 @@
 from __future__ import print_function
-from warnings import warn
+import logging
 
 from . import vfile
 
@@ -8,7 +8,7 @@ try:
     HAS_H5PY = True
 except ImportError:
     HAS_H5PY = False
-    warn("h5py not in use, no hdf5 support.", ImportWarning)
+    logging.warn("h5py library not found, no hdf5 support.")
 
 
 class FileHDF5(vfile.VFile):

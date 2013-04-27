@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+import logging
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -107,12 +108,12 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             # acts.append([axis, "ylim", opt[1:]])
 
         elif opt[0] == "own":
-            vutil.warn("own axis doesn't seem to work yet...")
+            logging.warn("own axis doesn't seem to work yet...")
             axis.set_sharex = None
             axis.set_sharey = None
 
         else:
-            vutil.warn("Unknown plot option {0}".format(opt[0]))
+            logging.warn("Unknown plot option {0}".format(opt[0]))
 
     # things that i just want to be automagic...
     # use seismic cmap if the data looks centered around 0
@@ -132,7 +133,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
 def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True, earth=None,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
-                 colorbar=True, verb=True, **kwargs):
+                 colorbar=True, **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
 
     style: "pcolormesh", "contour", "pcolor", style of 2D plot
@@ -161,9 +162,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True, earth=None,
     if style in ["pcolormesh", "pcolor"]:
         if fld.center == "Node":
             X, Y = fld.crds[(namex.upper() + 'cc', namey.upper() + 'cc')]
-            if verb:
-                vutil.warn("pcolormesh on node centered field... "
-                           "trimming the edges")
+            logging.info("pcolormesh on node centered field... "
+                         "trimming the edges")
             # FIXME: this is a little fragile with 2d stuff
             dat = fld.data[1:-1, 1:-1]
         elif fld.center == "Cell":
@@ -317,8 +317,8 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
     try:
         plane, value = fld.info["reduced"][0]
     except KeyError:
-        vutil.warn("No reduced dims in the field, i don't know what 2d \n "
-                   "plane, we're in and can't figure out the size of earth.")
+        logging.error("No reduced dims in the field, i don't know what 2d \n "
+                      "plane, we're in and can't figure out the size of earth.")
         return None
 
     if value**2 >= scale**2:

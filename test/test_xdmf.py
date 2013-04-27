@@ -6,6 +6,7 @@
 from __future__ import print_function
 import sys
 import os
+import argparse
 
 import matplotlib.pyplot as plt
 
@@ -13,14 +14,15 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+from viscid import vutil
 from viscid import readers
 from viscid import field
 from viscid.plot import mpl
 
-verb = 0
-
 def main():
-    show = "--plot" in sys.argv or "--show" in sys.argv
+    parser = argparse.ArgumentParser(description="Test xdmf")
+    parser.add_argument("--show", "--plot", action="store_true")
+    args = vutil.common_argparse(parser)
 
     f2d = readers.load(_viscid_root + '/../../sample/sample.py_0.xdmf')
     b2d = field.scalar_fields_to_vector("b", [f2d['bx'], f2d['by'], f2d['bz']])
@@ -52,12 +54,10 @@ def main():
     plt.subplot2grid((nrows, ncols), (3, 1))
     mpl.plot(bx2d, "z=0,x=-20:0", show=False)
 
-    if show:
+    if args.show:
         mpl.mplshow()
 
 if __name__ == "__main__":
-    if "-v" in sys.argv:
-        verb += 1
     main()
 
 ##

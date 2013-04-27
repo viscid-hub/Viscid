@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-from warnings import warn
+import logging
 
 class Bucket(object):
     """ This is an interface where  """
@@ -17,7 +17,7 @@ class Bucket(object):
         self._handles = {}
         self._int_counter = 0
 
-    def set_item(self, handles, item, warning=True, index_handle=True):
+    def set_item(self, handles, item, index_handle=True):
         """ if index_handle is true then the index of item will be included as
             a handle making the bucket indexable like a list """
         # found = False
@@ -34,7 +34,7 @@ class Bucket(object):
                 self._int_counter += 1
             self._items.append(item)
 
-        self._set_handles(handles, item, warning=warning)
+        self._set_handles(handles, item)
         return None
 
     def remove_item(self, item):
@@ -87,15 +87,13 @@ class Bucket(object):
             #s += "\n"
         return s
 
-    def _set_handles(self, handles, item, warning=True):
+    def _set_handles(self, handles, item):
         """ this should only be called for items that are in _items...
             a ValueError will result otherwise """
         onum = self.index(item)
         for h in handles:
-            # warn if we're reusing
-            if (warning and (h in self._handles) and
-                (not item is self._items[onum])):
-                warn("The handle {0} is being hijacked!".format(h))
+            if (h in self._handles) and (not item is self._items[onum]):
+                logging.warn("The handle {0} is being hijacked!".format(h))
             self._handles[h] = onum
         return None
 

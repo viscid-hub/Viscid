@@ -9,6 +9,8 @@
 from __future__ import print_function
 import sys
 import os
+import argparse
+import logging
 
 import numpy as np
 import numexpr as ne
@@ -18,16 +20,15 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+from viscid import vutil
 from viscid import field
 from viscid import coordinate
 from viscid.plot import mpl
 
 dtype = 'float64'
-verb = 0
 
 def run_mpl_testA(show=False):
-    if verb:
-        print("2D Cell centered tests")
+    logging.info("2D Cell centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
@@ -58,8 +59,7 @@ def run_mpl_testA(show=False):
         mpl.mplshow()
 
 def run_mpl_testB(show=False):
-    if verb:
-        print("3D Node centered tests")
+    logging.info("3D Node centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
@@ -76,29 +76,28 @@ def run_mpl_testB(show=False):
     ncols = 1
 
     plt.subplot2grid((nrows, ncols), (0, 0))
-    mpl.plot(fld_s, "z=0i,x=:30i", earth=True, verb=verb, plot_opts="lin_0")
+    mpl.plot(fld_s, "z=0i,x=:30i", earth=True, plot_opts="lin_0")
     plt.subplot2grid((nrows, ncols), (1, 0))
-    mpl.plot(fld_s, "z=0.75,x=-4i:-1i,y=-3:3", earth=True, verb=verb)
+    mpl.plot(fld_s, "z=0.75,x=-4i:-1i,y=-3:3", earth=True)
     plt.subplot2grid((nrows, ncols), (2, 0))
-    mpl.plot(fld_s, "x=-0.5:,y=-3:3,z=0", earth=True, verb=verb)
+    mpl.plot(fld_s, "x=-0.5:,y=-3:3,z=0", earth=True)
     plt.subplot2grid((nrows, ncols), (3, 0))
-    mpl.plot(fld_s, "x=0,y=-5:5", earth=True, verb=verb, plot_opts="log,g")
+    mpl.plot(fld_s, "x=0,y=-5:5", earth=True, plot_opts="log,g")
 
     mpl.tighten()
     if show:
         mpl.mplshow()
 
 def main():
+    parser = argparse.ArgumentParser(description="Test calc")
+    parser.add_argument("--show", "--plot", action="store_true")
+    args = vutil.common_argparse(parser)
 
-    show = "--plot" in sys.argv or "--show" in sys.argv
-
-    run_mpl_testA(show=show)
-    run_mpl_testB(show=show)
+    run_mpl_testA(show=args.show)
+    run_mpl_testB(show=args.show)
 
 
 if __name__ == "__main__":
-    if "-v" in sys.argv:
-        verb += 1
     main()
 
 ##

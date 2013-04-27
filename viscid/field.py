@@ -6,7 +6,7 @@ matters, it is assumed that if the coords are z, y, x then the data
 is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
-from warnings import warn
+import logging
 
 import numpy as np
 
@@ -89,7 +89,8 @@ class Field(object):
         elif self.center == "Cell":
             return list(self.crds.shape_cc)
         else:
-            warn("Edge/Face vectors not implemented, assuming node shape")
+            logging.warn("Edge/Face vectors not implemented, assuming "
+                         "node shape")
             return self.crds.shape
 
     @property
@@ -324,8 +325,8 @@ class VectorField(Field):
             return self.data.shape[-1]
         elif layout == LAYOUT_OTHER:
             # print(self.name, self.layout)
-            warn("I don't know what your layout is, assuming vectors are "
-                "the last index (interleaved)...")
+            logging.warn("I don't know what your layout is, assuming vectors "
+                         "are the last index (interleaved)...")
             return self.data.shape[-1]
 
     @property
@@ -360,8 +361,8 @@ class VectorField(Field):
 
         # if layout is found to be other, i cant do anything with that
         elif dat_layout == LAYOUT_OTHER:
-            warn("Cannot auto-detect layout; not translating; "
-                 "performance may suffer")
+            logging.warn("Cannot auto-detect layout; not translating; "
+                         "performance may suffer")
             self._layout = LAYOUT_OTHER
             return self._dat_to_ndarray(dat)
 

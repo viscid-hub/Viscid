@@ -10,6 +10,8 @@ from __future__ import print_function
 import sys
 import os
 from time import time
+import logging
+import argparse
 
 import numpy as np
 import numexpr as ne
@@ -26,34 +28,28 @@ from viscid import coordinate
 from viscid.calculator import calc
 from viscid.plot import mpl
 
-verb = 0
-
 def run_div_test(fld, exact, show=False):
     t0 = time()
     result_numexpr = calc.div(fld, backends="numexpr", only=True)
     t1 = time()
-    if verb:
-        print("numexpr magnitude runtime: ", t1 - t0)
+    logging.info("numexpr magnitude runtime: {0}".format(t1 - t0))
 
     t0 = time()
     result_cython = calc.div(fld, backends="cython", only=True)
     t1 = time()
-    if verb:
-        print("cython runtime: ", t1 - t0)
+    logging.info("cython runtime: {0}".format(t1 - t0))
 
     backend_diff = calc.difference(result_numexpr, result_cython)
     if not (backend_diff.data < 1e-14).all():
-        vutil.warn("numexpr result not exactly cython result")
-    if verb:
-        print("min/max(abs(numexpr - cython)): ", np.min(backend_diff.data),
-              "/", np.max(backend_diff.data))
+        logging.warn("numexpr result not exactly cython result")
+    logging.info("min/max(abs(numexpr - cython)): {0} = {1}".format(
+                 np.min(backend_diff.data), np.max(backend_diff.data)))
 
     result_diff = calc.difference(result_numexpr, exact, slb=[np.s_[1:-1]]*3)
     if not (result_diff.data < 5e-6).all():
-        vutil.warn("numexpr result is far from the exact result")
-    if verb:
-        print("min/max(abs(numexpr - exact)): ", np.min(result_diff.data),
-              "/", np.max(result_diff.data))
+        logging.warn("numexpr result is far from the exact result")
+    logging.info("min/max(abs(numexpr - exact)): {0} / {1}".format(
+                 np.min(result_diff.data), np.max(result_diff.data)))
 
     planes = ["y=0.", "z=0."]
     nrows = 4
@@ -63,21 +59,23 @@ def run_div_test(fld, exact, show=False):
 
     for i, p in enumerate(planes):
         plt.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
-        mpl.plot(result_numexpr, p, show=False, verb=verb)
+        mpl.plot(result_numexpr, p, show=False)
         plt.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
-        mpl.plot(result_cython, p, show=False, verb=verb)
+        mpl.plot(result_cython, p, show=False)
         plt.subplot2grid((nrows, ncols), (2, i), sharex=ax, sharey=ax)
-        mpl.plot(backend_diff, p, show=False, verb=verb)
+        mpl.plot(backend_diff, p, show=False)
         plt.subplot2grid((nrows, ncols), (3, i), sharex=ax, sharey=ax)
-        mpl.plot(result_diff, p, show=False, verb=verb)
+        mpl.plot(result_diff, p, show=False)
 
     if show:
         mpl.mplshow()
 
 def main():
-    dtype = 'float64'
+    parser = argparse.ArgumentParser(description="Test divergence")
+    parser.add_argument("--show", "--plot", action="store_true")
+    args = vutil.common_argparse(parser)
 
-    show = "--plot" in sys.argv or "--show" in sys.argv
+    dtype = 'float64'
 
     x = np.array(np.linspace(-0.5, 0.5, 512), dtype=dtype)
     y = np.array(np.linspace(-0.5, 0.5, 512), dtype=dtype)
@@ -90,8 +88,7 @@ def main():
     Z, Y, X = crds.get_crd(shaped=True)
     Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell")
 
-    if verb:
-        print("Cell centered tests")
+    logging.info("Cell centered tests")
 
     vx = ne.evaluate("(sin(Xcc))")  # + Zcc
     vy = ne.evaluate("(cos(Ycc))")  # + Xcc# + Zcc
@@ -107,10 +104,9 @@ def main():
                              )
     fld_exact = field.ScalarField("exact div", crds, exact,
                                   center="Cell", forget_source=True)
-    run_div_test(fld_v, fld_exact, show=show)
+    run_div_test(fld_v, fld_exact, show=args.show)
 
-    if verb:
-        print("Node centered tests")
+    logging.info("Node centered tests")
 
     vx = ne.evaluate("(sin(X))")  # + Zcc
     vy = ne.evaluate("(cos(Y))")  # + Xcc# + Zcc
@@ -126,12 +122,10 @@ def main():
                              )
     fld_exact = field.ScalarField("exact div", crds, exact,
                                   center="Node", forget_source=True)
-    run_div_test(fld_v, fld_exact, show=show)
+    run_div_test(fld_v, fld_exact, show=args.show)
 
 
 if __name__ == "__main__":
-    if "-v" in sys.argv:
-        verb += 1
     main()
 
 ##

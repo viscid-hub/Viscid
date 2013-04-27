@@ -2,7 +2,7 @@
 """ test docstring """
 
 from __future__ import print_function
-from warnings import warn
+import logging
 # import bisect
 
 from .bucket import Bucket
@@ -82,7 +82,7 @@ class Dataset(object):
         child = self.active_child
 
         if child is None:
-            warn("Could not get appropriate child...")
+            logging.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time)
@@ -147,7 +147,7 @@ class DatasetTemporal(Dataset):
             raise RuntimeError()
         if child.time is None:
             child.time = 0.0
-            warn("A child with no time? Something is strange...")
+            logging.warn("A child with no time? Something is strange...")
         # this keeps the children in time order
         self.children.append((child.time, child))
         self.children.sort()
@@ -188,7 +188,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            warn("Could not get appropriate child...")
+            logging.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time)

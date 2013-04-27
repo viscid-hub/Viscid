@@ -5,7 +5,7 @@ TODO: this dispatch mechanism is very simple, maybe something a little more
 flexable would be useful down the line? """
 
 from __future__ import print_function
-from warnings import warn
+import logging
 
 import numpy as np
 
@@ -60,7 +60,7 @@ def _check_backend(preferred, implemented, only=False):
                 if _installed_backends[backend]:
                     return backend
             except KeyError:
-                vutil.warn("Unknown backend: {0}".format(backend))
+                logging.error("Unknown backend: {0}".format(backend))
 
     if only:
         raise verror.BackendNotFound("No preferred backend "
@@ -69,12 +69,12 @@ def _check_backend(preferred, implemented, only=False):
     for backend in implemented:
         try:
             if _installed_backends[backend]:
-                vutil.warn("Preferred backends {0} not available, using {1} "
-                           "instead.".format(preferred, backend))
+                logging.warn("Preferred backends {0} not available, using {1} "
+                             "instead.".format(preferred, backend))
                 return backend
         except KeyError:
-            warn("Unknown backend (Should not be "
-                 "implemented?): {0}".format(backend))
+            logging.error("Unknown backend (Should not be "
+                          "implemented?): {0}".format(backend))
 
     raise verror.BackendNotFound("No implemented backends are installed "
                                  "for this function.")

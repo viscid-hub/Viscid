@@ -1,5 +1,6 @@
 from __future__ import print_function
 from os import path
+import logging
 
 import numpy as np
 
@@ -33,7 +34,8 @@ def load_topo(itop_name, ihem_name):
             #ihem = np.where(itop == 1, ihem, 0) # this should already be?
             topo_arr += 0.5 * ihem
     else:
-        warn("ihem file {0} not found, hem will be ignored".format(ihem_name))
+        logging.warn("ihem file {0} not found, hem "
+                     "will be ignored".format(ihem_name))
     #print("!!!!", np.min(topo_arr), np.max(topo_arr))
     print(np.min(topo_arr), np.max(topo_arr))
 
