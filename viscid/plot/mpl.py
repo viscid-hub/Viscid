@@ -4,6 +4,7 @@ from __future__ import print_function
 import logging
 
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
@@ -11,6 +12,9 @@ from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 from .. import field
 from ..calculator import calc
 from .. import vutil
+
+has_colorbar_gridspec = (matplotlib.major > 1) or \
+                        (matplotlib.major == 1 and matplotlib.minor1 >= 1)
 
 def plot(fld, selection=None, **kwargs):
     """ just plot... should generically dispatch to gen the right
@@ -203,7 +207,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True, earth=None,
         if not isinstance(colorbar, dict):
             colorbar = {}
         # unless otherwise specified, use_gridspec for
-        if not "use_gridspec" in colorbar:
+        if has_colorbar_gridspec and not "use_gridspec" in colorbar:
             colorbar["use_gridspec"] = True
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
