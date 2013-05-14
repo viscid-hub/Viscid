@@ -18,14 +18,22 @@ LAYOUT_INTERLACED = "Interlaced"
 LAYOUT_FLAT = "Flat"
 LAYOUT_OTHER = "Other"
 
+def field_type_from_str(typ_str):
+    for cls in vutil.subclass_spider(Field):
+        if cls.TYPE == typ_str:
+            return cls
+    logging.warn("Field type {0} not understood".format(typ_str))
+    return None
+
 def wrap_field(typ, name, crds, data, **kwargs):
     """ **kwargs passed to field constructor """
     #
     #len(clist), clist[0][0], len(clist[0][1]), type)
-    for cls in vutil.subclass_spider(Field):
-        if cls.TYPE == typ:
-            return cls(name, crds, data, **kwargs)
-    raise NotImplementedError("can not decipher field")
+    cls = field_type_from_str(typ)
+    if cls is not None:
+        return cls(name, crds, data, **kwargs)
+    else:
+        raise NotImplementedError("can not decipher field")
 
 def scalar_fields_to_vector(name, fldlist, **kwargs):
     if not name:
@@ -182,7 +190,7 @@ class Field(object):
             return self
 
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
-        fld = self.__fld_wrap__(self.data[slices],
+        fld = self.wrap(self.data[slices],
                                 {"name": self.name + "_slice",
                                  "crds": crds,
                                 })
@@ -204,7 +212,7 @@ class Field(object):
         return self.data[item]
 
     ## emulate a numeric type
-    def __fld_wrap__(self, arr, context=None, typ=None):
+    def wrap(self, arr, context=None, typ=None):
         """ arr is the data to wrap... context is exta info to pass
         to the constructor """
         if arr is NotImplemented:
@@ -219,55 +227,57 @@ class Field(object):
         # should it always return the same type as self?
         if typ is None:
             typ = type(self)
+        elif isinstance(typ, str):
+            typ = field_type_from_str(typ)
         return typ(name, crds, arr, time=time, center=center, info=info)
 
     def __add__(self, other):
-        return self.__fld_wrap__(self.data.__add__(other.data))
+        return self.wrap(self.data.__add__(other.data))
     def __sub__(self, other):
-        return self.__fld_wrap__(self.data.__sub__(other.data))
+        return self.wrap(self.data.__sub__(other.data))
     def __mul__(self, other):
-        return self.__fld_wrap__(self.data.__mul__(other.data))
+        return self.wrap(self.data.__mul__(other.data))
     def __div__(self, other):
-        return self.__fld_wrap__(self.data.__div__(other.data))
+        return self.wrap(self.data.__div__(other.data))
     def __truediv__(self, other):
-        return self.__fld_wrap__(self.data.__truediv__(other.data))
+        return self.wrap(self.data.__truediv__(other.data))
     def __floordiv__(self, other):
-        return self.__fld_wrap__(self.data.__floordiv__(other.data))
+        return self.wrap(self.data.__floordiv__(other.data))
     def __mod__(self, other):
-        return self.__fld_wrap__(self.data.__mod__(other.data))
+        return self.wrap(self.data.__mod__(other.data))
     def __divmod__(self, other):
-        return self.__fld_wrap__(self.data.__divmod__(other.data))
+        return self.wrap(self.data.__divmod__(other.data))
     def __pow__(self, other):
-        return self.__fld_wrap__(self.data.__pow__(other.data))
+        return self.wrap(self.data.__pow__(other.data))
     def __lshift__(self, other):
-        return self.__fld_wrap__(self.data.__lshift__(other.data))
+        return self.wrap(self.data.__lshift__(other.data))
     def __rshift__(self, other):
-        return self.__fld_wrap__(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other.data))
     def __and__(self, other):
-        return self.__fld_wrap__(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other.data))
     def __xor__(self, other):
-        return self.__fld_wrap__(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other.data))
     def __or__(self, other):
-        return self.__fld_wrap__(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other.data))
 
     def __radd__(self, other):
-        return self.__fld_wrap__(self.data.__radd__(other.data))
+        return self.wrap(self.data.__radd__(other.data))
     def __rsub__(self, other):
-        return self.__fld_wrap__(self.data.__rsub__(other.data))
+        return self.wrap(self.data.__rsub__(other.data))
     def __rmul__(self, other):
-        return self.__fld_wrap__(self.data.__rmul__(other.data))
+        return self.wrap(self.data.__rmul__(other.data))
     def __rdiv__(self, other):
-        return self.__fld_wrap__(self.data.__rdiv__(other.data))
+        return self.wrap(self.data.__rdiv__(other.data))
     def __rtruediv__(self, other):
-        return self.__fld_wrap__(self.data.__rtruediv__(other.data))
+        return self.wrap(self.data.__rtruediv__(other.data))
     def __rfloordiv__(self, other):
-        return self.__fld_wrap__(self.data.__rfloordiv__(other.data))
+        return self.wrap(self.data.__rfloordiv__(other.data))
     def __rmod__(self, other):
-        return self.__fld_wrap__(self.data.__rmod__(other.data))
+        return self.wrap(self.data.__rmod__(other.data))
     def __rdivmod__(self, other):
-        return self.__fld_wrap__(self.data.__rdivmod__(other.data))
+        return self.wrap(self.data.__rdivmod__(other.data))
     def __rpow__(self, other):
-        return self.__fld_wrap__(self.data.__rpow__(other.data))
+        return self.wrap(self.data.__rpow__(other.data))
 
     def __iadd__(self, other):
         raise NotImplementedError("Don't touch me like that")
@@ -287,13 +297,13 @@ class Field(object):
         raise NotImplementedError("Don't touch me like that")
 
     def __neg__(self):
-        return self.__fld_wrap__(self.data.__neg__())
+        return self.wrap(self.data.__neg__())
     def __pos__(self):
-        return self.__fld_wrap__(self.data.__pos__())
+        return self.wrap(self.data.__pos__())
     def __abs__(self):
-        return self.__fld_wrap__(self.data.__abs__())
+        return self.wrap(self.data.__abs__())
     def __invert__(self):
-        return self.__fld_wrap__(self.data.__invert__())
+        return self.wrap(self.data.__invert__())
 
 
 class ScalarField(Field):
