@@ -23,12 +23,13 @@ def common_argparse(parser, **kwargs):
     parser should be an ArgumentParser instance, and kwargs
     should be options that get passed to logging.basicConfig
     returns the args namespace  """
-    parser.add_argument("--log", action="store", type=str, default=None,
-                        help="Logging level (overrides verbosity)")
-    parser.add_argument("-v", action="count", default=0,
-                        help="increase verbosity")
-    parser.add_argument("-q", action="count", default=0,
-                        help="decrease verbosity")
+    general = parser.add_argument_group("Viscid general options")
+    general.add_argument("--log", action="store", type=str, default=None,
+                         help="Logging level (overrides verbosity)")
+    general.add_argument("-v", action="count", default=0,
+                         help="increase verbosity")
+    general.add_argument("-q", action="count", default=0,
+                         help="decrease verbosity")
     args = parser.parse_args()
 
     # setup the logging level
