@@ -5,6 +5,8 @@ from __future__ import print_function
 import logging
 # import bisect
 
+import numpy as np
+
 from .bucket import Bucket
 from .vutil import spill_prefix
 
@@ -61,6 +63,14 @@ class Dataset(object):
                 child.activate_time(time)
             except AttributeError:
                 pass
+
+    def iter_times(self, slice_str=":"):
+        for child in self.children:
+            try:
+                return child.iter_times(slice_str)
+            except AttributeError:
+                pass
+        raise RuntimeError("I find no temporal datasets")
 
     def spill(self, recursive=False, prefix=""):
         for child in self.children:
@@ -127,7 +137,7 @@ class Dataset(object):
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         self.unload()
         return None
 
@@ -182,12 +192,24 @@ class DatasetTemporal(Dataset):
         temporal datasets """
         self.activate(time)
 
+    def iter_times(self, slice_str=":"):
+        slice_lst = [float(s) if s.strip() != "" else None 
+                     for s in slice_str.split(":")]
+        times = np.array([child[0] for child in self.children])
+        # print("times", times)
+        # print("slice_lst", slice_lst)
+        # wow... there must be a more clear way to do this
+        slc = slice(*[np.argmin(np.abs(t - times)) if t is not None else None
+                    for t in slice_lst])
+        # print(slc)
+        return (child[1] for child in self.children[slc])
+
     def spill(self, recursive=False, prefix=""):
         for child in self.children:
             suffix = ""
             if child[1] is self.active_child:
                 suffix = " <-- active"
-            print("{0}{1}{2}".format(prefix, child, suffix))
+            # print("{0}{1}{2}".format(prefix, child, suffix))
             if recursive:
                 child[1].spill(recursive=True, prefix=prefix + spill_prefix)
 

@@ -41,6 +41,12 @@ class Grid(object):
             fld.unload()
         # TODO: does anything else need to be unloaded in here?
 
+    def iter_times(self, *args, **kwargs):
+        # FIXME: it is unclear to me what to do here, since a dataset
+        # may have > 1 grid... and if so only the first will be returned...
+        # i guess there is some ambiguity if there is no temporal dataset...
+        return [self]
+
     def spill(self, recursive=False, prefix=""):
         self.fields.spill(prefix=prefix + spill_prefix)
 
@@ -81,7 +87,7 @@ class Grid(object):
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         self.unload()
         return None
 
