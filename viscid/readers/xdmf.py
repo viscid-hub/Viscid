@@ -340,8 +340,8 @@ class FileXDMF(vfile.VFile):
             fname, loc = item.text.strip().split(':')
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
-            h5file = self.vfilebucket.load(fname, index_handle=False).file
-            arr = h5file[loc]
+            h5file = self.vfilebucket.load(fname, index_handle=False)
+            arr = h5file.get_data(loc)
             return arr, attrs
 
         if fmt == "Binary":

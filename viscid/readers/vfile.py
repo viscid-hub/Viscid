@@ -13,6 +13,35 @@ from time import time
 from ..dataset import Dataset
 
 
+class DataWrapper(object):
+    _shape = None
+    _dtype = None
+
+    def __init__(self):
+        self._shape = None
+        self._dtype = None
+
+    @property
+    def shape(self):
+        return self._shape
+
+    @property
+    def dtype(self):
+        return self._dtype
+
+    def __array__(self, *args, **kwargs):
+        raise NotImplementedError()
+
+    def read_direct(self, *args, **kwargs):
+        raise NotImplementedError()
+
+    def len(self):
+        raise NotImplementedError()
+
+    def __getitem__(self, item):
+        raise NotImplementedError()
+        
+
 class VFile(Dataset):
     # _detector is a regex string used for file type detection
     _detector = None
