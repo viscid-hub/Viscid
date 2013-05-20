@@ -113,9 +113,13 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
         elif opt[0] == "own":
             logging.warn("own axis doesn't seem to work yet...")
-            axis.set_sharex = None
-            axis.set_sharey = None
-
+            
+        elif opt[0] == "ownx":
+            logging.warn("own axis doesn't seem to work yet...")
+            
+        elif opt[0] == "owny":
+            logging.warn("own axis doesn't seem to work yet...")
+            
         else:
             logging.warn("Unknown plot option {0}".format(opt[0]))
 
@@ -128,7 +132,6 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
     # return axis, acts
     return axis
-
 
 # def _apply_acts(acts):
 #     for act in acts:
