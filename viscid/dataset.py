@@ -193,15 +193,15 @@ class DatasetTemporal(Dataset):
         self.activate(time)
 
     def iter_times(self, slice_str=":"):
-        slice_lst = [float(s) if s.strip() != "" else None 
-                     for s in slice_str.split(":")]
         times = np.array([child[0] for child in self.children])
-        # print("times", times)
-        # print("slice_lst", slice_lst)
-        # wow... there must be a more clear way to do this
-        slc = slice(*[np.argmin(np.abs(t - times)) if t is not None else None
-                    for t in slice_lst])
-        # print(slc)
+        slc_lst = [s.strip() for s in slice_str.split(":")]
+        # slc_lst[:2] = [float(t) if t != "" else None for t in slc_lst[:2]]
+        slc_lst[:2] = [np.argmin(np.abs(float(t) - times)) if t != "" else None
+                       for t in slc_lst[:2]]
+        slc_lst[2:] = [int(s) if s != "" else None for s in slc_lst[2:]]
+        if len(slc_lst) == 1:
+            slc_lst = [slc_lst[0], slc_lst[0] + 1]
+        slc = slice(*slc_lst) #pylint: disable=W0142
         return (child[1] for child in self.children[slc])
 
     def spill(self, recursive=False, prefix=""):
