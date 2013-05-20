@@ -11,6 +11,9 @@ class FieldNotFound(RuntimeError):
 class BackendNotFound(RuntimeError):
     pass
 
+class KeyboardInterruptError(Exception):
+    pass
+
 ##
 ## EOF
 ##
