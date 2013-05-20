@@ -4,6 +4,7 @@
 from __future__ import print_function
 import sys
 import os
+import argparse
 
 from mayavi import mlab
 
@@ -11,14 +12,15 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+from viscid import vutil
 from viscid import readers
 from viscid import field
 from viscid.plot import mvi
 
-verb = 0
-
 def main():
-    show = "--plot" in sys.argv or "--show" in sys.argv
+    parser = argparse.ArgumentParser(description="Test calc")
+    parser.add_argument("--show", "--plot", action="store_true")
+    args = vutil.common_argparse(parser)    
 
     f3d = readers.load(_viscid_root + '/../../sample/sample.3df.xdmf')
 
@@ -48,12 +50,10 @@ def main():
 
     mvi.mlab_earth(mlab.pipeline)
 
-    if show:
+    if args.show:
         mlab.show()
 
 if __name__ == "__main__":
-    if "-v" in sys.argv:
-        verb += 1
     main()
 
 ##

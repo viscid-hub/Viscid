@@ -5,6 +5,7 @@ from __future__ import print_function
 
 from .bucket import Bucket
 from . import verror
+from .vutil import spill_prefix
 
 class Grid(object):
     """ Grids contain fields... Datasets recurse to grids using __getitem__
@@ -40,8 +41,14 @@ class Grid(object):
             fld.unload()
         # TODO: does anything else need to be unloaded in here?
 
-    def spill(self):
-        print(self.fields)
+    def iter_times(self, *args, **kwargs):
+        # FIXME: it is unclear to me what to do here, since a dataset
+        # may have > 1 grid... and if so only the first will be returned...
+        # i guess there is some ambiguity if there is no temporal dataset...
+        return [self]
+
+    def spill(self, recursive=False, prefix=""):
+        self.fields.spill(prefix=prefix + spill_prefix)
 
     # def add_fields(self, name_field_list):
     #     """ input: [(name, data), (name1, name2, data), ...] """
@@ -80,7 +87,7 @@ class Grid(object):
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         self.unload()
         return None
 

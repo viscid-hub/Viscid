@@ -3,7 +3,7 @@
 # import string
 from __future__ import print_function
 import re
-from warnings import warn
+import logging
 
 import numpy as np
 
@@ -39,7 +39,7 @@ class FileASCII(vfile.VFile):
                     try:
                         self.meta[key] = val
                     except KeyError:
-                        warn("Invalid option in {0}: {1} = {2}".format(
+                        logging.error("Invalid option in {0}: {1} = {2}".format(
                             self.fname, key, val))
 
     @classmethod

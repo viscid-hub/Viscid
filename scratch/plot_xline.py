@@ -4,7 +4,7 @@
 from __future__ import print_function
 from os import path
 import sys
-#from warnings import warn
+import logging
 
 import numpy as np
 import numexpr as ne
@@ -25,9 +25,6 @@ from viscid.plot import mpl
 SKIP = 10
 
 safety = 0.5
-
-def warn(message):
-    sys.stderr.write("WARNING: {0}\n".format(message))
 
 #def meshgrid3(x, y, z):
 #    Xd = np.tile(x.reshape((-1, 1, 1)), (1, len(y), len(z))).flatten()
@@ -130,13 +127,13 @@ if __name__=='__main__':
         pass
         plot_line_file(lines_file)
     else:
-        warn("Lines file not found".format(lines_file))
+        logging.warn("Lines file not found".format(lines_file))
 
     markers_file = "{0}/li.recon-markers.{1}".format(dir, strtime)
     if path.exists(markers_file):
         plot_marker_file(markers_file)
     else:
-        warn("Lines file not found".format(markers_file))
+        logging.warn("Lines file not found".format(markers_file))
 
     itopfile = "{0}/{1}.3df{2}.itop.{3}.txt".format(dir, run, strtime, strres)
     ihemfile = "{0}/{1}.3df{2}.ihem.{3}.txt".format(dir, run, strtime, strres)
@@ -163,7 +160,7 @@ if __name__=='__main__':
         # mlab.colorbar(orientation='vertical')
         # mlab.outline()
     else:
-        warn("topology file {0} does not exist".format(itopfile))
+        logging.warn("topology file {0} does not exist".format(itopfile))
 
     shear_msx = None
     xdmf_file = "{0}/{1}.3df.{2}.xdmf".format(dir, run, strtime)
@@ -295,7 +292,7 @@ if __name__=='__main__':
         #         bslmp.seed.widget.enabled = True
 
     else:
-        warn("xdmf file {0} not found".format(xdmf_file))
+        logging.warn("xdmf file {0} not found".format(xdmf_file))
 
     # mlab.outline()
 
@@ -304,7 +301,7 @@ if __name__=='__main__':
         pass
         # plot_meeting_file(meeting_file)
     else:
-        warn("Meeting file {0} not found".format(meeting_file))
+        logging.warn("Meeting file {0} not found".format(meeting_file))
 
     #mlab.colorbar(orientation='vertical')
     mvi.mlab_earth(mlab.pipeline)

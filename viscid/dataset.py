@@ -2,11 +2,13 @@
 """ test docstring """
 
 from __future__ import print_function
-from warnings import warn
+import logging
 # import bisect
 
-from .bucket import Bucket
+import numpy as np
 
+from .bucket import Bucket
+from .vutil import spill_prefix
 
 class Dataset(object):
     """ datasets contain grids or other datasets
@@ -62,12 +64,22 @@ class Dataset(object):
             except AttributeError:
                 pass
 
-    def spill(self):
+    def iter_times(self, slice_str=":"):
+        for child in self.children:
+            try:
+                return child.iter_times(slice_str)
+            except AttributeError:
+                pass
+        raise RuntimeError("I find no temporal datasets")
+
+    def spill(self, recursive=False, prefix=""):
         for child in self.children:
             suffix = ""
             if child is self.active_child:
-                suffix = "  <-- active"
-            print(child, suffix)
+                suffix = " <-- active"
+            print("{0}{1}{2}".format(prefix, child, suffix))
+            if recursive:
+                child.spill(recursive=True, prefix=prefix + spill_prefix)
 
     # def get_non_dataset(self):
     #     """ recurse down datasets until active_grid is not a subclass
@@ -82,7 +94,7 @@ class Dataset(object):
         child = self.active_child
 
         if child is None:
-            warn("Could not get appropriate child...")
+            logging.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time)
@@ -125,9 +137,16 @@ class Dataset(object):
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         self.unload()
         return None
+
+    # def __iter__(self):
+    #     for child in self.children:
+    #         yield child
+
+    # def __next__(self):
+    #     raise NotImplementedError()
 
 
 class DatasetTemporal(Dataset):
@@ -147,7 +166,7 @@ class DatasetTemporal(Dataset):
             raise RuntimeError()
         if child.time is None:
             child.time = 0.0
-            warn("A child with no time? Something is strange...")
+            logging.warn("A child with no time? Something is strange...")
         # this keeps the children in time order
         self.children.append((child.time, child))
         self.children.sort()
@@ -173,12 +192,26 @@ class DatasetTemporal(Dataset):
         temporal datasets """
         self.activate(time)
 
-    def spill(self):
+    def iter_times(self, slice_str=":"):
+        times = np.array([child[0] for child in self.children])
+        slc_lst = [s.strip() for s in slice_str.split(":")]
+        # slc_lst[:2] = [float(t) if t != "" else None for t in slc_lst[:2]]
+        slc_lst[:2] = [np.argmin(np.abs(float(t) - times)) if t != "" else None
+                       for t in slc_lst[:2]]
+        slc_lst[2:] = [int(s) if s != "" else None for s in slc_lst[2:]]
+        if len(slc_lst) == 1:
+            slc_lst = [slc_lst[0], slc_lst[0] + 1]
+        slc = slice(*slc_lst) #pylint: disable=W0142
+        return (child[1] for child in self.children[slc])
+
+    def spill(self, recursive=False, prefix=""):
         for child in self.children:
             suffix = ""
             if child[1] is self.active_child:
-                suffix = "  <-- active"
-            print(child, suffix)
+                suffix = " <-- active"
+            # print("{0}{1}{2}".format(prefix, child, suffix))
+            if recursive:
+                child[1].spill(recursive=True, prefix=prefix + spill_prefix)
 
     def get_field(self, fldname, time=None):
         """ recurse down active children to get a field """
@@ -188,7 +221,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            warn("Could not get appropriate child...")
+            logging.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time)

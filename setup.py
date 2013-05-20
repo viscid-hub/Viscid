@@ -74,8 +74,8 @@ for i, d in enumerate(cy_defs):
         if os.path.isfile(fname):
             cy_defs[i][1][j] = fname
         else:
-            print("Warning! {0} not found. Skipping extension: "
-                  "{1}".format(fname, cy_defs[i][0]), file=sys.stderr)
+            log.warn("{0} not found. Skipping extension: "
+                  "{1}".format(fname, cy_defs[i][0]))
             print("To use this extension, please install cython",
                   file=sys.stderr)
             cy_defs[i] = None
@@ -122,7 +122,7 @@ for d in cy_defs:
                            extra_link_args=cy_ldflags)]
 
 setup(name='viscid',
-      version='0.41',
+      version='0.42',
       description='Visualization in python',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',

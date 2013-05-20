@@ -2,19 +2,19 @@
 
 from __future__ import print_function
 import argparse
+import logging
 
 import numpy as np
 import numexpr as ne
 import matplotlib.pyplot as plt
 
+from viscid import vutil
 from viscid import field
 from viscid import coordinate
 from viscid import readers
 from viscid.calculator import streamline
 from viscid.calculator import seed
 from viscid.plot import mpl
-
-verb = 0
 
 def get_dipole(m=None, twod=False):
     dtype = 'float32'
@@ -50,19 +50,12 @@ def get_dipole(m=None, twod=False):
 
 def main():
     parser = argparse.ArgumentParser(description="Load some data files")
-    parser.add_argument('--show', '-s', action='store_true',
-                        help='show interactive plots')
-    parser.add_argument('-v', action='count', default=0,
-                        help='increase verbosity')
-    parser.add_argument('-q', action='count', default=0,
-                        help='decrease verbosity')
     parser.add_argument('files', nargs="*", help='input files')
+    parser.add_argument("--show", "--plot", action="store_true")    
+    args = vutil.common_argparse(parser)
     args = parser.parse_args()
-    verb = args.v - args.q
 
-
-    if verb:
-        print("Testing field lines on 2d field...")
+    logging.info("Testing field lines on 2d field...")
     B = get_dipole(twod=True)
     obound0 = np.array([-10, -10, -10], dtype=B.data.dtype)
     obound1 = np.array([10, 10, 10], dtype=B.data.dtype)
@@ -74,8 +67,7 @@ def main():
                                obound0=obound0, obound1=obound1)
     mpl.plot_field_lines(lines, show=args.show)
 
-    if verb:
-        print("Testing field lines on 3d field...")
+    logging.info("Testing field lines on 3d field...")
     B = get_dipole(m=[0.2, 0.3, -0.9])
     lines = streamline.streamlines(B,
                                seed.SphereSeedGen((0.0, 0.0, 0.0),

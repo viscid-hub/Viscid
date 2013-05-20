@@ -7,6 +7,8 @@ from __future__ import print_function
 import sys
 import os
 from time import time
+import logging
+import argparse
 # import resource
 
 import numpy as np
@@ -18,13 +20,10 @@ if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
 from viscid import vutil
-from viscid import readers
 from viscid import field
 from viscid import coordinate
 from viscid.calculator import calc
 from viscid.plot import mpl
-
-verb = 0
 
 def run_mag_test(fld, show=False):
     vx, vy, vz = fld.component_views() #pylint: disable=W0612
@@ -33,21 +32,18 @@ def run_mag_test(fld, show=False):
     t0 = time()
     mag_ne = calc.magnitude(fld, backends="numexpr", only=True)
     t1 = time()
-    if verb:
-        print("numexpr mag runtime: ", t1 - t0)
+    logging.info("numexpr mag runtime: {0}".format(t1 - t0))
     t0 = time()
     mag_cy = calc.magnitude(fld, backends="cython", only=True)
     t1 = time()
-    if verb:
-        print("cython mag runtime: ", t1 - t0)
+    logging.info("cython mag runtime: {0}".format(t1 - t0))
 
     diff1 = calc.difference(mag_ne, mag_cy)
     absdiff1 = calc.abs_val(diff1)
     if not (absdiff1.data < 1e-14).all():
-        vutil.warn("numexpr result not exactly cython result")
-    if verb:
-        print("min/max(numexpr - cython): ", np.min(absdiff1.data), "/",
-              np.max(absdiff1.data))
+        logging.warn("numexpr result not exactly cython result")
+    logging.info("min/max(numexpr - cython): {0} / {1}".format(
+                 np.min(absdiff1.data), np.max(absdiff1.data)))
 
     planes = ["z=0", "y=0"]
     nrows = 5
@@ -57,22 +53,24 @@ def run_mag_test(fld, show=False):
 
     for ind, p in enumerate(planes):
         plt.subplot2grid((nrows, ncols), (0, ind), sharex=ax, sharey=ax)
-        mpl.plot(fld_vx, p, show=False, verb=verb)
+        mpl.plot(fld_vx, p, show=False)
         plt.subplot2grid((nrows, ncols), (1, ind), sharex=ax, sharey=ax)
-        mpl.plot(fld_vy, p, show=False, verb=verb)
+        mpl.plot(fld_vy, p, show=False)
         plt.subplot2grid((nrows, ncols), (2, ind), sharex=ax, sharey=ax)
-        mpl.plot(fld_vz, p, show=False, verb=verb)
+        mpl.plot(fld_vz, p, show=False)
         plt.subplot2grid((nrows, ncols), (3, ind), sharex=ax, sharey=ax)
-        mpl.plot(mag_ne, p, show=False, verb=verb)
+        mpl.plot(mag_ne, p, show=False)
         plt.subplot2grid((nrows, ncols), (4, ind), sharex=ax, sharey=ax)
-        mpl.plot(diff1, p, show=False, verb=verb)
+        mpl.plot(diff1, p, show=False)
 
     if show:
         mpl.mplshow()
 
 def main():
+    parser = argparse.ArgumentParser(description="Test calc")
+    parser.add_argument("--show", "--plot", action="store_true")
+    args = vutil.common_argparse(parser)
     dtype = 'float32'
-    show = "--plot" in sys.argv or "--show" in sys.argv
 
     x = np.array(np.linspace(-5, 5, 512), dtype=dtype)
     y = np.array(np.linspace(-5, 5, 256), dtype=dtype)
@@ -81,8 +79,7 @@ def main():
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y),
                                                 ('x', x)))
 
-    if verb:
-        print("Testing Node centered magnitudes")
+    logging.info("Testing Node centered magnitudes")
     Z, Y, X = crds.get_crd(shaped=True)
 
     vx = 0.5 * X**2 + Y
@@ -93,10 +90,9 @@ def main():
                               center="Node", forget_source=True,
                               info={"force_layout": field.LAYOUT_INTERLACED},
                              )
-    run_mag_test(fld_v, show=show)
+    run_mag_test(fld_v, show=args.show)
 
-    if verb:
-        print("Testing Cell centered magnitudes")
+    logging.info("Testing Cell centered magnitudes")
     Z, Y, X = crds.get_crd(shaped=True, center="Cell")
 
     vx = 0.5 * X**2 + Y
@@ -107,7 +103,7 @@ def main():
                               center="Cell", forget_source=True,
                               info={"force_layout": field.LAYOUT_INTERLACED},
                              )
-    run_mag_test(fld_v, show=show)
+    run_mag_test(fld_v, show=args.show)
 
     #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2)
     # print("ne: ", timereps(10, Div1ne, [fld_vx, fld_vy, fld_vz]))
@@ -116,8 +112,6 @@ def main():
     #print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2)
 
 if __name__ == "__main__":
-    if "-v" in sys.argv:
-        verb += 1
     main()
 
 ##

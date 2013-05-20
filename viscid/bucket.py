@@ -1,18 +1,24 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-from warnings import warn
+from .vutil import spill_prefix
+import logging
 
 class Bucket(object):
     """ This is an interface where  """
     _items = None
     _handles = None
+    # if index handle, set_item adds this number as a handle and increments it
+    # this is useful for hiding loads that are not user initiated, such as
+    # an xdmf file loading an h5 file under the covers
+    _int_counter = None
 
     def __init__(self):
         self._items = []
         self._handles = {}
+        self._int_counter = 0
 
-    def set_item(self, handles, item, warning=True):
+    def set_item(self, handles, item, index_handle=True):
         """ if index_handle is true then the index of item will be included as
             a handle making the bucket indexable like a list """
         # found = False
@@ -24,10 +30,12 @@ class Bucket(object):
         try:
             self.index(item)
         except ValueError:
-            handles += [len(self._items)] # handles += [onum]
+            if index_handle:
+                handles += [self._int_counter] # handles += [onum]
+                self._int_counter += 1
             self._items.append(item)
 
-        self._set_handles(handles, item, warning=warning)
+        self._set_handles(handles, item)
         return None
 
     def remove_item(self, item):
@@ -62,33 +70,26 @@ class Bucket(object):
                 return i
         raise ValueError("item's object id not in list")
 
-    def handle_string(self):
+    def handle_string(self, prefix=""):
         """ return string representation of handles and items """
         # this is inefficient, but probably doesn't matter
         s = ""
         for i, item in enumerate(self._items):
-            s += "item: " + str(item) + "\nhandles:\n"
-            for h, onum in self._handles.items():
-                if onum == i:
-                    if isinstance(h, str):
-                        s += '    "{0}"\n'.format(h)
-                    else:
-                        s += '    {0}\n'.format(h)
-            #hs = [h for h, onum in self._handles.items() \
-            #        if onum == i and isinstance(h, str)]
-            #s += "\n    ".join(hs)
-            #s += "\n"
+            hands = [repr(h) for h, onum in self._handles.items() if onum == i]
+            s += "{0}handles: {1}\n".format(prefix, ", ".join(hands))
+            s += "{0}  item: {1}\n".format(prefix, str(item))
         return s
 
-    def _set_handles(self, handles, item, warning=True):
+    def spill(self, prefix=""):
+        print(self.handle_string(prefix=prefix), end='')
+
+    def _set_handles(self, handles, item):
         """ this should only be called for items that are in _items...
             a ValueError will result otherwise """
         onum = self.index(item)
         for h in handles:
-            # warn if we're reusing
-            if (warning and (h in self._handles) and
-                (not item is self._items[onum])):
-                warn("The handle {0} is being hijacked!".format(h))
+            if (h in self._handles) and (not item is self._items[onum]):
+                logging.warn("The handle {0} is being hijacked!".format(h))
             self._handles[h] = onum
         return None
 

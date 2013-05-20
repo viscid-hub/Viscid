@@ -3,14 +3,14 @@
 
 from __future__ import print_function
 import os
-from warnings import warn
+import logging
 
 try:
     from lxml import etree
     HAS_LXML = True
 except ImportError:
     HAS_LXML = False
-    warn("lxml not installed, no xpointer support.", ImportWarning)
+    logging.warn("lxml library not found, no xdmf support.")
 
 
 import numpy as np
@@ -98,7 +98,7 @@ class FileXDMF(vfile.VFile):
         loading a bunch of files, you should really be using a global bucket,
         as something like in readers.load(file) """
 
-        if not vfilebucket:
+        if vfilebucket is None:
             # gen an empty bucket on the fly if the calling script
             # doesnt want a global bucket for all files
             self.vfilebucket = VFileBucket()
@@ -177,7 +177,8 @@ class FileXDMF(vfile.VFile):
             elif ct == "Spatial":
                 grd = dataset.Dataset(attrs["Name"])
             else:
-                warn("Unknown collection type {0}, ignoring grid".format(ct))
+                logging.warn("Unknown collection type {0}, ignoring "
+                             "grid".format(ct))
 
             for i, subgrid in enumerate(el.findall("./Grid")):
 
@@ -188,7 +189,8 @@ class FileXDMF(vfile.VFile):
 
         elif gt == "Uniform":
             if not (topoattrs and geoattrs):
-                warn("Xdmf Uniform grids must have topology / geometry.")
+                logging.warn("Xdmf Uniform grids must have "
+                             "topology / geometry.")
             else:
                 grd = grid.Grid(attrs["Name"])
                 for attribute in el.findall("./Attribute"):
@@ -199,11 +201,13 @@ class FileXDMF(vfile.VFile):
                     grd.add_field(fld)
 
         elif gt == "Tree":
-            warn("Xdmf Tree Grids not implemented, ignoring this grid")
+            logging.warn("Xdmf Tree Grids not implemented, ignoring "
+                         "this grid")
         elif gt == "Subset":
-            warn("Xdmf Subset Grids not implemented, ignoring this grid")
+            logging.warn("Xdmf Subset Grids not implemented, ignoring "
+                         "this grid")
         else:
-            warn("Unknown grid type {0}, ignoring this grid".format(gt))
+            logging.warn("Unknown grid type {0}, ignoring this grid".format(gt))
 
         # fill attributes / data items
         # if grid and gt == "Uniform":
@@ -297,7 +301,7 @@ class FileXDMF(vfile.VFile):
                 crdlist[i] = (crd, data_dx[i] * np.arange(n[i]) + data_o[i])
 
         else:
-            warn("Invalid GeometryType: {0}".format(geotype))
+            logging.warn("Invalid GeometryType: {0}".format(geotype))
 
         crds = coordinate.wrap_crds(crdtype, crdlist)
         return crds, geoattrs
@@ -336,14 +340,14 @@ class FileXDMF(vfile.VFile):
             fname, loc = item.text.strip().split(':')
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
-            h5file = self.vfilebucket.load(fname).file #pylint: disable=E1103
-            arr = h5file[loc]
+            h5file = self.vfilebucket.load(fname, index_handle=False)
+            arr = h5file.get_data(loc)
             return arr, attrs
 
         if fmt == "Binary":
             raise NotImplementedError("binary xdmf data not implemented")
 
-        warn("Invalid DataItem Format.")
+        logging.warn("Invalid DataItem Format.")
         return (None, None)
 
     def _parse_time(self, timetag):
@@ -371,7 +375,7 @@ class FileXDMF(vfile.VFile):
             arr = np.array([dat[0] + i * dat[1] for i in range(int(dat[2]))])
             return arr, attrs
         else:
-            warn("invalid TimeType.\n")
+            logging.warn("invalid TimeType.\n")
 
 # class FileGgcm2dXdmf(FileXDMF):
 #     _detector = r'.*\.p[xyz]_[0-9]+(\..*)?\.(xmf|xdmf)\s*$'
