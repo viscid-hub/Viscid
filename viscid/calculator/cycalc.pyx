@@ -140,6 +140,48 @@ cdef int _c_closest_ind(real_t[:] crd, real_t point) except -1:
         return 0
 
 
+def trilin_interp(fld, points):
+    """ Points can be list of 3-tuples or a SeedGen instance. If fld
+    is a scalar field, the output array has shape (npts,) where npts
+    is the number of seed points. If it's a vector, the output has shape
+    (npts, ncomps), where ncomps is the number of components of the vector.
+    The data type of the output is the same as the original field.
+    The output is always an array, even if only one point is given.
+    """
+    if fld.center == "Cell":
+        crdz, crdy, crdx = fld.crds.get_crd(center="Cell")
+    elif fld.center == "Node":
+        crdz, crdy, crdx = fld.crds.get_crd()
+    else:
+        raise RuntimeError("Dont touch me with that centering.")
+
+    # sanitize points input
+    if isinstance(points, seed.SeedGen):
+        points = points.points  # wow, this is silly
+    pts_arr = np.array(points, dtype=fld.dtype)
+    if len(points.shape) == 1:
+        pts_arr = np.array([pts_arr])
+    npts = pts_arr.shape[0]
+
+    if fld.TYPE == "Vector":
+        ncomp = fld.ncomp
+        views = fld.component_views()
+        ret = np.empty((npts, ncomp), dtype=fld.dtype)
+        for i from 0 <= i < npts:
+            for j from 0 <= j < ncomp:
+                ret[i][j] = _py_trilin_interp(views[j], crdz, crdy, crdx, 
+                                              pts_arr[i])
+        return ret
+
+    elif fld.TYPE == "Scalar":
+        view = fld.data
+        ret = np.empty((npts,), dtype=fld.dtype)
+        for i from 0 <= i < npts:
+            ret[i] = _py_trilin_interp(view, crdz, crdy, crdx, pts_arr[i])
+        return ret
+    else:
+        raise RuntimeError("That centering is not supported for trilin_interp")
+
 def _py_trilin_interp(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
                       real_t[:] crdx, real_t[:] x):
     """ return the scalar value of 3d scalar array s trilinearly interpolated

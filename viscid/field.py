@@ -154,10 +154,13 @@ class Field(object):
         else:
             # dtype.name is for pruning endianness out of dtype
             if isinstance(dat, (list, tuple)):
-                dtype = dat[0].dtype.name
+                dt = dat[0].dtype.name
+                arr = np.array([np.array(d, dtype=dt) for d in dat], dtype=dt)
+
+            elif isinstance(dat, Field):
+                arr = dat.data
             else:
-                dtype = dat.dtype.name
-            arr = np.array(dat, dtype=dtype)
+                arr = np.array(dat, dtype=dat.dtype.name)
         return self._reshape_ndarray_to_crds(arr)
 
     def _reshape_ndarray_to_crds(self, arr):
@@ -186,7 +189,7 @@ class Field(object):
                                                     rm_len1_dims=rm_len1_dims)
 
         # no slice necessary, just pass the field through
-        if slices == [slice(None)] * len(slices):
+        if list(slices) == [slice(None)] * len(slices):
             return self
 
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
@@ -202,14 +205,20 @@ class Field(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, typ, value, traceback):
         self.unload()
         return None
 
     def __getitem__(self, item):
-        if isinstance(item, str) and item in self.crds:
-            return self.crds[item]
-        return self.data[item]
+        if isinstance(item, str):
+            if item in self.crds:
+                return self.crds[item]
+            else:
+                return self.slice(item)
+        return self.slice(item)
+
+    # def __getslice__(self, i, j):
+    #     return self.data[slice(i, j)]
 
     ## emulate a numeric type
     def wrap(self, arr, context=None, typ=None):

@@ -17,20 +17,23 @@ class SeedGen(object):
         """ n x 3 ndarray of n seed points """
         return self._points
 
-class PointSeedGen(SeedGen):
+class Point(SeedGen):
     def __init__(self, points):
         """ points should be an n x 3 array of zyx points """
-        super(PointSeedGen, self).__init__()
+        super(Point, self).__init__()
         self.setup(points)
 
     def setup(self, points):
-        self.points = np.array(points)
+        pts_arr = np.array(points)
+        if len(pts_arr.shape) == 1:
+            pts_arr = np.array([pts_arr])
+        self._points = pts_arr
 
-class LineSeedGen(SeedGen):
+class Line(SeedGen):
     def __init__(self, p1, p2, res=20):
         """ p1 & p2 are (z, y, x) points as list, tuple, or ndarray
         res is the number of need points to generate """
-        super(LineSeedGen, self).__init__()
+        super(Line, self).__init__()
         self.setup(p1, p2, res)
 
     def setup(self, p1, p2, res):
@@ -39,13 +42,15 @@ class LineSeedGen(SeedGen):
         x = np.linspace(p1[2], p2[2], res)
         self._points = np.array([z, y, x]).T
 
-class PlaneSeedGen(SeedGen):
+class Plane(SeedGen):
     def __init__(self, p0, Ndir, Ldir, len_l, len_m, res_l=20, res_m=20):
         """ plane is specified in L,M,N coords where N is normal to the plane,
         and L is projected into the plane. len_l and len_m is the extent
         of the plane in the l and m directions. res_l and res_m are the
-        resolution of points in teh two directions """
-        super(PlaneSeedGen, self).__init__()
+        resolution of points in the two directions. Note that p0 is the center
+        of the plane, so the plane extends from (-len_l/2, len_l/2) around
+        p0, and similarly in the m direction. """
+        super(Plane, self).__init__()
         self.setup(p0, Ndir, Ldir, len_l, len_m, res_l, res_m)
 
     def setup(self, p0, Ndir, Ldir, len_l, len_m, res_l=20, res_m=20):
@@ -82,9 +87,9 @@ class PlaneSeedGen(SeedGen):
 
         self._points = np.array([z, y, x]).T
 
-class SphereSeedGen(SeedGen):
+class Sphere(SeedGen):
     def __init__(self, p0, r, restheta=20, resphi=20):
-        super(SphereSeedGen, self).__init__()
+        super(Sphere, self).__init__()
         self.setup(p0, r, restheta, resphi)
 
     def setup(self, p0, r, restheta, resphi):
@@ -108,13 +113,13 @@ if __name__ == "__main__":
 
     ax = plt.gca(projection='3d')
 
-    l = LineSeedGen((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points
+    l = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points
     ax.plot(l[:, 2], l[:, 1], l[:, 0], 'g.')
 
-    s = SphereSeedGen((0.0, 0.0, 0.0), 2.0, 10, 20).points
+    s = Sphere((0.0, 0.0, 0.0), 2.0, 10, 20).points
     ax.plot(s[:, 2], s[:, 1], s[:, 0], 'b')
 
-    p = PlaneSeedGen((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0),
+    p = Plane((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0),
                      2.0, 3.0, 10, 20).points
     ax.plot(p[:, 2], p[:, 1], p[:, 0], 'r')
 
