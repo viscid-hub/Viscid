@@ -111,6 +111,9 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             axis.set_ylim(*opt[1:])
             # acts.append([axis, "ylim", opt[1:]])
 
+        elif opt[0] == "earth":
+            kwargs["earth"] = True
+
         elif opt[0] == "own":
             logging.warn("own axis doesn't seem to work yet...")
             
@@ -138,7 +141,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 #         print(act)
 #         plt.setp(act[0], act[1], act[2])
 
-def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True, earth=None,
+def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
                  colorbar=True, **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
@@ -195,6 +198,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True, earth=None,
     if equalaxis:
         ax.axis('equal')
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+
+    earth = kwargs.pop("earth", False)
 
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, **kwargs)
