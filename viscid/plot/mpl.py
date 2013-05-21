@@ -303,6 +303,22 @@ def plot_field_lines(lines, ax=None, show=True, equal=False):
     if show:
         plt.show()
 
+def scatter_3d(points, color=None, ax=None, show=True, equal=False):
+    if not ax:
+        ax = plt.gca(projection='3d')
+
+    z = points[:, 0]
+    y = points[:, 1]
+    x = points[:, 2]
+    ax.scatter(x, y, z, c=color)
+    if equal:
+        ax.axis("equal")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    if show:
+        plt.show()
+
+
 def mplshow():
     # do i need to do anything special before i show?
     # can't think of anything at this point...

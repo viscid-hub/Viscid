@@ -12,6 +12,8 @@ from viscid import vutil
 from viscid import field
 from viscid import coordinate
 from viscid import readers
+from viscid.calculator import calc
+from viscid.calculator import cycalc
 from viscid.calculator import streamline
 from viscid.calculator import seed
 from viscid.plot import mpl
@@ -60,21 +62,40 @@ def main():
     obound0 = np.array([-10, -10, -10], dtype=B.data.dtype)
     obound1 = np.array([10, 10, 10], dtype=B.data.dtype)
     lines = streamline.streamlines(B,
-                               seed.LineSeedGen((0.0, 0.0, -1.0),
-                                                (0.0, 0.0, 1.0),
-                                                20),
-                               ds0=0.01, ibound=0.05, maxit=10000,
-                               obound0=obound0, obound1=obound1)
+                                   seed.Line((0.0, 0.0, -1.0),
+                                             (0.0, 0.0, 1.0),
+                                             20),
+                                   ds0=0.01, ibound=0.05, maxit=10000,
+                                   obound0=obound0, obound1=obound1)
     mpl.plot_field_lines(lines, show=args.show)
 
     logging.info("Testing field lines on 3d field...")
     B = get_dipole(m=[0.2, 0.3, -0.9])
     lines = streamline.streamlines(B,
-                               seed.SphereSeedGen((0.0, 0.0, 0.0),
-                                                  2.0, 5, 10),
-                               ds0=0.01, ibound=0.05, maxit=10000)
+                                   seed.Sphere((0.0, 0.0, 0.0),
+                                               2.0, 5, 10),
+                                   ds0=0.01, ibound=0.05, maxit=10000)
     mpl.plot_field_lines(lines, show=args.show)
 
+    logging.info("Testing trilinear interpolation...")
+
+    # plane = seed.Plane((1, 1, 1), (1, 1, 1), (0, 0, 1), 2, 2)
+    sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0)
+
+    # doing trilin interp on a vector field
+    interp_vals = cycalc.trilin_interp(B, sphere)
+    # make a 3d scatter plot of bz
+    mpl.scatter_3d(sphere.points, interp_vals[:, 2], show=args.show)
+
+    # doing trilin interp on a scalar field
+    bmag = calc.magnitude(B)
+    interp_vals = cycalc.trilin_interp(bmag, sphere)
+    # interp_vals is now a 1d array of interpolated values
+    # interp_vals[i] is located at sphere.points[i]
+    mpl.scatter_3d(sphere.points, interp_vals, show=args.show)
+
+    val = cycalc.trilin_interp(bmag, seed.Point((1.0, 1.0, 1.0)))
+    logging.info("bmag value at point (1, 1, 1) is {0}".format(val))
 
 if __name__ == "__main__":
     main()
