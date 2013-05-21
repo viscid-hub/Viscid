@@ -1,0 +1,57 @@
+{
+  "settings":
+  {
+    "build_switcher_systems":
+    [
+      "viscid#Debug",
+      "viscid#Clean",
+      "viscid#Install",
+      "viscid"
+    ],
+    "pylinter":
+    {
+      //"disable": ["C0301"]
+    },
+  },  
+	"folders":
+	[
+		{
+			"path": "./",
+      "file_exclude_patterns":
+      [
+        "*.sublime-workspace",
+        "*.sublime-project",
+      ],
+		},
+	],
+  "build_systems":
+  [
+    {
+      "name": "viscid",
+      "shell_cmd": "python setup.py build",
+      "working_dir": "${folder}",
+      "syntax": "Packages/Makefile/Make.build-language",
+      "extra_err_parse": true,
+      // "env": {"extra_err_parse": "true"},
+      // "env": {"CC": "/opt/local/bin/gcc", "CFLAGS": ""},
+      // "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+      "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+      "shell": true,
+      "variants":
+      [
+        {
+          "name": "Debug",
+          "shell_cmd": "python setup.py build_ext -i"
+        },
+        {
+          "name": "Clean",
+          "shell_cmd": "python setup.py clean -a"
+        },
+        {
+          "name": "Install",
+          "shell_cmd": "python setup.py install"
+        }
+      ]
+    }
+  ]  
+}

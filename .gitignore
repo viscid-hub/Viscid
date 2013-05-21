@@ -2,6 +2,7 @@ build
 dist
 
 MANIFEST
+viscid.sublime-workspace
 
 *.pyc
 *.pyo
@@ -11,4 +12,3 @@ MANIFEST
 
 .tags
 .DS_Store
-
