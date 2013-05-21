@@ -47,7 +47,9 @@ class Plane(SeedGen):
         """ plane is specified in L,M,N coords where N is normal to the plane,
         and L is projected into the plane. len_l and len_m is the extent
         of the plane in the l and m directions. res_l and res_m are the
-        resolution of points in teh two directions """
+        resolution of points in the two directions. Note that p0 is the center
+        of the plane, so the plane extends from (-len_l/2, len_l/2) around
+        p0, and similarly in the m direction. """
         super(Plane, self).__init__()
         self.setup(p0, Ndir, Ldir, len_l, len_m, res_l, res_m)
 
