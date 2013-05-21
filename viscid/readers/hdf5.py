@@ -21,13 +21,13 @@ class H5pyDataWrapper(vfile.DataWrapper): #pylint: disable=R0924
         self.fname = fname
         self.loc = loc
 
-        with h5py.File(self.fname) as f:
+        with h5py.File(self.fname, 'r') as f:
             dset = f[loc]
             self._shape = dset.shape
             self._dtype = dset.dtype
 
     def wrap_func(self, func_name, *args, **kwargs):
-        with h5py.File(self.fname) as f:
+        with h5py.File(self.fname, 'r') as f:
             return getattr(f[self.loc], func_name)(*args, **kwargs)
 
     def __array__(self, *args, **kwargs):
