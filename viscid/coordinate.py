@@ -13,6 +13,7 @@ types:
          -> Not Implemented <- """
 
 from __future__ import print_function
+import logging
 
 import numpy as np
 
@@ -173,8 +174,7 @@ class StructuredCrds(Coordinates):
         else:
             return self.axes[axis]
 
-    @staticmethod
-    def parse_slice_str(selection):
+    def parse_slice_str(self, selection):
         """ parse a selection string or dict. a trailing i means the number is
         an index, else numbers are interpreted as coordinates... ex:
         selection = 'y=12.32,z-1.0' is line of data
@@ -208,7 +208,13 @@ class StructuredCrds(Coordinates):
                         slclst[i] = float(val)
                 sel[dim] = slclst
             return sel
-
+        if isinstance(selection, slice):
+            return {self._axes[0]: selection}
+        if isinstance(selection, (tuple, list)):
+            ret = {}
+            for sel, axis in zip(selection, self._axes):
+                ret[axis] = sel
+            return ret
         else:
             raise TypeError()
 
@@ -294,7 +300,7 @@ class StructuredCrds(Coordinates):
                 else:
                     raise ValueError()
 
-            if use_cc and slc.stop is not None:
+            if use_cc and slc.stop is not None and slc.stop >= 0:
                 crd_slc = slice(slc.start, slc.stop + 1, slc.step)
             else:
                 crd_slc = slc
