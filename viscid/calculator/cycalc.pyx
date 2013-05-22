@@ -120,25 +120,38 @@ cdef _c_div3d(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
                                                      (crdz[k + 2] - crdz[k])
     return None
 
+def closest_ind(coord_array, value):
+    """ returns the integer such that:
+    if crd[1] > crd[0], then crd[i] < point <= crd[i+1]
+    if crd[1] < crd[0], then crd[i] > point >= crd[i+1]
+    ie. you always get the smaller index of the two straddling crds
+    """
+    return _py_closest_ind(coord_array, value)
+
 def _py_closest_ind(real_t[:] crd, real_t point):
-    """ returns the integer such that crd[i] < point < crd[i+1] """
+    """ returns the integer such that:
+    if crd[1] > crd[0], then crd[i] < point <= crd[i+1]
+    if crd[1] < crd[0], then crd[i] > point >= crd[i+1]
+    ie. you always get the smaller index of the two straddling crds
+    """
     return _c_closest_ind(crd, point)
 
 cdef int _c_closest_ind(real_t[:] crd, real_t point) except -1:
     cdef int i
     cdef unsigned int n = crd.shape[0]
+    cdef int forward = n > 1 and crd[1] > crd[0]
 
     # search linearly... maybe branch prediction makes this better
     # than bisection for smallish arrays...
-    # TODO: make this work for arrays that go backward
     for i from 1 <= i < n:
-        if crd[i] >= point:
+        if forward and crd[i] >= point:
             return i - 1
-    if crd.shape[0] >= 2:
+        if not forward and crd[i] <= point:
+            return i - 1
+    if n >= 2:
         return crd.shape[0] - 2  # if we've gone too far, pick the last index
     else:  # crd.shape[0] <= 1
         return 0
-
 
 def trilin_interp(fld, points):
     """ Points can be list of 3-tuples or a SeedGen instance. If fld
