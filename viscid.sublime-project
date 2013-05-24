@@ -3,7 +3,7 @@
   {
     "build_switcher_systems":
     [
-      "viscid#Debug",
+      "viscid#Develop",
       "viscid#Clean",
       "viscid#Install",
       "viscid"
@@ -40,7 +40,7 @@
       "variants":
       [
         {
-          "name": "Debug",
+          "name": "Develop",
           "shell_cmd": "python setup.py build_ext -i"
         },
         {
