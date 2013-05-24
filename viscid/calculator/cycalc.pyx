@@ -16,6 +16,7 @@ from . import seed
 
 ###########
 # cimports
+cimport cython
 from libc.math cimport sqrt
 
 from cycalc_util cimport *
@@ -46,6 +47,8 @@ def magnitude(fld):
 def _py_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
     return _c_magnitude3d(vect, mag)
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cdef _c_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
     cdef unsigned int nz = vect.shape[0]
     cdef unsigned int ny = vect.shape[1]
@@ -100,6 +103,8 @@ def _py_div3d(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
                real_t[:] crdz, real_t[:,:,:] div_arr):
     return _c_div3d(vect, crdx, crdy, crdz, div_arr)
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cdef _c_div3d(real_t[:,:,:,:] vect, real_t[:] crdx, real_t[:] crdy,
               real_t[:] crdz, real_t[:,:,:] div_arr):
     cdef unsigned int nz = div_arr.shape[0]
