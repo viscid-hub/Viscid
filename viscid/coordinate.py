@@ -288,11 +288,14 @@ class StructuredCrds(Coordinates):
 
                 if len(sel) == 1:
                     ind = sel[0]
-                    slices[dind] = np.s_[ind]
-                    slcrds[dind] = None
-                    loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
-                    reduced.append([axis, loc])
-                    continue
+                    if rm_len1_dims:
+                        slices[dind] = np.s_[ind]
+                        slcrds[dind] = None
+                        loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
+                        reduced.append([axis, loc])
+                        continue
+                    else:
+                        slc = np.s_[ind:ind + 1]
                 elif len(sel) == 2:
                     slc = np.s_[sel[0]:sel[1]]
                 elif len(sel) == 3:
