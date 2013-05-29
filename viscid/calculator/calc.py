@@ -79,13 +79,25 @@ def _check_backend(preferred, implemented, only=False):
     raise verror.BackendNotFound("No implemented backends are installed "
                                  "for this function.")
 
+def add(fld_a, fld_b, backends=None, only=False):
+    implemented_backends = ["numexpr"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        # tmp = fld_b[slb]
+        summ = necalc.add(fld_a, fld_b)
+
+    return field.wrap_field(fld_a.TYPE, fld_a.name + " sum", fld_a.crds,
+                            summ, center=fld_a.center, time=fld_a.time)
+
 def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None,
                only=False):
     implemented_backends = ["numexpr", "numpy"]
     use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "numexpr":
-        diff = necalc.difference(fld_a, fld_b, sla, slb)
+        # tmp = fld_b[slb]
+        diff = necalc.difference(fld_a[sla], fld_b[slb])
     elif use_backend == "numpy":
         return fld_a[sla] - fld_b[slb]
 
@@ -98,7 +110,7 @@ def relative_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
     use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "numexpr":
-        diff = necalc.relative_diff(fld_a, fld_b, sla, slb)
+        diff = necalc.relative_diff(fld_a[sla], fld_b[slb])
     elif use_backend == "numpy":
         a = fld_a.data[sla]
         b = fld_b.data[slb]
@@ -113,7 +125,7 @@ def abs_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
     use_backend = _check_backend(backends, implemented_backends, only=only)
 
     if use_backend == "numexpr":
-        diff = necalc.abs_diff(fld_a, fld_b, sla, slb)
+        diff = necalc.abs_diff(fld_a[sla], fld_b[slb])
     elif use_backend == "numpy":
         a = fld_a.data[sla]
         b = fld_b.data[slb]
@@ -180,6 +192,39 @@ def magnitude(fld, backends=None, only=False):
     #print(mag[:,128,128])
     return field.wrap_field("Scalar", fld.name + " magnitude", fld.crds,
                             mag, center=fld.center, time=fld.time)
+
+def scalar_mul(s, fld, backends=None, only=False):
+    implemented_backends = ["numexpr"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        prod = necalc.scalar_mul(s, fld)
+
+    return field.wrap_field(fld.TYPE, fld.name,
+                            fld.crds, prod, center=fld.center,
+                            time=fld.time)    
+
+def dot(fld_a, fld_b, backends=None, only=False):
+    implemented_backends = ["numexpr"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        prod = necalc.dot(fld_a, fld_b)
+
+    return field.wrap_field("Scalar", fld_a.name + " dot " + fld_b.name,
+                            fld_a.crds, prod, center=fld_a.center,
+                            time=fld_a.time)
+
+def cross(fld_a, fld_b, backends=None, only=False):
+    implemented_backends = ["numexpr"]
+    use_backend = _check_backend(backends, implemented_backends, only=only)
+
+    if use_backend == "numexpr":
+        prod = necalc.cross(fld_a, fld_b)
+
+    return field.wrap_field("Vector", fld_a.name + " cross " + fld_b.name,
+                            fld_a.crds, prod, center=fld_a.center,
+                            time=fld_a.time)
 
 def div(fld, backends=None, only=False):
     implemented_backends = ["numexpr", "cython"]
