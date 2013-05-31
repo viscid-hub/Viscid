@@ -84,7 +84,7 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         py_obound0 = obound0
         c_obound0[...] = py_obound0
 
-    if obound0 is None:
+    if obound1 is None:
         c_obound1[0] = crdz[-1]
         c_obound1[1] = crdy[-1]
         c_obound1[2] = crdx[-1]
