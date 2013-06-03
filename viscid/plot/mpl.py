@@ -13,8 +13,9 @@ from .. import field
 from ..calculator import calc
 from .. import vutil
 
-has_colorbar_gridspec = (matplotlib.major > 1) or \
-                        (matplotlib.major == 1 and matplotlib.minor1 >= 1)
+__mpl_ver__ = [int(v) for v in matplotlib.__version__.split('.')]
+has_colorbar_gridspec = (__mpl_ver__[0] > 1) or \
+                        (__mpl_ver__[0] == 1 and __mpl_ver__[1] >= 1)
 
 def plot(fld, selection=None, **kwargs):
     """ just plot... should generically dispatch to gen the right
