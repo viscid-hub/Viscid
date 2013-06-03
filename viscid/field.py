@@ -503,6 +503,10 @@ class VectorField(Field):
             return LAYOUT_FLAT
         elif list(dat.shape[:-1]) == shape:
             return LAYOUT_INTERLACED
+        elif dat.shape[0] == np.prod(shape):
+            return LAYOUT_INTERLACED
+        elif dat.shape[-1] == np.prod(shape):
+            return LAYOUT_FLAT
         else:
             return LAYOUT_OTHER
 
