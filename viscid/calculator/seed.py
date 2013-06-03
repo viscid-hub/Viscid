@@ -85,6 +85,17 @@ class Line(SeedGen):
         x = np.linspace(p0[2], p1[2], res).astype(self.dtype, copy=False)
         return np.array([z, y, x])
 
+    def as_coordinates(self):
+        p0 = self.params["p0"]
+        p1 = self.params["p1"]
+        res = self.params["res"]
+
+        dp = p1 - p0
+        dist = np.sqrt(np.dot(dp, dp))
+        x = np.linspace(0.0, dist, res)
+        crd = coordinate.wrap_crds("Rectilinear", (('x', x),))
+        return crd
+
 
 class Plane(SeedGen):
     def __init__(self, p0, Ndir, Ldir, len_l, len_m, res_l=20, res_m=20,
@@ -128,22 +139,17 @@ class Plane(SeedGen):
         # create matrix to go LNM -> zyx
         trans = np.matrix([Ldir, Mdir, Ndir]).T
 
+    def as_coordinates(self):
         len_l = self.params["len_l"]
         len_m = self.params["len_m"]
-        l = np.linspace(-0.5 * len_l, 0.5 * len_l,
-                        self.params["res_l"]).astype(self.dtype, copy=False)
-        m = np.linspace(-0.5 * len_m, 0.5 * len_m,
-                        self.params["res_m"]).astype(self.dtype, copy=False)
-        x, y, z = [], [], []
+        res_l = self.params["res_l"]
+        res_m = self.params["res_m"]
 
-        for li in l:
-            for mj in m:
-                pt = (trans * np.array([[li, mj, 0.0]]).T)
-                x.append(self.params["p0"][2] + pt[2, 0])
-                y.append(self.params["p0"][1] + pt[1, 0])
-                z.append(self.params["p0"][0] + pt[0, 0])
+        l = np.linspace(-0.5 * len_l, 0.5 * len_l, res_l)
+        m = np.linspace(-0.5 * len_m, 0.5 * len_m, res_m)
 
-        return np.array([z, y, x])
+        crds = coordinate.wrap_crds("Rectilinear", (('y', m), ('x', l)))
+        return crds
 
 
 class Volume(SeedGen):
@@ -161,15 +167,25 @@ class Volume(SeedGen):
     def gen_points(self):
         return np.array(list(self.iter_points()))
 
-    def iter_points(self):
+    def _make_arrays(self):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
         z = np.linspace(p0[0], p1[0], res[0]).astype(self.dtype, copy=False)
         y = np.linspace(p0[1], p1[1], res[1]).astype(self.dtype, copy=False)
         x = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype, copy=False)
+        return z, y, x
+
+    def iter_points(self):
+        z, y, x = self._make_arrays()
         return itertools.product(z, y, x)
 
+    def as_coordinates(self):
+        z, y, x = self._make_arrays()
+        crd = coordinate.wrap_crds("Rectilinear", 
+                                   (('z', z), ('y', y), ('x', x)))
+        return crd
+        
 
 class Sphere(SeedGen):
     def __init__(self, p0, r, restheta=20, resphi=20, cache=False):
