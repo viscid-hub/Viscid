@@ -13,8 +13,9 @@ from .. import field
 from ..calculator import calc
 from .. import vutil
 
-has_colorbar_gridspec = (matplotlib.major > 1) or \
-                        (matplotlib.major == 1 and matplotlib.minor1 >= 1)
+__mpl_ver__ = [int(v) for v in matplotlib.__version__.split('.')]
+has_colorbar_gridspec = (__mpl_ver__[0] > 1) or \
+                        (__mpl_ver__[0] == 1 and __mpl_ver__[1] >= 1)
 
 def plot(fld, selection=None, **kwargs):
     """ just plot... should generically dispatch to gen the right
@@ -111,6 +112,9 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             axis.set_ylim(*opt[1:])
             # acts.append([axis, "ylim", opt[1:]])
 
+        elif opt[0] == "earth":
+            kwargs["earth"] = True
+
         elif opt[0] == "own":
             logging.warn("own axis doesn't seem to work yet...")
             
@@ -138,7 +142,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 #         print(act)
 #         plt.setp(act[0], act[1], act[2])
 
-def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True, earth=None,
+def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
                  colorbar=True, **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
@@ -195,6 +199,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True, earth=None,
     if equalaxis:
         ax.axis('equal')
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+
+    earth = kwargs.pop("earth", False)
 
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, **kwargs)
@@ -292,9 +298,9 @@ def plot_field_lines(lines, ax=None, show=True, equal=False):
 
     for line in lines:
         line = np.array(line)
-        z = line[:, 0]
-        y = line[:, 1]
-        x = line[:, 2]
+        z = line[0]
+        y = line[1]
+        x = line[2]
         ax.plot(x, y, z)
     if equal:
         ax.axis("equal")
@@ -307,9 +313,9 @@ def scatter_3d(points, color=None, ax=None, show=True, equal=False):
     if not ax:
         ax = plt.gca(projection='3d')
 
-    z = points[:, 0]
-    y = points[:, 1]
-    x = points[:, 2]
+    z = points[0]
+    y = points[1]
+    x = points[2]
     ax.scatter(x, y, z, c=color)
     if equal:
         ax.axis("equal")

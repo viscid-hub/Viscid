@@ -13,6 +13,8 @@ types:
          -> Not Implemented <- """
 
 from __future__ import print_function
+# from timeit import default_timer as time
+import itertools
 import logging
 
 import numpy as np
@@ -38,11 +40,14 @@ class Coordinates(object):
     def __init__(self):
         pass
 
+    def as_coordinates(self):
+        return self
+
 
 class StructuredCrds(Coordinates):
     TYPE = "Structured"
     CENTER = {None: "", "Node": "", "Cell": "cc", "Face": "fc", "Edge": "ec"}
-    sfxIXES = list(CENTER.values())
+    SUFFIXES = list(CENTER.values())
 
     _axes = ["z", "y", "x"]
     _dim = 3
@@ -73,6 +78,10 @@ class StructuredCrds(Coordinates):
         return self.shape_nc
 
     @property
+    def dtype(self):
+        return self[self.axes[0]].dtype
+
+    @property
     def shape_nc(self):
         return [len(self[ax]) for ax in self.axes]
 
@@ -83,7 +92,7 @@ class StructuredCrds(Coordinates):
     def clear_crds(self):
         self._crds = {}
         for d in self.axes:
-            for sfx in self.sfxIXES:
+            for sfx in self.SUFFIXES:
                 self._crds[d + sfx] = None
                 self._crds[d.upper() + sfx] = None
 
@@ -288,11 +297,14 @@ class StructuredCrds(Coordinates):
 
                 if len(sel) == 1:
                     ind = sel[0]
-                    slices[dind] = np.s_[ind]
-                    slcrds[dind] = None
-                    loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
-                    reduced.append([axis, loc])
-                    continue
+                    if rm_len1_dims:
+                        slices[dind] = np.s_[ind]
+                        slcrds[dind] = None
+                        loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
+                        reduced.append([axis, loc])
+                        continue
+                    else:
+                        slc = np.s_[ind:ind + 1]
                 elif len(sel) == 2:
                     slc = np.s_[sel[0]:sel[1]]
                 elif len(sel) == 3:
@@ -317,6 +329,14 @@ class StructuredCrds(Coordinates):
         # print("*** crds: ", slcrds)
         return tuple(slices), slcrds, reduced
 
+    def slice(self, selection, use_cc=False):
+        slices, crdlst, reduced = self.make_slice(selection, use_cc=use_cc,
+                                                  rm_len1_dims=False)
+        # no slice necessary, just pass the field through
+        if list(slices) == [slice(None)] * len(slices):
+            return self
+        return wrap_crds(self.TYPE, crdlst)
+
     def get_crd(self, axis=None, shaped=False, center=None):
         """ if axis is not specified, return all coords,
         shaped makes axis capitalized and returns ogrid like crds
@@ -338,10 +358,25 @@ class StructuredCrds(Coordinates):
         center in the 3rd direction """
         return [name for name in self.axes if len(self[name]) > ignore]
 
-    def get_clist(self, slce=slice(None)):
+    def get_clist(self, slce=None):
         """ return a clist of the coordinates sliced if you wish
         I recommend using numpy.s_ for making the slice """
+        if slce is None:
+            slce = slice(None)
         return [[axis, self.get_crd(axis)[slce]] for axis in self.axes]
+
+    def points(self, center=None):
+        # t0 = time()
+        lst = np.array(list(self.iter_points(center=center)))
+        # t1 = time()
+        # print("points conversion: {0:.3e}".format(t1 - t0))
+        return lst
+
+    def n_points(self, center=None):
+        return np.prod([len(crd) for crd in self.get_crd(center=center)])
+
+    def iter_points(self, center=None, **kwargs):
+        return itertools.product(*self.get_crd(shaped=False, center=center))
 
     def __getitem__(self, axis):
         """ returns coord identified by axis """

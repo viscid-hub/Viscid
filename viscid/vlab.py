@@ -41,10 +41,10 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
             mpl.plot(fld, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
     hrs = int(grid.time / 3600)
-    mins = int((grid.time / 60) % 3600)
+    mins = int((grid.time / 60) % 60)
     secs = grid.time % 60
     # plt.suptitle("t = {0:.2f}".format(grid.time))
-    plt.suptitle("t = {0}:{1}:{2:.2f}".format(hrs, mins, secs))
+    plt.suptitle("t = {0}:{1:02}:{2:05.2f}".format(hrs, mins, secs))
 
     if out_prefix:
         plt.savefig("{0}_{1:06d}.png".format(out_prefix, tind + 1))

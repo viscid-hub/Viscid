@@ -4,7 +4,6 @@ from __future__ import print_function
 from timeit import default_timer as time
 import argparse
 import logging
-import sys
 
 import numpy as np
 import numexpr as ne
@@ -21,11 +20,11 @@ from viscid.calculator import seed
 from viscid.plot import mpl
 
 def get_dipole(m=None, twod=False):
-    dtype = 'float64'
-    n = 256
-    x = np.array(np.linspace(-5, 5, n), dtype=dtype)
-    y = np.array(np.linspace(-5, 5, n), dtype=dtype)
-    z = np.array(np.linspace(-5, 5, n), dtype=dtype)
+    dtype = 'float32'
+    n = 128
+    x = np.array(np.linspace(-10, 10, n), dtype=dtype)
+    y = np.array(np.linspace(-10, 10, n), dtype=dtype)
+    z = np.array(np.linspace(-10, 10, n), dtype=dtype)
     if twod:
         y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
@@ -57,61 +56,41 @@ def main():
     parser = argparse.ArgumentParser(description="Load some data files")
     parser.add_argument('files', nargs="*", help='input files')
     parser.add_argument("--show", "--plot", action="store_true")    
-    parser.add_argument("--old", action="store", type=int)
     args = vutil.common_argparse(parser)
     args = parser.parse_args()
 
-    logging.info("Testing field lines on 2d field...")
-    B = get_dipole(twod=True)
-    obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
-    obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
-    t0 = time()
-    lines = streamline.streamlines(B,
-                                   seed.Line((0.0, 0.0, -1.0),
-                                             (0.0, 0.0, 1.0),
-                                             200),
-                                   ds0=0.01, ibound=0.05, maxit=10000,
-                                   obound0=obound0, obound1=obound1)
-    t1 = time()
-    logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0)) 
-    mpl.plot_field_lines(lines, show=args.show)
-
     logging.info("Testing field lines on 3d field...")
-    B = get_dipole(m=[0.2, 0.3, -0.9])
+    B = get_dipole(m=[0.0, 0.0, -1.0])
+
+    mygrid = B.crds.slice("z=1:3,y=1i:3i,x=0.0", use_cc=True)
+    
+    # print(B.crds.get_crd(center="Node"))    
+    # print(mygrid.get_crd(center="Cell"))
+    # for z, y, x in mygrid.iter_points(center="Cell"):
+    #     print(z, y, x)
+    # print("======")
+    # for z, y, x in mygrid.points(center="Cell"):
+    #     print(z, y, x)
+    # print("======")
+    # print(mygrid.points(center="Cell")[:][0])
+
+    logging.info("testing streamlines")
     t0 = time()
-    lines = streamline.streamlines(B,
-                                   seed.Sphere((0.0, 0.0, 0.0),
-                                               2.0, 20, 10),
-                                   ds0=0.01, ibound=0.05, maxit=10000)
+    lines = streamline.streamlines(B, mygrid, ds0=0.01, ibound=0.05,
+                                   maxit=10000)
     t1 = time()
     logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
     mpl.plot_field_lines(lines, show=args.show)
 
-    logging.info("Testing trilinear interpolation...")
-
-    # plane = seed.Plane((1, 1, 1), (1, 1, 1), (0, 0, 1), 2, 2)
-    sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0, 200, 200)
-
-    # doing trilin interp on a scalar field
+    logging.info("testing interp")
     bmag = calc.magnitude(B)
     t0 = time()
-    interp_vals = cycalc.trilin_interp(bmag, sphere)
+    interp_vals = cycalc.trilin_interp(bmag, mygrid)
     t1 = time()
     logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))  
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
-    mpl.scatter_3d(sphere.points(), interp_vals, show=args.show)
-
-    # doing trilin interp on a vector field
-    t0 = time()
-    interp_vals = cycalc.trilin_interp(B, sphere)
-    t1 = time()
-    logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
-    # make a 3d scatter plot of bz
-    mpl.scatter_3d(sphere.points(), interp_vals[:, 2], show=args.show)
-
-    # val = cycalc.trilin_interp(bmag, seed.Point((1.0, 1.0, 1.0)))
-    # logging.info("bmag value at point (1, 1, 1) is {0}".format(val))
+    mpl.scatter_3d(mygrid.points(center="Cell"), interp_vals, show=args.show)
 
 if __name__ == "__main__":
     main()

@@ -15,8 +15,8 @@ Dependancies:
 + matplotlib (optional, if you import viscid.plot.mpl)
 + mayavi2 (optional, if you import viscid.plot.mvi)
 + numexpr (optional, for the calculator.necalc module)
-+ cython (optional for calculator.cycalc module; in the future, I may check
-          in the .c files so cycalc does not need cython to be available)
++ cython > 0.17 (optional for calculator.cycalc module; in the future, I may
+          check in the .c files so cycalc does not need cython to be available)
 
 The optional calculator modules (necalc and cycalc) are all dispatched through
 calculator.calc, and it is intelligent enough not to use a library that is not

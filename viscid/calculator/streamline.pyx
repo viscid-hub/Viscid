@@ -1,13 +1,16 @@
-# cython: boundscheck=True, wraparound=True
+# cython: boundscheck=True, wraparound=True, profile=False
 
 from __future__ import print_function
+
+import numpy as np
 
 from .. import field
 from . import seed
 
 ###########
 # cimports
-cimport numpy as np
+cimport cython
+# cimport numpy as cnp
 
 from cycalc_util cimport *
 from cycalc cimport *
@@ -22,26 +25,19 @@ def streamlines(fld, seeds, *args, **kwargs):
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.dim != 3:
         raise ValueError("Streamlines are only written in 3D.")
-    nptype = fld.data.dtype.name
+    # nptype = fld.data.dtype.name
 
     dat = fld.data
-    crdz, crdy, crdx = fld.crds.get_crd(center="Cell")
+    dtype = dat.dtype
+    center = "Cell"
+    crdz, crdy, crdx = fld.crds.get_crd(center=center)
+    iter_seeds = seeds.iter_points(center=center)
 
-    if isinstance(seeds, seed.SeedGen):
-        # recast the seed data type... this should be done better...
-        x0 = seeds.points.astype(dat.dtype)
-    else:
-        x0 = np.array(seeds, dtype=dat.dtype).reshape((-1, 3))
+    return _py_streamline(dtype, dat, crdz, crdy, crdx, iter_seeds,
+                          *args, **kwargs)
 
-    lines = []
-    for start in x0:
-        line = _py_streamline(dat, crdz, crdy, crdx,
-                              start, *args, **kwargs)
-        lines.append(line)
-    return lines
-
-def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
-                   real_t[:] crdx, real_t[:] x0, ds0=-1.0, ibound=0.0,
+def _py_streamline(dtype, real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
+                   real_t[:] crdx, iter_seeds, ds0=-1.0, ibound=0.0,
                    obound0=None, obound1=None, dir=BOTH,
                    maxit=10000):
     """ Start calculating a streamline at x0
@@ -68,13 +64,19 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         int i, j, it
         int ret
         int done
-        real_t s_arr[3]
-        real_t[:] s = s_arr
         real_t px, py, pz
-        real_t d
+        int d
         real_t rsq, distsq
 
-    line = []
+        real_t[:,:,:] line_arr
+        real_t[:,:] line
+        real_t x0_arr[3]
+        int line_ends_arr[2]
+        real_t s_arr[3]
+
+        real_t[:] x0 = x0_arr
+        int[:] line_ends = line_ends_arr
+        real_t[:] s = s_arr
 
     if obound0 is None:
         c_obound0[0] = crdz[0]
@@ -84,7 +86,7 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         py_obound0 = obound0
         c_obound0[...] = py_obound0
 
-    if obound0 is None:
+    if obound1 is None:
         c_obound1[0] = crdz[-1]
         c_obound1[1] = crdy[-1]
         c_obound1[2] = crdx[-1]
@@ -96,67 +98,84 @@ def _py_streamline(real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         # FIXME: calculate something reasonable here
         c_ds0 = 0.01
 
-    lseg = [[[x0[0], x0[1], x0[2]]], []]
-    for i, d in enumerate([-1.0, 1.0]):
-        if d < 0 and not (c_dir & BACKWARD):
-            continue
-        elif d > 0 and not (c_dir & FORWARD):
-            continue
+    lines = []
+    line_arr = np.empty((2, 3, c_maxit), dtype=dtype)
 
-        ds = d * c_ds0
+    for seed_pt in iter_seeds:
+        # print(seed_pt)
+        x0[0] = seed_pt[0]
+        x0[1] = seed_pt[1]
+        x0[2] = seed_pt[2]
 
-        s[0] = x0[0]
-        s[1] = x0[1]
-        s[2] = x0[2]
+        line_arr[1, 0, c_maxit - 1] = x0[0]
+        line_arr[1, 1, c_maxit - 1] = x0[1]
+        line_arr[1, 2, c_maxit - 1] = x0[2]
+        line_ends[0] = c_maxit - 2
+        line_ends[1] = 0
 
-        it = 0
-        done = 0
-        while it <= c_maxit:
-            # print("point (x, y, z): ", s[2], s[1], s[0])
-            # components run x, y, z, but coords run z, y, x
-            ret = _c_euler1[real_t](v_arr, crdz, crdy, crdx, ds, s)
-            # ret is non 0 when |varr| == 0
-            if ret != 0:
-                done = 1
-                break
+        for i, d in enumerate([-1, 1]):
+            if d < 0 and not (c_dir & BACKWARD):
+                continue
+            elif d > 0 and not (c_dir & FORWARD):
+                continue
 
-            lseg[i].append([s[0], s[1], s[2]])
-            it += 1
+            ds = d * c_ds0
 
-            # end conditions
-            rsq = s[0]**2 + s[1]**2 + s[2]**2
+            s[0] = x0[0]
+            s[1] = x0[1]
+            s[2] = x0[2]
 
-            # hit the inner boundary
-            if rsq <= c_ibound**2:
-                # print("inner boundary")
-                done = 1
-                break
+            it = line_ends[i]
 
-            for j from 0 <= j < 3:
-                # hit the outer boundary
-                if s[j] <= c_obound0[j] or s[j] >= c_obound1[j]:
-                    # print("outer boundary")
+            done = 0
+            while 0 <= it and it < c_maxit:
+                ret = _c_euler1[real_t](v_arr, crdz, crdy, crdx, ds, s)
+                # ret is non 0 when |varr| == 0
+                if ret != 0:
                     done = 1
                     break
 
-            # if we are within 0.99 * ds0 of the initial position
-            distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
-            if distsq < (0.99 * ds0)**2:
-                # print("cyclic field line")
-                done = 1
-                break
+                line_arr[i, 0, it] = s[0]
+                line_arr[i, 1, it] = s[1]
+                line_arr[i, 2, it] = s[2]
+                it += d
 
-            if done:
-                break
-        if not done:
-            pass
-            # print("maxit")
+                # end conditions
+                rsq = s[0]**2 + s[1]**2 + s[2]**2
 
-    # reverse the 'backward' line segment
-    # print("-- first: ", lseg[0][:4], " last: ", lseg[0][-4:])
-    # print("++ first: ", lseg[1][:4], " last: ", lseg[1][-4:])
-    line = (lseg[0][::-1] + lseg[1])
-    return line
+                # hit the inner boundary
+                if rsq <= c_ibound**2:
+                    # print("inner boundary")
+                    done = 1
+                    break
+
+                for j from 0 <= j < 3:
+                    # hit the outer boundary
+                    if s[j] <= c_obound0[j] or s[j] >= c_obound1[j]:
+                        # print("outer boundary")
+                        done = 1
+                        break
+
+                # if we are within 0.99 * ds0 of the initial position
+                distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
+                if distsq < (0.99 * ds0)**2:
+                    # print("cyclic field line")
+                    done = 1
+                    break
+
+                if done:
+                    break
+            if not done:
+                pass
+
+            line_ends[i] = it
+
+        # reverse the 'backward' line segment
+        line = np.concatenate((line_arr[0, :, line_ends[0] + 1:], 
+                               line_arr[1, :, :line_ends[1]]), axis=1)
+
+        lines.append(line)
+    return lines
 
 ##
 ## EOF
