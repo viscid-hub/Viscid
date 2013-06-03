@@ -202,6 +202,16 @@ class Field(object):
             fld.info["reduced"] = reduced
         return fld
 
+    def n_points(self, center=None, **kwargs): #pylint: disable=W0613
+        if center == "None":
+            center = self.center
+        return self.crds(center=center)
+
+    def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
+        if center == "None":
+            center = self.center
+        return self.crds.iter_points(center=center)
+
     def __enter__(self):
         return self
 

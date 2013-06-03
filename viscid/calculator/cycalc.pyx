@@ -1,4 +1,4 @@
-# cython: boundscheck=True, wraparound=True
+# cython: boundscheck=True, wraparound=True, profile=False
 #
 # Note: a _c_FUNCTION can only be called from another cdef-ed function, or
 # a def-ed _py_FUNCTION function because of the use of the fused real_t
@@ -8,6 +8,7 @@ from __future__ import print_function
 # import time
 
 import numpy as np
+from cython.view cimport array as cvarray
 # from cython.parallel import prange
 
 from .. import field
@@ -17,6 +18,8 @@ from . import seed
 ###########
 # cimports
 cimport cython
+cimport numpy as cnp
+
 from libc.math cimport sqrt
 
 from cycalc_util cimport *
@@ -66,6 +69,7 @@ cdef _c_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:] mag):
                 mag[k,j,i] = sqrt(val)
     return None
 
+@cython.wraparound(True)
 def div(fld):
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Div is only written for interlaced data.")
@@ -143,12 +147,15 @@ def _py_closest_ind(real_t[:] crd, real_t point):
 
 cdef int _c_closest_ind(real_t[:] crd, real_t point) except -1:
     cdef int i
+    # TODO: maybe this could be faster if i have a guess where to
+    # start looking
+    cdef int startind = 1
     cdef unsigned int n = crd.shape[0]
     cdef int forward = n > 1 and crd[1] > crd[0]
 
     # search linearly... maybe branch prediction makes this better
     # than bisection for smallish arrays...
-    for i from 1 <= i < n:
+    for i from startind <= i < n:
         if forward and crd[i] >= point:
             return i - 1
         if not forward and crd[i] <= point:
@@ -156,9 +163,9 @@ cdef int _c_closest_ind(real_t[:] crd, real_t point) except -1:
     if n >= 2:
         return crd.shape[0] - 2  # if we've gone too far, pick the last index
     else:  # crd.shape[0] <= 1
-        return 0
+        return startind - 1
 
-def trilin_interp(fld, points):
+def trilin_interp(fld, seeds):
     """ Points can be list of 3-tuples or a SeedGen instance. If fld
     is a scalar field, the output array has shape (npts,) where npts
     is the number of seed points. If it's a vector, the output has shape
@@ -173,38 +180,47 @@ def trilin_interp(fld, points):
     else:
         raise RuntimeError("Dont touch me with that centering.")
 
-    # sanitize points input
-    if isinstance(points, seed.SeedGen):
-        points = points.points  # wow, this is silly
-    pts_arr = np.array(points, dtype=fld.dtype)
-    if len(points.shape) == 1:
-        pts_arr = np.array([pts_arr])
-    npts = pts_arr.shape[0]
+    dtype = fld.dtype
 
     if fld.TYPE == "Vector":
-        ncomp = fld.ncomp
         views = fld.component_views()
-        ret = np.empty((npts, ncomp), dtype=fld.dtype)
-        for i from 0 <= i < npts:
-            for j from 0 <= j < ncomp:
-                ret[i][j] = _py_trilin_interp(views[j], crdz, crdy, crdx, 
-                                              pts_arr[i])
+        ncomp = fld.ncomp
+        npts = seeds.n_points(center=fld.center)
+        ret = np.empty((npts, ncomp), dtype=dtype)
+
+        for j from 0 <= j < ncomp:
+            # print(ret.shape, npts, ncomp)
+            ret[:,j] = _py_trilin_interp(dtype, views[j], crdz, crdy, crdx,
+                                seeds.iter_points(center=fld.center),
+                                npts)
         return ret
 
     elif fld.TYPE == "Scalar":
         view = fld.data
-        ret = np.empty((npts,), dtype=fld.dtype)
-        for i from 0 <= i < npts:
-            ret[i] = _py_trilin_interp(view, crdz, crdy, crdx, pts_arr[i])
+        npts = seeds.n_points(center=fld.center)
+        ret = np.empty((npts,), dtype=dtype)
+        ret[:] = _py_trilin_interp(dtype, view, crdz, crdy, crdx,
+                                 seeds.iter_points(center=fld.center),
+                                 npts)
         return ret
     else:
         raise RuntimeError("That centering is not supported for trilin_interp")
 
-def _py_trilin_interp(real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
-                      real_t[:] crdx, real_t[:] x):
+def _py_trilin_interp(dtype, real_t[:,:,:] s, real_t[:] crdz, real_t[:] crdy,
+                      real_t[:] crdx, points, int n_points):
     """ return the scalar value of 3d scalar array s trilinearly interpolated
     to the point x (in z, y, x order) """
-    return _c_trilin_interp(s, crdz, crdy, crdx, x)
+    cdef unsigned int i
+    cdef real_t[:] x = np.empty((3,), dtype=dtype)
+    cdef real_t[:] ret = np.empty((n_points,), dtype=dtype)
+    # print("n_points: ", n_points)
+    #for i, pt in enumerate(points):
+    for i , pt in enumerate(points):
+        x[0] = pt[0]
+        x[1] = pt[1]
+        x[2] = pt[2]
+        ret[i] = _c_trilin_interp(s, crdz, crdy, crdx, x)
+    return ret
 
 cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
                              real_t[:] crdy, real_t[:] crdx, real_t[:] x):
@@ -213,13 +229,19 @@ cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
     cdef int[3] p  # increment, used for 2d fields
     cdef real_t[3] xd
     cdef real_t[3] xdm  # will be 1 - xd
+    
+    crds = [crdz, crdy, crdx]
+    cdef real_t[:] crd
     cdef real_t c00, c10, c01, c11, c0, c1, c
 
     zp = 1 if crdz.shape[0] > 1 else 0
     yp = 1 if crdy.shape[0] > 1 else 0
     xp = 1 if crdx.shape[0] > 1 else 0
 
-    for i, crd in enumerate([crdz, crdy, crdx]):
+    # TODO: improve performance by making this not a list
+    # crds = [crdz, crdy, crdx]
+    for i from 0 <= i < 3:
+        crd = crds[i]
         ind = _c_closest_ind[real_t](crd, x[i])
         ix[i] = ind
         # this bit to support 2d fields could probably be handled
@@ -242,6 +264,7 @@ cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
           s[ix[0] + p[0], ix[1]       , ix[2] + p[2]] * xd[0]
     c11 = s[ix[0]       , ix[1] + p[1], ix[2] + p[2]] * xdm[0] + \
           s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]] * xd[0]
+
     c0 = c00 * xdm[1] + c10 * xd[1]
     c1 = c01 * xdm[1] + c11 * xd[1]
     c = c0 * xdm[2] + c1 * xd[2]

@@ -297,9 +297,9 @@ def plot_field_lines(lines, ax=None, show=True, equal=False):
 
     for line in lines:
         line = np.array(line)
-        z = line[:, 0]
-        y = line[:, 1]
-        x = line[:, 2]
+        z = line[0]
+        y = line[1]
+        x = line[2]
         ax.plot(x, y, z)
     if equal:
         ax.axis("equal")
@@ -312,9 +312,9 @@ def scatter_3d(points, color=None, ax=None, show=True, equal=False):
     if not ax:
         ax = plt.gca(projection='3d')
 
-    z = points[:, 0]
-    y = points[:, 1]
-    x = points[:, 2]
+    z = points[0]
+    y = points[1]
+    x = points[2]
     ax.scatter(x, y, z, c=color)
     if equal:
         ax.axis("equal")

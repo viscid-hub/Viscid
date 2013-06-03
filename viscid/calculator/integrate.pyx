@@ -1,4 +1,4 @@
-# cython: boundscheck=True, wraparound=True
+# cython: boundscheck=True, wraparound=True, profile=False
 #
 # Cython module for euler1 integration, and in the future rk4 and rk45
 
