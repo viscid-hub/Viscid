@@ -20,7 +20,7 @@ from viscid.plot import mpl
 
 def get_dipole(m=None, twod=False):
     dtype = 'float64'
-    n = 256
+    n = 64
     x = np.array(np.linspace(-5, 5, n), dtype=dtype)
     y = np.array(np.linspace(-5, 5, n), dtype=dtype)
     z = np.array(np.linspace(-5, 5, n), dtype=dtype)
@@ -57,24 +57,31 @@ if __name__=="__main__":
     # sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0, 500, 500)
     # cProfile.runctx("""interp_vals = cycalc.trilin_interp(B, sphere)""",
     #                 globals(), locals(), "interp.prof")    
-    plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (1., 0., 0.), 
-                       1.0, 1.0, 500, 500)
+    # plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (1., 0., 0.), 
+    #                    1.0, 1.0, 500, 500)
+    vol = B.crds
     # print(plane.points())
-    cProfile.runctx("""interp_vals = cycalc.trilin_interp(B, plane)""",
+    cProfile.runctx("""interp_vals = cycalc.trilin_interp(B, vol)""",
                     globals(), locals(), "interp.prof")
     t1 = time()
     print("Total time: {0:.3e}".format(t1 - t0))
     s = pstats.Stats("interp.prof")
     s.strip_dirs().sort_stats("cumtime").print_stats()
     # print([line.shape for line in lines])
-    mpl.scatter_3d(plane.points(), interp_vals[:, 2], show=True)
+    # mpl.scatter_3d(vol.points(), interp_vals[:, 2], show=True)
 
-    interp_field = field.wrap_field("Vector", "interp", plane.as_coordinates(),
-                                    interp_vals)
-    bx, by, bz = interp_field.component_fields()
-    mpl.plot(bx, show=True)
-    mpl.plot(by, show=True)
-    mpl.plot(bz, show=True)
+    interp_field = field.wrap_field("Vector", "interp", vol.as_coordinates(),
+                                    interp_vals, center="Cell")
+    interp_y1 = interp_field["y=1"]
+    exact_y1 = B["y=1"]
+    bxi, byi, bzi = interp_y1.component_fields()
+    bxe, bye, bze = exact_y1.component_fields()
+    for interp, exact in zip([bxi, byi, bzi], [bxe, bye, bze]):
+        plt.clf()
+        plt.subplot(211)
+        mpl.plot(exact, show=False)
+        plt.subplot(212)
+        mpl.plot(interp, show=True)
 
 ##
 ## EOF

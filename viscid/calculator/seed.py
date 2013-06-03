@@ -56,13 +56,26 @@ class Point(SeedGen):
         self.params["points"] = points
 
     def n_points(self, **kwargs):
+        pts = self.points()
         return self.points().shape[0]
         
     def gen_points(self):
-        pts_arr = np.array(self.params["points"], dtype=self.dtype).T
-        pts_arr = pts_arr.reshape((3, -1))
-        return pts_arr
-
+        pts = self.params["points"]
+        if isinstance(pts, np.ndarray):
+            if pts.shape[0] == 3:
+                return pts
+            elif pts.shape[-1] == 3:
+                return np.array(pts.T)
+            else:
+                raise ValueError("Malformed points")                
+        else:
+            pts_arr = np.array(pts, dtype=self.dtype)
+            if pts.shape[0] == 3:
+                return pts_arr
+            elif pts.shape[-1] == 3:
+                return np.array(pts_arr.T)
+            else:
+                raise ValueError("Malformed points")
 
 class Line(SeedGen):
     def __init__(self, p0, p1, res=20, cache=False, dtype=None):
@@ -186,7 +199,13 @@ class Volume(SeedGen):
         return self.params["res"]
 
     def gen_points(self):
-        return np.array(list(self.iter_points()))
+        crds = self._make_arrays()
+        shape = [len(c) for c in crds]
+        arr = np.empty([len(shape)] + [np.prod(shape)])
+        for i, c in enumerate(crds):
+            arr[i, :] = np.tile(np.repeat(c, np.prod(shape[:i])),
+                                np.prod(shape[i + 1:]))
+        return arr
 
     def _make_arrays(self):
         p0 = self.params["p0"]

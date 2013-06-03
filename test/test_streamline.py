@@ -89,15 +89,33 @@ def main():
 
     logging.info("Testing trilinear interpolation...")
 
-    # plane = seed.Plane((1, 1, 1), (1, 1, 1), (0, 0, 1), 2, 2)
+    bmag = calc.magnitude(B)
+
+    plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (0., 0., 1.), 2., 2., 50, 50)
+    t0 = time()
+    interp_vals = cycalc.trilin_interp(bmag, plane)
+    t1 = time()
+    logging.info("plane interp took {0:.3e}s to compute.".format(t1 - t0))  
+    # interp_vals is now a 1d array of interpolated values
+    # interp_vals[i] is located at sphere.points[i]
+    mpl.scatter_3d(plane.points(), interp_vals, show=args.show)
+
+    vol = bmag.crds.slice("x=::32,y=::32,z=::32")
+    t0 = time()
+    interp_vals = cycalc.trilin_interp(bmag, vol)
+    t1 = time()
+    logging.info("volume interp took {0:.3e}s to compute.".format(t1 - t0))  
+    # interp_vals is now a 1d array of interpolated values
+    # interp_vals[i] is located at sphere.points[i]
+    mpl.scatter_3d(vol.points(), interp_vals, show=args.show)
+
     sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0, 200, 200)
 
     # doing trilin interp on a scalar field
-    bmag = calc.magnitude(B)
     t0 = time()
     interp_vals = cycalc.trilin_interp(bmag, sphere)
     t1 = time()
-    logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))  
+    logging.info("sphere interp took {0:.3e}s to compute.".format(t1 - t0))  
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
     mpl.scatter_3d(sphere.points(), interp_vals, show=args.show)
@@ -106,7 +124,7 @@ def main():
     t0 = time()
     interp_vals = cycalc.trilin_interp(B, sphere)
     t1 = time()
-    logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
+    logging.info("vector interp took {0:.3e}s to compute.".format(t1 - t0))
     # make a 3d scatter plot of bz
     mpl.scatter_3d(sphere.points(), interp_vals[:, 2], show=args.show)
 
