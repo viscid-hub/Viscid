@@ -118,10 +118,18 @@ class Plane(SeedGen):
     def n_points(self, **kwargs):
         return self.params["res_l"] * self.params["res_m"]
 
+    # def _make_arrays(self):
+    #     pass
+
     def gen_points(self):
         # turn N and L into flat ndarrays
         Ndir = np.array(self.params["Ndir"], dtype=self.dtype).reshape(-1)
         Ldir = np.array(self.params["Ldir"], dtype=self.dtype).reshape(-1)
+        len_l = self.params["len_l"]
+        len_m = self.params["len_m"]
+        res_l = self.params["res_l"]
+        res_m = self.params["res_m"]        
+        p0 = np.array(self.params["p0"]).reshape((3, 1))
 
         if (Ndir == Ldir).all():
             raise RuntimeError("Ndir == Ldir, this does not define a plane")
@@ -136,8 +144,21 @@ class Plane(SeedGen):
         # compute Mdir
         Mdir = np.cross(Ldir, Ndir)  # zyx => left handed cross product
 
+        arr = np.empty((3, res_l * res_m), dtype=self.dtype)
+        l = np.linspace(-0.5 * len_l, 0.5 * len_l,
+                        res_l).astype(self.dtype, copy=False)
+        m = np.linspace(-0.5 * len_m, 0.5 * len_m,
+                        res_m).astype(self.dtype, copy=False)
+        arr[0, :] = np.repeat(m, res_l)
+        arr[1, :] = np.tile(l, res_m)
+        arr[2, :] = 0.0
+
         # create matrix to go LNM -> zyx
-        trans = np.matrix([Ldir, Mdir, Ndir]).T
+        trans = np.array([Mdir, Ldir, Ndir]).T
+
+        arr_transformed = p0 + np.dot(trans, arr)
+
+        return arr_transformed
 
     def as_coordinates(self):
         len_l = self.params["len_l"]
