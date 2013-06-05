@@ -80,9 +80,9 @@ class Line(SeedGen):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
-        z = np.linspace(p0[0], p1[0], res).astype(self.dtype, copy=False)
-        y = np.linspace(p0[1], p1[1], res).astype(self.dtype, copy=False)
-        x = np.linspace(p0[2], p1[2], res).astype(self.dtype, copy=False)
+        z = np.linspace(p0[0], p1[0], res).astype(self.dtype)
+        y = np.linspace(p0[1], p1[1], res).astype(self.dtype)
+        x = np.linspace(p0[2], p1[2], res).astype(self.dtype)
         return np.array([z, y, x])
 
     def as_coordinates(self):
@@ -146,9 +146,9 @@ class Plane(SeedGen):
 
         arr = np.empty((3, res_l * res_m), dtype=self.dtype)
         l = np.linspace(-0.5 * len_l, 0.5 * len_l,
-                        res_l).astype(self.dtype, copy=False)
+                        res_l).astype(self.dtype)
         m = np.linspace(-0.5 * len_m, 0.5 * len_m,
-                        res_m).astype(self.dtype, copy=False)
+                        res_m).astype(self.dtype)
         arr[0, :] = np.repeat(m, res_l)
         arr[1, :] = np.tile(l, res_m)
         arr[2, :] = 0.0
@@ -192,9 +192,9 @@ class Volume(SeedGen):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
-        z = np.linspace(p0[0], p1[0], res[0]).astype(self.dtype, copy=False)
-        y = np.linspace(p0[1], p1[1], res[1]).astype(self.dtype, copy=False)
-        x = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype, copy=False)
+        z = np.linspace(p0[0], p1[0], res[0]).astype(self.dtype)
+        y = np.linspace(p0[1], p1[1], res[1]).astype(self.dtype)
+        x = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype)
         return z, y, x
 
     def iter_points(self):
@@ -226,10 +226,10 @@ class Sphere(SeedGen):
         resphi = self.params["resphi"]
 
         theta = np.linspace(0, np.pi, restheta + 1, 
-                            endpoint=True).astype(self.dtype, copy=False)
+                            endpoint=True).astype(self.dtype)
         theta = 0.5 * (theta[1:] + theta[:-1])
         phi = np.linspace(0, 2.0 * np.pi, resphi,
-                          endpoint=False).astype(self.dtype, copy=False)
+                          endpoint=False).astype(self.dtype)
         T, P = np.ix_(theta, phi)
 
         x = p0[2] + r * np.sin(T) * np.cos(P)

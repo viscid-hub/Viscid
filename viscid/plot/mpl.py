@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 import logging
+from distutils.version import LooseVersion
 
 import numpy as np
 import matplotlib
@@ -13,9 +14,8 @@ from .. import field
 from ..calculator import calc
 from .. import vutil
 
-__mpl_ver__ = [int(v) for v in matplotlib.__version__.split('.')]
-has_colorbar_gridspec = (__mpl_ver__[0] > 1) or \
-                        (__mpl_ver__[0] == 1 and __mpl_ver__[1] >= 1)
+__mpl_ver__ = matplotlib.__version__
+has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 
 def plot(fld, selection=None, **kwargs):
     """ just plot... should generically dispatch to gen the right
