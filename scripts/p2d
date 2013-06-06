@@ -32,18 +32,27 @@ class AddPlotVar(argparse.Action):
         items.append([values, {}])
         setattr(namespace, self.dest, items)
 
+def split_floats(arg_str):
+    return [float(s) for s in arg_str.split(',')]
 
 def main():
     parser = argparse.ArgumentParser(description="Load some data files")
     parser.add_argument("-t", default=":", help="times to plot in slice "
                         "notation: ex : for all 60.0: for 60 mins on, and "
                         ":120 for the first 120mins")
+    parser.add_argument("--slice", help="spatial slice applied to all fields")
     parser.add_argument("-p", "--var", dest="plot_vars", action=AddPlotVar,
                         help="plot variable")
     parser.add_argument("-o", "--popts", dest="plot_vars", action=AddPlotOpts,
                         help="add plot options to most recent var on the "
                         "command line. if no preceeding vars, popts are "
                         "applied to all plots")
+    parser.add_argument("-T", "--transpose", action="store_true",
+                        help="desplay plots in a row, not a col")
+    parser.add_argument("-s", "--size", dest="plot_size", type=split_floats,
+                        default=None, help="size of mpl plot (inches)")
+    parser.add_argument("--dpi", dest="dpi", type=float, default=None, 
+                        help="dpi of plot")
     # parser.add_argument("--global_popts", default=None, help="Plot opts that "
     #                     "are applied to all plots, can also be specified "
     #                     "by a -o before any --var arguments")
@@ -59,6 +68,8 @@ def main():
                         help="keep temporary files.")
     parser.add_argument("--prefix", default=None,
                         help="Prefix of the output image filenames")
+    parser.add_argument("--format", "-f", default="png",
+                        help="output format, as in 'png'|'pdf'|...")
     parser.add_argument('-w', '--show', dest='show', action="store_true",
                         help="show plots with plt.show()")
     parser.add_argument("-n", "--np", type=int, default=1,
@@ -66,28 +77,36 @@ def main():
     parser.add_argument('file', nargs=1, help='input file')
     args = vutil.common_argparse(parser)
 
-    if getattr(args, "prefix", None) is None:
-        args.prefix = "tmp_image"
     global_popts = getattr(args, "global_popts", None)
 
     if getattr(args, "plot_vars", None) is None:
         args.plot_vars = [["pp", {"plot_opts":"x_-10_0,y_-5_5,log_5e-2_5e3"}],
                           ["by", {"plot_opts":"x_-10_0,y_-5_5,lin_-5_5"}]]
 
-    # print("args", args)
-    # print("plot_vars", args.plot_vars)
+    if args.animate is not None and args.prefix is None:
+        args.prefix = "tmp_image"
+    kwopts = {"transpose": args.transpose,
+              "out_prefix": args.prefix,
+              "out_format": args.format.strip('.'),
+              "plot_size": args.plot_size,
+              "dpi": args.dpi,
+              "selection": args.slice,
+             }
 
     files = readers.load(args.file)
     vlab.multiplot(files, args.plot_vars, np=args.np, time_slice=args.t,
                    share_axes = (not args.own), global_popts=global_popts,
-                   out_prefix=args.prefix, show=args.show)
+                   show=args.show, kwopts=kwopts)
 
     if args.animate:
-        sub.Popen("ffmpeg -r {0} -qscale {1} -i {2}_%06d.png {3}".format(
-                  args.framerate, args.qscale, args.prefix, args.animate),
-                  shell=True).communicate()
+        sub.Popen("ffmpeg -r {0} -i {2}_%06d.png -pix_fmt yuv420p "
+                  "-qscale {1} {3}".format(args.framerate, args.qscale, 
+                  args.prefix, args.animate), shell=True).communicate()
+    if args.animate is None and args.prefix is not None:
+        args.keep = True
     if not args.keep:
-        sub.Popen("rm {0}_*.png".format(args.prefix), shell=True).communicate()
+        sub.Popen("rm -f {0}_*.png".format(args.prefix),
+                  shell=True).communicate()
 
 
 if __name__ == "__main__":

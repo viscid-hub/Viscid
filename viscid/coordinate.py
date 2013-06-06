@@ -193,7 +193,7 @@ class StructuredCrds(Coordinates):
         # parse string to dict if necessary
         if isinstance(selection, dict):
             return selection
-        elif selection is None:
+        elif selection is None or len(selection) == 0:
             return {}
         elif isinstance(selection, str):
             sel = {}

@@ -36,7 +36,7 @@ def plot(fld, selection=None, **kwargs):
         raise TypeError("I can only do scalar fields right now")
 
 def _parse_str(plot_opts):
-    """ opts string looks like 'log,x_-20_10', output is
+    """ opts string looks like 'log,x=-20_10', output is
     [['log'], ['x', '-20', '10']] """
 
     if isinstance(plot_opts, str):
@@ -46,7 +46,7 @@ def _parse_str(plot_opts):
 
     for i, opt in enumerate(plot_opts):
         if isinstance(opt, str):
-            plot_opts[i] = opt.split("_")
+            plot_opts[i] = opt.replace("=", "_").split("_")
         elif not isinstance(plot_opts[i], (list, tuple)):
             plot_opts[i] = [plot_opts[i]]
 
