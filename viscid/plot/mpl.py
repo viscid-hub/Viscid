@@ -292,7 +292,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
         mplshow()
     return p, None
 
-def plot_field_lines(lines, ax=None, show=True, equal=False):
+def plot_streamlines(lines, ax=None, show=True, equal=False, **kwargs):
     if not ax:
         ax = plt.gca(projection='3d')
 
@@ -301,28 +301,32 @@ def plot_field_lines(lines, ax=None, show=True, equal=False):
         z = line[0]
         y = line[1]
         x = line[2]
-        ax.plot(x, y, z)
+        p = ax.plot(x, y, z, **kwargs)
     if equal:
         ax.axis("equal")
     plt.xlabel("x")
     plt.ylabel("y")
     if show:
         plt.show()
+    return p, None
 
-def scatter_3d(points, color=None, ax=None, show=True, equal=False):
+def scatter_3d(points, c='b', ax=None, show=True, equal=False, **kwargs):
+    """ c should be an array of values to use to color the points,
+    a la pyplot.scatter """
     if not ax:
         ax = plt.gca(projection='3d')
 
     z = points[0]
     y = points[1]
     x = points[2]
-    ax.scatter(x, y, z, c=color)
+    p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
         ax.axis("equal")
     plt.xlabel("x")
     plt.ylabel("y")
     if show:
         plt.show()
+    return p, None
 
 
 def mplshow():

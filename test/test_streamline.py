@@ -79,7 +79,7 @@ def main():
                                          fac_refine=0.75, fac_coarsen=1.5)
     t1 = time()
     logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0)) 
-    mpl.plot_field_lines(lines, show=args.show)
+    mpl.plot_streamlines(lines, show=args.show)
 
     logging.info("Testing field lines on 3d field...")
     B = get_dipole(m=[0.2, 0.3, -0.9])
@@ -94,7 +94,7 @@ def main():
                                          fac_refine=0.75, fac_coarsen=2.0)
     t1 = time()
     logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
-    mpl.plot_field_lines(lines, show=args.show)
+    mpl.plot_streamlines(lines, show=args.show)
 
     # assert(0)
     logging.info("Testing trilinear interpolation...")

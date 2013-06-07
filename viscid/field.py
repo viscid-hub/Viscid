@@ -123,7 +123,7 @@ class Field(object):
 
     @data.setter
     def data(self, dat):
-        if self._cache:
+        if self._cache is not None:
             self._purge_cache()
         self.source_data = dat
 

@@ -60,7 +60,7 @@ if __name__=="__main__":
     s = pstats.Stats("stream.prof")
     s.strip_dirs().sort_stats("cumtime").print_stats()
     # print([line.shape for line in lines])
-    mpl.plot_field_lines(lines, show=True)
+    mpl.plot_streamlines(lines, show=True)
 
 ##
 ## EOF

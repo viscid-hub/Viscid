@@ -50,6 +50,9 @@ def field_to_source(fld):
         arr = np.reshape(fld.data, (-1,))
     elif isinstance(fld, field.VectorField):
         arr = np.reshape(fld.data, (-1, 3))
+    else:
+        raise ValueError("Unexpected fld type: {0}".format(type(fld)))
+
 
     # swap endian if needed
     if str(arr.dtype).startswith(">"):

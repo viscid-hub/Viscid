@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Helpers to generate seed points for fieldlines """
+""" Helpers to generate seed points for streamlines """
 
 from __future__ import print_function
 import itertools
@@ -57,23 +57,23 @@ class Point(SeedGen):
 
     def n_points(self, **kwargs):
         pts = self.points()
-        return self.points().shape[0]
+        return self.points().shape[-1]
         
     def gen_points(self):
         pts = self.params["points"]
         if isinstance(pts, np.ndarray):
             if pts.shape[0] == 3:
-                return pts
+                return pts.reshape((3, -1))
             elif pts.shape[-1] == 3:
-                return np.array(pts.T)
+                return np.array(pts.T).reshape((3, -1))
             else:
                 raise ValueError("Malformed points")                
         else:
             pts_arr = np.array(pts, dtype=self.dtype)
-            if pts.shape[0] == 3:
-                return pts_arr
-            elif pts.shape[-1] == 3:
-                return np.array(pts_arr.T)
+            if pts_arr.shape[0] == 3:
+                return pts_arr.reshape((3, -1))
+            elif pts_arr.shape[-1] == 3:
+                return np.array(pts_arr.T).reshape((3, -1))
             else:
                 raise ValueError("Malformed points")
 

@@ -41,6 +41,9 @@ class Grid(object):
             fld.unload()
         # TODO: does anything else need to be unloaded in here?
 
+    def n_times(self, *args, **kwargs): #pylint: disable=R0201
+        return 1
+
     def iter_times(self, *args, **kwargs):
         # FIXME: it is unclear to me what to do here, since a dataset
         # may have > 1 grid... and if so only the first will be returned...
@@ -76,7 +79,7 @@ class Grid(object):
     def __getitem__(self, item):
         if item in self.fields:
             return self.get_field(item)
-        elif item in self.crds:
+        elif self.crds is not None and item in self.crds:
             return self.get_crd(item)
         else:
             raise verror.FieldNotFound("{0} not found".format(item))
