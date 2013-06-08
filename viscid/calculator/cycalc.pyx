@@ -5,7 +5,7 @@
 # to template both float32 and float64 versions
 
 from __future__ import print_function
-# import time
+import logging
 
 import numpy as np
 from cython.view cimport array as cvarray
@@ -24,6 +24,9 @@ from libc.math cimport sqrt
 
 from cycalc_util cimport *
 from cycalc cimport *
+
+cdef extern from "math.h":
+    bint isnan(double x)
 
 #####################
 # now the good stuff
@@ -268,6 +271,18 @@ cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
     c0 = c00 * xdm[1] + c10 * xd[1]
     c1 = c01 * xdm[1] + c11 * xd[1]
     c = c0 * xdm[2] + c1 * xd[2]
+    # if isnan(c):
+    #     logging.warning("NAN: {0}".format([s.shape[0], s.shape[1], s.shape[2], 
+    #                                        ix[0], ix[1], ix[2], p[0], p[1], p[2],
+    #                                        s[ix[0]       , ix[1]       , ix[2]       ],
+    #                                        s[ix[0] + p[0], ix[1]       , ix[2]       ],
+    #                                        s[ix[0]       , ix[1] + p[1], ix[2]       ],
+    #                                        s[ix[0] + p[0], ix[1] + p[1], ix[2]       ],
+    #                                        s[ix[0]       , ix[1]       , ix[2] + p[2]],
+    #                                        s[ix[0] + p[0], ix[1]       , ix[2] + p[2]],
+    #                                        s[ix[0]       , ix[1] + p[1], ix[2] + p[2]],
+    #                                        s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]]
+    #                                       ]))
     return c
 
 ##
