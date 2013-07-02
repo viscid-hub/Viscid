@@ -3,7 +3,8 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
+SPHINXBUILD   = sphinx-build-2.7
+SPHINXAPIDOC  = sphinx-apidoc-2.7
 PAPER         =
 BUILDDIR      = _build
 
@@ -40,6 +41,9 @@ help:
 
 clean:
 	-rm -rf $(BUILDDIR)/*
+
+#apidoc:
+#	$(SPHINXAPIDOC) -o $(SOURCEDIR)  ../viscid
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

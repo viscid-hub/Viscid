@@ -6,12 +6,14 @@
 Welcome to Viscid's documentation!
 ==================================
 
+Note: This documentation is super preliminary, and many docstrings are likely out of date. Not to mention it is poorly organized.
+
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 2
 
-
+  modules
 
 Indices and tables
 ==================
