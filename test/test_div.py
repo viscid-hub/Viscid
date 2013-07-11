@@ -30,22 +30,22 @@ from viscid.plot import mpl
 
 def run_div_test(fld, exact, show=False):
     t0 = time()
-    result_numexpr = calc.div(fld, backends="numexpr", only=True)
+    result_numexpr = calc.div(fld, preferred="numexpr", only=True)
     t1 = time()
     logging.info("numexpr magnitude runtime: {0}".format(t1 - t0))
 
     t0 = time()
-    result_cython = calc.div(fld, backends="cython", only=True)
+    result_cython = calc.div(fld, preferred="cython", only=True)
     t1 = time()
     logging.info("cython runtime: {0}".format(t1 - t0))
 
-    backend_diff = calc.difference(result_numexpr, result_cython)
+    backend_diff = calc.diff(result_numexpr, result_cython)
     if not (backend_diff.data < 1e-14).all():
         logging.warn("numexpr result not exactly cython result")
     logging.info("min/max(abs(numexpr - cython)): {0} = {1}".format(
                  np.min(backend_diff.data), np.max(backend_diff.data)))
 
-    result_diff = calc.difference(result_numexpr, exact, slb=[np.s_[1:-1]]*3)
+    result_diff = calc.diff(result_numexpr, exact[1:-1, 1:-1, 1:-1])
     if not (result_diff.data < 5e-6).all():
         logging.warn("numexpr result is far from the exact result")
     logging.info("min/max(abs(numexpr - exact)): {0} / {1}".format(

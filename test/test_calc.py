@@ -30,15 +30,15 @@ def run_mag_test(fld, show=False):
     fld_vx, fld_vy, fld_vz = fld.component_fields()
 
     t0 = time()
-    mag_ne = calc.magnitude(fld, backends="numexpr", only=True)
+    mag_ne = calc.magnitude(fld, preferred="numexpr", only=True)
     t1 = time()
     logging.info("numexpr mag runtime: {0}".format(t1 - t0))
     t0 = time()
-    mag_cy = calc.magnitude(fld, backends="cython", only=True)
+    mag_cy = calc.magnitude(fld, preferred="cython", only=True)
     t1 = time()
     logging.info("cython mag runtime: {0}".format(t1 - t0))
 
-    diff1 = calc.difference(mag_ne, mag_cy)
+    diff1 = calc.diff(mag_ne, mag_cy)
     absdiff1 = calc.abs_val(diff1)
     if not (absdiff1.data < 1e-14).all():
         logging.warn("numexpr result not exactly cython result")

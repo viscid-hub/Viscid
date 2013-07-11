@@ -12,7 +12,7 @@ from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from .. import field
 from ..calculator import calc
-from .. import vutil
+# from .. import vutil
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")

@@ -193,6 +193,8 @@ class StructuredCrds(Coordinates):
         # parse string to dict if necessary
         if isinstance(selection, dict):
             return selection
+        if isinstance(selection, slice):
+            return {self._axes[0]: selection}            
         elif selection is None or len(selection) == 0:
             return {}
         elif isinstance(selection, str):
@@ -217,9 +219,7 @@ class StructuredCrds(Coordinates):
                         slclst[i] = float(val)
                 sel[dim] = slclst
             return sel
-        if isinstance(selection, slice):
-            return {self._axes[0]: selection}
-        if isinstance(selection, (tuple, list)):
+        elif isinstance(selection, (tuple, list)):
             ret = {}
             for sel, axis in zip(selection, self._axes):
                 ret[axis] = sel

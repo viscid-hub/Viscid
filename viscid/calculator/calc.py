@@ -6,11 +6,12 @@ flexable would be useful down the line? """
 
 from __future__ import print_function
 import logging
+from collections import OrderedDict
 
 import numpy as np
 
-from .. import field
-from .. import vutil
+# from .. import field
+# from .. import vutil
 from .. import verror
 
 try:
@@ -25,227 +26,143 @@ try:
 except ImportError:
     has_numexpr = False
 
-_installed_backends = {"cython": has_cython,
-                       "numexpr": has_numexpr,
-                       "numpy": True,
-                       "native": True,  # now this is a silly one
-                      }
 
-# list of default backends to use in order of preference
-# this can be changed, with the warning that it will all users of this module
-default_backends = ["cython", "numexpr", "numpy"]
+class Operation(object):
+    default_backends = ["numexpr", "cython", "numpy"]
 
-# TODO: this is kind of a silly mechanism
-def _check_backend(preferred, implemented, only=False):
-    """ preferred should be a list of backends in order of preference, "default"
-    to use the default list, or None to just go down the implemented list and
-    use the first one that works. The first preferred backend that is in
-    implemented AND is installed is returned. If none of the preferred are
-    usable, the list of implemented backends is checked in order... so the
-    calling function should think about the order of the implemented list
-    too... for instance, try numexpr before numpy
-    """
-    if preferred == "default":
-        preferred = default_backends
-    if not isinstance(preferred, (list, tuple)):
-        if preferred is None:
-            preferred = implemented
-        else:
-            preferred = [preferred]
+    _imps = None  # implementations
+    opname = None
+    short_name = None
 
-    # go through preferred backends
-    for backend in preferred:
-        if backend in implemented:
-            try:
-                if _installed_backends[backend]:
-                    return backend
-            except KeyError:
-                logging.error("Unknown backend: {0}".format(backend))
+    def __init__(self, name, short_name, implementations=[]):
+        self.opname = name
+        self.short_name = short_name
+        self._imps = OrderedDict()
+        self.add_implementations(implementations)
 
-    if only:
-        raise verror.BackendNotFound("No preferred backend "
-                                     "usable: {0}".format(preferred))
+    def add_implementation(self, name, func):
+        self._imps[name] = func
 
-    for backend in implemented:
-        try:
-            if _installed_backends[backend]:
-                logging.warn("Preferred backends {0} not available, using {1} "
-                             "instead.".format(preferred, backend))
-                return backend
-        except KeyError:
-            logging.error("Unknown backend (Should not be "
-                          "implemented?): {0}".format(backend))
+    def add_implementations(self, implementations):
+        for name, func in implementations:
+            self.add_implementation(name, func)
 
-    raise verror.BackendNotFound("No implemented backends are installed "
-                                 "for this function.")
+    def _get_imp(self, preferred, only=False):
+        if not isinstance(preferred, (list, tuple)):
+            if preferred is None:
+                preferred = self._imps.keys()
+            else:
+                preferred = [preferred]
 
-def add(fld_a, fld_b, backends=None, only=False):
-    implemented_backends = ["numexpr"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
+        for name in preferred:
+            if name in self._imps:
+                return self._imps[name]
+        
+        msg = "{0} :: {1}".format(self.opname, preferred)
+        if only:
+            raise verror.BackendNotFound(msg)
+        logging.info("No preferred backends available: " + msg)
 
-    if use_backend == "numexpr":
-        # tmp = fld_b[slb]
-        summ = necalc.add(fld_a, fld_b)
+        for name in self.default_backends:
+            if name in self._imps:
+                return self._imps[name]
 
-    return field.wrap_field(fld_a.TYPE, fld_a.name + " sum", fld_a.crds,
-                            summ, center=fld_a.center, time=fld_a.time)
+        return self._imps.values()[0]
 
-def difference(fld_a, fld_b, sla=slice(None), slb=slice(None), backends=None,
-               only=False):
-    implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
+    def __call__(self, *args, **kwargs):
+        preferred = kwargs.pop("preferred", None)
+        only = kwargs.pop("only", False)
+        func = self._get_imp(preferred, only)
+        return func(*args, **kwargs)
 
-    if use_backend == "numexpr":
-        # tmp = fld_b[slb]
-        diff = necalc.difference(fld_a[sla], fld_b[slb])
-    elif use_backend == "numpy":
-        return fld_a[sla] - fld_b[slb]
 
-    return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
-                            diff, center=fld_a.center, time=fld_a.time)
+class UnaryOperation(Operation):
+    def __call__(self, a, **kwargs):
+        ret = super(UnaryOperation, self).__call__(a, **kwargs)
+        ret.name = "{0} {1}".format(self.short_name, a.name)
+        return ret
 
-def relative_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
-                  backends=None, only=False):
-    implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
+class BinaryOperation(Operation):
+    def __call__(self, a, b, **kwargs):
+        ret = super(BinaryOperation, self).__call__(a, b, **kwargs)
+        ret.name = "{0} {1} {2}".format(a.name, self.short_name, b.name)
+        return ret
 
-    if use_backend == "numexpr":
-        diff = necalc.relative_diff(fld_a[sla], fld_b[slb])
-    elif use_backend == "numpy":
-        a = fld_a.data[sla]
-        b = fld_b.data[slb]
-        diff = (a - b) / a
+add = BinaryOperation("add", "+")
+diff = BinaryOperation("diff", "-")
+mul = BinaryOperation("mul", "*")
+relative_diff = BinaryOperation("relative diff", "%-")
+abs_diff = BinaryOperation("abs diff", "|-|")
+abs_val = UnaryOperation("abs val", "absval")
+abs_max = Operation("abs max", "absmax")
+abs_min = Operation("abs min", "absmin")
+magnitude = UnaryOperation("magnitude", "magnitude")
+dot = BinaryOperation("dot", "dot")
+cross = BinaryOperation("cross", "x")
+div = UnaryOperation("div", "div")
 
-    return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
-                            diff, center=fld_a.center, time=fld_a.time)
+if has_numexpr:
+    add.add_implementation("numexpr", necalc.add)
+    diff.add_implementation("numexpr", necalc.diff)
+    mul.add_implementation("numexpr", necalc.mul)
+    relative_diff.add_implementation("numexpr", necalc.relative_diff)
+    abs_diff.add_implementation("numexpr", necalc.abs_diff)
+    abs_val.add_implementation("numexpr", necalc.abs_val)
+    abs_max.add_implementation("numexpr", necalc.abs_max)
+    abs_min.add_implementation("numexpr", necalc.abs_min)
+    magnitude.add_implementation("numexpr", necalc.magnitude)
+    dot.add_implementation("numexpr", necalc.dot)
+    cross.add_implementation("numexpr", necalc.cross)
+    div.add_implementation("numexpr", necalc.div)
 
-def abs_diff(fld_a, fld_b, sla=slice(None), slb=slice(None),
-             backends=None, only=False):
-    implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
+if has_cython:
+    magnitude.add_implementation("cython", cycalc.magnitude)
+    div.add_implementation("cython", cycalc.div)
 
-    if use_backend == "numexpr":
-        diff = necalc.abs_diff(fld_a[sla], fld_b[slb])
-    elif use_backend == "numpy":
-        a = fld_a.data[sla]
-        b = fld_b.data[slb]
-        diff = np.abs(a - b)
+# numpy versions
+add.add_implementation("numpy", lambda a, b: a + b)
+diff.add_implementation("numpy", lambda a, b: a - b)
+mul.add_implementation("numpy", lambda a, b: a * b)
+relative_diff.add_implementation("numpy", lambda a, b: (a -b) / a)
+abs_diff.add_implementation("numpy", lambda a, b: np.abs(a - b))
+abs_val.add_implementation("numpy", np.abs)
+abs_max.add_implementation("numpy", lambda a: np.max(np.abs(a)))
+abs_min.add_implementation("numpy", lambda a: np.min(np.abs(a)))
 
-    return field.wrap_field(fld_a.TYPE, fld_a.name + " difference", fld_a.crds,
-                            diff, center=fld_a.center, time=fld_a.time)
+def magnitude_np(fld):
+    vx, vy, vz = fld.component_views()
+    return np.sqrt((vx**2) + (vy**2) + (vz**2))
 
-def abs_val(fld, backends=None, only=False):
-    implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
+magnitude.add_implementation("numpy", magnitude_np)
 
-    if use_backend == "numexpr":
-        absarr = necalc.abs_val(fld)
-    elif use_backend == "numpy":
-        absarr = np.abs(fld.data)
+# native versions
+def magnitude_native(fld):
+    vx, vy, vz = fld.component_views()
+    mag = np.empty_like(vx)
+    for i in range(mag.shape[0]):
+        for j in range(mag.shape[1]):
+            for k in range(mag.shape[2]):
+                mag[i, j, k] = np.sqrt(vx[i, j, k]**2 + vy[i, j, k]**2 + \
+                                       vz[i, j, k]**2)
+    return vx.wrap(mag, context={"name": "{0} magnitude".format(fld.name)})
 
-    return field.wrap_field(fld.TYPE, "abs " + fld.name, fld.crds,
-                            absarr, center=fld.center, time=fld.time)
-
-def abs_min(fld, backends=None, only=False):
-    implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
-
-    if use_backend == "numexpr":
-        absmin = necalc.abs_min(fld)
-    elif use_backend == "numpy":
-        absmin = np.min(np.abs(fld.data))
-
-    return absmin
-
-def abs_max(fld, backends=None, only=False):
-    implemented_backends = ["numexpr", "numpy"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
-
-    if use_backend == "numexpr":
-        absmax = necalc.abs_max(fld)
-    elif use_backend == "numpy":
-        absmax = np.max(np.abs(fld.data))
-
-    return absmax
-
-def magnitude(fld, backends=None, only=False):
-    implemented_backends = ["numexpr", "cython", "numpy", "native"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
-
-    if use_backend == "cython":
-        return cycalc.magnitude(fld)
-    elif use_backend == "numexpr":
-        mag = necalc.magnitude(fld)
-    elif use_backend == "numpy":
-        vx, vy, vz = fld.component_views()
-        mag = np.sqrt((vx**2) + (vy**2) + (vz**2))
-    elif use_backend == "native":
-        vx, vy, vz = fld.component_views()
-        mag = np.empty_like(vx)
-        for i in range(mag.shape[0]):
-            for j in range(mag.shape[1]):
-                for k in range(mag.shape[2]):
-                    mag[i, j, k] = np.sqrt(vx[i, j, k]**2 + vy[i, j, k]**2 + \
-                                           vz[i, j, k]**2)
-
-    #print("MMM ", np.max(mag - np.sqrt((vx**2) + (vy**2) + (vz**2))))
-    #print(mag[:,128,128])
-    return field.wrap_field("Scalar", fld.name + " magnitude", fld.crds,
-                            mag, center=fld.center, time=fld.time)
-
-def scalar_mul(s, fld, backends=None, only=False):
-    implemented_backends = ["numexpr"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
-
-    if use_backend == "numexpr":
-        prod = necalc.scalar_mul(s, fld)
-
-    return field.wrap_field(fld.TYPE, fld.name,
-                            fld.crds, prod, center=fld.center,
-                            time=fld.time)    
-
-def dot(fld_a, fld_b, backends=None, only=False):
-    implemented_backends = ["numexpr"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
-
-    if use_backend == "numexpr":
-        prod = necalc.dot(fld_a, fld_b)
-
-    return field.wrap_field("Scalar", fld_a.name + " dot " + fld_b.name,
-                            fld_a.crds, prod, center=fld_a.center,
-                            time=fld_a.time)
-
-def cross(fld_a, fld_b, backends=None, only=False):
-    implemented_backends = ["numexpr"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
-
-    if use_backend == "numexpr":
-        prod = necalc.cross(fld_a, fld_b)
-
-    return field.wrap_field("Vector", fld_a.name + " cross " + fld_b.name,
-                            fld_a.crds, prod, center=fld_a.center,
-                            time=fld_a.time)
-
-def div(fld, backends=None, only=False):
-    implemented_backends = ["numexpr", "cython"]
-    use_backend = _check_backend(backends, implemented_backends, only=only)
-
-    if use_backend == "cython":
-        return cycalc.div(fld)
-    elif use_backend == "numexpr":
-        return necalc.div(fld)
+magnitude.add_implementation("native", magnitude_native)
 
 def closest1d_ind(arr, val):
+    """ DEPRECATED """
     #i = np.argmin(ne.evaluate("abs(arr - val)"))
     return np.argmin(np.abs(arr - val))
 
 def closest1d_val(arr, val):
+    """ DEPRECATED """
     #i = np.argmin(ne.evaluate("abs(arr - val)"))
     i = np.argmin(np.abs(arr - val))
     return arr[i]
 
 def nearest_val(fld, point):
-    """ find value of field closest to point """
+    """ DEPRECATED
+    find value of field closest to point
+    """
     x, y, z = point
     xind = closest1d_ind(fld.crds['x'], x)
     yind = closest1d_ind(fld.crds['y'], y)

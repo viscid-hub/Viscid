@@ -17,11 +17,11 @@ class VneCalc(object):
     ret_type = None
     ret_context = None
 
-    def __init__(self, expr, local_dict, slice_dict=None,
+    def __init__(self, expr, local_dict,
                  ret_type=None, ret_context=None):
         self.expr = expr
         self.local_dict = local_dict
-        self.slice_dict = slice_dict
+        # self.slice_dict = slice_dict
         self.ret_type = ret_type
         self.ret_context = ret_context
 
@@ -30,67 +30,63 @@ class VneCalc(object):
 
         for name, val in self.local_dict.items():
             if isinstance(val, int):
-                ldict[name] = args[val].data
-            elif isinstance(val, field.Field):
-                ldict[name] = val.data
+                ldict[name] = args[val]
             else:
                 ldict[name] = val
 
         # apply slices if given
-        if self.slice_dict is not None:
-            for name, slc in self.slice_dict.items():
-                ldict[name] = ldict[name][slc].data
+        # if self.slice_dict is not None:
+        #     for name, slc in self.slice_dict.items():
+        #         ldict[name] = ldict[name][slc].data
 
         # print(ldict)
         result = ne.evaluate(self.expr, local_dict=ldict)
         return args[0].wrap(result, context=self.ret_context, typ=self.ret_type)
 
-difference = VneCalc("a - b", {'a': 0, 'b': 1})
 add = VneCalc("a + b", {'a': 0, 'b': 1})
+diff = VneCalc("a - b", {'a': 0, 'b': 1})
+mul = VneCalc("a * b", {'a': 0, 'b': 1})
 relative_diff = VneCalc("(a - b) / a", {'a': 0, 'b': 1})
 abs_diff = VneCalc("abs(a - b)", {'a': 0, 'b': 1})
 abs_val = VneCalc("abs(a)", {'a': 0})
 
+def abs_max(fld):
+    a = fld.data #pylint: disable=W0612
+    return np.max(ne.evaluate("abs(a)"))
+
+def abs_min(fld):
+    a = fld.data #pylint: disable=W0612
+    return np.min(ne.evaluate("abs(a)"))
+
+# def scalar_mul(s, fld):
+#     sarr = np.array([s], dtype=fld.dtype) #pylint: disable=W0612
+#     fldarr = fld.data #pylint: disable=W0612
+#     result = ne.evaluate("sarr * fldarr")
+#     return fld.wrap(result)
+
 def magnitude(fld):
     vx, vy, vz = fld.component_views() #pylint: disable=W0612
     mag = ne.evaluate("sqrt((vx**2) + (vy**2) + (vz**2))")
-    return mag
-
-def abs_max(fld, sl=slice(None)):
-    a = fld.data[sl] #pylint: disable=W0612
-    return np.max(ne.evaluate("abs(a)"))
-
-def abs_min(fld, sl=slice(None)):
-    a = fld.data[sl] #pylint: disable=W0612
-    return np.min(ne.evaluate("abs(a)"))
-
-def add(a, b):
-    adat = a.data
-    bdat = b.data
-    return ne.evaluate("adat + bdat")
-
-def scalar_mul(s, fld):
-    sarr = np.array([s], dtype=fld.dtype) #pylint: disable=W0612
-    fldarr = fld.data #pylint: disable=W0612
-    return ne.evaluate("sarr * fldarr")
+    return fld.wrap(mag, typ="Scalar")
 
 def dot(fld_a, fld_b):
-    """ """
+    """ 3d dot product of two vector fields """
     ax, ay, az = fld_a.component_views() #pylint: disable=W0612
     bx, by, bz = fld_b.component_views() #pylint: disable=W0612
-    prod = ne.evaluate("ax * bx + ay * by + az * bz")
-    return prod
+    prod = ne.evaluate("(ax * bx) + (ay * by) + (az * bz)")
+    return fld_a.wrap(prod, typ="Scalar")
 
 def cross(fld_a, fld_b):
+    """ cross product of two vector fields """
     ax, ay, az = fld_a.component_views() #pylint: disable=W0612
     bx, by, bz = fld_b.component_views() #pylint: disable=W0612
     prodx = ne.evaluate("ay * bz - az * by")
     prody = ne.evaluate("-ax * bz + az * bx")
     prodz = ne.evaluate("ax * by - ay * bx")
-    return prodx, prody, prodz
+    return fld_a.wrap([prodx, prody, prodz])
 
 def div(fld):
-    """ first order  """
+    """ first order """
     vx, vy, vz = fld.component_views()
 
     if fld.center == "Cell":
