@@ -22,6 +22,7 @@ from streamline cimport *
 EULER1 = 1
 RK2 = 2
 RK12 = 3
+EULER1A = 4
 
 DIR_FORWARD = 1
 DIR_BACKWARD = 2
@@ -42,12 +43,12 @@ END_ZERO_LENGTH = 64
 END_CYCLIC = 128
 
 # these are not used, and are too specialized to be here
-TOPOLOGY_INVALID = 1 # 1, 2, 3, 4, 9, 10, 11, 12
+TOPOLOGY_INVALID = 1 # 1, 2, 3, 4, 9, 10, 11, 12, 15
 TOPOLOGY_CLOSED = 7 # 5 (both N), 6 (both S), 7(both hemispheres)
 TOPOLOGY_SW = 8
 TOPOLOGY_OPEN_NORTH = 13
 TOPOLOGY_OPEN_SOUTH = 14
-TOPOLOGY_OTHER = 16 # > 16
+TOPOLOGY_OTHER = 16 # >= 16
 
 
 #####################
@@ -100,7 +101,8 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
 
         # just for c
         int (*integrate_func)(real_t[:,:,:,:], real_t[:], real_t[:], real_t[:],
-                      real_t*, real_t[:], real_t, real_t, real_t, real_t) except -1
+                      real_t*, real_t[:], real_t, real_t, real_t, real_t,
+                      int[3]) except -1
         int i, j, it
         int i_stream
         int n_streams = seeds.n_points(center=center)
@@ -117,6 +119,7 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
         real_t x0_carr[3]
         int line_ends_carr[2]
         real_t s_carr[3]
+        int* start_inds = [0, 0, 0]
 
         int[:] topology_mv = None
         real_t[:,:,:] line_mv = None
@@ -154,6 +157,8 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
         integrate_func = _c_rk2[real_t]
     elif method == RK12:
         integrate_func = _c_rk12[real_t]
+    elif method == EULER1A:
+        integrate_func = _c_euler1a[real_t]
     else:
         raise ValueError("unknown integration method")
 
@@ -203,7 +208,8 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
             done = END_NONE
             while 0 <= it and it < c_maxit:
                 ret = integrate_func(v_mv, crdz, crdy, crdx, &ds, s_mv,
-                    c_tol_lo, c_tol_hi, c_fac_refine , c_fac_coarsen)
+                    c_tol_lo, c_tol_hi, c_fac_refine , c_fac_coarsen,
+                    start_inds)
                 # if i_stream == 0:
                 #     print(s_mv[2], s_mv[1], s_mv[0])
                 # ret is non 0 when |v_mv| == 0

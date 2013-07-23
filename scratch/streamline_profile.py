@@ -6,6 +6,7 @@ import numexpr as ne
 import matplotlib.pyplot as plt
 import cProfile
 import pstats
+from timeit import default_timer as time
 
 from viscid import vutil
 from viscid import field
@@ -52,11 +53,16 @@ def get_dipole(m=None, twod=False):
 
 if __name__=="__main__":
     B = get_dipole(m=[0.2, 0.3, -0.9])
-    cProfile.runctx("""lines = streamline.streamlines(B,
+    t0 = time()
+    cProfile.runctx("""lines, topo = streamline.streamlines(B,
                                seed.Sphere((0.0, 0.0, 0.0),
                                            2.0, 20, 10),
-                               ds0=0.01, ibound=0.05, maxit=10000)""",
+                               ds0=0.01, ibound=0.05, maxit=10000,
+                               method=streamline.EULER1,
+                               tol_lo=1e-3, tol_hi=1e-2)""",
                     globals(), locals(), "stream.prof")
+    t1 = time()
+    print("timeit: {0:.4} seconds".format(t1 - t0))
     s = pstats.Stats("stream.prof")
     s.strip_dirs().sort_stats("cumtime").print_stats()
     # print([line.shape for line in lines])

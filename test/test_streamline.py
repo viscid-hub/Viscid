@@ -72,7 +72,7 @@ def main():
                                                    10),
                                          ds0=0.01, ibound=0.1, maxit=10000,
                                          obound0=obound0, obound1=obound1,
-                                         method=streamline.RK12,
+                                         method=streamline.EULER1,
                                          dir=streamline.DIR_BOTH,
                                          output=streamline.OUTPUT_BOTH,
                                          tol_lo=5e-3, tol_hi=2e-1,
