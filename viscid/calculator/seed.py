@@ -6,6 +6,7 @@ import itertools
 
 import numpy as np
 
+from .. import field
 from .. import coordinate
 
 class SeedGen(object):
@@ -49,6 +50,12 @@ class SeedGen(object):
         """ this should return an iterable of (z, y, x) points """
         raise NotImplementedError()
 
+    def wrap_field(self, fld_typ, name, data, **kwargs):
+        """ fld_type is 'Scalar' or 'Vector' or something like that """
+        crds = self.as_coordinates()
+        return field.wrap_field(fld_typ, name, crds, data, **kwargs)
+
+
 class Point(SeedGen):
     def __init__(self, points, cache=False, dtype=None):
         """ points should be an n x 3 array of zyx points """
@@ -56,7 +63,6 @@ class Point(SeedGen):
         self.params["points"] = points
 
     def n_points(self, **kwargs):
-        pts = self.points()
         return self.points().shape[-1]
         
     def gen_points(self):
@@ -76,6 +82,10 @@ class Point(SeedGen):
                 return np.array(pts_arr.T).reshape((3, -1))
             else:
                 raise ValueError("Malformed points")
+
+    def as_coordinates(self):
+        raise NotImplementedError("not yet implemented")
+
 
 class Line(SeedGen):
     def __init__(self, p0, p1, res=20, cache=False, dtype=None):
@@ -99,8 +109,8 @@ class Line(SeedGen):
         return np.array([z, y, x])
 
     def as_coordinates(self):
-        p0 = self.params["p0"]
-        p1 = self.params["p1"]
+        p0 = np.array(self.params["p0"])
+        p1 = np.array(self.params["p1"])
         res = self.params["res"]
 
         dp = p1 - p0
@@ -260,6 +270,8 @@ class Sphere(SeedGen):
 
         return np.array([z, y, x])
 
+    def as_coordinates(self):
+        raise NotImplementedError("not yet implemented")
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
@@ -267,8 +279,8 @@ if __name__ == "__main__":
 
     ax = plt.gca(projection='3d')
 
-    l = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
-    ax.plot(l[:, 2], l[:, 1], l[:, 0], 'g.')
+    lin = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
+    ax.plot(lin[:, 2], lin[:, 1], lin[:, 0], 'g.')
 
     s = Sphere((0.0, 0.0, 0.0), 2.0, 10, 20).points()
     ax.plot(s[:, 2], s[:, 1], s[:, 0], 'b')
