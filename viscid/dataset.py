@@ -64,6 +64,14 @@ class Dataset(object):
             except AttributeError:
                 pass
 
+    def n_times(self, slice_str=":"):
+        for child in self.children:
+            try:
+                return child.n_times(slice_str)
+            except AttributeError:
+                pass
+        raise RuntimeError("I find no temporal datasets")
+
     def iter_times(self, slice_str=":"):
         for child in self.children:
             try:
@@ -192,7 +200,7 @@ class DatasetTemporal(Dataset):
         temporal datasets """
         self.activate(time)
 
-    def iter_times(self, slice_str=":"):
+    def _slice_time(self, slice_str=":"):
         times = np.array([child[0] for child in self.children])
         slc_lst = [s.strip() for s in slice_str.split(":")]
         # slc_lst[:2] = [float(t) if t != "" else None for t in slc_lst[:2]]
@@ -202,6 +210,14 @@ class DatasetTemporal(Dataset):
         if len(slc_lst) == 1:
             slc_lst = [slc_lst[0], slc_lst[0] + 1]
         slc = slice(*slc_lst) #pylint: disable=W0142
+        return slc
+
+    def n_times(self, slice_str=":"):
+        slc = self._slice_time(slice_str=slice_str)
+        return len(self.children[slc])
+
+    def iter_times(self, slice_str=":"):
+        slc = self._slice_time(slice_str=slice_str)
         return (child[1] for child in self.children[slc])
 
     def spill(self, recursive=False, prefix=""):

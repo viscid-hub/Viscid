@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 import logging
+from distutils.version import LooseVersion
 
 import numpy as np
 import matplotlib
@@ -11,11 +12,10 @@ from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from .. import field
 from ..calculator import calc
-from .. import vutil
+# from .. import vutil
 
-__mpl_ver__ = [int(v) for v in matplotlib.__version__.split('.')]
-has_colorbar_gridspec = (__mpl_ver__[0] > 1) or \
-                        (__mpl_ver__[0] == 1 and __mpl_ver__[1] >= 1)
+__mpl_ver__ = matplotlib.__version__
+has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 
 def plot(fld, selection=None, **kwargs):
     """ just plot... should generically dispatch to gen the right
@@ -36,7 +36,7 @@ def plot(fld, selection=None, **kwargs):
         raise TypeError("I can only do scalar fields right now")
 
 def _parse_str(plot_opts):
-    """ opts string looks like 'log,x_-20_10', output is
+    """ opts string looks like 'log,x=-20_10', output is
     [['log'], ['x', '-20', '10']] """
 
     if isinstance(plot_opts, str):
@@ -46,7 +46,7 @@ def _parse_str(plot_opts):
 
     for i, opt in enumerate(plot_opts):
         if isinstance(opt, str):
-            plot_opts[i] = opt.split("_")
+            plot_opts[i] = opt.replace("=", "_").split("_")
         elif not isinstance(plot_opts[i], (list, tuple)):
             plot_opts[i] = [plot_opts[i]]
 
@@ -292,7 +292,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
         mplshow()
     return p, None
 
-def plot_field_lines(lines, ax=None, show=True, equal=False):
+def plot_streamlines(lines, ax=None, show=True, equal=False, **kwargs):
     if not ax:
         ax = plt.gca(projection='3d')
 
@@ -301,28 +301,32 @@ def plot_field_lines(lines, ax=None, show=True, equal=False):
         z = line[0]
         y = line[1]
         x = line[2]
-        ax.plot(x, y, z)
+        p = ax.plot(x, y, z, **kwargs)
     if equal:
         ax.axis("equal")
     plt.xlabel("x")
     plt.ylabel("y")
     if show:
         plt.show()
+    return p, None
 
-def scatter_3d(points, color=None, ax=None, show=True, equal=False):
+def scatter_3d(points, c='b', ax=None, show=True, equal=False, **kwargs):
+    """ c should be an array of values to use to color the points,
+    a la pyplot.scatter """
     if not ax:
         ax = plt.gca(projection='3d')
 
     z = points[0]
     y = points[1]
     x = points[2]
-    ax.scatter(x, y, z, c=color)
+    p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
         ax.axis("equal")
     plt.xlabel("x")
     plt.ylabel("y")
     if show:
         plt.show()
+    return p, None
 
 
 def mplshow():

@@ -105,7 +105,11 @@ class Field(object):
     def dtype(self):
         # print(type(self.source_data))
         if self._cache is not None:
-            return self._cache.dtype
+            dt = self.source_data[0].dtype
+            if isinstance(dt, str):
+                return dt
+            else:
+                return self.source_data[0].dtype.name            
         else:
             # dtype.name is for pruning endianness out of dtype
             if isinstance(self.source_data, (list, tuple)):
@@ -123,8 +127,7 @@ class Field(object):
 
     @data.setter
     def data(self, dat):
-        if self._cache:
-            self._purge_cache()
+        self._purge_cache()
         self.source_data = dat
 
     def _purge_cache(self):
@@ -212,6 +215,9 @@ class Field(object):
             center = self.center
         return self.crds.iter_points(center=center)
 
+    def __array__(self):
+        return self.data
+
     def __enter__(self):
         return self
 
@@ -250,53 +256,60 @@ class Field(object):
             typ = field_type_from_str(typ)
         return typ(name, crds, arr, time=time, center=center, info=info)
 
+    def __array_wrap__(self, out_arr, context=None):
+        # print("wrapping")
+        return self.wrap(out_arr)
+
+    # def __array_finalize__(self, *args, **kwargs):
+    #     print("attempted call to field.__array_finalize__")
+
     def __add__(self, other):
-        return self.wrap(self.data.__add__(other.data))
+        return self.wrap(self.data.__add__(other))
     def __sub__(self, other):
-        return self.wrap(self.data.__sub__(other.data))
+        return self.wrap(self.data.__sub__(other))
     def __mul__(self, other):
-        return self.wrap(self.data.__mul__(other.data))
+        return self.wrap(self.data.__mul__(other))
     def __div__(self, other):
-        return self.wrap(self.data.__div__(other.data))
+        return self.wrap(self.data.__div__(other))
     def __truediv__(self, other):
-        return self.wrap(self.data.__truediv__(other.data))
+        return self.wrap(self.data.__truediv__(other))
     def __floordiv__(self, other):
-        return self.wrap(self.data.__floordiv__(other.data))
+        return self.wrap(self.data.__floordiv__(other))
     def __mod__(self, other):
-        return self.wrap(self.data.__mod__(other.data))
+        return self.wrap(self.data.__mod__(other))
     def __divmod__(self, other):
-        return self.wrap(self.data.__divmod__(other.data))
+        return self.wrap(self.data.__divmod__(other))
     def __pow__(self, other):
-        return self.wrap(self.data.__pow__(other.data))
+        return self.wrap(self.data.__pow__(other))
     def __lshift__(self, other):
-        return self.wrap(self.data.__lshift__(other.data))
+        return self.wrap(self.data.__lshift__(other))
     def __rshift__(self, other):
-        return self.wrap(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other))
     def __and__(self, other):
-        return self.wrap(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other))
     def __xor__(self, other):
-        return self.wrap(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other))
     def __or__(self, other):
-        return self.wrap(self.data.__rshift__(other.data))
+        return self.wrap(self.data.__rshift__(other))
 
     def __radd__(self, other):
-        return self.wrap(self.data.__radd__(other.data))
+        return self.wrap(self.data.__radd__(other))
     def __rsub__(self, other):
-        return self.wrap(self.data.__rsub__(other.data))
+        return self.wrap(self.data.__rsub__(other))
     def __rmul__(self, other):
-        return self.wrap(self.data.__rmul__(other.data))
+        return self.wrap(self.data.__rmul__(other))
     def __rdiv__(self, other):
-        return self.wrap(self.data.__rdiv__(other.data))
+        return self.wrap(self.data.__rdiv__(other))
     def __rtruediv__(self, other):
-        return self.wrap(self.data.__rtruediv__(other.data))
+        return self.wrap(self.data.__rtruediv__(other))
     def __rfloordiv__(self, other):
-        return self.wrap(self.data.__rfloordiv__(other.data))
+        return self.wrap(self.data.__rfloordiv__(other))
     def __rmod__(self, other):
-        return self.wrap(self.data.__rmod__(other.data))
+        return self.wrap(self.data.__rmod__(other))
     def __rdivmod__(self, other):
-        return self.wrap(self.data.__rdivmod__(other.data))
+        return self.wrap(self.data.__rdivmod__(other))
     def __rpow__(self, other):
-        return self.wrap(self.data.__rpow__(other.data))
+        return self.wrap(self.data.__rpow__(other))
 
     def __iadd__(self, other):
         raise NotImplementedError("Don't touch me like that")

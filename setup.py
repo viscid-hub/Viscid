@@ -14,6 +14,8 @@ from distutils.core import setup
 from distutils.extension import Extension
 import numpy as np
 
+from doc import ver
+
 try:
     from Cython.Distutils import build_ext
     has_cython = True
@@ -122,7 +124,7 @@ for d in cy_defs:
                            extra_link_args=cy_ldflags)]
 
 setup(name='viscid',
-      version='0.44',
+      version=ver.version,
       description='Visualization in python',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',

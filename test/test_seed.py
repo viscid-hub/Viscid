@@ -76,11 +76,11 @@ def main():
 
     logging.info("testing streamlines")
     t0 = time()
-    lines = streamline.streamlines(B, mygrid, ds0=0.01, ibound=0.05,
-                                   maxit=10000)
+    lines, topo = streamline.streamlines(B, mygrid, ds0=0.01, ibound=0.05,
+                                         maxit=10000)
     t1 = time()
     logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
-    mpl.plot_field_lines(lines, show=args.show)
+    mpl.plot_streamlines(lines, show=args.show)
 
     logging.info("testing interp")
     bmag = calc.magnitude(B)

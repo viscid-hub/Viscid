@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-""" Helpers to generate seed points for fieldlines """
+""" Helpers to generate seed points for streamlines """
 
 from __future__ import print_function
 import itertools
 
 import numpy as np
 
+from .. import field
 from .. import coordinate
 
 class SeedGen(object):
@@ -49,6 +50,12 @@ class SeedGen(object):
         """ this should return an iterable of (z, y, x) points """
         raise NotImplementedError()
 
+    def wrap_field(self, fld_typ, name, data, **kwargs):
+        """ fld_type is 'Scalar' or 'Vector' or something like that """
+        crds = self.as_coordinates()
+        return field.wrap_field(fld_typ, name, crds, data, **kwargs)
+
+
 class Point(SeedGen):
     def __init__(self, points, cache=False, dtype=None):
         """ points should be an n x 3 array of zyx points """
@@ -56,12 +63,28 @@ class Point(SeedGen):
         self.params["points"] = points
 
     def n_points(self, **kwargs):
-        return self.points().shape[0]
+        return self.points().shape[-1]
         
     def gen_points(self):
-        pts_arr = np.array(self.params["points"], dtype=self.dtype).T
-        pts_arr = pts_arr.reshape((3, -1))
-        return pts_arr
+        pts = self.params["points"]
+        if isinstance(pts, np.ndarray):
+            if pts.shape[0] == 3:
+                return pts.reshape((3, -1))
+            elif pts.shape[-1] == 3:
+                return np.array(pts.T).reshape((3, -1))
+            else:
+                raise ValueError("Malformed points")                
+        else:
+            pts_arr = np.array(pts, dtype=self.dtype)
+            if pts_arr.shape[0] == 3:
+                return pts_arr.reshape((3, -1))
+            elif pts_arr.shape[-1] == 3:
+                return np.array(pts_arr.T).reshape((3, -1))
+            else:
+                raise ValueError("Malformed points")
+
+    def as_coordinates(self):
+        raise NotImplementedError("not yet implemented")
 
 
 class Line(SeedGen):
@@ -80,14 +103,14 @@ class Line(SeedGen):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
-        z = np.linspace(p0[0], p1[0], res).astype(self.dtype, copy=False)
-        y = np.linspace(p0[1], p1[1], res).astype(self.dtype, copy=False)
-        x = np.linspace(p0[2], p1[2], res).astype(self.dtype, copy=False)
+        z = np.linspace(p0[0], p1[0], res).astype(self.dtype)
+        y = np.linspace(p0[1], p1[1], res).astype(self.dtype)
+        x = np.linspace(p0[2], p1[2], res).astype(self.dtype)
         return np.array([z, y, x])
 
     def as_coordinates(self):
-        p0 = self.params["p0"]
-        p1 = self.params["p1"]
+        p0 = np.array(self.params["p0"])
+        p1 = np.array(self.params["p1"])
         res = self.params["res"]
 
         dp = p1 - p0
@@ -146,9 +169,9 @@ class Plane(SeedGen):
 
         arr = np.empty((3, res_l * res_m), dtype=self.dtype)
         l = np.linspace(-0.5 * len_l, 0.5 * len_l,
-                        res_l).astype(self.dtype, copy=False)
+                        res_l).astype(self.dtype)
         m = np.linspace(-0.5 * len_m, 0.5 * len_m,
-                        res_m).astype(self.dtype, copy=False)
+                        res_m).astype(self.dtype)
         arr[0, :] = np.repeat(m, res_l)
         arr[1, :] = np.tile(l, res_m)
         arr[2, :] = 0.0
@@ -186,15 +209,21 @@ class Volume(SeedGen):
         return self.params["res"]
 
     def gen_points(self):
-        return np.array(list(self.iter_points()))
+        crds = self._make_arrays()
+        shape = [len(c) for c in crds]
+        arr = np.empty([len(shape)] + [np.prod(shape)])
+        for i, c in enumerate(crds):
+            arr[i, :] = np.tile(np.repeat(c, np.prod(shape[:i])),
+                                np.prod(shape[i + 1:]))
+        return arr
 
     def _make_arrays(self):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
-        z = np.linspace(p0[0], p1[0], res[0]).astype(self.dtype, copy=False)
-        y = np.linspace(p0[1], p1[1], res[1]).astype(self.dtype, copy=False)
-        x = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype, copy=False)
+        z = np.linspace(p0[0], p1[0], res[0]).astype(self.dtype)
+        y = np.linspace(p0[1], p1[1], res[1]).astype(self.dtype)
+        x = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype)
         return z, y, x
 
     def iter_points(self):
@@ -226,10 +255,10 @@ class Sphere(SeedGen):
         resphi = self.params["resphi"]
 
         theta = np.linspace(0, np.pi, restheta + 1, 
-                            endpoint=True).astype(self.dtype, copy=False)
+                            endpoint=True).astype(self.dtype)
         theta = 0.5 * (theta[1:] + theta[:-1])
         phi = np.linspace(0, 2.0 * np.pi, resphi,
-                          endpoint=False).astype(self.dtype, copy=False)
+                          endpoint=False).astype(self.dtype)
         T, P = np.ix_(theta, phi)
 
         x = p0[2] + r * np.sin(T) * np.cos(P)
@@ -241,6 +270,8 @@ class Sphere(SeedGen):
 
         return np.array([z, y, x])
 
+    def as_coordinates(self):
+        raise NotImplementedError("not yet implemented")
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
@@ -248,8 +279,8 @@ if __name__ == "__main__":
 
     ax = plt.gca(projection='3d')
 
-    l = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
-    ax.plot(l[:, 2], l[:, 1], l[:, 0], 'g.')
+    lin = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
+    ax.plot(lin[:, 2], lin[:, 1], lin[:, 0], 'g.')
 
     s = Sphere((0.0, 0.0, 0.0), 2.0, 10, 20).points()
     ax.plot(s[:, 2], s[:, 1], s[:, 0], 'b')

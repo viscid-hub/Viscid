@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -l
+#!/usr/bin/env bash
 
 sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

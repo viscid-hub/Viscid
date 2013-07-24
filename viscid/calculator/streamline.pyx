@@ -1,6 +1,8 @@
 # cython: boundscheck=True, wraparound=True, profile=False
 
 from __future__ import print_function
+from timeit import default_timer as time
+import logging
 
 import numpy as np
 
@@ -17,6 +19,38 @@ from cycalc cimport *
 from integrate cimport *
 from streamline cimport *
 
+EULER1 = 1
+RK2 = 2
+RK12 = 3
+EULER1A = 4
+
+DIR_FORWARD = 1
+DIR_BACKWARD = 2
+DIR_BOTH = 3
+
+OUTPUT_STREAMLINES = 1
+OUTPUT_TOPOLOGY = 2
+OUTPUT_BOTH = 3
+
+END_NONE = 0  # not ended yet
+END_IBOUND_NORTH = 1  # unused
+END_IBOUND_SOUTH = 2  # unused
+END_IBOUND = 4
+END_OBOUND = 8
+END_OTHER = 16  # ??
+END_MAXIT = 32
+END_ZERO_LENGTH = 64
+END_CYCLIC = 128
+
+# these are not used, and are too specialized to be here
+TOPOLOGY_INVALID = 1 # 1, 2, 3, 4, 9, 10, 11, 12, 15
+TOPOLOGY_CLOSED = 7 # 5 (both N), 6 (both S), 7(both hemispheres)
+TOPOLOGY_SW = 8
+TOPOLOGY_OPEN_NORTH = 13
+TOPOLOGY_OPEN_SOUTH = 14
+TOPOLOGY_OTHER = 16 # >= 16
+
+
 #####################
 # now the good stuff
 
@@ -25,21 +59,22 @@ def streamlines(fld, seeds, *args, **kwargs):
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.dim != 3:
         raise ValueError("Streamlines are only written in 3D.")
+    if fld.center != "Cell":
+        raise ValueError("Can only trace cell centered things...")
     # nptype = fld.data.dtype.name
 
     dat = fld.data
     dtype = dat.dtype
     center = "Cell"
     crdz, crdy, crdx = fld.crds.get_crd(center=center)
-    iter_seeds = seeds.iter_points(center=center)
-
-    return _py_streamline(dtype, dat, crdz, crdy, crdx, iter_seeds,
+    return _py_streamline(dtype, dat, crdz, crdy, crdx, seeds, center,
                           *args, **kwargs)
 
-def _py_streamline(dtype, real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
-                   real_t[:] crdx, iter_seeds, ds0=-1.0, ibound=0.0,
-                   obound0=None, obound1=None, dir=BOTH,
-                   maxit=10000):
+def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
+                   real_t[:] crdx, seeds, center, ds0=-1.0, ibound=0.0,
+                   obound0=None, obound1=None, maxit=10000,
+                   dir=DIR_BOTH, output=OUTPUT_BOTH, method=EULER1,
+                   tol_lo=1e-3, tol_hi=1e-2, fac_refine=0.75, fac_coarsen=2.0):
     """ Start calculating a streamline at x0
     dir:         DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
     ibound:      stop streamline if within inner_bound of the origin
@@ -51,32 +86,50 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         # cdefed versions of arguments
         real_t c_ds0 = ds0
         real_t c_ibound = ibound
-        real_t c_obound0_arr[3]
-        real_t c_obound1_arr[3]
-        real_t[:] c_obound0 = c_obound0_arr
-        real_t[:] c_obound1 = c_obound1_arr
+        real_t c_obound0_carr[3]
+        real_t c_obound1_carr[3]
+        real_t[:] c_obound0 = c_obound0_carr
+        real_t[:] c_obound1 = c_obound1_carr
         real_t[:] py_obound0
         real_t[:] py_obound1
         int c_dir = dir
         int c_maxit = maxit
+        real_t c_tol_lo = tol_lo
+        real_t c_tol_hi = tol_hi
+        real_t c_fac_refine = fac_refine
+        real_t c_fac_coarsen = fac_coarsen
 
         # just for c
+        int (*integrate_func)(real_t[:,:,:,:], real_t[:], real_t[:], real_t[:],
+                      real_t*, real_t[:], real_t, real_t, real_t, real_t,
+                      int[3]) except -1
         int i, j, it
-        int ret
-        int done
+        int i_stream
+        int n_streams = seeds.n_points(center=center)
+        int nprogress = max(n_streams / 50, 1)  # progerss at every 5%
+
+        int ret   # return status of euler integrate
+        int end_flags
+        int done  # streamline has ended for some reason
         real_t px, py, pz
-        int d
+        int d  # direction of streamline 1 | -1
+        real_t ds
         real_t rsq, distsq
 
-        real_t[:,:,:] line_arr
-        real_t[:,:] line
-        real_t x0_arr[3]
-        int line_ends_arr[2]
-        real_t s_arr[3]
+        real_t x0_carr[3]
+        int line_ends_carr[2]
+        real_t s_carr[3]
+        int* start_inds = [0, 0, 0]
 
-        real_t[:] x0 = x0_arr
-        int[:] line_ends = line_ends_arr
-        real_t[:] s = s_arr
+        int[:] topology_mv = None
+        real_t[:,:,:] line_mv = None
+        real_t[:] x0_mv = x0_carr
+        int[:] line_ends_mv = line_ends_carr
+        real_t[:] s_mv = s_carr
+
+    lines = None
+    line_ndarr = None
+    topology_ndarr = None
 
     if obound0 is None:
         c_obound0[0] = crdz[0]
@@ -98,84 +151,129 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_arr, real_t[:] crdz, real_t[:] crdy,
         # FIXME: calculate something reasonable here
         c_ds0 = 0.01
 
-    lines = []
-    line_arr = np.empty((2, 3, c_maxit), dtype=dtype)
+    if method == EULER1:
+        integrate_func = _c_euler1[real_t]
+    elif method == RK2:
+        integrate_func = _c_rk2[real_t]
+    elif method == RK12:
+        integrate_func = _c_rk12[real_t]
+    elif method == EULER1A:
+        integrate_func = _c_euler1a[real_t]
+    else:
+        raise ValueError("unknown integration method")
 
-    for seed_pt in iter_seeds:
-        # print(seed_pt)
-        x0[0] = seed_pt[0]
-        x0[1] = seed_pt[1]
-        x0[2] = seed_pt[2]
+    if output & OUTPUT_STREAMLINES:
+        line_ndarr = np.empty((2, 3, c_maxit), dtype=dtype)
+        line_mv = line_ndarr
+        lines = []
+    if output & OUTPUT_TOPOLOGY:
+        topology_ndarr = np.empty((n_streams,), dtype="i")
+        topology_mv = topology_ndarr
 
-        line_arr[1, 0, c_maxit - 1] = x0[0]
-        line_arr[1, 1, c_maxit - 1] = x0[1]
-        line_arr[1, 2, c_maxit - 1] = x0[2]
-        line_ends[0] = c_maxit - 2
-        line_ends[1] = 0
+    t0 = time()
+    for i_stream, seed_pt in enumerate(seeds.iter_points(center=center)):
+        if i_stream % nprogress == 0:
+            t1 = time()
+            logging.info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
+                         n_streams, int(100.0 * i_stream / n_streams),
+                         t1 - t0))
+            t0 = time()
+
+        x0_mv[0] = seed_pt[0]
+        x0_mv[1] = seed_pt[1]
+        x0_mv[2] = seed_pt[2]
+
+        if line_mv is not None:
+            line_mv[0, 0, c_maxit - 1] = x0_mv[0]
+            line_mv[0, 1, c_maxit - 1] = x0_mv[1]
+            line_mv[0, 2, c_maxit - 1] = x0_mv[2]
+        line_ends_mv[0] = c_maxit - 2
+        line_ends_mv[1] = 0
+        end_flags = END_NONE
 
         for i, d in enumerate([-1, 1]):
-            if d < 0 and not (c_dir & BACKWARD):
+            if d < 0 and not (c_dir & DIR_BACKWARD):
                 continue
-            elif d > 0 and not (c_dir & FORWARD):
+            elif d > 0 and not (c_dir & DIR_FORWARD):
                 continue
 
             ds = d * c_ds0
 
-            s[0] = x0[0]
-            s[1] = x0[1]
-            s[2] = x0[2]
+            s_mv[0] = x0_mv[0]
+            s_mv[1] = x0_mv[1]
+            s_mv[2] = x0_mv[2]
 
-            it = line_ends[i]
+            it = line_ends_mv[i]
 
-            done = 0
+            done = END_NONE
             while 0 <= it and it < c_maxit:
-                ret = _c_euler1[real_t](v_arr, crdz, crdy, crdx, ds, s)
-                # ret is non 0 when |varr| == 0
+                ret = integrate_func(v_mv, crdz, crdy, crdx, &ds, s_mv,
+                    c_tol_lo, c_tol_hi, c_fac_refine , c_fac_coarsen,
+                    start_inds)
+                # if i_stream == 0:
+                #     print(s_mv[2], s_mv[1], s_mv[0])
+                # ret is non 0 when |v_mv| == 0
                 if ret != 0:
-                    done = 1
+                    done = END_OTHER | END_ZERO_LENGTH
                     break
 
-                line_arr[i, 0, it] = s[0]
-                line_arr[i, 1, it] = s[1]
-                line_arr[i, 2, it] = s[2]
+                if line_mv is not None:
+                    line_mv[i, 0, it] = s_mv[0]
+                    line_mv[i, 1, it] = s_mv[1]
+                    line_mv[i, 2, it] = s_mv[2]
                 it += d
 
                 # end conditions
-                rsq = s[0]**2 + s[1]**2 + s[2]**2
+                rsq = s_mv[0]**2 + s_mv[1]**2 + s_mv[2]**2
 
                 # hit the inner boundary
                 if rsq <= c_ibound**2:
                     # print("inner boundary")
-                    done = 1
+                    if s_mv[0] >= 0.0:
+                        done = END_IBOUND | END_IBOUND_NORTH
+                    else:
+                        done = END_IBOUND | END_IBOUND_SOUTH
                     break
 
                 for j from 0 <= j < 3:
                     # hit the outer boundary
-                    if s[j] <= c_obound0[j] or s[j] >= c_obound1[j]:
+                    if s_mv[j] <= c_obound0[j] or s_mv[j] >= c_obound1[j]:
                         # print("outer boundary")
-                        done = 1
+                        done = END_OBOUND
                         break
 
                 # if we are within 0.99 * ds0 of the initial position
-                distsq = (x0[0] - s[0])**2 + (x0[1] - s[1])**2 + (x0[2] - s[2])**2
-                if distsq < (0.99 * ds0)**2:
-                    # print("cyclic field line")
-                    done = 1
-                    break
+                # distsq = (x0_mv[0] - s_mv[0])**2 + \
+                #          (x0_mv[1] - s_mv[1])**2 + \
+                #          (x0_mv[2] - s_mv[2])**2
+                # if distsq < (0.99 * ds0)**2:
+                #     # print("cyclic field line")
+                #     done = END_OTHER | END_CYCLIC
+                #     break
 
                 if done:
                     break
-            if not done:
-                pass
 
-            line_ends[i] = it
+            if done == END_NONE:
+                done = END_OTHER | END_MAXIT
 
-        # reverse the 'backward' line segment
-        line = np.concatenate((line_arr[0, :, line_ends[0] + 1:], 
-                               line_arr[1, :, :line_ends[1]]), axis=1)
+            line_ends_mv[i] = it
+            end_flags |= done
 
-        lines.append(line)
-    return lines
+        # now we have forward and background traces, process this streamline
+        if line_mv is not None:
+            # if i_stream == 0:
+            #     print("myzero", line_ends_mv[0], line_ends_mv[1], end_flags)
+            line_cat = np.concatenate((line_mv[0, :, line_ends_mv[0] + 1:], 
+                                       line_mv[1, :, :line_ends_mv[1]]), axis=1)
+            lines.append(line_cat)
+
+        if topology_mv is not None:
+            topology_mv[i_stream] = end_flags
+            # logging.info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags, 
+            #                         line_ends_mv[0], line_ends_mv[1]))
+
+    return lines, topology_ndarr
 
 ##
 ## EOF

@@ -193,7 +193,9 @@ class StructuredCrds(Coordinates):
         # parse string to dict if necessary
         if isinstance(selection, dict):
             return selection
-        elif selection is None:
+        if isinstance(selection, slice):
+            return {self._axes[0]: selection}            
+        elif selection is None or len(selection) == 0:
             return {}
         elif isinstance(selection, str):
             sel = {}
@@ -212,14 +214,12 @@ class StructuredCrds(Coordinates):
                     if len(val) == 0:
                         slclst[i] = None
                     elif val[-1] in ['i', 'j'] or i == 2:
-                        slclst[i] = int(val[:-1])
+                        slclst[i] = int(val.rstrip('ij'))
                     else:
                         slclst[i] = float(val)
                 sel[dim] = slclst
             return sel
-        if isinstance(selection, slice):
-            return {self._axes[0]: selection}
-        if isinstance(selection, (tuple, list)):
+        elif isinstance(selection, (tuple, list)):
             ret = {}
             for sel, axis in zip(selection, self._axes):
                 ret[axis] = sel
@@ -366,11 +366,13 @@ class StructuredCrds(Coordinates):
         return [[axis, self.get_crd(axis)[slce]] for axis in self.axes]
 
     def points(self, center=None):
-        # t0 = time()
-        lst = np.array(list(self.iter_points(center=center)))
-        # t1 = time()
-        # print("points conversion: {0:.3e}".format(t1 - t0))
-        return lst
+        crds = self.get_crd(shaped=False, center=center)
+        shape = [len(c) for c in crds]
+        arr = np.empty([len(shape)] + [np.prod(shape)])
+        for i, c in enumerate(crds):
+            arr[i, :] = np.tile(np.repeat(c, np.prod(shape[:i])),
+                                np.prod(shape[i + 1:]))
+        return arr
 
     def n_points(self, center=None):
         return np.prod([len(crd) for crd in self.get_crd(center=center)])
