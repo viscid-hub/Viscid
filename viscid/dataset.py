@@ -218,7 +218,11 @@ class DatasetTemporal(Dataset):
 
     def iter_times(self, slice_str=":"):
         slc = self._slice_time(slice_str=slice_str)
-        return (child[1] for child in self.children[slc])
+        for child in self.children[slc]:
+            with child[1] as target:
+                yield target
+        # this old way lead to a 'memory leak' of sorts
+        # return (child[1] for child in self.children[slc])
 
     def spill(self, recursive=False, prefix=""):
         for child in self.children:
