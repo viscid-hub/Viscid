@@ -327,13 +327,13 @@ class StructuredCrds(Coordinates):
         # print(slices)
         # print("*** slices: ", slices)
         # print("*** crds: ", slcrds)
-        return tuple(slices), slcrds, reduced
+        return slices, slcrds, reduced
 
     def slice(self, selection, use_cc=False):
         slices, crdlst, reduced = self.make_slice(selection, use_cc=use_cc,
                                                   rm_len1_dims=False)
         # no slice necessary, just pass the field through
-        if list(slices) == [slice(None)] * len(slices):
+        if slices == [slice(None)] * len(slices):
             return self
         return wrap_crds(self.TYPE, crdlst)
 

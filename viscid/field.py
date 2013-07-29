@@ -183,6 +183,11 @@ class Field(object):
     #TODO: some method that gracefully gets the correct crd arrays for
     # face and edge centered fields
 
+    def _augment_slices(self, slices): #pylint: disable=R0201
+        """ TODO: this is a crap mechanism to do vector slicing and should
+        disappear """
+        return slices
+
     def slice(self, selection, rm_len1_dims=False):
         """ Select a slice of the data using selection dictionary.
         Returns a new field.
@@ -196,6 +201,7 @@ class Field(object):
             return self
 
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
+        slices = self._augment_slices(slices)
         fld = self.wrap(self.data[slices],
                                 {"name": self.name + "_slice",
                                  "crds": crds,
@@ -244,17 +250,16 @@ class Field(object):
             return NotImplemented
         if context is None:
             context = {}
-        name = context.get("name", self.name)
-        crds = context.get("crds", self.crds)
-        center = context.get("center", self.center)
-        time = context.get("time", self.time)
-        info = context.get("time", self.info)
+        name = context.pop("name", self.name)
+        crds = context.pop("crds", self.crds)
+        center = context.pop("center", self.center)
+        time = context.pop("time", self.time)
         # should it always return the same type as self?
         if typ is None:
             typ = type(self)
         elif isinstance(typ, str):
             typ = field_type_from_str(typ)
-        return typ(name, crds, arr, time=time, center=center, info=info)
+        return typ(name, crds, arr, time=time, center=center, info=context)
 
     def __array_wrap__(self, out_arr, context=None):
         # print("wrapping")
@@ -347,6 +352,7 @@ class VectorField(Field):
 
     _layout = None
     _ncomp = None
+    _compdim = None
 
     def __init__(self, name, crds, data, **kwargs):        
         super(VectorField, self).__init__(name, crds, data, **kwargs)
@@ -360,16 +366,20 @@ class VectorField(Field):
 
     @property
     def ncomp(self):
+        return self.data.shape[self.compdim]
+
+    @property
+    def compdim(self):
+        """ dimension of the components of the vector """
         layout = self.layout
         if layout == LAYOUT_FLAT:
-            return self.data.shape[0]
+            return 0
         elif layout == LAYOUT_INTERLACED:
-            return self.data.shape[-1]
+            return self.crds.dim
         elif layout == LAYOUT_OTHER:
-            # print(self.name, self.layout)
             logging.warn("I don't know what your layout is, assuming vectors "
                          "are the last index (interleaved)...")
-            return self.data.shape[-1]
+            return self.crds.dim
 
     @property
     def layout(self):
@@ -392,7 +402,6 @@ class VectorField(Field):
 
         dat_layout = self.detect_layout(dat)
 
-        #print("Translating: ", self.name, "; detected layout is ", dat_layout)
 
         # we will preserve layout or we already have the correct layout,
         # do no translation... just like Field._translate_data
@@ -522,6 +531,13 @@ class VectorField(Field):
             return LAYOUT_FLAT
         else:
             return LAYOUT_OTHER
+
+    def _augment_slices(self, slices):
+        """ TODO: this is a crap mechanism to do vector slicing and should
+        disappear """
+        slices.insert(self.compdim, slice(None))
+        return slices
+
 
 class MatrixField(Field):
     TYPE = "Matrix"
