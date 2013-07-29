@@ -119,20 +119,44 @@ def div(fld):
     return field.wrap_field("Scalar", "div " + fld.name, divcrds, div_arr,
                             center=divcenter, time=fld.time)
 
-# This is not correct
-# div = VneCalc("(vxp-vxm)/(xp-xm) + (vyp-vym)/(yp-ym) + (vzp-vzm)/(zp-zm)",
-#               {"vxp": 0, "vxm": 0, "vyp": 1, "vym": 1, "vzp": 2, "vzm": 2,
-#                "xp": 0, "xm": 0, "yp": 1, "ym": 1, "zp": 2, "zm": 2,
-#               },
-#               {"vxp": np.s_[1:-1,1:-1,2:], "vxm": np.s_[1:-1,1:-1,:-2],
-#                "vyp": np.s_[1:-1,2:,1:-1], "vym": np.s_[1:-1,:-2,1:-1],
-#                "vzp": np.s_[2:,1:-1,1:-1], "vzm": np.s_[:-2,1:-1,1:-1],
-#                "xp": np.s_[:,:,2:], "xm": np.s_[:,:,:-2],
-#                "yp": np.s_[:,2:,:], "ym": np.s_[:,:-2,:],
-#                "zp": np.s_[2:,:,:], "zm": np.s_[:-2,:,:],
-#               },
-#               ret_type=field.ScalarField,
-#              )
+def curl(fld):
+    """ first order """
+    vx, vy, vz = fld.component_views()
+
+    if fld.center == "Cell":
+        crdz, crdy, crdx = fld.crds.get_crd(shaped=True, center="Cell")
+        curlcenter = "Cell"
+        curlcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+    elif fld.center == "Node":
+        crdz, crdy, crdx = fld.crds.get_crd(shaped=True)
+        curlcenter = "Node"
+        curlcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+    else:
+        raise NotImplementedError("Can only do cell and node centered divs")
+
+    xp = crdx[:,:,2:]; xm = crdx[:,:,:-2] #pylint: disable=W0612,C0321,C0324
+    yp = crdy[:,2:,:]; ym = crdy[:,:-2,:] #pylint: disable=W0612,C0321,C0324
+    zp = crdz[2:,:,:]; zm = crdz[:-2,:,:] #pylint: disable=W0612,C0321,C0324
+
+    # vxpx = vx[1:-1,1:-1,2:]; vxmx = vx[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
+    vxpy = vx[1:-1,2:,1:-1]; vxmy = vx[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+    vxpz = vx[2:,1:-1,1:-1]; vxmz = vx[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+
+    vypx = vy[1:-1,1:-1,2:]; vymx = vy[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
+    # vypy = vy[1:-1,2:,1:-1]; vymy = vy[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+    vypz = vy[2:,1:-1,1:-1]; vymz = vy[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+
+    vzpx = vz[1:-1,1:-1,2:]; vzmx = vz[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
+    vzpy = vz[1:-1,2:,1:-1]; vzmy = vz[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+    # vzpz = vz[2:,1:-1,1:-1]; vzmz = vz[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+
+    curl_x = ne.evaluate("(vzpy-vzmy)/(yp-ym) - (vypz-vymz)/(zp-zm)")
+    curl_y = ne.evaluate("-(vzpx-vzmx)/(xp-xm) + (vxpz-vxmz)/(zp-zm)")
+    curl_z = ne.evaluate("(vypx-vymx)/(xp-xm) - (vxpy-vxmy)/(yp-ym)")
+
+    return field.wrap_field("Vector", "curl " + fld.name, curlcrds,
+                            [curl_x, curl_y, curl_z],
+                            center=curlcenter, time=fld.time)
 
 ##
 ## EOF
