@@ -80,6 +80,17 @@ class Dataset(object):
                 pass
         raise RuntimeError("I find no temporal datasets")
 
+    def iter_fields(self, time=None):
+        """ generator for fields in the active dataset,
+        this will recurse down to a grid """
+        child = self.active_child
+
+        if child is None:
+            logging.warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.iter_fields(time=time)
+
     def spill(self, recursive=False, prefix=""):
         for child in self.children:
             suffix = ""
@@ -145,7 +156,7 @@ class Dataset(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, typ, value, traceback):
         self.unload()
         return None
 
@@ -223,6 +234,20 @@ class DatasetTemporal(Dataset):
                 yield target
         # this old way lead to a 'memory leak' of sorts
         # return (child[1] for child in self.children[slc])
+
+    def iter_fields(self, time=None):
+        """ generator for fields in the active dataset,
+        this will recurse down to a grid """
+        if time is not None:
+            child = self.get_child(time)
+        else:
+            child = self.active_child
+
+        if child is None:
+            logging.warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.iter_fields(time=time)
 
     def spill(self, recursive=False, prefix=""):
         for child in self.children:

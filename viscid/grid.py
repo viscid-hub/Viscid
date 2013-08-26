@@ -51,6 +51,11 @@ class Grid(object):
         with self as me:
             yield me
 
+    def iter_fields(self, *args, **kwargs):
+        for fld in self.fields:
+            with fld as f:
+                yield f
+
     def spill(self, recursive=False, prefix=""):
         self.fields.spill(prefix=prefix + spill_prefix)
 
