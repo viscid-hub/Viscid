@@ -342,6 +342,24 @@ class Field(object):
     def __invert__(self):
         return self.wrap(self.data.__invert__())
 
+    def any(self):
+        return self.data.any()
+    def all(self):
+        return self.data.all()
+
+    def __lt__(self, other):
+        return self.wrap(self.data.__lt__(other))
+    def __le__(self, other):
+        return self.wrap(self.data.__le__(other))
+    def __eq__(self, other):
+        return self.wrap(self.data.__eq__(other))
+    def __ne__(self, other):
+        return self.wrap(self.data.__ne__(other))
+    def __gt__(self, other):
+        return self.wrap(self.data.__gt__(other))
+    def __ge__(self, other):
+        return self.wrap(self.data.__ge__(other))  
+
 
 class ScalarField(Field):
     TYPE = "Scalar"
