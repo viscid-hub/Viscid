@@ -91,7 +91,11 @@ class Dataset(object):
         else:
             return child.iter_fields(time=time)
 
-    def spill(self, recursive=False, prefix=""):
+    def spill(self, recursive=True, prefix=""):
+        if prefix == "":
+            print(self)
+            prefix += spill_prefix
+
         for child in self.children:
             suffix = ""
             if child is self.active_child:
@@ -249,12 +253,16 @@ class DatasetTemporal(Dataset):
         else:
             return child.iter_fields(time=time)
 
-    def spill(self, recursive=False, prefix=""):
+    def spill(self, recursive=True, prefix=""):
+        if prefix == "":
+            print(self)
+            prefix += spill_prefix
+
         for child in self.children:
             suffix = ""
             if child[1] is self.active_child:
                 suffix = " <-- active"
-            # print("{0}{1}{2}".format(prefix, child, suffix))
+            print("{0}{1} (t={2}){3}".format(prefix, child, child[0], suffix))
             if recursive:
                 child[1].spill(recursive=True, prefix=prefix + spill_prefix)
 

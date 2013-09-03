@@ -185,7 +185,8 @@ class FileXDMF(vfile.VFile):
                 t = times[i] if (times is not None and i < len(times)) else time
                 # print(subgrid, grd, t)
                 self._parse_grid(subgrid, parent_grid=grd, time=t)
-            grd.activate(0)
+            if len(grd.children) > 0:
+                grd.activate(0)
 
         elif gt == "Uniform":
             if not (topoattrs and geoattrs):
