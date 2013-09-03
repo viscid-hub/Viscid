@@ -223,19 +223,26 @@ SUBROUTINE xcl4(gx, gy, gz, bx, by, bz, x, y, z, &
   ifl = 3;
   ihem = 0
 
+  ! TOPOLOGY_INVALID = 1 # 1, 2, 3, 4, 9, 10, 11, 12, 15
+  ! TOPOLOGY_CLOSED = 7 # 5 (both N), 6 (both S), 7(both hemispheres)
+  ! TOPOLOGY_SW = 8
+  ! TOPOLOGY_OPEN_NORTH = 13
+  ! TOPOLOGY_OPEN_SOUTH = 14
+  ! TOPOLOGY_OTHER = 16 # >= 16
+
   if(ifl1.eq.1.and.ifl2.eq.1) then
-    ifl = 0
+    ifl = 7
   endif
   if(ifl1.eq.1.and.ifl2.eq.2) then
-    ifl = 1;
+    ifl = 14;
     ihem = -1;
   endif
   if(ifl1.eq.2.and.ifl2.eq.1) then
-    ifl = 1;
+    ifl = 13;
     ihem = 1;
   endif
   if(ifl1.eq.2.and.ifl2.eq.2) then
-    ifl=2
+    ifl = 8
   endif
   if(iv.eq.1) then
     write(0,*)'xcl4b: ',ifl1,ifl2,ifl,ihem,imo,x,y,z,np
@@ -389,13 +396,26 @@ SUBROUTINE ipol3a(a,b,gx,gy,gz,x,y,z,iout, nx,ny,nz)
   dyi = (y - gy(iy)) / (gy(iy + 1) - gy(iy))
   dzi = (z - gz(iz)) / (gz(iz + 1) - gz(iz))
 
-  x00 = a(ix, iy, iz) + dxi * (a(ix + 1, iy, iz) - a(ix, iy, iz))
-  x10 = a(ix, iy + 1, iz) + dxi * (a(ix + 1, iy + 1, iz) - a(ix, iy + 1, iz))
-  x01 = a(ix, iy, iz + 1) + dxi * (a(ix + 1, iy, iz + 1) - a(ix, iy, iz + 1))
+  call interp3(a, ix, iy, iz, dxi, dyi, dzi, b, nx, ny, nz)
+
+  return
+
+END SUBROUTINE
+
+SUBROUTINE interp3(a, ix, iy, iz, dxi, dyi, dzi, b, nx, ny, nz)
+  INTEGER, INTENT(IN) :: nx, ny, nz
+  REAL, INTENT(IN) :: a(nx, ny, nz)
+  INTEGER, INTENT(IN) :: ix, iy, iz
+  REAL, INTENT(IN) :: dxi, dyi, dzi
+  REAL, INTENT(OUT) :: b
+  REAL :: x00, x01, x10, x11, y0, y1
+
+  x00 = a(ix, iy    , iz    ) + dxi * (a(ix + 1, iy    , iz    ) - a(ix, iy    , iz    ))
+  x10 = a(ix, iy + 1, iz    ) + dxi * (a(ix + 1, iy + 1, iz    ) - a(ix, iy + 1, iz    ))
+  x01 = a(ix, iy    , iz + 1) + dxi * (a(ix + 1, iy    , iz + 1) - a(ix, iy    , iz + 1))
   x11 = a(ix, iy + 1, iz + 1) + dxi * (a(ix + 1, iy + 1, iz + 1) - a(ix, iy + 1, iz + 1))
   y0 = x00 + dyi * (x10 - x00)
   y1 = x01 + dyi * (x11 - x01)
-  b = y0 + dzi * (y1 - y0)
-  return
+  b = y0 + dzi * (y1 - y0)  
 
 END SUBROUTINE

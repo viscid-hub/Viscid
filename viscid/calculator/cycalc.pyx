@@ -276,22 +276,32 @@ cdef real_t _c_trilin_interp(real_t[:,:,:] s, real_t[:] crdz,
             ix[i] = ind
             p[i] = 0
             xd[i] = 1.0
-        xdm[i] = 1.0 - xd[i]
+
+        # xdm[i] = 1.0 - xd[i]
 
     # this algorithm is shamelessly taken from the trilinear interpolation
     # wikipedia article
-    c00 = s[ix[0]       , ix[1]       , ix[2]       ] * xdm[0] + \
-          s[ix[0] + p[0], ix[1]       , ix[2]       ] * xd[0]
-    c10 = s[ix[0]       , ix[1] + p[1], ix[2]       ] * xdm[0] + \
-          s[ix[0] + p[0], ix[1] + p[1], ix[2]       ] * xd[0]
-    c01 = s[ix[0]       , ix[1]       , ix[2] + p[2]] * xdm[0] + \
-          s[ix[0] + p[0], ix[1]       , ix[2] + p[2]] * xd[0]
-    c11 = s[ix[0]       , ix[1] + p[1], ix[2] + p[2]] * xdm[0] + \
-          s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]] * xd[0]
+    # c00 = s[ix[0]       , ix[1]       , ix[2]       ] * xdm[0] + \
+    #       s[ix[0] + p[0], ix[1]       , ix[2]       ] * xd[0]
+    # c10 = s[ix[0]       , ix[1] + p[1], ix[2]       ] * xdm[0] + \
+    #       s[ix[0] + p[0], ix[1] + p[1], ix[2]       ] * xd[0]
+    # c01 = s[ix[0]       , ix[1]       , ix[2] + p[2]] * xdm[0] + \
+    #       s[ix[0] + p[0], ix[1]       , ix[2] + p[2]] * xd[0]
+    # c11 = s[ix[0]       , ix[1] + p[1], ix[2] + p[2]] * xdm[0] + \
+    #       s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]] * xd[0]
 
-    c0 = c00 * xdm[1] + c10 * xd[1]
-    c1 = c01 * xdm[1] + c11 * xd[1]
-    c = c0 * xdm[2] + c1 * xd[2]
+    # c0 = c00 * xdm[1] + c10 * xd[1]
+    # c1 = c01 * xdm[1] + c11 * xd[1]
+    # c = c0 * xdm[2] + c1 * xd[2]
+
+    c00 = s[ix[0], ix[1]       , ix[2]       ] + xd[0] * (s[ix[0] + p[0], ix[1]       , ix[2]       ] - s[ix[0], ix[1]       , ix[2]       ])
+    c10 = s[ix[0], ix[1] + p[1], ix[2]       ] + xd[0] * (s[ix[0] + p[0], ix[1] + p[1], ix[2]       ] - s[ix[0], ix[1] + p[1], ix[2]       ])
+    c01 = s[ix[0], ix[1]       , ix[2] + p[2]] + xd[0] * (s[ix[0] + p[0], ix[1]       , ix[2] + p[2]] - s[ix[0], ix[1]       , ix[2] + p[2]])
+    c11 = s[ix[0], ix[1] + p[1], ix[2] + p[2]] + xd[0] * (s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2]] - s[ix[0], ix[1] + p[1], ix[2] + p[2]])
+    c0 = c00 + xd[1] * (c10 - c00)
+    c1 = c01 + xd[1] * (c11 - c01)
+    c = c0 + xd[2] * (c1 - c0)
+    # c = _c_interp3[real_t](s, xd, ix, p)
 
     # if isnan(c):
     #     logging.warning("NAN: {0}".format([s.shape[0], s.shape[1], s.shape[2], 
