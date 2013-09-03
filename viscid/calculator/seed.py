@@ -206,7 +206,7 @@ class Volume(SeedGen):
         self.params["res"] = res
 
     def n_points(self, **kwargs):
-        return self.params["res"]
+        return np.prod(self.params["res"])
 
     def gen_points(self):
         crds = self._make_arrays()
@@ -226,7 +226,7 @@ class Volume(SeedGen):
         x = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype)
         return z, y, x
 
-    def iter_points(self):
+    def iter_points(self, **kwargs):
         z, y, x = self._make_arrays()
         return itertools.product(z, y, x)
 

@@ -354,10 +354,14 @@ class VectorField(Field):
     _ncomp = None
     _compdim = None
 
-    def __init__(self, name, crds, data, **kwargs):        
+    def __init__(self, name, crds, data, **kwargs):
+        forget_source = kwargs.pop("forget_source", False)
         super(VectorField, self).__init__(name, crds, data, **kwargs)
         if not "force_layout" in self.info:
             self.info["force_layout"] = LAYOUT_DEFAULT
+        if forget_source:
+            self.source_data = self.data
+
 
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
