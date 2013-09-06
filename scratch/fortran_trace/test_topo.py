@@ -24,6 +24,7 @@ from viscid.plot import mpl
 from viscid.plot import mvi
 from viscid.calculator import streamline
 from viscid.calculator import seed
+import topo_numba
 
 gsize = (8, 8, 8)
 x1 = -10.0; x2 = -5.0 #pylint: disable=C0321
@@ -55,18 +56,23 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
     tracer.get_topo(gx, gy, gz, bx_farr, by_farr, bz_farr, topo, 
                     x1, x2, y1, y2, z1, z2, nsegs)
     t1 = time()
+
+    t = t1 - t0
+    print("total segments calculated: ", nsegs)
+    print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
+
     topo_fld = vol.wrap_field("Scalar", "FortTopo", topo)
-    return t1 - t0, nsegs[0], None, topo_fld
+    return None, topo_fld
 
 def trace_cython(fld_bx, fld_by, fld_bz):
+    # print("Cython...")
     B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
                                       info={"force_layout": field.LAYOUT_INTERLACED})
     t0 = time()
     lines, topo = None, None
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
-                            maxit=100000, output=streamline.OUTPUT_BOTH)
+                            maxit=5000, output=streamline.OUTPUT_TOPOLOGY)
     t1 = time()
-    topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
 
     # mpl.plot_streamlines(lines, show=True)
     # mpl.plot(topo_cy, "y=0", show=True)
@@ -83,6 +89,23 @@ def trace_cython(fld_bx, fld_by, fld_bz):
         for line in lines:
             nsegs += len(line[0])
 
+    t = t1 - t0
+    print("total segments calculated: ", nsegs)
+    print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
+
+    topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
+
+    return lines, topo_fld
+
+def trace_numba(fld_bx, fld_by, fld_bz):
+    B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
+                                      info={"force_layout": field.LAYOUT_INTERLACED})
+    topo_arr = np.empty(gsize, order='C', dtype='int')
+    lines, topo = None, None
+    t0 = time()
+    nsegs = topo_numba.get_topo(B, topo_arr, x1, x2, y1, y2, z1, z2)
+    t1 = time()
+    topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
     return t1 - t0, nsegs, lines, topo_fld
 
 def main():
@@ -99,22 +122,34 @@ def main():
     by = f3d["by"]
     bz = f3d["bz"]
 
+    profile = False
+
     print("Fortran...")
-    t, nsegs, lines, topo_fort = trace_fortran(bx, by, bz)
-    print("total segments calculated: ", nsegs)
-    print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
+    if profile:
+        cProfile.runctx("lines, topo_fort = trace_fortran(bx, by, bz)",
+                        globals(), locals(), "topo_fort.prof")
+        s = pstats.Stats("topo_fort.prof")
+        s.strip_dirs().sort_stats("cumtime").print_stats(10)        
+    else:
+        lines, topo_fort = trace_fortran(bx, by, bz)
 
     print("Cython...")
-    t, nsegs, lines, topo_cy = trace_cython(bx, by, bz)
-    # cProfile.runctx("t, nsegs, lines, topo_cy = trace_cython(bx, by, bz)",
-    #                 globals(), locals(), "topo.prof")
-    # s = pstats.Stats("topo.prof")
-    # s.strip_dirs().sort_stats("tottime").print_stats()
-    print("total segments calculated: ", nsegs)
-    print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
+    if profile:
+        cProfile.runctx("lines, topo_cy = trace_cython(bx, by, bz)",
+                        globals(), locals(), "topo_cy.prof")
+        s = pstats.Stats("topo_cy.prof")
+        s.strip_dirs().sort_stats("cumtime").print_stats(15)
+    else:
+        lines, topo_cy = trace_cython(bx, by, bz)
+        print("Same? ",(np.ravel(topo_fort.data, order='K') == 
+                        np.ravel(topo_cy.data, order='K')).all())        
 
-    print("Same? ",(np.ravel(topo_fort.data, order='K') == 
-                    np.ravel(topo_cy.data, order='K')).all())
+    # print("Numba...")
+    # t, nsegs, lines, topo_nb = trace_numba(bx, by, bz)
+    # print("total segments calculated: ", nsegs)
+    # print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
+    # print("Same? ",(np.ravel(topo_fort.data, order='K') == 
+    #                 np.ravel(topo_nb.data, order='K')).all())
 
 if __name__ == "__main__":
     main()

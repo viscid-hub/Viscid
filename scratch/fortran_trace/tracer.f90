@@ -271,17 +271,20 @@ SUBROUTINE trace2(gx, gy, gz, bx, by, bz, &
 
   REAL :: r1
   REAL :: bb, bbx, bby, bbz, s
-  INTEGER iout
+  INTEGER :: iout = 0
 
   !..... trace one step
   r1 = sqrt(x1*x1 + y1*y1 + z1*z1)
   if(r1.gt.3.7) then
     call ipol3a(bx,bbx,gx,gy,gz,x1,y1,z1,iout,nx,ny,nz)
-    if(iout.ne.0) goto 999
     call ipol3a(by,bby,gx,gy,gz,x1,y1,z1,iout,nx,ny,nz)
-    if(iout.ne.0) goto 999
     call ipol3a(bz,bbz,gx,gy,gz,x1,y1,z1,iout,nx,ny,nz)
-    if(iout.ne.0) goto 999
+    if(iout.ne.0) then
+      x2 = 1.e6
+      y2 = 1.e6
+      z2 = 1.e6
+      return
+    endif
   else
     ! call cotr('gse','sm ',x1,y1,z1,xsm,ysm,zsm)
     ! xbbx = -3.0 * xsm * zsm
@@ -296,19 +299,18 @@ SUBROUTINE trace2(gx, gy, gz, bx, by, bz, &
   ! write(0,'(a,3(1x,g12.5))')' trace2: ',bbx,bby,bbz
 
   bb = sqrt(bbx*bbx + bby*bby + bbz*bbz)
-  if(bb.le.0.0) goto 999
-  s = dir / bb
+  if(bb.gt.0.0) then
+    s = dir / bb
 
-  x2 = x1 + bbx * s
-  y2 = y1 + bby * s
-  z2 = z1 + bbz * s
+    x2 = x1 + bbx * s
+    y2 = y1 + bby * s
+    z2 = z1 + bbz * s
+  else
+    x2 = 1.e6
+    y2 = 1.e6
+    z2 = 1.e6    
+  endif
 
-  return
-
-999   continue
-  x2 = 1.e6
-  y2 = 1.e6
-  z2 = 1.e6
   return
 
 END SUBROUTINE
@@ -324,72 +326,17 @@ SUBROUTINE ipol3a(a,b,gx,gy,gz,x,y,z,iout, nx,ny,nz)
   REAL, INTENT(OUT) :: b
   INTEGER, INTENT(OUT) :: iout
 
-  INTEGER, SAVE :: ixl = 1, iyl = 1, izl = 1
-  ! INTEGER, SAVE :: 
-  ! INTEGER, SAVE :: 
-  INTEGER :: i, ix, iy, iz
+  INTEGER, SAVE :: ix = 1, iy = 1, iz = 1
   REAL :: dxi, dyi, dzi
   REAL :: x00, x01, x10, x11, y0, y1
 
-  iout = 0
+  call closest_ind(gx, nx, x, ix, iout)
+  call closest_ind(gy, ny, y, iy, iout)
+  call closest_ind(gz, nz, z, iz, iout)
 
-  ! find x index
-  ix = ixl
-  if(x.ge.gx(ix).and.x.le.gx(ix + 1)) goto 100
-  ix = min0(ixl + 1, nx - 1)
-  if(x.ge.gx(ix).and.x.le.gx(ix + 1)) goto 100
-  ix = max0(ixl - 1, 1)
-  if(x.ge.gx(ix).and.x.le.gx(ix + 1)) goto 100
-  do i = 1, nx - 1
-    ! WRITE(*, *) "i: ", i
-    ! WRITE(*, *) "gx(i): ", gx(i)
-    ! WRITE(*, *) "gx(i + 1): ", gx(i + 1)
-    if(x.ge.gx(i).and.x.le.gx(i + 1)) then
-      ix = i
-      goto 100
-    endif
-  end do
-  iout = 1
-  return
-100 continue
-  ixl = ix
-  ! WRITE(*, *) ">> x:", ix
-
-  ! find y index
-  iy = iyl
-  if(y.ge.gy(iy).and.y.le.gy(iy + 1)) goto 200
-  iy = min0(iyl + 1, ny - 1)
-  if(y.ge.gy(iy).and.y.le.gy(iy + 1)) goto 200
-  iy = max0(iyl - 1, 1)
-  if(y.ge.gy(iy).and.y.le.gy(iy + 1)) goto 200
-  do i = 1, ny - 1
-    if(y.ge.gy(i).and.y.le.gy(i + 1)) then
-      iy = i
-      goto 200
-    endif
-  end do
-  iout = 1
-  return
-200 continue
-  iyl = iy
-
-  ! find y index
-  iz = izl
-  if(z.ge.gz(iz).and.z.le.gz(iz + 1)) goto 300
-  iz = min0(izl + 1, nz - 1)
-  if(z.ge.gz(iz).and.z.le.gz(iz + 1)) goto 300
-  iz = max0(izl - 1, 1)
-  if(z.ge.gz(iz).and.z.le.gz(iz + 1)) goto 300
-  do i = 1, nz - 1
-    if(z.ge.gz(i).and.z.le.gz(i + 1)) then
-      iz = i
-      goto 300
-    endif
-  end do
-  iout = 1
-  return
-300 continue
-  izl = iz
+  if(iout.gt.0) then
+    return
+  endif
 
   ! calc interpolation
   dxi = (x - gx(ix)) / (gx(ix + 1) - gx(ix))
@@ -402,7 +349,46 @@ SUBROUTINE ipol3a(a,b,gx,gy,gz,x,y,z,iout, nx,ny,nz)
 
 END SUBROUTINE
 
-SUBROUTINE interp3(a, ix, iy, iz, dxi, dyi, dzi, b, nx, ny, nz)
+PURE SUBROUTINE closest_ind(gx, nx, x, ix, iout)
+  IMPLICIT NONE
+
+  INTEGER, INTENT(IN) :: nx
+  REAL, INTENT(IN) :: gx(nx)
+  REAL, INTENT(IN) :: x
+  INTEGER, INTENT(INOUT) :: ix
+  INTEGER, INTENT(INOUT) :: iout
+  INTEGER i
+
+  ! already there?
+  if(x.ge.gx(ix).and.x.le.gx(ix + 1)) then
+    return
+  endif
+  ! what about one cell ahead?
+  ix = min0(ix + 1, nx - 1)
+  if(x.ge.gx(ix).and.x.le.gx(ix + 1)) then
+    return
+  endif
+  ! and one behind?
+  ix = max0(ix - 2, 1)
+  if(x.ge.gx(ix).and.x.le.gx(ix + 1)) then
+    return
+  endif
+  ! ok then search
+  do i = 1, nx - 1
+    if(x.ge.gx(i).and.x.le.gx(i + 1)) then
+      ix = i
+      return
+    endif
+  end do
+
+  ! oh man, we never found it
+  iout = iout + 1
+  return
+END SUBROUTINE
+
+PURE SUBROUTINE interp3(a, ix, iy, iz, dxi, dyi, dzi, b, nx, ny, nz)
+  IMPLICIT NONE
+
   INTEGER, INTENT(IN) :: nx, ny, nz
   REAL, INTENT(IN) :: a(nx, ny, nz)
   INTEGER, INTENT(IN) :: ix, iy, iz
@@ -416,6 +402,5 @@ SUBROUTINE interp3(a, ix, iy, iz, dxi, dyi, dzi, b, nx, ny, nz)
   x11 = a(ix, iy + 1, iz + 1) + dxi * (a(ix + 1, iy + 1, iz + 1) - a(ix, iy + 1, iz + 1))
   y0 = x00 + dyi * (x10 - x00)
   y1 = x01 + dyi * (x11 - x01)
-  b = y0 + dzi * (y1 - y0)  
-
+  b = y0 + dzi * (y1 - y0)
 END SUBROUTINE

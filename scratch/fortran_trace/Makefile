@@ -13,9 +13,13 @@ F2PY=f2py-2.7
 
 tracer: tracer.f90
 	# $(FC) -o $@ $^
-	$(F2PY) -c -m tracer $^
+	$(F2PY) -c -m $@ $^
 
-all: tracer
+for_bench: for_bench.f90
+	# $(FC) -o $@ $^
+	$(F2PY) -c -m $@ $^
+
+all: tracer for_bench
 
 clean:
 	rm -f *.o *.so

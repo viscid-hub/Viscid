@@ -117,10 +117,6 @@ if has_numexpr:
     div.add_implementation("numexpr", necalc.div)
     curl.add_implementation("numexpr", necalc.curl)
 
-if has_cython:
-    magnitude.add_implementation("cython", cycalc.magnitude)
-    div.add_implementation("cython", cycalc.div)
-
 # numpy versions
 add.add_implementation("numpy", lambda a, b: a + b)
 diff.add_implementation("numpy", lambda a, b: a - b)
