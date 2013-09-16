@@ -16,15 +16,38 @@ class H5pyDataWrapper(vfile.DataWrapper): #pylint: disable=R0924
     fname = None
     loc = None
 
+    _shape = None
+    _dtype = None
+
     def __init__(self, fname, loc):
         super(H5pyDataWrapper, self).__init__()
         self.fname = fname
         self.loc = loc
 
+    def _get_info(self):
+        # this takes super long when reading 3 hrs worth of ggcm data
+        # over sshfs
+        # import pdb; pdb.set_trace()
         with h5py.File(self.fname, 'r') as f:
-            dset = f[loc]
+            dset = f[self.loc]
             self._shape = dset.shape
             self._dtype = dset.dtype
+
+    @property
+    def shape(self):
+        """ only ask for this if you really need it; can be a speed problem
+        for large temporal datasets over sshfs """
+        if self._shape is None:
+            self._get_info()
+        return self._shape
+
+    @property
+    def dtype(self):
+        """ only ask for this if you really need it; can be a speed problem
+        for large temporal datasets over sshfs """        
+        if self._dtype is None:
+            self._get_info()
+        return self._dtype
 
     def wrap_func(self, func_name, *args, **kwargs):
         with h5py.File(self.fname, 'r') as f:
