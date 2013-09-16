@@ -175,16 +175,17 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         topology_ndarr = np.empty((n_streams,), dtype="i")
         topology_mv = topology_ndarr
 
-    # for timing
-    # t0 = time()
+    # first one is for timing, second for status
+    # t0_all = time()
+    t0 = time()
 
     for i_stream, seed_pt in enumerate(seeds.iter_points(center=center)):
-        # if i_stream % nprogress == 0:
-        #     t1 = time()
-        #     logging.info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
-        #                  n_streams, int(100.0 * i_stream / n_streams),
-        #                  t1 - t0))
-        #     t0 = time()
+        if i_stream % nprogress == 0:
+            t1 = time()
+            logging.info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
+                         n_streams, int(100.0 * i_stream / n_streams),
+                         t1 - t0))
+            t0 = time()
 
         x0_mv[0] = seed_pt[0]
         x0_mv[1] = seed_pt[1]
@@ -282,8 +283,8 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
             #                         line_ends_mv[0], line_ends_mv[1]))
 
     # for timing
-    # t1 = time()
-    # t = t1 - t0
+    # t1_all = time()
+    # t = t1_all - t0_all
     # print("=> in cython time: {0:.03e} s  {1:.03e} s/seg".format(t, t / nsegs))
 
     return lines, topology_ndarr
