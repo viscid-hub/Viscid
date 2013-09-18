@@ -62,7 +62,7 @@ class Field(object):
     _cache = None  # this will always be a numpy array
 
     def __init__(self, name, crds, data, center="Node", time=0.0,
-                 info=None, forget_source=False):
+                 info=None, forget_source=False, **kwargs):
         self.name = name
         self.center = center
         self.time = time
@@ -70,6 +70,8 @@ class Field(object):
         self.data = data
 
         self.info = {} if info is None else info
+        for k, v in kwargs.items():
+            self.info[k] = v
 
         if forget_source:
             self.source_data = self.data
