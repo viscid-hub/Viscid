@@ -74,7 +74,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     mins = int((grid.time / 60) % 60)
     secs = grid.time % 60
     # plt.suptitle("t = {0:.2f}".format(grid.time))
-    plt.suptitle("t = {0}:{1:02}:{2:05.2f}".format(hrs, mins, secs))
+    plt.suptitle("\nt = {0}:{1:02}:{2:05.2f}".format(hrs, mins, secs))
     # mpl.tighten()
 
     if out_prefix:
