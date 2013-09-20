@@ -250,7 +250,7 @@ class FileXDMF(vfile.VFile):
 
         # parse geometry into coords
         geotype = geoattrs["GeometryType"]
-        if geotype == "XYZ":
+        if geotype.upper() == "XYZ":
             data, attrs = self._parse_dataitem(geo.find("./DataItem"),
                                                keep_flat=True)
             x = data[0::3]
@@ -258,7 +258,7 @@ class FileXDMF(vfile.VFile):
             z = data[2::3]
             crdlist = (('z', z), ('y', y), ('x', x))
 
-        elif geotype == "XY":
+        elif geotype.upper() == "XY":
             data, attrs = self._parse_dataitem(geo.find("./DataItem"),
                                                keep_flat=True)
             x = data[0::2]
@@ -266,7 +266,7 @@ class FileXDMF(vfile.VFile):
             z = np.zeros(len(x))
             crdlist = (('z', z), ('y', y), ('x', x))
 
-        elif geotype == "X_Y_Z":
+        elif geotype.upper() == "X_Y_Z":
             crdlist = [None] * 3
             for i, crd in enumerate(['Z', 'Y', 'X']):
                 di = geo.find("./dataitem[@name='{0}']".format(crd))
@@ -275,7 +275,7 @@ class FileXDMF(vfile.VFile):
                 data, attrs = self._parse_dataitem(di, keep_flat=True)
                 crdlist[i] = (crd.lower(), data)
 
-        elif geotype == "VXVYVZ":
+        elif geotype.upper() == "VXVYVZ":
             crdlist = [None] * 3
             for i, crd in enumerate(['Z', 'Y', 'X']):
                 di = geo.find("./DataItem[@Name='V{0}']".format(crd))
@@ -284,11 +284,12 @@ class FileXDMF(vfile.VFile):
                 data, attrs = self._parse_dataitem(di, keep_flat=True)
                 crdlist[i] = (crd.lower(), data)
 
-        elif geotype == "ORIGIN_DXDYDZ":
+        elif geotype.upper() == "ORIGIN_DXDYDZ":
             # this is for rectilinear grids with uniform spacing
             dataitems = geo.findall("./DataItem")
             data_o, attrs_o = self._parse_dataitem(dataitems[0])
             data_dx, attrs_dx = self._parse_dataitem(dataitems[1])
+            dtyp = data_o.dtype
             nstr = None
             if topoattrs["Dimensions"]:
                 nstr = topoattrs["Dimensions"]
@@ -296,10 +297,11 @@ class FileXDMF(vfile.VFile):
                 nstr = topoattrs["NumberOfElements"]
             else:
                 raise ValueError("ORIGIN_DXDYDZ has no number of elements...")
-            n = (int(num) for num in nstr)
+            n = [int(num) for num in nstr.split()]
             crdlist = [None] * 3
             for i, crd in enumerate(['z', 'y', 'x']):
-                crdlist[i] = (crd, data_dx[i] * np.arange(n[i]) + data_o[i])
+                crd_arr = data_dx[i] * np.arange(n[i], dtype=dtyp) + data_o[i]
+                crdlist[i] = (crd, crd_arr)
 
         else:
             logging.warn("Invalid GeometryType: {0}".format(geotype))
