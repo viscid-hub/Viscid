@@ -204,6 +204,7 @@ class Field(object):
 
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
         slices = self._augment_slices(slices)
+        # TODO: This can probably be done with a 'lazy slice'
         fld = self.wrap(self.data[slices],
                                 {"name": self.name + "_slice",
                                  "crds": crds,
