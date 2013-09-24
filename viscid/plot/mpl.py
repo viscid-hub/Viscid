@@ -144,7 +144,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
 def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
-                 colorbar=True, rotate_plot=True, **kwargs):
+                 colorbar=True, rotate_plot=False, **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
 
     style: "pcolormesh", "contour", "pcolor", style of 2D plot
@@ -205,6 +205,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     if rotate_plot:
         X, Y = Y.T, X.T
         dat = dat.T
+        namex, namey = namey, namex
 
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, **kwargs)
