@@ -190,13 +190,13 @@ class Field(object):
         disappear """
         return slices
 
-    def slice(self, selection, rm_len1_dims=False):
+    def slice(self, selection, consolidate=False):
         """ Select a slice of the data using selection dictionary.
         Returns a new field.
         """
         cc = (self.center == "Cell")
         slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
-                                                    rm_len1_dims=rm_len1_dims)
+                                                    consolidate=consolidate)
 
         # no slice necessary, just pass the field through
         if list(slices) == [slice(None)] * len(slices):

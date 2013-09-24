@@ -254,7 +254,7 @@ class StructuredCrds(Coordinates):
         else:
             raise TypeError()
 
-    def make_slice(self, selection, use_cc=False, rm_len1_dims=False):
+    def make_slice(self, selection, use_cc=False, consolidate=False):
         """ use a selection dict that looks like:
         {'x': (0,12), 'y': 0.0, 'z': (-13.0, 13.0)}
         to get a list of slices and crds that one
@@ -264,7 +264,7 @@ class StructuredCrds(Coordinates):
          [['x', array(1, 2, 3)], ['y', array(0, 1)]],  # new clist
          [['z', 0.0]],  # list of coords that are taken out by the slices
         )
-        rm_len1_dims will automatically add directions with only
+        consolidate will automatically add directions with only
         one coord value to the selection dict. the idea is to auto reduce
         3d to 2d if the data is naturally 2d (one dicection has no depth)
         """
@@ -279,7 +279,7 @@ class StructuredCrds(Coordinates):
         for dind, axis in enumerate(self.axes):
             if not axis in selection:
                 n = len(self[axis + "cc"]) if use_cc else len(self[axis])
-                if rm_len1_dims and n == 1:
+                if consolidate and n == 1:
                     slices[dind] = np.s_[0]
                     slcrds[dind] = None
                     crdval = self[axis + "cc"][0] if use_cc else self[axis][0]
@@ -324,7 +324,7 @@ class StructuredCrds(Coordinates):
 
                 if len(sel) == 1:
                     ind = sel[0]
-                    if rm_len1_dims:
+                    if consolidate:
                         slices[dind] = np.s_[ind]
                         slcrds[dind] = None
                         loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
@@ -358,7 +358,7 @@ class StructuredCrds(Coordinates):
 
     def slice(self, selection, use_cc=False):
         slices, crdlst, reduced = self.make_slice(selection, use_cc=use_cc,
-                                                  rm_len1_dims=False)
+                                                  consolidate=False)
         # no slice necessary, just pass the field through
         if slices == [slice(None)] * len(slices):
             return self
