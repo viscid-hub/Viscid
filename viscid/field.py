@@ -196,7 +196,7 @@ class Field(object):
         """
         cc = (self.center == "Cell")
         slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
-                                                    consolidate=consolidate)
+                                                       consolidate=consolidate)
 
         # no slice necessary, just pass the field through
         if list(slices) == [slice(None)] * len(slices):
