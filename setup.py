@@ -141,7 +141,7 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
               "), but I'll continue anyway...")
 
 setup(name='viscid',
-      version=ver.version,
+      version=ver.release,
       description='Visualization in python',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',
