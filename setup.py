@@ -42,7 +42,7 @@ ext_mods = []
 # appended if building with cython, and .c will be appended
 # if using pre-generated c files
 # "other" files are files with set extensions, like .pxd dependancies
-cy_ccflags = ["-Wno-unused-function", "-mssse3", "-O4"]
+cy_ccflags = ["-Wno-unused-function"]
 cy_ldflags = []
 cy_defs = []
 cy_defs.append(["viscid.calculator.cycalc",
