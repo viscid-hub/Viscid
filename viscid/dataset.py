@@ -80,7 +80,22 @@ class Dataset(object):
                 pass
         raise RuntimeError("I find no temporal datasets")
 
-    def spill(self, recursive=False, prefix=""):
+    def iter_fields(self, time=None, named=None):
+        """ generator for fields in the active dataset,
+        this will recurse down to a grid """
+        child = self.active_child
+
+        if child is None:
+            logging.warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.iter_fields(time=time, named=named)
+
+    def spill(self, recursive=True, prefix=""):
+        if prefix == "":
+            print(self)
+            prefix += spill_prefix
+
         for child in self.children:
             suffix = ""
             if child is self.active_child:
@@ -145,7 +160,7 @@ class Dataset(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, typ, value, traceback):
         self.unload()
         return None
 
@@ -218,14 +233,36 @@ class DatasetTemporal(Dataset):
 
     def iter_times(self, slice_str=":"):
         slc = self._slice_time(slice_str=slice_str)
-        return (child[1] for child in self.children[slc])
+        for child in self.children[slc]:
+            with child[1] as target:
+                yield target
+        # this old way lead to a 'memory leak' of sorts
+        # return (child[1] for child in self.children[slc])
 
-    def spill(self, recursive=False, prefix=""):
+    def iter_fields(self, time=None, named=None):
+        """ generator for fields in the active dataset,
+        this will recurse down to a grid """
+        if time is not None:
+            child = self.get_child(time)
+        else:
+            child = self.active_child
+
+        if child is None:
+            logging.warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.iter_fields(time=time, named=named)
+
+    def spill(self, recursive=True, prefix=""):
+        if prefix == "":
+            print(self)
+            prefix += spill_prefix
+
         for child in self.children:
             suffix = ""
             if child[1] is self.active_child:
                 suffix = " <-- active"
-            # print("{0}{1}{2}".format(prefix, child, suffix))
+            print("{0}{1} (t={2}){3}".format(prefix, child, child[0], suffix))
             if recursive:
                 child[1].spill(recursive=True, prefix=prefix + spill_prefix)
 

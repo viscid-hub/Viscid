@@ -5,6 +5,7 @@ import argparse
 import subprocess as sub
 import logging
 import copy as _copy
+import os
 
 from viscid import readers
 from viscid import vutil
@@ -84,7 +85,12 @@ def main():
                           ["by", {"plot_opts":"x_-10_0,y_-5_5,lin_-5_5"}]]
 
     if args.animate is not None and args.prefix is None:
-        args.prefix = "tmp_image"
+        args.prefix = os.path.splitext(args.animate)[0]
+        # args.prefix = "tmp_image"
+
+    if args.prefix is None:
+        args.show = True
+
     kwopts = {"transpose": args.transpose,
               "out_prefix": args.prefix,
               "out_format": args.format.strip('.'),

@@ -46,6 +46,7 @@
         {
           "name": "Develop",
           "shell_cmd": "python setup.py build_ext -i"
+          // "shell_cmd": "python setup.py build_ext -i"
         },
         {
           "name": "Clean",

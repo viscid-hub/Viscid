@@ -1,4 +1,4 @@
-# cython: boundscheck=True, wraparound=True, profile=False
+# cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
 
 from __future__ import print_function
 from timeit import default_timer as time
@@ -61,8 +61,7 @@ def streamlines(fld, seeds, *args, **kwargs):
         raise ValueError("Streamlines are only written in 3D.")
     if fld.center != "Cell":
         raise ValueError("Can only trace cell centered things...")
-    # nptype = fld.data.dtype.name
-
+    
     dat = fld.data
     dtype = dat.dtype
     center = "Cell"
@@ -70,13 +69,15 @@ def streamlines(fld, seeds, *args, **kwargs):
     return _py_streamline(dtype, dat, crdz, crdy, crdx, seeds, center,
                           *args, **kwargs)
 
-def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
-                   real_t[:] crdx, seeds, center, ds0=-1.0, ibound=0.0,
+@cython.wraparound(True)
+def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
+                   real_t[:] crdz, real_t[:] crdy, real_t[:] crdx,
+                   seeds, center, ds0=-1.0, ibound=0.0,
                    obound0=None, obound1=None, maxit=10000,
-                   dir=DIR_BOTH, output=OUTPUT_BOTH, method=EULER1,
+                   stream_dir=DIR_BOTH, output=OUTPUT_BOTH, method=EULER1,
                    tol_lo=1e-3, tol_hi=1e-2, fac_refine=0.75, fac_coarsen=2.0):
     """ Start calculating a streamline at x0
-    dir:         DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
+    stream_dir:  DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
     ibound:      stop streamline if within inner_bound of the origin
                  ignored if 0
     obound0:     corner of box beyond which to stop streamline (smallest values)
@@ -92,7 +93,7 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
         real_t[:] c_obound1 = c_obound1_carr
         real_t[:] py_obound0
         real_t[:] py_obound1
-        int c_dir = dir
+        int c_stream_dir = stream_dir
         int c_maxit = maxit
         real_t c_tol_lo = tol_lo
         real_t c_tol_hi = tol_hi
@@ -100,13 +101,14 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
         real_t c_fac_coarsen = fac_coarsen
 
         # just for c
-        int (*integrate_func)(real_t[:,:,:,:], real_t[:], real_t[:], real_t[:],
+        int (*integrate_func)(real_t[:,:,:,::1], real_t[:]*,
                       real_t*, real_t[:], real_t, real_t, real_t, real_t,
-                      int[3]) except -1
+                      int[3])
         int i, j, it
         int i_stream
         int n_streams = seeds.n_points(center=center)
         int nprogress = max(n_streams / 50, 1)  # progerss at every 5%
+        int nsegs = 0
 
         int ret   # return status of euler integrate
         int end_flags
@@ -115,34 +117,37 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
         int d  # direction of streamline 1 | -1
         real_t ds
         real_t rsq, distsq
+        double t0inner, t1inner
+        double tinner = 0.0
 
         real_t x0_carr[3]
         int line_ends_carr[2]
         real_t s_carr[3]
-        int* start_inds = [0, 0, 0]
+        int *start_inds = [0, 0, 0]
 
         int[:] topology_mv = None
-        real_t[:,:,:] line_mv = None
+        real_t[:,:,::1] line_mv = None
         real_t[:] x0_mv = x0_carr
         int[:] line_ends_mv = line_ends_carr
         real_t[:] s_mv = s_carr
+    cdef real_t[:] *crds = [crdz, crdy, crdx]
 
     lines = None
     line_ndarr = None
     topology_ndarr = None
 
     if obound0 is None:
-        c_obound0[0] = crdz[0]
-        c_obound0[1] = crdy[0]
-        c_obound0[2] = crdx[0]
+        c_obound0[0] = crds[0][0]
+        c_obound0[1] = crds[1][0]
+        c_obound0[2] = crds[2][0]
     else:
         py_obound0 = obound0
         c_obound0[...] = py_obound0
 
     if obound1 is None:
-        c_obound1[0] = crdz[-1]
-        c_obound1[1] = crdy[-1]
-        c_obound1[2] = crdx[-1]
+        c_obound1[0] = crds[0][-1]
+        c_obound1[1] = crds[1][-1]
+        c_obound1[2] = crds[2][-1]
     else:
         py_obound1 = obound1
         c_obound1[...] = py_obound1
@@ -170,7 +175,10 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
         topology_ndarr = np.empty((n_streams,), dtype="i")
         topology_mv = topology_ndarr
 
+    # first one is for timing, second for status
+    # t0_all = time()
     t0 = time()
+
     for i_stream, seed_pt in enumerate(seeds.iter_points(center=center)):
         if i_stream % nprogress == 0:
             t1 = time()
@@ -192,9 +200,9 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
         end_flags = END_NONE
 
         for i, d in enumerate([-1, 1]):
-            if d < 0 and not (c_dir & DIR_BACKWARD):
+            if d < 0 and not (c_stream_dir & DIR_BACKWARD):
                 continue
-            elif d > 0 and not (c_dir & DIR_FORWARD):
+            elif d > 0 and not (c_stream_dir & DIR_FORWARD):
                 continue
 
             ds = d * c_ds0
@@ -207,7 +215,8 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
 
             done = END_NONE
             while 0 <= it and it < c_maxit:
-                ret = integrate_func(v_mv, crdz, crdy, crdx, &ds, s_mv,
+                nsegs += 1
+                ret = integrate_func(v_mv, crds, &ds, s_mv,
                     c_tol_lo, c_tol_hi, c_fac_refine , c_fac_coarsen,
                     start_inds)
                 # if i_stream == 0:
@@ -272,6 +281,11 @@ def _py_streamline(dtype, real_t[:,:,:,:] v_mv, real_t[:] crdz, real_t[:] crdy,
             topology_mv[i_stream] = end_flags
             # logging.info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags, 
             #                         line_ends_mv[0], line_ends_mv[1]))
+
+    # for timing
+    # t1_all = time()
+    # t = t1_all - t0_all
+    # print("=> in cython time: {0:.03e} s  {1:.03e} s/seg".format(t, t / nsegs))
 
     return lines, topology_ndarr
 

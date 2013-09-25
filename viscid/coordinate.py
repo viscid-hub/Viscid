@@ -35,7 +35,7 @@ def wrap_crds(typ, clist):
 class Coordinates(object):
     TYPE = "None"
 
-    _crds = None
+    __crds = None
 
     def __init__(self):
         pass
@@ -51,6 +51,8 @@ class StructuredCrds(Coordinates):
 
     _axes = ["z", "y", "x"]
     _dim = 3
+
+    _src_crds_nc = None
 
     has_cc = None
 
@@ -89,37 +91,61 @@ class StructuredCrds(Coordinates):
     def shape_cc(self):
         return [len(self[ax + "cc"]) for ax in self.axes]
 
+    @property
+    def _crds(self):
+        "!!! BIG NOTE: THIS PROPERTY IS STILL PRIVATE !!!"
+        if self.__crds is None:
+            self._fill_crds_dict()
+        return self.__crds
+
+
     def clear_crds(self):
-        self._crds = {}
-        for d in self.axes:
-            for sfx in self.SUFFIXES:
-                self._crds[d + sfx] = None
-                self._crds[d.upper() + sfx] = None
+        self._src_crds_nc = {}
+        self.__crds = None
+        # for d in self.axes:
+        #     for sfx in self.SUFFIXES:
+        #         self.__crds[d + sfx] = None
+        #         self.__crds[d.upper() + sfx] = None
 
     def set_crds(self, clist):
         """ called with a list of lists:
         (('x', ndarray), ('y',ndarray), ('z',ndarray))
         Note: input crds are assumed to be node centered
         """
-        # print(clist)
-        for axis, arr in clist:
+        for axis, data in clist:
+            # axis = self.axis_name(axis)
+            if not axis in self._axes:
+                raise KeyError()
+            ind = self.ind(axis)
+            self._src_crds_nc[axis.lower()] = data
+
+    def _fill_crds_dict(self):
+        """ do the math to calc node, cell, face, edge crds from 
+        the src crds """
+        self.__crds = {}
+
+        # get node centered crds from the src crds
+        for axis, arr in self._src_crds_nc.items():
             # make axis into string representation
-            axis = self.axis_name(axis)
+            # axis = self.axis_name(axis)
             ind = self.ind(axis)
             arr = np.array(arr, dtype=arr.dtype.name)
             flatarr, openarr = self.ogrid_single(ind, arr)
-            self._crds[axis.lower()] = flatarr
-            self._crds[axis.upper()] = openarr
+            self.__crds[axis.lower()] = flatarr
+            self.__crds[axis.upper()] = openarr
 
         # recalculate all cell centers, and refresh face / edges
         sfx = self.CENTER["Cell"]
         for a in self.axes:
-            a = self.axis_name(a)  # validate input
-            ccarr = 0.5 * (self._crds[a][1:] + self._crds[a][:-1])
+            # a = self.axis_name(a)  # validate input
+            ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
             flatarr, openarr = self.ogrid_single(a, ccarr)
-            self._crds[a + sfx] = flatarr
-            self._crds[a.upper() + sfx] = openarr
+            self.__crds[a + sfx] = flatarr
+            self.__crds[a.upper() + sfx] = openarr
 
+        # ok, so this is a little recursive, but it's ok since we set
+        # __crds above, note however that now we only have nc and cc
+        # crds in __crds
         crds_nc = self.get_crd()
         crds_nc_shaped = self.get_crd(shaped=True)
         crds_cc = self.get_crd(center="Cell")
@@ -128,27 +154,28 @@ class StructuredCrds(Coordinates):
         # store references to face and edge centers while we're here
         sfx = self.CENTER["Face"]
         for i, a in enumerate(self.axes):
-            self._crds[a + sfx] = [None] * len(self.axes)
-            self._crds[a.upper() + sfx] = [None] * len(self.axes)
+            self.__crds[a + sfx] = [None] * len(self.axes)
+            self.__crds[a.upper() + sfx] = [None] * len(self.axes)
             for j, d in enumerate(self.axes): #pylint: disable=W0612
                 if i == j:
-                    self._crds[a + sfx][j] = crds_nc[i]
-                    self._crds[a.upper() + sfx][j] = crds_nc_shaped[i]
+                    self.__crds[a + sfx][j] = crds_nc[i]
+                    self.__crds[a.upper() + sfx][j] = crds_nc_shaped[i]
                 else:
-                    self._crds[a + sfx][j] = crds_cc[i]
-                    self._crds[a.upper() + sfx][j] = crds_cc_shaped[i]
+                    self.__crds[a + sfx][j] = crds_cc[i]
+                    self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
+
         # same as face, but swap nc with cc
-        sfx = self.CENTER["Face"]
+        sfx = self.CENTER["Edge"]
         for i, a in enumerate(self.axes):
-            self._crds[a + sfx] = [None] * len(self.axes)
-            self._crds[a.upper() + sfx] = [None] * len(self.axes)
+            self.__crds[a + sfx] = [None] * len(self.axes)
+            self.__crds[a.upper() + sfx] = [None] * len(self.axes)
             for j, d in enumerate(self.axes):
                 if i == j:
-                    self._crds[a + sfx][j] = crds_cc[i]
-                    self._crds[a.upper() + sfx][j] = crds_cc_shaped[i]
+                    self.__crds[a + sfx][j] = crds_cc[i]
+                    self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
                 else:
-                    self._crds[a + sfx][j] = crds_nc[i]
-                    self._crds[a.upper() + sfx][j] = crds_nc_shaped[i]
+                    self.__crds[a + sfx][j] = crds_nc[i]
+                    self.__crds[a.upper() + sfx][j] = crds_nc_shaped[i]
 
     def ogrid_single(self, axis, arr):
         """ returns (flat array, open array) """
@@ -227,7 +254,7 @@ class StructuredCrds(Coordinates):
         else:
             raise TypeError()
 
-    def make_slice(self, selection, use_cc=False, rm_len1_dims=False):
+    def make_slice(self, selection, use_cc=False, consolidate=False):
         """ use a selection dict that looks like:
         {'x': (0,12), 'y': 0.0, 'z': (-13.0, 13.0)}
         to get a list of slices and crds that one
@@ -237,7 +264,7 @@ class StructuredCrds(Coordinates):
          [['x', array(1, 2, 3)], ['y', array(0, 1)]],  # new clist
          [['z', 0.0]],  # list of coords that are taken out by the slices
         )
-        rm_len1_dims will automatically add directions with only
+        consolidate will automatically add directions with only
         one coord value to the selection dict. the idea is to auto reduce
         3d to 2d if the data is naturally 2d (one dicection has no depth)
         """
@@ -252,7 +279,7 @@ class StructuredCrds(Coordinates):
         for dind, axis in enumerate(self.axes):
             if not axis in selection:
                 n = len(self[axis + "cc"]) if use_cc else len(self[axis])
-                if rm_len1_dims and n == 1:
+                if consolidate and n == 1:
                     slices[dind] = np.s_[0]
                     slcrds[dind] = None
                     crdval = self[axis + "cc"][0] if use_cc else self[axis][0]
@@ -297,7 +324,7 @@ class StructuredCrds(Coordinates):
 
                 if len(sel) == 1:
                     ind = sel[0]
-                    if rm_len1_dims:
+                    if consolidate:
                         slices[dind] = np.s_[ind]
                         slcrds[dind] = None
                         loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
@@ -327,13 +354,13 @@ class StructuredCrds(Coordinates):
         # print(slices)
         # print("*** slices: ", slices)
         # print("*** crds: ", slcrds)
-        return tuple(slices), slcrds, reduced
+        return slices, slcrds, reduced
 
     def slice(self, selection, use_cc=False):
         slices, crdlst, reduced = self.make_slice(selection, use_cc=use_cc,
-                                                  rm_len1_dims=False)
+                                                  consolidate=False)
         # no slice necessary, just pass the field through
-        if list(slices) == [slice(None)] * len(slices):
+        if slices == [slice(None)] * len(slices):
             return self
         return wrap_crds(self.TYPE, crdlst)
 
@@ -347,6 +374,7 @@ class StructuredCrds(Coordinates):
             axis = [a.upper() if shaped else a for a in self.axes]
 
         sfx = self.CENTER[center]
+
         if isinstance(axis, (list, tuple)):
             return [self._crds[self.axis_name(a) + sfx] for a in axis]
         else:

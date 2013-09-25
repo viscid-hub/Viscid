@@ -100,6 +100,7 @@ magnitude = UnaryOperation("magnitude", "magnitude")
 dot = BinaryOperation("dot", "dot")
 cross = BinaryOperation("cross", "x")
 div = UnaryOperation("div", "div")
+curl = UnaryOperation("curl", "curl")
 
 if has_numexpr:
     add.add_implementation("numexpr", necalc.add)
@@ -114,10 +115,7 @@ if has_numexpr:
     dot.add_implementation("numexpr", necalc.dot)
     cross.add_implementation("numexpr", necalc.cross)
     div.add_implementation("numexpr", necalc.div)
-
-if has_cython:
-    magnitude.add_implementation("cython", cycalc.magnitude)
-    div.add_implementation("cython", cycalc.div)
+    curl.add_implementation("numexpr", necalc.curl)
 
 # numpy versions
 add.add_implementation("numpy", lambda a, b: a + b)

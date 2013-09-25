@@ -6,3 +6,6 @@ cimport numpy as np
 ctypedef fused real_t:
     np.float32_t
     np.float64_t
+
+# for debugging (faster compile) / making the C code more readable
+# ctypedef np.float32_t real_t

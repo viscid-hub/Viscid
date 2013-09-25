@@ -7,11 +7,12 @@ from __future__ import print_function
 import sys
 import os
 import glob
+import sysconfig
 from distutils.command.clean import clean
-
 from distutils import log
 from distutils.core import setup
 from distutils.extension import Extension
+
 import numpy as np
 
 from doc import ver
@@ -123,8 +124,24 @@ for d in cy_defs:
     ext_mods += [Extension(d[0], src_lst, extra_compile_args=cy_ccflags,
                            extra_link_args=cy_ldflags)]
 
+# hack for OSX pythons that are compiled with gcc symlinked to llvm-gcc
+if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
+    # The import is here since check_output is new in 2.7, so only break if
+    # we're already going down the rabbit hole
+    from subprocess import check_output, CalledProcessError, STDOUT
+    cc = sysconfig.get_config_var("CC")
+    try:
+        if "MacPorts" in check_output([cc, "--version"], stderr=STDOUT):
+            cc = "llvm-gcc"
+            cc = check_output(["which", cc]).strip()
+            os.environ["CC"] = cc
+            print("switching compiler to", cc)
+    except CalledProcessError:
+        print("I think there's a problem with your compiler ( CC =", cc, 
+              "), but I'll continue anyway...")
+
 setup(name='viscid',
-      version=ver.version,
+      version=ver.release,
       description='Visualization in python',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',

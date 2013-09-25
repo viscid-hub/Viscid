@@ -88,6 +88,12 @@ def field_to_source(fld):
 
     return src
 
+def plot_lines(pipeline, lines, **kwargs):
+    from mayavi import mlab
+
+    for line in lines:
+        mlab.plot3d(line[2], line[1], line[0], **kwargs)
+
 def mlab_earth(pipeline, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15):
     from mayavi.sources.builtin_surface import BuiltinSurface
 

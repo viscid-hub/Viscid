@@ -22,7 +22,7 @@ def plot(fld, selection=None, **kwargs):
     matplotlib plot given the field. returns the mpl plot and color bar
     as a tuple """
     if isinstance(fld, field.ScalarField):
-        fld = fld.slice(selection, rm_len1_dims=True)
+        fld = fld.slice(selection, consolidate=True)
         # print(selection)
         # print(fld.crds.shape, fld.shape)
 
@@ -125,7 +125,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             logging.warn("own axis doesn't seem to work yet...")
             
         else:
-            logging.warn("Unknown plot option {0}".format(opt[0]))
+            logging.warn("Unknown plot option ({0})".format(opt[0]))
 
     # things that i just want to be automagic...
     # use seismic cmap if the data looks centered around 0
@@ -144,7 +144,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
 def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
-                 colorbar=True, **kwargs):
+                 colorbar=True, rotate_plot=False, **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
 
     style: "pcolormesh", "contour", "pcolor", style of 2D plot
@@ -201,6 +201,11 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
 
     earth = kwargs.pop("earth", False)
+
+    if rotate_plot:
+        X, Y = Y.T, X.T
+        dat = dat.T
+        namex, namey = namey, namex
 
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, **kwargs)
@@ -306,6 +311,33 @@ def plot_streamlines(lines, ax=None, show=True, equal=False, **kwargs):
         ax.axis("equal")
     plt.xlabel("x")
     plt.ylabel("y")
+    if show:
+        plt.show()
+    return p, None
+
+def plot_streamlines2d(lines, symmetry_dir, ax=None, show=False, equal=False,
+                       rotate_plot=False, **kwargs):
+    if not ax:
+        ax = plt.gca()
+
+    for line in lines:
+        line = np.array(line)
+        if symmetry_dir.upper() == "X":
+            x = line[1]
+            y = line[0]
+        elif symmetry_dir.upper() == "Y":
+            x = line[2]
+            y = line[0]
+        elif symmetry_dir.upper() == "Z":
+            x = line[2]
+            y = line[1]
+        else:
+            raise ValueError("symmetry_dir should be x, y, or z")
+
+        if rotate_plot:
+            x, y = y, x
+        p = ax.plot(x, y, **kwargs)
+
     if show:
         plt.show()
     return p, None

@@ -62,7 +62,7 @@ class Field(object):
     _cache = None  # this will always be a numpy array
 
     def __init__(self, name, crds, data, center="Node", time=0.0,
-                 info=None, forget_source=False):
+                 info=None, forget_source=False, **kwargs):
         self.name = name
         self.center = center
         self.time = time
@@ -70,6 +70,8 @@ class Field(object):
         self.data = data
 
         self.info = {} if info is None else info
+        for k, v in kwargs.items():
+            self.info[k] = v
 
         if forget_source:
             self.source_data = self.data
@@ -183,27 +185,40 @@ class Field(object):
     #TODO: some method that gracefully gets the correct crd arrays for
     # face and edge centered fields
 
-    def slice(self, selection, rm_len1_dims=False):
+    def _augment_slices(self, slices): #pylint: disable=R0201
+        """ TODO: this is a crap mechanism to do vector slicing and should
+        disappear """
+        return slices
+
+    def slice(self, selection, consolidate=False):
         """ Select a slice of the data using selection dictionary.
         Returns a new field.
         """
         cc = (self.center == "Cell")
         slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
-                                                    rm_len1_dims=rm_len1_dims)
+                                                       consolidate=consolidate)
 
         # no slice necessary, just pass the field through
         if list(slices) == [slice(None)] * len(slices):
             return self
 
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
-        fld = self.wrap(self.data[slices],
-                                {"name": self.name + "_slice",
-                                 "crds": crds,
-                                })
-        # if there are reduced dims, put them into the info dict
-        if len(reduced) > 0:
-            fld.info["reduced"] = reduced
-        return fld
+        slices = self._augment_slices(slices)
+        # TODO: This can probably be done with a 'lazy slice'
+        
+        # if we sliced the hell out of the array, just 
+        # return the value that's left
+        if len(reduced) == len(slices):
+            return self.data[tuple(slices)]
+        else:
+            fld = self.wrap(self.data[tuple(slices)],
+                            {"name": self.name + "_slice",
+                             "crds": crds,
+                            })
+            # if there are reduced dims, put them into the info dict
+            if len(reduced) > 0:
+                fld.info["reduced"] = reduced
+            return fld
 
     def n_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center == "None":
@@ -244,17 +259,16 @@ class Field(object):
             return NotImplemented
         if context is None:
             context = {}
-        name = context.get("name", self.name)
-        crds = context.get("crds", self.crds)
-        center = context.get("center", self.center)
-        time = context.get("time", self.time)
-        info = context.get("time", self.info)
+        name = context.pop("name", self.name)
+        crds = context.pop("crds", self.crds)
+        center = context.pop("center", self.center)
+        time = context.pop("time", self.time)
         # should it always return the same type as self?
         if typ is None:
             typ = type(self)
         elif isinstance(typ, str):
             typ = field_type_from_str(typ)
-        return typ(name, crds, arr, time=time, center=center, info=info)
+        return typ(name, crds, arr, time=time, center=center, info=context)
 
     def __array_wrap__(self, out_arr, context=None):
         # print("wrapping")
@@ -337,6 +351,24 @@ class Field(object):
     def __invert__(self):
         return self.wrap(self.data.__invert__())
 
+    def any(self):
+        return self.data.any()
+    def all(self):
+        return self.data.all()
+
+    def __lt__(self, other):
+        return self.wrap(self.data.__lt__(other))
+    def __le__(self, other):
+        return self.wrap(self.data.__le__(other))
+    def __eq__(self, other):
+        return self.wrap(self.data.__eq__(other))
+    def __ne__(self, other):
+        return self.wrap(self.data.__ne__(other))
+    def __gt__(self, other):
+        return self.wrap(self.data.__gt__(other))
+    def __ge__(self, other):
+        return self.wrap(self.data.__ge__(other))  
+
 
 class ScalarField(Field):
     TYPE = "Scalar"
@@ -347,11 +379,16 @@ class VectorField(Field):
 
     _layout = None
     _ncomp = None
+    _compdim = None
 
-    def __init__(self, name, crds, data, **kwargs):        
+    def __init__(self, name, crds, data, **kwargs):
+        forget_source = kwargs.pop("forget_source", False)
         super(VectorField, self).__init__(name, crds, data, **kwargs)
         if not "force_layout" in self.info:
             self.info["force_layout"] = LAYOUT_DEFAULT
+        if forget_source:
+            self.source_data = self.data
+
 
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
@@ -360,16 +397,20 @@ class VectorField(Field):
 
     @property
     def ncomp(self):
+        return self.data.shape[self.compdim]
+
+    @property
+    def compdim(self):
+        """ dimension of the components of the vector """
         layout = self.layout
         if layout == LAYOUT_FLAT:
-            return self.data.shape[0]
+            return 0
         elif layout == LAYOUT_INTERLACED:
-            return self.data.shape[-1]
+            return self.crds.dim
         elif layout == LAYOUT_OTHER:
-            # print(self.name, self.layout)
             logging.warn("I don't know what your layout is, assuming vectors "
                          "are the last index (interleaved)...")
-            return self.data.shape[-1]
+            return self.crds.dim
 
     @property
     def layout(self):
@@ -392,7 +433,6 @@ class VectorField(Field):
 
         dat_layout = self.detect_layout(dat)
 
-        #print("Translating: ", self.name, "; detected layout is ", dat_layout)
 
         # we will preserve layout or we already have the correct layout,
         # do no translation... just like Field._translate_data
@@ -522,6 +562,13 @@ class VectorField(Field):
             return LAYOUT_FLAT
         else:
             return LAYOUT_OTHER
+
+    def _augment_slices(self, slices):
+        """ TODO: this is a crap mechanism to do vector slicing and should
+        disappear """
+        slices.insert(self.compdim, slice(None))
+        return slices
+
 
 class MatrixField(Field):
     TYPE = "Matrix"

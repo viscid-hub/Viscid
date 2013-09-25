@@ -1,6 +1,8 @@
 # Viscid #
 
-Python framework to visualize gridded scientific data.
+Python framework to visualize scientific data on structured meshes. At the moment,
+only rectilinear meshes defined in the xdmf format are supported, and support for
+other mesh types will be added as needed.
 
 File types:
 + XDMF + HDF5
@@ -8,7 +10,7 @@ File types:
 
 ## Install ##
 
-Dependancies:
+Dependencies:
 + numpy (required... for everything)
 + lxml (required, for xdmf support)
 + h5py (required, for reading hdf5 files)
