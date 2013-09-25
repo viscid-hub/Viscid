@@ -205,14 +205,20 @@ class Field(object):
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
         slices = self._augment_slices(slices)
         # TODO: This can probably be done with a 'lazy slice'
-        fld = self.wrap(self.data[slices],
-                                {"name": self.name + "_slice",
-                                 "crds": crds,
-                                })
-        # if there are reduced dims, put them into the info dict
-        if len(reduced) > 0:
-            fld.info["reduced"] = reduced
-        return fld
+        
+        # if we sliced the hell out of the array, just 
+        # return the value that's left
+        if len(reduced) == len(slices):
+            return self.data[tuple(slices)]
+        else:
+            fld = self.wrap(self.data[tuple(slices)],
+                            {"name": self.name + "_slice",
+                             "crds": crds,
+                            })
+            # if there are reduced dims, put them into the info dict
+            if len(reduced) > 0:
+                fld.info["reduced"] = reduced
+            return fld
 
     def n_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center == "None":
