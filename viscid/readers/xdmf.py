@@ -135,7 +135,7 @@ class FileXDMF(vfile.VFile):
     def _parse_grid(self, el, parent_grid=None, time=None):
         attrs = self._fill_attrs(el)
         grd = None
-        coords = None
+        crds = None
 
         # parse topology, or cascade parent grid's topology
         topology = el.find("./Topology")
@@ -223,8 +223,8 @@ class FileXDMF(vfile.VFile):
                 grd.topology_info = topoattrs
             if geoattrs is not None:
                 grd.geometry_info = geoattrs
-            if coords is not None:
-                grd.set_crds(coords)
+            if crds is not None:
+                grd.set_crds(crds)
             if parent_grid is not None:
                 parent_grid.add(grd)
 
@@ -234,7 +234,7 @@ class FileXDMF(vfile.VFile):
         """ geo is the element tree item, returns Coordinate object and
             xml attributes """
         geoattrs = self._fill_attrs(geo)
-        # coords = None
+        # crds = None
         crdlist = None
         crdtype = None
 
@@ -248,7 +248,7 @@ class FileXDMF(vfile.VFile):
         else:
             raise NotImplementedError("Unstructured grids not yet supported")
 
-        # parse geometry into coords
+        # parse geometry into crds
         geotype = geoattrs["GeometryType"]
         if geotype.upper() == "XYZ":
             data, attrs = self._parse_dataitem(geo.find("./DataItem"),

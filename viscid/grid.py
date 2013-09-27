@@ -24,7 +24,7 @@ class Grid(object):
         self.name = name
         self.fields = Bucket()
 
-        self.coords = None  # Coordinates()
+        self.crds = None  # Coordinates()
 
     def add_field(self, field):
         if isinstance(field, (list, tuple)):

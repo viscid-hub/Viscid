@@ -46,7 +46,7 @@ class Coordinates(object):
 
 class StructuredCrds(Coordinates):
     TYPE = "Structured"
-    CENTER = {None: "", "Node": "", "Cell": "cc", "Face": "fc", "Edge": "ec"}
+    CENTER = {None: "", "Node": "nc", "Cell": "cc", "Face": "fc", "Edge": "ec"}
     SUFFIXES = list(CENTER.values())
 
     _axes = ["z", "y", "x"]
@@ -120,11 +120,12 @@ class StructuredCrds(Coordinates):
             self._src_crds_nc[axis.lower()] = data
 
     def _fill_crds_dict(self):
-        """ do the math to calc node, cell, face, edge crds from 
+        """ do the math to calc node, cell, face, edge crds from
         the src crds """
         self.__crds = {}
 
         # get node centered crds from the src crds
+        sfx = self.CENTER["Node"]
         for axis, arr in self._src_crds_nc.items():
             # make axis into string representation
             # axis = self.axis_name(axis)
@@ -133,6 +134,9 @@ class StructuredCrds(Coordinates):
             flatarr, openarr = self.ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr
             self.__crds[axis.upper()] = openarr
+            # now with suffix
+            self.__crds[axis.lower() + sfx] = flatarr
+            self.__crds[axis.upper() + sfx] = openarr
 
         # recalculate all cell centers, and refresh face / edges
         sfx = self.CENTER["Cell"]
@@ -221,7 +225,7 @@ class StructuredCrds(Coordinates):
         if isinstance(selection, dict):
             return selection
         if isinstance(selection, slice):
-            return {self._axes[0]: selection}            
+            return {self._axes[0]: selection}
         elif selection is None or len(selection) == 0:
             return {}
         elif isinstance(selection, str):
@@ -369,7 +373,7 @@ class StructuredCrds(Coordinates):
         shaped makes axis capitalized and returns ogrid like crds
         shaped is only used if axis == None
         sfx can be None, Node, Cell, Face, Edge """
-        
+
         if axis == None:
             axis = [a.upper() if shaped else a for a in self.axes]
 
@@ -407,6 +411,11 @@ class StructuredCrds(Coordinates):
 
     def iter_points(self, center=None, **kwargs):
         return itertools.product(*self.get_crd(shaped=False, center=center))
+
+    def spill(self):
+        c = self.get_clist()
+        for l in c:
+            print(l[0])
 
     def __getitem__(self, axis):
         """ returns coord identified by axis """
