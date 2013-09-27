@@ -117,13 +117,13 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
         elif opt[0] == "own":
             logging.warn("own axis doesn't seem to work yet...")
-            
+
         elif opt[0] == "ownx":
             logging.warn("own axis doesn't seem to work yet...")
-            
+
         elif opt[0] == "owny":
             logging.warn("own axis doesn't seem to work yet...")
-            
+
         else:
             logging.warn("Unknown plot option ({0})".format(opt[0]))
 
@@ -368,7 +368,10 @@ def mplshow():
 
 def tighten():
     """ tightens the layout so that axis labels dont get plotted over """
-    plt.tight_layout()
+    try:
+        plt.tight_layout()
+    except AttributeError:
+        logging.warn("No matplotlib tight layout support")
 
 def plot_earth(fld, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crds="mhd"):
