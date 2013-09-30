@@ -92,6 +92,18 @@ class StructuredCrds(Coordinates):
         return [len(self[ax + "cc"]) for ax in self.axes]
 
     @property
+    def size(self):
+        return self.size_nc
+
+    @property
+    def size_nc(self):
+        return np.product(self.shape_nc)
+
+    @property
+    def size_cc(self):
+        return np.product(self.shape_cc)
+
+    @property
     def _crds(self):
         "!!! BIG NOTE: THIS PROPERTY IS STILL PRIVATE !!!"
         if self.__crds is None:
@@ -224,7 +236,7 @@ class StructuredCrds(Coordinates):
         # parse string to dict if necessary
         if isinstance(selection, dict):
             return selection
-        if isinstance(selection, slice):
+        elif isinstance(selection, (slice, int, float)):
             return {self._axes[0]: selection}
         elif selection is None or len(selection) == 0:
             return {}
@@ -329,13 +341,26 @@ class StructuredCrds(Coordinates):
                 if len(sel) == 1:
                     ind = sel[0]
                     if consolidate:
-                        slices[dind] = np.s_[ind]
+                        slices[dind] = ind
                         slcrds[dind] = None
                         loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
                         reduced.append([axis, loc])
-                        continue
+                        # print("mkslice int:", self.shape, selection, dind, slices[dind], slcrds[dind], loc, reduced)
                     else:
-                        slc = np.s_[ind:ind + 1]
+                        slices[dind] = [ind]
+                        if use_cc:
+                            # if cc slice, we need 2 crds, which is a little
+                            # awkward when using negative indices
+                            if ind == -1 or ind == -2:
+                                crd_slc = np.s_[-2:]
+                            else:
+                                crd_slc = np.s_[ind:ind + 2]
+                        else:
+                            crd_slc = [ind]  # ind
+                        slcrds[dind] = [axis, self[axis][crd_slc]]
+                    # continue if len(sel) == 1, we already set slices & slcrds
+                    continue
+
                 elif len(sel) == 2:
                     slc = np.s_[sel[0]:sel[1]]
                 elif len(sel) == 3:
@@ -343,6 +368,8 @@ class StructuredCrds(Coordinates):
                 else:
                     raise ValueError()
 
+            # if we're doing a cc slice, there needs to be one more crd
+            # than data element, so do an extra +1 on stop
             if use_cc and slc.stop is not None and slc.stop >= 0:
                 crd_slc = slice(slc.start, slc.stop + 1, slc.step)
             else:

@@ -104,6 +104,10 @@ class Field(object):
             return self.crds.shape
 
     @property
+    def size(self):
+        return np.product(self.shape)
+
+    @property
     def dtype(self):
         # print(type(self.source_data))
         if self._cache is not None:
@@ -205,13 +209,14 @@ class Field(object):
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
         slices = self._augment_slices(slices)
         # TODO: This can probably be done with a 'lazy slice'
-        
-        # if we sliced the hell out of the array, just 
+
+        # if we sliced the hell out of the array, just
         # return the value that's left
-        if len(reduced) == len(slices):
-            return self.data[tuple(slices)]
+        slced_dat = self.data[tuple(slices)]
+        if len(reduced) == len(slices) or slced_dat.size == 1:
+            return slced_dat
         else:
-            fld = self.wrap(self.data[tuple(slices)],
+            fld = self.wrap(slced_dat,
                             {"name": self.name + "_slice",
                              "crds": crds,
                             })
@@ -219,6 +224,10 @@ class Field(object):
             if len(reduced) > 0:
                 fld.info["reduced"] = reduced
             return fld
+
+    def consolidate_dims(self):
+        """ consolidate dimensions with length 1 in place """
+        raise NotImplementedError()
 
     def n_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center == "None":
@@ -239,6 +248,10 @@ class Field(object):
     def __exit__(self, typ, value, traceback):
         self.unload()
         return None
+
+    def __iter__(self):
+        for val in self.data.ravel():
+            yield val
 
     def __getitem__(self, item):
         if isinstance(item, str):
