@@ -115,7 +115,7 @@ class Field(object):
             if isinstance(dt, str):
                 return dt
             else:
-                return self.source_data[0].dtype.name            
+                return self.source_data[0].dtype.name
         else:
             # dtype.name is for pruning endianness out of dtype
             if isinstance(self.source_data, (list, tuple)):
@@ -267,9 +267,14 @@ class Field(object):
     ## emulate a numeric type
     def wrap(self, arr, context=None, typ=None):
         """ arr is the data to wrap... context is exta info to pass
-        to the constructor """
+        to the constructor. The return is just a number if arr is a
+        1 element ndarray, this is for ufuncs that reduce to a scalar """
         if arr is NotImplemented:
             return NotImplemented
+        # if just 1 number wrappen in an array, unpack the value and
+        # return it... this is more ufuncy behavior
+        if isinstance(arr, np.ndarray) and arr.size == 1:
+            return np.ravel(arr)[0]
         if context is None:
             context = {}
         name = context.pop("name", self.name)
@@ -380,7 +385,7 @@ class Field(object):
     def __gt__(self, other):
         return self.wrap(self.data.__gt__(other))
     def __ge__(self, other):
-        return self.wrap(self.data.__ge__(other))  
+        return self.wrap(self.data.__ge__(other))
 
 
 class ScalarField(Field):
