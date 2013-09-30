@@ -7,7 +7,7 @@ from distutils.version import LooseVersion
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
+from matplotlib.colors import Normalize, LogNorm
 from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from .. import field
@@ -77,7 +77,9 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             if fld.dim == 1:
                 axis.set_ylim(*opt[1:])
             elif fld.dim == 2:
-                kwargs["norm"] = plt.normalize(*opt[1:])
+                # plt.normalize is deprecated
+                # kwargs["norm"] = plt.normalize(*opt[1:])
+                kwargs["norm"] = Normalize(*opt[1:])
 
         elif opt[0] == "log":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
