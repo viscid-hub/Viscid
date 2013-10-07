@@ -439,7 +439,7 @@ class StructuredCrds(Coordinates):
     def iter_points(self, center=None, **kwargs):
         return itertools.product(*self.get_crd(shaped=False, center=center))
 
-    def spill(self):
+    def print_tree(self):
         c = self.get_clist()
         for l in c:
             print(l[0])

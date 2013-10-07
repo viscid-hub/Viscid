@@ -20,11 +20,11 @@ def main():
     print()
 
     files = readers.load(args.files)
-    readers.__filebucket__.spill()
+    readers.__filebucket__.print_tree()
     print()
-    
+
     for f in files:
-        f.spill(recursive=True)
+        f.print_tree(recursive=True)
 
 if __name__ == "__main__":
     main()
