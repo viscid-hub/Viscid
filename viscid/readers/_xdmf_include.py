@@ -4,9 +4,21 @@
 # limited support for XPointers.
 
 import copy
-import code
 import logging
 from xml.etree import ElementTree
+try:
+    from urlparse import urljoin #pylint: disable=E0611
+    from urllib2 import urlopen #pylint: disable=E0611
+except ImportError:
+    # Python 3
+    from urllib.parse import urljoin #pylint: disable=E0611,F0401
+    from urllib.request import urlopen #pylint: disable=E0611,F0401
+
+try:
+    set
+except NameError:
+    # Python 2.3
+    from sets import Set as set #pylint: disable=W0622
 
 XINCLUDE = "{http://www.w3.org/2001/XInclude}"
 
@@ -16,24 +28,36 @@ XINCLUDE_FALLBACK = XINCLUDE + "fallback"
 class FatalIncludeError(SyntaxError):
     pass
 
-def default_loader(href, parse, xi_elem, encoding=None):
-    # code.interact(local=locals())
+def _xdmf_default_loader(href, parse, encoding=None, parser=None):
     try:
         if parse == "xml":
-            data = ElementTree.parse(href).getroot()
+            data = ElementTree.parse(href, parser).getroot()
         else:
-            with open(href) as f:
-                data = f.read()
-                if encoding:
-                    data = data.decode(encoding)
+            if "://" in href:
+                with urlopen(href) as f:
+                    data = f.read()
+            else:
+                with open(href, 'rb') as f:
+                    data = f.read()
+
+            if not encoding:
+                encoding = 'utf-8'
+            data = data.decode(encoding)
     except IOError:
         # as far as I care, if a file doesn't exist, that's ok
         data = None
     return data
 
-def include(elem, loader=None):
+def include(elem, loader=None, base_url="./", _parent_hrefs=None):
+    """ base_url is just a file path """
     if loader is None:
-        loader = default_loader
+        loader = _xdmf_default_loader
+
+    # TODO: for some nested includes, urljoin is adding an extra / which
+    # means this way of detecting infinite recursion doesn't work
+    if _parent_hrefs is None:
+        _parent_hrefs = set()
+
     # look for xinclude elements
     i = 0
     while i < len(elem):
@@ -41,10 +65,16 @@ def include(elem, loader=None):
         if e.tag == XINCLUDE_INCLUDE:
             # process xinclude directive
             href = e.get("href")
+            href = urljoin(base_url, href)
             parse = e.get("parse", "xml")
             pointer = e.get("xpointer", None)
 
             if parse == "xml":
+                if href in _parent_hrefs:
+                    raise FatalIncludeError(
+                        "recursive include of {0} detected".format(href)
+                        )
+                _parent_hrefs.add(href)
                 node = loader(href, parse, e)
 
                 if node is None:
@@ -68,6 +98,9 @@ def include(elem, loader=None):
                 else:
                     node = copy.copy(node)
 
+                # recursively look for xincludes in the included element
+                include(node, loader, href, _parent_hrefs)
+
                 if e.tail:
                     node.tail = (node.tail or "") + e.tail
                 elem[i] = node
@@ -90,7 +123,7 @@ def include(elem, loader=None):
                     "unknown parse type in xi:include tag (%r)" % parse
                 )
         else:
-            include(e, loader)
+            include(e, loader, base_url, _parent_hrefs)
         i = i + 1
 
 ##

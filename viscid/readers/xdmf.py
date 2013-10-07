@@ -8,14 +8,6 @@ from xml.etree import ElementTree
 import _xdmf_include
 
 import numpy as np
-try:
-    raise ImportError
-    from lxml import etree
-    HAS_LXML = True
-except ImportError:
-    HAS_LXML = False
-    logging.info("lxml library not found, xdmf support (XInclude & XPath) "
-                 "will be limited.")
 
 from . import vfile
 from .vfile_bucket import VFileBucket
@@ -107,27 +99,17 @@ class FileXDMF(vfile.VFile):
         super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
 
     def _parse(self):
-        if HAS_LXML:
-            # sweet, you have it... use the better xml library
-            tree = etree.parse(self.fname)
-            #print(self.tree)
-            tree.xinclude()  # TODO: implement with built in xml stuff
-                                  # and do xpointer by hand?
-            #print(self.tree)
-            root = tree.getroot()
-        else:
-            # Fall back on element tree from default xml
-            tree = ElementTree.parse(self.fname)
-            root = tree.getroot()
-            # ElementInclude.include(root)  # this won't work by default
-
-            # change directory so xincludes are relative to the xml file
-            # this is a hack, the paths should be figured out inside the
-            # include module
-            old_pwd = os.getcwd()
-            os.chdir(os.path.dirname(self.fname))
-            _xdmf_include.include(root)
-            os.chdir(old_pwd)
+        # lxml has better xpath support, so it's preferred, but it stops
+        # if an xinclude doesn't exist, so for now use our custom extension
+        # of the default python xml lib
+        # if HAS_LXML:
+        #     # sweet, you have it... use the better xml library
+        #     tree = etree.parse(self.fname) #pylint: disable=E0602
+        #     tree.xinclude()  # TODO: gracefully ignore include problems
+        #     root = tree.getroot()
+        tree = ElementTree.parse(self.fname)
+        root = tree.getroot()
+        _xdmf_include.include(root, base_url=self.fname)
 
         # search for all root grids, and parse them
         domain_grids = root.findall("./Domain/Grid")
@@ -360,7 +342,7 @@ class FileXDMF(vfile.VFile):
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
             h5file = self.vfilebucket.load(fname, index_handle=False)
-            arr = h5file.get_data(loc)
+            arr = h5file.get_data(loc)  #pylint: disable=E1103
             return arr, attrs
 
         if fmt == "Binary":

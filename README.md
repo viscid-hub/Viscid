@@ -12,7 +12,6 @@ File types:
 
 Dependencies:
 + numpy (required... for everything)
-+ lxml (required, for xdmf support)
 + h5py (required, for reading hdf5 files)
 + matplotlib (optional, if you import viscid.plot.mpl)
 + mayavi2 (optional, if you import viscid.plot.mvi)
