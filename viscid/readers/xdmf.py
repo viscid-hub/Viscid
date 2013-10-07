@@ -4,16 +4,18 @@
 from __future__ import print_function
 import os
 import logging
+from xml.etree import ElementTree
+import _xdmf_include
 
+import numpy as np
 try:
+    raise ImportError
     from lxml import etree
     HAS_LXML = True
 except ImportError:
     HAS_LXML = False
-    logging.warn("lxml library not found, no xdmf support.")
-
-
-import numpy as np
+    logging.info("lxml library not found, xdmf support (XInclude & XPath) "
+                 "will be limited.")
 
 from . import vfile
 from .vfile_bucket import VFileBucket
@@ -26,7 +28,6 @@ from .. import field
 #     def set_precision():
 #         nptype = np.dtype({'Float': 'float', 'Int': 'int', 'UInt': 'unit',
 #                'Char': 'int', 'UChar': 'int'}[numbertype] + str(8*precision))
-
 
 class FileXDMF(vfile.VFile):
     """ on init, parse an xdmf file into datasets, grids, and fields """
@@ -90,7 +91,7 @@ class FileXDMF(vfile.VFile):
             }
         }
 
-    tree = None
+    # tree = None
 
     def __init__(self, fname, vfilebucket=None, **kwargs):
         """ vfilebucket is a bucket for loading any hdf5 files. it can be
@@ -106,12 +107,27 @@ class FileXDMF(vfile.VFile):
         super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
 
     def _parse(self):
-        self.tree = etree.parse(self.fname)
-        #print(self.tree)
-        self.tree.xinclude()  # TODO: implement with built in xml stuff
-                              # and do xpointer by hand?
-        #print(self.tree)
-        root = self.tree.getroot()
+        if HAS_LXML:
+            # sweet, you have it... use the better xml library
+            tree = etree.parse(self.fname)
+            #print(self.tree)
+            tree.xinclude()  # TODO: implement with built in xml stuff
+                                  # and do xpointer by hand?
+            #print(self.tree)
+            root = tree.getroot()
+        else:
+            # Fall back on element tree from default xml
+            tree = ElementTree.parse(self.fname)
+            root = tree.getroot()
+            # ElementInclude.include(root)  # this won't work by default
+
+            # change directory so xincludes are relative to the xml file
+            # this is a hack, the paths should be figured out inside the
+            # include module
+            old_pwd = os.getcwd()
+            os.chdir(os.path.dirname(self.fname))
+            _xdmf_include.include(root)
+            os.chdir(old_pwd)
 
         # search for all root grids, and parse them
         domain_grids = root.findall("./Domain/Grid")

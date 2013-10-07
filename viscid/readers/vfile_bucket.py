@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 import os
+import logging
 # import sys
 
 from ..bucket import Bucket
@@ -53,7 +54,10 @@ class VFileBucket(Bucket):
                     s = "IOError on file: {0}\n".format(absfname)
                     s += "File Type: {0}\n".format(ftype)
                     s += e.message
-                    raise IOError(s)
+                    logging.error(s)
+                except ValueError:
+                    pass
+                #     raise IOError(s)
 
             if f is not None:
                 self.set_item([absfname, fname], f, index_handle=index_handle)
