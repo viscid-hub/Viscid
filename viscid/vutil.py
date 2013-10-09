@@ -5,8 +5,6 @@ from itertools import islice
 from timeit import default_timer as time
 import logging
 
-from . import verror
-
 tree_prefix = ".   "
 
 def find_field(vfile, fld_name_lst):
@@ -15,8 +13,7 @@ def find_field(vfile, fld_name_lst):
     for fld_name in fld_name_lst:
         if fld_name in vfile:
             return vfile[fld_name]
-    raise verror.FieldNotFound("file {0} contains none of "
-                               "{1}".format(vfile, fld_name_lst))
+    raise KeyError("file {0} contains none of {1}".format(vfile, fld_name_lst))
 
 def common_argparse(parser, **kwargs):
     """ add some common verbosity stuff to argparse, parse the

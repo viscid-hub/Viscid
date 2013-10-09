@@ -4,7 +4,6 @@
 from __future__ import print_function
 
 from .bucket import Bucket
-from . import verror
 from .vutil import tree_prefix
 
 class Grid(object):
@@ -79,10 +78,7 @@ class Grid(object):
         return self.crds[handle]
 
     def get_field(self, fldname, time=None): #pylint: disable=W0613
-        try:
-            return self.fields[fldname]
-        except KeyError:
-            raise verror.FieldNotFound("{0} not found".format(fldname))
+        return self.fields[fldname]
 
     def __contains__(self, item):
         return item in self.fields
@@ -93,7 +89,7 @@ class Grid(object):
         elif self.crds is not None and item in self.crds:
             return self.get_crd(item)
         else:
-            raise verror.FieldNotFound("{0} not found".format(item))
+            raise KeyError(item)
 
     def __str__(self):
         return "<Grid name={0}>".format(self.name)
