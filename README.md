@@ -11,6 +11,7 @@ File types:
 ## Install ##
 
 Dependencies:
++ Python 2.6+
 + numpy (required... for everything)
 + h5py (required, for reading hdf5 files)
 + matplotlib (optional, if you import viscid.plot.mpl)
