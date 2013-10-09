@@ -6,7 +6,10 @@ flexable would be useful down the line? """
 
 from __future__ import print_function
 import logging
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ..compat import OrderedDict
 
 import numpy as np
 
