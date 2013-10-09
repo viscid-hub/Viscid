@@ -265,22 +265,30 @@ class FileXDMF(vfile.VFile):
             crdlist = (('z', z), ('y', y), ('x', x))
 
         elif geotype.upper() == "X_Y_Z":
-            crdlist = [None] * 3
-            for i, crd in enumerate(['Z', 'Y', 'X']):
-                di = geo.find("./dataitem[@name='{0}']".format(crd))
-                if di is None:
-                    raise RuntimeError("expected a V{0} element".format(crd))
+            crdlookup = {'z': 0, 'y': 1, 'x': 2}
+            crdlist = [['z', None], ['y', None], ['x', None]]
+            # can't use ./DataItem[@Name='X'] so python2.6 works
+            dataitems = geo.findall("./DataItem")
+            for di in dataitems:
+                crd_name = di.attrib["Name"].lower()
                 data, attrs = self._parse_dataitem(di, keep_flat=True)
-                crdlist[i] = (crd.lower(), data)
+                crdlist[crdlookup.pop(crd_name)][1] = data
+            if len(crdlookup) > 0:
+                raise RuntimeError("XDMF format error: Coords not specified "
+                                   "for {0} dimesions".format(crdlookup.keys()))
 
         elif geotype.upper() == "VXVYVZ":
-            crdlist = [None] * 3
-            for i, crd in enumerate(['Z', 'Y', 'X']):
-                di = geo.find("./DataItem[@Name='V{0}']".format(crd))
-                if di is None:
-                    raise RuntimeError("expected a V{0} element".format(crd))
+            crdlookup = {'z': 0, 'y': 1, 'x': 2}
+            crdlist = [['z', None], ['y', None], ['x', None]]
+            # can't use ./DataItem[@Name='VX'] so python2.6 works
+            dataitems = geo.findall("./DataItem")
+            for di in dataitems:
+                crd_name = di.attrib["Name"].lstrip('V').lower()
                 data, attrs = self._parse_dataitem(di, keep_flat=True)
-                crdlist[i] = (crd.lower(), data)
+                crdlist[crdlookup.pop(crd_name)][1] = data
+            if len(crdlookup) > 0:
+                raise RuntimeError("XDMF format error: Coords not specified "
+                                   "for {0} dimesions".format(crdlookup.keys()))
 
         elif geotype.upper() == "ORIGIN_DXDYDZ":
             # this is for rectilinear grids with uniform spacing
