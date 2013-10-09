@@ -26,14 +26,14 @@ def wrap_crds(typ, clist):
     """  """
     # print(len(clist), clist[0][0], len(clist[0][1]), typ)
     for cls in vutil.subclass_spider(Coordinates):
-        if cls.TYPE == typ:
+        if cls.TYPE == typ.lower():
             # return an instance
             return cls(clist)
     raise NotImplementedError("can not decipher crds")
 
 
 class Coordinates(object):
-    TYPE = "None"
+    TYPE = "none"
 
     __crds = None
 
@@ -45,8 +45,9 @@ class Coordinates(object):
 
 
 class StructuredCrds(Coordinates):
-    TYPE = "Structured"
-    CENTER = {None: "", "Node": "nc", "Cell": "cc", "Face": "fc", "Edge": "ec"}
+    TYPE = "structured"
+    CENTER = {"none": "", "node": "nc", "cell": "cc",
+              "face": "fc", "edge": "ec"}
     SUFFIXES = list(CENTER.values())
 
     _axes = ["z", "y", "x"]
@@ -137,7 +138,7 @@ class StructuredCrds(Coordinates):
         self.__crds = {}
 
         # get node centered crds from the src crds
-        sfx = self.CENTER["Node"]
+        sfx = self.CENTER["node"]
         for axis, arr in self._src_crds_nc.items():
             # make axis into string representation
             # axis = self.axis_name(axis)
@@ -151,7 +152,7 @@ class StructuredCrds(Coordinates):
             self.__crds[axis.upper() + sfx] = openarr
 
         # recalculate all cell centers, and refresh face / edges
-        sfx = self.CENTER["Cell"]
+        sfx = self.CENTER["cell"]
         for a in self.axes:
             # a = self.axis_name(a)  # validate input
             ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
@@ -168,7 +169,7 @@ class StructuredCrds(Coordinates):
         crds_cc_shaped = self.get_crd(shaped=True, center="Cell")
 
         # store references to face and edge centers while we're here
-        sfx = self.CENTER["Face"]
+        sfx = self.CENTER["face"]
         for i, a in enumerate(self.axes):
             self.__crds[a + sfx] = [None] * len(self.axes)
             self.__crds[a.upper() + sfx] = [None] * len(self.axes)
@@ -181,7 +182,7 @@ class StructuredCrds(Coordinates):
                     self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
 
         # same as face, but swap nc with cc
-        sfx = self.CENTER["Edge"]
+        sfx = self.CENTER["edge"]
         for i, a in enumerate(self.axes):
             self.__crds[a + sfx] = [None] * len(self.axes)
             self.__crds[a.upper() + sfx] = [None] * len(self.axes)
@@ -395,16 +396,16 @@ class StructuredCrds(Coordinates):
             return self
         return wrap_crds(self.TYPE, crdlst)
 
-    def get_crd(self, axis=None, shaped=False, center=None):
+    def get_crd(self, axis=None, shaped=False, center="none"):
         """ if axis is not specified, return all coords,
         shaped makes axis capitalized and returns ogrid like crds
         shaped is only used if axis == None
-        sfx can be None, Node, Cell, Face, Edge """
+        sfx can be none, node, cell, face, edge """
 
         if axis == None:
             axis = [a.upper() if shaped else a for a in self.axes]
 
-        sfx = self.CENTER[center]
+        sfx = self.CENTER[center.lower()]
 
         if isinstance(axis, (list, tuple)):
             return [self._crds[self.axis_name(a) + sfx] for a in axis]
@@ -424,7 +425,7 @@ class StructuredCrds(Coordinates):
             slce = slice(None)
         return [[axis, self.get_crd(axis)[slce]] for axis in self.axes]
 
-    def points(self, center=None):
+    def points(self, center="none"):
         crds = self.get_crd(shaped=False, center=center)
         shape = [len(c) for c in crds]
         arr = np.empty([len(shape)] + [np.prod(shape)])
@@ -433,10 +434,10 @@ class StructuredCrds(Coordinates):
                                 np.prod(shape[i + 1:]))
         return arr
 
-    def n_points(self, center=None):
+    def n_points(self, center="none"):
         return np.prod([len(crd) for crd in self.get_crd(center=center)])
 
-    def iter_points(self, center=None, **kwargs):
+    def iter_points(self, center="none", **kwargs):
         return itertools.product(*self.get_crd(shaped=False, center=center))
 
     def print_tree(self):
@@ -456,7 +457,7 @@ class StructuredCrds(Coordinates):
 
 
 class RectilinearCrds(StructuredCrds):
-    TYPE = "Rectilinear"
+    TYPE = "rectilinear"
     _axes = ["z", "y", "x"]
 
     def __init__(self, init_clist=None, **kwargs):
@@ -464,7 +465,7 @@ class RectilinearCrds(StructuredCrds):
 
 
 class CylindricalCrds(StructuredCrds):
-    TYPE = "Cylindrical"
+    TYPE = "cylindrical"
     _axes = ["z", "theta", "r"]
 
     def __init__(self, init_clist=None, **kwargs):
@@ -472,7 +473,7 @@ class CylindricalCrds(StructuredCrds):
 
 
 class SphericalCrds(StructuredCrds):
-    TYPE = "Spherical"
+    TYPE = "spherical"
     _axes = ["phi", "theta", "r"]
 
     def __init__(self, init_clist=None, **kwargs):
@@ -480,7 +481,7 @@ class SphericalCrds(StructuredCrds):
 
 
 class UnstructuredCrds(Coordinates):
-    TYPE = "Unstructured"
+    TYPE = "unstructured"
 
     def __init__(self, **kwargs):
         super(UnstructuredCrds, self).__init__(**kwargs)

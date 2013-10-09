@@ -28,7 +28,7 @@ from viscid.plot import mpl
 dtype = 'float64'
 
 def run_mpl_testA(show=False):
-    logging.info("2D Cell centered tests")
+    logging.info("2D cell centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
@@ -59,7 +59,7 @@ def run_mpl_testA(show=False):
         mpl.mplshow()
 
 def run_mpl_testB(show=False):
-    logging.info("3D Node centered tests")
+    logging.info("3D node centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)

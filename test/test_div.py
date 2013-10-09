@@ -89,7 +89,7 @@ def main():
     Z, Y, X = crds.get_crd(shaped=True)
     Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell")
 
-    logging.info("Cell centered tests")
+    logging.info("cell centered tests")
 
     vx = ne.evaluate("(sin(Xcc))")  # + Zcc
     vy = ne.evaluate("(cos(Ycc))")  # + Xcc# + Zcc
@@ -107,7 +107,7 @@ def main():
                                   center="Cell", forget_source=True)
     run_div_test(fld_v, fld_exact, show=args.show)
 
-    logging.info("Node centered tests")
+    logging.info("node centered tests")
 
     vx = ne.evaluate("(sin(X))")  # + Zcc
     vy = ne.evaluate("(cos(Y))")  # + Xcc# + Zcc

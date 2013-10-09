@@ -80,7 +80,7 @@ def main():
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y),
                                                 ('x', x)))
 
-    logging.info("Testing Node centered magnitudes")
+    logging.info("Testing node centered magnitudes")
     Z, Y, X = crds.get_crd(shaped=True)
 
     vx = 0.5 * X**2 + Y
@@ -93,7 +93,7 @@ def main():
                              )
     run_mag_test(fld_v, show=args.show)
 
-    logging.info("Testing Cell centered magnitudes")
+    logging.info("Testing cell centered magnitudes")
     Z, Y, X = crds.get_crd(shaped=True, center="Cell")
 
     vx = 0.5 * X**2 + Y

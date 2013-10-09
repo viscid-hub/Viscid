@@ -64,12 +64,12 @@ def streamlines(fld, seed, nproc=1, **kwargs):
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.dim != 3:
         raise ValueError("Streamlines are only written in 3D.")
-    if fld.center != "Cell":
+    if fld.center.lower() != "cell":
         raise ValueError("Can only trace cell centered things...")
 
     dat = fld.data
     dtype = dat.dtype
-    center = "Cell"
+    center = "cell"
     crdz, crdy, crdx = fld.crds.get_crd(center=center)
     n_streams = seed.n_points(center=center)
 

@@ -96,16 +96,16 @@ def trilin_interp(fld, seeds):
     The data type of the output is the same as the original field.
     The output is always an array, even if only one point is given.
     """
-    if fld.center == "Cell":
+    if fld.center.lower() == "cell":
         crdz, crdy, crdx = fld.crds.get_crd(center="Cell")
-    elif fld.center == "Node":
+    elif fld.center.lower() == "node":
         crdz, crdy, crdx = fld.crds.get_crd()
     else:
         raise RuntimeError("Dont touch me with that centering.")
 
     dtype = fld.dtype
 
-    if fld.TYPE == "Vector":
+    if fld.TYPE.lower() == "vector":
         if not fld.layout == field.LAYOUT_INTERLACED:
             raise ValueError("Trilin interp only written for interlaced data.")
         ncomp = fld.ncomp
@@ -119,7 +119,7 @@ def trilin_interp(fld, seeds):
                                 npts)
         return ret
 
-    elif fld.TYPE == "Scalar":
+    elif fld.TYPE.lower() == "scalar":
         dat = fld.data.reshape(fld.shape + [1])
         npts = seeds.n_points(center=fld.center)
         ret = np.empty((npts,), dtype=dtype)

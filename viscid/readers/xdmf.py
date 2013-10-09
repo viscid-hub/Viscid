@@ -28,7 +28,7 @@ class FileXDMF(vfile.VFile):
         "Attribute": {
             "Name": None,
             "AttributeType": "Scalar",  # Vector,Tensor,Tensor6,Matrix,GlobalID
-            "Center": "Node"  # Cell,Grid,Face,Edge
+            "Center": "node"  # cell,Grid,face,edge
             },
         "DataItem": {
             "Name": None,

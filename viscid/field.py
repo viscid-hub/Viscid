@@ -13,14 +13,14 @@ import numpy as np
 from . import coordinate
 from . import vutil
 
-LAYOUT_DEFAULT = None  # do not translate
-LAYOUT_INTERLACED = "Interlaced"
-LAYOUT_FLAT = "Flat"
-LAYOUT_OTHER = "Other"
+LAYOUT_DEFAULT = "none"  # do not translate
+LAYOUT_INTERLACED = "interlaced"
+LAYOUT_FLAT = "flat"
+LAYOUT_OTHER = "other"
 
 def field_type_from_str(typ_str):
     for cls in vutil.subclass_spider(Field):
-        if cls.TYPE == typ_str:
+        if cls.TYPE == typ_str.lower():
             return cls
     logging.warn("Field type {0} not understood".format(typ_str))
     return None
@@ -49,11 +49,11 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
 
 
 class Field(object):
-    TYPE = "None"
-    CENTERING = ['Node', 'Cell', 'Grid', 'Face', 'Edge']
+    TYPE = "none"
+    CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
 
     name = None  # String
-    center = None  # String in CENTERING
+    center = "none"  # String in CENTERING
     crds = None  # Coordinate object
     time = None  # float
     info = None  # dict
@@ -64,7 +64,7 @@ class Field(object):
     def __init__(self, name, crds, data, center="Node", time=0.0,
                  info=None, forget_source=False, **kwargs):
         self.name = name
-        self.center = center
+        self.center = center.lower()
         self.time = time
         self.crds = crds
         self.data = data
@@ -94,12 +94,12 @@ class Field(object):
         # it is enforced that the cached data has a shape that agrees with
         # the coords by _reshape_ndarray_to_crds... actually, that method
         # requires this method to depend on the crd shape
-        if self.center == "Node":
+        if self.center.lower() == "node":
             return list(self.crds.shape_nc)
-        elif self.center == "Cell":
+        elif self.center.lower() == "cell":
             return list(self.crds.shape_cc)
         else:
-            logging.warn("Edge/Face vectors not implemented, assuming "
+            logging.warn("edge/face vectors not implemented, assuming "
                          "node shape")
             return self.crds.shape
 
@@ -198,7 +198,7 @@ class Field(object):
         """ Select a slice of the data using selection dictionary.
         Returns a new field.
         """
-        cc = (self.center == "Cell")
+        cc = (self.center.lower() == "cell")
         slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
                                                        consolidate=consolidate)
 
@@ -229,13 +229,13 @@ class Field(object):
         """ consolidate dimensions with length 1 in place """
         raise NotImplementedError()
 
-    def n_points(self, center=None, **kwargs): #pylint: disable=W0613
-        if center == "None":
+    def n_points(self, center="none", **kwargs): #pylint: disable=W0613
+        if center.lower() == "none":
             center = self.center
         return self.crds(center=center)
 
-    def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
-        if center == "None":
+    def iter_points(self, center="none", **kwargs): #pylint: disable=W0613
+        if center.lower() == "none":
             center = self.center
         return self.crds.iter_points(center=center)
 
@@ -389,11 +389,11 @@ class Field(object):
 
 
 class ScalarField(Field):
-    TYPE = "Scalar"
+    TYPE = "scalar"
 
 
 class VectorField(Field):
-    TYPE = "Vector"
+    TYPE = "vector"
 
     _layout = None
     _ncomp = None
@@ -421,11 +421,11 @@ class VectorField(Field):
     def compdim(self):
         """ dimension of the components of the vector """
         layout = self.layout
-        if layout == LAYOUT_FLAT:
+        if layout.lower() == LAYOUT_FLAT:
             return 0
-        elif layout == LAYOUT_INTERLACED:
+        elif layout.lower() == LAYOUT_INTERLACED:
             return self.crds.dim
-        elif layout == LAYOUT_OTHER:
+        elif layout.lower() == LAYOUT_OTHER:
             logging.warn("I don't know what your layout is, assuming vectors "
                          "are the last index (interleaved)...")
             return self.crds.dim
@@ -454,20 +454,20 @@ class VectorField(Field):
 
         # we will preserve layout or we already have the correct layout,
         # do no translation... just like Field._translate_data
-        if self.info["force_layout"] == LAYOUT_DEFAULT or \
-           self.info["force_layout"] == dat_layout:
+        if self.info["force_layout"].lower() == LAYOUT_DEFAULT or \
+           self.info["force_layout"].lower() == dat_layout:
             self._layout = dat_layout
             return self._dat_to_ndarray(dat)
 
         # if layout is found to be other, i cant do anything with that
-        elif dat_layout == LAYOUT_OTHER:
+        elif dat_layout.lower() == LAYOUT_OTHER:
             logging.warn("Cannot auto-detect layout; not translating; "
                          "performance may suffer")
             self._layout = LAYOUT_OTHER
             return self._dat_to_ndarray(dat)
 
         # ok, we demand FLAT arrays, make it so
-        elif self.info["force_layout"] == LAYOUT_FLAT:
+        elif self.info["force_layout"].lower() == LAYOUT_FLAT:
             if dat_layout != LAYOUT_INTERLACED:
                 raise RuntimeError("should not be here")
 
@@ -482,7 +482,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # ok, we demand INTERLACED arrays, make it so
-        elif self.info["force_layout"] == LAYOUT_INTERLACED:
+        elif self.info["force_layout"].lower() == LAYOUT_INTERLACED:
             if dat_layout != LAYOUT_FLAT:
                 raise RuntimeError("should not be here")
 
@@ -501,7 +501,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # catch the remaining cases
-        elif self.info["force_layout"] == LAYOUT_OTHER:
+        elif self.info["force_layout"].lower() == LAYOUT_OTHER:
             raise RuntimeError("How should I know how to force other layout?")
         else:
             raise ValueError("Bad argument for layout forcing")
@@ -516,9 +516,9 @@ class VectorField(Field):
         # place and self.data hasn't been set yet, because this has to happen
         # first... like an ouroboros
         # NOTE: this logic is hideous, there must be a better way
-        if self._layout == LAYOUT_FLAT:
+        if self._layout.lower() == LAYOUT_FLAT:
             target_shape = [arr.shape[0]] + target_shape
-        elif self._layout == LAYOUT_INTERLACED:
+        elif self._layout.lower() == LAYOUT_INTERLACED:
             target_shape = target_shape + [arr.shape[-1]]
         else:
             # assuming flat?
@@ -533,9 +533,9 @@ class VectorField(Field):
         """ return numpy views to components individually, memory layout
         of the original field is maintained """
         ncomp = self.ncomp
-        if self.layout == LAYOUT_FLAT:
+        if self.layout.lower() == LAYOUT_FLAT:
             return [self.data[i, ...] for i in range(ncomp)]
-        elif self.layout == LAYOUT_INTERLACED:
+        elif self.layout.lower() == LAYOUT_INTERLACED:
             return [self.data[..., i] for i in range(ncomp)]
         else:
             return [self.data[..., i] for i in range(ncomp)]
@@ -589,11 +589,11 @@ class VectorField(Field):
 
 
 class MatrixField(Field):
-    TYPE = "Matrix"
+    TYPE = "matrix"
 
 
 class TensorField(Field):
-    TYPE = "Tensor"
+    TYPE = "tensor"
 
 
 ##

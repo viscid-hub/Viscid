@@ -12,7 +12,7 @@ from .. import field
 #     """ get a data source from a scalar field """
 #     dat = tvtk.RectilinearGrid()
 #
-#     suffix = "cc" if fld.center == "Cell" else ""
+#     suffix = "cc" if fld.center.lower() == "cell" else ""
 #     dat.x_coordinates = fld.crds['x' + suffix]
 #     dat.y_coordinates = fld.crds['y' + suffix]
 #     dat.z_coordinates = fld.crds['z' + suffix]
@@ -60,14 +60,14 @@ def field_to_source(fld):
 
     # at the moment, everything is point data
     # TODO: fix up for cell data
-    if fld.center == "Cell":
+    if fld.center.lower() == "cell":
         dat_center = grid.point_data
         # grid.dimensions is x, y, z not z, y, x
         grid.dimensions = tuple(fld.crds.shape_cc[::-1])
         grid.x_coordinates = fld.crds['xcc']
         grid.y_coordinates = fld.crds['ycc']
         grid.z_coordinates = fld.crds['zcc']
-    elif fld.center == "Node":
+    elif fld.center.lower() == "node":
         dat_center = grid.point_data
         # grid.dimensions is x, y, z not z, y, x
         grid.dimensions = tuple(fld.crds.shape_nc[::-1])
@@ -75,7 +75,7 @@ def field_to_source(fld):
         grid.y_coordinates = fld.crds['y']
         grid.z_coordinates = fld.crds['z']
     else:
-        raise ValueError("Cell or Node only please")
+        raise ValueError("cell or node only please")
 
     if isinstance(fld, field.ScalarField):
         dat_center.scalars = arr
