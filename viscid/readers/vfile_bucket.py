@@ -28,6 +28,7 @@ class VFileBucket(Bucket):
             not add to the _objs list
 
             kwargs is passed to file constructor """
+        f = None
         ret_as_list = True
         if not isinstance(fnames, (list, tuple)):
             fnames = [fnames]
