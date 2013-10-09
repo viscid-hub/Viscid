@@ -101,7 +101,7 @@ def chunk_iterator(iter_list, nel):
     return ret
 
 def subclass_spider(cls):
-    """ return recursive list of subclasses of cls """
+    """ return recursive list of subclasses of cls (depth first) """
     sub_classes = cls.__subclasses__()
     lst = [cls]
     for c in sub_classes:
