@@ -1,7 +1,11 @@
 from __future__ import print_function
 import multiprocessing as mp
-import itertools
 import logging
+import itertools
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 from . import readers
 from . import verror
@@ -105,15 +109,15 @@ def _do_multiplot_star(all_args):
 
 def multiplot(files, plot_vars, np=1, time_slice=":", global_popts=None,
               share_axes=False, show=False, kwopts=None):
-    grid_iter = itertools.izip(
-                               itertools.count(),
-                               files[0].iter_times(time_slice),
-                               itertools.repeat(plot_vars),
-                               itertools.repeat(global_popts),
-                               itertools.repeat(share_axes),
-                               itertools.repeat(show),
-                               itertools.repeat(kwopts),
-                              )
+    grid_iter = izip(
+                     itertools.count(),
+                     files[0].iter_times(time_slice),
+                     itertools.repeat(plot_vars),
+                     itertools.repeat(global_popts),
+                     itertools.repeat(share_axes),
+                     itertools.repeat(show),
+                     itertools.repeat(kwopts),
+                    )
     if np == 1:
         for args in grid_iter:
             _do_multiplot_star(args)

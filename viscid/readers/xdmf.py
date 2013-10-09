@@ -275,7 +275,8 @@ class FileXDMF(vfile.VFile):
                 crdlist[crdlookup.pop(crd_name)][1] = data
             if len(crdlookup) > 0:
                 raise RuntimeError("XDMF format error: Coords not specified "
-                                   "for {0} dimesions".format(crdlookup.keys()))
+                                   "for {0} dimesions"
+                                   "".format(list(crdlookup.keys())))
 
         elif geotype.upper() == "VXVYVZ":
             crdlookup = {'z': 0, 'y': 1, 'x': 2}
@@ -288,7 +289,8 @@ class FileXDMF(vfile.VFile):
                 crdlist[crdlookup.pop(crd_name)][1] = data
             if len(crdlookup) > 0:
                 raise RuntimeError("XDMF format error: Coords not specified "
-                                   "for {0} dimesions".format(crdlookup.keys()))
+                                   "for {0} dimesions"
+                                   "".format(list(crdlookup.keys())))
 
         elif geotype.upper() == "ORIGIN_DXDYDZ":
             # this is for rectilinear grids with uniform spacing

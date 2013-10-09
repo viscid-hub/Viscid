@@ -3,6 +3,10 @@
 
 from __future__ import print_function
 import itertools
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 import numpy as np
 
@@ -37,7 +41,7 @@ class SeedGen(object):
         take twice the time to iterate over a generator, than to use a for loop
         over indices of an array, but only if the array already exists """
         pts = self.points()
-        return itertools.izip(pts[0, :], pts[1, :], pts[2, :])
+        return izip(pts[0, :], pts[1, :], pts[2, :])
 
     def n_points(self, **kwargs):
         raise NotImplementedError()
