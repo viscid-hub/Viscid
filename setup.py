@@ -7,11 +7,12 @@ from __future__ import print_function
 import sys
 import os
 import glob
-import sysconfig
+from subprocess import Popen, CalledProcessError, STDOUT, PIPE
 from distutils.command.clean import clean
 from distutils import log
 from distutils.core import setup
 from distutils.extension import Extension
+from distutils import sysconfig
 
 import numpy as np
 
@@ -161,15 +162,15 @@ for d in cy_defs:
 
 # hack for OSX pythons that are compiled with gcc symlinked to llvm-gcc
 if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
-    # The import is here since check_output is new in 2.7, so only break if
-    # we're already going down the rabbit hole
-    from subprocess import check_output, CalledProcessError, STDOUT
     cc = sysconfig.get_config_var("CC")
     try:
-        if "MacPorts" in check_output([cc, "--version"], stderr=STDOUT):
+        cc_version = Popen([cc, "--version"], stdout=PIPE,
+                            stderr=PIPE).communicate()[0].decode()
+        if "MacPorts" in cc_version:
             cc = "llvm-gcc"
-            cc = check_output(["which", cc]).strip()
+            cc = Popen(["which", cc], stdout=PIPE).communicate()[0].strip()
             os.environ["CC"] = cc
+            cc = cc.decode()
             print("switching compiler to", cc)
     except CalledProcessError:
         print("I think there's a problem with your compiler ( CC =", cc,
