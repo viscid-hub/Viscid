@@ -19,7 +19,7 @@ def main():
     # logging.debug(args)
     print()
 
-    files = readers.load(args.files)
+    files = readers.load_files(args.files)
     readers.__filebucket__.print_tree()
     print()
 

@@ -89,7 +89,7 @@ class FileXDMF(vfile.VFile):
         """ vfilebucket is a bucket for loading any hdf5 files. it can be
         None if you want the bucket to be local to this Dataset, but if you're
         loading a bunch of files, you should really be using a global bucket,
-        as something like in readers.load(file) """
+        as something like in readers.load_file(file) """
 
         if vfilebucket is None:
             # gen an empty bucket on the fly if the calling script
@@ -351,7 +351,7 @@ class FileXDMF(vfile.VFile):
             fname, loc = item.text.strip().split(':')
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
-            h5file = self.vfilebucket.load(fname, index_handle=False)
+            h5file = self.vfilebucket.load_file(fname, index_handle=False)
             arr = h5file.get_data(loc)  #pylint: disable=E1103
             return arr, attrs
 

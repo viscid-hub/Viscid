@@ -208,7 +208,7 @@ def main():
     z1 = -5.0; z2 = 5.0 #pylint: disable=C0321
     vol = seed.Volume((z1, y1, x1), (z2, y2, x2), gsize)
 
-    f3d = readers.load("/Users/kmaynard/dev/work/t1/t1.3df.004320.xdmf")
+    f3d = readers.load_file("/Users/kmaynard/dev/work/t1/t1.3df.004320.xdmf")
     fld_bx = f3d["bx"]
     fld_by = f3d["by"]
     fld_bz = f3d["bz"]

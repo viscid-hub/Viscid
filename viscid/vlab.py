@@ -11,7 +11,7 @@ from . import readers
 from . import verror
 
 def load_vfile(fname):
-    readers.load(fname)
+    readers.load_file(fname)
 
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                   show=False, kwopts=None):

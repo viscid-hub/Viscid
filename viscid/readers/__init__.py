@@ -17,10 +17,24 @@ from . import xdmf
 
 __filebucket__ = vfile_bucket.VFileBucket()
 
+def load(fnames):
+    from warnings import warn
+    # this is not a deprecated warning since by default those aren't shown
+    # and i want this to be a loud and clear do not use :)
+    warn("readers.load deprecated in favor of load_file or load_files",
+         stacklevel=2)
+    files = load_files(fnames)
+    if isinstance(fnames, (list, tuple)):
+        return files
+    else:
+        return files[0]
 
-def load(fname):
-    """ This function is the primary means of loading a file """
-    fle = __filebucket__.load(fname)
-    return fle
+def load_file(fname):
+    """ Load a single file and return a vFille.
+    This function is the primary means of loading a file. """
+    return __filebucket__.load_file(fname)
 
-# load = load_vfile
+def load_files(fnames):
+    """ Load a single file and return a vFille.
+    This function is the primary means of loading a file. """
+    return __filebucket__.load_files(fnames)

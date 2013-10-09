@@ -113,11 +113,11 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser) #pylint: disable=W0612
 
-    # f3d = readers.load(_viscid_root + '/../../sample/sample.3df.xdmf')
+    # f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
     # b3d = f3d['b']
     # bx, by, bz = b3d.component_fields() #pylint: disable=W0612
 
-    f3d = readers.load("/Users/kmaynard/dev/work/t1/t1.3df.004320.xdmf")
+    f3d = readers.load_file("/Users/kmaynard/dev/work/t1/t1.3df.004320.xdmf")
     bx = f3d["bx"]
     by = f3d["by"]
     bz = f3d["bz"]

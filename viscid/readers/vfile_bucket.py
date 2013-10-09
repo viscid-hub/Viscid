@@ -22,20 +22,23 @@ class VFileBucket(Bucket):
     #     absfname = os.path.abspath(fname)
     #     self[(absfname, fname)] = f
 
-    def load(self, fnames, index_handle=True, **kwargs):
+    def load_file(self, fname, index_handle=True, **kwargs):
+        """ load a single file and return a vFile instance, not a list
+        of vFiles like load does """
+        return self.load_files([fname], index_handle=index_handle, **kwargs)[0]
+
+    def load_files(self, fnames, index_handle=True, **kwargs):
         """ initialize obj before it's put into the list, whatever is returned
             is what gets stored, returning None means object init failed, do
             not add to the _objs list
 
             kwargs is passed to file constructor """
-        f = None
-        ret_as_list = True
         if not isinstance(fnames, (list, tuple)):
             fnames = [fnames]
-            ret_as_list = False
-        files = []
+        file_lst = []
 
         for fname in fnames:
+            f = None
             absfname = os.path.abspath(fname)
 
             # if the file was already loaded, return it
@@ -62,9 +65,6 @@ class VFileBucket(Bucket):
 
             if f is not None:
                 self.set_item([absfname, fname], f, index_handle=index_handle)
-            files.append(f)
+            file_lst.append(f)
 
-        if ret_as_list:
-            return files
-        else:
-            return files[0]
+        return file_lst

@@ -22,7 +22,7 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = readers.load(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
 
     if "b" in f3d:
         b = f3d["b"]
