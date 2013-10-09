@@ -15,7 +15,7 @@ def sillyfunc(real_t[:] num, dtype, seeds, switch):
     if switch == 0:
         if isinstance(seeds, seed.SeedGen):
             # recast the seed data type... this should be done better...
-            x0 = seeds.points.astype(dtype)    
+            x0 = seeds.points.astype(dtype)
         else:
             seeds_lst = list(seeds.iter_points())
             x0 = np.array(seeds_lst, dtype=dtype).reshape((-1, 3))
@@ -42,6 +42,6 @@ def sillyfunc(real_t[:] num, dtype, seeds, switch):
             it += 1
     print("total iterations: ", it)
     return val
-    
+
 cdef csillyfunc(real_t[:] arr):
     return arr[0] + arr[1] + arr[2]

@@ -20,7 +20,7 @@ from viscid.plot import mvi
 def main():
     parser = argparse.ArgumentParser(description="Test calc")
     parser.add_argument("--show", "--plot", action="store_true")
-    args = vutil.common_argparse(parser)    
+    args = vutil.common_argparse(parser)
 
     f3d = readers.load(_viscid_root + '/../../sample/sample.3df.xdmf')
 

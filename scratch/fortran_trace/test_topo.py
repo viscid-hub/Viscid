@@ -51,9 +51,9 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
     logging.info("topo")
     logging.info(topo.strides)
     logging.info(topo.shape)
-    
+
     t0 = time()
-    tracer.get_topo(gx, gy, gz, bx_farr, by_farr, bz_farr, topo, 
+    tracer.get_topo(gx, gy, gz, bx_farr, by_farr, bz_farr, topo,
                     x1, x2, y1, y2, z1, z2, nsegs)
     t1 = time()
 
@@ -129,7 +129,7 @@ def main():
         cProfile.runctx("lines, topo_fort = trace_fortran(bx, by, bz)",
                         globals(), locals(), "topo_fort.prof")
         s = pstats.Stats("topo_fort.prof")
-        s.strip_dirs().sort_stats("cumtime").print_stats(10)        
+        s.strip_dirs().sort_stats("cumtime").print_stats(10)
     else:
         lines, topo_fort = trace_fortran(bx, by, bz)
 
@@ -141,14 +141,14 @@ def main():
         s.strip_dirs().sort_stats("cumtime").print_stats(15)
     else:
         lines, topo_cy = trace_cython(bx, by, bz)
-        print("Same? ",(np.ravel(topo_fort.data, order='K') == 
-                        np.ravel(topo_cy.data, order='K')).all())        
+        print("Same? ",(np.ravel(topo_fort.data, order='K') ==
+                        np.ravel(topo_cy.data, order='K')).all())
 
     # print("Numba...")
     # t, nsegs, lines, topo_nb = trace_numba(bx, by, bz)
     # print("total segments calculated: ", nsegs)
     # print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
-    # print("Same? ",(np.ravel(topo_fort.data, order='K') == 
+    # print("Same? ",(np.ravel(topo_fort.data, order='K') ==
     #                 np.ravel(topo_nb.data, order='K')).all())
 
 if __name__ == "__main__":

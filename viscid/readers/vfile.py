@@ -40,7 +40,7 @@ class DataWrapper(object):
 
     def __getitem__(self, item):
         raise NotImplementedError()
-        
+
 
 class VFile(Dataset):
     # _detector is a regex string used for file type detection

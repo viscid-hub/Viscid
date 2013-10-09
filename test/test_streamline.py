@@ -56,7 +56,7 @@ def get_dipole(m=None, twod=False):
 def main():
     parser = argparse.ArgumentParser(description="Load some data files")
     parser.add_argument('files', nargs="*", help='input files')
-    parser.add_argument("--show", "--plot", action="store_true")    
+    parser.add_argument("--show", "--plot", action="store_true")
     parser.add_argument("--old", action="store", type=int)
     args = vutil.common_argparse(parser)
     args = parser.parse_args()
@@ -78,7 +78,7 @@ def main():
                                          tol_lo=5e-3, tol_hi=2e-1,
                                          fac_refine=0.75, fac_coarsen=1.5)
     t1 = time()
-    logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0)) 
+    logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
     mpl.plot_streamlines(lines, show=args.show)
 
     logging.info("Testing field lines on 3d field...")
@@ -90,7 +90,7 @@ def main():
                                          ds0=0.01, ibound=0.1, maxit=10000,
                                          method=streamline.RK12,
                                          output=streamline.OUTPUT_STREAMLINES,
-                                         tol_lo=1e-3, tol_hi=1e-2, 
+                                         tol_lo=1e-3, tol_hi=1e-2,
                                          fac_refine=0.75, fac_coarsen=2.0)
     t1 = time()
     logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
@@ -105,7 +105,7 @@ def main():
     t0 = time()
     interp_vals = cycalc.trilin_interp(bmag, plane)
     t1 = time()
-    logging.info("plane interp took {0:.3e}s to compute.".format(t1 - t0))  
+    logging.info("plane interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
     mpl.scatter_3d(plane.points(), interp_vals, show=args.show)
@@ -114,7 +114,7 @@ def main():
     t0 = time()
     interp_vals = cycalc.trilin_interp(bmag, vol)
     t1 = time()
-    logging.info("volume interp took {0:.3e}s to compute.".format(t1 - t0))  
+    logging.info("volume interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
     mpl.scatter_3d(vol.points(), interp_vals, show=args.show)
@@ -125,7 +125,7 @@ def main():
     t0 = time()
     interp_vals = cycalc.trilin_interp(bmag, sphere)
     t1 = time()
-    logging.info("sphere interp took {0:.3e}s to compute.".format(t1 - t0))  
+    logging.info("sphere interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
     mpl.scatter_3d(sphere.points(), interp_vals, show=args.show)

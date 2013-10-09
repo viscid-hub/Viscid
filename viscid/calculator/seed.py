@@ -3,6 +3,10 @@
 
 from __future__ import print_function
 import itertools
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 
 import numpy as np
 
@@ -37,7 +41,7 @@ class SeedGen(object):
         take twice the time to iterate over a generator, than to use a for loop
         over indices of an array, but only if the array already exists """
         pts = self.points()
-        return itertools.izip(pts[0, :], pts[1, :], pts[2, :])
+        return izip(pts[0, :], pts[1, :], pts[2, :])
 
     def n_points(self, **kwargs):
         raise NotImplementedError()
@@ -64,7 +68,7 @@ class Point(SeedGen):
 
     def n_points(self, **kwargs):
         return self.points().shape[-1]
-        
+
     def gen_points(self):
         pts = self.params["points"]
         if isinstance(pts, np.ndarray):
@@ -73,7 +77,7 @@ class Point(SeedGen):
             elif pts.shape[-1] == 3:
                 return np.array(pts.T).reshape((3, -1))
             else:
-                raise ValueError("Malformed points")                
+                raise ValueError("Malformed points")
         else:
             pts_arr = np.array(pts, dtype=self.dtype)
             if pts_arr.shape[0] == 3:
@@ -151,7 +155,7 @@ class Plane(SeedGen):
         len_l = self.params["len_l"]
         len_m = self.params["len_m"]
         res_l = self.params["res_l"]
-        res_m = self.params["res_m"]        
+        res_m = self.params["res_m"]
         p0 = np.array(self.params["p0"]).reshape((3, 1))
 
         if (Ndir == Ldir).all():
@@ -232,10 +236,10 @@ class Volume(SeedGen):
 
     def as_coordinates(self):
         z, y, x = self._make_arrays()
-        crd = coordinate.wrap_crds("Rectilinear", 
+        crd = coordinate.wrap_crds("Rectilinear",
                                    (('z', z), ('y', y), ('x', x)))
         return crd
-        
+
 
 class Sphere(SeedGen):
     def __init__(self, p0, r, restheta=20, resphi=20, cache=False):
@@ -254,7 +258,7 @@ class Sphere(SeedGen):
         restheta = self.params["restheta"]
         resphi = self.params["resphi"]
 
-        theta = np.linspace(0, np.pi, restheta + 1, 
+        theta = np.linspace(0, np.pi, restheta + 1,
                             endpoint=True).astype(self.dtype)
         theta = 0.5 * (theta[1:] + theta[:-1])
         phi = np.linspace(0, 2.0 * np.pi, resphi,

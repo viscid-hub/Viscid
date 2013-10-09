@@ -5,7 +5,7 @@ from __future__ import print_function
 
 from .bucket import Bucket
 from . import verror
-from .vutil import spill_prefix
+from .vutil import tree_prefix
 
 class Grid(object):
     """ Grids contain fields... Datasets recurse to grids using __getitem__
@@ -24,7 +24,7 @@ class Grid(object):
         self.name = name
         self.fields = Bucket()
 
-        self.coords = None  # Coordinates()
+        self.crds = None  # Coordinates()
 
     def add_field(self, field):
         if isinstance(field, (list, tuple)):
@@ -61,8 +61,8 @@ class Grid(object):
                 with fld as f:
                     yield f
 
-    def spill(self, recursive=False, prefix=""):
-        self.fields.spill(prefix=prefix + spill_prefix)
+    def print_tree(self, recursive=False, prefix=""):
+        self.fields.print_tree(prefix=prefix + tree_prefix)
 
     # def add_fields(self, name_field_list):
     #     """ input: [(name, data), (name1, name2, data), ...] """

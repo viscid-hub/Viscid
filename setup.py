@@ -7,11 +7,12 @@ from __future__ import print_function
 import sys
 import os
 import glob
-import sysconfig
+from subprocess import Popen, CalledProcessError, STDOUT, PIPE
 from distutils.command.clean import clean
 from distutils import log
 from distutils.core import setup
 from distutils.extension import Extension
+from distutils import sysconfig
 
 import numpy as np
 
@@ -64,9 +65,40 @@ cy_defs.append(["viscid.calculator.streamline",
 ############################################################################
 # below this line shouldn't need to be changed except for version and stuff
 
+# FIXME: these should be distutils commands, but they're not
+try:
+    i = sys.argv.index("dev")
+    sys.argv[i] = "build_ext"
+    sys.argv.insert(i + 1, "-i")
+    sys.argv.insert(i + 1, "--with-cython")
+    if not has_cython:
+        raise RuntimeError("dev builds imply you have cython, try just using "
+                           "'build_ext -i --with-cython' for the most general "
+                           "build (use cython if you have it)")
+except ValueError:
+    pass
+
+try:
+    i = sys.argv.index("devclean")
+    sys.argv[i] = "clean"
+    sys.argv.insert(i + 1, "-a")
+    sys.argv.insert(i + 1, "--with-cython")
+    if not has_cython:
+        raise RuntimeError("devclean imply you have cython, try just using "
+                           "'clean -a --with-cython' for the most general case "
+                           "(clean .c files if you have cython)")
+except ValueError:
+    pass
+
+try:
+    sys.argv.remove("--with-cython")
+    use_cython = True
+except ValueError:
+    use_cython = False
+
 # decide which extension to add to cython sources (pyx or c)
 cy_ext = ".c"  # or ".cpp"?
-if has_cython:
+if has_cython and use_cython:
     cy_ext = ".pyx"
     cmdclass["build_ext"] = build_ext
 
@@ -84,6 +116,10 @@ for i, d in enumerate(cy_defs):
             cy_defs[i] = None
             break
 
+    # remove cythonic dependancies if we're not using cython
+    if not (has_cython and use_cython):
+        for j, dep in reversed(list(enumerate(d[2]))):
+            d[2].pop(j)
 
 # get clean to remove inplace files
 class Clean(clean):
@@ -103,7 +139,7 @@ class Clean(clean):
                         os.unlink(fn)
 
                 # remove c files if has_cython
-                if has_cython:
+                if has_cython and use_cython:
                     for f in ext.sources:
                         if f[-4:] == ".pyx":
                             for rm_ext in ['.c', '.cpp']:
@@ -126,18 +162,18 @@ for d in cy_defs:
 
 # hack for OSX pythons that are compiled with gcc symlinked to llvm-gcc
 if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
-    # The import is here since check_output is new in 2.7, so only break if
-    # we're already going down the rabbit hole
-    from subprocess import check_output, CalledProcessError, STDOUT
     cc = sysconfig.get_config_var("CC")
     try:
-        if "MacPorts" in check_output([cc, "--version"], stderr=STDOUT):
+        cc_version = Popen([cc, "--version"], stdout=PIPE,
+                            stderr=PIPE).communicate()[0].decode()
+        if "MacPorts" in cc_version:
             cc = "llvm-gcc"
-            cc = check_output(["which", cc]).strip()
+            cc = Popen(["which", cc], stdout=PIPE).communicate()[0].strip()
             os.environ["CC"] = cc
+            cc = cc.decode()
             print("switching compiler to", cc)
     except CalledProcessError:
-        print("I think there's a problem with your compiler ( CC =", cc, 
+        print("I think there's a problem with your compiler ( CC =", cc,
               "), but I'll continue anyway...")
 
 setup(name='viscid',

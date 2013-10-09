@@ -7,7 +7,7 @@ import logging
 
 from . import verror
 
-spill_prefix = ".   "
+tree_prefix = ".   "
 
 def find_field(vfile, fld_name_lst):
     """ convenience function to get a field that could be called many things
@@ -51,9 +51,9 @@ def chunk_list(seq, nchunks):
     """
     slice seq into chunks if nchunks size, seq can be a anything sliceable
     such as lists, numpy arrays, etc.
-    Note: Use chunk_iterator to chunk up iterators 
+    Note: Use chunk_iterator to chunk up iterators
     Returns: nchunks slices of length N = (len(lst) // nchunks) or N - 1
-    
+
     ex: it1, it2, it3 = chunk_list(range(8), 3)
     it1 == range(0, 2)  # 2 vals
     it2 == range(2, 5)  # 3 vals
@@ -78,7 +78,7 @@ def chunk_iterator(iter_list, nel):
     iter_list: list of independant iterators (not pointers to the
                same iterator a la [it]*nchunks), one for each chunk
                you want. They should all contain the same data... the
-               returned iterators will be these iterators isliced to the 
+               returned iterators will be these iterators isliced to the
                right location / length
     nel: how many elements are in one pass of the original iterators
     nchunks: is inferred from the length of iter_list

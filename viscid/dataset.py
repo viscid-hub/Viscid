@@ -8,7 +8,7 @@ import logging
 import numpy as np
 
 from .bucket import Bucket
-from .vutil import spill_prefix
+from .vutil import tree_prefix
 
 class Dataset(object):
     """ datasets contain grids or other datasets
@@ -91,10 +91,10 @@ class Dataset(object):
         else:
             return child.iter_fields(time=time, named=named)
 
-    def spill(self, recursive=True, prefix=""):
+    def print_tree(self, recursive=True, prefix=""):
         if prefix == "":
             print(self)
-            prefix += spill_prefix
+            prefix += tree_prefix
 
         for child in self.children:
             suffix = ""
@@ -102,7 +102,7 @@ class Dataset(object):
                 suffix = " <-- active"
             print("{0}{1}{2}".format(prefix, child, suffix))
             if recursive:
-                child.spill(recursive=True, prefix=prefix + spill_prefix)
+                child.print_tree(recursive=True, prefix=prefix + tree_prefix)
 
     # def get_non_dataset(self):
     #     """ recurse down datasets until active_grid is not a subclass
@@ -253,10 +253,10 @@ class DatasetTemporal(Dataset):
         else:
             return child.iter_fields(time=time, named=named)
 
-    def spill(self, recursive=True, prefix=""):
+    def print_tree(self, recursive=True, prefix=""):
         if prefix == "":
             print(self)
-            prefix += spill_prefix
+            prefix += tree_prefix
 
         for child in self.children:
             suffix = ""
@@ -264,7 +264,7 @@ class DatasetTemporal(Dataset):
                 suffix = " <-- active"
             print("{0}{1} (t={2}){3}".format(prefix, child, child[0], suffix))
             if recursive:
-                child[1].spill(recursive=True, prefix=prefix + spill_prefix)
+                child[1].print_tree(recursive=True, prefix=prefix + tree_prefix)
 
     def get_field(self, fldname, time=None):
         """ recurse down active children to get a field """

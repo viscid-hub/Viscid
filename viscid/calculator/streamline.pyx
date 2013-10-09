@@ -3,9 +3,12 @@
 from __future__ import print_function
 from timeit import default_timer as time
 import logging
+from multiprocessing import Pool
+import itertools
 
 import numpy as np
 
+from .. import vutil
 from .. import field
 from . import seed
 
@@ -26,23 +29,26 @@ EULER1A = 4
 
 DIR_FORWARD = 1
 DIR_BACKWARD = 2
-DIR_BOTH = 3
+DIR_BOTH = 3  # = DIR_FORWARD | DIR_BACKWARD
 
 OUTPUT_STREAMLINES = 1
 OUTPUT_TOPOLOGY = 2
-OUTPUT_BOTH = 3
+OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
+# topology will be 1+ of these flags unary or-ed together
 END_NONE = 0  # not ended yet
-END_IBOUND_NORTH = 1  # unused
-END_IBOUND_SOUTH = 2  # unused
+END_IBOUND_NORTH = 1
+END_IBOUND_SOUTH = 2
 END_IBOUND = 4
 END_OBOUND = 8
-END_OTHER = 16  # ??
+END_OTHER = 16  # anything > END_OTHER will be END_OTHER | END_*
 END_MAXIT = 32
 END_ZERO_LENGTH = 64
 END_CYCLIC = 128
 
-# these are not used, and are too specialized to be here
+# since TOPOLGY is a bitmask, these values are only one of possible values
+# for each state
+# Note: these are not used, and are too specialized to be here
 TOPOLOGY_INVALID = 1 # 1, 2, 3, 4, 9, 10, 11, 12, 15
 TOPOLOGY_CLOSED = 7 # 5 (both N), 6 (both S), 7(both hemispheres)
 TOPOLOGY_SW = 8
@@ -53,26 +59,70 @@ TOPOLOGY_OTHER = 16 # >= 16
 
 #####################
 # now the good stuff
-
-def streamlines(fld, seeds, *args, **kwargs):
+def streamlines(fld, seed, nproc=1, **kwargs):
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.dim != 3:
         raise ValueError("Streamlines are only written in 3D.")
     if fld.center != "Cell":
         raise ValueError("Can only trace cell centered things...")
-    
+
     dat = fld.data
     dtype = dat.dtype
     center = "Cell"
     crdz, crdy, crdx = fld.crds.get_crd(center=center)
-    return _py_streamline(dtype, dat, crdz, crdy, crdx, seeds, center,
-                          *args, **kwargs)
+    n_streams = seed.n_points(center=center)
+
+    if nproc == 1:
+        seed_iter = seed.iter_points(center=center)
+        return _py_streamline(dtype, dat, crdz, crdy, crdx, seed_iter,
+                              n_streams, **kwargs)
+    else:
+        logging.warning("Parallel streamlines are super not ready for prime "
+                        "time. They may eat your cat.")
+        iter_list = [seed.iter_points(center=center) for i in range(nproc)]
+        seed_iters = vutil.chunk_iterator(iter_list, n_streams)
+        n_streams_it = [len(l) for l in vutil.chunk_list(range(n_streams), nproc)]
+        grid_iter = itertools.izip(
+                                   itertools.repeat(dtype),
+                                   itertools.repeat(dat),
+                                   itertools.repeat(crdz),
+                                   itertools.repeat(crdy),
+                                   itertools.repeat(crdx),
+                                   seed_iters,
+                                   n_streams_it,
+                                   itertools.repeat(kwargs)
+                                  )
+
+        # FIXME: this will turn the seed generator into a list, this will eat
+        # some time and memory, but generators aren't pickelable, so maybe
+        # there is a better way to do this
+        for i in range(len(seed_iters)):
+            seed_iters[i] = list(seed_iters[i])
+
+        p = Pool(nproc)
+        r = p.map(_do_streamline_star, grid_iter)
+
+        if r[0][0] is not None:
+            lines = np.concatenate([ri[0] for ri in r])
+        else:
+            lines = None
+
+        if r[0][1] is not None:
+            topo = np.concatenate([ri[1] for ri in r])
+        else:
+            topo = None
+
+        return lines, topo
+
+@cython.wraparound(True)
+def _do_streamline_star(args):
+    return _py_streamline(*(args[:-1]), **(args[-1]))
 
 @cython.wraparound(True)
 def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                    real_t[:] crdz, real_t[:] crdy, real_t[:] crdx,
-                   seeds, center, ds0=-1.0, ibound=0.0,
+                   seed_iter, int n_streams, ds0=-1.0, ibound=0.0,
                    obound0=None, obound1=None, maxit=10000,
                    stream_dir=DIR_BOTH, output=OUTPUT_BOTH, method=EULER1,
                    tol_lo=1e-3, tol_hi=1e-2, fac_refine=0.75, fac_coarsen=2.0):
@@ -106,7 +156,6 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                       int[3])
         int i, j, it
         int i_stream
-        int n_streams = seeds.n_points(center=center)
         int nprogress = max(n_streams / 50, 1)  # progerss at every 5%
         int nsegs = 0
 
@@ -179,7 +228,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
     # t0_all = time()
     t0 = time()
 
-    for i_stream, seed_pt in enumerate(seeds.iter_points(center=center)):
+    for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
             logging.info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
@@ -273,13 +322,13 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         if line_mv is not None:
             # if i_stream == 0:
             #     print("myzero", line_ends_mv[0], line_ends_mv[1], end_flags)
-            line_cat = np.concatenate((line_mv[0, :, line_ends_mv[0] + 1:], 
+            line_cat = np.concatenate((line_mv[0, :, line_ends_mv[0] + 1:],
                                        line_mv[1, :, :line_ends_mv[1]]), axis=1)
             lines.append(line_cat)
 
         if topology_mv is not None:
             topology_mv[i_stream] = end_flags
-            # logging.info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags, 
+            # logging.info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags,
             #                         line_ends_mv[0], line_ends_mv[1]))
 
     # for timing

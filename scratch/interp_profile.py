@@ -56,8 +56,8 @@ if __name__=="__main__":
     t0 = time()
     # sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0, 500, 500)
     # cProfile.runctx("""interp_vals = cycalc.trilin_interp(B, sphere)""",
-    #                 globals(), locals(), "interp.prof")    
-    # plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (1., 0., 0.), 
+    #                 globals(), locals(), "interp.prof")
+    # plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (1., 0., 0.),
     #                    1.0, 1.0, 500, 500)
     vol = B.crds
     # print(plane.points())

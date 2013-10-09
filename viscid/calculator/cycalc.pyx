@@ -157,7 +157,7 @@ cdef real_t _c_trilin_interp(real_t[:,:,:,::1] s, np.intp_t m, real_t[:] *crds,
     cdef int[3] ix
     cdef int[3] p  # increment, used for 2d fields
     cdef real_t[3] xd
-    
+
     # cdef real_t[:] *crds = [crdz, crdy, crdx]
     cdef real_t c00, c10, c01, c11, c0, c1, c
 

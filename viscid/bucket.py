@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-from .vutil import spill_prefix
+from .vutil import tree_prefix
 import logging
 
 class Bucket(object):
@@ -80,7 +80,7 @@ class Bucket(object):
             s += "{0}  item: {1}\n".format(prefix, str(item))
         return s
 
-    def spill(self, prefix=""):
+    def print_tree(self, prefix=""):
         print(self.handle_string(prefix=prefix), end='')
 
     def _set_handles(self, handles, item):

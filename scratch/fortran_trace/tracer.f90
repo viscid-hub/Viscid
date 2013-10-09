@@ -62,7 +62,7 @@ SUBROUTINE get_topo(gx, gy, gz, bx, by, bz, topo, x1, x2, y1, y2, z1, z2, &
     end do
   end do
 
-  WRITE (*, *) "Total segments calculated: ", nsegs 
+  WRITE (*, *) "Total segments calculated: ", nsegs
 
 END SUBROUTINE
 
@@ -118,7 +118,7 @@ SUBROUTINE xcl4(gx, gy, gz, bx, by, bz, x, y, z, &
   ! trace backward
   do k=1, maxst
     if(iv.eq.1) then
-      write(0,'(a,2i6,6(1x,f8.3))') 'backward1:  ', ip, k, xe, ye, ze 
+      write(0,'(a,2i6,6(1x,f8.3))') 'backward1:  ', ip, k, xe, ye, ze
     endif
 
     call trace2(gx, gy, gz, bx, by, bz, xs, ys, zs, xe, ye, ze, dir, nx, ny, nz)
@@ -172,11 +172,11 @@ SUBROUTINE xcl4(gx, gy, gz, bx, by, bz, x, y, z, &
   ip = np;
   dir = ddir;
   ifl2 = 0;
-  
+
   xs = xmhd;
   ys = ymhd;
   zs = zmhd
-  
+
   do k=1, maxst
     call trace2(gx, gy, gz, bx, by, bz, xs, ys, zs, xe, ye, ze, dir, nx, ny, nz)
     nsegs = nsegs + 1
@@ -203,14 +203,14 @@ SUBROUTINE xcl4(gx, gy, gz, bx, by, bz, x, y, z, &
       exit
     endif
 
-    ip = ip + 1; 
+    ip = ip + 1;
     vl(1, ip) = xe;
     vl(2, ip) = ye;
     vl(3, ip) = ze
     if(iv.eq.1) then
       write(0,'(a,2i6,6(1x,f8.3))')'forward:  ',k,ip,xs,ys,zs,xe,ye,ze
     endif
-    
+
     xs = xe;
     ys = ye;
     zs = ze;
@@ -247,7 +247,7 @@ SUBROUTINE xcl4(gx, gy, gz, bx, by, bz, x, y, z, &
   if(iv.eq.1) then
     write(0,*)'xcl4b: ',ifl1,ifl2,ifl,ihem,imo,x,y,z,np
   endif
-  
+
   nv = np;
   if(imo.eq.0) then
     return
@@ -308,7 +308,7 @@ SUBROUTINE trace2(gx, gy, gz, bx, by, bz, &
   else
     x2 = 1.e6
     y2 = 1.e6
-    z2 = 1.e6    
+    z2 = 1.e6
   endif
 
   return

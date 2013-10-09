@@ -4,17 +4,11 @@
 from __future__ import print_function
 import os
 import logging
-
-try:
-    from lxml import etree
-    HAS_LXML = True
-except ImportError:
-    HAS_LXML = False
-    logging.warn("lxml library not found, no xdmf support.")
-
+from xml.etree import ElementTree
 
 import numpy as np
 
+from . import _xdmf_include
 from . import vfile
 from .vfile_bucket import VFileBucket
 from .. import grid
@@ -26,7 +20,6 @@ from .. import field
 #     def set_precision():
 #         nptype = np.dtype({'Float': 'float', 'Int': 'int', 'UInt': 'unit',
 #                'Char': 'int', 'UChar': 'int'}[numbertype] + str(8*precision))
-
 
 class FileXDMF(vfile.VFile):
     """ on init, parse an xdmf file into datasets, grids, and fields """
@@ -90,7 +83,7 @@ class FileXDMF(vfile.VFile):
             }
         }
 
-    tree = None
+    # tree = None
 
     def __init__(self, fname, vfilebucket=None, **kwargs):
         """ vfilebucket is a bucket for loading any hdf5 files. it can be
@@ -106,12 +99,17 @@ class FileXDMF(vfile.VFile):
         super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
 
     def _parse(self):
-        self.tree = etree.parse(self.fname)
-        #print(self.tree)
-        self.tree.xinclude()  # TODO: implement with built in xml stuff
-                              # and do xpointer by hand?
-        #print(self.tree)
-        root = self.tree.getroot()
+        # lxml has better xpath support, so it's preferred, but it stops
+        # if an xinclude doesn't exist, so for now use our custom extension
+        # of the default python xml lib
+        # if HAS_LXML:
+        #     # sweet, you have it... use the better xml library
+        #     tree = etree.parse(self.fname) #pylint: disable=E0602
+        #     tree.xinclude()  # TODO: gracefully ignore include problems
+        #     root = tree.getroot()
+        tree = ElementTree.parse(self.fname)
+        root = tree.getroot()
+        _xdmf_include.include(root, base_url=self.fname)
 
         # search for all root grids, and parse them
         domain_grids = root.findall("./Domain/Grid")
@@ -135,7 +133,7 @@ class FileXDMF(vfile.VFile):
     def _parse_grid(self, el, parent_grid=None, time=None):
         attrs = self._fill_attrs(el)
         grd = None
-        coords = None
+        crds = None
 
         # parse topology, or cascade parent grid's topology
         topology = el.find("./Topology")
@@ -223,8 +221,8 @@ class FileXDMF(vfile.VFile):
                 grd.topology_info = topoattrs
             if geoattrs is not None:
                 grd.geometry_info = geoattrs
-            if coords is not None:
-                grd.set_crds(coords)
+            if crds is not None:
+                grd.set_crds(crds)
             if parent_grid is not None:
                 parent_grid.add(grd)
 
@@ -234,7 +232,7 @@ class FileXDMF(vfile.VFile):
         """ geo is the element tree item, returns Coordinate object and
             xml attributes """
         geoattrs = self._fill_attrs(geo)
-        # coords = None
+        # crds = None
         crdlist = None
         crdtype = None
 
@@ -248,7 +246,7 @@ class FileXDMF(vfile.VFile):
         else:
             raise NotImplementedError("Unstructured grids not yet supported")
 
-        # parse geometry into coords
+        # parse geometry into crds
         geotype = geoattrs["GeometryType"]
         if geotype.upper() == "XYZ":
             data, attrs = self._parse_dataitem(geo.find("./DataItem"),
@@ -267,22 +265,32 @@ class FileXDMF(vfile.VFile):
             crdlist = (('z', z), ('y', y), ('x', x))
 
         elif geotype.upper() == "X_Y_Z":
-            crdlist = [None] * 3
-            for i, crd in enumerate(['Z', 'Y', 'X']):
-                di = geo.find("./dataitem[@name='{0}']".format(crd))
-                if di is None:
-                    raise RuntimeError("expected a V{0} element".format(crd))
+            crdlookup = {'z': 0, 'y': 1, 'x': 2}
+            crdlist = [['z', None], ['y', None], ['x', None]]
+            # can't use ./DataItem[@Name='X'] so python2.6 works
+            dataitems = geo.findall("./DataItem")
+            for di in dataitems:
+                crd_name = di.attrib["Name"].lower()
                 data, attrs = self._parse_dataitem(di, keep_flat=True)
-                crdlist[i] = (crd.lower(), data)
+                crdlist[crdlookup.pop(crd_name)][1] = data
+            if len(crdlookup) > 0:
+                raise RuntimeError("XDMF format error: Coords not specified "
+                                   "for {0} dimesions"
+                                   "".format(list(crdlookup.keys())))
 
         elif geotype.upper() == "VXVYVZ":
-            crdlist = [None] * 3
-            for i, crd in enumerate(['Z', 'Y', 'X']):
-                di = geo.find("./DataItem[@Name='V{0}']".format(crd))
-                if di is None:
-                    raise RuntimeError("expected a V{0} element".format(crd))
+            crdlookup = {'z': 0, 'y': 1, 'x': 2}
+            crdlist = [['z', None], ['y', None], ['x', None]]
+            # can't use ./DataItem[@Name='VX'] so python2.6 works
+            dataitems = geo.findall("./DataItem")
+            for di in dataitems:
+                crd_name = di.attrib["Name"].lstrip('V').lower()
                 data, attrs = self._parse_dataitem(di, keep_flat=True)
-                crdlist[i] = (crd.lower(), data)
+                crdlist[crdlookup.pop(crd_name)][1] = data
+            if len(crdlookup) > 0:
+                raise RuntimeError("XDMF format error: Coords not specified "
+                                   "for {0} dimesions"
+                                   "".format(list(crdlookup.keys())))
 
         elif geotype.upper() == "ORIGIN_DXDYDZ":
             # this is for rectilinear grids with uniform spacing
@@ -344,7 +352,7 @@ class FileXDMF(vfile.VFile):
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
             h5file = self.vfilebucket.load(fname, index_handle=False)
-            arr = h5file.get_data(loc)
+            arr = h5file.get_data(loc)  #pylint: disable=E1103
             return arr, attrs
 
         if fmt == "Binary":

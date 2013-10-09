@@ -104,6 +104,10 @@ class Field(object):
             return self.crds.shape
 
     @property
+    def size(self):
+        return np.product(self.shape)
+
+    @property
     def dtype(self):
         # print(type(self.source_data))
         if self._cache is not None:
@@ -111,7 +115,7 @@ class Field(object):
             if isinstance(dt, str):
                 return dt
             else:
-                return self.source_data[0].dtype.name            
+                return self.source_data[0].dtype.name
         else:
             # dtype.name is for pruning endianness out of dtype
             if isinstance(self.source_data, (list, tuple)):
@@ -205,13 +209,14 @@ class Field(object):
         crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
         slices = self._augment_slices(slices)
         # TODO: This can probably be done with a 'lazy slice'
-        
-        # if we sliced the hell out of the array, just 
+
+        # if we sliced the hell out of the array, just
         # return the value that's left
-        if len(reduced) == len(slices):
-            return self.data[tuple(slices)]
+        slced_dat = self.data[tuple(slices)]
+        if len(reduced) == len(slices) or slced_dat.size == 1:
+            return slced_dat
         else:
-            fld = self.wrap(self.data[tuple(slices)],
+            fld = self.wrap(slced_dat,
                             {"name": self.name + "_slice",
                              "crds": crds,
                             })
@@ -219,6 +224,10 @@ class Field(object):
             if len(reduced) > 0:
                 fld.info["reduced"] = reduced
             return fld
+
+    def consolidate_dims(self):
+        """ consolidate dimensions with length 1 in place """
+        raise NotImplementedError()
 
     def n_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center == "None":
@@ -240,6 +249,10 @@ class Field(object):
         self.unload()
         return None
 
+    def __iter__(self):
+        for val in self.data.ravel():
+            yield val
+
     def __getitem__(self, item):
         if isinstance(item, str):
             if item in self.crds:
@@ -254,9 +267,14 @@ class Field(object):
     ## emulate a numeric type
     def wrap(self, arr, context=None, typ=None):
         """ arr is the data to wrap... context is exta info to pass
-        to the constructor """
+        to the constructor. The return is just a number if arr is a
+        1 element ndarray, this is for ufuncs that reduce to a scalar """
         if arr is NotImplemented:
             return NotImplemented
+        # if just 1 number wrappen in an array, unpack the value and
+        # return it... this is more ufuncy behavior
+        if isinstance(arr, np.ndarray) and arr.size == 1:
+            return np.ravel(arr)[0]
         if context is None:
             context = {}
         name = context.pop("name", self.name)
@@ -367,7 +385,7 @@ class Field(object):
     def __gt__(self, other):
         return self.wrap(self.data.__gt__(other))
     def __ge__(self, other):
-        return self.wrap(self.data.__ge__(other))  
+        return self.wrap(self.data.__ge__(other))
 
 
 class ScalarField(Field):

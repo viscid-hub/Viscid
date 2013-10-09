@@ -6,7 +6,10 @@ flexable would be useful down the line? """
 
 from __future__ import print_function
 import logging
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ..compat import OrderedDict
 
 import numpy as np
 
@@ -50,14 +53,14 @@ class Operation(object):
     def _get_imp(self, preferred, only=False):
         if not isinstance(preferred, (list, tuple)):
             if preferred is None:
-                preferred = self._imps.keys()
+                preferred = list(self._imps.keys())
             else:
                 preferred = [preferred]
 
         for name in preferred:
             if name in self._imps:
                 return self._imps[name]
-        
+
         msg = "{0} :: {1}".format(self.opname, preferred)
         if only:
             raise verror.BackendNotFound(msg)
@@ -67,7 +70,7 @@ class Operation(object):
             if name in self._imps:
                 return self._imps[name]
 
-        return self._imps.values()[0]
+        return list(self._imps.values())[0]
 
     def __call__(self, *args, **kwargs):
         preferred = kwargs.pop("preferred", None)

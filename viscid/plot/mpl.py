@@ -7,7 +7,7 @@ from distutils.version import LooseVersion
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
+from matplotlib.colors import Normalize, LogNorm
 from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from .. import field
@@ -77,7 +77,9 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             if fld.dim == 1:
                 axis.set_ylim(*opt[1:])
             elif fld.dim == 2:
-                kwargs["norm"] = plt.normalize(*opt[1:])
+                # plt.normalize is deprecated
+                # kwargs["norm"] = plt.normalize(*opt[1:])
+                kwargs["norm"] = Normalize(*opt[1:])
 
         elif opt[0] == "log":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
@@ -117,13 +119,13 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
         elif opt[0] == "own":
             logging.warn("own axis doesn't seem to work yet...")
-            
+
         elif opt[0] == "ownx":
             logging.warn("own axis doesn't seem to work yet...")
-            
+
         elif opt[0] == "owny":
             logging.warn("own axis doesn't seem to work yet...")
-            
+
         else:
             logging.warn("Unknown plot option ({0})".format(opt[0]))
 
@@ -181,6 +183,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
             X, Y = fld.crds[(namex.upper(), namey.upper())]
             dat = fld.data
     else:
+        dat = fld.data
         if fld.center == "Node":
             X, Y = fld.crds[(namex, namey)]
         elif fld.center == "Cell":
@@ -319,6 +322,7 @@ def plot_streamlines2d(lines, symmetry_dir, ax=None, show=False, equal=False,
                        rotate_plot=False, **kwargs):
     if not ax:
         ax = plt.gca()
+    p = None
 
     for line in lines:
         line = np.array(line)
@@ -368,7 +372,10 @@ def mplshow():
 
 def tighten():
     """ tightens the layout so that axis labels dont get plotted over """
-    plt.tight_layout()
+    try:
+        plt.tight_layout()
+    except AttributeError:
+        logging.warn("No matplotlib tight layout support")
 
 def plot_earth(fld, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crds="mhd"):
