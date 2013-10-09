@@ -5,10 +5,10 @@ from __future__ import print_function
 import os
 import logging
 from xml.etree import ElementTree
-import _xdmf_include
 
 import numpy as np
 
+from . import _xdmf_include
 from . import vfile
 from .vfile_bucket import VFileBucket
 from .. import grid
