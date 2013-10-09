@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.47 Release
+## 0.50.0 Release
 Features:
   - Remove lxml dependancy
   - Remove Cython dependancy
