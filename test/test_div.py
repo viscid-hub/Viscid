@@ -62,7 +62,7 @@ def run_div_test(fld, exact, show=False):
         plt.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
         mpl.plot(result_numexpr, p, show=False)
         plt.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
-        mpl.plot(result_diff, p, show=False)        
+        mpl.plot(result_diff, p, show=False)
         # plt.subplot2grid((nrows, ncols), (2, i), sharex=ax, sharey=ax)
         # mpl.plot(result_cython, p, show=False)
         # plt.subplot2grid((nrows, ncols), (3, i), sharex=ax, sharey=ax)

@@ -46,7 +46,7 @@ def xcl4(B, gx, gy, gz, x0, y0, z0, xmaxlen):
     nz, ny, nx, nc = B.shape
     maxst = int(xmaxlen / ddir)
     nsegs = 0
-    
+
     # trace backward
     ds = -ddir
     x, y, z = x0, y0, z0
@@ -164,7 +164,7 @@ def closest_ind(gx, x, ix):
     # ok then, search
     for i in range(nx):
         if x > gx[ix] and x <= gx[ix + 1]:
-            return ix        
+            return ix
 
     return ix
 

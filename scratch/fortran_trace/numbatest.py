@@ -45,7 +45,7 @@ def closest_ind(crd, point, startinds, m):
         fallback = max(n - 2, 0)
         startinds[m] = fallback
         return fallback
-    
+
     # startind was too large... go backwards
     for i in range(start - 1, -1, -1):
         if forward and crd[i] <= point:
@@ -98,7 +98,7 @@ def euler1(v, crdx, crdy, crdz, x, ds, startinds):
     #     return 1
     x[0] += ds * vz / vmag
     x[1] += ds * vy / vmag
-    x[2] += ds * vx / vmag    
+    x[2] += ds * vx / vmag
     return x
 
 @nb.jit(nb.int_(nb.float_[:,:,:,::1], nb.float_[:], nb.float_[:], nb.float_[:],
@@ -111,7 +111,7 @@ def trace(B, gx, gy, gz, r0, maxlen):
     maxst = int(maxlen / ddir)
     nsegs = 0
     start_ind = np.array([0, 0, 0], dtype=nb.int_)
-    
+
     # trace backward
     ds = -ddir
     r = r0
@@ -188,7 +188,7 @@ def nb_get_topo(B, gx, gy, gz, topo_arr, x1, x2):
                 topo = trace(B, gx, gy, gz, r, 100)
                 # nsegs += nsegsi
                 topo_arr[iz, iy, ix] = topo
-    
+
     # print("nsegs:", nsegs)
     return nsegs
 

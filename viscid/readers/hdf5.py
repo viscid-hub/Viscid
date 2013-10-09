@@ -44,7 +44,7 @@ class H5pyDataWrapper(vfile.DataWrapper): #pylint: disable=R0924
     @property
     def dtype(self):
         """ only ask for this if you really need it; can be a speed problem
-        for large temporal datasets over sshfs """        
+        for large temporal datasets over sshfs """
         if self._dtype is None:
             self._get_info()
         return self._dtype

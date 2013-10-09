@@ -55,7 +55,7 @@ def get_dipole(m=None, twod=False):
 def main():
     parser = argparse.ArgumentParser(description="Load some data files")
     parser.add_argument('files', nargs="*", help='input files')
-    parser.add_argument("--show", "--plot", action="store_true")    
+    parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
     args = parser.parse_args()
 
@@ -63,8 +63,8 @@ def main():
     B = get_dipole(m=[0.0, 0.0, -1.0])
 
     mygrid = B.crds.slice("z=1:3,y=1i:3i,x=0.0", use_cc=True)
-    
-    # print(B.crds.get_crd(center="Node"))    
+
+    # print(B.crds.get_crd(center="Node"))
     # print(mygrid.get_crd(center="Cell"))
     # for z, y, x in mygrid.iter_points(center="Cell"):
     #     print(z, y, x)
@@ -87,7 +87,7 @@ def main():
     t0 = time()
     interp_vals = cycalc.trilin_interp(bmag, mygrid)
     t1 = time()
-    logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))  
+    logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
     mpl.scatter_3d(mygrid.points(center="Cell"), interp_vals, show=args.show)

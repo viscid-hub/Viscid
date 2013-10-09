@@ -57,7 +57,7 @@ class Operation(object):
         for name in preferred:
             if name in self._imps:
                 return self._imps[name]
-        
+
         msg = "{0} :: {1}".format(self.opname, preferred)
         if only:
             raise verror.BackendNotFound(msg)
