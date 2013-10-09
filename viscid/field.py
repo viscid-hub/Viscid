@@ -7,6 +7,7 @@ is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
 import logging
+from inspect import isclass
 
 import numpy as np
 
@@ -18,18 +19,36 @@ LAYOUT_INTERLACED = "interlaced"
 LAYOUT_FLAT = "flat"
 LAYOUT_OTHER = "other"
 
-def field_type_from_str(typ_str):
-    for cls in vutil.subclass_spider(Field):
-        if cls.TYPE == typ_str.lower():
-            return cls
-    logging.warn("Field type {0} not understood".format(typ_str))
+def field_type(typ):
+    """ @returns: a class where class.TYPE matches typ
+    the magic lookup happens when typ is a string, if typ is a class
+    then just return the class for convenience """
+    if isclass(typ) and issubclass(typ, Field):
+        return typ
+    else:
+        for cls in vutil.subclass_spider(Field):
+            if cls.TYPE == typ.lower():
+                return cls
+    logging.warn("Field type {0} not understood".format(typ))
     return None
+
+def empty_like(fld, name, **kwargs):
+    dat = np.empty(fld.shape, dtype=fld.dtype)
+    wrap_field(fld.TYPE, name, fld.crds, dat, **kwargs)
+
+def zeros_like(fld, name, **kwargs):
+    dat = np.zeros(fld.shape, dtype=fld.dtype)
+    wrap_field(fld.TYPE, name, fld.crds, dat, **kwargs)
+
+def ones_like(fld, name, **kwargs):
+    dat = np.ones(fld.shape, dtype=fld.dtype)
+    wrap_field(fld.TYPE, name, fld.crds, dat, **kwargs)
 
 def wrap_field(typ, name, crds, data, **kwargs):
     """ **kwargs passed to field constructor """
     #
     #len(clist), clist[0][0], len(clist[0][1]), type)
-    cls = field_type_from_str(typ)
+    cls = field_type(typ)
     if cls is not None:
         return cls(name, crds, data, **kwargs)
     else:
@@ -284,8 +303,8 @@ class Field(object):
         # should it always return the same type as self?
         if typ is None:
             typ = type(self)
-        elif isinstance(typ, str):
-            typ = field_type_from_str(typ)
+        else:
+            typ = field_type(typ)
         return typ(name, crds, arr, time=time, center=center, info=context)
 
     def __array_wrap__(self, out_arr, context=None):
