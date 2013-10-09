@@ -183,6 +183,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
             X, Y = fld.crds[(namex.upper(), namey.upper())]
             dat = fld.data
     else:
+        dat = fld.data
         if fld.center == "Node":
             X, Y = fld.crds[(namex, namey)]
         elif fld.center == "Cell":
@@ -321,6 +322,7 @@ def plot_streamlines2d(lines, symmetry_dir, ax=None, show=False, equal=False,
                        rotate_plot=False, **kwargs):
     if not ax:
         ax = plt.gca()
+    p = None
 
     for line in lines:
         line = np.array(line)
