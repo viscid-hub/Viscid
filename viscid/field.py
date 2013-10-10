@@ -430,25 +430,25 @@ class Field(object):
 class ScalarField(Field):
     _TYPE = "scalar"
 
-    @property
-    def nr_comp(self):
-        """ dimension of the components of the vector """
-        layout = self.layout
-        if layout == LAYOUT_FLAT:
-            return 0
-        elif layout == LAYOUT_INTERLACED:
-            return self.crds.dim
-        elif layout == LAYOUT_OTHER:
-            logging.warn("I don't know what your layout is, assuming vectors "
-                         "are the last index (interleaved)...")
-            return self.crds.dim
+    # @property
+    # def nr_comp(self):
+    #     """ dimension of the components of the vector """
+    #     layout = self.layout
+    #     if layout == LAYOUT_FLAT:
+    #         return 0
+    #     elif layout == LAYOUT_INTERLACED:
+    #         return self.crds.dim
+    #     elif layout == LAYOUT_OTHER:
+    #         logging.warn("I don't know what your layout is, assuming vectors "
+    #                      "are the last index (interleaved)...")
+    #         return self.crds.dim
 
 
 class VectorField(Field):
     _TYPE = "vector"
 
     _layout = None
-    _ncomp = None
+    _nr_comps = None
     _nr_comp = None
 
     def __init__(self, name, crds, data, **kwargs):
@@ -468,7 +468,7 @@ class VectorField(Field):
         self._layout = None
 
     @property
-    def ncomp(self):
+    def nr_comps(self):
         # MERGE_UP
         return self.data.shape[self.nr_comp]
 
@@ -526,9 +526,9 @@ class VectorField(Field):
             if dat_layout != LAYOUT_INTERLACED:
                 raise RuntimeError("should not be here")
 
-            ncomp = dat.shape[-1]  # dat is interlaced
-            dat_dest = np.empty([ncomp] + self.shape, dtype=dat.dtype.name)
-            for i in range(ncomp):
+            nr_comps = dat.shape[-1]  # dat is interlaced
+            dat_dest = np.empty([nr_comps] + self.shape, dtype=dat.dtype.name)
+            for i in range(nr_comps):
                 # NOTE: I wonder if this is the fastest way to reorder
                 dat_dest[i, ...] = dat[..., i]
                 # NOTE: no special case for lists, they are not
@@ -542,14 +542,14 @@ class VectorField(Field):
                 raise RuntimeError("should not be here")
 
             if isinstance(dat, (list, tuple)):
-                ncomp = len(dat)
+                nr_comps = len(dat)
                 dtype = dat[0].dtype.name
             else:
-                ncomp = dat.shape[0]
+                nr_comps = dat.shape[0]
                 dtype = dat.dtype.name
 
-            dat_dest = np.empty(self.shape + [ncomp], dtype=dtype)
-            for i in range(ncomp):
+            dat_dest = np.empty(self.shape + [nr_comps], dtype=dtype)
+            for i in range(nr_comps):
                 dat_dest[..., i] = dat[i]
 
             self._layout = LAYOUT_INTERLACED
@@ -567,7 +567,7 @@ class VectorField(Field):
         node / cell centering
         """
         target_shape = list(self.shape)
-        # can't use self.ncomp or self.layout because we're in a weird
+        # can't use self.nr_comps or self.layout because we're in a weird
         # place and self.data hasn't been set yet, because this has to happen
         # first... like an ouroboros
         # NOTE: this logic is hideous, there must be a better way
@@ -587,13 +587,13 @@ class VectorField(Field):
     def component_views(self):
         """ return numpy views to components individually, memory layout
         of the original field is maintained """
-        ncomp = self.ncomp
+        nr_comps = self.nr_comps
         if self.layout == LAYOUT_FLAT:
-            return [self.data[i, ...] for i in range(ncomp)]
+            return [self.data[i, ...] for i in range(nr_comps)]
         elif self.layout == LAYOUT_INTERLACED:
-            return [self.data[..., i] for i in range(ncomp)]
+            return [self.data[..., i] for i in range(nr_comps)]
         else:
-            return [self.data[..., i] for i in range(ncomp)]
+            return [self.data[..., i] for i in range(nr_comps)]
 
     def component_fields(self):
         n = self.name

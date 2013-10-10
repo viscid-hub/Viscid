@@ -92,7 +92,7 @@ def trilin_interp(fld, seeds):
     """ Points can be list of 3-tuples or a SeedGen instance. If fld
     is a scalar field, the output array has shape (npts,) where npts
     is the number of seed points. If it's a vector, the output has shape
-    (npts, ncomp), where ncomp is the number of components of the vector.
+    (npts, nr_comps), where nr_comps is the number of components of the vector.
     The data type of the output is the same as the original field.
     The output is always an array, even if only one point is given.
     """
@@ -108,12 +108,12 @@ def trilin_interp(fld, seeds):
     if fld.istype("Vector"):
         if not fld.layout == field.LAYOUT_INTERLACED:
             raise ValueError("Trilin interp only written for interlaced data.")
-        ncomp = fld.ncomp
+        nr_comps = fld.nr_comps
         npts = seeds.n_points(center=fld.center)
-        ret = np.empty((npts, ncomp), dtype=dtype)
+        ret = np.empty((npts, nr_comps), dtype=dtype)
 
-        for j from 0 <= j < ncomp:
-            # print(ret.shape, npts, ncomp)
+        for j from 0 <= j < nr_comps:
+            # print(ret.shape, npts, nr_comps)
             ret[:,j] = _py_trilin_interp(dtype, fld.data, j, crdz, crdy, crdx,
                                 seeds.iter_points(center=fld.center),
                                 npts)
