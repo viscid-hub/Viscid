@@ -173,20 +173,20 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     # trim the edges of the data... maybe i should just be faking
     # the coord array somehow to show the edges...
     if style in ["pcolormesh", "pcolor"]:
-        if fld.center.lower() == "node":
+        if fld.iscentered("Node"):
             X, Y = fld.crds[(namex.upper() + 'cc', namey.upper() + 'cc')]
             logging.info("pcolormesh on node centered field... "
                          "trimming the edges")
             # FIXME: this is a little fragile with 2d stuff
             dat = fld.data[1:-1, 1:-1]
-        elif fld.center.lower() == "cell":
+        elif fld.iscentered("Cell"):
             X, Y = fld.crds[(namex.upper(), namey.upper())]
             dat = fld.data
     else:
         dat = fld.data
-        if fld.center.lower() == "node":
+        if fld.iscentered("Node"):
             X, Y = fld.crds[(namex, namey)]
-        elif fld.center.lower() == "cell":
+        elif fld.iscentered("Cell"):
             X, Y = fld.crds[(namex + 'cc', namey + 'cc')]
 
     if mod:
@@ -285,9 +285,9 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
     # print(fld.shape, fld.crds.shape)
 
     namex, = fld.crds.axes
-    if fld.center.lower() == "node":
+    if fld.iscentered("Node"):
         x = fld.crds[namex]
-    elif fld.center.lower() == "cell":
+    elif fld.iscentered("Cell"):
         x = fld.crds[namex + "cc"]
 
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)

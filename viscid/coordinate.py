@@ -26,16 +26,24 @@ def wrap_crds(typ, clist):
     """  """
     # print(len(clist), clist[0][0], len(clist[0][1]), typ)
     for cls in vutil.subclass_spider(Coordinates):
-        if cls.TYPE == typ.lower():
+        if cls.istype(typ):
             # return an instance
             return cls(clist)
     raise NotImplementedError("can not decipher crds")
 
 
 class Coordinates(object):
-    TYPE = "none"
+    _TYPE = "none"
 
     __crds = None
+
+    @property
+    def type(self):
+        return self._TYPE
+
+    @classmethod
+    def istype(cls, type_str):
+        return cls._TYPE == type_str.lower()
 
     def __init__(self):
         pass
@@ -45,10 +53,10 @@ class Coordinates(object):
 
 
 class StructuredCrds(Coordinates):
-    TYPE = "structured"
-    CENTER = {"none": "", "node": "nc", "cell": "cc",
+    _TYPE = "structured"
+    _CENTER = {"none": "", "node": "nc", "cell": "cc",
               "face": "fc", "edge": "ec"}
-    SUFFIXES = list(CENTER.values())
+    SUFFIXES = list(_CENTER.values())
 
     _axes = ["z", "y", "x"]
     _dim = 3
@@ -138,7 +146,7 @@ class StructuredCrds(Coordinates):
         self.__crds = {}
 
         # get node centered crds from the src crds
-        sfx = self.CENTER["node"]
+        sfx = self._CENTER["node"]
         for axis, arr in self._src_crds_nc.items():
             # make axis into string representation
             # axis = self.axis_name(axis)
@@ -152,7 +160,7 @@ class StructuredCrds(Coordinates):
             self.__crds[axis.upper() + sfx] = openarr
 
         # recalculate all cell centers, and refresh face / edges
-        sfx = self.CENTER["cell"]
+        sfx = self._CENTER["cell"]
         for a in self.axes:
             # a = self.axis_name(a)  # validate input
             ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
@@ -169,7 +177,7 @@ class StructuredCrds(Coordinates):
         crds_cc_shaped = self.get_crd(shaped=True, center="Cell")
 
         # store references to face and edge centers while we're here
-        sfx = self.CENTER["face"]
+        sfx = self._CENTER["face"]
         for i, a in enumerate(self.axes):
             self.__crds[a + sfx] = [None] * len(self.axes)
             self.__crds[a.upper() + sfx] = [None] * len(self.axes)
@@ -182,7 +190,7 @@ class StructuredCrds(Coordinates):
                     self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
 
         # same as face, but swap nc with cc
-        sfx = self.CENTER["edge"]
+        sfx = self._CENTER["edge"]
         for i, a in enumerate(self.axes):
             self.__crds[a + sfx] = [None] * len(self.axes)
             self.__crds[a.upper() + sfx] = [None] * len(self.axes)
@@ -394,7 +402,7 @@ class StructuredCrds(Coordinates):
         # no slice necessary, just pass the field through
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self.TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst)
 
     def get_crd(self, axis=None, shaped=False, center="none"):
         """ if axis is not specified, return all coords,
@@ -405,7 +413,7 @@ class StructuredCrds(Coordinates):
         if axis == None:
             axis = [a.upper() if shaped else a for a in self.axes]
 
-        sfx = self.CENTER[center.lower()]
+        sfx = self._CENTER[center.lower()]
 
         if isinstance(axis, (list, tuple)):
             return [self._crds[self.axis_name(a) + sfx] for a in axis]
@@ -457,7 +465,7 @@ class StructuredCrds(Coordinates):
 
 
 class RectilinearCrds(StructuredCrds):
-    TYPE = "rectilinear"
+    _TYPE = "rectilinear"
     _axes = ["z", "y", "x"]
 
     def __init__(self, init_clist=None, **kwargs):
@@ -465,7 +473,7 @@ class RectilinearCrds(StructuredCrds):
 
 
 class CylindricalCrds(StructuredCrds):
-    TYPE = "cylindrical"
+    _TYPE = "cylindrical"
     _axes = ["z", "theta", "r"]
 
     def __init__(self, init_clist=None, **kwargs):
@@ -473,7 +481,7 @@ class CylindricalCrds(StructuredCrds):
 
 
 class SphericalCrds(StructuredCrds):
-    TYPE = "spherical"
+    _TYPE = "spherical"
     _axes = ["phi", "theta", "r"]
 
     def __init__(self, init_clist=None, **kwargs):
@@ -481,7 +489,7 @@ class SphericalCrds(StructuredCrds):
 
 
 class UnstructuredCrds(Coordinates):
-    TYPE = "unstructured"
+    _TYPE = "unstructured"
 
     def __init__(self, **kwargs):
         super(UnstructuredCrds, self).__init__(**kwargs)

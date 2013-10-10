@@ -20,29 +20,29 @@ LAYOUT_FLAT = "flat"
 LAYOUT_OTHER = "other"
 
 def field_type(typ):
-    """ @returns: a class where class.TYPE matches typ
+    """ @returns: a class where class.type matches typ
     the magic lookup happens when typ is a string, if typ is a class
     then just return the class for convenience """
     if isclass(typ) and issubclass(typ, Field):
         return typ
     else:
         for cls in vutil.subclass_spider(Field):
-            if cls.TYPE == typ.lower():
+            if cls.istype(typ):
                 return cls
     logging.warn("Field type {0} not understood".format(typ))
     return None
 
 def empty_like(fld, name, **kwargs):
     dat = np.empty(fld.shape, dtype=fld.dtype)
-    wrap_field(fld.TYPE, name, fld.crds, dat, **kwargs)
+    wrap_field(fld.type, name, fld.crds, dat, **kwargs)
 
 def zeros_like(fld, name, **kwargs):
     dat = np.zeros(fld.shape, dtype=fld.dtype)
-    wrap_field(fld.TYPE, name, fld.crds, dat, **kwargs)
+    wrap_field(fld.type, name, fld.crds, dat, **kwargs)
 
 def ones_like(fld, name, **kwargs):
     dat = np.ones(fld.shape, dtype=fld.dtype)
-    wrap_field(fld.TYPE, name, fld.crds, dat, **kwargs)
+    wrap_field(fld.type, name, fld.crds, dat, **kwargs)
 
 def wrap_field(typ, name, crds, data, **kwargs):
     """ **kwargs passed to field constructor """
@@ -68,11 +68,11 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
 
 
 class Field(object):
-    TYPE = "none"
-    CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
+    _TYPE = "none"
+    _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
 
     name = None  # String
-    center = "none"  # String in CENTERING
+    _center = "none"  # String in CENTERING
     crds = None  # Coordinate object
     time = None  # float
     info = None  # dict
@@ -80,10 +80,30 @@ class Field(object):
     source_data = None  # numpy-like object (h5py too)
     _cache = None  # this will always be a numpy array
 
+    @property
+    def type(self):
+        return self._TYPE
+
+    @property
+    def center(self):
+        return self._center
+    @center.setter
+    def center(self, new_center):
+        new_center = new_center.lower()
+        assert(new_center in self._CENTERING)
+        self._center = new_center
+
+    @classmethod
+    def istype(cls, type_str):
+        return cls._TYPE == type_str.lower()
+
+    def iscentered(self, center_str):
+        return self.center == center_str.lower()
+
     def __init__(self, name, crds, data, center="Node", time=0.0,
                  info=None, forget_source=False, **kwargs):
         self.name = name
-        self.center = center.lower()
+        self.center = center
         self.time = time
         self.crds = crds
         self.data = data
@@ -113,9 +133,9 @@ class Field(object):
         # it is enforced that the cached data has a shape that agrees with
         # the coords by _reshape_ndarray_to_crds... actually, that method
         # requires this method to depend on the crd shape
-        if self.center.lower() == "node":
+        if self.center == "node":
             return list(self.crds.shape_nc)
-        elif self.center.lower() == "cell":
+        elif self.center == "cell":
             return list(self.crds.shape_cc)
         else:
             logging.warn("edge/face vectors not implemented, assuming "
@@ -217,7 +237,7 @@ class Field(object):
         """ Select a slice of the data using selection dictionary.
         Returns a new field.
         """
-        cc = (self.center.lower() == "cell")
+        cc = self.iscentered("Cell")
         slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
                                                        consolidate=consolidate)
 
@@ -225,7 +245,7 @@ class Field(object):
         if list(slices) == [slice(None)] * len(slices):
             return self
 
-        crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
+        crds = coordinate.wrap_crds(self.crds.type, crdlst)
         slices = self._augment_slices(slices)
         # TODO: This can probably be done with a 'lazy slice'
 
@@ -248,13 +268,13 @@ class Field(object):
         """ consolidate dimensions with length 1 in place """
         raise NotImplementedError()
 
-    def n_points(self, center="none", **kwargs): #pylint: disable=W0613
-        if center.lower() == "none":
+    def n_points(self, center=None, **kwargs): #pylint: disable=W0613
+        if center is None:
             center = self.center
         return self.crds(center=center)
 
-    def iter_points(self, center="none", **kwargs): #pylint: disable=W0613
-        if center.lower() == "none":
+    def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
+        if center is None:
             center = self.center
         return self.crds.iter_points(center=center)
 
@@ -408,43 +428,60 @@ class Field(object):
 
 
 class ScalarField(Field):
-    TYPE = "scalar"
+    _TYPE = "scalar"
+
+    @property
+    def nr_comp(self):
+        """ dimension of the components of the vector """
+        layout = self.layout
+        if layout == LAYOUT_FLAT:
+            return 0
+        elif layout == LAYOUT_INTERLACED:
+            return self.crds.dim
+        elif layout == LAYOUT_OTHER:
+            logging.warn("I don't know what your layout is, assuming vectors "
+                         "are the last index (interleaved)...")
+            return self.crds.dim
 
 
 class VectorField(Field):
-    TYPE = "vector"
+    _TYPE = "vector"
 
     _layout = None
     _ncomp = None
-    _compdim = None
+    _nr_comp = None
 
     def __init__(self, name, crds, data, **kwargs):
         forget_source = kwargs.pop("forget_source", False)
         super(VectorField, self).__init__(name, crds, data, **kwargs)
         if not "force_layout" in self.info:
             self.info["force_layout"] = LAYOUT_DEFAULT
+        self.info["force_layout"] = self.info["force_layout"].lower()
         if forget_source:
             self.source_data = self.data
 
 
     def _purge_cache(self):
+        # MERGE_UP
         """ does not guarentee that the memory will be freed """
         self._cache = None
         self._layout = None
 
     @property
     def ncomp(self):
-        return self.data.shape[self.compdim]
+        # MERGE_UP
+        return self.data.shape[self.nr_comp]
 
     @property
-    def compdim(self):
+    def nr_comp(self):
+        # MERGE_UP
         """ dimension of the components of the vector """
         layout = self.layout
-        if layout.lower() == LAYOUT_FLAT:
+        if layout == LAYOUT_FLAT:
             return 0
-        elif layout.lower() == LAYOUT_INTERLACED:
+        elif layout == LAYOUT_INTERLACED:
             return self.crds.dim
-        elif layout.lower() == LAYOUT_OTHER:
+        elif layout == LAYOUT_OTHER:
             logging.warn("I don't know what your layout is, assuming vectors "
                          "are the last index (interleaved)...")
             return self.crds.dim
@@ -470,23 +507,22 @@ class VectorField(Field):
 
         dat_layout = self.detect_layout(dat)
 
-
         # we will preserve layout or we already have the correct layout,
         # do no translation... just like Field._translate_data
-        if self.info["force_layout"].lower() == LAYOUT_DEFAULT or \
-           self.info["force_layout"].lower() == dat_layout:
+        if self.info["force_layout"] == LAYOUT_DEFAULT or \
+           self.info["force_layout"] == dat_layout:
             self._layout = dat_layout
             return self._dat_to_ndarray(dat)
 
         # if layout is found to be other, i cant do anything with that
-        elif dat_layout.lower() == LAYOUT_OTHER:
+        elif dat_layout == LAYOUT_OTHER:
             logging.warn("Cannot auto-detect layout; not translating; "
                          "performance may suffer")
             self._layout = LAYOUT_OTHER
             return self._dat_to_ndarray(dat)
 
         # ok, we demand FLAT arrays, make it so
-        elif self.info["force_layout"].lower() == LAYOUT_FLAT:
+        elif self.info["force_layout"] == LAYOUT_FLAT:
             if dat_layout != LAYOUT_INTERLACED:
                 raise RuntimeError("should not be here")
 
@@ -501,7 +537,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # ok, we demand INTERLACED arrays, make it so
-        elif self.info["force_layout"].lower() == LAYOUT_INTERLACED:
+        elif self.info["force_layout"] == LAYOUT_INTERLACED:
             if dat_layout != LAYOUT_FLAT:
                 raise RuntimeError("should not be here")
 
@@ -520,7 +556,7 @@ class VectorField(Field):
             return self._dat_to_ndarray(dat_dest)
 
         # catch the remaining cases
-        elif self.info["force_layout"].lower() == LAYOUT_OTHER:
+        elif self.info["force_layout"] == LAYOUT_OTHER:
             raise RuntimeError("How should I know how to force other layout?")
         else:
             raise ValueError("Bad argument for layout forcing")
@@ -535,9 +571,9 @@ class VectorField(Field):
         # place and self.data hasn't been set yet, because this has to happen
         # first... like an ouroboros
         # NOTE: this logic is hideous, there must be a better way
-        if self._layout.lower() == LAYOUT_FLAT:
+        if self._layout == LAYOUT_FLAT:
             target_shape = [arr.shape[0]] + target_shape
-        elif self._layout.lower() == LAYOUT_INTERLACED:
+        elif self._layout == LAYOUT_INTERLACED:
             target_shape = target_shape + [arr.shape[-1]]
         else:
             # assuming flat?
@@ -552,9 +588,9 @@ class VectorField(Field):
         """ return numpy views to components individually, memory layout
         of the original field is maintained """
         ncomp = self.ncomp
-        if self.layout.lower() == LAYOUT_FLAT:
+        if self.layout == LAYOUT_FLAT:
             return [self.data[i, ...] for i in range(ncomp)]
-        elif self.layout.lower() == LAYOUT_INTERLACED:
+        elif self.layout == LAYOUT_INTERLACED:
             return [self.data[..., i] for i in range(ncomp)]
         else:
             return [self.data[..., i] for i in range(ncomp)]
@@ -603,16 +639,16 @@ class VectorField(Field):
     def _augment_slices(self, slices):
         """ TODO: this is a crap mechanism to do vector slicing and should
         disappear """
-        slices.insert(self.compdim, slice(None))
+        slices.insert(self.nr_comp, slice(None))
         return slices
 
 
 class MatrixField(Field):
-    TYPE = "matrix"
+    _TYPE = "matrix"
 
 
 class TensorField(Field):
-    TYPE = "tensor"
+    _TYPE = "tensor"
 
 
 ##

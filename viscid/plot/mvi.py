@@ -12,7 +12,7 @@ from .. import field
 #     """ get a data source from a scalar field """
 #     dat = tvtk.RectilinearGrid()
 #
-#     suffix = "cc" if fld.center.lower() == "cell" else ""
+#     suffix = "cc" if fld.iscentered("Cell") else ""
 #     dat.x_coordinates = fld.crds['x' + suffix]
 #     dat.y_coordinates = fld.crds['y' + suffix]
 #     dat.z_coordinates = fld.crds['z' + suffix]
@@ -60,14 +60,14 @@ def field_to_source(fld):
 
     # at the moment, everything is point data
     # TODO: fix up for cell data
-    if fld.center.lower() == "cell":
+    if fld.iscentered("Cell"):
         dat_center = grid.point_data
         # grid.dimensions is x, y, z not z, y, x
         grid.dimensions = tuple(fld.crds.shape_cc[::-1])
         grid.x_coordinates = fld.crds['xcc']
         grid.y_coordinates = fld.crds['ycc']
         grid.z_coordinates = fld.crds['zcc']
-    elif fld.center.lower() == "node":
+    elif fld.iscentered("Node"):
         dat_center = grid.point_data
         # grid.dimensions is x, y, z not z, y, x
         grid.dimensions = tuple(fld.crds.shape_nc[::-1])
