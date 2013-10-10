@@ -268,7 +268,7 @@ class Field(object):
         """ consolidate dimensions with length 1 in place """
         raise NotImplementedError()
 
-    def n_points(self, center=None, **kwargs): #pylint: disable=W0613
+    def nr_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center is None:
             center = self.center
         return self.crds(center=center)

@@ -71,7 +71,7 @@ def streamlines(fld, seed, nproc=1, **kwargs):
     dtype = dat.dtype
     center = "cell"
     crdz, crdy, crdx = fld.crds.get_crd(center=center)
-    n_streams = seed.n_points(center=center)
+    n_streams = seed.nr_points(center=center)
 
     if nproc == 1:
         seed_iter = seed.iter_points(center=center)

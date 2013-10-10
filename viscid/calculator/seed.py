@@ -28,14 +28,14 @@ class SeedGen(object):
         """ 3 x n ndarray of n seed points """
         if self._points is not None:
             return self._points
-        pts = self.gen_points()
+        pts = self.genr_points()
         if self._cache:
             self._points = pts
         return pts
 
     def iter_points(self, **kwargs):
         """ always returns an iterator, this can be overridden in a subclass
-        if it's more efficient to iterate than a call to gen_points,
+        if it's more efficient to iterate than a call to genr_points,
         calling iter_points should make an effort to be the fastest way to
         iterate through the points, ignorant of caching. In cython, it seems to
         take twice the time to iterate over a generator, than to use a for loop
@@ -43,14 +43,14 @@ class SeedGen(object):
         pts = self.points()
         return izip(pts[0, :], pts[1, :], pts[2, :])
 
-    def n_points(self, **kwargs):
+    def nr_points(self, **kwargs):
         raise NotImplementedError()
 
     def as_coordinates(self):
         """ basically, wrap_crds on something meaningful """
         raise NotImplementedError()
 
-    def gen_points(self):
+    def genr_points(self):
         """ this should return an iterable of (z, y, x) points """
         raise NotImplementedError()
 
@@ -66,10 +66,10 @@ class Point(SeedGen):
         super(Point, self).__init__(cache=cache, dtype=dtype)
         self.params["points"] = points
 
-    def n_points(self, **kwargs):
+    def nr_points(self, **kwargs):
         return self.points().shape[-1]
 
-    def gen_points(self):
+    def genr_points(self):
         pts = self.params["points"]
         if isinstance(pts, np.ndarray):
             if pts.shape[0] == 3:
@@ -100,10 +100,10 @@ class Line(SeedGen):
         self.params["p1"] = p1
         self.params["res"] = res
 
-    def n_points(self, **kwargs):
+    def nr_points(self, **kwargs):
         return self.params["res"]
 
-    def gen_points(self):
+    def genr_points(self):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
@@ -142,13 +142,13 @@ class Plane(SeedGen):
         self.params["res_l"] = res_l
         self.params["res_m"] = res_m
 
-    def n_points(self, **kwargs):
+    def nr_points(self, **kwargs):
         return self.params["res_l"] * self.params["res_m"]
 
     # def _make_arrays(self):
     #     pass
 
-    def gen_points(self):
+    def genr_points(self):
         # turn N and L into flat ndarrays
         Ndir = np.array(self.params["Ndir"], dtype=self.dtype).reshape(-1)
         Ldir = np.array(self.params["Ldir"], dtype=self.dtype).reshape(-1)
@@ -209,10 +209,10 @@ class Volume(SeedGen):
         self.params["p1"] = p1
         self.params["res"] = res
 
-    def n_points(self, **kwargs):
+    def nr_points(self, **kwargs):
         return np.prod(self.params["res"])
 
-    def gen_points(self):
+    def genr_points(self):
         crds = self._make_arrays()
         shape = [len(c) for c in crds]
         arr = np.empty([len(shape)] + [np.prod(shape)])
@@ -249,10 +249,10 @@ class Sphere(SeedGen):
         self.params["restheta"] = restheta
         self.params["resphi"] = resphi
 
-    def n_points(self, **kwargs):
+    def nr_points(self, **kwargs):
         return self.params["restheta"] * self.params["resphi"]
 
-    def gen_points(self):
+    def genr_points(self):
         p0 = self.params["p0"]
         r = self.params["r"]
         restheta = self.params["restheta"]

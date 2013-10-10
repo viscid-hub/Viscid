@@ -442,7 +442,7 @@ class StructuredCrds(Coordinates):
                                 np.prod(shape[i + 1:]))
         return arr
 
-    def n_points(self, center="none"):
+    def nr_points(self, center="none"):
         return np.prod([len(crd) for crd in self.get_crd(center=center)])
 
     def iter_points(self, center="none", **kwargs):
