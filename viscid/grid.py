@@ -40,7 +40,7 @@ class Grid(object):
             fld.unload()
         # TODO: does anything else need to be unloaded in here?
 
-    def n_times(self, *args, **kwargs): #pylint: disable=R0201
+    def nr_times(self, *args, **kwargs): #pylint: disable=R0201
         return 1
 
     def iter_times(self, *args, **kwargs):

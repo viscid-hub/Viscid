@@ -64,10 +64,10 @@ class Dataset(object):
             except AttributeError:
                 pass
 
-    def n_times(self, slice_str=":"):
+    def nr_times(self, slice_str=":"):
         for child in self.children:
             try:
-                return child.n_times(slice_str)
+                return child.nr_times(slice_str)
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
@@ -227,7 +227,7 @@ class DatasetTemporal(Dataset):
         slc = slice(*slc_lst) #pylint: disable=W0142
         return slc
 
-    def n_times(self, slice_str=":"):
+    def nr_times(self, slice_str=":"):
         slc = self._slice_time(slice_str=slice_str)
         return len(self.children[slc])
 
@@ -362,7 +362,7 @@ class DatasetTemporal(Dataset):
     #         item = (item,)
 
     #     varname = item[-1]
-    #     ntimes = len(item) - 1 # -1 for varname
+    #     nr_times = len(item) - 1 # -1 for varname
     #     try:
     #         if len(item) > 1:
     #             req_grid = self.grids[item[-2]]
@@ -370,12 +370,12 @@ class DatasetTemporal(Dataset):
     #         pass
     #     if not req_grid:
     #         req_grid = self.active_grid
-    #         ntimes -= 1
+    #         nr_times -= 1
 
-    #     if ntimes == 0:
+    #     if nr_times == 0:
     #         grids = [self.grid_by_time(self.active_time)]
     #     else:
-    #         grids = [self.grid_by_time(t) for t in item[:ntimes]]
+    #         grids = [self.grid_by_time(t) for t in item[:nr_times]]
 
     #     if len(grids) == 1:
     #         return grids[0][varname]
