@@ -26,9 +26,9 @@ def plot(fld, selection=None, **kwargs):
         # print(selection)
         # print(fld.crds.shape, fld.shape)
 
-        if fld.dim == 1:
+        if fld.nr_sdims == 1:
             return plot1d_field(fld, **kwargs)
-        elif fld.dim == 2:
+        elif fld.nr_sdims == 2:
             return plot2d_field(fld, **kwargs)
         else:
             raise ValueError("mpl can only do 1-D or 2-D fields")
@@ -74,9 +74,9 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
                 absmax = calc.abs_max(fld)
                 opt = [opt[0], -1.0 * absmax, 1.0 * absmax]
 
-            if fld.dim == 1:
+            if fld.nr_sdims == 1:
                 axis.set_ylim(*opt[1:])
-            elif fld.dim == 2:
+            elif fld.nr_sdims == 2:
                 # plt.normalize is deprecated
                 # kwargs["norm"] = plt.normalize(*opt[1:])
                 kwargs["norm"] = Normalize(*opt[1:])
@@ -85,10 +85,10 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
             axis.set_xscale("linear")
 
-            if fld.dim == 1:
+            if fld.nr_sdims == 1:
                 axis.set_yscale("log")
                 axis.set_ylim(*opt[1:])
-            elif fld.dim == 2:
+            elif fld.nr_sdims == 2:
                 axis.set_yscale("linear")
                 kwargs["norm"] = LogNorm(*opt[1:])
 
@@ -96,7 +96,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
             axis.set_xscale("log")
             axis.set_yscale("log")
-            if fld.dim == 2:
+            if fld.nr_sdims == 2:
                 kwargs["norm"] = LogNorm(*opt[1:])
 
         elif opt[0] in ["g", "grid"]:
@@ -155,12 +155,12 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     earth: whether or not to plot
     show: call mpl.show() afterward
     mask_nan: mask nan values in fld.data
-    mod: list of factors for the coords
+    mod: list of scaling factors for the coords
     plot_opts: string of options
     colorbar: is evaluated boolean to decide whether to plot a colorbar, if
     it is a dict, it's passed to colorbar as keyword args
     (note: bool({}) == False) """
-    if fld.dim != 2:
+    if fld.nr_sdims != 2:
         raise RuntimeError("I will only contour a 2d field")
 
     # THIS IS BACKWARD, on account of the convention for
@@ -170,8 +170,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
 
     # pcolor mesh uses node coords, and cell data, if we have
     # node data, fake it by using cell centered coords and
-    # trim the edges of the data... maybe i should just be faking
-    # the coord array somehow to show the edges...
+    # trim the edges of the data... maybe i should just be
+    # extapolating the crds and keeping the edges...
     if style in ["pcolormesh", "pcolor"]:
         if fld.iscentered("Node"):
             X, Y = fld.crds[(namex.upper() + 'cc', namey.upper() + 'cc')]
@@ -213,6 +213,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, **kwargs)
     elif style == "contour":
+        p = ax.contour(X, Y, dat, **kwargs)
+    elif style == "contourf":
         p = ax.contourf(X, Y, dat, **kwargs)
     elif style == "pcolor":
         p = ax.pcolor(X, Y, dat, **kwargs)
@@ -244,46 +246,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         mplshow()
     return p, cbar
 
-# def contour_field(fld, ax=None, equalaxis=True, earth=None,
-#                   show=False, mask_nan=False, colorbar=True, mod=None,
-#                   plot_opts=None, **kwargs):
-#     #print(slcrds[0][0], slcrds[0][1].shape)
-#     #print(slcrds[1][0], slcrds[1][1].shape)
-#     #print(dat.shape)
-#     cbar = None
-#     if not ax:
-#         ax = plt.gca()
-
-#     namey, namex = fld.crds.axes # fld.crds.get_culled_axes()
-
-#     if mod:
-#         X *= mod[0]
-#         Y *= mod[1]
-
-#     # print(x.shape, y.shape, fld.data.shape)
-#     dat = fld.data
-#     if mask_nan:
-#         dat = np.ma.masked_where(np.isnan(dat), dat)
-#     ctr = ax.contour(X, Y, dat, **kwargs)
-
-#     if colorbar:
-#         cbar = plt.colorbar(ctr, use_gridspec=True)
-#         cbar.set_label(fld.name)
-
-#     plt.xlabel(namex)
-#     plt.ylabel(namey)
-
-#     if equalaxis:
-#         ax.axis('equal')
-#     if earth:
-#         plot_earth(fld)
-#     if show:
-#         mplshow()
-#     return ctr, cbar
-
 def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
-    # print(fld.shape, fld.crds.shape)
-
     namex, = fld.crds.axes
     if fld.iscentered("Node"):
         x = fld.crds[namex]
@@ -320,19 +283,23 @@ def plot_streamlines(lines, ax=None, show=True, equal=False, **kwargs):
 
 def plot_streamlines2d(lines, symmetry_dir, ax=None, show=False, equal=False,
                        rotate_plot=False, **kwargs):
+    """ print streamlines given as a list of lines which are ndarrays with
+    dimension (3, npts). symmetry_dir says which dimension to ignore, so that
+    the lines are just parallel projected onto a plane. kwargs are passed to
+    plt.plot(...) """
     if not ax:
         ax = plt.gca()
     p = None
 
     for line in lines:
         line = np.array(line)
-        if symmetry_dir.upper() == "X":
+        if symmetry_dir.lower() == "x":
             x = line[1]
             y = line[0]
-        elif symmetry_dir.upper() == "Y":
+        elif symmetry_dir.lower() == "y":
             x = line[2]
             y = line[0]
-        elif symmetry_dir.upper() == "Z":
+        elif symmetry_dir.lower() == "z":
             x = line[2]
             y = line[1]
         else:
@@ -381,11 +348,11 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crds="mhd"):
     """ crds = "mhd" (Jimmy crds) or "gsm" (GSM crds)... gsm is the same
     as mhd + rot=180. earth_plane is a string in the format 'y=0.2', this
-    says what the 3rd dimension is and sets the radius that the earth should
+    says what the 3rd.nr_sdimsension is and sets the radius that the earth should
     be """
     import matplotlib.patches as mpatches
 
-    # take only the 1st reduced dim... this should just work
+    # take only the 1st reduced.nr_sdims... this should just work
     try:
         plane, value = fld.info["reduced"][0]
     except KeyError:

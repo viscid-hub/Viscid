@@ -62,7 +62,7 @@ TOPOLOGY_OTHER = 16 # >= 16
 def streamlines(fld, seed, nproc=1, **kwargs):
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
-    if fld.dim != 3:
+    if fld.nr_sdims != 3 or fld.nr_comps != 3:
         raise ValueError("Streamlines are only written in 3D.")
     if not fld.iscentered("Cell"):
         raise ValueError("Can only trace cell centered things...")

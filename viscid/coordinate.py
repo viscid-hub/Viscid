@@ -15,7 +15,6 @@ types:
 from __future__ import print_function
 # from timeit import default_timer as time
 import itertools
-import logging
 
 import numpy as np
 
@@ -59,7 +58,6 @@ class StructuredCrds(Coordinates):
     SUFFIXES = list(_CENTER.values())
 
     _axes = ["z", "y", "x"]
-    _dim = 3
 
     _src_crds_nc = None
 
@@ -77,7 +75,8 @@ class StructuredCrds(Coordinates):
             self.set_crds(init_clist)
 
     @property
-    def dim(self):
+    def nr_dims(self):
+        """ number of spatial dimensions """
         return len(self._axes)
 
     @property
@@ -137,7 +136,7 @@ class StructuredCrds(Coordinates):
             # axis = self.axis_name(axis)
             if not axis in self._axes:
                 raise KeyError()
-            ind = self.ind(axis)
+            # ind = self.ind(axis)
             self._src_crds_nc[axis.lower()] = data
 
     def _fill_crds_dict(self):
@@ -205,14 +204,14 @@ class StructuredCrds(Coordinates):
     def ogrid_single(self, axis, arr):
         """ returns (flat array, open array) """
         i = self.ind(axis)
-        shape = [1] * self.dim
+        shape = [1] * self.nr_dims
         shape[i] = -1
 
         # print(arr.shape)
 
         if len(arr.shape) == 1:
             return arr, np.reshape(arr, shape)
-        elif len(arr.shape) == self.dim:
+        elif len(arr.shape) == self.nr_dims:
             return np.ravel(arr), arr
         else:
             raise ValueError()
@@ -295,9 +294,9 @@ class StructuredCrds(Coordinates):
         """
         # TODO: see if np.s_ could clean this up a bit
         selection = self.parse_slice_str(selection)
-        slices = [None] * self.dim
-        # colapse = [None] * self.dim
-        slcrds = [None] * self.dim
+        slices = [None] * self.nr_dims
+        # colapse = [None] * self.nr_dims
+        slcrds = [None] * self.nr_dims
         reduced = []
 
         # go through all axes and see if they are selected
@@ -352,9 +351,13 @@ class StructuredCrds(Coordinates):
                     if consolidate:
                         slices[dind] = ind
                         slcrds[dind] = None
-                        loc = self[axis + "cc"][ind] if use_cc else self[axis][ind]
+                        if use_cc:
+                            loc = self[axis + "cc"][ind]
+                        else:
+                            loc = self[axis][ind]
                         reduced.append([axis, loc])
-                        # print("mkslice int:", self.shape, selection, dind, slices[dind], slcrds[dind], loc, reduced)
+                        # print("mkslice int:", self.shape, selection, dind,
+                        #       slices[dind], slcrds[dind], loc, reduced)
                     else:
                         slices[dind] = [ind]
                         if use_cc:
@@ -445,7 +448,7 @@ class StructuredCrds(Coordinates):
     def nr_points(self, center="none"):
         return np.prod([len(crd) for crd in self.get_crd(center=center)])
 
-    def iter_points(self, center="none", **kwargs):
+    def iter_points(self, center="none", **kwargs): #pylint: disable=W0613
         return itertools.product(*self.get_crd(shaped=False, center=center))
 
     def print_tree(self):
@@ -453,12 +456,18 @@ class StructuredCrds(Coordinates):
         for l in c:
             print(l[0])
 
+    def __len__(self):
+        return self.nr_dims
+
     def __getitem__(self, axis):
         """ returns coord identified by axis """
         return self.get_crd(axis)
 
     def __setitem__(self, axis, arr):
         return self.set_crds((axis, arr))
+
+    def __delitem__(self, item):
+        raise ValueError("can not delete crd this way")
 
     def __contains__(self, item):
         return item in self._crds

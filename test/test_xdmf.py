@@ -35,7 +35,6 @@ def main():
     nrows = 4
     ncols = 2
 
-
     plt.subplot2grid((nrows, ncols), (0, 0))
     mpl.plot(bx, "z=0i,x=:30i", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (1, 0))

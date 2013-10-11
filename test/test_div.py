@@ -47,7 +47,7 @@ def run_div_test(fld, exact, show=False):
     #              np.min(backend_diff.data), np.max(backend_diff.data)))
 
     result_diff = calc.diff(result_numexpr, exact[1:-1, 1:-1, 1:-1])
-    if not (result_diff.data < 5e-6).all():
+    if not (result_diff.data < 5e-5).all():
         logging.warn("numexpr result is far from the exact result")
     logging.info("min/max(abs(numexpr - exact)): {0} / {1}".format(
                  np.min(result_diff.data), np.max(result_diff.data)))
@@ -78,9 +78,10 @@ def main():
 
     dtype = 'float64'
 
-    x = np.array(np.linspace(-0.5, 0.5, 512), dtype=dtype)
-    y = np.array(np.linspace(-0.5, 0.5, 512), dtype=dtype)
-    z = np.array(np.linspace(-0.5, 0.5, 256), dtype=dtype)
+    # use 512 512 256 to inspect memory related things
+    x = np.array(np.linspace(-0.5, 0.5, 256), dtype=dtype)
+    y = np.array(np.linspace(-0.5, 0.5, 256), dtype=dtype)
+    z = np.array(np.linspace(-0.5, 0.5, 64), dtype=dtype)
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
 
     half = np.array([0.5], dtype=dtype) #pylint: disable=W0612
@@ -97,12 +98,12 @@ def main():
     exact = ne.evaluate("cos(Xcc) - "
                         "sin(Ycc) - "
                         "cos(Zcc)")
-
     # cell centered field and exact divergence
     fld_v = field.VectorField("v_cc", crds, [vx, vy, vz],
                               center="Cell", forget_source=True,
                               info={"force_layout": field.LAYOUT_INTERLACED},
                              )
+    vx = vy = vz = None
     fld_exact = field.ScalarField("exact div", crds, exact,
                                   center="Cell", forget_source=True)
     run_div_test(fld_v, fld_exact, show=args.show)

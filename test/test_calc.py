@@ -83,9 +83,9 @@ def main():
     logging.info("Testing node centered magnitudes")
     Z, Y, X = crds.get_crd(shaped=True)
 
-    vx = 0.5 * X**2 + Y
-    vy = 0.5 * Y**2
-    vz = 0.5 * Z**2
+    vx = 0.5 * X**2 +       Y    + 0.0 * Z
+    vy = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z
+    vz = 0.0 * X    + 0.0 * Y    + 0.5 * Z**2
 
     fld_v = field.VectorField("v", crds, [vx, vy, vz],
                               center="Node", forget_source=True,
@@ -96,7 +96,7 @@ def main():
     logging.info("Testing cell centered magnitudes")
     Z, Y, X = crds.get_crd(shaped=True, center="Cell")
 
-    vx = 0.5 * X**2 + Y
+    vx = 0.5 * X**2 + Y + 0.0 * Z
     vy = 0.5 * Y**2
     vz = 0.5 * Z**2
 
