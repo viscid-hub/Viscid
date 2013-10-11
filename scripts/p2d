@@ -54,9 +54,6 @@ def main():
                         default=None, help="size of mpl plot (inches)")
     parser.add_argument("--dpi", dest="dpi", type=float, default=None,
                         help="dpi of plot")
-    # parser.add_argument("--global_popts", default=None, help="Plot opts that "
-    #                     "are applied to all plots, can also be specified "
-    #                     "by a -o before any --var arguments")
     parser.add_argument("--own", action="store_true", help="axes use their own "
                         "x and y")
     parser.add_argument("-a", "--animate", default=None,

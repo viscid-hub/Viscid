@@ -23,8 +23,6 @@ def plot(fld, selection=None, **kwargs):
     as a tuple """
     if isinstance(fld, field.ScalarField):
         fld = fld.slice(selection, consolidate=True)
-        # print(selection)
-        # print(fld.crds.shape, fld.shape)
 
         if fld.nr_sdims == 1:
             return plot1d_field(fld, **kwargs)

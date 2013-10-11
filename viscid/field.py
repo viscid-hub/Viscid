@@ -103,6 +103,7 @@ class Field(object):
 
         if not "force_layout" in self.info:
             self.info["force_layout"] = LAYOUT_DEFAULT
+        self.info["force_layout"] = self.info["force_layout"].lower()
 
         if forget_source:
             self._src_data = self.data

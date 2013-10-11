@@ -27,8 +27,8 @@ Standard distutils
 ```./setup.py build
 ./setup.py install```
 
-For a better dev experience, I recommend adding viscid/viscid to PYTHONPATH,
-viscid/scripts to PATH, and building in-place with
+For a better dev experience, I recommend adding Viscid to your PYTHONPATH,
+viscid/scripts to your PATH, and building in-place with
 ```./setup.py build_ext -i --with-cython```
 If you want to ensure the cython generated code is up to date, you can use the
 shortcut `./setup.py dev`, which is the same as above, but it ensures that
