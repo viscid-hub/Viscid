@@ -33,7 +33,7 @@ z1 = -5.0; z2 = 5.0 #pylint: disable=C0321
 vol = seed.Volume((z1, y1, x1), (z2, y2, x2), gsize)
 
 def trace_fortran(fld_bx, fld_by, fld_bz):
-    gx, gy, gz = fld_bx.crds.get_crd(('xcc', 'ycc', 'zcc'))
+    gx, gy, gz = fld_bx.get_crds_cc(('x', 'y', 'z'))
     nz, ny, nx = fld_bx.shape
 
     bx_farr = np.array(np.ravel(fld_bx.data, order='K').reshape((nx, ny, nz), order="F")) #pylint: disable=C0301

@@ -81,7 +81,7 @@ def main():
                                                 ('x', x)))
 
     logging.info("Testing node centered magnitudes")
-    Z, Y, X = crds.get_crd(shaped=True)
+    Z, Y, X = crds.get_crds_nc(shaped=True)
 
     vx = 0.5 * X**2 +       Y    + 0.0 * Z
     vy = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z
@@ -94,7 +94,7 @@ def main():
     run_mag_test(fld_v, show=args.show)
 
     logging.info("Testing cell centered magnitudes")
-    Z, Y, X = crds.get_crd(shaped=True, center="Cell")
+    Z, Y, X = crds.get_crds_cc(shaped=True)
 
     vx = 0.5 * X**2 + Y + 0.0 * Z
     vy = 0.5 * Y**2

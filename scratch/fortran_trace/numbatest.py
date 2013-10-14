@@ -195,7 +195,7 @@ def nb_get_topo(B, gx, gy, gz, topo_arr, x1, x2):
 @nb.autojit()
 def py_get_topo(Bfld, topo_arr, x1, x2, y1, y2, z1, z2):
     B = Bfld.data
-    gx, gy, gz = Bfld.crds.get_crd(('xcc', 'ycc', 'zcc'))
+    gx, gy, gz = Bfld.get_crds_cc(('x', 'y', 'z'))
     x1 = np.array([z1, y1, x1], dtype=B.dtype)
     x2 = np.array([z2, y2, x2], dtype=B.dtype)
     nsegs = nb_get_topo(B, gx, gy, gz, topo_arr, x1, x2)

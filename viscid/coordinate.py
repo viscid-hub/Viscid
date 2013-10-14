@@ -84,12 +84,12 @@ class StructuredCrds(Coordinates):
         return self._axes
 
     @property
-    def shape(self):
-        return self.shape_nc
-
-    @property
     def dtype(self):
         return self[self.axes[0]].dtype
+
+    @property
+    def shape(self):
+        return self.shape_nc
 
     @property
     def shape_nc(self):
@@ -117,7 +117,6 @@ class StructuredCrds(Coordinates):
         if self.__crds is None:
             self._fill_crds_dict()
         return self.__crds
-
 
     def clear_crds(self):
         self._src_crds_nc = {}
@@ -151,7 +150,7 @@ class StructuredCrds(Coordinates):
             # axis = self.axis_name(axis)
             ind = self.ind(axis)
             arr = np.array(arr, dtype=arr.dtype.name)
-            flatarr, openarr = self.ogrid_single(ind, arr)
+            flatarr, openarr = self._ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr
             self.__crds[axis.upper()] = openarr
             # now with suffix
@@ -163,17 +162,17 @@ class StructuredCrds(Coordinates):
         for a in self.axes:
             # a = self.axis_name(a)  # validate input
             ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
-            flatarr, openarr = self.ogrid_single(a, ccarr)
+            flatarr, openarr = self._ogrid_single(a, ccarr)
             self.__crds[a + sfx] = flatarr
             self.__crds[a.upper() + sfx] = openarr
 
         # ok, so this is a little recursive, but it's ok since we set
         # __crds above, note however that now we only have nc and cc
         # crds in __crds
-        crds_nc = self.get_crd()
-        crds_nc_shaped = self.get_crd(shaped=True)
-        crds_cc = self.get_crd(center="Cell")
-        crds_cc_shaped = self.get_crd(shaped=True, center="Cell")
+        crds_nc = self.get_crds_nc()
+        crds_nc_shaped = self.get_crds_nc(shaped=True)
+        crds_cc = self.get_crds_cc()
+        crds_cc_shaped = self.get_crds_cc(shaped=True)
 
         # store references to face and edge centers while we're here
         sfx = self._CENTER["face"]
@@ -201,7 +200,7 @@ class StructuredCrds(Coordinates):
                     self.__crds[a + sfx][j] = crds_nc[i]
                     self.__crds[a.upper() + sfx][j] = crds_nc_shaped[i]
 
-    def ogrid_single(self, axis, arr):
+    def _ogrid_single(self, axis, arr):
         """ returns (flat array, open array) """
         i = self.ind(axis)
         shape = [1] * self.nr_dims
@@ -407,21 +406,27 @@ class StructuredCrds(Coordinates):
             return self
         return wrap_crds(self._TYPE, crdlst)
 
-    def get_crd(self, axis=None, shaped=False, center="none"):
+    def get_crd(self, axis, shaped=False, center="none"):
         """ if axis is not specified, return all coords,
         shaped makes axis capitalized and returns ogrid like crds
         shaped is only used if axis == None
-        sfx can be none, node, cell, face, edge """
+        sfx can be none, node, cell, face, edge
+        raises KeyError if axis not found """
+        return self.get_crds([axis], shaped, center)[0]
 
-        if axis == None:
-            axis = [a.upper() if shaped else a for a in self.axes]
-
+    def get_crds(self, axes=None, shaped=False, center="none"):
+        """ axes: should be a list of names or integer indices, or None
+                  to return all axes
+        shaped: boolean if you want a shaped or flat ndarray
+                (True is the same as capitalizing axis)
+        center: 'node' 'cell' 'edge' 'face', same as adding a suffix to axes
+        returns list of coords as ndarrays """
+        if axes == None:
+            axes = [a.upper() if shaped else a for a in self.axes]
+        if not isinstance(axes, (list, tuple)):
+            axes = [axes]
         sfx = self._CENTER[center.lower()]
-
-        if isinstance(axis, (list, tuple)):
-            return [self._crds[self.axis_name(a) + sfx] for a in axis]
-        else:
-            return self._crds[self.axis_name(axis) + sfx]
+        return [self._crds[self.axis_name(a) + sfx] for a in axes]
 
     def get_culled_axes(self, ignore=2):
         """ return list of axes names, but discard axes whose coords have
@@ -429,15 +434,59 @@ class StructuredCrds(Coordinates):
         center in the 3rd direction """
         return [name for name in self.axes if len(self[name]) > ignore]
 
-    def get_clist(self, slce=None):
+    def get_clist(self, slc=None):
         """ return a clist of the coordinates sliced if you wish
         I recommend using numpy.s_ for making the slice """
-        if slce is None:
-            slce = slice(None)
-        return [[axis, self.get_crd(axis)[slce]] for axis in self.axes]
+        if slc is None:
+            slc = slice(None)
+        return [[axis, self.get_crd(axis)[slc]] for axis in self.axes]
+
+    ## These methods just return one crd axis
+    def get_nc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.get_crd(axis, shaped=shaped, center="node")
+
+    def get_cc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.get_crd(axis, shaped=shaped, center="cell")
+
+    def get_fc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.get_crd(axis, shaped=shaped, center="face")
+
+    def get_ec(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.get_crd(axis, shaped=shaped, center="edge")
+
+    ## These methods return all crd axes
+    def get_crds_nc(self, axes=None, shaped=False):
+        """ returns all node centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.get_crds(axes=axes, center="node", shaped=shaped)
+
+    def get_crds_cc(self, axes=None, shaped=False):
+        """ returns all cell centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.get_crds(axes=axes, center="cell", shaped=shaped)
+
+    def get_crds_ec(self, axes=None, shaped=False):
+        """ return all edge centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.get_crds(axes=axes, center="edge", shaped=shaped)
+
+    def get_crds_fc(self, axes=None, shaped=False):
+        """ returns all face centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.get_crds(axes=axes, center="face", shaped=shaped)
 
     def points(self, center="none"):
-        crds = self.get_crd(shaped=False, center=center)
+        """ returns all points in a grid defined by crds as a
+        nr_dims x nr_points ndarray """
+        crds = self.get_crds(shaped=False, center=center)
         shape = [len(c) for c in crds]
         arr = np.empty([len(shape)] + [np.prod(shape)])
         for i, c in enumerate(crds):
@@ -446,10 +495,13 @@ class StructuredCrds(Coordinates):
         return arr
 
     def nr_points(self, center="none"):
-        return np.prod([len(crd) for crd in self.get_crd(center=center)])
+        """ returns the number of points in a grid defined by these crds """
+        return np.prod([len(crd) for crd in self.get_crds(center=center)])
 
     def iter_points(self, center="none", **kwargs): #pylint: disable=W0613
-        return itertools.product(*self.get_crd(shaped=False, center=center))
+        """ returns an iterator over all the points in a grid, each nextitem
+        will be a list of nr_dims numbers """
+        return itertools.product(*self.get_crds(shaped=False, center=center))
 
     def print_tree(self):
         c = self.get_clist()
@@ -460,18 +512,24 @@ class StructuredCrds(Coordinates):
         return self.nr_dims
 
     def __getitem__(self, axis):
-        """ returns coord identified by axis """
+        """ returns coord identified by axis (shaped / centering encoded through
+            capitalization of crd, and suffix), ex: 'Xcc' is shaped cell centered,
+            'znc' is flat node centered, 'x' is flat node centered,
+            2 is self._axes[2] """
         return self.get_crd(axis)
 
     def __setitem__(self, axis, arr):
+        """ I recommend against doing this since there may be unintended
+        side effects """
         return self.set_crds((axis, arr))
 
     def __delitem__(self, item):
         raise ValueError("can not delete crd this way")
 
     def __contains__(self, item):
+        if item[-2:] in list(self._CENTER.values()):
+            item = item[:-2].lower()
         return item in self._crds
-
 
 class RectilinearCrds(StructuredCrds):
     _TYPE = "rectilinear"

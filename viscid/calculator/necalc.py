@@ -90,11 +90,11 @@ def div(fld):
     vx, vy, vz = fld.component_views()
 
     if fld.iscentered("Cell"):
-        crdz, crdy, crdx = fld.crds.get_crd(shaped=True, center="Cell")
+        crdz, crdy, crdx = fld.get_crds_cc(shaped=True)
         divcenter = "Cell"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     elif fld.iscentered("Node"):
-        crdz, crdy, crdx = fld.crds.get_crd(shaped=True)
+        crdz, crdy, crdx = fld.get_crds_nc(shaped=True)
         divcenter = "Node"
         divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     else:
@@ -124,11 +124,11 @@ def curl(fld):
     vx, vy, vz = fld.component_views()
 
     if fld.iscentered("Cell"):
-        crdz, crdy, crdx = fld.crds.get_crd(shaped=True, center="Cell")
+        crdz, crdy, crdx = fld.get_crds_cc(shaped=True)
         curlcenter = "cell"
         curlcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     elif fld.iscentered("Node"):
-        crdz, crdy, crdx = fld.crds.get_crd(shaped=True)
+        crdz, crdy, crdx = fld.get_crds_nc(shaped=True)
         curlcenter = "node"
         curlcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
     else:

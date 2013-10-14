@@ -20,40 +20,50 @@ LAYOUT_FLAT = "flat"
 LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
-def field_type(typ):
-    """ @returns: a class where class.type matches typ
-    the magic lookup happens when typ is a string, if typ is a class
-    then just return the class for convenience """
-    if isclass(typ) and issubclass(typ, Field):
-        return typ
+def empty(typ, name, crds, nr_comps=0, layout=LAYOUT_FLAT, center="Cell",
+          dtype="float64", **kwargs):
+    """ creates an empty field of type typ with the same shape as crds,
+    dtype is just something that can be understood by np.array() and
+    kwargs get passed to the field constructor """
+    if center.lower() == "cell":
+        sshape = crds.shape_cc
+    elif center.lower() == "node":
+        sshape = crds.shape_nc
     else:
-        for cls in vutil.subclass_spider(Field):
-            if cls.istype(typ):
-                return cls
-    logging.warn("Field type {0} not understood".format(typ))
-    return None
+        sshape = crds.shape_nc
+
+    if ScalarField.istype(typ):
+        shape = sshape
+    else:
+        if layout.lower() == LAYOUT_INTERLACED:
+            shape = sshape + [nr_comps]
+        else:
+            shape = [nr_comps] + sshape
+
+    dat = np.empty(shape, dtype=dtype)
+
+    return wrap_field(typ, name, crds, dat, center=center, **kwargs)
 
 def empty_like(fld, name, **kwargs):
+    """ create empty field whose shape / meta data match fld """
     dat = np.empty(fld.shape, dtype=fld.dtype)
-    wrap_field(fld.type, name, fld.crds, dat, **kwargs)
+    c = fld.center
+    t = fld.time
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
 def zeros_like(fld, name, **kwargs):
+    """ create field of zeros whose shape / meta data match fld """
     dat = np.zeros(fld.shape, dtype=fld.dtype)
-    wrap_field(fld.type, name, fld.crds, dat, **kwargs)
+    c = fld.center
+    t = fld.time
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
 def ones_like(fld, name, **kwargs):
+    """ create field of ones whose shape / meta data match fld """
     dat = np.ones(fld.shape, dtype=fld.dtype)
-    wrap_field(fld.type, name, fld.crds, dat, **kwargs)
-
-def wrap_field(typ, name, crds, data, **kwargs):
-    """ **kwargs passed to field constructor """
-    #
-    #len(clist), clist[0][0], len(clist[0][1]), type)
-    cls = field_type(typ)
-    if cls is not None:
-        return cls(name, crds, data, **kwargs)
-    else:
-        raise NotImplementedError("can not decipher field")
+    c = fld.center
+    t = fld.time
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
 def scalar_fields_to_vector(name, fldlist, **kwargs):
     if not name:
@@ -67,12 +77,36 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
                          **kwargs)
     return vfield
 
+def field_type(typ):
+    """ @returns: a class where class.type matches typ
+    the magic lookup happens when typ is a string, if typ is a class
+    then just return the class for convenience """
+    if isclass(typ) and issubclass(typ, Field):
+        return typ
+    else:
+        for cls in vutil.subclass_spider(Field):
+            if cls.istype(typ):
+                return cls
+    logging.warn("Field type {0} not understood".format(typ))
+    return None
+
+def wrap_field(typ, name, crds, data, **kwargs):
+    """ **kwargs passed to field constructor """
+    #
+    #len(clist), clist[0][0], len(clist[0][1]), type)
+    cls = field_type(typ)
+    if cls is not None:
+        return cls(name, crds, data, **kwargs)
+    else:
+        raise NotImplementedError("can not decipher field")
 
 class Field(object):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
 
     # set on __init__
+    # NOTE: _src_data is allowed by be a list to support creating vectors from
+    # some scalar fields without necessarilly loading the data
     _center = "none"  # String in CENTERING
     _src_data = None  # numpy-like object (h5py too), or list of these objects
     name = None  # String
@@ -154,6 +188,7 @@ class Field(object):
             layout = self._detect_layout(self._src_data)
             if layout == LAYOUT_INTERLACED:
                 if isinstance(self._src_data, (list, tuple)):
+                    # this is an awkward way to get the data in here...
                     self._nr_comps = self._src_data[0].shape[-1]
                 else:
                     self._nr_comps = self._src_data.shape[-1]
@@ -268,20 +303,9 @@ class Field(object):
     def _fill_cache(self):
         """ actually load data into the cache """
         self._cache = self._src_data_to_ndarray()
-        # self._cache = self._translate_src_data(self._src_data)
 
     def _translate_src_data(self):
-        # if dat is list of fields, make it into a list of _src_data so that
-        # elements can be passed bare to np.array(...)
         pass
-        # if isinstance(self._src_data, (list, tuple)):
-        #     for i in range(len(self._src_data)):
-        #         if isinstance(self._src_data[i], Field):
-        #             # use _src_data so that things don't get auto cached
-        #             # since we are caching own copy of the data anyway
-        #             # yes, i know _src_data is 'protected', but I can use it
-        #             # anyway; this is why python rocks
-        #             self._src_data[i] = self._src_data[i]._src_data
 
     def _src_data_to_ndarray(self):
         """ prep the src data into something usable and enforce a layout """
@@ -465,6 +489,28 @@ class Field(object):
         """ does not guarentee that the memory will be freed """
         self._purge_cache()
 
+    def downsample(self, factor):
+        """ downsample the spatial dimensions by factor """
+        # slices = [None] * factor
+        # for i in range(factor):
+        #     slices[i] = [slice(, None, factor)] * self.nr_sdims
+
+        # if self.istype("Vector"):
+        #     if self.layout == LAYOUT_INTERLACED:
+        #         slc = slc + [slice(None)]
+        #     else:
+        #         slc = [slice(None)] + slc
+
+        # # src_data is allowed by be a list to support creating vectors from
+        # # some scalar fields without necessarilly loading the data
+        # if isinstance(self._src_data, (list, tuple)):
+        #     s0 = slc.pop(0)
+        #     dat0 = self._src_data[s0]
+        #     dat = [d[slc] for d in dat0]
+        # else:
+        #     dat = self.data[slc]
+        raise NotImplementedError
+
     @classmethod
     def istype(cls, type_str):
         return cls._TYPE == type_str.lower()
@@ -490,6 +536,61 @@ class Field(object):
         for val in self.data.ravel():
             yield val
 
+    ##################################
+    ## Utility methods to get at crds
+    # these are the same as something like self.crds['xnc']
+    # or self.crds.get_crd()
+    def get_crd(self, axis, shaped=False):
+        """ return crd along axis with same centering as field
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_crd(axis, center=self.center, shaped=shaped)
+
+    def get_crd_nc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_nc(axis, shaped=shaped)
+
+    def get_crd_cc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_cc(axis, shaped=shaped)
+
+    def get_crd_ec(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_ec(axis, shaped=shaped)
+
+    def get_crd_fc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_fc(axis, shaped=shaped)
+
+    ## these return all crd dimensions
+    # these are the same as something like self.crds.get_crds()
+    def get_crds(self, axes=None, shaped=False):
+        """ return all crds as list of ndarrays with same centering as field """
+        return self.crds.get_crds(axes=axes, center=self.center, shaped=shaped)
+
+    def get_crds_nc(self, axes=None, shaped=False):
+        """ returns all node centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_nc(axes=axes, shaped=shaped)
+
+    def get_crds_cc(self, axes=None, shaped=False):
+        """ returns all cell centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_cc(axes=axes, shaped=shaped)
+
+    def get_crds_fc(self, axes=None, shaped=False):
+        """ returns all face centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_fc(axes=axes, shaped=shaped)
+
+    def get_crds_ec(self, axes=None, shaped=False):
+        """ returns all edge centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_ec(axes=axes, shaped=shaped)
+
     #######################
     ## emulate a container
 
@@ -498,10 +599,7 @@ class Field(object):
 
     def __getitem__(self, item):
         if isinstance(item, str):
-            if item in self.crds:
-                return self.crds[item]
-            else:
-                return self.slice(item)
+            return self.slice(item)
         return self.slice(item)
 
     def __setitem__(self, key, value):
@@ -653,6 +751,10 @@ class Field(object):
 class ScalarField(Field):
     _TYPE = "scalar"
 
+    @property
+    def nr_dims(self):
+        return self.nr_sdims
+
     # FIXME: there is probably a better way to deal with scalars not
     # having a component dimension
     @property
@@ -662,6 +764,28 @@ class ScalarField(Field):
     @property
     def nr_comps(self):
         return 0
+
+    # no transpose / swap axes for vectors yet since that would have the added
+    # layer of checking the layout
+    def transpose(self, *axes):
+        """ same behavior as numpy transpose, alse accessable
+        using np.transpose(fld) """
+        if axes == (None, ) or len(axes) == 0:
+            axes = range(self.nr_dims - 1, -1, -1)
+        if not (len(axes) == self.nr_dims):
+            raise ValueError("transpose can not change number of axes")
+        clist = self.crds.get_clist()
+        new_clist = [clist[ax] for ax in axes]
+        t_crds = coordinate.wrap_crds(self.crds.type, new_clist)
+        t_data = self.data.transpose(axes)
+        return self.wrap(t_data, {"crds": t_crds})
+
+    def swap_axes(self, a, b):
+        new_clist = self.crds.get_clist()
+        new_clist[a], new_clist[b] = new_clist[b], new_clist[a]
+        new_crds = coordinate.wrap_crds(self.crds.type, new_clist)
+        new_data = self.data.swap_axes(a, b)
+        return self.wrap(new_data, {"crds": new_crds})
 
 
 class VectorField(Field):

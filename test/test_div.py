@@ -87,8 +87,8 @@ def main():
     half = np.array([0.5], dtype=dtype) #pylint: disable=W0612
     two = np.array([2.0], dtype=dtype) #pylint: disable=W0612
 
-    Z, Y, X = crds.get_crd(shaped=True)
-    Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell")
+    Z, Y, X = crds.get_crds_nc(shaped=True) #pylint: disable=W0612
+    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True) #pylint: disable=W0612
 
     logging.info("cell centered tests")
 

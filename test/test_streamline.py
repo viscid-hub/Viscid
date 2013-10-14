@@ -37,7 +37,7 @@ def get_dipole(m=None, twod=False):
     m = np.array(m, dtype=dtype)
     mx, my, mz = m #pylint: disable=W0612
 
-    Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell") #pylint: disable=W0612
+    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True) #pylint: disable=W0612
 
     rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
     mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612

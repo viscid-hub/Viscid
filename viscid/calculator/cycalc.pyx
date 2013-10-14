@@ -97,9 +97,9 @@ def trilin_interp(fld, seeds):
     The output is always an array, even if only one point is given.
     """
     if fld.iscentered("Cell"):
-        crdz, crdy, crdx = fld.crds.get_crd(center="Cell")
+        crdz, crdy, crdx = fld.get_crds_cc()
     elif fld.iscentered("Node"):
-        crdz, crdy, crdx = fld.crds.get_crd()
+        crdz, crdy, crdx = fld.get_crds_nc()
     else:
         raise RuntimeError("Dont touch me with that centering.")
 

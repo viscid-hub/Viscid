@@ -70,7 +70,7 @@ def streamlines(fld, seed, nproc=1, **kwargs):
     dat = fld.data
     dtype = dat.dtype
     center = "cell"
-    crdz, crdy, crdx = fld.crds.get_crd(center=center)
+    crdz, crdy, crdx = fld.get_crds_cc()
     n_streams = seed.nr_points(center=center)
 
     if nproc == 1:

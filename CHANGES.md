@@ -8,6 +8,7 @@ Features:
 
 ## 0.50.1 dev
 Features:
+  - crds accessable from grids / fields / crds using get_crd_?c or get_crds_?c for one or multile crds rspectively
   - rewrite fields to a cleaner, unified interface
   - stringy typed things should be case insensitive if compared with the provided methods (istype() and iscentered()), otherwise everything is lowercase
   - field properties are now even lazier and cachier

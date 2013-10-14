@@ -13,7 +13,7 @@ from numba.decorators import jit, autojit
 @autojit()
 def get_topo(Bfld, topo_arr, x1, x2, y1, y2, z1, z2):
     B = Bfld.data
-    gx, gy, gz = Bfld.crds.get_crd(('xcc', 'ycc', 'zcc'))
+    gx, gy, gz = Bfld.get_crds_cc(('x', 'y', 'z'))
     outnx, outny, outnz = topo_arr.shape
     # nz, ny, nx, nc = B.shape
     nsegs = 0
