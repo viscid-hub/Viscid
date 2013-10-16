@@ -523,28 +523,6 @@ class Field(object):
         """ does not guarentee that the memory will be freed """
         self._purge_cache()
 
-    def downsample(self, factor):
-        """ downsample the spatial dimensions by factor """
-        # slices = [None] * factor
-        # for i in range(factor):
-        #     slices[i] = [slice(, None, factor)] * self.nr_sdims
-
-        # if self.istype("Vector"):
-        #     if self.layout == LAYOUT_INTERLACED:
-        #         slc = slc + [slice(None)]
-        #     else:
-        #         slc = [slice(None)] + slc
-
-        # # src_data is allowed by be a list to support creating vectors from
-        # # some scalar fields without necessarilly loading the data
-        # if isinstance(self._src_data, (list, tuple)):
-        #     s0 = slc.pop(0)
-        #     dat0 = self._src_data[s0]
-        #     dat = [d[slc] for d in dat0]
-        # else:
-        #     dat = self.data[slc]
-        raise NotImplementedError
-
     @classmethod
     def istype(cls, type_str):
         return cls._TYPE == type_str.lower()
@@ -797,8 +775,35 @@ class ScalarField(Field):
     def nr_comps(self):
         return 0
 
-    # no transpose / swap axes for vectors yet since that would have the added
-    # layer of checking the layout
+    # no downsample / transpose / swap axes for vectors yet since that would
+    # have the added layer of checking the layout
+    def downsample(self):
+        """ downsample the spatial dimensions by a factor of 2 """
+        # FIXME: this implementation assumes a lot about the field
+        end = np.array(self.sshape) // 2
+        dat = self.data
+
+        if self.nr_sdims == 1:
+            downdat = 0.5 * (dat[:end[0]:2] + dat[1:end[0]:2])
+        elif self.nr_sdims == 2:
+            downdat = 0.25 * (dat[:end[0]:2, :end[1]:2] +
+                              dat[1:end[0]:2, :end[1]:2] +
+                              dat[:end[0]:2, 1:end[1]:2] +
+                              dat[1:end[0]:2, 1:end[1]:2])
+        elif self.nr_sdims == 3:
+            downdat = 0.125 * (dat[:end[0]:2, :end[1]:2, :end[2]:2] +
+                               dat[1:end[0]:2, :end[1]:2, :end[2]:2] +
+                               dat[:end[0]:2, 1:end[1]:2, :end[2]:2] +
+                               dat[:end[0]:2, :end[1]:2, 1:end[2]:2] +
+                               dat[1:end[0]:2, 1:end[1]:2, :end[2]:2] +
+                               dat[1:end[0]:2, :end[1]:2, 1:end[2]:2] +
+                               dat[:end[0]:2, 1:end[1]:2, 1:end[2]:2] +
+                               dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
+
+        downclist = self.crds.get_clist(np.s_[::2])
+        downcrds = coordinate.wrap_crds("Rectilinear", downclist)
+        return self.wrap(downdat, {"crds": downcrds})
+
     def transpose(self, *axes):
         """ same behavior as numpy transpose, alse accessable
         using np.transpose(fld) """
