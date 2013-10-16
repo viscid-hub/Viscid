@@ -92,11 +92,13 @@ def div(fld):
     if fld.iscentered("Cell"):
         crdz, crdy, crdx = fld.get_crds_cc(shaped=True)
         divcenter = "Cell"
-        divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     elif fld.iscentered("Node"):
         crdz, crdy, crdx = fld.get_crds_nc(shaped=True)
         divcenter = "Node"
-        divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
 
@@ -115,7 +117,6 @@ def div(fld):
 
     div_arr = ne.evaluate("(vxp-vxm)/(xp-xm) + (vyp-vym)/(yp-ym) + "
                           "(vzp-vzm)/(zp-zm)")
-
     return field.wrap_field("Scalar", "div " + fld.name, divcrds, div_arr,
                             center=divcenter, time=fld.time)
 

@@ -22,7 +22,7 @@ def plot(fld, selection=None, **kwargs):
     matplotlib plot given the field. returns the mpl plot and color bar
     as a tuple """
     if isinstance(fld, field.ScalarField):
-        fld = fld.slice(selection, consolidate=True)
+        fld = fld.slice_reduce(selection)
 
         if fld.nr_sdims == 1:
             return plot1d_field(fld, **kwargs)

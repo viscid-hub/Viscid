@@ -242,9 +242,9 @@ class Field(object):
         # it is enforced that the cached data has a shape that agrees with
         # the coords by _reshape_ndarray_to_crds... actually, that method
         # requires this method to depend on the crd shape
-        if self.center == "node":
+        if self.iscentered("node"):
             return list(self.crds.shape_nc)
-        elif self.center == "cell":
+        elif self.iscentered("cell"):
             return list(self.crds.shape_cc)
         else:
             logging.warn("edge/face vectors not implemented, assuming "
@@ -448,42 +448,76 @@ class Field(object):
 
         return layout
 
-    #TODO: some method that gracefully gets the correct crd arrays for
-    # face and edge centered fields
+    def _prepare_slice(self, selection):
+        """ if selection has a slice for component dimension, set it aside """
+        comp_slc = slice(None)
+        if isinstance(selection, tuple):
+            selection = list(selection)
+        if isinstance(selection, list):
+            if self.nr_comps > 0 and len(selection) == self.nr_dims:
+                comp_slc = selection.pop[self.nr_comp]
+        return selection, comp_slc
 
-    def slice(self, selection, consolidate=False):
-        """ Select a slice of the data using selection dictionary.
-        Returns a new field.
-        """
-        cc = self.iscentered("Cell")
-        slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
-                                                       consolidate=consolidate)
-
+    def _finalize_slice(self, slices, crdlst, reduced, comp_slc):
         # no slice necessary, just pass the field through
         if list(slices) == [slice(None)] * len(slices):
             return self
 
         crds = coordinate.wrap_crds(self.crds.type, crdlst)
         try:
-            slices.insert(self.nr_comp, slice(None))
+            slices.insert(self.nr_comp, comp_slc)
         except TypeError:
             pass
-        # TODO: This can probably be done with a 'lazy slice'
 
         # if we sliced the hell out of the array, just
-        # return the value that's left
+        # return the value that's left, ndarrays have the same behavior
         slced_dat = self.data[tuple(slices)]
         if len(reduced) == len(slices) or slced_dat.size == 1:
             return slced_dat
         else:
             fld = self.wrap(slced_dat,
-                            {"name": self.name + "_slice",
+                            {"name": self.name,
                              "crds": crds,
                             })
             # if there are reduced dims, put them into the info dict
             if len(reduced) > 0:
                 fld.info["reduced"] = reduced
             return fld
+
+    def slice(self, selection):
+        """ Slice the field using a string like "y=3i:6i:2,z=0" or a standard
+        list of slice objects like one would give to numpy. In a string, i
+        means by index, and bare numbers mean by the index closest to that
+        value; see Coordinate.make_slice docs for an example. The semantics
+        for keeping / droping dimensions are the same as for numpy arrays.
+        This means selections that leave one crd in a given dimension reduce
+        that dimension out. For other behavior see
+        slice_reduce and slice_keep
+        """
+        cc = self.iscentered("Cell")
+        selection, comp_slc = self._prepare_slice(selection)
+        slices, crdlst, reduced = self.crds.make_slice(selection, cc_slice=cc)
+        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+
+    def slice_reduce(self, selection):
+        """ Slice the field, then go through all dims and look for dimensions
+        with only one coordinate. Reduce those dimensions out of the new
+        field """
+        cc = self.iscentered("Cell")
+        selection, comp_slc = self._prepare_slice(selection)
+        slices, crdlst, reduced = self.crds.make_slice_reduce(selection,
+                                                              cc_slice=cc)
+        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+
+    def slice_and_keep(self, selection):
+        """ Slice the field, then go through dimensions that would be reduced
+        by a normal numpy slice (like saying 'z=0') and keep those dimensions
+        in the new field """
+        cc = self.iscentered("Cell")
+        selection, comp_slc = self._prepare_slice(selection)
+        slices, crdlst, reduced = self.crds.make_slice_keep(selection,
+                                                            cc_slice=cc)
+        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def unload(self):
         """ does not guarentee that the memory will be freed """
@@ -598,8 +632,6 @@ class Field(object):
         return self.shape[0]
 
     def __getitem__(self, item):
-        if isinstance(item, str):
-            return self.slice(item)
         return self.slice(item)
 
     def __setitem__(self, key, value):
