@@ -107,11 +107,11 @@ def _do_multiplot_star(all_args):
     except KeyboardInterrupt:
         raise verror.KeyboardInterruptError()
 
-def multiplot(files, plot_vars, np=1, time_slice=":", global_popts=None,
+def multiplot(file_, plot_vars, np=1, time_slice=":", global_popts=None,
               share_axes=False, show=False, kwopts=None):
     grid_iter = izip(
                      itertools.count(),
-                     files[0].iter_times(time_slice),
+                     file_.iter_times(time_slice),
                      itertools.repeat(plot_vars),
                      itertools.repeat(global_popts),
                      itertools.repeat(share_axes),
