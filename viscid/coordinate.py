@@ -233,7 +233,7 @@ class StructuredCrds(Coordinates):
         else:
             return self.axes[axis]
 
-    def _parse_slice_str(self, selection):
+    def _parse_slice(self, selection):
         """ parse a selection string or dict. a trailing i means the number is
         an index, else numbers are interpreted as coordinates... ex:
         selection = 'y=12.32,z-1.0' is line of data
@@ -250,8 +250,11 @@ class StructuredCrds(Coordinates):
         elif isinstance(selection, str):
             sel = {}
             for i, s in enumerate(selection.replace('_', ',').split(',')):
+                swhole = s
                 s = s.split('=')
-
+                if not len(s) == 2:
+                    raise IndexError("There must be exactly 1 '=' per dim, "
+                                     "I see '{0}'".format(swhole))
                 # this extra : split is for asking for a subset in one
                 # dimension
                 dim = s[0].strip()
@@ -299,7 +302,7 @@ class StructuredCrds(Coordinates):
         # which looks like {'axis': (start,stop?,step?), ...}
         # where start /step are optional and start / stop can be floats which
         # indicate that we need to lookup the index
-        selection = self._parse_slice_str(selection)
+        selection = self._parse_slice(selection)
         slices = [None] * self.nr_dims
         slcrds = [None] * self.nr_dims
         reduced = []

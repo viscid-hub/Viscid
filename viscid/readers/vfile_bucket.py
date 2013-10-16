@@ -55,10 +55,10 @@ class VFileBucket(Bucket):
                     # vfilebucket kwarg is ignored by file types that don't care
                     f = ftype(absfname, vfilebucket=self, **kwargs)
                 except IOError as e:
-                    s = "IOError on file: {0}\n".format(absfname)
-                    s += "File Type: {0}\n".format(ftype)
-                    s += e.message
-                    logging.error(s)
+                    s = " IOError on file: {0}\n".format(absfname)
+                    s += "              File Type: {0}\n".format(ftype)
+                    s += "              {0}".format(e.message)
+                    logging.warn(s)
                 except ValueError:
                     pass
                 #     raise IOError(s)
