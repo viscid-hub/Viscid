@@ -12,6 +12,7 @@ from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
 from .. import field
 from ..calculator import calc
+from ..calculator.topology import color_from_topology
 # from .. import vutil
 
 __mpl_ver__ = matplotlib.__version__
@@ -261,15 +262,27 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
         mplshow()
     return p, None
 
-def plot_streamlines(lines, ax=None, show=True, equal=False, **kwargs):
+def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
+                     **kwargs):
     if not ax:
         ax = plt.gca(projection='3d')
 
-    for line in lines:
+    if topology is not None:
+        if isinstance(topology, field.Field):
+            topology = topology.data.reshape(-1)
+        if not "color" in kwargs:
+            topo_color = True
+    else:
+        topo_color = False
+
+    for i, line in enumerate(lines):
         line = np.array(line)
         z = line[0]
         y = line[1]
         x = line[2]
+
+        if topo_color:
+            kwargs["color"] = color_from_topology(topology[i])
         p = ax.plot(x, y, z, **kwargs)
     if equal:
         ax.axis("equal")
@@ -279,17 +292,26 @@ def plot_streamlines(lines, ax=None, show=True, equal=False, **kwargs):
         plt.show()
     return p, None
 
-def plot_streamlines2d(lines, symmetry_dir, ax=None, show=False, equal=False,
-                       rotate_plot=False, **kwargs):
+def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
+                       equal=False, rotate_plot=False, **kwargs):
     """ print streamlines given as a list of lines which are ndarrays with
     dimension (3, npts). symmetry_dir says which dimension to ignore, so that
     the lines are just parallel projected onto a plane. kwargs are passed to
-    plt.plot(...) """
+    plt.plot(...). topology can be an integer array (or field) of
+    size = nr_lines to color the lines by topology """
     if not ax:
         ax = plt.gca()
     p = None
 
-    for line in lines:
+    if topology is not None:
+        if isinstance(topology, field.Field):
+            topology = topology.data.reshape(-1)
+        if not "color" in kwargs:
+            topo_color = True
+    else:
+        topo_color = False
+
+    for i, line in enumerate(lines):
         line = np.array(line)
         if symmetry_dir.lower() == "x":
             x = line[1]
@@ -305,6 +327,9 @@ def plot_streamlines2d(lines, symmetry_dir, ax=None, show=False, equal=False,
 
         if rotate_plot:
             x, y = y, x
+
+        if topo_color:
+            kwargs["color"] = color_from_topology(topology[i])
         p = ax.plot(x, y, **kwargs)
 
     if show:

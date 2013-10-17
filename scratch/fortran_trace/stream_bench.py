@@ -11,6 +11,8 @@ import logging
 
 import numpy as np
 from mayavi import mlab
+from matplotlib import pyplot as plt
+from matplotlib.colors import BoundaryNorm
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../../src/viscid/') #pylint: disable=C0301
 if not _viscid_root in sys.path:
@@ -58,7 +60,7 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
     t1 = time()
 
     t = t1 - t0
-    print("total segments calculated: ", nsegs)
+    print("total segments calculated: {0:.05e}".format(float(nsegs)))
     print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
 
     topo_fld = vol.wrap_field("Scalar", "FortTopo", topo)
@@ -71,15 +73,27 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     t0 = time()
     lines, topo = None, None
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
-                            maxit=5000, output=streamline.OUTPUT_TOPOLOGY)
+                            maxit=5000, output=streamline.OUTPUT_BOTH,
+                            method=streamline.EULER1,
+                            tol_lo=0.005, tol_hi=0.1,
+                            fac_refine=0.75, fac_coarsen=1.5)
     t1 = time()
 
-    # mpl.plot_streamlines(lines, show=True)
-    # mpl.plot(topo_cy, "y=0", show=True)
+    topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
 
-    # b_src = mvi.field_to_source(B)
+    cmap = plt.get_cmap('spectral')
+    levels = [4, 5, 6, 7, 8, 13, 14, 16, 17]
+    norm = BoundaryNorm(levels, cmap.N)
+    mpl.plot(topo_fld, "y=0", cmap=cmap, norm=norm, show=False)
+    mpl.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
+    # mpl.plot_streamlines(lines, topology=topo, show=False)
+    mpl.mplshow()
+
     # topo_src = mvi.field_to_source(topo_fld)
-    # mvi.plot_lines(mlab.pipeline, lines, color=(0.0, 0.8, 0.0), tube_radius=0.05)
+    # e = mlab.get_engine()
+    # e.add_source(topo_src)
+    # mvi.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,
+    #                tube_radius=0.02)
     # mvi.mlab_earth(mlab.pipeline)
     # mlab.show()
 
@@ -92,8 +106,6 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     t = t1 - t0
     print("total segments calculated: ", nsegs)
     print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
-
-    topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
 
     return lines, topo_fld
 
@@ -111,27 +123,31 @@ def trace_numba(fld_bx, fld_by, fld_bz):
 def main():
     parser = argparse.ArgumentParser(description="Test xdmf")
     parser.add_argument("--show", "--plot", action="store_true")
-    args = vutil.common_argparse(parser) #pylint: disable=W0612
+    parser.add_argument('file', nargs="?", default=None)
+    args = vutil.common_argparse(parser)
 
     # f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
     # b3d = f3d['b']
     # bx, by, bz = b3d.component_fields() #pylint: disable=W0612
 
-    f3d = readers.load_file("/Users/kmaynard/dev/work/t1/t1.3df.004320.xdmf")
+    if args.file is None:
+        args.file = "/Users/kmaynard/dev/work/cen4000/cen4000.3d.xdmf"
+    f3d = readers.load_file(args.file)
+
     bx = f3d["bx"]
     by = f3d["by"]
     bz = f3d["bz"]
 
     profile = False
 
-    print("Fortran...")
-    if profile:
-        cProfile.runctx("lines, topo_fort = trace_fortran(bx, by, bz)",
-                        globals(), locals(), "topo_fort.prof")
-        s = pstats.Stats("topo_fort.prof")
-        s.strip_dirs().sort_stats("cumtime").print_stats(10)
-    else:
-        lines, topo_fort = trace_fortran(bx, by, bz)
+    # print("Fortran...")
+    # if profile:
+    #     cProfile.runctx("lines, topo_fort = trace_fortran(bx, by, bz)",
+    #                     globals(), locals(), "topo_fort.prof")
+    #     s = pstats.Stats("topo_fort.prof")
+    #     s.strip_dirs().sort_stats("cumtime").print_stats(10)
+    # else:
+    #     lines, topo_fort = trace_fortran(bx, by, bz)
 
     print("Cython...")
     if profile:
@@ -141,8 +157,8 @@ def main():
         s.strip_dirs().sort_stats("cumtime").print_stats(15)
     else:
         lines, topo_cy = trace_cython(bx, by, bz)
-        print("Same? ",(np.ravel(topo_fort.data, order='K') ==
-                        np.ravel(topo_cy.data, order='K')).all())
+        # print("Same? ",(np.ravel(topo_fort.data, order='K') ==
+        #                 np.ravel(topo_cy.data, order='K')).all())
 
     # print("Numba...")
     # t, nsegs, lines, topo_nb = trace_numba(bx, by, bz)

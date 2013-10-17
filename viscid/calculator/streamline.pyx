@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 from timeit import default_timer as time
-import logging
+from logging import info, warning
 from multiprocessing import Pool
 import itertools
 
@@ -15,6 +15,7 @@ from . import seed
 ###########
 # cimports
 cimport cython
+from libc.math cimport fabs
 # cimport numpy as cnp
 
 from cycalc_util cimport *
@@ -22,10 +23,10 @@ from cycalc cimport *
 from integrate cimport *
 from streamline cimport *
 
-EULER1 = 1
-RK2 = 2
-RK12 = 3
-EULER1A = 4
+EULER1 = 1  # euler1 non-adaptive
+RK2 = 2  # rk2 non-adaptive
+RK12 = 3  # euler1 + rk2 adaptive
+EULER1A = 4  # euler 1st order adaptive
 
 DIR_FORWARD = 1
 DIR_BACKWARD = 2
@@ -36,26 +37,17 @@ OUTPUT_TOPOLOGY = 2
 OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
 # topology will be 1+ of these flags unary or-ed together
-END_NONE = 0  # not ended yet
-END_IBOUND_NORTH = 1
-END_IBOUND_SOUTH = 2
-END_IBOUND = 4
-END_OBOUND = 8
-END_OTHER = 16  # anything > END_OTHER will be END_OTHER | END_*
-END_MAXIT = 32
-END_ZERO_LENGTH = 64
-END_CYCLIC = 128
-
-# since TOPOLGY is a bitmask, these values are only one of possible values
-# for each state
-# Note: these are not used, and are too specialized to be here
-TOPOLOGY_INVALID = 1 # 1, 2, 3, 4, 9, 10, 11, 12, 15
-TOPOLOGY_CLOSED = 7 # 5 (both N), 6 (both S), 7(both hemispheres)
-TOPOLOGY_SW = 8
-TOPOLOGY_OPEN_NORTH = 13
-TOPOLOGY_OPEN_SOUTH = 14
-TOPOLOGY_OTHER = 16 # >= 16
-
+#                  bit #   8 6 4 2 0
+END_NONE = 0           # 0b000000000 not ended yet
+END_IBOUND_NORTH = 1   # 0b000000001
+END_IBOUND_SOUTH = 2   # 0b000000010
+END_IBOUND = 4         # 0b000000100
+END_OBOUND = 8         # 0b000001000
+END_OTHER = 16         # 0b000010000 anything > END_OTHER := END_OTHER | END_*
+END_MAXIT = 32         # 0b000100000
+END_MAX_LENGTH = 64    # 0b001000000
+END_ZERO_LENGTH = 128  # 0b010000000
+END_CYCLIC = 256       # 0b100000000
 
 #####################
 # now the good stuff
@@ -78,8 +70,8 @@ def streamlines(fld, seed, nproc=1, **kwargs):
         return _py_streamline(dtype, dat, crdz, crdy, crdx, seed_iter,
                               n_streams, **kwargs)
     else:
-        logging.warning("Parallel streamlines are super not ready for prime "
-                        "time. They may eat your cat.")
+        warning("Parallel streamlines are super not ready for prime "
+                "time. They may eat your cat.")
         iter_list = [seed.iter_points(center=center) for i in range(nproc)]
         seed_iters = vutil.chunk_iterator(iter_list, n_streams)
         n_streams_it = [len(l) for l in vutil.chunk_list(range(n_streams), nproc)]
@@ -123,9 +115,9 @@ def _do_streamline_star(args):
 def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                    real_t[:] crdz, real_t[:] crdy, real_t[:] crdx,
                    seed_iter, int n_streams, ds0=-1.0, ibound=0.0,
-                   obound0=None, obound1=None, maxit=10000,
+                   obound0=None, obound1=None, maxit=10000, max_length=0.0,
                    stream_dir=DIR_BOTH, output=OUTPUT_BOTH, method=EULER1,
-                   tol_lo=1e-3, tol_hi=1e-2, fac_refine=0.75, fac_coarsen=2.0):
+                   tol_lo=1e-3, tol_hi=1e-2, fac_refine=0.75, fac_coarsen=1.25):
     """ Start calculating a streamline at x0
     stream_dir:  DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
     ibound:      stop streamline if within inner_bound of the origin
@@ -145,6 +137,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         real_t[:] py_obound1
         int c_stream_dir = stream_dir
         int c_maxit = maxit
+        real_t c_max_length = max_length
         real_t c_tol_lo = tol_lo
         real_t c_tol_hi = tol_hi
         real_t c_fac_refine = fac_refine
@@ -156,14 +149,16 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                       int[3])
         int i, j, it
         int i_stream
-        int nprogress = max(n_streams / 50, 1)  # progerss at every 5%
-        int nsegs = 0
+        int nprogress = max(n_streams / 50, 1)  # progeress at every 5%
+        int nr_segs = 0
 
         int ret   # return status of euler integrate
         int end_flags
         int done  # streamline has ended for some reason
+        real_t stream_length
         real_t px, py, pz
         int d  # direction of streamline 1 | -1
+        real_t pre_ds
         real_t ds
         real_t rsq, distsq
         double t0inner, t1inner
@@ -225,13 +220,13 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         topology_mv = topology_ndarr
 
     # first one is for timing, second for status
-    # t0_all = time()
+    t0_all = time()
     t0 = time()
 
     for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
-            logging.info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
+            info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
                          n_streams, int(100.0 * i_stream / n_streams),
                          t1 - t0))
             t0 = time()
@@ -255,6 +250,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                 continue
 
             ds = d * c_ds0
+            stream_length = 0.0
 
             s_mv[0] = x0_mv[0]
             s_mv[1] = x0_mv[1]
@@ -264,10 +260,18 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
 
             done = END_NONE
             while 0 <= it and it < c_maxit:
-                nsegs += 1
+                nr_segs += 1
+                pre_ds = fabs(ds)
+
                 ret = integrate_func(v_mv, crds, &ds, s_mv,
                     c_tol_lo, c_tol_hi, c_fac_refine , c_fac_coarsen,
                     start_inds)
+
+                if fabs(ds) >= pre_ds:
+                    stream_length += pre_ds
+                else:
+                    stream_length += fabs(ds)
+
                 # if i_stream == 0:
                 #     print(s_mv[2], s_mv[1], s_mv[0])
                 # ret is non 0 when |v_mv| == 0
@@ -300,6 +304,9 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                         done = END_OBOUND
                         break
 
+                if c_max_length > 0.0 and stream_length > c_max_length:
+                    done = END_OTHER | END_MAX_LENGTH
+                    break
                 # if we are within 0.99 * ds0 of the initial position
                 # distsq = (x0_mv[0] - s_mv[0])**2 + \
                 #          (x0_mv[1] - s_mv[1])**2 + \
@@ -328,13 +335,14 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
 
         if topology_mv is not None:
             topology_mv[i_stream] = end_flags
-            # logging.info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags,
-            #                         line_ends_mv[0], line_ends_mv[1]))
+            # info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags,
+            #                       line_ends_mv[0], line_ends_mv[1]))
 
     # for timing
     # t1_all = time()
     # t = t1_all - t0_all
-    # print("=> in cython time: {0:.03e} s  {1:.03e} s/seg".format(t, t / nsegs))
+    # print("=> in cython nr_segments: {0:.05e}".format(nr_segs))
+    # print("=> in cython time: {0:.03f}s {1:.03e}s/seg".format(t, t / nr_segs))
 
     return lines, topology_ndarr
 

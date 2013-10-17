@@ -7,6 +7,7 @@ from mayavi.sources.vtk_data_source import VTKDataSource
 from tvtk.api import tvtk
 
 from .. import field
+from ..calculator.topology import color_from_topology
 
 # def data_source(fld):
 #     """ get a data source from a scalar field """
@@ -88,10 +89,20 @@ def field_to_source(fld):
 
     return src
 
-def plot_lines(pipeline, lines, **kwargs):
+def plot_lines(pipeline, lines, topology=None, **kwargs):
     from mayavi import mlab
 
-    for line in lines:
+    if topology is not None:
+        if isinstance(topology, field.Field):
+            topology = topology.data.reshape(-1)
+        if not "color" in kwargs:
+            topo_color = True
+    else:
+        topo_color = False
+
+    for i, line in enumerate(lines):
+        if topo_color:
+            kwargs["color"] = color_from_topology(topology[i])
         mlab.plot3d(line[2], line[1], line[0], **kwargs)
 
 def mlab_earth(pipeline, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15):
