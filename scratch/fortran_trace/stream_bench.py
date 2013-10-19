@@ -73,7 +73,7 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     t0 = time()
     lines, topo = None, None
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
-                            maxit=5000, output=streamline.OUTPUT_BOTH,
+                            maxit=5000, output=streamline.OUTPUT_TOPOLOGY,
                             method=streamline.EULER1,
                             tol_lo=0.005, tol_hi=0.1,
                             fac_refine=0.75, fac_coarsen=1.5)
@@ -85,7 +85,7 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     levels = [4, 5, 6, 7, 8, 13, 14, 16, 17]
     norm = BoundaryNorm(levels, cmap.N)
     mpl.plot(topo_fld, "y=0", cmap=cmap, norm=norm, show=False)
-    mpl.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
+    # mpl.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
     # mpl.plot_streamlines(lines, topology=topo, show=False)
     mpl.mplshow()
 
@@ -140,14 +140,14 @@ def main():
 
     profile = False
 
-    # print("Fortran...")
-    # if profile:
-    #     cProfile.runctx("lines, topo_fort = trace_fortran(bx, by, bz)",
-    #                     globals(), locals(), "topo_fort.prof")
-    #     s = pstats.Stats("topo_fort.prof")
-    #     s.strip_dirs().sort_stats("cumtime").print_stats(10)
-    # else:
-    #     lines, topo_fort = trace_fortran(bx, by, bz)
+    print("Fortran...")
+    if profile:
+        cProfile.runctx("lines, topo_fort = trace_fortran(bx, by, bz)",
+                        globals(), locals(), "topo_fort.prof")
+        s = pstats.Stats("topo_fort.prof")
+        s.strip_dirs().sort_stats("cumtime").print_stats(10)
+    else:
+        lines, topo_fort = trace_fortran(bx, by, bz)
 
     print("Cython...")
     if profile:

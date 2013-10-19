@@ -20,7 +20,7 @@ from . import seed
 ###########
 # cimports
 cimport cython
-cimport numpy as cnp
+# cimport numpy as cnp
 
 from libc.math cimport sqrt
 
@@ -46,7 +46,8 @@ cdef inline int _c_int_min(int a, int b):
         return b
 
 
-cdef inline int _c_closest_ind(real_t[:] crd, real_t point, int *startind):
+cdef inline int _c_closest_ind(real_t[:] crd, real_t point,
+                               int *startind) except -1:
     cdef int i
     cdef int fallback
     cdef int n = crd.shape[0]

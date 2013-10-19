@@ -1,10 +1,19 @@
-# cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
+# cython: boundscheck=True, wraparound=False, cdivision=True, profile=False
+""" NOTE: when nr_procs > 1, fields are shared to child processes using
+a global variable so that on Unix there is no need to picklel and copy the
+entire field. This will only work on Unix, and I have absolutely no idea
+what will happen on Windows """
 
 from __future__ import print_function
 from timeit import default_timer as time
 from logging import info, warning
 from multiprocessing import Pool
-import itertools
+from itertools import islice, repeat
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
+
 
 import numpy as np
 
@@ -49,9 +58,30 @@ END_MAX_LENGTH = 64    # 0b001000000
 END_ZERO_LENGTH = 128  # 0b010000000
 END_CYCLIC = 256       # 0b100000000
 
+# these are set if there is a pool of workers doing streamlines, they are
+# always set back to None when the streamlines are done
+# they need to be global so that the memory is shared with subprocesses
+_global_dat = None
+_global_crds = None
+
 #####################
 # now the good stuff
-def streamlines(fld, seed, nproc=1, **kwargs):
+def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1, **kwargs):
+    """
+    fld:      Some vector field
+    seed:     can be a Seeds instance or a Coordinates instance... basically anything
+              which exposes an iter_points method
+    nr_procs: how many processes to calc streamlines on (>1 only works on unix systems)
+    force_parallel: always calc streamlines in a separate process, even if nr_procs == 1
+    nr_chunks_factor: nchunks = nr_procs * nr_chunks_factor, if streamlines are really
+                      unbalanced, try bumping this up
+    kwargs:   keyword arguments for _py_streamline
+    Returns (lines, topo), either of which can be None depending on output
+    lines: list or ndarray of objects (if nr_procs > 1) of nr_streams ndarrays,
+           each ndarray has shape (3, nr_points_in_stream)
+           the nr_points_in_stream can be different for each line
+    topo is an ndarray with shape (nr_streams,) of topology bitmask
+    """
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
     if fld.nr_sdims != 3 or fld.nr_comps != 3:
@@ -63,68 +93,82 @@ def streamlines(fld, seed, nproc=1, **kwargs):
     dtype = dat.dtype
     center = "cell"
     crdz, crdy, crdx = fld.get_crds_cc()
-    n_streams = seed.nr_points(center=center)
+    nr_streams = seed.nr_points(center=center)
+    kwargs["center"] = center
 
-    if nproc == 1:
-        seed_iter = seed.iter_points(center=center)
-        return _py_streamline(dtype, dat, crdz, crdy, crdx, seed_iter,
-                              n_streams, **kwargs)
+    if nr_procs == 1 and not force_parallel:
+        lines, topo = _py_streamline(dtype, dat, crdz, crdy, crdx, nr_streams,
+                                     seed, **kwargs)
     else:
-        warning("Parallel streamlines are super not ready for prime "
-                "time. They may eat your cat.")
-        iter_list = [seed.iter_points(center=center) for i in range(nproc)]
-        seed_iters = vutil.chunk_iterator(iter_list, n_streams)
-        n_streams_it = [len(l) for l in vutil.chunk_list(range(n_streams), nproc)]
-        grid_iter = itertools.izip(
-                                   itertools.repeat(dtype),
-                                   itertools.repeat(dat),
-                                   itertools.repeat(crdz),
-                                   itertools.repeat(crdy),
-                                   itertools.repeat(crdx),
-                                   seed_iters,
-                                   n_streams_it,
-                                   itertools.repeat(kwargs)
-                                  )
+        # wrap the above around some parallelizing logic that is way more cumbersome
+        # than it needs to be
+        nr_chunks = nr_chunks_factor * nr_procs
+        seed_slices = vutil.chunk_interslices(nr_chunks)  # every nr_chunks seed points
+        # seed_slices = vutil.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
+        chunk_sizes = vutil.chunk_sizes(nr_streams, nr_chunks)
 
-        # FIXME: this will turn the seed generator into a list, this will eat
-        # some time and memory, but generators aren't pickelable, so maybe
-        # there is a better way to do this
-        for i in range(len(seed_iters)):
-            seed_iters[i] = list(seed_iters[i])
+        global _global_dat, _global_crds
+        # if they were already set, then some other process sharing this
+        # global memory is doing streamlines
+        if _global_dat is not None or _global_crds is not None:
+            raise RuntimeError("Another process is doing streamlines in this "
+                               "global memory space")
+        _global_dat = dat
+        _global_crds = [crdz, crdy, crdx]
+        grid_iter = izip(chunk_sizes, repeat(seed), seed_slices, repeat(kwargs))
 
-        p = Pool(nproc)
-        r = p.map(_do_streamline_star, grid_iter)
+        p = Pool(nr_procs)
+        r = p.map_async(_do_streamline_star, grid_iter).get(1e8)
 
+        _global_dat = None
+        _global_crds = None
+
+        # rearrange the output to be the exact same as if we just called
+        # _py_streamline straight up (like for nr_procs == 1)
         if r[0][0] is not None:
-            lines = np.concatenate([ri[0] for ri in r])
+            lines = np.empty((nr_streams,), dtype=np.ndarray)  # [None] * nr_streams
+            for i in range(nr_chunks):
+                lines[slice(*seed_slices[i])] = r[i][0]
         else:
             lines = None
 
         if r[0][1] is not None:
-            topo = np.concatenate([ri[1] for ri in r])
+            topo = np.empty((nr_streams,), dtype=dtype)
+            for i in range(nr_chunks):
+                topo[slice(*seed_slices[i])] = r[i][1]
         else:
             topo = None
-
-        return lines, topo
+    return lines, topo
 
 @cython.wraparound(True)
 def _do_streamline_star(args):
-    return _py_streamline(*(args[:-1]), **(args[-1]))
+    ret = _py_streamline(_global_dat.dtype, _global_dat,
+                         _global_crds[0], _global_crds[1], _global_crds[2],
+                         *(args[:-1]), **(args[-1]))
+    return ret
 
 @cython.wraparound(True)
 def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                    real_t[:] crdz, real_t[:] crdy, real_t[:] crdx,
-                   seed_iter, int n_streams, ds0=-1.0, ibound=0.0,
-                   obound0=None, obound1=None, maxit=10000, max_length=0.0,
-                   stream_dir=DIR_BOTH, output=OUTPUT_BOTH, method=EULER1,
-                   tol_lo=1e-3, tol_hi=1e-2, fac_refine=0.75, fac_coarsen=1.25):
+                   int nr_streams, seed, seed_slice=(None, ), center="Cell",
+                   ds0=0.0, ibound=0.0, obound0=None, obound1=None,
+                   maxit=10000, max_length=0.0, stream_dir=DIR_BOTH,
+                   output=OUTPUT_BOTH, method=EULER1, tol_lo=1e-3, tol_hi=1e-2,
+                   fac_refine=0.75, fac_coarsen=1.25):
     """ Start calculating a streamline at x0
     stream_dir:  DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
     ibound:      stop streamline if within inner_bound of the origin
                  ignored if 0
     obound0:     corner of box beyond which to stop streamline (smallest values)
     obound1:     corner of box beyond which to stop streamline (smallest values)
-    ds0:         initial spatial step for the streamline """
+    ds0:         initial spatial step for the streamline
+    seed_slice:  a tuple of arguments for slice(...), so it's
+                 stop or start, stop, [step]
+    output:      OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY | OUTPUT_BOTH
+    Returns (lines, topo), either of which can be None depending on output
+    lines: list of nr_streams ndarrays, each ndarray has shape (3, nr_points_in_stream)
+           the nr_points_in_stream can be different for each line
+    topo is an ndarray with shape (nr_streams,) of topology bitmask """
     cdef:
         # cdefed versions of arguments
         real_t c_ds0 = ds0
@@ -146,10 +190,10 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         # just for c
         int (*integrate_func)(real_t[:,:,:,::1], real_t[:]*,
                       real_t*, real_t[:], real_t, real_t, real_t, real_t,
-                      int[3])
+                      int[3]) except -1
         int i, j, it
         int i_stream
-        int nprogress = max(n_streams / 50, 1)  # progeress at every 5%
+        int nprogress = max(nr_streams / 50, 1)  # progeress at every 5%
         int nr_segs = 0
 
         int ret   # return status of euler integrate
@@ -196,9 +240,8 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         py_obound1 = obound1
         c_obound1[...] = py_obound1
 
-    if c_ds0 <= 0.0:
-        # FIXME: calculate something reasonable here
-        c_ds0 = 0.01
+    if c_ds0 == 0.0:
+        c_ds0 = np.min([np.min(crdz), np.min(crdy), np.min(crdx)])
 
     if method == EULER1:
         integrate_func = _c_euler1[real_t]
@@ -212,22 +255,24 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         raise ValueError("unknown integration method")
 
     if output & OUTPUT_STREAMLINES:
+        # 2 (0=backward, 1=forward), 3 z,y,x, c_maxit points in the line
         line_ndarr = np.empty((2, 3, c_maxit), dtype=dtype)
         line_mv = line_ndarr
         lines = []
     if output & OUTPUT_TOPOLOGY:
-        topology_ndarr = np.empty((n_streams,), dtype="i")
+        topology_ndarr = np.empty((nr_streams,), dtype="i")
         topology_mv = topology_ndarr
 
     # first one is for timing, second for status
     t0_all = time()
     t0 = time()
 
+    seed_iter = islice(seed.iter_points(center=center), *seed_slice)
     for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
             info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
-                         n_streams, int(100.0 * i_stream / n_streams),
+                         nr_streams, int(100.0 * i_stream / nr_streams),
                          t1 - t0))
             t0 = time()
 

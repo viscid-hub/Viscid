@@ -102,10 +102,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     plt.clf()
 
 def _do_multiplot_star(all_args):
-    try:
-        return _do_multiplot(*all_args) #pylint: disable=W0142
-    except KeyboardInterrupt:
-        raise verror.KeyboardInterruptError()
+    return _do_multiplot(*all_args) #pylint: disable=W0142
 
 def multiplot(file_, plot_vars, np=1, time_slice=":", global_popts=None,
               share_axes=False, show=False, kwopts=None):
@@ -123,9 +120,7 @@ def multiplot(file_, plot_vars, np=1, time_slice=":", global_popts=None,
             _do_multiplot_star(args)
     else:
         pool = mp.Pool(np)
-        pool.map(_do_multiplot_star, grid_iter)
-        pool.close()
-        pool.join()
+        pool.map_async(_do_multiplot_star, grid_iter).get(1e8)
 
 ##
 ## EOF
