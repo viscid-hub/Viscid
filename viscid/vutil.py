@@ -4,6 +4,7 @@ from __future__ import print_function
 from itertools import islice
 from timeit import default_timer as time
 import logging
+import subprocess as sub
 
 import numpy as np
 
@@ -16,6 +17,39 @@ def find_field(vfile, fld_name_lst):
         if fld_name in vfile:
             return vfile[fld_name]
     raise KeyError("file {0} contains none of {1}".format(vfile, fld_name_lst))
+
+def split_floats(arg_str):
+    return [float(s) for s in arg_str.split(',')]
+
+def add_animate_arguments(parser):
+    """ add common options for animating """
+    anim = parser.add_argument_group("Options for creating animations")
+    anim.add_argument("-a", "--animate", default=None,
+                      help="animate results")
+    anim.add_argument("--prefix", default=None,
+                        help="Prefix of the output image filenames")
+    anim.add_argument('-r', '--rate', dest='framerate', type=int, default=5,
+                      help="animation frame rate (default 5).")
+    anim.add_argument('--qscale', dest='qscale', default='2',
+                      help="animation quality flag (default 2).")
+    anim.add_argument('-k', dest='keep', action='store_true',
+                      help="keep temporary files.")
+    return parser
+
+def add_mpl_output_arguments(parser):
+    """ add common options for tuning matplotlib output """
+    mplargs = parser.add_argument_group("Options for tuning matplotlib")
+    mplargs.add_argument("-s", "--size", dest="plot_size", type=split_floats,
+                         default=None, help="size of mpl plot (inches)")
+    mplargs.add_argument("--dpi", dest="dpi", type=float, default=None,
+                         help="dpi of plot")
+    parser.add_argument("--prefix", default=None,
+                        help="Prefix of the output image filenames")
+    parser.add_argument("--format", "-f", default="png",
+                        help="output format, as in 'png'|'pdf'|...")
+    parser.add_argument('-w', '--show', dest='show', action="store_true",
+                        help="show plots with plt.show()")
+    return parser
 
 def common_argparse(parser, **kwargs):
     """ add some common verbosity stuff to argparse, parse the
@@ -46,88 +80,22 @@ def common_argparse(parser, **kwargs):
 
     return args
 
-def chunk_list(seq, nchunks):
-    """
-    slice seq into chunks if nchunks size, seq can be a anything sliceable
-    such as lists, numpy arrays, etc. These chunks will be 'contiguous', see
-    chunk_interslice for picking every nth element.
-
-    Note: Use chunk_iterator to chunk up iterators
-
-    Returns: nchunks slices of length N = (len(lst) // nchunks) or N - 1
-
-    ex: it1, it2, it3 = chunk_list(range(8), 3)
-    it1 == range(0, 3)  # 3 vals
-    it2 == range(3, 6)  # 3 vals
-    it3 == range(6, 8)  # 2 vals
-    """
-    nel = len(seq)
-    ret = chunk_slices(nel, nchunks)
-    for i in range(nchunks):
-        ret[i] = seq[slice(*ret[i])]
-    return ret
-
-def chunk_slices(nel, nchunks):
-    """
-    Get the slice info (can be unpacked & passed to the slice builtin as in
-    slice(*ret[i])) for nchunks contiguous chunks in a list with nel elements
-
-    nel: how many elements are in one pass of the original list
-    nchunks: how many chunks to make
-    Returns: a list of (start, stop) tuples with length nchunks
-
-    ex: sl1, sl2 = chunk_slices(5, 2)
-    -> sl1 == (0, 3)  # 3 vals
-    -> sl2 == (3, 5)  # 2 vals
-    """
-    nlong = nel % nchunks  # nshort guarenteed < nchunks
-    lenshort = nel // nchunks
-    lenlong = lenshort + 1
-
-    ret = [None] * nchunks
-    start = 0
-    for i in range(nlong):
-        ret[i] = (start, start + lenlong)
-        start += lenlong
-    for i in range(nlong, nchunks):
-        ret[i] = (start, start + lenshort)
-        start += lenshort
-    return ret
-
-def chunk_interslices(nchunks):
-    """
-    Similar to chunk_slices, but pick every nth element instead of getting
-    a contiguous block for each chunk
-
-    nchunks: how many chunks to make
-    Returns: a list of (start, stop, step) tuples with length nchunks
-
-    ex: chunk_slices(2) == [(0, None, 2), (1, None, 2)]
-    """
-    ret = [None] * nchunks
-    for i in range(nchunks):
-        ret[i] = (i, None, nchunks)
-    return ret
-
-def chunk_sizes(nel, nchunks):
-    """
-    nel: how many elements are in one pass of the original list
-    nchunks: is inferred from the length of iter_list
-    Returns: an ndarray of the number of elements in each chunk, this
-             should be the same for chunk_list, chunk_slices and
-             chunk_interslices
-
-    ex: nel1, nel2 = chunk_sizes(5, 2)
-    -> nel1 == 2
-    -> nel2 == 3
-    """
-    nlong = nel % nchunks  # nshort guarenteed < nchunks
-    lenshort = nel // nchunks
-    lenlong = lenshort + 1
-    ret = np.empty((nchunks,), dtype="int")
-    ret[:nlong] = lenlong
-    ret[nlong:] = lenshort
-    return ret
+def make_animation(args, program="ffmpeg"):
+    """ make animation by calling program (only ffmpeg works for now) using
+    args, which is a namespace filled by the argparse options from
+    add_animate_arguments. Plots are expected to be named
+    ${args.prefix}_000001.png where the number is in order from 1 up """
+    if args.animate:
+        if program == "ffmpeg":
+            sub.Popen("ffmpeg -r {0} -i {2}_%06d.png -pix_fmt yuv420p "
+                      "-qscale {1} {3}".format(args.framerate, args.qscale,
+                      args.prefix, args.animate), shell=True).communicate()
+    if args.animate is None and args.prefix is not None:
+        args.keep = True
+    if not args.keep:
+        sub.Popen("rm -f {0}_*.png".format(args.prefix),
+                  shell=True).communicate()
+    return None
 
 def subclass_spider(cls):
     """ return recursive list of subclasses of cls (depth first) """

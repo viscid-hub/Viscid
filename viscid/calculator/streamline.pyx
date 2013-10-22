@@ -14,10 +14,9 @@ try:
 except ImportError:
     izip = zip
 
-
 import numpy as np
 
-from .. import vutil
+from .. import parallel
 from .. import field
 from . import seed
 
@@ -103,9 +102,9 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1,
         # wrap the above around some parallelizing logic that is way more cumbersome
         # than it needs to be
         nr_chunks = nr_chunks_factor * nr_procs
-        seed_slices = vutil.chunk_interslices(nr_chunks)  # every nr_chunks seed points
-        # seed_slices = vutil.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
-        chunk_sizes = vutil.chunk_sizes(nr_streams, nr_chunks)
+        seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points
+        # seed_slices = parallel.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
+        chunk_sizes = parallel.chunk_sizes(nr_streams, nr_chunks)
 
         global _global_dat, _global_crds
         # if they were already set, then some other process sharing this
@@ -115,10 +114,11 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1,
                                "global memory space")
         _global_dat = dat
         _global_crds = [crdz, crdy, crdx]
-        grid_iter = izip(chunk_sizes, repeat(seed), seed_slices, repeat(kwargs))
+        grid_iter = izip(chunk_sizes, repeat(seed), seed_slices)
+        args = izip(grid_iter, repeat(kwargs))
 
         p = Pool(nr_procs)
-        r = p.map_async(_do_streamline_star, grid_iter).get(1e8)
+        r = p.map_async(_do_streamline_star, args).get(1e8)
 
         _global_dat = None
         _global_crds = None
@@ -144,7 +144,7 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1,
 def _do_streamline_star(args):
     ret = _py_streamline(_global_dat.dtype, _global_dat,
                          _global_crds[0], _global_crds[1], _global_crds[2],
-                         *(args[:-1]), **(args[-1]))
+                         *(args[0]), **(args[1]))
     return ret
 
 @cython.wraparound(True)
