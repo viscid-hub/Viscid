@@ -13,17 +13,19 @@ import numpy as np
 
 
 # Non daemonic processes are probably a really bad idea
-# class NoDaemonProcess(mp.Process):
-#     # make 'daemon' attribute always return False
-#     @staticmethod
-#     def _get_daemon():
-#         return False
-#     def _set_daemon(self, value):
-#         pass
-#     daemon = property(_get_daemon, _set_daemon)
+class NoDaemonProcess(mp.Process):
+    # make 'daemon' attribute always return False
+    @staticmethod
+    def _get_daemon():
+        return False
+    def _set_daemon(self, value):
+        pass
+    daemon = property(_get_daemon, _set_daemon)
 
-# class NoDaemonPool(multiprocessing.pool.Pool): #pylint: disable=W0223
-#     Process = NoDaemonProcess
+class NoDaemonPool(multiprocessing.pool.Pool): #pylint: disable=W0223
+    """ I am vulnerable to armies of undead worker processes, chances
+    are you don't actually want to use me """
+    Process = NoDaemonProcess
 
 
 def chunk_list(seq, nchunks):
@@ -114,11 +116,16 @@ def _star_passthrough(args):
     # args[0] is function, args[1] is positional args, and args[2] is kwargs
     return args[0](*(args[1]), **(args[2]))
 
-def run(nr_procs, func, args_iter, timeout=1e8, **kwargs):
+def run(nr_procs, func, args_iter, timeout=1e8, daemonic=True,
+        **kwargs):
     """
     run func on nr_procs with arguments given by args_iter. args_iter
     should be an iterable of the list of arguments that can be unpacked
     for each invocation. kwargs are passed to func as keyword arguments
+    IMPORTANT: daemonic can be set to False if one needs to spawn child
+               processes in func, BUT this could be vulnerable to creating
+               an undead army of worker processes, only use this if you
+               really really need it, and know what you're doing
     ex:
     func = lambda i, letter: print i, letter
     run(2, func, itertools.izip(itertools.count(), ['a', 'b', 'c']))
@@ -132,9 +139,14 @@ def run(nr_procs, func, args_iter, timeout=1e8, **kwargs):
     if nr_procs == 1:
         return [_star_passthrough(args) for args in args_iter]
     else:
-        pool = mp.Pool(nr_procs)
+        if daemonic:
+            pool = mp.Pool(nr_procs)
+        else:
+            # hope you know what you're doing if you got here
+            pool = NoDaemonPool(nr_procs)
         ret = pool.map_async(_star_passthrough, args_iter).get(timeout)
         return ret
+
 ##
 ## EOF
 ##
