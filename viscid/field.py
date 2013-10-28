@@ -44,22 +44,22 @@ def empty(typ, name, crds, nr_comps=0, layout=LAYOUT_FLAT, center="Cell",
 
     return wrap_field(typ, name, crds, dat, center=center, **kwargs)
 
-def empty_like(fld, name, **kwargs):
-    """ create empty field whose shape / meta data match fld """
+def empty_like(name, fld, **kwargs):
+    """ create empty field with 'name' whose shape / meta data match fld """
     dat = np.empty(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
     return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
-def zeros_like(fld, name, **kwargs):
-    """ create field of zeros whose shape / meta data match fld """
+def zeros_like(name, fld, **kwargs):
+    """ create field of zeros with 'name' whose shape / meta data match fld """
     dat = np.zeros(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
     return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
-def ones_like(fld, name, **kwargs):
-    """ create field of ones whose shape / meta data match fld """
+def ones_like(name, fld, **kwargs):
+    """ create field of ones with 'name' whose shape / meta data match fld """
     dat = np.ones(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
