@@ -44,18 +44,29 @@ OUTPUT_STREAMLINES = 1
 OUTPUT_TOPOLOGY = 2
 OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
-# topology will be 1+ of these flags unary or-ed together
+# topology will be 1+ of these flags binary or-ed together
 #                  bit #   8 6 4 2 0
 END_NONE = 0           # 0b000000000 not ended yet
-END_IBOUND_NORTH = 1   # 0b000000001
-END_IBOUND_SOUTH = 2   # 0b000000010
 END_IBOUND = 4         # 0b000000100
+END_IBOUND_NORTH = 5   # 0b000000101  == END_IBOUND | 1
+END_IBOUND_SOUTH = 6   # 0b000000110  == END_IBOUND | 2
 END_OBOUND = 8         # 0b000001000
 END_OTHER = 16         # 0b000010000 anything > END_OTHER := END_OTHER | END_*
 END_MAXIT = 32         # 0b000100000
 END_MAX_LENGTH = 64    # 0b001000000
 END_ZERO_LENGTH = 128  # 0b010000000
 END_CYCLIC = 256       # 0b100000000
+
+# ok, this is over complicated, but the goal was to or the topology value
+# with its neighbors to find a separator line... To this end, or-ing two
+# END_* values doesn't help, so before streamlines returns, it will
+# replace the numbers that mean closed / open with powers of 2, that way
+# we end up with topology as an actual bit mask
+TOPOLOGY_NONE = 0  # no translation needed
+TOPOLOGY_CLOSED = 1  # translated from 5, 6, 7(4|5|6)
+TOPOLOGY_OPEN_NORTH = 2  # translated from 13 (8|5)
+TOPOLOGY_OPEN_SOUTH = 4  # translated from 14 (8|6)
+TOPOLOGY_SW = 8  # no translation needed
 
 # these are set if there is a pool of workers doing streamlines, they are
 # always set back to None when the streamlines are done
@@ -133,7 +144,7 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1,
             lines = None
 
         if r[0][1] is not None:
-            topo = np.empty((nr_streams,), dtype=dtype)
+            topo = np.empty((nr_streams,), dtype=r[0][1].dtype)
             for i in range(nr_chunks):
                 topo[slice(*seed_slices[i])] = r[i][1]
         else:
@@ -337,9 +348,9 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                 if rsq <= c_ibound**2:
                     # print("inner boundary")
                     if s_mv[0] >= 0.0:
-                        done = END_IBOUND | END_IBOUND_NORTH
+                        done = END_IBOUND_NORTH
                     else:
-                        done = END_IBOUND | END_IBOUND_SOUTH
+                        done = END_IBOUND_SOUTH
                     break
 
                 for j from 0 <= j < 3:
@@ -379,7 +390,14 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
             lines.append(line_cat)
 
         if topology_mv is not None:
-            topology_mv[i_stream] = end_flags
+            if end_flags == 13:
+                topology_mv[i_stream] = TOPOLOGY_OPEN_NORTH
+            elif end_flags == 14:
+                topology_mv[i_stream] = TOPOLOGY_OPEN_SOUTH
+            elif end_flags == 5 or end_flags == 6 or end_flags == 7:
+                topology_mv[i_stream] = TOPOLOGY_CLOSED
+            else:
+                topology_mv[i_stream] = end_flags
             # info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags,
             #                       line_ends_mv[0], line_ends_mv[1]))
 
