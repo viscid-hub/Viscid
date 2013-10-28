@@ -1,4 +1,5 @@
 from __future__ import print_function
+import sys
 import logging
 
 from . import vfile
@@ -28,10 +29,14 @@ class H5pyDataWrapper(vfile.DataWrapper): #pylint: disable=R0924
         # this takes super long when reading 3 hrs worth of ggcm data
         # over sshfs
         # import pdb; pdb.set_trace()
-        with h5py.File(self.fname, 'r') as f:
-            dset = f[self.loc]
-            self._shape = dset.shape
-            self._dtype = dset.dtype
+        try:
+            with h5py.File(self.fname, 'r') as f:
+                dset = f[self.loc]
+                self._shape = dset.shape
+                self._dtype = dset.dtype
+        except IOError as e:
+            logging.error("Problem opening hdf5 file, '{0}'".format(self.fname))
+            raise e
 
     @property
     def shape(self):
