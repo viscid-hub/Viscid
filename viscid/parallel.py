@@ -116,19 +116,32 @@ def _star_passthrough(args):
     # args[0] is function, args[1] is positional args, and args[2] is kwargs
     return args[0](*(args[1]), **(args[2]))
 
-def run(nr_procs, func, args_iter, timeout=1e8, daemonic=True,
+def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True,
         **kwargs):
+    """ same as map_async, except it waits for the result to be ready
+    and returns it """
+    # don't waste time spinning up a new process
+    if nr_procs == 1:
+        args_iter = izip(repeat(func), args_iter, repeat(kwargs))
+        return [_star_passthrough(args) for args in args_iter]
+    else:
+        r = map_async(nr_procs, func, args_iter, daemonic=daemonic, **kwargs)
+        return r.get(timeout)
+
+def map_async(nr_procs, func, args_iter, daemonic=True, **kwargs):
     """
     run func on nr_procs with arguments given by args_iter. args_iter
     should be an iterable of the list of arguments that can be unpacked
     for each invocation. kwargs are passed to func as keyword arguments
+    Returns a multiprocessing.pool.AsyncResult object
     IMPORTANT: daemonic can be set to False if one needs to spawn child
                processes in func, BUT this could be vulnerable to creating
                an undead army of worker processes, only use this if you
                really really need it, and know what you're doing
     ex:
     func = lambda i, letter: print i, letter
-    run(2, func, itertools.izip(itertools.count(), ['a', 'b', 'c']))
+    r = map_async(2, func, itertools.izip(itertools.count(), ['a', 'b', 'c']))
+    r.get(1e8)
     will print
     0 a
     1 b
@@ -136,16 +149,12 @@ def run(nr_procs, func, args_iter, timeout=1e8, daemonic=True,
     on two processes
     """
     args_iter = izip(repeat(func), args_iter, repeat(kwargs))
-    if nr_procs == 1:
-        return [_star_passthrough(args) for args in args_iter]
+    if daemonic:
+        pool = mp.Pool(nr_procs)
     else:
-        if daemonic:
-            pool = mp.Pool(nr_procs)
-        else:
-            # hope you know what you're doing if you got here
-            pool = NoDaemonPool(nr_procs)
-        ret = pool.map_async(_star_passthrough, args_iter).get(timeout)
-        return ret
+        # hope you know what you're doing if you got here
+        pool = NoDaemonPool(nr_procs)
+    return pool.map_async(_star_passthrough, args_iter)
 
 ##
 ## EOF
