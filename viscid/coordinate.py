@@ -501,7 +501,10 @@ class StructuredCrds(Coordinates):
         if axes == None:
             axes = [a.upper() if shaped else a for a in self.axes]
         if not isinstance(axes, (list, tuple)):
-            axes = [axes]
+            try:
+                axes = [a for a in axes]
+            except TypeError:
+                axes = [axes]
         sfx = self._CENTER[center.lower()]
         return [self._crds[self.axis_name(a) + sfx] for a in axes]
 
@@ -511,12 +514,14 @@ class StructuredCrds(Coordinates):
         center in the 3rd direction """
         return [name for name in self.axes if len(self[name]) > ignore]
 
-    def get_clist(self, slc=None):
+    def get_clist(self, axes=None, slc=None):
         """ return a clist of the coordinates sliced if you wish
         I recommend using numpy.s_ for making the slice """
         if slc is None:
             slc = slice(None)
-        return [[axis, self.get_crd(axis)[slc]] for axis in self.axes]
+        if axes is None:
+            axes = self.axes
+        return [[axis, self.get_crd(axis)[slc]] for axis in axes]
 
     ## These methods just return one crd axis
     def get_nc(self, axis, shaped=False):
