@@ -3,6 +3,7 @@
 from __future__ import print_function
 import multiprocessing as mp
 import multiprocessing.pool
+from contextlib import closing
 from itertools import repeat
 try:
     from itertools import izip
@@ -116,7 +117,7 @@ def _star_passthrough(args):
     # args[0] is function, args[1] is positional args, and args[2] is kwargs
     return args[0](*(args[1]), **(args[2]))
 
-def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True,
+def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True, pool=None,
         **kwargs):
     """ same as map_async, except it waits for the result to be ready
     and returns it """
@@ -124,31 +125,30 @@ def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True,
     if nr_procs == 1:
         args_iter = izip(repeat(func), args_iter, repeat(kwargs))
         return [_star_passthrough(args) for args in args_iter]
-        # ret = []
-        # from guppy import hpy
-        # h = hpy()
-        # print(h.heap())
-        # for args in args_iter:
-        #     ret.append(_star_passthrough(args))
-        # return ret
     else:
-        r = map_async(nr_procs, func, args_iter, daemonic=daemonic, **kwargs)
-        return r.get(timeout)
+        p, r = map_async(nr_procs, func, args_iter, daemonic=daemonic,
+                         pool=pool, **kwargs)
+        ret = r.get(timeout)
+        # in principle this join should return almost immediately since
+        # we already called r.get
+        p.join()
+        return ret
 
-def map_async(nr_procs, func, args_iter, daemonic=True, **kwargs):
+def map_async(nr_procs, func, args_iter, daemonic=True, pool=None, **kwargs):
     """
     run func on nr_procs with arguments given by args_iter. args_iter
     should be an iterable of the list of arguments that can be unpacked
     for each invocation. kwargs are passed to func as keyword arguments
-    Returns a multiprocessing.pool.AsyncResult object
+    Returns (pool, multiprocessing.pool.AsyncResult)
     IMPORTANT: daemonic can be set to False if one needs to spawn child
                processes in func, BUT this could be vulnerable to creating
                an undead army of worker processes, only use this if you
                really really need it, and know what you're doing
     ex:
     func = lambda i, letter: print i, letter
-    r = map_async(2, func, itertools.izip(itertools.count(), ['a', 'b', 'c']))
+    p, r = map_async(2, func, itertools.izip(itertools.count(), 'abc'))
     r.get(1e8)
+    p.join()
     will print
     0 a
     1 b
@@ -156,12 +156,18 @@ def map_async(nr_procs, func, args_iter, daemonic=True, **kwargs):
     on two processes
     """
     args_iter = izip(repeat(func), args_iter, repeat(kwargs))
+
+    # if given a pool, don't close it when we're done delegating tasks
+    if pool is not None:
+        return pool, pool.map_async(_star_passthrough, args_iter)
+
     if daemonic:
         pool = mp.Pool(nr_procs)
     else:
-        # hope you know what you're doing if you got here
         pool = NoDaemonPool(nr_procs)
-    return pool.map_async(_star_passthrough, args_iter)
+
+    with closing(pool) as p:
+        return p, p.map_async(_star_passthrough, args_iter)
 
 ##
 ## EOF

@@ -8,6 +8,7 @@ from __future__ import print_function
 from timeit import default_timer as time
 from logging import info, warning
 from multiprocessing import Pool
+from contextlib import closing
 from itertools import islice, repeat
 try:
     from itertools import izip
@@ -128,8 +129,9 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1,
         grid_iter = izip(chunk_sizes, repeat(seed), seed_slices)
         args = izip(grid_iter, repeat(kwargs))
 
-        p = Pool(nr_procs)
-        r = p.map_async(_do_streamline_star, args).get(1e8)
+        with closing(Pool(nr_procs)) as p:
+            r = p.map_async(_do_streamline_star, args).get(1e8)
+        p.join()
 
         _global_dat = None
         _global_crds = None
