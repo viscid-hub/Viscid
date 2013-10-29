@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-from itertools import islice
+# from itertools import islice
 from timeit import default_timer as time
 import logging
 import subprocess as sub
-
-import numpy as np
 
 tree_prefix = ".   "
 
@@ -22,7 +20,8 @@ def split_floats(arg_str):
     return [float(s) for s in arg_str.split(',')]
 
 def add_animate_arguments(parser):
-    """ add common options for animating """
+    """ add common options for animating, you may want to make sure parser was
+    constructed with conflict_handler='resolve' """
     anim = parser.add_argument_group("Options for creating animations")
     anim.add_argument("-a", "--animate", default=None,
                       help="animate results")
@@ -37,7 +36,8 @@ def add_animate_arguments(parser):
     return parser
 
 def add_mpl_output_arguments(parser):
-    """ add common options for tuning matplotlib output """
+    """ add common options for tuning matplotlib output, you may want to make
+    sure parser was constructed with conflict_handler='resolve' """
     mplargs = parser.add_argument_group("Options for tuning matplotlib")
     mplargs.add_argument("-s", "--size", dest="plot_size", type=split_floats,
                          default=None, help="size of mpl plot (inches)")

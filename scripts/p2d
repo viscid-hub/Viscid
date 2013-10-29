@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+""" plot some 2d data files with a slew of tuning arguments, and maybe make
+a movie too """
 
 from __future__ import print_function
 import argparse
@@ -37,7 +39,10 @@ def split_floats(arg_str):
     return [float(s) for s in arg_str.split(',')]
 
 def main():
-    parser = argparse.ArgumentParser(description="Load some data files")
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     conflict_handler='resolve')
+    vutil.add_animate_arguments(parser)
+    vutil.add_mpl_output_arguments(parser)
     parser.add_argument("-t", default=":", help="times to plot in slice "
                         "notation: ex : for all 60.0: for 60 mins on, and "
                         ":120 for the first 120mins")
@@ -50,26 +55,8 @@ def main():
                         "applied to all plots")
     parser.add_argument("-T", "--transpose", action="store_true",
                         help="desplay plots in a row, not a col")
-    parser.add_argument("-s", "--size", dest="plot_size", type=split_floats,
-                        default=None, help="size of mpl plot (inches)")
-    parser.add_argument("--dpi", dest="dpi", type=float, default=None,
-                        help="dpi of plot")
     parser.add_argument("--own", action="store_true", help="axes use their own "
                         "x and y")
-    parser.add_argument("-a", "--animate", default=None,
-                        help="animate results")
-    parser.add_argument('-r', '--rate', dest='framerate', type=int, default=5,
-                        help="animation frame rate (default 5).")
-    parser.add_argument('--qscale', dest='qscale', default='2',
-                        help="animation quality flag (default 2).")
-    parser.add_argument('-k', dest='keep', action='store_true',
-                        help="keep temporary files.")
-    parser.add_argument("--prefix", default=None,
-                        help="Prefix of the output image filenames")
-    parser.add_argument("--format", "-f", default="png",
-                        help="output format, as in 'png'|'pdf'|...")
-    parser.add_argument('-w', '--show', dest='show', action="store_true",
-                        help="show plots with plt.show()")
     parser.add_argument("-n", "--np", type=int, default=1,
                         help="run n simultaneous processes (not yet working)")
     parser.add_argument('file', nargs=1, help='input file')
