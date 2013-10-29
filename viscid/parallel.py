@@ -124,6 +124,13 @@ def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True,
     if nr_procs == 1:
         args_iter = izip(repeat(func), args_iter, repeat(kwargs))
         return [_star_passthrough(args) for args in args_iter]
+        # ret = []
+        # from guppy import hpy
+        # h = hpy()
+        # print(h.heap())
+        # for args in args_iter:
+        #     ret.append(_star_passthrough(args))
+        # return ret
     else:
         r = map_async(nr_procs, func, args_iter, daemonic=daemonic, **kwargs)
         return r.get(timeout)
