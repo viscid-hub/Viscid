@@ -85,7 +85,7 @@ def main():
     logging.info("testing interp")
     bmag = calc.magnitude(B)
     t0 = time()
-    interp_vals = cycalc.trilin_interp(bmag, mygrid)
+    interp_vals = cycalc.interp_trilin(bmag, mygrid)
     t1 = time()
     logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values

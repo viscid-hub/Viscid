@@ -20,7 +20,7 @@ from . import seed
 ###########
 # cimports
 cimport cython
-# cimport numpy as cnp
+cimport numpy as cnp
 
 from libc.math cimport sqrt
 
@@ -88,8 +88,7 @@ cdef inline int _c_closest_ind(real_t[:] crd, real_t point,
     startind[0] = fallback
     return fallback
 
-
-def trilin_interp(fld, seeds):
+def interp_trilin(fld, seeds):
     """ Points can be list of 3-tuples or a SeedGen instance. If fld
     is a scalar field, the output array has shape (nr_points,) where nr_points
     is the number of seed points. If it's a vector, the output has shape
@@ -115,7 +114,7 @@ def trilin_interp(fld, seeds):
 
         for j from 0 <= j < nr_comps:
             # print(ret.shape, nr_points, nr_comps)
-            ret[:,j] = _py_trilin_interp(dtype, fld.data, j, crdz, crdy, crdx,
+            ret[:,j] = _py_interp_trilin(dtype, fld.data, j, crdz, crdy, crdx,
                                 seeds.iter_points(center=fld.center),
                                 nr_points)
         return ret
@@ -124,15 +123,15 @@ def trilin_interp(fld, seeds):
         dat = fld.data.reshape(fld.shape + [1])
         nr_points = seeds.nr_points(center=fld.center)
         ret = np.empty((nr_points,), dtype=dtype)
-        ret[:] = _py_trilin_interp(dtype, dat, 0, crdz, crdy, crdx,
+        ret[:] = _py_interp_trilin(dtype, dat, 0, crdz, crdy, crdx,
                                    seeds.iter_points(center=fld.center),
                                    nr_points)
         return ret
 
     else:
-        raise RuntimeError("That centering is not supported for trilin_interp")
+        raise RuntimeError("That centering is not supported for interp_trilin")
 
-def _py_trilin_interp(dtype, real_t[:,:,:,::1] s, np.intp_t m,
+def _py_interp_trilin(dtype, real_t[:,:,:,::1] s, cnp.intp_t m,
                       real_t[:] crdz, real_t[:] crdy, real_t[:] crdx, points,
                       int nr_points):
     """ return the scalar value of 3d scalar array s trilinearly interpolated
@@ -149,10 +148,10 @@ def _py_trilin_interp(dtype, real_t[:,:,:,::1] s, np.intp_t m,
         x[0] = pt[0]
         x[1] = pt[1]
         x[2] = pt[2]
-        ret[i] = _c_trilin_interp(s, m, crds, x, start_inds)
+        ret[i] = _c_interp_trilin(s, m, crds, x, start_inds)
     return ret
 
-cdef real_t _c_trilin_interp(real_t[:,:,:,::1] s, np.intp_t m, real_t[:] *crds,
+cdef real_t _c_interp_trilin(real_t[:,:,:,::1] s, cnp.intp_t m, real_t[:] *crds,
                              real_t[:] x, int start_inds[3]):
     cdef int i, j, ind, ncells
     cdef int[3] ix

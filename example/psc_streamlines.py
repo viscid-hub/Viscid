@@ -71,7 +71,7 @@ def main():
     plt.show()
 
     # interpolate e onto each point of the first field line of lines1
-    e1 = cycalc.trilin_interp(e, seed.Point(lines1[0]))
+    e1 = cycalc.interp_trilin(e, seed.Point(lines1[0]))
     print(e1.shape, lines1[0].shape)
     plt.clf()
     plt.plot(np.linspace(0, ds * e1.shape[0], e1.shape[0]), e1[:, 0])

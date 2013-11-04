@@ -62,7 +62,7 @@ def closest_ind(crd, point, startinds, m):
 @nb.jit(nb.float_(nb.float_[:,:,:,::1], nb.int_, nb.float_[:], nb.float_[:],
                       nb.float_[:], nb.float_[:], nb.int_[:]),
             nopython=False)
-def trilin_interp(v, m, crdz, crdy, crdx, x, startinds):
+def interp_trilin(v, m, crdz, crdy, crdx, x, startinds):
     ix = np.array([0, 0, 0], dtype=nb.int_)
     p = np.array([0, 0, 0], dtype=nb.int_)
     xd = np.array([0.0, 0.0, 0.0], dtype=nb.float_)
@@ -89,9 +89,9 @@ def trilin_interp(v, m, crdz, crdy, crdx, x, startinds):
                       nb.float_[:], nb.float_[:], nb.float_,
                       nb.int_[:]))
 def euler1(v, crdx, crdy, crdz, x, ds, startinds):
-    vx = trilin_interp(v, 0, crdz, crdy, crdx, x, startinds)
-    vy = trilin_interp(v, 1, crdz, crdy, crdx, x, startinds)
-    vz = trilin_interp(v, 2, crdz, crdy, crdx, x, startinds)
+    vx = interp_trilin(v, 0, crdz, crdy, crdx, x, startinds)
+    vy = interp_trilin(v, 1, crdz, crdy, crdx, x, startinds)
+    vz = interp_trilin(v, 2, crdz, crdy, crdx, x, startinds)
     vmag = np.sqrt(vx**2 + vy**2 + vz**2)
     # if vmag == 0.0 or isnan(vmag):
     #     logging.warning("vmag issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
