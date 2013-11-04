@@ -35,7 +35,7 @@ def main():
     else:
         raise RuntimeError("Where have all the B fields gone...")
 
-    b_src = mvi.field_to_source(b)
+    b_src = mvi.field_to_point_source(b)
     bsl2 = mlab.pipeline.streamline(b_src, seedtype='sphere',
                                     integration_direction='both',
                                     seed_resolution=4)

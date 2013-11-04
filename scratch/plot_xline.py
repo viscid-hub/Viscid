@@ -140,7 +140,7 @@ if __name__=='__main__':
     topo_arr = None
     if path.exists(itopfile):
         topo_fld = topology.load_topo(itopfile, ihemfile)
-        topo_src = mvi.field_to_source(topo_fld)
+        topo_src = mvi.field_to_point_source(topo_fld)
         e=mlab.get_engine()
         e.add_source(topo_src)
         mlab.axes(topo_src)
@@ -173,7 +173,7 @@ if __name__=='__main__':
         resampled_topo_fld = None
         if stream_color == "itop" and topo_fld is not None:
             resampled_topo_fld = resample_field(f['rr'], topo_fld, "Topology")
-            #itop_src = mvi.field_to_source(itop_fld)
+            #itop_src = mvi.field_to_point_source(itop_fld)
             #e.add_source(itop_src)
             #ptop = mlab.pipeline.scalar_cut_plane(itop_src, plane_orientation='y_axes',
             #                                 transparent=True, opacity=1.0, view_controls=False)
@@ -192,9 +192,9 @@ if __name__=='__main__':
             xpt_x, xpt_y, xpt_z = topology.find_xpoint_fast(topo_fld, ix, iy, iz)
             mlab.points3d(xpt_x, xpt_y, xpt_z, color=(.8, 0, 0), scale_factor=0.15)
 
-        bsrc = mvi.field_to_source(b)
-        vsrc = mvi.field_to_source(v)
-        xjsrc = mvi.field_to_source(xj)
+        bsrc = mvi.field_to_point_source(b)
+        vsrc = mvi.field_to_point_source(v)
+        xjsrc = mvi.field_to_point_source(xj)
 
         # xjmag = mlab.pipeline.extract_vector_norm(xjsrc)
         # xjcut = mlab.pipeline.scalar_cut_plane(xjmag, plane_orientation='y_axes',

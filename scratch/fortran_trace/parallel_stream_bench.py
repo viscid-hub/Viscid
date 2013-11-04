@@ -103,7 +103,7 @@ def main():
         #mpl.plot_streamlines(lines, topology=topo, show=False)
         mpl.mplshow()
 
-        # topo_src = mvi.field_to_source(topo_fld)
+        # topo_src = mvi.field_to_point_source(topo_fld)
         # e = mlab.get_engine()
         # e.add_source(topo_src)
         # mvi.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,
