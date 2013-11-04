@@ -26,9 +26,8 @@ except ImportError:
 try:
     from . import necalc
     has_numexpr = True
-except ImportError:
+except ImportError as e:
     has_numexpr = False
-
 
 class Operation(object):
     default_backends = ["numexpr", "cython", "numpy"]
@@ -70,6 +69,8 @@ class Operation(object):
             if name in self._imps:
                 return self._imps[name]
 
+        if len(self._imps) == 0:
+            raise verror.BackendNotFound("No backends available")
         return list(self._imps.values())[0]
 
     def __call__(self, *args, **kwargs):
