@@ -47,16 +47,16 @@ OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
 # topology will be 1+ of these flags binary or-ed together
 #                  bit #   8 6 4 2 0
-END_NONE = 0           # 0b000000000 not ended yet
-END_IBOUND = 4         # 0b000000100
-END_IBOUND_NORTH = 5   # 0b000000101  == END_IBOUND | 1
-END_IBOUND_SOUTH = 6   # 0b000000110  == END_IBOUND | 2
-END_OBOUND = 8         # 0b000001000
-END_OTHER = 16         # 0b000010000 anything > END_OTHER := END_OTHER | END_*
-END_MAXIT = 32         # 0b000100000
-END_MAX_LENGTH = 64    # 0b001000000
-END_ZERO_LENGTH = 128  # 0b010000000
-END_CYCLIC = 256       # 0b100000000
+END_NONE = 0                      # 0b000000000 not ended yet
+END_IBOUND = 4                    # 0b000000100
+END_IBOUND_NORTH = 5              # 0b000000101  == END_IBOUND | 1
+END_IBOUND_SOUTH = 6              # 0b000000110  == END_IBOUND | 2
+END_OBOUND = 8                    # 0b000001000
+END_CYCLIC = 16                   # 0b000010000
+END_OTHER = 32                    # 0b000100000
+END_MAXIT = 64 | END_OTHER        # 0b001100000
+END_MAX_LENGTH = 128 | END_OTHER  # 0b010100000
+END_ZERO_LENGTH = 256 | END_OTHER # 0b100100000
 
 # ok, this is over complicated, but the goal was to or the topology value
 # with its neighbors to find a separator line... To this end, or-ing two
@@ -68,6 +68,7 @@ TOPOLOGY_CLOSED = 1  # translated from 5, 6, 7(4|5|6)
 TOPOLOGY_OPEN_NORTH = 2  # translated from 13 (8|5)
 TOPOLOGY_OPEN_SOUTH = 4  # translated from 14 (8|6)
 TOPOLOGY_SW = 8  # no translation needed
+TOPOLOGY_CYCLIC = 16  # no translation needed
 
 # these are set if there is a pool of workers doing streamlines, they are
 # always set back to None when the streamlines are done
@@ -365,14 +366,15 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                 if c_max_length > 0.0 and stream_length > c_max_length:
                     done = END_OTHER | END_MAX_LENGTH
                     break
-                # if we are within 0.99 * ds0 of the initial position
-                # distsq = (x0_mv[0] - s_mv[0])**2 + \
-                #          (x0_mv[1] - s_mv[1])**2 + \
-                #          (x0_mv[2] - s_mv[2])**2
-                # if distsq < (0.99 * ds0)**2:
-                #     # print("cyclic field line")
-                #     done = END_OTHER | END_CYCLIC
-                #     break
+
+                # if we are within 0.5 * ds of the initial position
+                distsq = (x0_mv[0] - s_mv[0])**2 + \
+                         (x0_mv[1] - s_mv[1])**2 + \
+                         (x0_mv[2] - s_mv[2])**2
+                if distsq < (0.5 * ds0)**2:
+                    # print("cyclic field line")
+                    done = END_CYCLIC
+                    break
 
                 if done:
                     break
