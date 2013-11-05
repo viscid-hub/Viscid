@@ -519,6 +519,13 @@ class Field(object):
                                                             cc_slice=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
+    def set_slice(self, selection, value):
+        cc = self.iscentered("Cell")
+        selection = self._prepare_slice(selection)[0]
+        slices, crdlst = self.crds.make_slice(selection, cc_slice=cc)[:2]
+        self.data[tuple(slices)] = value
+        return None
+
     def unload(self):
         """ does not guarentee that the memory will be freed """
         self._purge_cache()
