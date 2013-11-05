@@ -173,20 +173,20 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     # extapolating the crds and keeping the edges...
     if style in ["pcolormesh", "pcolor"]:
         if fld.iscentered("Node"):
-            X, Y = fld.get_crds_cc((namex, namey), shaped=True)
-            logging.info("pcolormesh on node centered field... "
-                         "trimming the edges")
-            # FIXME: this is a little fragile with 2d stuff
-            dat = fld.data[1:-1, 1:-1]
+            X, Y = fld.get_crds_cc((namex, namey))
+            # extrapolate the crds to plot the boundary cells
+            dx = X[1:] - X[:-1]
+            X = np.concatenate([[X[0] - dx[0]], X, [X[-1] + dx[-1]]])
+            dy = Y[1:] - Y[:-1]
+            Y = np.concatenate([[Y[0] - dy[0]], Y, [Y[-1] + dy[-1]]])
         elif fld.iscentered("Cell"):
-            X, Y = fld.get_crds_nc((namex, namey), shaped=True)
-            dat = fld.data
+            X, Y = fld.get_crds_nc((namex, namey))
     else:
-        dat = fld.data
         if fld.iscentered("Node"):
             X, Y = fld.get_crds_nc[(namex, namey)]
         elif fld.iscentered("Cell"):
             X, Y = fld.get_crds_cc[(namex, namey)]
+    dat = fld.data
 
     if mod:
         X *= mod[0]
