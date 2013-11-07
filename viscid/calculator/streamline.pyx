@@ -46,17 +46,17 @@ OUTPUT_TOPOLOGY = 2
 OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
 # topology will be 1+ of these flags binary or-ed together
-#                  bit #   8 6 4 2 0
-END_NONE = 0                      # 0b000000000 not ended yet
-END_IBOUND = 4                    # 0b000000100
-END_IBOUND_NORTH = 5              # 0b000000101  == END_IBOUND | 1
-END_IBOUND_SOUTH = 6              # 0b000000110  == END_IBOUND | 2
-END_OBOUND = 8                    # 0b000001000
-END_CYCLIC = 16                   # 0b000010000
-END_OTHER = 32                    # 0b000100000
-END_MAXIT = 64 | END_OTHER        # 0b001100000
-END_MAX_LENGTH = 128 | END_OTHER  # 0b010100000
-END_ZERO_LENGTH = 256 | END_OTHER # 0b100100000
+#                              bit #   8 6 4 2 0
+END_NONE = 0                       # 0b000000000 not ended yet
+END_IBOUND = 4                     # 0b000000100
+END_IBOUND_NORTH = 5               # 0b000000101  == END_IBOUND | 1
+END_IBOUND_SOUTH = 6               # 0b000000110  == END_IBOUND | 2
+END_OBOUND = 8                     # 0b000001000
+END_CYCLIC = 16                    # 0b000010000
+END_OTHER = 32                     # 0b000100000
+END_MAXIT = 64 | END_OTHER         # 0b001100000
+END_MAX_LENGTH = 128 | END_OTHER   # 0b010100000
+END_ZERO_LENGTH = 256 | END_OTHER  # 0b100100000
 
 # ok, this is over complicated, but the goal was to or the topology value
 # with its neighbors to find a separator line... To this end, or-ing two
@@ -371,7 +371,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                 distsq = (x0_mv[0] - s_mv[0])**2 + \
                          (x0_mv[1] - s_mv[1])**2 + \
                          (x0_mv[2] - s_mv[2])**2
-                if distsq < (0.5 * ds0)**2:
+                if distsq < (0.05 * ds0)**2:
                     # print("cyclic field line")
                     done = END_CYCLIC
                     break

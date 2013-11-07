@@ -117,11 +117,10 @@ def _finalize_source(fld, arr, grid, dat_target):
     return VTKDataSource(data=grid)
 
 def plot_lines(lines, topology=None, **kwargs):
-    if topology is not None:
+    if "color" not in kwargs and topology is not None:
         if isinstance(topology, field.Field):
             topology = topology.data.reshape(-1)
-        if not "color" in kwargs:
-            topo_color = True
+        topo_color = True
     else:
         topo_color = False
 
