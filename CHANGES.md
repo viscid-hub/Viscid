@@ -7,6 +7,7 @@ Features:
   - rewrite fields to a cleaner, unified interface
   - stringy typed things should be case insensitive if compared with the provided methods (istype() and iscentered()), otherwise everything is lowercase
   - field properties are now even lazier and cachier
+  - add reader for 1d gnuplot like files
 Refactors:
   - filed.n_points -> filed.nr_points
   - filed.n_comps -> filed.nr_comps

@@ -10,10 +10,9 @@
 from . import vfile_bucket
 
 # these imports are necessary to register file types
-from . import csv
-from . import hdf5
 from . import xdmf
-
+from . import hdf5
+from . import ascii
 
 __filebucket__ = vfile_bucket.VFileBucket()
 
