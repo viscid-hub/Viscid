@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Try to convert a Field to a mayavi type and plot streamlines or something
+""" Try to convert a Field to a mayavi type and plot
+streamlines or something """
 
 from __future__ import print_function
 import sys

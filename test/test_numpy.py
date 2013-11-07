@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 """ Test Fields' numpy compatability """
-# Tests calculator magnitude function on synthetic vector data...
-# If numexpr or cython are not installed, the test fails
-# The test also fails if the two results aren't almost exactly equal
 
 from __future__ import print_function
 import sys

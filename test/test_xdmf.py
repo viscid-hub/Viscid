@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# Try to use matplot lib to plot a bunch of 2d and 1d slices of 3d
-# xdmf sample data.
-# This is really a test of the slicing routines
+""" test reading 2d / 3d xdmf files """
 
 from __future__ import print_function
 import sys

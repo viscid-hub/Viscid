@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-# Tests calculator divergence function on synthetic vector data...
-# If numexpr or cython are not installed, the test fails
-# The test also fails if the two results aren't almost exactly equal, or
-# if the result isn't close enough to the analytical divergence
-# There is a systematic error in this case because the initial condition is
-# sign waves and we use a central difference divergence
+""" kick the tires on making matplotlib plots """
 
 from __future__ import print_function
 import sys

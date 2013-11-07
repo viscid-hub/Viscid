@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" test making and plotting streamlines """
 
 from __future__ import print_function
 from timeit import default_timer as time

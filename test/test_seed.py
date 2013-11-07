@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" test using seeds to calc streamlines / interpolation """
 
 from __future__ import print_function
 from timeit import default_timer as time
