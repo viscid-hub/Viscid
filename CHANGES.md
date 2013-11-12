@@ -9,6 +9,7 @@ Features:
   - field properties are now even lazier and cachier
   - add reader for 1d gnuplot like files
   - add reader for numpy binary npz files (can also save a list of fields)
+  - add super preliminary support for writing hdf5 files with companion xdmf file, still no direct hdf5 reading
 Refactors:
   - filed.n_points -> filed.nr_points
   - filed.n_comps -> filed.nr_comps

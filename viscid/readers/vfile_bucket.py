@@ -27,11 +27,13 @@ class VFileBucket(Bucket):
         of vFiles like load does """
         return self.load_files([fname], index_handle=index_handle, **kwargs)[0]
 
-    def load_files(self, fnames, index_handle=True, **kwargs):
+    def load_files(self, fnames, index_handle=True, file_type=None, **kwargs):
         """ initialize obj before it's put into the list, whatever is returned
             is what gets stored, returning None means object init failed, do
             not add to the _objs list
 
+            file_type: a class that is a subclass of VFile, if given, use this
+                       file type, don't use the autodetect mechanism
             kwargs is passed to file constructor """
         if not isinstance(fnames, (list, tuple)):
             fnames = [fnames]
@@ -47,21 +49,22 @@ class VFileBucket(Bucket):
                 f = self[absfname]
             else:
                 # load a new file
-                ftype = VFile.detect_type(absfname)
-                if not ftype:
+                if file_type is None:
+                    file_type = VFile.detect_type(absfname)
+                if not file_type:
                     raise RuntimeError("Can't determine type "
                                        "for {0}".format(absfname))
                 try:
                     # vfilebucket kwarg is ignored by file types that don't care
-                    f = ftype(absfname, vfilebucket=self, **kwargs)
+                    f = file_type(absfname, vfilebucket=self, **kwargs)
                 except IOError as e:
                     s = " IOError on file: {0}\n".format(absfname)
-                    s += "              File Type: {0}\n".format(ftype)
+                    s += "              File Type: {0}\n".format(file_type)
                     s += "              {0}".format(e.message)
                     logging.warn(s)
                 except ValueError:
                     pass
-                #     raise IOError(s)
+                    # raise IOError(s)
 
             if f is not None:
                 self.set_item([absfname, fname], f, index_handle=index_handle)

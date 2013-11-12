@@ -11,6 +11,7 @@ import numpy as np
 from . import _xdmf_include
 from . import vfile
 from .vfile_bucket import VFileBucket
+from .hdf5 import FileLazyHDF5
 from .. import grid
 from .. import dataset
 from .. import coordinate
@@ -351,7 +352,8 @@ class FileXDMF(vfile.VFile):
             fname, loc = item.text.strip().split(':')
             if not fname == os.path.abspath(fname):
                 fname = os.path.join(self.dirname, fname)
-            h5file = self.vfilebucket.load_file(fname, index_handle=False)
+            h5file = self.vfilebucket.load_file(fname, index_handle=False,
+                                                file_type=FileLazyHDF5)
             arr = h5file.get_data(loc)  #pylint: disable=E1103
             return arr, attrs
 
