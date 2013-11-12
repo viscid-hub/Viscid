@@ -156,19 +156,22 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
     @classmethod
     def save_fields(cls, fname, flds, **kwargs):
         """ save some fields using the format given by the class """
+        # FIXME: this is only good for writing cartesian rectilnear flds
+        # FIXME: axes are renamed if flds[0] is 1D or 2D
         assert(len(flds) > 0)
         clist = flds[0].crds.get_clist()
-        vxvyvz = [np.array(0.0)] * 3
+        crd_arrs = [np.array([0.0])] * 3
+        crd_names = ["z", "y", "x"]
         for i, c in enumerate(clist):
-            vxvyvz[i] = c[1]
-        crd_shape = [len(arr) for arr in vxvyvz]
+            crd_arrs[i] = c[1]
+        crd_shape = [len(arr) for arr in crd_arrs]
         time = flds[0].time
 
         # write arrays to the hdf5 file
         with h5py.File(fname, 'w') as f:
-            for axis_name, crdarr in clist:
+            for axis_name, arr in zip(crd_names, crd_arrs):
                 loc = cls._CRDS_GROUP + '/' + axis_name
-                f[loc] = crdarr
+                f[loc] = arr
 
             for fld in flds:
                 loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + fld.name
@@ -177,9 +180,9 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
         # now write an xdmf file
         xdmf_fname = os.path.splitext(fname)[0] + ".xdmf"
         with open(xdmf_fname, 'w') as f:
-            xloc = cls._CRDS_GROUP + '/' + clist[2][0]
-            yloc = cls._CRDS_GROUP + '/' + clist[1][0]
-            zloc = cls._CRDS_GROUP + '/' + clist[0][0]
+            xloc = cls._CRDS_GROUP + '/' + crd_names[2]
+            yloc = cls._CRDS_GROUP + '/' + crd_names[1]
+            zloc = cls._CRDS_GROUP + '/' + crd_names[0]
             dim_str = " ".join([str(l) for l in crd_shape])
             f.write(cls._XDMF_TEMPLATE_BEGIN.format(time=time))
             f.write(cls._XDMF_TEMPLATE_RECTILINEAR_GRID_BEGIN.format(
