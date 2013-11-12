@@ -15,6 +15,7 @@ Refactors:
   - filed.n_comps -> filed.nr_comps
   - grid / dataset n_times -> nr_times
   - trilin_interp -> interp_trilin
+  - keyword arg cc_slice -> cc
 Backward Incompatible Changes:
   - Coordinate.get_crd used to take a list, now that use case has to call Coordinate.get_crds
 Deprecated:

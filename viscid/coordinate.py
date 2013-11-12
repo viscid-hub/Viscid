@@ -280,7 +280,7 @@ class StructuredCrds(Coordinates):
         else:
             raise TypeError()
 
-    def make_slice(self, selection, cc_slice=False):
+    def make_slice(self, selection, cc=False):
         """ In practice, selection can be a string like "y=3i:6i:2,z=0"
         where i indicates slice by index as opposed to bare numbers which
         slice by crd value. The example slice would be the 3rd and 5th crds
@@ -295,7 +295,7 @@ class StructuredCrds(Coordinates):
          [['x', ndarray(all nc x crds)], ['y', array(y[3], y[5])]], # new clist
          [['z', 0.0]],  # list of coords that are taken out by the slices
         )
-        Note: cc_slice is necessary for finding the closest plane, otherwise it
+        Note: cc is necessary for finding the closest plane, otherwise it
               might be off by half a grid cell
         """
         # this turns all types of selection input styles into a selection dict
@@ -330,7 +330,7 @@ class StructuredCrds(Coordinates):
                 for i, v in enumerate(sel[:2]):
                     if isinstance(v, float):
                         # find index of closest node
-                        if cc_slice:
+                        if cc:
                             diff = v - self.get_cc(axis)
                         else:
                             diff = v - self.get_nc(axis)
@@ -348,7 +348,7 @@ class StructuredCrds(Coordinates):
 
                     slices[dind] = ind
                     slcrds[dind] = None
-                    if cc_slice:
+                    if cc:
                         loc = self.get_cc(axis)[ind]
                     else:
                         loc = self.get_nc(axis)[ind]
@@ -368,7 +368,7 @@ class StructuredCrds(Coordinates):
 
             # if we're doing a cc slice, there needs to be one more node
             # than data element, so add an extra node to slc.stop
-            if cc_slice and slc.stop is not None:
+            if cc and slc.stop is not None:
                 if slc.stop >= 0:
                     newstop = slc.stop + 1
                 else:  # slc.stop < 0
@@ -388,18 +388,18 @@ class StructuredCrds(Coordinates):
         #       "reduced", reduced)
         return slices, slcrds, reduced
 
-    def make_slice_reduce(self, selection, cc_slice=False):
+    def make_slice_reduce(self, selection, cc=False):
         """ make slice, and reduce dims that were not explicitly sliced """
-        slices, crdlst, reduced = self.make_slice(selection, cc_slice=cc_slice)
+        slices, crdlst, reduced = self.make_slice(selection, cc=cc)
         # augment slices / reduced
         for i, axis in enumerate(self.axes):
             reduce_axis = False
             if slices[i] == slice(None):
-                if cc_slice and self.shape_cc[i] == 1:
+                if cc and self.shape_cc[i] == 1:
                     slices[i] = 0
                     reduced.insert(i, [axis, self.get_cc(axis)[0]])
                     reduce_axis = True
-                elif not cc_slice and self.shape_nc[i] == 1:
+                elif not cc and self.shape_nc[i] == 1:
                     slices[i] = 0
                     reduced.insert(i, [axis, self.get_nc(axis)[0]])
                     reduce_axis = True
@@ -416,9 +416,9 @@ class StructuredCrds(Coordinates):
         #       "reduced", reduced)
         return slices, crdlst, reduced
 
-    def make_slice_keep(self, selection, cc_slice=False):
+    def make_slice_keep(self, selection, cc=False):
         """ make slice, but put back dims that were explicitly reduced """
-        slices, crdlst, reduced = self.make_slice(selection, cc_slice=cc_slice)
+        slices, crdlst, reduced = self.make_slice(selection, cc=cc)
         # put reduced dims back, reduced will be in the same order as self.axes
         # since make_slice loops over self.axes to do the slices; this enables
         # us to call insert in the loop
@@ -428,7 +428,7 @@ class StructuredCrds(Coordinates):
             loc_ind = slices[axis_ind]
             crd_nc = self.get_nc(axis)
 
-            if cc_slice:
+            if cc:
                 if loc_ind == -1:
                     crd = crd_nc[-2:]
                     slc = slice(-1, None)
@@ -455,29 +455,29 @@ class StructuredCrds(Coordinates):
         #       "reduced", reduced)
         return slices, crdlst, reduced
 
-    def slice(self, selection, cc_slice=False):
+    def slice(self, selection, cc=False):
         """ Get crds that describe a slice (subset) of this grid. Reduces dims
         the same way numpy / fields do. Chances are you want either slice_reduce
         or slice_keep """
-        slices, crdlst, reduced = self.make_slice(selection, cc_slice=cc_slice)
+        slices, crdlst, reduced = self.make_slice(selection, cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
         return wrap_crds(self._TYPE, crdlst)
 
-    def slice_reduce(self, selection, cc_slice=False):
+    def slice_reduce(self, selection, cc=False):
         """ Get crds that describe a slice (subset) of this grid. Go through,
         and if the slice didn't touch a dim with only one crd, reduce it """
         slices, crdlst, reduced = self.make_slice_reduce(selection,
-                                                         cc_slice=cc_slice)
+                                                         cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
         return wrap_crds(self._TYPE, crdlst)
 
-    def slice_keep(self, selection, cc_slice=False):
+    def slice_keep(self, selection, cc=False):
         slices, crdlst, reduced = self.make_slice_keep(selection,
-                                                       cc_slice=cc_slice)
+                                                       cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self

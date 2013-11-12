@@ -496,7 +496,7 @@ class Field(object):
         """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self.crds.make_slice(selection, cc_slice=cc)
+        slices, crdlst, reduced = self.crds.make_slice(selection, cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def slice_reduce(self, selection):
@@ -506,7 +506,7 @@ class Field(object):
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
         slices, crdlst, reduced = self.crds.make_slice_reduce(selection,
-                                                              cc_slice=cc)
+                                                              cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def slice_and_keep(self, selection):
@@ -516,13 +516,13 @@ class Field(object):
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
         slices, crdlst, reduced = self.crds.make_slice_keep(selection,
-                                                            cc_slice=cc)
+                                                            cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def set_slice(self, selection, value):
         cc = self.iscentered("Cell")
         selection = self._prepare_slice(selection)[0]
-        slices, crdlst = self.crds.make_slice(selection, cc_slice=cc)[:2]
+        slices, crdlst = self.crds.make_slice(selection, cc=cc)[:2]
         self.data[tuple(slices)] = value
         return None
 
