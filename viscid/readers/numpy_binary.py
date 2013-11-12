@@ -6,6 +6,7 @@ grid """
 
 # import string
 from __future__ import print_function
+import os
 import logging
 
 import numpy as np
@@ -155,6 +156,7 @@ class FileNumpyNPZ(vfile.VFile):
     @classmethod
     def save_fields(cls, fname, flds, **kwargs):
         assert(len(flds) > 0)
+        fname = os.path.expanduser(os.path.expandvars(fname))
         fld_dict = {}
 
         # setup crds

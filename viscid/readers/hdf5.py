@@ -159,6 +159,8 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
         # FIXME: this is only good for writing cartesian rectilnear flds
         # FIXME: axes are renamed if flds[0] is 1D or 2D
         assert(len(flds) > 0)
+        fname = os.path.expanduser(os.path.expandvars(fname))
+
         clist = flds[0].crds.get_clist()
         crd_arrs = [np.array([0.0])] * 3
         crd_names = ["z", "y", "x"]
