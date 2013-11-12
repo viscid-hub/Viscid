@@ -230,7 +230,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
         cbar = plt.colorbar(p, **colorbar) #pylint: disable=W0142
-        cbar.set_label(fld.name)
+        cbar.set_label(fld.pretty_name)
     else:
         cbar = None
 
@@ -255,7 +255,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
     p = plt.plot(x, fld.data, **kwargs)
     plt.xlabel(namex)
-    plt.ylabel(fld.name)
+    plt.ylabel(fld.pretty_name)
     # _apply_acts(acts)
 
     if show:

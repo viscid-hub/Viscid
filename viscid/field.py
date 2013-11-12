@@ -113,6 +113,7 @@ class Field(object):
     crds = None  # Coordinate object
     time = None  # float
     info = None  # dict
+    pretty_name = None  # String
 
     # these get reset when data is set
     _layout = None
@@ -124,12 +125,18 @@ class Field(object):
     _cache = None  # this will always be a numpy array
 
     def __init__(self, name, crds, data, center="Node", time=0.0,
-                 info=None, forget_source=False, **kwargs):
+                 info=None, forget_source=False, pretty_name=None,
+                 **kwargs):
         self.name = name
         self.center = center
         self.time = time
         self.crds = crds
         self.data = data
+
+        if pretty_name is None:
+            self.pretty_name = self.name
+        else:
+            self.pretty_name = pretty_name
 
         self.info = {} if info is None else info
         for k, v in kwargs.items():
