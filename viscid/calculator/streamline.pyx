@@ -1,4 +1,4 @@
-# cython: boundscheck=True, wraparound=False, cdivision=True, profile=False
+# cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
 """ NOTE: when nr_procs > 1, fields are shared to child processes using
 a global variable so that on Unix there is no need to picklel and copy the
 entire field. This will only work on Unix, and I have absolutely no idea
@@ -36,6 +36,8 @@ EULER1 = 1  # euler1 non-adaptive
 RK2 = 2  # rk2 non-adaptive
 RK12 = 3  # euler1 + rk2 adaptive
 EULER1A = 4  # euler 1st order adaptive
+METHOD = {"euler": EULER1, "euler1": EULER1, "rk2": RK2, "rk12": RK12,
+          "euler1a": EULER1A}
 
 DIR_FORWARD = 1
 DIR_BACKWARD = 2
@@ -168,7 +170,8 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
                    ds0=0.0, ibound=0.0, obound0=None, obound1=None,
                    maxit=10000, max_length=0.0, stream_dir=DIR_BOTH,
                    output=OUTPUT_BOTH, method=EULER1, tol_lo=1e-3, tol_hi=1e-2,
-                   fac_refine=0.75, fac_coarsen=1.25):
+                   fac_refine=0.5, fac_coarsen=1.25, smallest_step=1e-4,
+                   largest_step=1e2):
     """ Start calculating a streamline at x0
     stream_dir:  DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
     ibound:      stop streamline if within inner_bound of the origin
@@ -200,11 +203,13 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
         real_t c_tol_hi = tol_hi
         real_t c_fac_refine = fac_refine
         real_t c_fac_coarsen = fac_coarsen
+        real_t c_smallest_step = smallest_step
+        real_t c_largest_step = largest_step
 
         # just for c
         int (*integrate_func)(real_t[:,:,:,::1], real_t[:]*,
                       real_t*, real_t[:], real_t, real_t, real_t, real_t,
-                      int[3]) except -1
+                      real_t, real_t, int[3]) except -1
         int i, j, it
         int i_stream
         int nprogress = max(nr_streams / 50, 1)  # progeress at every 5%
@@ -324,7 +329,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
 
                 ret = integrate_func(v_mv, crds, &ds, s_mv,
                     c_tol_lo, c_tol_hi, c_fac_refine , c_fac_coarsen,
-                    start_inds)
+                    c_smallest_step, c_largest_step, start_inds)
 
                 if fabs(ds) >= pre_ds:
                     stream_length += pre_ds

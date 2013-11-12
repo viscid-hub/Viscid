@@ -15,6 +15,18 @@ from cycalc cimport *
 cdef extern from "math.h":
     bint isnan(double x)
 
+cdef inline real_t _c_real_max(real_t a, real_t b):
+    if a >= b:
+        return a
+    else:
+        return b
+
+cdef inline real_t _c_real_min(real_t a, real_t b):
+    if a <= b:
+        return a
+    else:
+        return b
+
 #####################
 # now the good stuff
 
@@ -22,6 +34,7 @@ cdef int _c_euler1(real_t[:,:,:,::1] s, real_t[:] *crds,
                    real_t *ds, real_t[:] x,
                    real_t tol_lo, real_t tol_hi,
                    real_t fac_refine, real_t fac_coarsen,
+                   real_t smallest_step, real_t largest_step,
                    int start_inds[3]) except -1:
     cdef real_t vx, vy, vz, vmag
     vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)
@@ -40,6 +53,7 @@ cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,
                 real_t *ds, real_t[:] x0,
                 real_t tol_lo, real_t tol_hi,
                 real_t fac_refine, real_t fac_coarsen,
+                real_t smallest_step, real_t largest_step,
                 int start_inds[3]) except -1:
     cdef real_t[3] x1
     cdef real_t[3] v0
@@ -75,6 +89,7 @@ cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
                  real_t *ds, real_t[:] x0,
                  real_t tol_lo, real_t tol_hi,
                  real_t fac_refine, real_t fac_coarsen,
+                 real_t smallest_step, real_t largest_step,
                  int start_inds[3]) except -1:
     cdef real_t[3] x1
     cdef real_t[3] v0
@@ -126,12 +141,15 @@ cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
         if dist > tol_hi * fabs(deref(ds)):
             # logging.debug("Refining ds: {0} -> {1}".format(
             #     deref(ds), fac_refine * deref(ds)))
-            ds[0] = fac_refine * deref(ds)
-            continue
+            if ds[0] <= smallest_step:
+                break
+            else:
+                ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+                continue
         elif dist < tol_lo * fabs(deref(ds)):
             # logging.debug("Coarsening ds: {0} -> {1}".format(
             #     deref(ds), fac_coarsen * deref(ds)))
-            ds[0] = fac_coarsen * deref(ds)
+            ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
             break
         else:
             break
@@ -145,6 +163,7 @@ cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
                     real_t *ds, real_t[:] x0,
                     real_t tol_lo, real_t tol_hi,
                     real_t fac_refine, real_t fac_coarsen,
+                    real_t smallest_step, real_t largest_step,
                     int start_inds[3]) except -1:
     cdef real_t[3] x1
     cdef real_t[3] x2
@@ -189,12 +208,15 @@ cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
         if dist > tol_hi * fabs(deref(ds)):
             # logging.debug("Refining ds: {0} -> {1}".format(
             #     deref(ds), fac_refine * deref(ds)))
-            ds[0] = fac_refine * deref(ds)
-            continue
+            if ds[0] <= smallest_step:
+                break
+            else:
+                ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+                continue
         elif dist < tol_lo * fabs(deref(ds)):
             # logging.debug("Coarsening ds: {0} -> {1}".format(
             #     deref(ds), fac_coarsen * deref(ds)))
-            ds[0] = fac_coarsen * deref(ds)
+            ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
             break
         else:
             break

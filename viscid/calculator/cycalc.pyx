@@ -45,7 +45,6 @@ cdef inline int _c_int_min(int a, int b):
     else:
         return b
 
-
 cdef inline int _c_closest_ind(real_t[:] crd, real_t point,
                                int *startind) except -1:
     cdef int i
