@@ -121,6 +121,9 @@ class Grid(object):
     def get_field(self, fldname, time=None): #pylint: disable=W0613
         return self.fields[fldname]
 
+    def get_grid(self, time=None): #pylint: disable=W0613
+        return self
+
     def __contains__(self, item):
         return item in self.fields
 
@@ -149,7 +152,7 @@ class Grid(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, typ, value, traceback):
         self.unload()
         return None
 

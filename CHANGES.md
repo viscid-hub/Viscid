@@ -8,6 +8,7 @@ Features:
   - stringy typed things should be case insensitive if compared with the provided methods (istype() and iscentered()), otherwise everything is lowercase
   - field properties are now even lazier and cachier
   - add reader for 1d gnuplot like files
+  - add reader for numpy binary npz files (can also save a list of fields)
 Refactors:
   - filed.n_points -> filed.nr_points
   - filed.n_comps -> filed.nr_comps

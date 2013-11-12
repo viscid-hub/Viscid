@@ -122,6 +122,16 @@ class Dataset(object):
         else:
             return child.get_field(fldname, time=time)
 
+    def get_grid(self, time=None):
+        """ recurse down active children to get a field """
+        child = self.active_child
+
+        if child is None:
+            logging.warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.get_grid(time=time)
+
     def get_child(self, item):
         """ get a child from this Dataset,  """
         return self.children[item]
@@ -278,6 +288,19 @@ class DatasetTemporal(Dataset):
             return None
         else:
             return child.get_field(fldname, time=time)
+
+    def get_grid(self, time=None):
+        """ recurse down active children to get a field """
+        if time is not None:
+            child = self.get_child(time)
+        else:
+            child = self.active_child
+
+        if child is None:
+            logging.warn("Could not get appropriate child...")
+            return None
+        else:
+            return child.get_grid(time=time)
 
     def get_child(self, item):
         """ if item is an int and < len(children), it is an index in a list,

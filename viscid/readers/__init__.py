@@ -7,11 +7,13 @@
 # Also, look at csv for an example of overriding detect_type(...)
 
 # import vfile
+from .vfile import VFile
 from . import vfile_bucket
 
 # these imports are necessary to register file types
 from . import xdmf
 from . import hdf5
+from . import numpy_binary
 from . import ascii
 
 __filebucket__ = vfile_bucket.VFileBucket()
@@ -37,3 +39,18 @@ def load_files(fnames):
     """ Load a single file and return a vFille.
     This function is the primary means of loading a file. """
     return __filebucket__.load_files(fnames)
+
+def save_grid(fname, grd, **kwargs):
+    """ save a grid, filetype is inferred from fname """
+    ftype = VFile.detect_type(fname)
+    ftype.save_grid(fname, grd, **kwargs)
+
+def save_field(fname, fld, **kwargs):
+    """ save a field, filetype is inferred from fname """
+    ftype = VFile.detect_type(fname)
+    ftype.save_field(fname, fld, **kwargs)
+
+def save_fields(fname, flds, **kwargs):
+    """ save a list of fields, filetype is inferred from fname """
+    ftype = VFile.detect_type(fname)
+    ftype.save_fields(fname, flds, **kwargs)

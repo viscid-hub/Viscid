@@ -502,7 +502,7 @@ class StructuredCrds(Coordinates):
             axes = [a.upper() if shaped else a for a in self.axes]
         if not isinstance(axes, (list, tuple)):
             try:
-                axes = [a for a in axes]
+                axes = [a.upper() if shaped else a for a in axes]
             except TypeError:
                 axes = [axes]
         sfx = self._CENTER[center.lower()]

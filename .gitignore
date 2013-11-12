@@ -4,6 +4,8 @@ dist
 MANIFEST
 viscid.sublime-workspace
 
+sample/test.npz
+
 *.pyc
 *.pyo
 *.pyd
