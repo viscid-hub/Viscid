@@ -181,6 +181,7 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
 
         # now write an xdmf file
         xdmf_fname = os.path.splitext(fname)[0] + ".xdmf"
+        relh5fname = "./" + os.path.basename(fname)
         with open(xdmf_fname, 'w') as f:
             xloc = cls._CRDS_GROUP + '/' + crd_names[2]
             yloc = cls._CRDS_GROUP + '/' + crd_names[1]
@@ -188,7 +189,7 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
             dim_str = " ".join([str(l) for l in crd_shape])
             f.write(cls._XDMF_TEMPLATE_BEGIN.format(time=time))
             f.write(cls._XDMF_TEMPLATE_RECTILINEAR_GRID_BEGIN.format(
-                    grid_name="vgrid", crd_dims=dim_str, h5fname=fname,
+                    grid_name="vgrid", crd_dims=dim_str, h5fname=relh5fname,
                     xdim=crd_shape[2], ydim=crd_shape[1], zdim=crd_shape[0],
                     xloc=xloc, yloc=yloc, zloc=zloc))
 
@@ -200,7 +201,7 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
                 f.write(cls._XDMF_TEMPLATE_ATTRIBUTE.format(fld_name=fld.name,
                         fld_type=fld.type, center=fld.center.title(),
                         dtype=dt, precision=precision, fld_dims=fld_dim_str,
-                        h5fname=fname, fld_loc=loc))
+                        h5fname=relh5fname, fld_loc=loc))
 
             f.write(cls._XDMF_TEMPLATE_GRID_END)
             f.write(cls._XDMF_TEMPLATE_END)
