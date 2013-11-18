@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.50.1 dev
+## 0.50.1
 Features:
   - Field slicing semantics are now the same as numpy in terms of when dimensions get reduced. To enforce specific reductions, use Field.slice_reduce() or Field.slice_keep()
   - crds accessable from grids / fields / crds using get_crd_[ncef]c or get_crds_[ncef]c for one or multile crds rspectively
