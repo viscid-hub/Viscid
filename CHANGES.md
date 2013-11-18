@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.50.2 dev
+
 ## 0.50.1
 Features:
   - Field slicing semantics are now the same as numpy in terms of when dimensions get reduced. To enforce specific reductions, use Field.slice_reduce() or Field.slice_keep()
