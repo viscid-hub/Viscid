@@ -1,6 +1,5 @@
 Just some notes...
 
- * for 0.60.0: actually implement ascii reader
  * for 0.60.0: add docstrings
  * for 0.60.0: give sphinx some personality
  * for 0.70.0: streamline calc dispatching and have numpy fallback for all numexpr functions

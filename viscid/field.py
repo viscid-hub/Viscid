@@ -7,33 +7,63 @@ is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
 import logging
+from inspect import isclass
 
 import numpy as np
 
 from . import coordinate
 from . import vutil
 
-LAYOUT_DEFAULT = None  # do not translate
-LAYOUT_INTERLACED = "Interlaced"
-LAYOUT_FLAT = "Flat"
-LAYOUT_OTHER = "Other"
+LAYOUT_DEFAULT = "none"  # do not translate
+LAYOUT_INTERLACED = "interlaced"
+LAYOUT_FLAT = "flat"
+LAYOUT_SCALAR = "scalar"
+LAYOUT_OTHER = "other"
 
-def field_type_from_str(typ_str):
-    for cls in vutil.subclass_spider(Field):
-        if cls.TYPE == typ_str:
-            return cls
-    logging.warn("Field type {0} not understood".format(typ_str))
-    return None
-
-def wrap_field(typ, name, crds, data, **kwargs):
-    """ **kwargs passed to field constructor """
-    #
-    #len(clist), clist[0][0], len(clist[0][1]), type)
-    cls = field_type_from_str(typ)
-    if cls is not None:
-        return cls(name, crds, data, **kwargs)
+def empty(typ, name, crds, nr_comps=0, layout=LAYOUT_FLAT, center="Cell",
+          dtype="float64", **kwargs):
+    """ creates an empty field of type typ with the same shape as crds,
+    dtype is just something that can be understood by np.array() and
+    kwargs get passed to the field constructor """
+    if center.lower() == "cell":
+        sshape = crds.shape_cc
+    elif center.lower() == "node":
+        sshape = crds.shape_nc
     else:
-        raise NotImplementedError("can not decipher field")
+        sshape = crds.shape_nc
+
+    if ScalarField.istype(typ):
+        shape = sshape
+    else:
+        if layout.lower() == LAYOUT_INTERLACED:
+            shape = sshape + [nr_comps]
+        else:
+            shape = [nr_comps] + sshape
+
+    dat = np.empty(shape, dtype=dtype)
+
+    return wrap_field(typ, name, crds, dat, center=center, **kwargs)
+
+def empty_like(name, fld, **kwargs):
+    """ create empty field with 'name' whose shape / meta data match fld """
+    dat = np.empty(fld.shape, dtype=fld.dtype)
+    c = fld.center
+    t = fld.time
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
+
+def zeros_like(name, fld, **kwargs):
+    """ create field of zeros with 'name' whose shape / meta data match fld """
+    dat = np.zeros(fld.shape, dtype=fld.dtype)
+    c = fld.center
+    t = fld.time
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
+
+def ones_like(name, fld, **kwargs):
+    """ create field of ones with 'name' whose shape / meta data match fld """
+    dat = np.ones(fld.shape, dtype=fld.dtype)
+    c = fld.center
+    t = fld.time
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
 def scalar_fields_to_vector(name, fldlist, **kwargs):
     if not name:
@@ -47,81 +77,212 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
                          **kwargs)
     return vfield
 
+def field_type(typ):
+    """ @returns: a class where class.type matches typ
+    the magic lookup happens when typ is a string, if typ is a class
+    then just return the class for convenience """
+    if isclass(typ) and issubclass(typ, Field):
+        return typ
+    else:
+        for cls in vutil.subclass_spider(Field):
+            if cls.istype(typ):
+                return cls
+    logging.warn("Field type {0} not understood".format(typ))
+    return None
+
+def wrap_field(typ, name, crds, data, **kwargs):
+    """ **kwargs passed to field constructor """
+    #
+    #len(clist), clist[0][0], len(clist[0][1]), type)
+    cls = field_type(typ)
+    if cls is not None:
+        return cls(name, crds, data, **kwargs)
+    else:
+        raise NotImplementedError("can not decipher field")
 
 class Field(object):
-    TYPE = "None"
-    CENTERING = ['Node', 'Cell', 'Grid', 'Face', 'Edge']
+    _TYPE = "none"
+    _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
 
+    # set on __init__
+    # NOTE: _src_data is allowed by be a list to support creating vectors from
+    # some scalar fields without necessarilly loading the data
+    _center = "none"  # String in CENTERING
+    _src_data = None  # numpy-like object (h5py too), or list of these objects
     name = None  # String
-    center = None  # String in CENTERING
     crds = None  # Coordinate object
     time = None  # float
     info = None  # dict
+    pretty_name = None  # String
 
-    source_data = None  # numpy-like object (h5py too)
+    # these get reset when data is set
+    _layout = None
+    _nr_comps = None
+    _nr_comp = None
+    _dtype = None
+
+    # set when data is retrieved
     _cache = None  # this will always be a numpy array
 
     def __init__(self, name, crds, data, center="Node", time=0.0,
-                 info=None, forget_source=False, **kwargs):
+                 info=None, forget_source=False, pretty_name=None,
+                 **kwargs):
         self.name = name
         self.center = center
         self.time = time
         self.crds = crds
         self.data = data
 
+        if pretty_name is None:
+            self.pretty_name = self.name
+        else:
+            self.pretty_name = pretty_name
+
         self.info = {} if info is None else info
         for k, v in kwargs.items():
             self.info[k] = v
 
-        if forget_source:
-            self.source_data = self.data
+        if not "force_layout" in self.info:
+            self.info["force_layout"] = LAYOUT_DEFAULT
+        self.info["force_layout"] = self.info["force_layout"].lower()
 
-    def unload(self):
-        """ does not guarentee that the memory will be freed """
-        self._purge_cache()
+        if forget_source:
+            self._src_data = self.data
 
     @property
-    def dim(self):
-        return self.crds.dim
-        # try:
-        #     return len(self.source_data.shape)
-        # except AttributeError:
-        #     # FIXME
-        #     return len(self.source_data[0].shape) + 1
+    def type(self):
+        return self._TYPE
+
+    @property
+    def center(self):
+        return self._center
+    @center.setter
+    def center(self, new_center):
+        new_center = new_center.lower()
+        assert(new_center in self._CENTERING)
+        self._center = new_center
+
+    @property
+    def layout(self):
+        """ get the layout type, 'interlaced' (AOS) | 'flat (SOA)'. This at most
+        calls _detect_layout(_src_data) which tries to be lazy """
+        if self._layout is None:
+            if self.info["force_layout"] != LAYOUT_DEFAULT:
+                self._layout = self.info["force_layout"]
+            else:
+                self._layout = self._detect_layout(self._src_data)
+        return self._layout
+
+    @property
+    def nr_dims(self):
+        """ returns number of dims, this should be the number of dims of
+        the underlying data, but is assumed a priori so no data load is
+        done here """
+        return self.nr_sdims + 1
+
+    @property
+    def nr_sdims(self):
+        """ number of spatial dims, same as crds.nr_dims, does not
+        explicitly load the data """
+        return self.crds.nr_dims
+
+    @property
+    def nr_comps(self):
+        """ how many components are there? Only inspects _src_data """
+        # this gets # of comps from src_data, so layout is given as layout
+        # of src_data since it might not be loaded yet
+        if self._nr_comps is None:
+            layout = self._detect_layout(self._src_data)
+            if layout == LAYOUT_INTERLACED:
+                if isinstance(self._src_data, (list, tuple)):
+                    # this is an awkward way to get the data in here...
+                    self._nr_comps = self._src_data[0].shape[-1]
+                else:
+                    self._nr_comps = self._src_data.shape[-1]
+            elif layout == LAYOUT_FLAT:
+                # length of 1st dim... this works for ndarrays && lists
+                self._nr_comps = len(self._src_data)
+            elif layout == LAYOUT_SCALAR:
+                self._nr_comps = 1
+            else:
+                raise RuntimeError("Could not detect data layout; "
+                                   "can't give nr_comps")
+                # return self._src_data.shape[-1]
+        return self._nr_comps
+
+    @property
+    def nr_comp(self):
+        """ dimension of the components of the vector, loads the data if
+        self.layout does """
+        if self._nr_comp is None:
+            layout = self.layout
+            if layout == LAYOUT_FLAT:
+                self._nr_comp = 0
+            elif layout == LAYOUT_INTERLACED:
+                self._nr_comp = self.crds.nr_dims
+            elif layout == LAYOUT_SCALAR:
+                # use same as interlaced for slicing convenience, note
+                # this is only for a one component vector, for scalars
+                # nr_comp is None
+                self._nr_comp = self.crds.nr_dims
+            else:
+                raise RuntimeError("Could not detect data layout; "
+                                   "can't give nr_comp")
+        return self._nr_comp
 
     @property
     def shape(self):
+        """ returns the shape of the underlying data, does not explicitly load
+        the data """
+        s = self.sshape
+        try:
+            s.insert(self.nr_comp, self.nr_comps)
+        except TypeError:
+            pass
+
+        return s
+
+    @property
+    def sshape(self):
+        """ shape of spatial dimensions, does not include comps, and is not
+        the same shape as underlying array, does not load the data """
         # it is enforced that the cached data has a shape that agrees with
         # the coords by _reshape_ndarray_to_crds... actually, that method
         # requires this method to depend on the crd shape
-        if self.center == "Node":
+        if self.iscentered("node"):
             return list(self.crds.shape_nc)
-        elif self.center == "Cell":
+        elif self.iscentered("cell"):
             return list(self.crds.shape_cc)
         else:
-            logging.warn("Edge/Face vectors not implemented, assuming "
+            logging.warn("edge/face vectors not implemented, assuming "
                          "node shape")
             return self.crds.shape
 
     @property
     def size(self):
+        """ how many values are in underlying data """
         return np.product(self.shape)
 
     @property
+    def ssize(self):
+        """ how many values make up one component of the underlying data """
+        return np.product(self.sshape)
+
+    @property
     def dtype(self):
-        # print(type(self.source_data))
-        if self._cache is not None:
-            dt = self.source_data[0].dtype
-            if isinstance(dt, str):
-                return dt
+        # print(type(self._src_data))
+        # dtype.name is for pruning endianness out of dtype
+        if self._dtype is None:
+            if isinstance(self._src_data, (list, tuple)):
+                dt = self._src_data[0].dtype
             else:
-                return self.source_data[0].dtype.name
-        else:
-            # dtype.name is for pruning endianness out of dtype
-            if isinstance(self.source_data, (list, tuple)):
-                return self.source_data[0].dtype.name
+                dt = self._src_data.dtype
+
+            if isinstance(dt, np.dtype):
+                self._dtype = np.dtype(dt.name)
             else:
-                return self.source_data.dtype.name
+                self._dtype = np.dtype(dt)
+        return self._dtype
 
     @property
     def data(self):
@@ -130,24 +291,84 @@ class Field(object):
         if self._cache is None:
             self._fill_cache()
         return self._cache
-
     @data.setter
     def data(self, dat):
+        # clean up
         self._purge_cache()
-        self.source_data = dat
+        self._layout = None
+        self._nr_comp = None
+        self._nr_comps = None
+        self._dtype = None
+        self._src_data = dat
+        self._translate_src_data()
+        # do some sort of lazy pre-setup _src_data inspection?
 
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
         self._cache = None
 
     def _fill_cache(self):
-        self._cache = self._translate_data(self.source_data)
+        """ actually load data into the cache """
+        self._cache = self._src_data_to_ndarray()
 
-    def _translate_data(self, dat):
+    def _translate_src_data(self):
+        pass
+
+    def _src_data_to_ndarray(self):
+        """ prep the src data into something usable and enforce a layout """
         # some magic may need to happen here to accept more than np/h5 data
         # override if a type does something fancy (eg, interlacing)
         # and dat.flags["OWNDATA"]  # might i want this?
-        return self._dat_to_ndarray(dat)
+        src_data_layout = self._detect_layout(self._src_data)
+        force_layout = self.info["force_layout"]
+
+        # we will preserve layout or we already have the correct layout,
+        # do no translation
+        if force_layout == LAYOUT_DEFAULT or \
+           force_layout == src_data_layout:
+            return self._dat_to_ndarray(self._src_data)
+
+        # if layout is found to be other, i cant do anything with that
+        elif src_data_layout == LAYOUT_OTHER:
+            logging.warn("Cannot auto-detect layout; not translating; "
+                         "performance may suffer")
+            return self._dat_to_ndarray(self._src_data)
+
+        # ok, we demand FLAT arrays, make it so
+        elif force_layout == LAYOUT_FLAT:
+            if src_data_layout != LAYOUT_INTERLACED:
+                raise RuntimeError("I should not be here")
+
+            nr_comps = self.nr_comps
+            data_dest = np.empty(self.shape, dtype=self.dtype)
+            for i in range(nr_comps):
+                # NOTE: I wonder if this is the fastest way to reorder
+                data_dest[i, ...] = self._src_data[..., i]
+                # NOTE: no special case for lists, they are not
+                # interpreted this way
+            return self._dat_to_ndarray(data_dest)
+
+        # ok, we demand INTERLACED arrays, make it so
+        elif force_layout == LAYOUT_INTERLACED:
+            if src_data_layout != LAYOUT_FLAT:
+                raise RuntimeError("I should not be here")
+
+            nr_comps = self.nr_comps
+            dtype = self.dtype
+            data_dest = np.empty(self.shape, dtype=dtype)
+            for i in range(nr_comps):
+                data_dest[..., i] = self._src_data[i]
+
+            self._layout = LAYOUT_INTERLACED
+            return self._dat_to_ndarray(data_dest)
+
+        # catch the remaining cases
+        elif self.info["force_layout"] == LAYOUT_OTHER:
+            raise ValueError("How should I know how to force other layout?")
+        else:
+            raise ValueError("Bad argument for layout forcing")
+
+        raise RuntimeError("I should not be here")
 
     def _dat_to_ndarray(self, dat):
         """ This should be the last thing called for all data that gets put
@@ -177,47 +398,92 @@ class Field(object):
         self.shape better still be using the crds shape corrected for
         node / cell centering
         """
-        if arr.shape == self.shape:
+        if list(arr.shape) == self.shape:
             return arr
         else:
-            # print(">>> arr.shape: ", arr.shape)
-            # print(">>> self.shape: ", self.shape)
-            # print(len(self.crds["xcc"]), ", x = ", self.crds["xcc"])
-            # print("center = ", self.center)
-            return arr.reshape(self.shape)
+            ret = arr.reshape(self.shape)
+            return ret
 
-    #TODO: some method that gracefully gets the correct crd arrays for
-    # face and edge centered fields
+    def _detect_layout(self, dat):
+        """ returns LAYOUT_XXX, this just looks at len(dat) or dat.shape """
+        # if i receive a list, then i suppose i have a list of
+        # arrays, one for each component... this is a flat layout
+        sshape = list(self.sshape)
+        if isinstance(dat, (list, tuple)):
+            # Make sure the list makes sense... this strictly speaking
+            # doesn't need to happen, but it's a bad habbit to allow
+            # shapes through that I don't explicitly plan for, since
+            # this is just the door to the rabbit hole
+            # BUT, this has the side effect that one can't create vector
+            # fields with vx = Xcc, one has to use
+            # vx = Xcc + 0 * Ycc + 0 * Zcc, which is rather cumbersome
+            # for d in dat:
+            #     assert(list(d.shape) == list(sshape))
+            return LAYOUT_FLAT
 
-    def _augment_slices(self, slices): #pylint: disable=R0201
-        """ TODO: this is a crap mechanism to do vector slicing and should
-        disappear """
-        return slices
+        if list(dat.shape) == sshape:
+            return LAYOUT_SCALAR
 
-    def slice(self, selection, consolidate=False):
-        """ Select a slice of the data using selection dictionary.
-        Returns a new field.
-        """
-        cc = (self.center == "Cell")
-        slices, crdlst, reduced = self.crds.make_slice(selection, use_cc=cc,
-                                                       consolidate=consolidate)
+        # if the crds shape has more values than the dat.shape
+        # then try trimming the directions that have 1 element
+        # this can happen when crds are 3d, but field is only 2d
+        ## I'm not sure why this needs to happen... but tests fail
+        ## without it
+        while len(sshape) > len(dat.shape) - 1:
+            try:
+                sshape.remove(1)
+            except ValueError:
+                break
 
+        # check which dims match the shape of the crds
+        if list(dat.shape) == sshape:
+            layout = LAYOUT_SCALAR
+        elif list(dat.shape[1:]) == sshape:
+            layout = LAYOUT_FLAT
+        elif list(dat.shape[:-1]) == sshape:
+            layout = LAYOUT_INTERLACED
+        elif dat.shape[0] == np.prod(sshape):
+            layout = LAYOUT_INTERLACED
+        elif dat.shape[-1] == np.prod(sshape):
+            layout = LAYOUT_FLAT
+        else:
+            # if this happens, don't ignore it even if it happens to work
+            logging.warn("could not detect layout for '{0}': shape = {1} "
+                         "target shape = {2}"
+                         "".format(self.name, dat.shape, sshape))
+            layout = LAYOUT_OTHER
+
+        return layout
+
+    def _prepare_slice(self, selection):
+        """ if selection has a slice for component dimension, set it aside """
+        comp_slc = slice(None)
+        if isinstance(selection, tuple):
+            selection = list(selection)
+        if isinstance(selection, list):
+            if self.nr_comps > 0 and len(selection) == self.nr_dims:
+                comp_slc = selection.pop[self.nr_comp]
+        return selection, comp_slc
+
+    def _finalize_slice(self, slices, crdlst, reduced, comp_slc):
         # no slice necessary, just pass the field through
         if list(slices) == [slice(None)] * len(slices):
             return self
 
-        crds = coordinate.wrap_crds(self.crds.TYPE, crdlst)
-        slices = self._augment_slices(slices)
-        # TODO: This can probably be done with a 'lazy slice'
+        crds = coordinate.wrap_crds(self.crds.type, crdlst)
+        try:
+            slices.insert(self.nr_comp, comp_slc)
+        except TypeError:
+            pass
 
         # if we sliced the hell out of the array, just
-        # return the value that's left
+        # return the value that's left, ndarrays have the same behavior
         slced_dat = self.data[tuple(slices)]
         if len(reduced) == len(slices) or slced_dat.size == 1:
             return slced_dat
         else:
             fld = self.wrap(slced_dat,
-                            {"name": self.name + "_slice",
+                            {"name": self.name,
                              "crds": crds,
                             })
             # if there are reduced dims, put them into the info dict
@@ -225,46 +491,161 @@ class Field(object):
                 fld.info["reduced"] = reduced
             return fld
 
-    def consolidate_dims(self):
-        """ consolidate dimensions with length 1 in place """
-        raise NotImplementedError()
+    def slice(self, selection):
+        """ Slice the field using a string like "y=3i:6i:2,z=0" or a standard
+        list of slice objects like one would give to numpy. In a string, i
+        means by index, and bare numbers mean by the index closest to that
+        value; see Coordinate.make_slice docs for an example. The semantics
+        for keeping / droping dimensions are the same as for numpy arrays.
+        This means selections that leave one crd in a given dimension reduce
+        that dimension out. For other behavior see
+        slice_reduce and slice_keep
+        """
+        cc = self.iscentered("Cell")
+        selection, comp_slc = self._prepare_slice(selection)
+        slices, crdlst, reduced = self.crds.make_slice(selection, cc=cc)
+        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
-    def n_points(self, center=None, **kwargs): #pylint: disable=W0613
-        if center == "None":
-            center = self.center
-        return self.crds(center=center)
+    def slice_reduce(self, selection):
+        """ Slice the field, then go through all dims and look for dimensions
+        with only one coordinate. Reduce those dimensions out of the new
+        field """
+        cc = self.iscentered("Cell")
+        selection, comp_slc = self._prepare_slice(selection)
+        slices, crdlst, reduced = self.crds.make_slice_reduce(selection,
+                                                              cc=cc)
+        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+
+    def slice_and_keep(self, selection):
+        """ Slice the field, then go through dimensions that would be reduced
+        by a normal numpy slice (like saying 'z=0') and keep those dimensions
+        in the new field """
+        cc = self.iscentered("Cell")
+        selection, comp_slc = self._prepare_slice(selection)
+        slices, crdlst, reduced = self.crds.make_slice_keep(selection,
+                                                            cc=cc)
+        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+
+    def set_slice(self, selection, value):
+        cc = self.iscentered("Cell")
+        selection = self._prepare_slice(selection)[0]
+        slices, crdlst = self.crds.make_slice(selection, cc=cc)[:2]
+        self.data[tuple(slices)] = value
+        return None
+
+    def unload(self):
+        """ does not guarentee that the memory will be freed """
+        self._purge_cache()
+
+    @classmethod
+    def istype(cls, type_str):
+        return cls._TYPE == type_str.lower()
+
+    def iscentered(self, center_str):
+        return self.center == center_str.lower()
 
     def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
-        if center == "None":
+        if center is None:
             center = self.center
         return self.crds.iter_points(center=center)
-
-    def __array__(self):
-        return self.data
 
     def __enter__(self):
         return self
 
     def __exit__(self, typ, value, traceback):
+        """ unload the data """
         self.unload()
         return None
 
     def __iter__(self):
+        """ iterate though all values in the data, raveled """
         for val in self.data.ravel():
             yield val
 
+    ##################################
+    ## Utility methods to get at crds
+    # these are the same as something like self.crds['xnc']
+    # or self.crds.get_crd()
+    def get_crd(self, axis, shaped=False):
+        """ return crd along axis with same centering as field
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_crd(axis, center=self.center, shaped=shaped)
+
+    def get_crd_nc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_nc(axis, shaped=shaped)
+
+    def get_crd_cc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_cc(axis, shaped=shaped)
+
+    def get_crd_ec(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_ec(axis, shaped=shaped)
+
+    def get_crd_fc(self, axis, shaped=False):
+        """ returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        return self.crds.get_fc(axis, shaped=shaped)
+
+    ## these return all crd dimensions
+    # these are the same as something like self.crds.get_crds()
+    def get_crds(self, axes=None, shaped=False):
+        """ return all crds as list of ndarrays with same centering as field """
+        return self.crds.get_crds(axes=axes, center=self.center, shaped=shaped)
+
+    def get_crds_nc(self, axes=None, shaped=False):
+        """ returns all node centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_nc(axes=axes, shaped=shaped)
+
+    def get_crds_cc(self, axes=None, shaped=False):
+        """ returns all cell centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_cc(axes=axes, shaped=shaped)
+
+    def get_crds_fc(self, axes=None, shaped=False):
+        """ returns all face centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_fc(axes=axes, shaped=shaped)
+
+    def get_crds_ec(self, axes=None, shaped=False):
+        """ returns all edge centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        return self.crds.get_crds_ec(axes=axes, shaped=shaped)
+
+    #######################
+    ## emulate a container
+
+    def __len__(self):
+        return self.shape[0]
+
     def __getitem__(self, item):
-        if isinstance(item, str):
-            if item in self.crds:
-                return self.crds[item]
-            else:
-                return self.slice(item)
         return self.slice(item)
 
-    # def __getslice__(self, i, j):
-    #     return self.data[slice(i, j)]
+    def __setitem__(self, key, value):
+        """ just act as if you setitem on underlying data """
+        self.data.__setitem__(key, value)
 
+    def __delitem__(self, item):
+        """ just act as if you delitem on underlying data, probably raises a
+        ValueError """
+        self.data.__delitem__(item)
+
+    ##########################
     ## emulate a numeric type
+
+    def __array__(self, dtype=None):
+        if dtype is None or np.dtype(dtype) == self.dtype:
+            return self.data
+        else:
+            ret = np.array(self.data, dtype=dtype)
+            return ret
+
+
     def wrap(self, arr, context=None, typ=None):
         """ arr is the data to wrap... context is exta info to pass
         to the constructor. The return is just a number if arr is a
@@ -284,11 +665,11 @@ class Field(object):
         # should it always return the same type as self?
         if typ is None:
             typ = type(self)
-        elif isinstance(typ, str):
-            typ = field_type_from_str(typ)
+        else:
+            typ = field_type(typ)
         return typ(name, crds, arr, time=time, center=center, info=context)
 
-    def __array_wrap__(self, out_arr, context=None):
+    def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
         # print("wrapping")
         return self.wrap(out_arr)
 
@@ -343,22 +724,25 @@ class Field(object):
     def __rpow__(self, other):
         return self.wrap(self.data.__rpow__(other))
 
+    # inplace operations are not implemented since the data
+    # can up and disappear (due to unload)... this could cause
+    # confusion
     def __iadd__(self, other):
-        raise NotImplementedError("Don't touch me like that")
+        return NotImplemented
     def __isub__(self, other):
-        raise NotImplementedError("Don't touch me like that")
+        return NotImplemented
     def __imul__(self, other):
-        raise NotImplementedError("Don't touch me like that")
+        return NotImplemented
     def __idiv__(self, other):
-        raise NotImplementedError("Don't touch me like that")
-    def __itruediv__(self, other):
-        raise NotImplementedError("Don't touch me like that")
-    def __ifloordiv__(self, other):
-        raise NotImplementedError("Don't touch me like that")
+        return NotImplemented
+    def __itruediv__(self, other): #pylint: disable=R0201,W0613
+        return NotImplemented
+    def __ifloordiv__(self, other): #pylint: disable=R0201,W0613
+        return NotImplemented
     def __imod__(self, other):
-        raise NotImplementedError("Don't touch me like that")
+        return NotImplemented
     def __ipow__(self, other):
-        raise NotImplementedError("Don't touch me like that")
+        return NotImplemented
 
     def __neg__(self):
         return self.wrap(self.data.__neg__())
@@ -389,156 +773,87 @@ class Field(object):
 
 
 class ScalarField(Field):
-    TYPE = "Scalar"
+    _TYPE = "scalar"
+
+    @property
+    def nr_dims(self):
+        return self.nr_sdims
+
+    # FIXME: there is probably a better way to deal with scalars not
+    # having a component dimension
+    @property
+    def nr_comp(self):
+        raise TypeError("Scalars have no components")
+
+    @property
+    def nr_comps(self):
+        return 0
+
+    # no downsample / transpose / swap axes for vectors yet since that would
+    # have the added layer of checking the layout
+    def downsample(self):
+        """ downsample the spatial dimensions by a factor of 2 """
+        # FIXME: this implementation assumes a lot about the field
+        end = np.array(self.sshape) // 2
+        dat = self.data
+
+        if self.nr_sdims == 1:
+            downdat = 0.5 * (dat[:end[0]:2] + dat[1:end[0]:2])
+        elif self.nr_sdims == 2:
+            downdat = 0.25 * (dat[:end[0]:2, :end[1]:2] +
+                              dat[1:end[0]:2, :end[1]:2] +
+                              dat[:end[0]:2, 1:end[1]:2] +
+                              dat[1:end[0]:2, 1:end[1]:2])
+        elif self.nr_sdims == 3:
+            downdat = 0.125 * (dat[:end[0]:2, :end[1]:2, :end[2]:2] +
+                               dat[1:end[0]:2, :end[1]:2, :end[2]:2] +
+                               dat[:end[0]:2, 1:end[1]:2, :end[2]:2] +
+                               dat[:end[0]:2, :end[1]:2, 1:end[2]:2] +
+                               dat[1:end[0]:2, 1:end[1]:2, :end[2]:2] +
+                               dat[1:end[0]:2, :end[1]:2, 1:end[2]:2] +
+                               dat[:end[0]:2, 1:end[1]:2, 1:end[2]:2] +
+                               dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
+
+        downclist = self.crds.get_clist(np.s_[::2])
+        downcrds = coordinate.wrap_crds("Rectilinear", downclist)
+        return self.wrap(downdat, {"crds": downcrds})
+
+    def transpose(self, *axes):
+        """ same behavior as numpy transpose, alse accessable
+        using np.transpose(fld) """
+        if axes == (None, ) or len(axes) == 0:
+            axes = range(self.nr_dims - 1, -1, -1)
+        if not (len(axes) == self.nr_dims):
+            raise ValueError("transpose can not change number of axes")
+        clist = self.crds.get_clist()
+        new_clist = [clist[ax] for ax in axes]
+        t_crds = coordinate.wrap_crds(self.crds.type, new_clist)
+        t_data = self.data.transpose(axes)
+        return self.wrap(t_data, {"crds": t_crds})
+
+    def swap_axes(self, a, b):
+        new_clist = self.crds.get_clist()
+        new_clist[a], new_clist[b] = new_clist[b], new_clist[a]
+        new_crds = coordinate.wrap_crds(self.crds.type, new_clist)
+        new_data = self.data.swap_axes(a, b)
+        return self.wrap(new_data, {"crds": new_crds})
 
 
 class VectorField(Field):
-    TYPE = "Vector"
-
-    _layout = None
-    _ncomp = None
-    _compdim = None
-
-    def __init__(self, name, crds, data, **kwargs):
-        forget_source = kwargs.pop("forget_source", False)
-        super(VectorField, self).__init__(name, crds, data, **kwargs)
-        if not "force_layout" in self.info:
-            self.info["force_layout"] = LAYOUT_DEFAULT
-        if forget_source:
-            self.source_data = self.data
-
-
-    def _purge_cache(self):
-        """ does not guarentee that the memory will be freed """
-        self._cache = None
-        self._layout = None
-
-    @property
-    def ncomp(self):
-        return self.data.shape[self.compdim]
-
-    @property
-    def compdim(self):
-        """ dimension of the components of the vector """
-        layout = self.layout
-        if layout == LAYOUT_FLAT:
-            return 0
-        elif layout == LAYOUT_INTERLACED:
-            return self.crds.dim
-        elif layout == LAYOUT_OTHER:
-            logging.warn("I don't know what your layout is, assuming vectors "
-                         "are the last index (interleaved)...")
-            return self.crds.dim
-
-    @property
-    def layout(self):
-        # make sure that the data is translated before you inquire
-        # about the layout
-        if self._cache is None:
-            self._fill_cache()
-        return self._layout
-
-    def _translate_data(self, dat):
-        # if dat is list of fields, make it into a list of source_data so that
-        # elements can be passed bare to np.array(...)
-        if isinstance(dat, (list, tuple)):
-            # dat = [d.source_data if isinstance(d, Field) else d for d in dat]
-            for i in range(len(dat)):
-                if isinstance(dat[i], Field):
-                    # use source_data so that things don't get auto cached
-                    # since we are caching own copy of the data anyway
-                    dat[i] = dat[i].source_data  # pylint: disable=W0212
-
-        dat_layout = self.detect_layout(dat)
-
-
-        # we will preserve layout or we already have the correct layout,
-        # do no translation... just like Field._translate_data
-        if self.info["force_layout"] == LAYOUT_DEFAULT or \
-           self.info["force_layout"] == dat_layout:
-            self._layout = dat_layout
-            return self._dat_to_ndarray(dat)
-
-        # if layout is found to be other, i cant do anything with that
-        elif dat_layout == LAYOUT_OTHER:
-            logging.warn("Cannot auto-detect layout; not translating; "
-                         "performance may suffer")
-            self._layout = LAYOUT_OTHER
-            return self._dat_to_ndarray(dat)
-
-        # ok, we demand FLAT arrays, make it so
-        elif self.info["force_layout"] == LAYOUT_FLAT:
-            if dat_layout != LAYOUT_INTERLACED:
-                raise RuntimeError("should not be here")
-
-            ncomp = dat.shape[-1]  # dat is interlaced
-            dat_dest = np.empty([ncomp] + self.shape, dtype=dat.dtype.name)
-            for i in range(ncomp):
-                # NOTE: I wonder if this is the fastest way to reorder
-                dat_dest[i, ...] = dat[..., i]
-                # NOTE: no special case for lists, they are not
-                # interpreted this way
-            self._layout = LAYOUT_FLAT
-            return self._dat_to_ndarray(dat_dest)
-
-        # ok, we demand INTERLACED arrays, make it so
-        elif self.info["force_layout"] == LAYOUT_INTERLACED:
-            if dat_layout != LAYOUT_FLAT:
-                raise RuntimeError("should not be here")
-
-            if isinstance(dat, (list, tuple)):
-                ncomp = len(dat)
-                dtype = dat[0].dtype.name
-            else:
-                ncomp = dat.shape[0]
-                dtype = dat.dtype.name
-
-            dat_dest = np.empty(self.shape + [ncomp], dtype=dtype)
-            for i in range(ncomp):
-                dat_dest[..., i] = dat[i]
-
-            self._layout = LAYOUT_INTERLACED
-            return self._dat_to_ndarray(dat_dest)
-
-        # catch the remaining cases
-        elif self.info["force_layout"] == LAYOUT_OTHER:
-            raise RuntimeError("How should I know how to force other layout?")
-        else:
-            raise ValueError("Bad argument for layout forcing")
-
-    def _reshape_ndarray_to_crds(self, arr):
-        """ enforce same dimensionality as coords here!
-        self.shape better still be using the crds shape corrected for
-        node / cell centering
-        """
-        target_shape = list(self.shape)
-        # can't use self.ncomp or self.layout because we're in a weird
-        # place and self.data hasn't been set yet, because this has to happen
-        # first... like an ouroboros
-        # NOTE: this logic is hideous, there must be a better way
-        if self._layout == LAYOUT_FLAT:
-            target_shape = [arr.shape[0]] + target_shape
-        elif self._layout == LAYOUT_INTERLACED:
-            target_shape = target_shape + [arr.shape[-1]]
-        else:
-            # assuming flat?
-            target_shape = [arr.shape[0]] + target_shape
-
-        if arr.shape == target_shape:
-            return arr
-        else:
-            return arr.reshape(target_shape)
+    _TYPE = "vector"
+    _COMPONENT_NAMES = {0: 'x', 1: 'y', 2: 'z', 3: 'u', 4: 'v', 5: 'w'}
 
     def component_views(self):
         """ return numpy views to components individually, memory layout
         of the original field is maintained """
-        ncomp = self.ncomp
+        nr_comps = self.nr_comps
+        # comp_slc = [slice(None)] * self.nr_dims
         if self.layout == LAYOUT_FLAT:
-            return [self.data[i, ...] for i in range(ncomp)]
+            return [self.data[i, ...] for i in range(nr_comps)]
         elif self.layout == LAYOUT_INTERLACED:
-            return [self.data[..., i] for i in range(ncomp)]
+            return [self.data[..., i] for i in range(nr_comps)]
         else:
-            return [self.data[..., i] for i in range(ncomp)]
+            return [self.data[..., i] for i in range(nr_comps)]
 
     def component_fields(self):
         n = self.name
@@ -548,52 +863,17 @@ class VectorField(Field):
         views = self.component_views()
         lst = [None] * len(views)
         for i, v in enumerate(views):
-            lst[i] = ScalarField("{0} {1}".format(n, i), crds, v, center=c,
-                                 time=t)
+            lst[i] = ScalarField("{0}{1}".format(n, self._COMPONENT_NAMES[i]),
+                                 crds, v, center=c, time=t)
         return lst
-
-    def detect_layout(self, dat):
-        """ returns LAYOUT_XXX """
-        # if i receive a list, then i suppose i have a list of
-        # arrays, one for each component... this is a flat layout
-        if isinstance(dat, (list, tuple)):
-            return LAYOUT_FLAT
-
-        shape = self.shape
-
-        # if the crds shape has more values than the dat.shape
-        # then try trimmeng the directions that have 1 element
-        # this can happen when crds are 3d, but field is only 2d
-        while len(shape) > len(dat.shape) - 1:
-            try:
-                shape.remove(1)
-            except ValueError:
-                break
-
-        if list(dat.shape[1:]) == shape:
-            return LAYOUT_FLAT
-        elif list(dat.shape[:-1]) == shape:
-            return LAYOUT_INTERLACED
-        elif dat.shape[0] == np.prod(shape):
-            return LAYOUT_INTERLACED
-        elif dat.shape[-1] == np.prod(shape):
-            return LAYOUT_FLAT
-        else:
-            return LAYOUT_OTHER
-
-    def _augment_slices(self, slices):
-        """ TODO: this is a crap mechanism to do vector slicing and should
-        disappear """
-        slices.insert(self.compdim, slice(None))
-        return slices
 
 
 class MatrixField(Field):
-    TYPE = "Matrix"
+    _TYPE = "matrix"
 
 
 class TensorField(Field):
-    TYPE = "Tensor"
+    _TYPE = "tensor"
 
 
 ##

@@ -22,19 +22,25 @@ class VFileBucket(Bucket):
     #     absfname = os.path.abspath(fname)
     #     self[(absfname, fname)] = f
 
-    def load(self, fnames, index_handle=True, **kwargs):
+    def load_file(self, fname, index_handle=True, **kwargs):
+        """ load a single file and return a vFile instance, not a list
+        of vFiles like load does """
+        return self.load_files([fname], index_handle=index_handle, **kwargs)[0]
+
+    def load_files(self, fnames, index_handle=True, file_type=None, **kwargs):
         """ initialize obj before it's put into the list, whatever is returned
             is what gets stored, returning None means object init failed, do
             not add to the _objs list
 
+            file_type: a class that is a subclass of VFile, if given, use this
+                       file type, don't use the autodetect mechanism
             kwargs is passed to file constructor """
-        ret_as_list = True
         if not isinstance(fnames, (list, tuple)):
             fnames = [fnames]
-            ret_as_list = False
-        files = []
+        file_lst = []
 
         for fname in fnames:
+            f = None
             absfname = os.path.abspath(fname)
 
             # if the file was already loaded, return it
@@ -43,27 +49,25 @@ class VFileBucket(Bucket):
                 f = self[absfname]
             else:
                 # load a new file
-                ftype = VFile.detect_type(absfname)
-                if not ftype:
+                if file_type is None:
+                    file_type = VFile.detect_type(absfname)
+                if not file_type:
                     raise RuntimeError("Can't determine type "
                                        "for {0}".format(absfname))
                 try:
                     # vfilebucket kwarg is ignored by file types that don't care
-                    f = ftype(absfname, vfilebucket=self, **kwargs)
+                    f = file_type(absfname, vfilebucket=self, **kwargs)
                 except IOError as e:
-                    s = "IOError on file: {0}\n".format(absfname)
-                    s += "File Type: {0}\n".format(ftype)
-                    s += e.message
-                    logging.error(s)
+                    s = " IOError on file: {0}\n".format(absfname)
+                    s += "              File Type: {0}\n".format(file_type)
+                    s += "              {0}".format(e.message)
+                    logging.warn(s)
                 except ValueError:
                     pass
-                #     raise IOError(s)
+                    # raise IOError(s)
 
             if f is not None:
                 self.set_item([absfname, fname], f, index_handle=index_handle)
-            files.append(f)
+            file_lst.append(f)
 
-        if ret_as_list:
-            return files
-        else:
-            return files[0]
+        return file_lst

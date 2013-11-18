@@ -1,5 +1,4 @@
 from __future__ import print_function
-import multiprocessing as mp
 import logging
 import itertools
 try:
@@ -8,10 +7,10 @@ except ImportError:
     izip = zip
 
 from . import readers
-from . import verror
+from . import parallel
 
 def load_vfile(fname):
-    readers.load(fname)
+    readers.load_file(fname)
 
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                   show=False, kwopts=None):
@@ -101,31 +100,18 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
         plt.show()
     plt.clf()
 
-def _do_multiplot_star(all_args):
-    try:
-        return _do_multiplot(*all_args) #pylint: disable=W0142
-    except KeyboardInterrupt:
-        raise verror.KeyboardInterruptError()
-
-def multiplot(files, plot_vars, np=1, time_slice=":", global_popts=None,
+def multiplot(file_, plot_vars, np=1, time_slice=":", global_popts=None,
               share_axes=False, show=False, kwopts=None):
     grid_iter = izip(
                      itertools.count(),
-                     files[0].iter_times(time_slice),
+                     file_.iter_times(time_slice),
                      itertools.repeat(plot_vars),
                      itertools.repeat(global_popts),
                      itertools.repeat(share_axes),
                      itertools.repeat(show),
                      itertools.repeat(kwopts),
                     )
-    if np == 1:
-        for args in grid_iter:
-            _do_multiplot_star(args)
-    else:
-        pool = mp.Pool(np)
-        pool.map(_do_multiplot_star, grid_iter)
-        pool.close()
-        pool.join()
+    parallel.map(np, _do_multiplot, grid_iter)
 
 ##
 ## EOF

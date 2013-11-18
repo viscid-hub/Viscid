@@ -62,7 +62,7 @@ def closest_ind(crd, point, startinds, m):
 @nb.jit(nb.float_(nb.float_[:,:,:,::1], nb.int_, nb.float_[:], nb.float_[:],
                       nb.float_[:], nb.float_[:], nb.int_[:]),
             nopython=False)
-def trilin_interp(v, m, crdz, crdy, crdx, x, startinds):
+def interp_trilin(v, m, crdz, crdy, crdx, x, startinds):
     ix = np.array([0, 0, 0], dtype=nb.int_)
     p = np.array([0, 0, 0], dtype=nb.int_)
     xd = np.array([0.0, 0.0, 0.0], dtype=nb.float_)
@@ -89,9 +89,9 @@ def trilin_interp(v, m, crdz, crdy, crdx, x, startinds):
                       nb.float_[:], nb.float_[:], nb.float_,
                       nb.int_[:]))
 def euler1(v, crdx, crdy, crdz, x, ds, startinds):
-    vx = trilin_interp(v, 0, crdz, crdy, crdx, x, startinds)
-    vy = trilin_interp(v, 1, crdz, crdy, crdx, x, startinds)
-    vz = trilin_interp(v, 2, crdz, crdy, crdx, x, startinds)
+    vx = interp_trilin(v, 0, crdz, crdy, crdx, x, startinds)
+    vy = interp_trilin(v, 1, crdz, crdy, crdx, x, startinds)
+    vz = interp_trilin(v, 2, crdz, crdy, crdx, x, startinds)
     vmag = np.sqrt(vx**2 + vy**2 + vz**2)
     # if vmag == 0.0 or isnan(vmag):
     #     logging.warning("vmag issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
@@ -195,7 +195,7 @@ def nb_get_topo(B, gx, gy, gz, topo_arr, x1, x2):
 @nb.autojit()
 def py_get_topo(Bfld, topo_arr, x1, x2, y1, y2, z1, z2):
     B = Bfld.data
-    gx, gy, gz = Bfld.crds.get_crd(('xcc', 'ycc', 'zcc'))
+    gx, gy, gz = Bfld.get_crds_cc(('x', 'y', 'z'))
     x1 = np.array([z1, y1, x1], dtype=B.dtype)
     x2 = np.array([z2, y2, x2], dtype=B.dtype)
     nsegs = nb_get_topo(B, gx, gy, gz, topo_arr, x1, x2)
@@ -208,7 +208,7 @@ def main():
     z1 = -5.0; z2 = 5.0 #pylint: disable=C0321
     vol = seed.Volume((z1, y1, x1), (z2, y2, x2), gsize)
 
-    f3d = readers.load("/Users/kmaynard/dev/work/t1/t1.3df.004320.xdmf")
+    f3d = readers.load_file("/Users/kmaynard/dev/work/t1/t1.3df.004320.xdmf")
     fld_bx = f3d["bx"]
     fld_by = f3d["by"]
     fld_bz = f3d["bz"]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# Tests calculator magnitude function on synthetic vector data...
-# If numexpr or cython are not installed, the test fails
-# The test also fails if the two results aren't almost exactly equal
+""" Tests calculator magnitude function on synthetic vector data...
+If numexpr or cython are not installed, the test fails
+The test also fails if the two results aren't almost exactly equal """
 
 from __future__ import print_function
 import sys
@@ -80,12 +80,12 @@ def main():
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y),
                                                 ('x', x)))
 
-    logging.info("Testing Node centered magnitudes")
-    Z, Y, X = crds.get_crd(shaped=True)
+    logging.info("Testing node centered magnitudes")
+    Z, Y, X = crds.get_crds_nc(shaped=True)
 
-    vx = 0.5 * X**2 + Y
-    vy = 0.5 * Y**2
-    vz = 0.5 * Z**2
+    vx = 0.5 * X**2 +       Y    + 0.0 * Z
+    vy = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z
+    vz = 0.0 * X    + 0.0 * Y    + 0.5 * Z**2
 
     fld_v = field.VectorField("v", crds, [vx, vy, vz],
                               center="Node", forget_source=True,
@@ -93,10 +93,10 @@ def main():
                              )
     run_mag_test(fld_v, show=args.show)
 
-    logging.info("Testing Cell centered magnitudes")
-    Z, Y, X = crds.get_crd(shaped=True, center="Cell")
+    logging.info("Testing cell centered magnitudes")
+    Z, Y, X = crds.get_crds_cc(shaped=True)
 
-    vx = 0.5 * X**2 + Y
+    vx = 0.5 * X**2 + Y + 0.0 * Z
     vy = 0.5 * Y**2
     vz = 0.5 * Z**2
 

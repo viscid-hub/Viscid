@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" test making and plotting streamlines """
 
 from __future__ import print_function
 from timeit import default_timer as time
@@ -37,7 +38,7 @@ def get_dipole(m=None, twod=False):
     m = np.array(m, dtype=dtype)
     mx, my, mz = m #pylint: disable=W0612
 
-    Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell") #pylint: disable=W0612
+    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True) #pylint: disable=W0612
 
     rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
     mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
@@ -103,7 +104,7 @@ def main():
 
     plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (0., 0., 1.), 2., 2., 50, 50)
     t0 = time()
-    interp_vals = cycalc.trilin_interp(bmag, plane)
+    interp_vals = cycalc.interp_trilin(bmag, plane)
     t1 = time()
     logging.info("plane interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
@@ -112,7 +113,7 @@ def main():
 
     vol = bmag.crds.slice("x=::32,y=::32,z=::32")
     t0 = time()
-    interp_vals = cycalc.trilin_interp(bmag, vol)
+    interp_vals = cycalc.interp_trilin(bmag, vol)
     t1 = time()
     logging.info("volume interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
@@ -123,7 +124,7 @@ def main():
 
     # doing trilin interp on a scalar field
     t0 = time()
-    interp_vals = cycalc.trilin_interp(bmag, sphere)
+    interp_vals = cycalc.interp_trilin(bmag, sphere)
     t1 = time()
     logging.info("sphere interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
@@ -132,13 +133,13 @@ def main():
 
     # doing trilin interp on a vector field
     t0 = time()
-    interp_vals = cycalc.trilin_interp(B, sphere)
+    interp_vals = cycalc.interp_trilin(B, sphere)
     t1 = time()
     logging.info("vector interp took {0:.3e}s to compute.".format(t1 - t0))
     # make a 3d scatter plot of bz
     mpl.scatter_3d(sphere.points(), interp_vals[:, 2], show=args.show)
 
-    # val = cycalc.trilin_interp(bmag, seed.Point((1.0, 1.0, 1.0)))
+    # val = cycalc.interp_trilin(bmag, seed.Point((1.0, 1.0, 1.0)))
     # logging.info("bmag value at point (1, 1, 1) is {0}".format(val))
 
 if __name__ == "__main__":

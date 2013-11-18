@@ -32,7 +32,7 @@ def sillyfunc(real_t[:] num, dtype, seeds, switch):
             it += 1
     elif switch==2:
         pts = seeds.iter_points()
-        for ind from 0 <= ind < seeds.n_points():
+        for ind from 0 <= ind < seeds.nr_points():
             pt = pts.__next__()
             #for pt in seeds.iter_points():
             arr_c[0] = pt[0]

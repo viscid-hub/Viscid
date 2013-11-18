@@ -15,6 +15,18 @@ from cycalc cimport *
 cdef extern from "math.h":
     bint isnan(double x)
 
+cdef inline real_t _c_real_max(real_t a, real_t b):
+    if a >= b:
+        return a
+    else:
+        return b
+
+cdef inline real_t _c_real_min(real_t a, real_t b):
+    if a <= b:
+        return a
+    else:
+        return b
+
 #####################
 # now the good stuff
 
@@ -22,11 +34,12 @@ cdef int _c_euler1(real_t[:,:,:,::1] s, real_t[:] *crds,
                    real_t *ds, real_t[:] x,
                    real_t tol_lo, real_t tol_hi,
                    real_t fac_refine, real_t fac_coarsen,
-                   int start_inds[3]):
+                   real_t smallest_step, real_t largest_step,
+                   int start_inds[3]) except -1:
     cdef real_t vx, vy, vz, vmag
-    vx = _c_trilin_interp[real_t](s, 0, crds, x, start_inds)
-    vy = _c_trilin_interp[real_t](s, 1, crds, x, start_inds)
-    vz = _c_trilin_interp[real_t](s, 2, crds, x, start_inds)
+    vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)
+    vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)
+    vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
     vmag = sqrt(vx**2 + vy**2 + vz**2)
     if vmag == 0.0 or isnan(vmag):
         # logging.warning("vmag issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
@@ -40,15 +53,16 @@ cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,
                 real_t *ds, real_t[:] x0,
                 real_t tol_lo, real_t tol_hi,
                 real_t fac_refine, real_t fac_coarsen,
-                int start_inds[3]):
+                real_t smallest_step, real_t largest_step,
+                int start_inds[3]) except -1:
     cdef real_t[3] x1
     cdef real_t[3] v0
     cdef real_t[3] v1
     cdef real_t vmag0, vmag1
     cdef real_t ds_half = 0.5 * deref(ds)
-    v0[2] = _c_trilin_interp[real_t](s, 0, crds, x0, start_inds)
-    v0[1] = _c_trilin_interp[real_t](s, 1, crds, x0, start_inds)
-    v0[0] = _c_trilin_interp[real_t](s, 2, crds, x0, start_inds)
+    v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
+    v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
+    v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
     # logging.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
     if vmag0 == 0.0 or isnan(vmag0):
@@ -58,9 +72,9 @@ cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,
     x1[1] = x0[1] + ds_half * v0[1] / vmag0
     x1[2] = x0[2] + ds_half * v0[2] / vmag0
 
-    v1[2] = _c_trilin_interp[real_t](s, 0, crds, x1, start_inds)
-    v1[1] = _c_trilin_interp[real_t](s, 1, crds, x1, start_inds)
-    v1[0] = _c_trilin_interp[real_t](s, 2, crds, x1, start_inds)
+    v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
+    v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
+    v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
     # logging.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
     if vmag1 == 0.0 or isnan(vmag1):
@@ -75,7 +89,8 @@ cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
                  real_t *ds, real_t[:] x0,
                  real_t tol_lo, real_t tol_hi,
                  real_t fac_refine, real_t fac_coarsen,
-                 int start_inds[3]):
+                 real_t smallest_step, real_t largest_step,
+                 int start_inds[3]) except -1:
     cdef real_t[3] x1
     cdef real_t[3] v0
     cdef real_t[3] v1
@@ -89,9 +104,9 @@ cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
         ds_half = 0.5 * deref(ds)
 
         # print("A", start_inds[0], start_inds[1], start_inds[2])
-        v0[2] = _c_trilin_interp[real_t](s, 0, crds, x0, start_inds)
-        v0[1] = _c_trilin_interp[real_t](s, 1, crds, x0, start_inds)
-        v0[0] = _c_trilin_interp[real_t](s, 2, crds, x0, start_inds)
+        v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
+        v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
+        v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
         # logging.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
         if vmag0 == 0.0 or isnan(vmag0):
@@ -107,9 +122,9 @@ cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
         x1[2] = x0[2] + ds_half * v0[2] / vmag0
 
         # print("B", start_inds[0], start_inds[1], start_inds[2])
-        v1[2] = _c_trilin_interp[real_t](s, 0, crds, x1, start_inds)
-        v1[1] = _c_trilin_interp[real_t](s, 1, crds, x1, start_inds)
-        v1[0] = _c_trilin_interp[real_t](s, 2, crds, x1, start_inds)
+        v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
+        v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
+        v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
         # logging.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
         if vmag1 == 0.0 or isnan(vmag1):
@@ -126,12 +141,15 @@ cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
         if dist > tol_hi * fabs(deref(ds)):
             # logging.debug("Refining ds: {0} -> {1}".format(
             #     deref(ds), fac_refine * deref(ds)))
-            ds[0] = fac_refine * deref(ds)
-            continue
+            if ds[0] <= smallest_step:
+                break
+            else:
+                ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+                continue
         elif dist < tol_lo * fabs(deref(ds)):
             # logging.debug("Coarsening ds: {0} -> {1}".format(
             #     deref(ds), fac_coarsen * deref(ds)))
-            ds[0] = fac_coarsen * deref(ds)
+            ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
             break
         else:
             break
@@ -145,7 +163,8 @@ cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
                     real_t *ds, real_t[:] x0,
                     real_t tol_lo, real_t tol_hi,
                     real_t fac_refine, real_t fac_coarsen,
-                    int start_inds[3]):
+                    real_t smallest_step, real_t largest_step,
+                    int start_inds[3]) except -1:
     cdef real_t[3] x1
     cdef real_t[3] x2
     cdef real_t[3] v0
@@ -154,9 +173,9 @@ cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
 
     while True:
         # go forward
-        v0[2] = _c_trilin_interp[real_t](s, 0, crds, x0, start_inds)
-        v0[1] = _c_trilin_interp[real_t](s, 1, crds, x0, start_inds)
-        v0[0] = _c_trilin_interp[real_t](s, 2, crds, x0, start_inds)
+        v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
+        v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
+        v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
         # logging.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
         if vmag0 == 0.0 or isnan(vmag0):
@@ -168,9 +187,9 @@ cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
         x1[2] = x0[2] + deref(ds) * v0[2] / vmag0
 
         # now go backward
-        v1[2] = _c_trilin_interp[real_t](s, 0, crds, x1, start_inds)
-        v1[1] = _c_trilin_interp[real_t](s, 1, crds, x1, start_inds)
-        v1[0] = _c_trilin_interp[real_t](s, 2, crds, x1, start_inds)
+        v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
+        v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
+        v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
 
         # logging.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -189,12 +208,15 @@ cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
         if dist > tol_hi * fabs(deref(ds)):
             # logging.debug("Refining ds: {0} -> {1}".format(
             #     deref(ds), fac_refine * deref(ds)))
-            ds[0] = fac_refine * deref(ds)
-            continue
+            if ds[0] <= smallest_step:
+                break
+            else:
+                ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+                continue
         elif dist < tol_lo * fabs(deref(ds)):
             # logging.debug("Coarsening ds: {0} -> {1}".format(
             #     deref(ds), fac_coarsen * deref(ds)))
-            ds[0] = fac_coarsen * deref(ds)
+            ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
             break
         else:
             break

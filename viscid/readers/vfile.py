@@ -82,6 +82,27 @@ class VFile(Dataset):
         """
         super(VFile, self).unload()
 
+    # some classy saving utility methods, should be sufficient to override
+    # save and save_fields
+    def save(self, fname=None, **kwargs):
+        """ save an instance of VFile, fname defaults to the name
+        of the file object as read """
+        raise NotImplementedError()
+
+    @classmethod
+    def save_grid(cls, fname, grd, **kwargs):
+        flds = list(grd.iter_fields)
+        cls.save_fields(fname, flds, **kwargs)
+
+    @classmethod
+    def save_field(cls, fname, fld, **kwargs):
+        cls.save_fields(fname, [fld], **kwargs)
+
+    @classmethod
+    def save_fields(cls, fname, flds, **kwargs):
+        """ save some fields using the format given by the class """
+        raise NotImplementedError()
+
     # already implemented in dataset
     #def add_grid(self, grid):
     #    self.grids[grid.name] = grid

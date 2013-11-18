@@ -1,18 +1,22 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+import code
 
 import numpy as np
+from mayavi import mlab
 from mayavi.sources.vtk_data_source import VTKDataSource
+from mayavi.sources.builtin_surface import BuiltinSurface
 from tvtk.api import tvtk
 
 from .. import field
+from ..calculator.topology import color_from_topology
 
 # def data_source(fld):
 #     """ get a data source from a scalar field """
 #     dat = tvtk.RectilinearGrid()
 #
-#     suffix = "cc" if fld.center == "Cell" else ""
+#     suffix = "cc" if fld.iscentered("Cell") else ""
 #     dat.x_coordinates = fld.crds['x' + suffix]
 #     dat.y_coordinates = fld.crds['y' + suffix]
 #     dat.z_coordinates = fld.crds['z' + suffix]
@@ -44,6 +48,52 @@ from .. import field
 #     collection.unload()
 
 def field_to_source(fld):
+    if fld.iscentered("Node"):
+        return field_to_point_source(fld)
+    elif fld.iscentered("Cell"):
+        return field_to_cell_source(fld)
+    else:
+        raise NotImplementedError("cell / node only for now")
+
+def field_to_point_source(fld):
+    grid, arr = _prep_field(fld)
+    dat_target = grid.point_data
+
+    if fld.iscentered("Cell"):
+        # grid.dimensions is x, y, z not z, y, x
+        grid.dimensions = tuple(fld.crds.shape_cc[::-1])
+        grid.x_coordinates = fld.get_crd_cc('x')
+        grid.y_coordinates = fld.get_crd_cc('y')
+        grid.z_coordinates = fld.get_crd_cc('z')
+    elif fld.iscentered("Node"):
+        # grid.dimensions is x, y, z not z, y, x
+        grid.dimensions = tuple(fld.crds.shape_nc[::-1])
+        grid.x_coordinates = fld.get_crd_nc('x')
+        grid.y_coordinates = fld.get_crd_nc('y')
+        grid.z_coordinates = fld.get_crd_nc('z')
+    else:
+        raise ValueError("cell or node only please")
+
+    return _finalize_source(fld, arr, grid, dat_target)
+
+def field_to_cell_source(fld):
+    grid, arr = _prep_field(fld)
+    dat_target = grid.cell_data
+
+    if fld.iscentered("Cell"):
+        # grid.dimensions is x, y, z not z, y, x
+        grid.dimensions = tuple(fld.crds.shape_cc[::-1])
+        grid.x_coordinates = fld.get_crd_nc('x')
+        grid.y_coordinates = fld.get_crd_nc('y')
+        grid.z_coordinates = fld.get_crd_nc('z')
+    elif fld.iscentered("Node"):
+        raise NotImplementedError("can't do lossless cell data from nodes yet")
+    else:
+        raise ValueError("cell or node only please")
+
+    return _finalize_source(fld, arr, grid, dat_target)
+
+def _prep_field(fld):
     grid = tvtk.RectilinearGrid()
 
     if isinstance(fld, field.ScalarField):
@@ -52,51 +102,34 @@ def field_to_source(fld):
         arr = np.reshape(fld.data, (-1, 3))
     else:
         raise ValueError("Unexpected fld type: {0}".format(type(fld)))
-
-
     # swap endian if needed
     if str(arr.dtype).startswith(">"):
         arr = arr.byteswap().newbyteorder()
+    return grid, arr
 
-    # at the moment, everything is point data
-    # TODO: fix up for cell data
-    if fld.center == "Cell":
-        dat_center = grid.point_data
-        # grid.dimensions is x, y, z not z, y, x
-        grid.dimensions = tuple(fld.crds.shape_cc[::-1])
-        grid.x_coordinates = fld.crds['xcc']
-        grid.y_coordinates = fld.crds['ycc']
-        grid.z_coordinates = fld.crds['zcc']
-    elif fld.center == "Node":
-        dat_center = grid.point_data
-        # grid.dimensions is x, y, z not z, y, x
-        grid.dimensions = tuple(fld.crds.shape_nc[::-1])
-        grid.x_coordinates = fld.crds['x']
-        grid.y_coordinates = fld.crds['y']
-        grid.z_coordinates = fld.crds['z']
-    else:
-        raise ValueError("Cell or Node only please")
-
+def _finalize_source(fld, arr, grid, dat_target):
     if isinstance(fld, field.ScalarField):
-        dat_center.scalars = arr
-        dat_center.scalars.name = fld.name
+        dat_target.scalars = arr
+        dat_target.scalars.name = fld.name
     elif isinstance(fld, field.VectorField):
-        dat_center.vectors = arr
-        dat_center.vectors.name = fld.name
+        dat_target.vectors = arr
+        dat_target.vectors.name = fld.name
+    return VTKDataSource(data=grid)
 
-    src = VTKDataSource(data=grid)
+def plot_lines(lines, topology=None, **kwargs):
+    if "color" not in kwargs and topology is not None:
+        if isinstance(topology, field.Field):
+            topology = topology.data.reshape(-1)
+        topo_color = True
+    else:
+        topo_color = False
 
-    return src
-
-def plot_lines(pipeline, lines, **kwargs):
-    from mayavi import mlab
-
-    for line in lines:
+    for i, line in enumerate(lines):
+        if topo_color:
+            kwargs["color"] = color_from_topology(topology[i])
         mlab.plot3d(line[2], line[1], line[0], **kwargs)
 
 def mlab_earth(pipeline, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15):
-    from mayavi.sources.builtin_surface import BuiltinSurface
-
     night = BuiltinSurface(source='sphere', name='night')
     night.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=270,
                           end_theta=90, theta_resolution=res,
@@ -107,6 +140,19 @@ def mlab_earth(pipeline, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15):
     day.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=90,
                         end_theta=270, theta_resolution=res, phi_resolution=res)
     pipeline.surface(day, color=daycol)
+
+def show(stop=True):
+    mlab.show(stop=stop)
+
+def interact(local=None):
+    """ you probably want to use interact(local=locals()) """
+    banner = """Have some fun with mayavi :)
+    hints:
+        - use locals() to explore the namespace
+        - mlab.show(stop=True) or mvi.show() to interact with the plot/gui
+        - mayavi objects all have a trait_names() method
+        - Use Ctrl-D (eof) to end interaction """
+    code.interact(banner, local=local)
 
 ##
 ## EOF

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-# Try to convert a Field to a mayavi type and plot streamlines or something
+""" Try to convert a Field to a mayavi type and plot
+streamlines or something """
 
 from __future__ import print_function
 import sys
@@ -22,7 +23,7 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = readers.load(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
 
     if "b" in f3d:
         b = f3d["b"]
@@ -35,7 +36,7 @@ def main():
     else:
         raise RuntimeError("Where have all the B fields gone...")
 
-    b_src = mvi.field_to_source(b)
+    b_src = mvi.field_to_point_source(b)
     bsl2 = mlab.pipeline.streamline(b_src, seedtype='sphere',
                                     integration_direction='both',
                                     seed_resolution=4)

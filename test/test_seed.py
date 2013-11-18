@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+""" test using seeds to calc streamlines / interpolation """
 
 from __future__ import print_function
 from timeit import default_timer as time
@@ -36,7 +37,7 @@ def get_dipole(m=None, twod=False):
     m = np.array(m, dtype=dtype)
     mx, my, mz = m #pylint: disable=W0612
 
-    Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell") #pylint: disable=W0612
+    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True) #pylint: disable=W0612
 
     rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
     mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
@@ -62,7 +63,7 @@ def main():
     logging.info("Testing field lines on 3d field...")
     B = get_dipole(m=[0.0, 0.0, -1.0])
 
-    mygrid = B.crds.slice("z=1:3,y=1i:3i,x=0.0", use_cc=True)
+    mygrid = B.crds.slice_keep("z=1:3,y=1i:3i,x=0.0", cc=True)
 
     # print(B.crds.get_crd(center="Node"))
     # print(mygrid.get_crd(center="Cell"))
@@ -85,7 +86,7 @@ def main():
     logging.info("testing interp")
     bmag = calc.magnitude(B)
     t0 = time()
-    interp_vals = cycalc.trilin_interp(bmag, mygrid)
+    interp_vals = cycalc.interp_trilin(bmag, mygrid)
     t1 = time()
     logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values

@@ -1,10 +1,5 @@
 #!/usr/bin/env python
-# Tests calculator divergence function on synthetic vector data...
-# If numexpr or cython are not installed, the test fails
-# The test also fails if the two results aren't almost exactly equal, or
-# if the result isn't close enough to the analytical divergence
-# There is a systematic error in this case because the initial condition is
-# sign waves and we use a central difference divergence
+""" kick the tires on making matplotlib plots """
 
 from __future__ import print_function
 import sys
@@ -28,13 +23,13 @@ from viscid.plot import mpl
 dtype = 'float64'
 
 def run_mpl_testA(show=False):
-    logging.info("2D Cell centered tests")
+    logging.info("2D cell centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-1, 1, 2), dtype=dtype)
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
-    Zcc, Ycc, Xcc = crds.get_crd(shaped=True, center="Cell")
+    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True)
 
     s = ne.evaluate("(sin(Xcc) + cos(Ycc))")
     fld_s = field.ScalarField("s", crds, s, center="Cell", forget_source=True)
@@ -59,13 +54,13 @@ def run_mpl_testA(show=False):
         mpl.mplshow()
 
 def run_mpl_testB(show=False):
-    logging.info("3D Node centered tests")
+    logging.info("3D node centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-10, 10, 140), dtype=dtype)
     crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
-    Z, Y, X = crds.get_crd(shaped=True) #pylint: disable=W0612
+    Z, Y, X = crds.get_crds_nc(shaped=True) #pylint: disable=W0612
 
     s = ne.evaluate("(sin(X) + cos(Y) - cos(Z))")
     fld_s = field.ScalarField("s", crds, s, center="Node", forget_source=True)

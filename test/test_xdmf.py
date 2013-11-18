@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# Try to use matplot lib to plot a bunch of 2d and 1d slices of 3d
-# xdmf sample data.
-# This is really a test of the slicing routines
+""" test reading 2d / 3d xdmf files """
 
 from __future__ import print_function
 import sys
@@ -24,17 +22,16 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f2d = readers.load(_viscid_root + '/../../sample/sample.py_0.xdmf')
+    f2d = readers.load_file(_viscid_root + '/../../sample/sample.py_0.xdmf')
     b2d = field.scalar_fields_to_vector("b", [f2d['bx'], f2d['by'], f2d['bz']])
     bx2d, by2d, bz2d = b2d.component_fields() #pylint: disable=W0612
 
-    f3d = readers.load(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
     b3d = f3d['b']
     bx, by, bz = b3d.component_fields() #pylint: disable=W0612
 
     nrows = 4
     ncols = 2
-
 
     plt.subplot2grid((nrows, ncols), (0, 0))
     mpl.plot(bx, "z=0i,x=:30i", earth=True, show=False)
