@@ -23,7 +23,7 @@ def color_from_topology(topology):
     elif topology == TOPOLOGY_OPEN_SOUTH:
         return (0.7, 0.0, 0.0)
     elif topology == TOPOLOGY_SW:
-        return (0.5, 0.5, 0.5)
+        return (0.7, 0.7, 0.7)
     # elif topology == TOPOLOGY_CYCLIC:
     #     return (1.0, 1.0, 1.0)
     else:
