@@ -24,8 +24,7 @@ calculator.calc, and it is intelligent enough not to use a library that is not
 installed.
 
 Standard distutils
-```./setup.py build
-./setup.py install```
+```./setup.py build; ./setup.py install```
 
 For a better dev experience, I recommend adding Viscid to your PYTHONPATH,
 viscid/scripts to your PATH, and building in-place with
