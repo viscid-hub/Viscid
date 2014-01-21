@@ -145,7 +145,8 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
 def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
-                 colorbar=True, rotate_plot=False, **kwargs):
+                 colorbar=True, rotate_plot=False, label_cbar=True,
+                 **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
 
     style: "pcolormesh", "contour", "pcolor", style of 2D plot
@@ -213,6 +214,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         p = ax.pcolormesh(X, Y, dat, **kwargs)
     elif style == "contour":
         p = ax.contour(X, Y, dat, **kwargs)
+        if "colors" in kwargs:
+            colorbar = False
     elif style == "contourf":
         p = ax.contourf(X, Y, dat, **kwargs)
     elif style == "pcolor":
@@ -230,7 +233,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
         cbar = plt.colorbar(p, **colorbar) #pylint: disable=W0142
-        cbar.set_label(fld.pretty_name)
+        if label_cbar:
+            cbar.set_label(fld.pretty_name)
     else:
         cbar = None
 
