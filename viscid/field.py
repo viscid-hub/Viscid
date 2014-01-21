@@ -471,6 +471,7 @@ class Field(object):
             return self
 
         crds = coordinate.wrap_crds(self.crds.type, crdlst)
+
         try:
             slices.insert(self.nr_comp, comp_slc)
         except TypeError:

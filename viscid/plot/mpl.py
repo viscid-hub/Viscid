@@ -184,9 +184,9 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
             X, Y = fld.get_crds_nc((namex, namey))
     else:
         if fld.iscentered("Node"):
-            X, Y = fld.get_crds_nc[(namex, namey)]
+            X, Y = fld.get_crds_nc((namex, namey))
         elif fld.iscentered("Cell"):
-            X, Y = fld.get_crds_cc[(namex, namey)]
+            X, Y = fld.get_crds_cc((namex, namey))
     dat = fld.data
 
     if mod:
