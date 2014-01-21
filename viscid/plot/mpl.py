@@ -339,6 +339,29 @@ def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
         plt.show()
     return p, None
 
+def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
+    # FIXME: with dowscale != 1, this reveals a problem when slice and
+    # downscaling a field; i think this is a prickley one
+    vx, vy, vz = fld.component_views()
+    x, y = fld.get_crds_cc(shaped=True)
+    if symdir.lower() == "x":
+        # x, y = ycc, zcc
+        pvx, pvy = vy, vz
+    elif symdir.lower() == "y":
+        # x, y = xcc, zcc
+        pvx, pvy = vx, vz
+    elif symdir.lower() == "z":
+        # x, y = xcc, ycc
+        pvx, pvy = vx, vy
+    X, Y = np.meshgrid(y, x)
+    if downscale != 1:
+        X = X[::downscale]
+        Y = Y[::downscale]
+        pvx = pvx[::downscale]
+        pvy = pvy[::downscale]
+    # print(X.shape, Y.shape, pvx.shape, pvy.shape)
+    return plt.quiver(X, Y, pvx, pvy, **kwargs)
+
 def scatter_3d(points, c='b', ax=None, show=True, equal=False, **kwargs):
     """ c should be an array of values to use to color the points,
     a la pyplot.scatter """
