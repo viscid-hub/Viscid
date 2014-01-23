@@ -1,62 +1,55 @@
 {
-  "settings":
-  {
-    "build_switcher_systems":
-    [
-      "viscid#Develop",
-      "viscid#Clean",
-      "viscid#Install",
-      "viscid"
-    ],
-    "pylinter":
-    {
-      //"disable": ["C0301"]
-    },
-  },
+	"build_systems":
+	[
+		{
+			"extra_err_parse": true,
+			"file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+			"name": "viscid",
+			"shell": true,
+			"shell_cmd": "python setup.py build",
+			"syntax": "Packages/Makefile/Make.build-language",
+			"variants":
+			[
+				{
+					"name": "Develop",
+					"shell_cmd": "python setup.py dev"
+				},
+				{
+					"name": "Clean",
+					"shell_cmd": "python setup.py devclean"
+				},
+				{
+					"name": "Install",
+					"shell_cmd": "python setup.py install"
+				}
+			],
+			"working_dir": "${folder}"
+		}
+	],
 	"folders":
 	[
 		{
-			"path": "./",
-      "folder_exclude_patterns":
-      [
-        "build",
-      ],
-      "file_exclude_patterns":
-      [
-        "*.sublime-workspace",
-        "*.sublime-project",
-      ],
-		},
+			"file_exclude_patterns":
+			[
+				"*.sublime-workspace",
+				"*.sublime-project"
+			],
+			"folder_exclude_patterns":
+			[
+				"build"
+			],
+			"follow_symlinks": true,
+			"path": "."
+		}
 	],
-  "build_systems":
-  [
-    {
-      "name": "viscid",
-      "shell_cmd": "python setup.py build",
-      "working_dir": "${folder}",
-      "syntax": "Packages/Makefile/Make.build-language",
-      "extra_err_parse": true,
-      // "env": {"extra_err_parse": "true"},
-      // "env": {"CC": "/opt/local/bin/gcc", "CFLAGS": ""},
-      // "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
-      "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
-      "shell": true,
-      "variants":
-      [
-        {
-          "name": "Develop",
-          "shell_cmd": "python setup.py dev"
-          // "shell_cmd": "python setup.py build_ext -i"
-        },
-        {
-          "name": "Clean",
-          "shell_cmd": "python setup.py devclean"
-        },
-        {
-          "name": "Install",
-          "shell_cmd": "python setup.py install"
-        }
-      ]
-    }
-  ]
+	"settings":
+	{
+		"build_switcher_systems":
+		[
+			"viscid#Develop",
+			"viscid#Clean",
+			"viscid#Install",
+			"viscid"
+		]
+	}
 }
