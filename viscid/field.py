@@ -842,7 +842,7 @@ class ScalarField(Field):
 
 class VectorField(Field):
     _TYPE = "vector"
-    _COMPONENT_NAMES = {0: 'x', 1: 'y', 2: 'z', 3: 'u', 4: 'v', 5: 'w'}
+    _COMPONENT_NAMES = "xyzuvw"
 
     def component_views(self):
         """ return numpy views to components individually, memory layout
