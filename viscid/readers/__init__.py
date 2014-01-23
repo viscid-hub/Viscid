@@ -16,6 +16,11 @@ from . import hdf5
 from . import numpy_binary
 from . import ascii
 
+# these imports register convenience readers for data from
+# specific sim packages
+from . import openggcm
+from . import psc
+
 __filebucket__ = vfile_bucket.VFileBucket()
 
 def load(fnames):
