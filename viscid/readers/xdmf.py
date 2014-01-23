@@ -12,7 +12,6 @@ from . import _xdmf_include
 from . import vfile
 from .vfile_bucket import VFileBucket
 from .hdf5 import FileLazyHDF5
-from .. import grid
 from .. import dataset
 from .. import coordinate
 from .. import field
@@ -192,7 +191,7 @@ class FileXDMF(vfile.VFile):
                 logging.warn("Xdmf Uniform grids must have "
                              "topology / geometry.")
             else:
-                grd = grid.Grid(attrs["Name"])
+                grd = self._grid_type(attrs["Name"])
                 for attribute in el.findall("./Attribute"):
                     fld = self._parse_attribute(attribute, crds, topoattrs,
                                                 time)
@@ -390,18 +389,6 @@ class FileXDMF(vfile.VFile):
         else:
             logging.warn("invalid TimeType.\n")
 
-# class FileGgcm2dXdmf(FileXDMF):
-#     _detector = r'.*\.p[xyz]_[0-9]+(\..*)?\.(xmf|xdmf)\s*$'
-
-#     def __init__(self, fname=None):
-#         super(FileGgcm2dXdmf, self).__init__(fname=fname)
-
-
-# class FileGgcm3dXdmf(FileXDMF):
-#     _detector = r'.*\.3df(\..*)?\.(xmf|xdmf)\s*$'
-
-#     def __init__(self, fname=None):
-#         super(FileGgcm3dXdmf, self).__init__(fname=fname)
 
 if __name__ == '__main__':
     import sys

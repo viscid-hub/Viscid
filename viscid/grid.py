@@ -119,7 +119,11 @@ class Grid(object):
 
     ##
     def get_field(self, fldname, time=None): #pylint: disable=W0613
-        return self.fields[fldname]
+        try:
+            return self.fields[fldname]
+        except KeyError:
+            func = "_get_" + fldname
+            return getattr(self, func)()
 
     def get_grid(self, time=None): #pylint: disable=W0613
         return self
@@ -133,12 +137,13 @@ class Grid(object):
     def __getitem__(self, item):
         """ returns a field by name, or if no field is found, a coordinate by
         name some crd identifier, see Coordinate.get_item for details """
-        if item in self.fields:
+        try:
             return self.get_field(item)
-        elif self.crds is not None and item in self.crds:
-            return self.crds[item]
-        else:
-            raise KeyError(item)
+        except KeyError:
+            if self.crds is not None and item in self.crds:
+                return self.crds[item]
+            else:
+                raise KeyError(item)
 
     def __setitem__(self, fldname, fld):
         self.fields[fldname] = fld

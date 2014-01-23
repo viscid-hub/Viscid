@@ -12,7 +12,6 @@ import logging
 import numpy as np
 
 from . import vfile
-from .. import grid
 from .. import coordinate
 from .. import field
 
@@ -101,7 +100,7 @@ class FileNumpyNPZ(vfile.VFile):
         return field.wrap_field(typ, fld_name, crds, lazy_arr, center=center)
 
     def _parse(self):
-        g = grid.Grid()
+        g = self._grid_type()
 
         with np.load(self.fname) as f:
             fld_names = f.keys()

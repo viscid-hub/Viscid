@@ -4,17 +4,15 @@ WARNING: not lazy """
 
 # import string
 from __future__ import print_function
-import re
-import logging
+# import logging
 
 import numpy as np
 
 from . import vfile
-from .. import grid
 from .. import coordinate
 from .. import field
 
-class FileASCII(vfile.VFile):
+class FileASCII(vfile.VFile):  # pylint: disable=W0223
     """ open an ascii file with viscid format, or if not specified, assume
     it's in gnuplot format, gnuplot format not yet specified """
     _detector = r".*\.(txt|asc)\s*$"  # NOTE: detect type is overridden
@@ -23,7 +21,7 @@ class FileASCII(vfile.VFile):
         super(FileASCII, self).__init__(fname, **kwargs)
 
     def _parse(self):
-        g = grid.Grid()
+        g = self._grid_type()
 
         arr = np.loadtxt(self.fname)
         crds = coordinate.wrap_crds("Rectilinear", [['x', arr[:, 0]]])
