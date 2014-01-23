@@ -134,7 +134,8 @@ class VFile(Dataset):
         class... that can also take care of the bucket / circular reference
         problem maybe
         """
-        for filetype in cls.__subclasses__(): #pylint: disable=E1101
+        # reversed gives precedence to the more recently declared classes
+        for filetype in reversed(cls.__subclasses__()): #pylint: disable=E1101
             td = filetype.detect_type(fname)
             if td:
                 return td
