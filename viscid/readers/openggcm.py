@@ -15,7 +15,7 @@ class GGCMGrid(grid.Grid):
     # backward, which is kind of a good thing cause it wouldn't be straight
     # forward making a streamlined translation interface if it could
     # (since fld._dat_to_ndarray handles lists too)
-    mhd_to_gse = False
+    mhd_to_gse_on_read = True
 
     @staticmethod
     def transform_mhd_to_gse_field(arr):
@@ -30,7 +30,7 @@ class GGCMGrid(grid.Grid):
 
     def set_crds(self, crds_object):
         super(GGCMGrid, self).set_crds(crds_object)
-        if self.mhd_to_gse:
+        if self.mhd_to_gse_on_read:
             transform_dict = {}
             transform_dict['y'] = self.transform_mhd_to_gse_crds
             transform_dict['x'] = self.transform_mhd_to_gse_crds
@@ -40,7 +40,7 @@ class GGCMGrid(grid.Grid):
         if not isinstance(fields, (list, tuple)):
             fields = [fields]
         for f in fields:
-            if self.mhd_to_gse:
+            if self.mhd_to_gse_on_read:
                 f.transform_func = self.transform_mhd_to_gse_field
                 f.info["crd_system"] = "gse"
             else:

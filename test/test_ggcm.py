@@ -23,7 +23,7 @@ from viscid.plot import mpl
 # built-in reader and implement some convenience getters for
 # derived quantities not in the file
 class MyGGCMGrid(openggcm.GGCMGrid):
-    mhd_to_gse = True
+    mhd_to_gse_on_read = True
 
     def _get_bmag(self):
         try:
@@ -70,7 +70,8 @@ def main():
     pp = f3d['pp']
     rr = f3d['rr']
     T = f3d['T']
-    bmag = timeit(lambda: f3d['bmag'])
+    # bmag = timeit(lambda: f3d['bmag'])
+    bmag = f3d["bmag"]
 
     plt.subplot(141)
     mpl.plot(pp, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
