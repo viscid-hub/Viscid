@@ -112,8 +112,13 @@ class Field(object):
     name = None  # String
     crds = None  # Coordinate object
     time = None  # float
-    info = None  # dict
+    # dict, this stuff will be copied by self.wrap
+    info = None  #
+    # dict, used for stuff that won't be blindly copied by self.wrap
+    deep_meta = None
     pretty_name = None  # String
+
+    transform_func = None
 
     # these get reset when data is set
     _layout = None
@@ -124,9 +129,9 @@ class Field(object):
     # set when data is retrieved
     _cache = None  # this will always be a numpy array
 
-    def __init__(self, name, crds, data, center="Node", time=0.0,
-                 info=None, forget_source=False, pretty_name=None,
-                 **kwargs):
+    def __init__(self, name, crds, data, center="Node", time=0.0, info=None,
+                 deep_meta=None, forget_source=False, pretty_name=None,
+                 transform_func=None, **kwargs):
         self.name = name
         self.center = center
         self.time = time
@@ -138,13 +143,17 @@ class Field(object):
         else:
             self.pretty_name = pretty_name
 
-        self.info = {} if info is None else info
-        for k, v in kwargs.items():
-            self.info[k] = v
+        if transform_func is not None:
+            self.transform_func = transform_func
 
-        if not "force_layout" in self.info:
-            self.info["force_layout"] = LAYOUT_DEFAULT
-        self.info["force_layout"] = self.info["force_layout"].lower()
+        self.info = {} if info is None else info
+        self.deep_meta = {} if deep_meta is None else deep_meta
+        for k, v in kwargs.items():
+            self.deep_meta[k] = v
+
+        if not "force_layout" in self.deep_meta:
+            self.deep_meta["force_layout"] = LAYOUT_DEFAULT
+        self.deep_meta["force_layout"] = self.deep_meta["force_layout"].lower()
 
         if forget_source:
             self._src_data = self.data
@@ -159,7 +168,7 @@ class Field(object):
     @center.setter
     def center(self, new_center):
         new_center = new_center.lower()
-        assert(new_center in self._CENTERING)
+        assert new_center in self._CENTERING
         self._center = new_center
 
     @property
@@ -167,8 +176,8 @@ class Field(object):
         """ get the layout type, 'interlaced' (AOS) | 'flat (SOA)'. This at most
         calls _detect_layout(_src_data) which tries to be lazy """
         if self._layout is None:
-            if self.info["force_layout"] != LAYOUT_DEFAULT:
-                self._layout = self.info["force_layout"]
+            if self.deep_meta["force_layout"] != LAYOUT_DEFAULT:
+                self._layout = self.deep_meta["force_layout"]
             else:
                 self._layout = self._detect_layout(self._src_data)
         return self._layout
@@ -320,7 +329,7 @@ class Field(object):
         # override if a type does something fancy (eg, interlacing)
         # and dat.flags["OWNDATA"]  # might i want this?
         src_data_layout = self._detect_layout(self._src_data)
-        force_layout = self.info["force_layout"]
+        force_layout = self.deep_meta["force_layout"]
 
         # we will preserve layout or we already have the correct layout,
         # do no translation
@@ -363,7 +372,7 @@ class Field(object):
             return self._dat_to_ndarray(data_dest)
 
         # catch the remaining cases
-        elif self.info["force_layout"] == LAYOUT_OTHER:
+        elif self.deep_meta["force_layout"] == LAYOUT_OTHER:
             raise ValueError("How should I know how to force other layout?")
         else:
             raise ValueError("Bad argument for layout forcing")
@@ -391,7 +400,12 @@ class Field(object):
                 arr = dat.data
             else:
                 arr = np.array(dat, dtype=dat.dtype.name)
-        return self._reshape_ndarray_to_crds(arr)
+
+        if self.transform_func is not None:
+            arr = self.transform_func(arr)
+
+        reshaped_arr = self._reshape_ndarray_to_crds(arr)
+        return reshaped_arr
 
     def _reshape_ndarray_to_crds(self, arr):
         """ enforce same dimensionality as coords here!
@@ -487,9 +501,9 @@ class Field(object):
                             {"name": self.name,
                              "crds": crds,
                             })
-            # if there are reduced dims, put them into the info dict
+            # if there are reduced dims, put them into the deep_meta dict
             if len(reduced) > 0:
-                fld.info["reduced"] = reduced
+                fld.deep_meta["reduced"] = reduced
             return fld
 
     def slice(self, selection):
@@ -648,7 +662,7 @@ class Field(object):
 
 
     def wrap(self, arr, context=None, typ=None):
-        """ arr is the data to wrap... context is exta info to pass
+        """ arr is the data to wrap... context is exta deep_meta to pass
         to the constructor. The return is just a number if arr is a
         1 element ndarray, this is for ufuncs that reduce to a scalar """
         if arr is NotImplemented:
@@ -668,7 +682,8 @@ class Field(object):
             typ = type(self)
         else:
             typ = field_type(typ)
-        return typ(name, crds, arr, time=time, center=center, info=context)
+        return typ(name, crds, arr, time=time, center=center,
+                   info=self.info, deep_meta=context)
 
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
         # print("wrapping")

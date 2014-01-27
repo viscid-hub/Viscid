@@ -23,6 +23,8 @@ from viscid.plot import mpl
 # built-in reader and implement some convenience getters for
 # derived quantities not in the file
 class MyGGCMGrid(openggcm.GGCMGrid):
+    mhd_to_gse = True
+
     def _get_bmag(self):
         try:
             b = self["b"]
@@ -48,6 +50,15 @@ class MyGGCMGrid(openggcm.GGCMGrid):
 #     _grid_type = MyGGCMGrid
 
 
+def timeit(f, *args, **kwargs):
+    from timeit import default_timer as time
+    t0 = time()
+    ret = f(*args, **kwargs)
+    t1 = time()
+
+    print("Took {0:.03g} secs.".format(t1 - t0))
+    return ret
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
@@ -59,7 +70,7 @@ def main():
     pp = f3d['pp']
     rr = f3d['rr']
     T = f3d['T']
-    bmag = f3d['bmag']
+    bmag = timeit(lambda: f3d['bmag'])
 
     plt.subplot(141)
     mpl.plot(pp, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)

@@ -394,16 +394,19 @@ def tighten():
         logging.warn("No matplotlib tight layout support")
 
 def plot_earth(fld, axis=None, scale=1.0, rot=0,
-               daycol='w', nightcol='k', crds="mhd"):
-    """ crds = "mhd" (Jimmy crds) or "gsm" (GSM crds)... gsm is the same
-    as mhd + rot=180. earth_plane is a string in the format 'y=0.2', this
-    says what the 3rd.nr_sdimsension is and sets the radius that the earth should
-    be """
+               daycol='w', nightcol='k', crd_system="mhd"):
+    """ crd_system = "mhd" (Jimmy crds) or "gse" (GSE crds)... gsm is the
+    same as mhd + rot=180. This is inferred from fld but defaults to whatever
+    is given. earth_plane is a string in the format 'y=0.2', this
+    says what the 3rd.nr_sdimsension is and sets the radius that the earth
+    should be """
     import matplotlib.patches as mpatches
+
+    crd_system = fld.info.get("crd_system", crd_system)
 
     # take only the 1st reduced.nr_sdims... this should just work
     try:
-        plane, value = fld.info["reduced"][0]
+        plane, value = fld.deep_meta["reduced"][0]
     except KeyError:
         logging.error("No reduced dims in the field, i don't know what 2d \n "
                       "plane, we're in and can't figure out the size of earth.")
@@ -416,7 +419,7 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
     if not axis:
         axis = plt.gca()
 
-    if crds == "gsm":
+    if crd_system == "gse":
         rot = 180
 
     if plane == 'y' or plane == 'z':

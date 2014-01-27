@@ -47,6 +47,7 @@ class VFile(Dataset):
     _detector = None
     # _gc_warn = True  # i dont think this is used... it should go away?
     _grid_type = grid.Grid
+    _grid_opts = {}
 
     vfilebucket = None
     load_time = None
@@ -58,13 +59,17 @@ class VFile(Dataset):
                  # for instance hdf5 File object
     # grids = None  # already part of Dataset
 
-    def __init__(self, fname, vfilebucket=None, grid_type=None, **kwargs):
+    def __init__(self, fname, vfilebucket=None, grid_type=None, grid_opts=None,
+                 **kwargs):
         """  """
         super(VFile, self).__init__(fname, **kwargs)
 
         if grid_type is not None:
             self._grid_type = grid_type
+        if grid_opts is not None:
+            self.grid_opts = grid_opts
         assert self._grid_type is not None
+        assert isinstance(self._grid_opts, dict)
 
         self.vfilebucket = vfilebucket
         self.load(fname)

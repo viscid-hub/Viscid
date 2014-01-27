@@ -49,13 +49,13 @@ class PscGrid(grid.Grid):
                                 center="Cell")
 
 
-class PscFile(xdmf.FileXDMF):  # pylint: disable=W0223
+class PscFieldFile(xdmf.FileXDMF):  # pylint: disable=W0223
     _detector = r"^\s*(.*/)?(.*)fd\.([0-9]{6}).xdmf"
     _grid_type = PscGrid
 
     def __init__(self, fname, *args, **kwargs):
         print("Opening '%s'" % (fname))
-        super(PscFile, self).__init__(fname, *args, **kwargs)
+        super(PscFieldFile, self).__init__(fname, *args, **kwargs)
 
 
 class PscParticles(object):
@@ -76,8 +76,10 @@ def open_psc_file(path, step, pfx="p"):
     not to call this twice on the same file. Nothing bad will happen,
     you'll just have 2 versions in memory.
     """
-    filename = "{0}/{1}fd.{2:.06d}.xdmf".format(path, pfx, step)
-    return PscFile(filename)
+    return PscFieldFile(make_fname(path, step, pfx))
+
+def make_fname(path, step, pfx="p"):
+    return "{0}/{1}fd.{2:.06d}.xdmf".format(path, pfx, step)
 
 ##
 ## EOF

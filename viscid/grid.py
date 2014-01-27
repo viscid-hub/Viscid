@@ -19,18 +19,30 @@ class Grid(object):
 
     name = None
 
-    def __init__(self, name=None):
+    def __init__(self, name=None, **kwargs):
+        """ all kwargs are added to the grid as attributes """
         self.name = name
         self.fields = Bucket()
 
         self.crds = None  # Coordinates()
+        for opt, value in kwargs.items():
+            setattr(self, opt, value)
 
-    def add_field(self, field):
-        if isinstance(field, (list, tuple)):
-            for f in field:
-                self.fields[f.name] = f
-        else:
-            self.fields[field.name] = field
+    @staticmethod
+    def null_transform(something):
+        return something
+
+    # def set_time(self, time):
+    #     self.time = time
+
+    def set_crds(self, crds_object):
+        self.crds = crds_object
+
+    def add_field(self, fields):
+        if not isinstance(fields, (list, tuple)):
+            fields = [fields]
+        for f in fields:
+            self.fields[f.name] = f
 
     def unload(self):
         """ unload is meant to give children a chance to free caches, the idea
@@ -64,12 +76,6 @@ class Grid(object):
 
     def print_tree(self, recursive=False, prefix=""): #pylint: disable=W0613
         self.fields.print_tree(prefix=prefix + tree_prefix)
-
-    # def set_time(self, time):
-    #     self.time = time
-
-    def set_crds(self, crds_object):
-        self.crds = crds_object
 
     ##################################
     ## Utility methods to get at crds

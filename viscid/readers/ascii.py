@@ -21,7 +21,7 @@ class FileASCII(vfile.VFile):  # pylint: disable=W0223
         super(FileASCII, self).__init__(fname, **kwargs)
 
     def _parse(self):
-        g = self._grid_type()
+        g = self._grid_type(**self._grid_opts)
 
         arr = np.loadtxt(self.fname)
         crds = coordinate.wrap_crds("Rectilinear", [['x', arr[:, 0]]])

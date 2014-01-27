@@ -61,13 +61,19 @@ class StructuredCrds(Coordinates):
 
     _src_crds_nc = None
 
+    transform_funcs = None
     has_cc = None
 
-    def __init__(self, init_clist=None, has_cc=True, **kwargs):
+    def __init__(self, init_clist=None, has_cc=True, transform_funcs=None,
+                 **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
         super(StructuredCrds, self).__init__(**kwargs)
         self.has_cc = has_cc
+
+        if transform_funcs is not None:
+            self.transform_funcs = transform_funcs
+
         if init_clist:
             self._axes = [d[0].lower() for d in init_clist]
         self.clear_crds()
@@ -120,11 +126,18 @@ class StructuredCrds(Coordinates):
 
     def clear_crds(self):
         self._src_crds_nc = {}
-        self.__crds = None
+        self._purge_cache()
         # for d in self.axes:
         #     for sfx in self.SUFFIXES:
         #         self.__crds[d + sfx] = None
         #         self.__crds[d.upper() + sfx] = None
+
+    def _purge_cache(self):
+        self.__crds = None
+
+    def unload(self):
+        """ does not guarentee that the memory will be freed """
+        self._purge_cache()
 
     def set_crds(self, clist):
         """ called with a list of lists:
@@ -150,6 +163,13 @@ class StructuredCrds(Coordinates):
             # axis = self.axis_name(axis)
             ind = self.ind(axis)
             arr = np.array(arr, dtype=arr.dtype.name)
+
+            if self.transform_funcs is not None:
+                if axis in self.transform_funcs:
+                    arr = self.transform_funcs[axis](arr)
+                elif ind in self.transform_funcs:
+                    arr = self.transform_funcs[ind](arr)
+
             flatarr, openarr = self._ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr
             self.__crds[axis.upper()] = openarr
