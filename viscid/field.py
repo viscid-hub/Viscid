@@ -118,7 +118,8 @@ class Field(object):
     deep_meta = None
     pretty_name = None  # String
 
-    transform_func = None
+    pre_reshape_transform_func = None
+    post_reshape_transform_func = None
 
     # these get reset when data is set
     _layout = None
@@ -131,7 +132,9 @@ class Field(object):
 
     def __init__(self, name, crds, data, center="Node", time=0.0, info=None,
                  deep_meta=None, forget_source=False, pretty_name=None,
-                 transform_func=None, **kwargs):
+                 pre_reshape_transform_func=None,
+                 post_reshape_transform_func=None,
+                 **kwargs):
         self.name = name
         self.center = center
         self.time = time
@@ -143,8 +146,10 @@ class Field(object):
         else:
             self.pretty_name = pretty_name
 
-        if transform_func is not None:
-            self.transform_func = transform_func
+        if pre_reshape_transform_func is not None:
+            self.pre_reshape_transform_func = pre_reshape_transform_func
+        if post_reshape_transform_func is not None:
+            self.post_reshape_transform_func = post_reshape_transform_func
 
         self.info = {} if info is None else info
         self.deep_meta = {} if deep_meta is None else deep_meta
@@ -401,11 +406,15 @@ class Field(object):
             else:
                 arr = np.array(dat, dtype=dat.dtype.name)
 
-        if self.transform_func is not None:
-            arr = self.transform_func(arr)
+        if self.pre_reshape_transform_func is not None:
+            arr = self.pre_reshape_transform_func(arr)
 
-        reshaped_arr = self._reshape_ndarray_to_crds(arr)
-        return reshaped_arr
+        arr = self._reshape_ndarray_to_crds(arr)
+
+        if self.post_reshape_transform_func is not None:
+            arr = self.post_reshape_transform_func(arr)
+
+        return arr
 
     def _reshape_ndarray_to_crds(self, arr):
         """ enforce same dimensionality as coords here!

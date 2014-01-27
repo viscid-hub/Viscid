@@ -41,7 +41,7 @@ class GGCMGrid(grid.Grid):
             fields = [fields]
         for f in fields:
             if self.mhd_to_gse_on_read:
-                f.transform_func = self.transform_mhd_to_gse_field
+                f.post_reshape_transform_func = self.transform_mhd_to_gse_field
                 f.info["crd_system"] = "gse"
             else:
                 f.info["crd_system"] = "mhd"
