@@ -1,12 +1,17 @@
 # Changelog
 
 ## Current develop branch (0.50.2 dev)
+
 Features:
   - Support for custom grids (this allows for custom readers for GGCM / PSC / etc)
   - Grids can supply derived fields by defining _get_varname
   - Grids can supply generic transformations for fields / crds on load
   - GGCM reader, can translate MHD coordinate system to GSE
   - PSC reader can calculate psi (flux function)
+
+Refactors:
+  - RectilinearCrds -> NonuniformCartesianCrds
+  - "Rectilinear" -> "nonuniform_cartesian"
 
 Backward Incompatible Changes:
   - GGCM files read directly into GSE by default. Use `viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = False` to keep the files in MHD coordinates.
@@ -15,6 +20,7 @@ Other:
   - Precedence for auto-detecting classes is given to those more recently declared
 
 ## 0.50.1
+
 Features:
   - Field slicing semantics are now the same as numpy in terms of when dimensions get reduced. To enforce specific reductions, use Field.slice_reduce() or Field.slice_keep()
   - crds accessible from grids / fields / crds using get_crd_[ncef]c or get_crds_[ncef]c for one or multiple crds respectively
@@ -40,6 +46,7 @@ Deprecated:
   - readers.load() -> readers.load_file("...") or readers.load_files(["..."])
 
 ## 0.50.0 Release
+
 Features:
   - Remove lxml dependency
   - Remove Cython dependency

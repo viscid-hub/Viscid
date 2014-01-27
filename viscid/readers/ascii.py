@@ -24,7 +24,7 @@ class FileASCII(vfile.VFile):  # pylint: disable=W0223
         g = self._grid_type(**self._grid_opts)
 
         arr = np.loadtxt(self.fname)
-        crds = coordinate.wrap_crds("Rectilinear", [['x', arr[:, 0]]])
+        crds = coordinate.wrap_crds("nonuniform_cartesian", [['x', arr[:, 0]]])
         g.set_crds(crds)
 
         if len(arr.shape) > 1:

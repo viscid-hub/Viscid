@@ -28,7 +28,7 @@ def run_mpl_testA(show=False):
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-1, 1, 2), dtype=dtype)
-    crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
+    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
     Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True)
 
     s = ne.evaluate("(sin(Xcc) + cos(Ycc))")
@@ -59,7 +59,7 @@ def run_mpl_testB(show=False):
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-10, 10, 140), dtype=dtype)
-    crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
+    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
     Z, Y, X = crds.get_crds_nc(shaped=True) #pylint: disable=W0612
 
     s = ne.evaluate("(sin(X) + cos(Y) - cos(Z))")

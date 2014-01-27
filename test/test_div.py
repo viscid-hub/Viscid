@@ -82,7 +82,7 @@ def main():
     x = np.array(np.linspace(-0.5, 0.5, 256), dtype=dtype)
     y = np.array(np.linspace(-0.5, 0.5, 256), dtype=dtype)
     z = np.array(np.linspace(-0.5, 0.5, 64), dtype=dtype)
-    crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
+    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
 
     half = np.array([0.5], dtype=dtype) #pylint: disable=W0612
     two = np.array([2.0], dtype=dtype) #pylint: disable=W0612

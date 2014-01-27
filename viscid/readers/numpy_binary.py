@@ -117,7 +117,7 @@ class FileNumpyNPZ(vfile.VFile):
                     if axisname in f:
                         crd_names.append(axisname)
             clist = [(cn, NPZDataWrapper(self.fname, cn)) for cn in crd_names]
-            crds = coordinate.wrap_crds("Rectilinear", clist)
+            crds = coordinate.wrap_crds("nonuniform_cartesian", clist)
             g.set_crds(crds)
             for c in clist:
                 # we should be sure by now that the keys exist

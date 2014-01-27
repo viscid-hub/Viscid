@@ -840,7 +840,7 @@ class ScalarField(Field):
                                dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
 
         downclist = self.crds.get_clist(np.s_[::2])
-        downcrds = coordinate.wrap_crds("Rectilinear", downclist)
+        downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist)
         return self.wrap(downdat, {"crds": downcrds})
 
     def transpose(self, *axes):

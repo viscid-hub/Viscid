@@ -77,7 +77,7 @@ def main():
     y = np.array(np.linspace(-5, 5, 256), dtype=dtype)
     z = np.array(np.linspace(-5, 5, 256), dtype=dtype)
 
-    crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y),
+    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y),
                                                 ('x', x)))
 
     logging.info("Testing node centered magnitudes")

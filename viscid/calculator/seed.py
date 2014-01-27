@@ -120,7 +120,7 @@ class Line(SeedGen):
         dp = p1 - p0
         dist = np.sqrt(np.dot(dp, dp))
         x = np.linspace(0.0, dist, res)
-        crd = coordinate.wrap_crds("Rectilinear", (('x', x),))
+        crd = coordinate.wrap_crds("nonuniform_cartesian", (('x', x),))
         return crd
 
 
@@ -196,7 +196,7 @@ class Plane(SeedGen):
         l = np.linspace(-0.5 * len_l, 0.5 * len_l, res_l)
         m = np.linspace(-0.5 * len_m, 0.5 * len_m, res_m)
 
-        crds = coordinate.wrap_crds("Rectilinear", (('y', m), ('x', l)))
+        crds = coordinate.wrap_crds("nonuniform_cartesian", (('y', m), ('x', l)))
         return crds
 
 
@@ -236,7 +236,7 @@ class Volume(SeedGen):
 
     def as_coordinates(self):
         z, y, x = self._make_arrays()
-        crd = coordinate.wrap_crds("Rectilinear",
+        crd = coordinate.wrap_crds("nonuniform_cartesian",
                                    (('z', z), ('y', y), ('x', x)))
         return crd
 

@@ -92,12 +92,12 @@ def div(fld):
     if fld.iscentered("Cell"):
         crdz, crdy, crdx = fld.get_crds_cc(shaped=True)
         divcenter = "Cell"
-        # divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
         divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     elif fld.iscentered("Node"):
         crdz, crdy, crdx = fld.get_crds_nc(shaped=True)
         divcenter = "Node"
-        # divcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
         divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
@@ -127,11 +127,11 @@ def curl(fld):
     if fld.iscentered("Cell"):
         crdz, crdy, crdx = fld.get_crds_cc(shaped=True)
         curlcenter = "cell"
-        curlcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
     elif fld.iscentered("Node"):
         crdz, crdy, crdx = fld.get_crds_nc(shaped=True)
         curlcenter = "node"
-        curlcrds = coordinate.RectilinearCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
 

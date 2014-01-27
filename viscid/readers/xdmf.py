@@ -238,11 +238,12 @@ class FileXDMF(vfile.VFile):
 
         topotype = topoattrs["TopologyType"]
 
-        if topotype in ['3DRectMesh', '3DCoRectMesh',
-                        '2DRectMesh', '2DCoRectMesh']:
-            crdtype = "Rectilinear"
+        if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
+            crdtype = "uniform_cartesian"
+        if topotype in ['3DRectMesh', '2DRectMesh']:
+            crdtype = "nonuniform_cartesian"
         elif topotype in ['2DSMesh', '3DSMesh']:
-            crdtype = "Spherical"
+            crdtype = "uniform_spherical"
         else:
             raise NotImplementedError("Unstructured grids not yet supported")
 
@@ -293,7 +294,7 @@ class FileXDMF(vfile.VFile):
                                    "".format(list(crdlookup.keys())))
 
         elif geotype.upper() == "ORIGIN_DXDYDZ":
-            # this is for rectilinear grids with uniform spacing
+            # this is for grids with uniform spacing
             dataitems = geo.findall("./DataItem")
             data_o, attrs_o = self._parse_dataitem(dataitems[0])
             data_dx, attrs_dx = self._parse_dataitem(dataitems[1])
