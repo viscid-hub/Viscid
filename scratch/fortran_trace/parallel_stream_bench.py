@@ -62,7 +62,7 @@ def main():
     by = f3d["by"]
     bz = f3d["bz"]
     B = field.scalar_fields_to_vector("B_cc", [bx, by, bz],
-                                info={"force_layout": field.LAYOUT_INTERLACED})
+                                deep_meta={"force_layout": field.LAYOUT_INTERLACED})
 
     t0 = time()
     lines_single, topo = trace_cython(B, nr_procs=1)

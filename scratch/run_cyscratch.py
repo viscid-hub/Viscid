@@ -1,26 +1,20 @@
-#!/usr/bin/env python
 
 from __future__ import print_function
 from timeit import default_timer as time
+import sys
+
 import numpy as np
 import numexpr as ne
-import matplotlib.pyplot as plt
-import cProfile
-import pstats
+import pyximport
+pyximport.install(setup_args={"include_dirs":np.get_include()})
 
-from viscid import vutil
+import cyscratch
 from viscid import field
 from viscid import coordinate
-from viscid import readers
-from viscid.calculator import calc
-from viscid.calculator import cycalc
-from viscid.calculator import streamline
-from viscid.calculator import seed
-from viscid.plot import mpl
 
 def get_dipole(m=None, twod=False):
     dtype = 'float64'
-    n = 64
+    n = 256
     x = np.array(np.linspace(-5, 5, n), dtype=dtype)
     y = np.array(np.linspace(-5, 5, n), dtype=dtype)
     z = np.array(np.linspace(-5, 5, n), dtype=dtype)
@@ -51,38 +45,14 @@ def get_dipole(m=None, twod=False):
     #                             center="Cell", forget_source=True)
     return fld  # , fld_rsq
 
-if __name__ == "__main__":
-    B = get_dipole(m=[0.2, 0.3, -0.9])
-    t0 = time()
-    # sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0, 500, 500)
-    # cProfile.runctx("""interp_vals = cycalc.interp_trilin(B, sphere)""",
-    #                 globals(), locals(), "interp.prof")
-    # plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (1., 0., 0.),
-    #                    1.0, 1.0, 500, 500)
-    vol = B.crds
-    # print(plane.points())
-    cProfile.runctx("""interp_vals = cycalc.interp_trilin(B, vol)""",
-                    globals(), locals(), "interp.prof")
-    t1 = time()
-    print("Total time: {0:.3e}".format(t1 - t0))
-    s = pstats.Stats("interp.prof")
-    s.strip_dirs().sort_stats("cumtime").print_stats()
-    # print([line.shape for line in lines])
-    # mpl.scatter_3d(vol.points(), interp_vals[:, 2], show=True)
+def main():
+    B = get_dipole(twod=True)
+    bmag = cyscratch.magnitude(B)
 
-    interp_field = field.wrap_field("Vector", "interp", vol.as_coordinates(),
-                                    interp_vals, center="Cell")
-    interp_y1 = interp_field["y=1"]
-    exact_y1 = B["y=1"]
-    bxi, byi, bzi = interp_y1.component_fields()
-    bxe, bye, bze = exact_y1.component_fields()
-    for interp, exact in zip([bxi, byi, bzi], [bxe, bye, bze]):
-        plt.clf()
-        plt.subplot(211)
-        mpl.plot(exact, show=False)
-        plt.subplot(212)
-        mpl.plot(interp, show=True)
+if __name__ == "__main__":
+    main()
 
 ##
 ## EOF
 ##
+
