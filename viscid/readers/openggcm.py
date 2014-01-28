@@ -4,8 +4,9 @@
 from __future__ import print_function
 import numpy as np
 
-from .. import grid
 from . import xdmf
+from .. import grid
+from .. import field
 
 
 class GGCMGrid(grid.Grid):
@@ -64,6 +65,11 @@ class GGCMGrid(grid.Grid):
 
     def _get_bz(self):
         return self['b'].component_fields()[2]
+
+    def _get_b(self):
+        bx, by, bz = self['bx'], self['by'], self['bz']
+        b = field.scalar_fields_to_vector("B", [bx, by, bz])
+        return b
 
 
 class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
