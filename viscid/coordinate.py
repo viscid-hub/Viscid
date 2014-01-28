@@ -64,7 +64,7 @@ class StructuredCrds(Coordinates):
     transform_funcs = None
     has_cc = None
 
-    def __init__(self, init_clist=None, has_cc=True, transform_funcs=None,
+    def __init__(self, init_clist, has_cc=True, transform_funcs=None,
                  **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
@@ -702,18 +702,16 @@ class UniformCartesianCrds(UniformCrds):
     _TYPE = "uniform_cartesian"
     _axes = ["z", "y", "x"]
 
-    def __init__(self, init_clist=None, **kwargs):
-        super(UniformCartesianCrds, self).__init__(init_clist=init_clist,
-                                                   **kwargs)
+    def __init__(self, init_clist, **kwargs):
+        super(UniformCartesianCrds, self).__init__(init_clist, **kwargs)
 
 
 class NonuniformCartesianCrds(NonuniformCrds):
     _TYPE = "nonuniform_cartesian"
     _axes = ["z", "y", "x"]
 
-    def __init__(self, init_clist=None, **kwargs):
-        super(NonuniformCartesianCrds, self).__init__(init_clist=init_clist,
-                                                      **kwargs)
+    def __init__(self, init_clist, **kwargs):
+        super(NonuniformCartesianCrds, self).__init__(init_clist, **kwargs)
 
 
 # class UniformSphericalCrds(UniformCrds):
@@ -721,29 +719,41 @@ class NonuniformCartesianCrds(NonuniformCrds):
 #     _axes = ["phi", "theta", "r"]
 
 #     def __init__(self, init_clist=None, **kwargs):
-#         super(UniformSphericalCrds, self).__init__(init_clist=init_clist,
-#                                                    **kwargs)
+#         super(UniformSphericalCrds, self).__init__(init_clist, **kwargs)
 
 
 class NonuniformSphericalCrds(NonuniformCrds):
     _TYPE = "nonuniform_spherical"
     _axes = ["phi", "theta", "r"]
 
-    def __init__(self, init_clist=None, **kwargs):
-        super(NonuniformSphericalCrds, self).__init__(init_clist=init_clist,
-                                                      **kwargs)
+    _target_nc_params = None
 
-    # def set_crds(self, clist):
-    #     """ called with a list of lists:
-    #     (('x', ndarray), ('y',ndarray), ('z',ndarray))
-    #     Note: input crds are assumed to be node centered
-    #     """
-    #     for axis, data in clist:
-    #         # axis = self.axis_name(axis)
-    #         if not axis in self._axes:
-    #             raise KeyError()
-    #         # ind = self.ind(axis)
-    #         self._src_crds_nc[axis.lower()] = data
+    def __init__(self, init_clist, **kwargs):
+        """ This subclass is hackilly different from other crd types...
+        init_clist MUST be list of the form:
+        [
+            ['phi', [0.0, 360.0, 181]],
+            ['theta', [0.0, 180.0, 61]],
+            ['r', [0.95, 1.05, 2]],
+        ]
+        where the list is the first, last, num given to
+        numpy.linspace
+        """
+        self._axes = [d[0].lower() for d in init_clist]
+        self._target_nc_params = [d[1] for d in init_clist]
+        super(NonuniformSphericalCrds, self).__init__(None, **kwargs)
+
+    def _fill_crds_dict(self):
+        """ do the math to calc node, cell, face, edge crds from
+        the src crds """
+        # SUPERHACKY! ok, so we're ignoring the cordinates in the file, and
+        # just assuming they span the sphere... that way all we actually need
+        # is nphi, ntheta, so when we need the crds, fill _src_crds_nc as
+        # though we had them
+        self._src_crds_nc = {}
+        for ax, p in zip(self._axes, self._target_nc_params):
+            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2])
+        return super(NonuniformSphericalCrds, self)._fill_crds_dict()
 
 
 class UnstructuredCrds(Coordinates):

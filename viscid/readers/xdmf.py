@@ -238,32 +238,31 @@ class FileXDMF(vfile.VFile):
 
         topotype = topoattrs["TopologyType"]
 
-        if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
-            crdtype = "uniform_cartesian"
-        if topotype in ['3DRectMesh', '2DRectMesh']:
-            crdtype = "nonuniform_cartesian"
-        elif topotype in ['2DSMesh', '3DSMesh']:
-            crdtype = "uniform_spherical"
-        else:
-            raise NotImplementedError("Unstructured grids not yet supported")
-
         # parse geometry into crds
         geotype = geoattrs["GeometryType"]
         if geotype.upper() == "XYZ":
             data, attrs = self._parse_dataitem(geo.find("./DataItem"),
                                                keep_flat=True)
-            x = data[0::3]
-            y = data[1::3]
-            z = data[2::3]
-            crdlist = (('z', z), ('y', y), ('x', x))
+            # x = data[0::3]
+            # y = data[1::3]
+            # z = data[2::3]
+            # crdlist = (('z', z), ('y', y), ('x', x))
+            # quietly do nothing... we don't support unstructured grids
+            # or 3d spherical yet, and 2d spherical can be figured out
+            # if we assume the grid spans the whole sphere
+            crdlist = None
 
         elif geotype.upper() == "XY":
             data, attrs = self._parse_dataitem(geo.find("./DataItem"),
                                                keep_flat=True)
-            x = data[0::2]
-            y = data[1::2]
-            z = np.zeros(len(x))
-            crdlist = (('z', z), ('y', y), ('x', x))
+            # x = data[0::2]
+            # y = data[1::2]
+            # z = np.zeros(len(x))
+            # crdlist = (('z', z), ('y', y), ('x', x))
+            # quietly do nothing... we don't support unstructured grids
+            # or 3d spherical yet, and 2d spherical can be figured out
+            # if we assume the grid spans the whole sphere
+            crdlist = None
 
         elif geotype.upper() == "X_Y_Z":
             crdlookup = {'z': 0, 'y': 1, 'x': 2}
@@ -314,6 +313,54 @@ class FileXDMF(vfile.VFile):
 
         else:
             logging.warn("Invalid GeometryType: {0}".format(geotype))
+
+        if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
+            crdtype = "uniform_cartesian"
+        if topotype in ['3DRectMesh', '2DRectMesh']:
+            crdtype = "nonuniform_cartesian"
+        elif topotype in ['2DSMesh']:
+            crdtype = "nonuniform_spherical"
+            ######## this doesn't quite work, but it's too heavy to be useful
+            ######## anyway... if we assume a 2d spherical grid spans the
+            ######## whole sphere, and radius doesnt matter, all we need are
+            ######## the nr_phis / nr_thetas, so let's just do that
+            # # this asserts that attrs["Dimensions"] will have the zyx
+            # # dimensions
+            # # turn x, y, z -> phi, theta, r
+            # dims = [int(s) for
+            #         s in reversed(topoattrs["Dimensions"].split(' '))]
+            # dims = [1] * (3 - len(dims)) + dims
+            # nr, ntheta, nphi = [d for d in dims]
+            # # dtype = crdlist[0][1].dtype
+            # # phi, theta, r = [np.empty((n,), dtype=dtype) for n in dims]
+            # z, y, x = (crdlist[i][1].reshape(dims) for i in range(3))
+            # nphitheta = nphi * ntheta
+            # r = np.sqrt(x[::nphitheta, 0, 0]**2 + y[::nphitheta, 0, 0]**2 +
+            #             z[::nphitheta, 0, 0]**2)
+            # ir = nr // 2  # things get squirrly near the extrema
+            # theta = (180.0 / np.pi) * \
+            #         (np.arccos(z[ir, :, ::nphi] / r[ir]).reshape(-1))
+            # itheta = ntheta // 2
+            # phi = (180.0 / np.pi) * \
+            #       np.arctan2(y[ir, itheta, :], x[ir, itheta, :])
+            # print(dims, nr, ntheta, nphi)
+            # print("r:", r.shape, r)
+            # print("theta:", theta.shape, theta)
+            # print("phi:", phi.shape, phi)
+            # raise RuntimeError()
+            ######## general names in spherical crds
+            # ntheta, nphi = [int(s) for s in topoattrs["Dimensions"].split(' ')]
+            # crdlist = [['theta', [0.0, 180.0, ntheta]],
+            #            ['phi', [0.0, 360.0, nphi]]]
+            ######## names on a map
+            nlat, nlon = [int(s) for s in topoattrs["Dimensions"].split(' ')]
+            crdlist = [['lat', [0.0, 180.0, nlat]],
+                       ['lon', [0.0, 360.0, nlon]]]
+
+        elif topologytype in ['3DSMesh']:
+            raise NotImplementedError("3D spherical grids not yet supported")
+        else:
+            raise NotImplementedError("Unstructured grids not yet supported")
 
         crds = coordinate.wrap_crds(crdtype, crdlist)
         return crds, geoattrs
