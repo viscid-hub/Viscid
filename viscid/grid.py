@@ -145,7 +145,7 @@ class Grid(object):
         name some crd identifier, see Coordinate.get_item for details """
         try:
             return self.get_field(item)
-        except KeyError:
+        except (KeyError, AttributeError):
             if self.crds is not None and item in self.crds:
                 return self.crds[item]
             else:
