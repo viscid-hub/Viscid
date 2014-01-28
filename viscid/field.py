@@ -399,7 +399,8 @@ class Field(object):
             # dtype.name is for pruning endianness out of dtype
             if isinstance(dat, (list, tuple)):
                 dt = dat[0].dtype.name
-                arr = np.array([np.array(d, dtype=dt, copy=False) for d in dat], dtype=dt)
+                arr = np.array([np.array(d, dtype=dt, copy=False)
+                                for d in dat], dtype=dt)
             else:
                 arr = np.array(dat, dtype=dat.dtype.name, copy=False)
             # elif isinstance(dat, Field):
@@ -554,7 +555,7 @@ class Field(object):
     def set_slice(self, selection, value):
         cc = self.iscentered("Cell")
         selection = self._prepare_slice(selection)[0]
-        slices, crdlst = self.crds.make_slice(selection, cc=cc)[:2]
+        slices, _ = self.crds.make_slice(selection, cc=cc)[:2]
         self.data[tuple(slices)] = value
         return None
 
@@ -845,7 +846,7 @@ class ScalarField(Field):
         using np.transpose(fld) """
         if axes == (None, ) or len(axes) == 0:
             axes = range(self.nr_dims - 1, -1, -1)
-        if not (len(axes) == self.nr_dims):
+        if len(axes) != self.nr_dims:
             raise ValueError("transpose can not change number of axes")
         clist = self.crds.get_clist()
         new_clist = [clist[ax] for ax in axes]
