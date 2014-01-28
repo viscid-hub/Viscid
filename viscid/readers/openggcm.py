@@ -2,7 +2,13 @@
 """ Wrapper grid for some OpenGGCM convenience """
 
 from __future__ import print_function
+
 import numpy as np
+try:
+    import numexpr
+    _has_numexpr = True
+except ImportError:
+    _has_numexpr = False
 
 from . import xdmf
 from .. import grid
@@ -10,26 +16,42 @@ from .. import field
 
 
 class GGCMGrid(grid.Grid):
-    # this puts a 60% performance hit when loading data from h5 file
-    # to an ndarray in memory. Most of that seems to be creating a temp
-    # ndarray for the translation since h5py won't read the array
-    # backward, which is kind of a good thing cause it wouldn't be straight
-    # forward making a streamlined translation interface if it could
-    # (since fld._dat_to_ndarray handles lists too)
-    ## A way around the overhead is to specify copy=False in the array
-    # constructors, but then you don't have 'contiguous C' arrays
-    mhd_to_gse_on_read = True
+    """ This defines some cool openggcm convinience stuff...
+    The following attributes can be set by saying,
+        `viscid.grid.readers.openggcm.GGCMGrid.flag = value`.
+    This should be done before a call to readers.load_file so that all grids
+    that are instantiated have the flags you want.
 
-    @staticmethod
-    def transform_mhd_to_gse_field(arr):
+    mhd_to_gse_on_read = True|False, flips arrays on load to be in GSE crds
+                         (default=True)
+    copy_on_transform = True|False, True means array will be contiguous
+                        after transform (if one is done), but makes data
+                        load 50%-60% slower (default=True)
+    derived_vector_layout = viscid.field.LAYOUT_*, force layout when
+                            preparing a derived vector, like B from a file with
+                            bx, by, bz scalar arrays
+                            (default=LAYOUT_DEFAULT)
+
+    derived quantities accessable by dictionary lookup:
+      - T (Temperature, for now, just pressure / density)
+      - bx, by, bz (CC mag field components, if not already stored by
+                    component)
+      - b (mag field as vector, layout affected by
+           GGCMGrid.derived_vector_layout)
+      - v (velocity as vector, same idea as b)
+    """
+    mhd_to_gse_on_read = True
+    copy_on_transform = True
+    derived_vector_layout = field.LAYOUT_DEFAULT
+
+    def transform_mhd_to_gse_field(self, arr):
         # Note: field._data will be set to whatever is returned (after
         # being reshaped to the crd shape), so if you return a view,
         # field._data will be a view
-        return np.array(arr[:, ::-1, ::-1])
+        return np.array(arr[:, ::-1, ::-1], copy=self.copy_on_transform)
 
-    @staticmethod
-    def transform_mhd_to_gse_crds(arr):
-        return np.array(-1.0 * arr[::-1])
+    def transform_mhd_to_gse_crds(self, arr):
+        return np.array(-1.0 * arr[::-1], copy=self.copy_on_transform)
 
     def set_crds(self, crds_object):
         super(GGCMGrid, self).set_crds(crds_object)
@@ -68,8 +90,41 @@ class GGCMGrid(grid.Grid):
 
     def _get_b(self):
         bx, by, bz = self['bx'], self['by'], self['bz']
-        b = field.scalar_fields_to_vector("B", [bx, by, bz])
+        b = field.scalar_fields_to_vector("B", [bx, by, bz],
+            deep_meta={"force_layout": self.derived_vector_layout})
         return b
+
+    def _get_v(self):
+        vx, vy, vz = self['vx'], self['vy'], self['vz']
+        v = field.scalar_fields_to_vector("V", [vx, vy, vz],
+            deep_meta={"force_layout": self.derived_vector_layout})
+        return v
+
+    def _calc_mag(self, vx, vy, vz):
+        if _has_numexpr:
+            vmag = numexpr.evaluate("sqrt(vx**2 + vy**2 + vz**2)")
+            return vx.wrap(vmag, typ="Scalar")
+        else:
+            vmag = np.sqrt(vx**2 + vy**2 + vz**2)
+            return vmag
+
+    def _get_bmag(self):
+        bx, by, bz = self['bx'], self['by'], self['bz']
+        bmag = self._calc_mag(bx, by, bz)
+        bmag.name = "|B|"
+        return bmag
+
+    def _get_jmag(self):
+        jx, jy, jz = self['jx'], self['jy'], self['jz']
+        jmag = self._calc_mag(jx, jy, jz)
+        jmag.name = "|J|"
+        return jmag
+
+    def _get_speed(self):
+        vx, vy, vz = self['vx'], self['vy'], self['vz']
+        speed = self._calc_mag(vx, vy, vz)
+        speed.name = "Speed"
+        return speed
 
 
 class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223

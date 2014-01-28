@@ -14,9 +14,7 @@ if not _viscid_root in sys.path:
 
 from viscid import vutil
 from viscid import readers
-from viscid import field
 from viscid.readers import openggcm
-from viscid.calculator import calc
 from viscid.plot import mpl
 
 # These two class definitions are examples of how to override a
@@ -25,15 +23,8 @@ from viscid.plot import mpl
 class MyGGCMGrid(openggcm.GGCMGrid):
     mhd_to_gse_on_read = True
 
-    def _get_bmag(self):
-        try:
-            b = self["b"]
-        except KeyError:
-            bx, by, bz = self['bx'], self['by'], self['bz']
-            b = field.scalar_fields_to_vector("B_cc", [bx, by, bz])
-        bmag = calc.magnitude(b)
-        bmag.name = "|B|"
-        return bmag
+    def _get_bcc(self):
+        return self['b']
 
 
 # So, you can make a class that derrives from an existing vFile type.
