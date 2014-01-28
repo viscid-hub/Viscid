@@ -79,7 +79,7 @@ class Point(SeedGen):
             else:
                 raise ValueError("Malformed points")
         else:
-            pts_arr = np.array(pts, dtype=self.dtype)
+            pts_arr = np.array(pts, dtype=self.dtype, copy=False)
             if pts_arr.shape[0] == 3:
                 return pts_arr.reshape((3, -1))
             elif pts_arr.shape[-1] == 3:

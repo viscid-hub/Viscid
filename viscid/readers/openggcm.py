@@ -15,6 +15,8 @@ class GGCMGrid(grid.Grid):
     # backward, which is kind of a good thing cause it wouldn't be straight
     # forward making a streamlined translation interface if it could
     # (since fld._dat_to_ndarray handles lists too)
+    ## A way around the overhead is to specify copy=False in the array
+    # constructors, but then you don't have 'contiguous C' arrays
     mhd_to_gse_on_read = True
 
     @staticmethod

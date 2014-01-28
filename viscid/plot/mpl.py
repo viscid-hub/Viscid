@@ -281,7 +281,7 @@ def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
         topo_color = False
 
     for i, line in enumerate(lines):
-        line = np.array(line)
+        line = np.array(line, copy=False)
         z = line[0]
         y = line[1]
         x = line[2]
@@ -317,7 +317,7 @@ def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
         topo_color = False
 
     for i, line in enumerate(lines):
-        line = np.array(line)
+        line = np.array(line, copy=False)
         if symmetry_dir.lower() == "x":
             x = line[1]
             y = line[0]

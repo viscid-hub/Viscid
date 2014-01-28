@@ -399,12 +399,13 @@ class Field(object):
             # dtype.name is for pruning endianness out of dtype
             if isinstance(dat, (list, tuple)):
                 dt = dat[0].dtype.name
-                arr = np.array([np.array(d, dtype=dt) for d in dat], dtype=dt)
-
-            elif isinstance(dat, Field):
-                arr = dat.data
+                arr = np.array([np.array(d, dtype=dt, copy=False) for d in dat], dtype=dt)
             else:
-                arr = np.array(dat, dtype=dat.dtype.name)
+                arr = np.array(dat, dtype=dat.dtype.name, copy=False)
+            # elif isinstance(dat, Field):
+            #     arr = dat.data
+            # else:
+            #     arr = np.array(dat, dtype=dat.dtype.name, copy=False)
 
         if self.pre_reshape_transform_func is not None:
             arr = self.pre_reshape_transform_func(arr)
@@ -663,12 +664,8 @@ class Field(object):
     ## emulate a numeric type
 
     def __array__(self, dtype=None):
-        if dtype is None or np.dtype(dtype) == self.dtype:
-            return self.data
-        else:
-            ret = np.array(self.data, dtype=dtype)
-            return ret
-
+        # dtype = None is ok, datatype won't change
+        return np.array(self.data, dtype=dtype, copy=False)
 
     def wrap(self, arr, context=None, typ=None):
         """ arr is the data to wrap... context is exta deep_meta to pass
