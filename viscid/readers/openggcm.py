@@ -41,7 +41,7 @@ class GGCMGrid(grid.Grid):
       - v (velocity as vector, same idea as b)
     """
     mhd_to_gse_on_read = True
-    copy_on_transform = True
+    copy_on_transform = False
     derived_vector_layout = field.LAYOUT_DEFAULT
 
     def transform_mhd_to_gse_field(self, arr):
