@@ -27,10 +27,8 @@ class GGCMGrid(grid.Grid):
     copy_on_transform = True|False, True means array will be contiguous
                         after transform (if one is done), but makes data
                         load 50%-60% slower (default=True)
-    derived_vector_layout = viscid.field.LAYOUT_*, force layout when
-                            preparing a derived vector, like B from a file with
-                            bx, by, bz scalar arrays
-                            (default=LAYOUT_DEFAULT)
+    force_vector_layout = inherited from grid.Grid, enforces layout for
+                          vector fields on load (default=LAYOUT_DEFAULT)
 
     derived quantities accessable by dictionary lookup:
       - T (Temperature, for now, just pressure / density)
@@ -40,37 +38,84 @@ class GGCMGrid(grid.Grid):
            GGCMGrid.derived_vector_layout)
       - v (velocity as vector, same idea as b)
     """
+    _flip_vect_comp_names = "bx, by, b1x, b1y, " \
+                            "vx, vy, rv1x, rv1y, " \
+                            "jx, jy, ex, ey, ex_cc, ey_cc".split(', ')
+    _flip_vect_names = "v, b, j, xj".split(', ')
+    # _flip_vect_comp_names = []
+    # _flip_vect_names = []
+
     mhd_to_gse_on_read = True
     copy_on_transform = False
-    derived_vector_layout = field.LAYOUT_DEFAULT
 
-    def transform_mhd_to_gse_field(self, arr):
+    def mhd2gse_field_scalar(self, fld, arr):  # pylint: disable=W0613
         # Note: field._data will be set to whatever is returned (after
         # being reshaped to the crd shape), so if you return a view,
         # field._data will be a view
         return np.array(arr[:, ::-1, ::-1], copy=self.copy_on_transform)
 
-    def transform_mhd_to_gse_crds(self, arr):
+    def mhd2gse_field_scalar_m1(self, fld, arr):  # pylint: disable=W0613
+        # This is always copied since the -1.0 * arr will need new
+        # memory anyway
+        a = np.array(arr[:, ::-1, ::-1], copy=False)
+
+        if self.copy_on_transform:
+            if _has_numexpr:
+                m1 = np.array([-1.0], dtype=arr.dtype)
+                a = numexpr.evaluate("a * m1")
+            else:
+                a = a * -1
+        else:
+            a *= -1.0
+        return a
+
+    def mhd2gse_field_vector(self, fld, arr):
+        layout = fld.layout
+        if layout == field.LAYOUT_INTERLACED:
+            a = np.array(arr[:, ::-1, ::-1, :], copy=False)
+            factor = np.array([-1.0, -1.0, 1.0],
+                              dtype=arr.dtype).reshape(1, 1, 1, -1)
+        elif layout == field.LAYOUT_FLAT:
+            a = np.array(arr[:, :, ::-1, ::-1], copy=False)
+            factor = np.array([-1.0, -1.0, 1.0],
+                              dtype=arr.dtype).reshape(-1, 1, 1, 1)
+        else:
+            raise RuntimeError("well what am i looking at then...")
+
+        if self.copy_on_transform:
+            if _has_numexpr:
+                a = numexpr.evaluate("arr * factor")
+            else:
+                a = a * factor
+        else:
+            a *= factor
+        return a
+
+    def mhd2gse_crds(self, crds, arr):  # pylint: disable=W0613
         return np.array(-1.0 * arr[::-1], copy=self.copy_on_transform)
 
     def set_crds(self, crds_object):
-        super(GGCMGrid, self).set_crds(crds_object)
         if self.mhd_to_gse_on_read:
             transform_dict = {}
-            transform_dict['y'] = self.transform_mhd_to_gse_crds
-            transform_dict['x'] = self.transform_mhd_to_gse_crds
-            self.crds.transform_funcs = transform_dict
+            transform_dict['y'] = self.mhd2gse_crds
+            transform_dict['x'] = self.mhd2gse_crds
+            crds_object.transform_funcs = transform_dict
+        super(GGCMGrid, self).set_crds(crds_object)
 
-    def add_field(self, fields):
-        if not isinstance(fields, (list, tuple)):
-            fields = [fields]
+    def add_field(self, *fields):
         for f in fields:
             if self.mhd_to_gse_on_read:
-                f.post_reshape_transform_func = self.transform_mhd_to_gse_field
+                # what a pain... vector components also need to be flipped
+                if f.name in self._flip_vect_comp_names:
+                    f.post_reshape_transform_func = self.mhd2gse_field_scalar_m1
+                elif f.name in self._flip_vect_names:
+                    f.post_reshape_transform_func = self.mhd2gse_field_vector
+                else:
+                    f.post_reshape_transform_func = self.mhd2gse_field_scalar
                 f.info["crd_system"] = "gse"
             else:
                 f.info["crd_system"] = "mhd"
-            self.fields[f.name] = f
+        super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):
         pp = self["pp"]
@@ -91,13 +136,13 @@ class GGCMGrid(grid.Grid):
     def _get_b(self):
         bx, by, bz = self['bx'], self['by'], self['bz']
         b = field.scalar_fields_to_vector("B", [bx, by, bz],
-            deep_meta={"force_layout": self.derived_vector_layout})
+            deep_meta={"force_layout": self.force_vector_layout})
         return b
 
     def _get_v(self):
         vx, vy, vz = self['vx'], self['vy'], self['vz']
         v = field.scalar_fields_to_vector("V", [vx, vy, vz],
-            deep_meta={"force_layout": self.derived_vector_layout})
+            deep_meta={"force_layout": self.force_vector_layout})
         return v
 
     def _calc_mag(self, vx, vy, vz):

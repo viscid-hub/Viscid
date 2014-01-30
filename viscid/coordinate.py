@@ -166,9 +166,9 @@ class StructuredCrds(Coordinates):
 
             if self.transform_funcs is not None:
                 if axis in self.transform_funcs:
-                    arr = self.transform_funcs[axis](arr)
+                    arr = self.transform_funcs[axis](self, arr)
                 elif ind in self.transform_funcs:
-                    arr = self.transform_funcs[ind](arr)
+                    arr = self.transform_funcs[ind](self, arr)
 
             flatarr, openarr = self._ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr

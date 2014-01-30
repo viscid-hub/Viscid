@@ -161,7 +161,7 @@ class Field(object):
         self.deep_meta["force_layout"] = self.deep_meta["force_layout"].lower()
 
         if forget_source:
-            self._src_data = self.data
+            self.forget_source()
 
     @property
     def type(self):
@@ -186,6 +186,17 @@ class Field(object):
             else:
                 self._layout = self._detect_layout(self._src_data)
         return self._layout
+
+    @layout.setter
+    def layout(self, new_layout):
+        """ UNTESTED, unload data if layout changes """
+        new_layout = new_layout.lower()
+        if self.is_loaded():
+            current_layout = self.layout
+            if new_layout != current_layout:
+                self.unload()
+        self.deep_meta["force_layout"] = new_layout
+        self._layout = None
 
     @property
     def nr_dims(self):
@@ -317,6 +328,9 @@ class Field(object):
         self._translate_src_data()
         # do some sort of lazy pre-setup _src_data inspection?
 
+    def is_loaded(self):
+        return self._cache is not None
+
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
         self._cache = None
@@ -409,12 +423,12 @@ class Field(object):
             #     arr = np.array(dat, dtype=dat.dtype.name, copy=False)
 
         if self.pre_reshape_transform_func is not None:
-            arr = self.pre_reshape_transform_func(arr)
+            arr = self.pre_reshape_transform_func(self, arr)
 
         arr = self._reshape_ndarray_to_crds(arr)
 
         if self.post_reshape_transform_func is not None:
-            arr = self.post_reshape_transform_func(arr)
+            arr = self.post_reshape_transform_func(self, arr)
 
         return arr
 
@@ -495,6 +509,7 @@ class Field(object):
         if list(slices) == [slice(None)] * len(slices):
             return self
 
+        # coord transforms are not copied on purpose
         crds = coordinate.wrap_crds(self.crds.type, crdlst)
 
         try:
@@ -516,6 +531,9 @@ class Field(object):
             if len(reduced) > 0:
                 fld.deep_meta["reduced"] = reduced
             return fld
+
+    def forget_source(self):
+        self._src_data = self.data
 
     def slice(self, selection):
         """ Slice the field using a string like "y=3i:6i:2,z=0" or a standard
@@ -887,7 +905,7 @@ class VectorField(Field):
         lst = [None] * len(views)
         for i, v in enumerate(views):
             lst[i] = ScalarField("{0}{1}".format(n, self._COMPONENT_NAMES[i]),
-                                 crds, v, center=c, time=t)
+                                 crds, v, center=c, time=t, info=self.info)
         return lst
 
 

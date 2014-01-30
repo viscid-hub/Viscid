@@ -3,12 +3,19 @@
 
 from __future__ import print_function
 
+from . import field
 from .bucket import Bucket
 from .vutil import tree_prefix
 
 class Grid(object):
     """ Grids contain fields... Datasets recurse to grids using __getitem__
-    and get_field in order to find fields """
+    and get_field in order to find fields
+
+    The following attributes are for customizing data reads, intended to
+    be changed by `grid.Grid.flag = value`:
+    force_vector_layout = field.LAYOUT_*, force all vectors to be of a certain
+                          layout when they're created (default: LAYOUT_DEFAULT)
+    """
     topology_info = None
     geometry_info = None
     crds = None
@@ -18,6 +25,11 @@ class Grid(object):
     # time = None
 
     name = None
+
+    # these attributes are intended to control how fields are read
+    # they can be customized by setting the class value, and inherited
+    # by grids that get created in the future
+    force_vector_layout = field.LAYOUT_DEFAULT
 
     def __init__(self, name=None, **kwargs):
         """ all kwargs are added to the grid as attributes """
@@ -38,10 +50,12 @@ class Grid(object):
     def set_crds(self, crds_object):
         self.crds = crds_object
 
-    def add_field(self, fields):
-        if not isinstance(fields, (list, tuple)):
-            fields = [fields]
+    def add_field(self, *fields):
+        """ Note: in XDMF reader, the grid will NOT have crds when adding
+        fields, so any grid crd transforms won't be set """
         for f in fields:
+            if isinstance(f, field.VectorField):
+                f.layout = self.force_vector_layout
             self.fields[f.name] = f
 
     def unload(self):
