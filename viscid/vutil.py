@@ -114,6 +114,15 @@ def timereps(reps, func, *args, **kwargs):
         arr[i] = end - start
     return min(arr), max(arr), sum(arr) / reps
 
+def timeit(f, *args, **kwargs):
+    from timeit import default_timer as time
+    t0 = time()
+    ret = f(*args, **kwargs)
+    t1 = time()
+
+    print("Took {0:.03g} secs.".format(t1 - t0))
+    return ret
+
 ##
 ## EOF
 ##
