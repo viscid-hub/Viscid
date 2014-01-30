@@ -134,18 +134,22 @@ class GGCMGrid(grid.Grid):
         return self['b'].component_fields()[2]
 
     def _get_b(self):
-        bx, by, bz = self['bx'], self['by'], self['bz']
-        b = field.scalar_fields_to_vector("B", [bx, by, bz],
-            deep_meta={"force_layout": self.force_vector_layout})
+        with self['bx'] as bx, self['by'] as by, self['bz'] as bz:
+            b = field.scalar_fields_to_vector("B", [bx, by, bz],
+                            force_layout=self.force_vector_layout,
+                            forget_source=True)
         return b
 
     def _get_v(self):
-        vx, vy, vz = self['vx'], self['vy'], self['vz']
-        v = field.scalar_fields_to_vector("V", [vx, vy, vz],
-            deep_meta={"force_layout": self.force_vector_layout})
+        with self['vx'] as vx, self['vy'] as vy, self['vz'] as vz:
+            v = field.scalar_fields_to_vector("V", [vx, vy, vz],
+                            force_layout=self.force_vector_layout,
+                            forget_source=True)
         return v
 
-    def _calc_mag(self, vx, vy, vz):
+
+    @staticmethod
+    def _calc_mag(vx, vy, vz):
         if _has_numexpr:
             vmag = numexpr.evaluate("sqrt(vx**2 + vy**2 + vz**2)")
             return vx.wrap(vmag, typ="Scalar")
