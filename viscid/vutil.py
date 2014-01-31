@@ -115,7 +115,6 @@ def timereps(reps, func, *args, **kwargs):
     return min(arr), max(arr), sum(arr) / reps
 
 def timeit(f, *args, **kwargs):
-    from timeit import default_timer as time
     t0 = time()
     ret = f(*args, **kwargs)
     t1 = time()

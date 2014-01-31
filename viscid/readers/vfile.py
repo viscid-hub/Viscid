@@ -76,6 +76,7 @@ class VFile(Dataset):
 
     def load(self, fname):
         #self.unload()
+        fname = os.path.expanduser(os.path.expandvars(fname))
         self.fname = os.path.abspath(fname)
         self.dirname = os.path.dirname(self.fname)
         self.load_time = time()

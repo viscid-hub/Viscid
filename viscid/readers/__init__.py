@@ -51,6 +51,11 @@ def load_files(fnames, **kwargs):
     """
     return __filebucket__.load_files(fnames, **kwargs)
 
+def get_file(handle):
+    """ return a file that's already been loaded by either
+    number (as in nth file loaded), of file name """
+    return __filebucket__[handle]
+
 def save_grid(fname, grd, **kwargs):
     """ save a grid, filetype is inferred from fname """
     ftype = VFile.detect_type(fname)
