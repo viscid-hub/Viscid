@@ -45,7 +45,7 @@ class GGCMGrid(grid.Grid):
     # _flip_vect_comp_names = []
     # _flip_vect_names = []
 
-    mhd_to_gse_on_read = True
+    mhd_to_gse_on_read = False
     copy_on_transform = False
 
     def mhd2gse_field_scalar(self, fld, arr):  # pylint: disable=W0613

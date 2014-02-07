@@ -6,15 +6,12 @@ Features:
   - Support for custom grids (this allows for custom readers for GGCM / PSC / etc)
   - Grids can supply derived fields by defining _get_varname
   - Grids can supply generic transformations for fields / crds on load
-  - GGCM reader, can translate MHD coordinate system to GSE
+  - GGCM reader, can translate MHD coordinate system to GSE using `viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = True`
   - PSC reader can calculate psi (flux function)
 
 Refactors:
   - RectilinearCrds -> NonuniformCartesianCrds
   - "Rectilinear" -> "nonuniform_cartesian"
-
-Backward Incompatible Changes:
-  - GGCM files read directly into GSE by default. Use `viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = False` to keep the files in MHD coordinates.
 
 Other:
   - Precedence for auto-detecting classes is given to those more recently declared
