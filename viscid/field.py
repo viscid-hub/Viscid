@@ -908,6 +908,17 @@ class VectorField(Field):
                                  crds, v, center=c, time=t, info=self.info)
         return lst
 
+    def __getitem__(self, item):
+        if item in self._COMPONENT_NAMES:
+            i = self._COMPONENT_NAMES.index(item)
+            if self.layout == LAYOUT_FLAT:
+                dat = self.data[i, ...]
+            else:
+                dat = self.data[..., i]
+            return self.wrap(dat, typ="Scalar",
+                             context={"name": self.name + item})
+        else:
+            return super(VectorField, self).__getitem__(item)
 
 class MatrixField(Field):
     _TYPE = "matrix"
