@@ -104,6 +104,9 @@ def interp_trilin(fld, seeds):
 
     dtype = fld.dtype
 
+    if isinstance(seeds, list):
+        seeds = seed.Point(seeds)
+
     if fld.istype("Vector"):
         if not fld.layout == field.LAYOUT_INTERLACED:
             raise ValueError("Trilin interp only written for interlaced data.")
