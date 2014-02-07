@@ -294,6 +294,16 @@ class StructuredCrds(Coordinates):
             return sel
         elif isinstance(selection, (tuple, list)):
             ret = {}
+            try:
+                i = selection.index(Ellipsis)
+                sln = [slice(None)] * (self.nr_dims - (len(selection) - 1))
+                selection = selection[:i] + sln + selection[i + 1:]
+                for i in range(selection):
+                    if selection[i] == Ellipsis:
+                        selection[i] = slice(None)
+            except ValueError:
+                pass
+
             for sel, axis in zip(selection, self._axes):
                 ret[axis] = sel
             return ret
