@@ -16,14 +16,19 @@ from viscid.calculator import cycalc
 np.seterr(divide='ignore')
 
 def find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2):
-    """
+    """ This function just finds roots of a quadratic equation
+    that solves the intersection of f1 = f2 = 0.
     f1(x, y) = a1 + b1 * x + c1 * y + d1 * x * y
     f2(x, y) = a1 + b1 * x + c1 * y + d1 * x * y
     where {x, y} are in the range [0.0, 1.0]
 
-    returns ndarray(x), ndarray(y) such that
+    Returns ndarray(x), ndarray(y) such that
     f1(xi, yi) = f2(xi, yi) = 0 and
-    0 <= xi <= 1.0 && 0 <= yi <= 1.0
+    0 <= xi <= 1.0 && 0 < yi < 1.0
+
+    Note: the way this prunes edges is different for x and y,
+    this is to keep from double counting edges of a cell
+    when the faces are visited xy yz zx
     """
     # F(x) = a * x**2 + b * x + c = 0 has the same roots xi
     # as f1(x, ?) = f2(x, ?) = 0, so solve that, then
@@ -59,7 +64,7 @@ def find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2):
 
     # remove roots that are outside the box
     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &
-            (roots_y >= 0.0) & (roots_y <= 1.0))
+            (roots_y > 0.0) & (roots_y < 1.0))
     roots_x = roots_x[keep]
     roots_y = roots_y[keep]
 
@@ -74,9 +79,9 @@ def main():
     z = np.linspace(zl, zh, nz)
     crds = coordinate.wrap_crds("nonuniform_cartesian",
                                 [('z', z), ('y', y), ('x', x)])
-    fld1 = field.empty("Scalar", "f1", crds, center="Node")
-    fld2 = field.empty("Scalar", "f2", crds, center="Node")
-    fld3 = field.empty("Scalar", "f3", crds, center="Node")
+    bx = field.empty("Scalar", "f1", crds, center="Node")
+    by = field.empty("Scalar", "f2", crds, center="Node")
+    bz = field.empty("Scalar", "f3", crds, center="Node")
     fld = field.empty("Vector", "f", crds, 3, center="Node",
                       layout="interlaced")
     Z, Y, X = crds.get_crds(shaped=True)
@@ -85,22 +90,22 @@ def main():
     x02, y02, z02 = 0.5, 0.5, 0.5
     x03, y03, z03 = 0.5, 0.5, 0.5
 
-    fld1[:] = 0.0 + 1.0 * (X - x01) + 1.0 * (Y - y01) + 1.0 * (Z - z01) + \
+    bx[:] = 0.0 + 1.0 * (X - x01) + 1.0 * (Y - y01) + 1.0 * (Z - z01) + \
               1.0 * (X - x01) * (Y - y01) + 1.0 * (Y - y01) * (Z - z01) + \
               1.0 * (X - x01) * (Y - y01) * (Z - z01)
-    fld2[:] = 0.0 + 1.0 * (X - x02) + 1.0 * (Y - y02) + 1.0 * (Z - z02) + \
+    by[:] = 0.0 + 1.0 * (X - x02) - 1.0 * (Y - y02) + 1.0 * (Z - z02) + \
               1.0 * (X - x02) * (Y - y02) + 1.0 * (Y - y02) * (Z - z02) - \
               1.0 * (X - x02) * (Y - y02) * (Z - z02)
-    fld3[:] = 0.0 + 1.0 * (X - x03) + 1.0 * (Y - y03) + 1.0 * (Z - z03) + \
-              1.0 * (X - x03) * (Y - y03) - 1.0 * (Y - y03) * (Z - z03) + \
+    bz[:] = 0.0 + 1.0 * (X - x03) + 1.0 * (Y - y03) - 1.0 * (Z - z03) + \
+              1.0 * (X - x03) * (Y - y03) + 1.0 * (Y - y03) * (Z - z03) + \
               1.0 * (X - x03) * (Y - y03) * (Z - z03)
-    fld[..., 0] = fld1
-    fld[..., 1] = fld2
-    fld[..., 2] = fld3
+    fld[..., 0] = bx
+    fld[..., 1] = by
+    fld[..., 2] = bz
 
-    f1_src = mvi.field_to_source(fld1)
-    f2_src = mvi.field_to_source(fld2)
-    f3_src = mvi.field_to_source(fld3)
+    f1_src = mvi.field_to_source(bx)
+    f2_src = mvi.field_to_source(by)
+    f3_src = mvi.field_to_source(bz)
     e = mlab.get_engine()
     e.add_source(f1_src)
     e.add_source(f2_src)
@@ -117,46 +122,50 @@ def main():
     print("f(0.5, 0.5, 0.5):", nullpt)
 
     ax1 = plt.subplot2grid((4, 3), (0, 0))
+    all_roots = []
     positive_roots = []
+    ix = iy = iz = 0
+
     for di, d in enumerate([0, -1]):
         #### XY face
-        a1 = fld1[d, 0, 0]
-        b1 = fld1[d, 0, -1] - fld1[d, 0, 0]
-        c1 = fld1[d, -1, 0] - fld1[d, 0, 0]
-        d1 = fld1[d, -1, -1] - fld1[d, 0, -1] - fld1[d, -1, 0] + fld1[d, 0, 0]
+        a1 = bx[iz + d, iy, ix]
+        b1 = bx[iz + d, iy, ix - 1] - a1
+        c1 = bx[iz + d, iy - 1, ix] - a1
+        d1 = bx[iz + d, iy - 1, ix - 1] - c1 - b1 - a1
 
-        a2 = fld2[d, 0, 0]
-        b2 = fld2[d, 0, -1] - fld2[d, 0, 0]
-        c2 = fld2[d, -1, 0] - fld2[d, 0, 0]
-        d2 = fld2[d, -1, -1] - fld2[d, 0, -1] - fld2[d, -1, 0] + fld2[d, 0, 0]
+        a2 = by[iz + d, iy, ix]
+        b2 = by[iz + d, iy, ix - 1] - a2
+        c2 = by[iz + d, iy - 1, ix] - a2
+        d2 = by[iz + d, iy - 1, ix - 1] - c2 - b2 - a2
 
-        a3 = fld3[d, 0, 0]
-        b3 = fld3[d, 0, -1] - fld3[d, 0, 0]
-        c3 = fld3[d, -1, 0] - fld3[d, 0, 0]
-        d3 = fld3[d, -1, -1] - fld3[d, 0, -1] - fld3[d, -1, 0] + fld3[d, 0, 0]
+        a3 = bz[iz + d, iy, ix]
+        b3 = bz[iz + d, iy, ix - 1] - a3
+        c3 = bz[iz + d, iy - 1, ix] - a3
+        d3 = bz[iz + d, iy - 1, ix - 1] - c3 - b3 - a3
 
-        roots_x, roots_y = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
+        roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
 
-        for xrt, yrt in zip(roots_x, roots_y):
-            print("=")
-            print("fx", a1 + b1 * xrt + c1 * yrt + d1 * xrt * yrt)
-            print("fy", a2 + b2 * xrt + c2 * yrt + d2 * xrt * yrt)
-            print("=")
+        # for rt1, rt2 in zip(roots1, roots2):
+        #     print("=")
+        #     print("fx", a1 + b1 * rt1 + c1 * rt2 + d1 * rt1 * rt2)
+        #     print("fy", a2 + b2 * rt1 + c2 * rt2 + d2 * rt1 * rt2)
+        #     print("=")
 
         # find f3 at the root points
-        f3 = np.empty_like(roots_x)
+        f3 = np.empty_like(roots1)
         markers = [None] * len(f3)
-        for i, rtx, rty in zip(count(), roots_x, roots_y):
-            f3[i] = a3 + b3 * rtx + c3 * rty + d3 * rtx * rty
+        for i, rt1, rt2 in zip(count(), roots1, roots2):
+            f3[i] = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
+            all_roots.append((rt1, rt2, d))  # switch order here
             if f3[i] >= 0.0:
                 markers[i] = 'k^'
-                positive_roots.append((rtx, rty, d))
+                positive_roots.append((rt1, rt2, d))  # switch order here
             else:
-                markers[i] = 'g^'
+                markers[i] = 'w^'
 
         # rescale the roots to the original domain
-        roots_x = (xh - xl) * roots_x + xl
-        roots_y = (yh - yl) * roots_y + yl
+        roots1 = (xh - xl) * roots1 + xl
+        roots2 = (yh - yl) * roots2 + yl
 
         xp = np.linspace(0.0, 1.0, nx)
 
@@ -166,7 +175,7 @@ def main():
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, yl, yh))
         y1 = - (a1 + b1 * xp) / (c1 + d1 * xp)
         plt.plot(x, (yh - yl) * y1 + yl, 'k')
-        for i, xrt, yrt in zip(count(), roots_x, roots_y):
+        for i, xrt, yrt in zip(count(), roots1, roots2):
             plt.plot(xrt, yrt, markers[i])
 
         # plt.subplot(122)
@@ -175,130 +184,135 @@ def main():
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, yl, yh))
         y2 = - (a2 + b2 * xp) / (c2 + d2 * xp)
         plt.plot(x, (yh - yl) * y2 + yl, 'k')
-        for xrt, yrt in zip(roots_x, roots_y):
-            plt.plot(xrt, yrt, 'k^')
-
-        #### XZ face
-        a1 = fld1[0, d, 0]
-        b1 = fld1[0, d, -1] - fld1[0, d, 0]
-        c1 = fld1[-1, d, 0] - fld1[0, d, 0]
-        d1 = fld1[-1, d, -1] - fld1[0, d, -1] - fld1[-1, d, 0] + fld1[0, d, 0]
-
-        a2 = fld2[0, d, 0]
-        b2 = fld2[0, d, -1] - fld2[0, d, 0]
-        c2 = fld2[-1, d, 0] - fld2[0, d, 0]
-        d2 = fld2[-1, d, -1] - fld2[0, d, -1] - fld2[-1, d, 0] + fld2[0, d, 0]
-
-        a3 = fld3[0, d, 0]
-        b3 = fld3[0, d, -1] - fld3[0, d, 0]
-        c3 = fld3[-1, d, 0] - fld3[0, d, 0]
-        d3 = fld3[-1, d, -1] - fld3[0, d, -1] - fld3[-1, d, 0] + fld3[0, d, 0]
-
-        # roots_x, roots_z = find_roots_face(a1, b1, c1, d1, a3, b3, c3, d3)
-        roots_x, roots_z = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
-
-        for xrt, zrt in zip(roots_x, roots_z):
-            print("=")
-            print("fx", a1 + b1 * xrt + c1 * zrt + d1 * xrt * zrt)
-            print("fy", a2 + b2 * xrt + c2 * zrt + d2 * xrt * zrt)
-            print("=")
-
-        # find f3 at the root points
-        f3 = np.empty_like(roots_x)
-        markers = [None] * len(f3)
-        for i, rtx, rtz in zip(count(), roots_x, roots_z):
-            f3[i] = a3 + b3 * rtx + c3 * rtz + d3 * rtx * rtz
-            if f3[i] >= 0.0:
-                markers[i] = 'k^'
-                positive_roots.append((rtx, rtz, d))
-            else:
-                markers[i] = 'g^'
-
-        # rescale the roots to the original domain
-        roots_x = (xh - xl) * roots_x + xl
-        roots_z = (zh - zl) * roots_z + zl
-
-        xp = np.linspace(0.0, 1.0, nx)
-
-        # plt.subplot(121)
-        plt.subplot2grid((4, 3), (0 + 2 * di, 1), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['x'], "y={0}i".format(d),
-                 plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
-        z1 = - (a1 + b1 * xp) / (c1 + d1 * xp)
-        plt.plot(x, (zh - zl) * z1 + zl, 'k')
-        for i, xrt, zrt in zip(count(), roots_x, roots_z):
-            plt.plot(xrt, zrt, markers[i])
-
-        # plt.subplot(122)
-        plt.subplot2grid((4, 3), (1 + 2 * di, 1), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['y'], "y={0}i".format(d),
-                 plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
-        z2 = - (a2 + b2 * xp) / (c2 + d2 * xp)
-        plt.plot(x, (zh - zl) * z2 + zl, 'k')
-        for i, xrt, zrt in zip(count(), roots_x, roots_z):
-            plt.plot(xrt, zrt, markers[i])
+        for xrt, yrt in zip(roots1, roots2):
+            plt.plot(xrt, yrt, markers[i])
 
         #### YZ face
-        a1 = fld1[0, 0, d]
-        b1 = fld1[0, -1, d] - fld1[0, 0, d]
-        c1 = fld1[-1, 0, d] - fld1[0, 0, d]
-        d1 = fld1[-1, -1, d] - fld1[0, -1, d] - fld1[-1, 0, d] + fld1[0, 0, d]
+        a1 = bx[iz, iy, ix + d]
+        b1 = bx[iz, iy - 1, ix + d] - a1
+        c1 = bx[iz - 1, iy, ix + d] - a1
+        d1 = bx[iz - 1, iy - 1, ix + d] - c1 - b1 - a1
 
-        a2 = fld2[0, 0, d]
-        b2 = fld2[0, -1, d] - fld2[0, 0, d]
-        c2 = fld2[-1, 0, d] - fld2[0, 0, d]
-        d2 = fld2[-1, -1, d] - fld2[0, -1, d] - fld2[-1, 0, d] + fld2[0, 0, d]
+        a2 = by[iz, iy, ix + d]
+        b2 = by[iz, iy - 1, ix + d] - a2
+        c2 = by[iz - 1, iy, ix + d] - a2
+        d2 = by[iz - 1, iy - 1, ix + d] - c2 - b2 - a2
 
-        a3 = fld3[0, 0, d]
-        b3 = fld3[0, -1, d] - fld3[0, 0, d]
-        c3 = fld3[-1, 0, d] - fld3[0, 0, d]
-        d3 = fld3[-1, -1, d] - fld3[0, -1, d] - fld3[-1, 0, d] + fld3[0, 0, d]
+        a3 = bz[iz, iy, ix + d]
+        b3 = bz[iz, iy - 1, ix + d] - a3
+        c3 = bz[iz - 1, iy, ix + d] - a3
+        d3 = bz[iz - 1, iy - 1, ix + d] - c3 - b3 - a3
 
-        # roots_y, roots_z = find_roots_face(a2, b2, c2, d2, a3, b3, c3, d3)
-        roots_y, roots_z = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
+        roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
 
-        for yrt, zrt in zip(roots_y, roots_z):
-            print("=")
-            print("fx", a1 + b1 * yrt + c1 * zrt + d1 * yrt * zrt)
-            print("fy", a2 + b2 * yrt + c2 * zrt + d2 * yrt * zrt)
-            print("=")
+        # for rt1, rt2 in zip(roots1, roots2):
+        #     print("=")
+        #     print("fx", a1 + b1 * rt1 + c1 * rt2 + d1 * rt1 * rt2)
+        #     print("fy", a2 + b2 * rt1 + c2 * rt2 + d2 * rt1 * rt2)
+        #     print("=")
 
-        # find f1 at the root points
-        f3 = np.empty_like(roots_y)
+        # find f3 at the root points
+        f3 = np.empty_like(roots1)
         markers = [None] * len(f3)
-        for i, rty, rtz in zip(count(), roots_y, roots_z):
-            f3[i] = a3 + b3 * rty + c3 * rtz + d3 * rty * rtz
+        for i, rt1, rt2 in zip(count(), roots1, roots2):
+            f3[i] = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
+            all_roots.append((d, rt1, rt2))  # switch order here
             if f3[i] >= 0.0:
                 markers[i] = 'k^'
-                positive_roots.append((rty, rtz, d))
+                positive_roots.append((d, rt1, rt2))  # switch order here
             else:
-                markers[i] = 'g^'
+                markers[i] = 'w^'
 
         # rescale the roots to the original domain
-        roots_y = (yh - yl) * roots_y + yl
-        roots_z = (zh - zl) * roots_z + zl
+        roots1 = (yh - yl) * roots1 + yl
+        roots2 = (zh - zl) * roots2 + zl
 
         yp = np.linspace(0.0, 1.0, ny)
 
         # plt.subplot(121)
-        plt.subplot2grid((4, 3), (0 + 2 * di, 2), sharex=ax1, sharey=ax1)
+        plt.subplot2grid((4, 3), (0 + 2 * di, 1), sharex=ax1, sharey=ax1)
         mpl.plot(fld['x'], "x={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(yl, yh, zl, zh))
         z1 = - (a1 + b1 * yp) / (c1 + d1 * yp)
         plt.plot(y, (zh - zl) * z1 + zl, 'k')
-        for i, yrt, zrt in zip(count(), roots_y, roots_z):
+        for i, yrt, zrt in zip(count(), roots1, roots2):
             plt.plot(yrt, zrt, markers[i])
 
         # plt.subplot(122)
-        plt.subplot2grid((4, 3), (1 + 2 * di, 2), sharex=ax1, sharey=ax1)
+        plt.subplot2grid((4, 3), (1 + 2 * di, 1), sharex=ax1, sharey=ax1)
         mpl.plot(fld['y'], "x={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(yl, yh, zl, zh))
-        z2 = - (a2 + b2 * yp) / (c2 + d2 * yp)
-        plt.plot(y, (zh - zl) * z2 + zl, 'k')
-        for i, yrt, zrt in zip(count(), roots_y, roots_z):
+        z1 = - (a2 + b2 * yp) / (c2 + d2 * yp)
+        plt.plot(y, (zh - zl) * z1 + zl, 'k')
+        for i, yrt, zrt in zip(count(), roots1, roots2):
             plt.plot(yrt, zrt, markers[i])
 
-    print("Null Point?", len(positive_roots) % 2 == 1)
+        #### ZX face
+        a1 = bx[iz, iy + d, ix]
+        b1 = bx[iz - 1, iy + d, ix] - a1
+        c1 = bx[iz, iy + d, ix - 1] - a1
+        d1 = bx[iz - 1, iy + d, ix - 1] - c1 - b1 - a1
+
+        a2 = by[iz, iy + d, ix]
+        b2 = by[iz - 1, iy + d, ix] - a2
+        c2 = by[iz, iy + d, ix - 1] - a2
+        d2 = by[iz - 1, iy + d, ix - 1] - c2 - b2 - a2
+
+        a3 = bz[iz, iy + d, ix]
+        b3 = bz[iz - 1, iy + d, ix] - a3
+        c3 = bz[iz, iy + d, ix - 1] - a3
+        d3 = bz[iz - 1, iy + d, ix - 1] - c3 - b3 - a3
+
+        roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
+
+        # for rt1, rt2 in zip(roots1, roots2):
+        #     print("=")
+        #     print("fx", a1 + b1 * rt1 + c1 * rt2 + d1 * rt1 * rt2)
+        #     print("fy", a2 + b2 * rt1 + c2 * rt2 + d2 * rt1 * rt2)
+        #     print("=")
+
+        # find f3 at the root points
+        f3 = np.empty_like(roots1)
+        markers = [None] * len(f3)
+        for i, rt1, rt2 in zip(count(), roots1, roots2):
+            f3[i] = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
+            all_roots.append((rt2, d, rt1))  # switch order here
+            if f3[i] >= 0.0:
+                markers[i] = 'k^'
+                positive_roots.append((rt2, d, rt1))  # switch order here
+            else:
+                markers[i] = 'w^'
+
+        # rescale the roots to the original domain
+        roots1 = (zh - zl) * roots1 + zl
+        roots2 = (xh - xl) * roots2 + xl
+
+        zp = np.linspace(0.0, 1.0, nz)
+
+        # plt.subplot(121)
+        plt.subplot2grid((4, 3), (0 + 2 * di, 2), sharex=ax1, sharey=ax1)
+        mpl.plot(fld['x'], "y={0}i".format(d),
+                 plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
+        x1 = - (a1 + b1 * zp) / (c1 + d1 * zp)
+        plt.plot(z, (xh - xl) * x1 + xl, 'k')
+        for i, zrt, xrt in zip(count(), roots1, roots2):
+            plt.plot(xrt, zrt, markers[i])
+
+        # plt.subplot(121)
+        plt.subplot2grid((4, 3), (1 + 2 * di, 2), sharex=ax1, sharey=ax1)
+        mpl.plot(fld['y'], "y={0}i".format(d),
+                 plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
+        x1 = - (a2 + b2 * zp) / (c2 + d2 * zp)
+        plt.plot(z, (xh - xl) * x1 + xl, 'k')
+        for i, zrt, xrt in zip(count(), roots1, roots2):
+            plt.plot(xrt, zrt, markers[i])
+
+    print("all:", len(all_roots), "positive:", len(positive_roots))
+    if len(all_roots) % 2 == 1:
+        print("something is fishy, there are an odd number of root points "
+              "on the surface of your cube, there is probably a degenerate "
+              "line or surface of nulls")
+    print("Null Point?", (len(positive_roots) % 2 == 1))
 
     plt.show()
 

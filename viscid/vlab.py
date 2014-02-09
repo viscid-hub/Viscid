@@ -33,7 +33,7 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False):
 
     one = np.array([1.0], dtype=dtype) #pylint: disable=W0612
     three = np.array([3.0], dtype=dtype) #pylint: disable=W0612
-    if not m:
+    if m is None:
         m = [0.0, 0.0, -1.0]
     m = np.array(m, dtype=dtype)
     mx, my, mz = m #pylint: disable=W0612
