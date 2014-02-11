@@ -54,6 +54,34 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False):
     #                             center="Cell", forget_source=True)
     return fld  # , fld_rsq
 
+def get_trilinear_field():
+    xl, xh, nx = -1.0, 1.0, 41
+    yl, yh, ny = -1.5, 1.5, 41
+    zl, zh, nz = -2.0, 2.0, 41
+    x = np.linspace(xl, xh, nx)
+    y = np.linspace(yl, yh, ny)
+    z = np.linspace(zl, zh, nz)
+    crds = coordinate.wrap_crds("nonuniform_cartesian",
+                                [('z', z), ('y', y), ('x', x)])
+    b = field.empty("Vector", "f", crds, 3, center="Cell",
+                      layout="interlaced")
+    Z, Y, X = b.get_crds(shaped=True)
+
+    x01, y01, z01 = 0.5, 0.5, 0.5
+    x02, y02, z02 = 0.5, 0.5, 0.5
+    x03, y03, z03 = 0.5, 0.5, 0.5
+
+    b['x'][:] = 0.0 + 1.0 * (X - x01) + 1.0 * (Y - y01) + 1.0 * (Z - z01) + \
+                1.0 * (X - x01) * (Y - y01) + 1.0 * (Y - y01) * (Z - z01) + \
+                1.0 * (X - x01) * (Y - y01) * (Z - z01)
+    b['y'][:] = 0.0 + 1.0 * (X - x02) - 1.0 * (Y - y02) + 1.0 * (Z - z02) + \
+                1.0 * (X - x02) * (Y - y02) + 1.0 * (Y - y02) * (Z - z02) - \
+                1.0 * (X - x02) * (Y - y02) * (Z - z02)
+    b['z'][:] = 0.0 + 1.0 * (X - x03) + 1.0 * (Y - y03) - 1.0 * (Z - z03) + \
+                1.0 * (X - x03) * (Y - y03) + 1.0 * (Y - y03) * (Z - z03) + \
+                1.0 * (X - x03) * (Y - y03) * (Z - z03)
+    return b
+
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                   show=False, kwopts=None):
     import matplotlib.pyplot as plt
