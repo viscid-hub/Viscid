@@ -130,7 +130,8 @@ def main():
     # bx, by, bz = b3d.component_fields() #pylint: disable=W0612
 
     if args.file is None:
-        args.file = "/Users/kmaynard/dev/work/cen4000/cen4000.3d.xdmf"
+        # args.file = "/Users/kmaynard/dev/work/cen4000/cen4000.3d.xdmf"
+        args.file = "/Users/kmaynard/dev/work/tmp/cen2000.3d.004045.xdmf"
     f3d = readers.load_file(args.file)
 
     bx = f3d["bx"]
