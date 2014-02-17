@@ -274,29 +274,150 @@ class Sphere(SeedGen):
 
         return np.array([z, y, x])
 
+    def _local_zyx(self, theta, phi):
+        r = self.params["r"]
+        phi = np.asarray(phi).reshape(-1)
+        theta = np.asarray(theta).reshape(-1)
+        P, T = np.ix_(phi, theta)
+
+        a = np.empty((3, len(theta) * len(phi)), dtype=self.dtype)
+        # 2 == x, 1 == y, 0 == z
+        a[2, :] = (r * np.sin(T) * np.cos(P)).reshape(-1)
+        a[1, :] = (r * np.sin(T) * np.sin(P)).reshape(-1)
+        a[0, :] = (r * np.cos(T) + 0.0 * P).reshape(-1)
+        return a
+
+    def spherical_to_zyx(self, theta, phi):
+        p0 = self.params["p0"]
+        return p0.reshape((-1, 1)) + self._local_zyx(theta, phi)
+
     def as_coordinates(self):
-        raise NotImplementedError("not yet implemented")
+        restheta = self.params["restheta"]
+        resphi = self.params["resphi"]
+        theta = np.linspace(0, np.pi, restheta + 1,
+                            endpoint=True).astype(self.dtype)
+        theta = 0.5 * (theta[1:] + theta[:-1])
+        phi = np.linspace(0, 2.0 * np.pi, resphi,
+                          endpoint=False).astype(self.dtype)
+        crds = coordinate.wrap_crds("nonuniform_cartesian",
+                                    (('y', theta), ('x', phi)))
+        return crds
+
+class SphericalCap(Sphere):
+    _euler_rot = None  # rotation matrix for 2 euler rotations
+
+    def __init__(self, p0, p1, angle,
+                 restheta=20, resphi=20,
+                 r=None, cache=False):
+        """ angle is the opening angle of the cone
+        if r is given, p1 is moved to a distance r away from p0 """
+        p0 = np.array(p0)
+        p1 = np.array(p1)
+        if r is None:
+            r = np.sqrt(np.sum((p1 - p0)**2))
+            print("calculated r:", r)
+            # d = np.sqrt(np.sum((p1 - p0)**2))
+            # p1 = p0 + (r / d) * (p1 - p0)
+        super(SphericalCap, self).__init__(p0, r, restheta, resphi, cache=cache)
+        self.params["p1"] = p1
+        self.params["angle"] = angle * (np.pi / 180.0)
+
+    def nr_points(self, **kwargs):
+        return self.params["restheta"] * self.params["resphi"]
+
+    @property
+    def euler_rot(self):
+        if self._euler_rot is None:
+            p0 = self.params["p0"]
+            p1 = self.params["p1"]
+            script_r = p1 - p0
+            script_rmag = np.sqrt(np.sum(script_r**2))
+
+            theta0 = np.arccos(script_r[0] / script_rmag)
+            phi0 = np.arctan2(script_r[1], script_r[2])
+
+            # first 2 euler angle rotations, the 3rd one would be
+            # the rotation around the cone's axis, so no need for that one
+            # the convention used here is y-z-x, as in theta0 around y,
+            # phi0 around z, and psi0 around x, but without the last one
+            sint0 = np.sin(theta0)
+            cost0 = np.cos(theta0)
+            sinp0 = np.sin(phi0)
+            cosp0 = np.cos(phi0)
+            mat = np.array([[cost0,            0.0, -sint0],          # pylint: disable=C0326
+                            [sinp0 * sint0,  cosp0,  sinp0 * cost0],  # pylint: disable=C0326
+                            [cosp0 * sint0, -sinp0,  cosp0 * cost0],  # pylint: disable=C0326
+                           ], dtype=self.dtype)
+            self._euler_rot = mat
+        return self._euler_rot
+
+    def spherical_to_zyx(self, theta, phi):
+        p0 = self.params["p0"]
+        a = self._local_zyx(theta, phi)
+        return p0.reshape((-1, 1)) + np.dot(self.euler_rot, a)
+
+    def genr_points(self):
+        angle = self.params["angle"]
+        restheta = self.params["restheta"]
+        resphi = self.params["resphi"]
+
+        theta = np.linspace(angle, 0.0, restheta, endpoint=False)
+        theta = np.array(theta[::-1], dtype=self.dtype)
+        phi = np.linspace(0, 2.0 * np.pi, resphi,
+                          endpoint=False).astype(self.dtype)
+        return self.spherical_to_zyx(theta, phi)
+
+    def as_coordinates(self):
+        angle = self.params["angle"]
+        restheta = self.params["restheta"]
+        resphi = self.params["resphi"]
+        theta = np.linspace(angle, 0.0, restheta, endpoint=False)
+        theta = np.array(theta[::-1], dtype=self.dtype)
+        phi = np.linspace(0, 2.0 * np.pi, resphi,
+                          endpoint=False).astype(self.dtype)
+        crds = coordinate.wrap_crds("nonuniform_cartesian",
+                                    (('y', theta), ('x', phi)))
+        return crds
 
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
+    # import matplotlib.pyplot as plt
+    # from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
+    # ax = plt.gca(projection='3d')
+    # lin = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
+    # ax.plot(lin[:, 2], lin[:, 1], lin[:, 0], 'g.')
+    # s = Sphere((0.0, 0.0, 0.0), 2.0, 10, 20).points()
+    # ax.plot(s[:, 2], s[:, 1], s[:, 0], 'b')
+    # p = Plane((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0),
+    #                  2.0, 3.0, 10, 20).points()
+    # ax.plot(p[:, 2], p[:, 1], p[:, 0], 'r')
+    # plt.xlabel("X")
+    # plt.ylabel("Y")
+    # plt.show()
 
-    ax = plt.gca(projection='3d')
+    from timeit import default_timer as time
+    from mayavi import mlab
+    from viscid import vlab
+    from viscid.calculator import calc
+    from viscid.calculator import cycalc
 
-    lin = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
-    ax.plot(lin[:, 2], lin[:, 1], lin[:, 0], 'g.')
-
-    s = Sphere((0.0, 0.0, 0.0), 2.0, 10, 20).points()
-    ax.plot(s[:, 2], s[:, 1], s[:, 0], 'b')
-
-    p = Plane((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0),
-                     2.0, 3.0, 10, 20).points()
-    ax.plot(p[:, 2], p[:, 1], p[:, 0], 'r')
-
-    plt.xlabel("X")
-    plt.ylabel("Y")
-
-    plt.show()
+    B = vlab.get_dipole(m=[0.0, 0.0, -1.0])
+    bmag = calc.magnitude(B)
+    t0 = time()
+    _p0 = [1.0, 1.0, 1.0]
+    _p1 = [0.0, 0.0, 0.0]
+    cap = SphericalCap(_p0, _p1, 120.0, r=1.0, cache=True)
+    interp_vals = cycalc.interp_trilin(bmag, cap)
+    t1 = time()
+    # logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
+    pts = cap.points()
+    mlab.points3d(_p0[2], _p0[1], _p0[0],
+                  scale_factor=0.07, color=(0.0, 0.0, 0.0))
+    mlab.points3d(_p1[2], _p1[1], _p1[0],
+                  scale_factor=0.07, color=(1.0, 1.0, 1.0))
+    mlab.points3d(pts[2], pts[1], pts[0], interp_vals,
+                  scale_factor=0.07, scale_mode="none")
+    mlab.axes(nb_labels=5)
+    mlab.show()
 
 ##
 ## EOF
