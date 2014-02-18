@@ -129,16 +129,24 @@ def plot_lines(lines, topology=None, **kwargs):
             kwargs["color"] = color_from_topology(topology[i])
         mlab.plot3d(line[2], line[1], line[0], **kwargs)
 
-def mlab_earth(pipeline, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15):
+def mlab_earth(pipeline, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
+               crd_system="mhd"):
+    crd_system = crd_system.lower()
+    if crd_system == "mhd":
+        theta_dusk, theta_dawn = 270, 90
+    elif crd_system == "gse":
+        theta_dusk, theta_dawn = 90, 270
+
     night = BuiltinSurface(source='sphere', name='night')
-    night.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=270,
-                          end_theta=90, theta_resolution=res,
+    night.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=theta_dusk,
+                          end_theta=theta_dawn, theta_resolution=res,
                           phi_resolution=res)
     pipeline.surface(night, color=nightcol)
 
     day = BuiltinSurface(source='sphere', name='day')
-    day.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=90,
-                        end_theta=270, theta_resolution=res, phi_resolution=res)
+    day.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=theta_dawn,
+                        end_theta=theta_dusk, theta_resolution=res,
+                        phi_resolution=res)
     pipeline.surface(day, color=daycol)
 
 def show(stop=True):

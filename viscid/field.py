@@ -74,7 +74,7 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
     # shape = fldlist[0].data.shape
 
     vfield = VectorField(name, crds, fldlist, center=center, time=time,
-                         **kwargs)
+                         info=fldlist[0].info, **kwargs)
     return vfield
 
 def field_type(typ):
