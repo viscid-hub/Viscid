@@ -101,6 +101,10 @@ def wrap_field(typ, name, crds, data, **kwargs):
     else:
         raise NotImplementedError("can not decipher field")
 
+def rewrap_field(fld):
+    return type(fld)(fld.name, fld.crds, fld.data, center=fld.center,
+                     _copy=False)
+
 class Field(object):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
