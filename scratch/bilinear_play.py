@@ -79,10 +79,10 @@ def main():
     z = np.linspace(zl, zh, nz)
     crds = coordinate.wrap_crds("nonuniform_cartesian",
                                 [('z', z), ('y', y), ('x', x)])
-    bx = field.empty("Scalar", "f1", crds, center="Node")
-    by = field.empty("Scalar", "f2", crds, center="Node")
-    bz = field.empty("Scalar", "f3", crds, center="Node")
-    fld = field.empty("Vector", "f", crds, 3, center="Node",
+    bx = field.empty("Scalar", "$B_x$", crds, center="Node")
+    by = field.empty("Scalar", "$B_y$", crds, center="Node")
+    bz = field.empty("Scalar", "$B_z$", crds, center="Node")
+    fld = field.empty("Vector", "B", crds, 3, center="Node",
                       layout="interlaced")
     Z, Y, X = crds.get_crds(shaped=True)
 
@@ -103,6 +103,9 @@ def main():
     fld[..., 1] = by
     fld[..., 2] = bz
 
+    fig = mlab.figure(size=(1150, 850),
+                      bgcolor=(1.0, 1.0, 1.0),
+                      fgcolor=(0.0, 0.0, 0.0))
     f1_src = mvi.field_to_source(bx)
     f2_src = mvi.field_to_source(by)
     f3_src = mvi.field_to_source(bz)
@@ -116,6 +119,7 @@ def main():
                               opacity=1.0, color=(0.0, 1.0, 0.0))
     mlab.pipeline.iso_surface(f3_src, contours=[0.0],
                               opacity=1.0, color=(0.0, 0.0, 1.0))
+    mlab.axes()
     mlab.show()
 
     nullpt = cycalc.interp_trilin(fld, [(0.5, 0.5, 0.5)])
