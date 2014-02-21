@@ -169,6 +169,9 @@ class Field(object):
                 self.deep_meta["force_layout"] = LAYOUT_DEFAULT
         self.deep_meta["force_layout"] = self.deep_meta["force_layout"].lower()
 
+        if not "copy" in self.deep_meta:
+            self.deep_meta["copy"] = False
+
         if forget_source:
             self.forget_source()
 
@@ -422,10 +425,10 @@ class Field(object):
             # dtype.name is for pruning endianness out of dtype
             if isinstance(dat, (list, tuple)):
                 dt = dat[0].dtype.name
-                arr = np.array([np.array(d, dtype=dt, copy=False)
+                arr = np.array([np.array(d, dtype=dt, copy=self.deep_meta["copy"])
                                 for d in dat], dtype=dt)
             else:
-                arr = np.array(dat, dtype=dat.dtype.name, copy=False)
+                arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
             # elif isinstance(dat, Field):
             #     arr = dat.data
             # else:
