@@ -103,7 +103,7 @@ def wrap_field(typ, name, crds, data, **kwargs):
 
 def rewrap_field(fld):
     return type(fld)(fld.name, fld.crds, fld.data, center=fld.center,
-                     _copy=False)
+                     forget_source=True, _copy=True)
 
 class Field(object):
     _TYPE = "none"
@@ -423,20 +423,17 @@ class Field(object):
         but the coords have a 3rd dimension with length 1, reshape the array
         to include that extra dimension.
         """
+        # dtype.name is for pruning endianness out of dtype
         if isinstance(dat, np.ndarray):
-            arr = dat
+            arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
+        elif isinstance(dat, (list, tuple)):
+            dt = dat[0].dtype.name
+            arr = np.array([np.array(d, dtype=dt, copy=self.deep_meta["copy"])
+                            for d in dat], dtype=dt)
+        # elif isinstance(dat, Field):
+        #     arr = dat.data  # not the way
         else:
-            # dtype.name is for pruning endianness out of dtype
-            if isinstance(dat, (list, tuple)):
-                dt = dat[0].dtype.name
-                arr = np.array([np.array(d, dtype=dt, copy=self.deep_meta["copy"])
-                                for d in dat], dtype=dt)
-            else:
-                arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
-            # elif isinstance(dat, Field):
-            #     arr = dat.data
-            # else:
-            #     arr = np.array(dat, dtype=dat.dtype.name, copy=False)
+            arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
 
         if self.pre_reshape_transform_func is not None:
             arr = self.pre_reshape_transform_func(self, arr)
