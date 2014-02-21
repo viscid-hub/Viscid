@@ -6,6 +6,7 @@ matters, it is assumed that if the coords are z, y, x then the data
 is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
+import warnings
 import logging
 from inspect import isclass
 
@@ -154,10 +155,18 @@ class Field(object):
         self.info = {} if info is None else info
         self.deep_meta = {} if deep_meta is None else deep_meta
         for k, v in kwargs.items():
-            self.deep_meta[k] = v
+            if k.startswith("_"):
+                self.deep_meta[k[1:]] = v
+            else:
+                self.info[k] = v
 
         if not "force_layout" in self.deep_meta:
-            self.deep_meta["force_layout"] = LAYOUT_DEFAULT
+            if "force_layout" in self.info:
+                warnings.warn("deprecated force_layout syntax: kwarg should "
+                              "be given as _force_layout")
+                self.deep_meta["force_layout"] = self.info["force_layout"]
+            else:
+                self.deep_meta["force_layout"] = LAYOUT_DEFAULT
         self.deep_meta["force_layout"] = self.deep_meta["force_layout"].lower()
 
         if forget_source:

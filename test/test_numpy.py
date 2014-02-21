@@ -43,7 +43,7 @@ def main():
 
     v = field.VectorField("v", crds, [vx, vy, vz],
                               center="Cell", forget_source=True,
-                              deep_meta={"force_layout": field.LAYOUT_INTERLACED},
+                              _force_layout=field.LAYOUT_INTERLACED,
                              )
     vx, vy, vz = v.component_fields()
     mag = calc.magnitude(v)

@@ -69,7 +69,7 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
 def trace_cython(fld_bx, fld_by, fld_bz):
     # print("Cython...")
     B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
-                                      deep_meta={"force_layout": field.LAYOUT_INTERLACED})
+                                      _force_layout=field.LAYOUT_INTERLACED)
     t0 = time()
     lines, topo = None, None
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
@@ -110,7 +110,7 @@ def trace_cython(fld_bx, fld_by, fld_bz):
 
 def trace_numba(fld_bx, fld_by, fld_bz):
     B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
-                                      deep_meta={"force_layout": field.LAYOUT_INTERLACED})
+                                      _force_layout=field.LAYOUT_INTERLACED)
     topo_arr = np.empty(gsize, order='C', dtype='int')
     lines, topo = None, None
     t0 = time()

@@ -89,7 +89,7 @@ def main():
 
     fld_v = field.VectorField("v", crds, [vx, vy, vz],
                               center="Node", forget_source=True,
-                              deep_meta={"force_layout": field.LAYOUT_INTERLACED},
+                              _force_layout=field.LAYOUT_INTERLACED,
                              )
     run_mag_test(fld_v, show=args.show)
 
@@ -102,7 +102,7 @@ def main():
 
     fld_v = field.VectorField("v", crds, [vx, vy, vz],
                               center="Cell", forget_source=True,
-                              deep_meta={"force_layout": field.LAYOUT_INTERLACED},
+                              _force_layout=field.LAYOUT_INTERLACED,
                              )
     run_mag_test(fld_v, show=args.show)
 

@@ -39,7 +39,7 @@ def get_dipole(m=None, twod=False):
 
     fld = field.VectorField("B_cc", crds, [Bx, By, Bz],
                             center="Cell", forget_source=True,
-                            deep_meta={"force_layout": field.LAYOUT_INTERLACED},
+                            _force_layout=field.LAYOUT_INTERLACED,
                            )
     # fld_rsq = field.ScalarField("r", crds, hmm,
     #                             center="Cell", forget_source=True)

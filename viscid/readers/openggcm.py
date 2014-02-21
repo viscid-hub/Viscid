@@ -136,14 +136,14 @@ class GGCMGrid(grid.Grid):
     def _get_b(self):
         with self['bx'] as bx, self['by'] as by, self['bz'] as bz:
             b = field.scalar_fields_to_vector("B", [bx, by, bz],
-                            force_layout=self.force_vector_layout,
+                            _force_layout=self.force_vector_layout,
                             forget_source=True)
         return b
 
     def _get_v(self):
         with self['vx'] as vx, self['vy'] as vy, self['vz'] as vz:
             v = field.scalar_fields_to_vector("V", [vx, vy, vz],
-                            force_layout=self.force_vector_layout,
+                            _force_layout=self.force_vector_layout,
                             forget_source=True)
         return v
 

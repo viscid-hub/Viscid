@@ -13,6 +13,9 @@ Refactors:
   - RectilinearCrds -> NonuniformCartesianCrds
   - "Rectilinear" -> "nonuniform_cartesian"
 
+Backward Incompatible Changes:
+  - kwargs to field constructors go to deep_meta dict if they start with a '_', else they go to the info dict
+
 Other:
   - Precedence for auto-detecting classes is given to those more recently declared
 
