@@ -143,7 +143,10 @@ class Grid(object):
             return self.fields[fldname]
         except KeyError:
             func = "_get_" + fldname
-            return getattr(self, func)()
+            if hasattr(self, func):
+                return getattr(self, func)()
+            else:
+                raise KeyError("field not found")
 
     def get_grid(self, time=None): #pylint: disable=W0613
         return self
@@ -159,7 +162,7 @@ class Grid(object):
         name some crd identifier, see Coordinate.get_item for details """
         try:
             return self.get_field(item)
-        except (KeyError, AttributeError):
+        except KeyError:
             if self.crds is not None and item in self.crds:
                 return self.crds[item]
             else:
