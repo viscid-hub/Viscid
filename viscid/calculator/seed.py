@@ -244,7 +244,7 @@ class Volume(SeedGen):
 class Sphere(SeedGen):
     def __init__(self, p0, r, restheta=20, resphi=20, cache=False):
         super(Sphere, self).__init__(cache=cache)
-        self.params["p0"] = p0
+        self.params["p0"] = np.array(p0, copy=False)
         self.params["r"] = r
         self.params["restheta"] = restheta
         self.params["resphi"] = resphi
@@ -253,32 +253,34 @@ class Sphere(SeedGen):
         return self.params["restheta"] * self.params["resphi"]
 
     def genr_points(self):
+        theta, phi = self._get_all_theta_phi()
+        return self.spherical_to_zyx(theta, phi)
+
+    def spherical_to_zyx(self, theta, phi):
         p0 = self.params["p0"]
-        r = self.params["r"]
+        return p0.reshape((-1, 1)) + self._local_zyx(theta, phi)
+
+    def as_coordinates(self):
+        theta, phi = self._get_all_theta_phi()
+        crds = coordinate.wrap_crds("nonuniform_cartesian",
+                                    (('y', theta), ('x', phi)))
+        return crds
+
+    def _get_all_theta_phi(self):
         restheta = self.params["restheta"]
         resphi = self.params["resphi"]
-
         theta = np.linspace(0, np.pi, restheta + 1,
                             endpoint=True).astype(self.dtype)
         theta = 0.5 * (theta[1:] + theta[:-1])
         phi = np.linspace(0, 2.0 * np.pi, resphi,
                           endpoint=False).astype(self.dtype)
-        T, P = np.ix_(theta, phi)
-
-        x = p0[2] + r * np.sin(T) * np.cos(P)
-        y = p0[1] + r * np.sin(T) * np.sin(P)
-        z = p0[0] + r * np.cos(T) + 0.0 * P
-        x = x.reshape(-1)
-        y = y.reshape(-1)
-        z = z.reshape(-1)
-
-        return np.array([z, y, x])
+        return theta, phi
 
     def _local_zyx(self, theta, phi):
         r = self.params["r"]
         phi = np.asarray(phi).reshape(-1)
         theta = np.asarray(theta).reshape(-1)
-        P, T = np.ix_(phi, theta)
+        T, P = np.ix_(theta, phi)
 
         a = np.empty((3, len(theta) * len(phi)), dtype=self.dtype)
         # 2 == x, 1 == y, 0 == z
@@ -286,22 +288,6 @@ class Sphere(SeedGen):
         a[1, :] = (r * np.sin(T) * np.sin(P)).reshape(-1)
         a[0, :] = (r * np.cos(T) + 0.0 * P).reshape(-1)
         return a
-
-    def spherical_to_zyx(self, theta, phi):
-        p0 = self.params["p0"]
-        return p0.reshape((-1, 1)) + self._local_zyx(theta, phi)
-
-    def as_coordinates(self):
-        restheta = self.params["restheta"]
-        resphi = self.params["resphi"]
-        theta = np.linspace(0, np.pi, restheta + 1,
-                            endpoint=True).astype(self.dtype)
-        theta = 0.5 * (theta[1:] + theta[:-1])
-        phi = np.linspace(0, 2.0 * np.pi, resphi,
-                          endpoint=False).astype(self.dtype)
-        crds = coordinate.wrap_crds("nonuniform_cartesian",
-                                    (('y', theta), ('x', phi)))
-        return crds
 
 class SphericalCap(Sphere):
     _euler_rot = None  # rotation matrix for 2 euler rotations
@@ -321,9 +307,6 @@ class SphericalCap(Sphere):
         super(SphericalCap, self).__init__(p0, r, restheta, resphi, cache=cache)
         self.params["p1"] = p1
         self.params["angle"] = angle * (np.pi / 180.0)
-
-    def nr_points(self, **kwargs):
-        return self.params["restheta"] * self.params["resphi"]
 
     @property
     def euler_rot(self):
@@ -356,7 +339,7 @@ class SphericalCap(Sphere):
         a = self._local_zyx(theta, phi)
         return p0.reshape((-1, 1)) + np.dot(self.euler_rot, a)
 
-    def genr_points(self):
+    def _get_all_theta_phi(self):
         angle = self.params["angle"]
         restheta = self.params["restheta"]
         resphi = self.params["resphi"]
@@ -365,19 +348,7 @@ class SphericalCap(Sphere):
         theta = np.array(theta[::-1], dtype=self.dtype)
         phi = np.linspace(0, 2.0 * np.pi, resphi,
                           endpoint=False).astype(self.dtype)
-        return self.spherical_to_zyx(theta, phi)
-
-    def as_coordinates(self):
-        angle = self.params["angle"]
-        restheta = self.params["restheta"]
-        resphi = self.params["resphi"]
-        theta = np.linspace(angle, 0.0, restheta, endpoint=False)
-        theta = np.array(theta[::-1], dtype=self.dtype)
-        phi = np.linspace(0, 2.0 * np.pi, resphi,
-                          endpoint=False).astype(self.dtype)
-        crds = coordinate.wrap_crds("nonuniform_cartesian",
-                                    (('y', theta), ('x', phi)))
-        return crds
+        return theta, phi
 
 if __name__ == "__main__":
     # import matplotlib.pyplot as plt
