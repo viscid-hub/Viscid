@@ -146,7 +146,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
                  colorbar=True, rotate_plot=False, label_cbar=True,
-                 action_ax=None, **kwargs):
+                 action_ax=None, extra_args=[], **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
 
     style: "pcolormesh", "contour", "pcolor", style of 2D plot
@@ -213,15 +213,15 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         namex, namey = namey, namex
 
     if style == "pcolormesh":
-        p = action_ax.pcolormesh(X, Y, dat, **kwargs)
+        p = action_ax.pcolormesh(X, Y, dat, *extra_args, **kwargs)
     elif style == "contour":
-        p = action_ax.contour(X, Y, dat, **kwargs)
+        p = action_ax.contour(X, Y, dat, *extra_args, **kwargs)
         if "colors" in kwargs:
             colorbar = False
     elif style == "contourf":
-        p = action_ax.contourf(X, Y, dat, **kwargs)
+        p = action_ax.contourf(X, Y, dat, *extra_args, **kwargs)
     elif style == "pcolor":
-        p = action_ax.pcolor(X, Y, dat, **kwargs)
+        p = action_ax.pcolor(X, Y, dat, *extra_args, **kwargs)
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
