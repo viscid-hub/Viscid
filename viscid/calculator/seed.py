@@ -132,8 +132,16 @@ class Plane(SeedGen):
         of the plane in the l and m directions. res_l and res_m are the
         resolution of points in the two directions. Note that p0 is the center
         of the plane, so the plane extends from (-len_l/2, len_l/2) around
-        p0, and similarly in the m direction. """
+        p0, and similarly in the m direction.
+
+        Also, if len_l or len_m is a 2-tuple (or list), that specifies the exact
+        limits of the plane as opposed to going (-len/2, len/2) """
         super(Plane, self).__init__(cache=cache)
+        if not isinstance(len_l, (list, tuple)):
+            len_l = [-0.5 * len_l, 0.5 * len_l]
+        if not isinstance(len_m, (list, tuple)):
+            len_m = [-0.5 * len_m, 0.5 * len_m]
+
         self.params["p0"] = p0
         self.params["Ndir"] = Ndir
         self.params["Ldir"] = Ldir
@@ -172,10 +180,8 @@ class Plane(SeedGen):
         Mdir = np.cross(Ldir, Ndir)  # zyx => left handed cross product
 
         arr = np.empty((3, res_l * res_m), dtype=self.dtype)
-        l = np.linspace(-0.5 * len_l, 0.5 * len_l,
-                        res_l).astype(self.dtype)
-        m = np.linspace(-0.5 * len_m, 0.5 * len_m,
-                        res_m).astype(self.dtype)
+        l = np.linspace(len_l[0], len_l[1], res_l).astype(self.dtype)
+        m = np.linspace(len_m[0], len_m[1], res_m).astype(self.dtype)
         arr[0, :] = np.repeat(m, res_l)
         arr[1, :] = np.tile(l, res_m)
         arr[2, :] = 0.0
@@ -193,8 +199,8 @@ class Plane(SeedGen):
         res_l = self.params["res_l"]
         res_m = self.params["res_m"]
 
-        l = np.linspace(-0.5 * len_l, 0.5 * len_l, res_l)
-        m = np.linspace(-0.5 * len_m, 0.5 * len_m, res_m)
+        l = np.linspace(len_l[0], len_l[1], res_l)
+        m = np.linspace(len_m[0], len_m[1], res_m)
 
         crds = coordinate.wrap_crds("nonuniform_cartesian", (('y', m), ('x', l)))
         return crds
@@ -349,6 +355,21 @@ class SphericalCap(Sphere):
         phi = np.linspace(0, 2.0 * np.pi, resphi,
                           endpoint=False).astype(self.dtype)
         return theta, phi
+
+# class SphericalCap2(SphericalCap):
+#     def _get_all_theta_phi(self):
+#         angle = self.params["angle"]
+#         restheta = self.params["restheta"]
+#         resphi = self.params["resphi"]
+
+#         # theta = np.linspace(angle, 0.0, restheta, endpoint=False)
+#         # theta = np.array(theta[::-1], dtype=self.dtype)
+#         # phi = np.linspace(0, 2.0 * np.pi, resphi,
+#         #                   endpoint=False).astype(self.dtype)
+#         theta = np.linspace(-angle, angle, restheta, endpoint=True).astype(self.dtype)
+#         phi = np.linspace(0.0, np.pi, resphi, endpoint=False).astype(self.dtype)
+#         return theta, phi
+
 
 if __name__ == "__main__":
     # import matplotlib.pyplot as plt
