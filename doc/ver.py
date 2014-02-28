@@ -4,4 +4,4 @@ from distutils.version import LooseVersion
 version = "0.50.2"
 
 # The full version, including alpha/beta/rc tags.
-release = LooseVersion(version + "dev")
+release = LooseVersion(version)

@@ -1,6 +1,6 @@
 # Changelog
 
-## Current develop branch (0.50.2 dev)
+## 0.50.2
 
 Features:
   - Support for custom grids (this allows for custom readers for GGCM / PSC / etc)
