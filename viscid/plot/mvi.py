@@ -129,8 +129,11 @@ def plot_lines(lines, topology=None, **kwargs):
             kwargs["color"] = color_from_topology(topology[i])
         mlab.plot3d(line[2], line[1], line[0], **kwargs)
 
-def mlab_earth(pipeline, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
+def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
                crd_system="mhd"):
+    if pipeline is None:
+        pipeline = mlab.pipeline
+
     crd_system = crd_system.lower()
     if crd_system == "mhd":
         theta_dusk, theta_dawn = 270, 90
