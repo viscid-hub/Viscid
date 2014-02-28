@@ -29,7 +29,7 @@ def main():
     x = np.linspace(-2, 2, 20)
     y = np.linspace(-2.5, 2.5, 25)
     z = np.linspace(-3, 3, 30)
-    crds = coordinate.wrap_crds("Rectilinear", [('z', z), ('y', y), ('x', x)])
+    crds = coordinate.wrap_crds("nonuniform_cartesian", [('z', z), ('y', y), ('x', x)])
 
     psi = field.empty("Scalar", "psi", crds, center="Node")
     b = field.empty("Vector", "b", crds, nr_comps=3,

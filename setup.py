@@ -30,7 +30,6 @@ pkgs = ['viscid',
         'viscid.calculator',
         'viscid.plot',
         'viscid.readers',
-        'viscid.tools',
        ]
 
 scripts = glob.glob(os.path.join('scripts', '*'))

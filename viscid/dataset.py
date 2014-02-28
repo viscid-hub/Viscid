@@ -231,6 +231,12 @@ class DatasetTemporal(Dataset):
         # slc_lst[:2] = [float(t) if t != "" else None for t in slc_lst[:2]]
         slc_lst[:2] = [np.argmin(np.abs(float(t) - times)) if t != "" else None
                        for t in slc_lst[:2]]
+        # make the slice inclusive, no matter what
+        if len(slc_lst) > 1 and slc_lst[1] is not None:
+            if slc_lst[0] <= slc_lst[1]:
+                slc_lst[1] += 1
+            else:
+                slc_lst[1] -= 1
         slc_lst[2:] = [int(s) if s != "" else None for s in slc_lst[2:]]
         if len(slc_lst) == 1:
             slc_lst = [slc_lst[0], slc_lst[0] + 1]

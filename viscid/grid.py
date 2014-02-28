@@ -3,12 +3,19 @@
 
 from __future__ import print_function
 
+from . import field
 from .bucket import Bucket
 from .vutil import tree_prefix
 
 class Grid(object):
     """ Grids contain fields... Datasets recurse to grids using __getitem__
-    and get_field in order to find fields """
+    and get_field in order to find fields
+
+    The following attributes are for customizing data reads, intended to
+    be changed by `grid.Grid.flag = value`:
+    force_vector_layout = field.LAYOUT_*, force all vectors to be of a certain
+                          layout when they're created (default: LAYOUT_DEFAULT)
+    """
     topology_info = None
     geometry_info = None
     crds = None
@@ -19,18 +26,37 @@ class Grid(object):
 
     name = None
 
-    def __init__(self, name=None):
+    # these attributes are intended to control how fields are read
+    # they can be customized by setting the class value, and inherited
+    # by grids that get created in the future
+    force_vector_layout = field.LAYOUT_DEFAULT
+
+    def __init__(self, name=None, **kwargs):
+        """ all kwargs are added to the grid as attributes """
         self.name = name
         self.fields = Bucket()
 
         self.crds = None  # Coordinates()
+        for opt, value in kwargs.items():
+            setattr(self, opt, value)
 
-    def add_field(self, field):
-        if isinstance(field, (list, tuple)):
-            for f in field:
-                self.fields[f.name] = f
-        else:
-            self.fields[field.name] = field
+    @staticmethod
+    def null_transform(something):
+        return something
+
+    # def set_time(self, time):
+    #     self.time = time
+
+    def set_crds(self, crds_object):
+        self.crds = crds_object
+
+    def add_field(self, *fields):
+        """ Note: in XDMF reader, the grid will NOT have crds when adding
+        fields, so any grid crd transforms won't be set """
+        for f in fields:
+            if isinstance(f, field.VectorField):
+                f.layout = self.force_vector_layout
+            self.fields[f.name] = f
 
     def unload(self):
         """ unload is meant to give children a chance to free caches, the idea
@@ -64,12 +90,6 @@ class Grid(object):
 
     def print_tree(self, recursive=False, prefix=""): #pylint: disable=W0613
         self.fields.print_tree(prefix=prefix + tree_prefix)
-
-    # def set_time(self, time):
-    #     self.time = time
-
-    def set_crds(self, crds_object):
-        self.crds = crds_object
 
     ##################################
     ## Utility methods to get at crds
@@ -119,7 +139,14 @@ class Grid(object):
 
     ##
     def get_field(self, fldname, time=None): #pylint: disable=W0613
-        return self.fields[fldname]
+        try:
+            return self.fields[fldname]
+        except KeyError:
+            func = "_get_" + fldname
+            if hasattr(self, func):
+                return getattr(self, func)()
+            else:
+                raise KeyError("field not found")
 
     def get_grid(self, time=None): #pylint: disable=W0613
         return self
@@ -133,12 +160,13 @@ class Grid(object):
     def __getitem__(self, item):
         """ returns a field by name, or if no field is found, a coordinate by
         name some crd identifier, see Coordinate.get_item for details """
-        if item in self.fields:
+        try:
             return self.get_field(item)
-        elif self.crds is not None and item in self.crds:
-            return self.crds[item]
-        else:
-            raise KeyError(item)
+        except KeyError:
+            if self.crds is not None and item in self.crds:
+                return self.crds[item]
+            else:
+                raise KeyError(item)
 
     def __setitem__(self, fldname, fld):
         self.fields[fldname] = fld

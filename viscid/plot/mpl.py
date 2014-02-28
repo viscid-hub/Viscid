@@ -145,7 +145,8 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
 def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
-                 colorbar=True, rotate_plot=False, **kwargs):
+                 colorbar=True, rotate_plot=False, label_cbar=True,
+                 action_ax=None, extra_args=[], **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
 
     style: "pcolormesh", "contour", "pcolor", style of 2D plot
@@ -183,9 +184,9 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
             X, Y = fld.get_crds_nc((namex, namey))
     else:
         if fld.iscentered("Node"):
-            X, Y = fld.get_crds_nc[(namex, namey)]
+            X, Y = fld.get_crds_nc((namex, namey))
         elif fld.iscentered("Cell"):
-            X, Y = fld.get_crds_cc[(namex, namey)]
+            X, Y = fld.get_crds_cc((namex, namey))
     dat = fld.data
 
     if mod:
@@ -201,6 +202,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     if equalaxis:
         ax.axis('equal')
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+    if action_ax is None:
+        action_ax = ax
 
     earth = kwargs.pop("earth", False)
 
@@ -210,13 +213,15 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         namex, namey = namey, namex
 
     if style == "pcolormesh":
-        p = ax.pcolormesh(X, Y, dat, **kwargs)
+        p = action_ax.pcolormesh(X, Y, dat, *extra_args, **kwargs)
     elif style == "contour":
-        p = ax.contour(X, Y, dat, **kwargs)
+        p = action_ax.contour(X, Y, dat, *extra_args, **kwargs)
+        if "colors" in kwargs:
+            colorbar = False
     elif style == "contourf":
-        p = ax.contourf(X, Y, dat, **kwargs)
+        p = action_ax.contourf(X, Y, dat, *extra_args, **kwargs)
     elif style == "pcolor":
-        p = ax.pcolor(X, Y, dat, **kwargs)
+        p = action_ax.pcolor(X, Y, dat, *extra_args, **kwargs)
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
@@ -230,7 +235,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
         cbar = plt.colorbar(p, **colorbar) #pylint: disable=W0142
-        cbar.set_label(fld.pretty_name)
+        if label_cbar:
+            cbar.set_label(fld.pretty_name)
     else:
         cbar = None
 
@@ -275,7 +281,7 @@ def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
         topo_color = False
 
     for i, line in enumerate(lines):
-        line = np.array(line)
+        line = np.array(line, copy=False)
         z = line[0]
         y = line[1]
         x = line[2]
@@ -311,7 +317,7 @@ def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
         topo_color = False
 
     for i, line in enumerate(lines):
-        line = np.array(line)
+        line = np.array(line, copy=False)
         if symmetry_dir.lower() == "x":
             x = line[1]
             y = line[0]
@@ -334,6 +340,29 @@ def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
     if show:
         plt.show()
     return p, None
+
+def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
+    # FIXME: with dowscale != 1, this reveals a problem when slice and
+    # downscaling a field; i think this is a prickley one
+    vx, vy, vz = fld.component_views()
+    x, y = fld.get_crds_cc(shaped=True)
+    if symdir.lower() == "x":
+        # x, y = ycc, zcc
+        pvx, pvy = vy, vz
+    elif symdir.lower() == "y":
+        # x, y = xcc, zcc
+        pvx, pvy = vx, vz
+    elif symdir.lower() == "z":
+        # x, y = xcc, ycc
+        pvx, pvy = vx, vy
+    X, Y = np.meshgrid(y, x)
+    if downscale != 1:
+        X = X[::downscale]
+        Y = Y[::downscale]
+        pvx = pvx[::downscale]
+        pvy = pvy[::downscale]
+    # print(X.shape, Y.shape, pvx.shape, pvy.shape)
+    return plt.quiver(X, Y, pvx, pvy, **kwargs)
 
 def scatter_3d(points, c='b', ax=None, show=True, equal=False, **kwargs):
     """ c should be an array of values to use to color the points,
@@ -367,16 +396,19 @@ def tighten():
         logging.warn("No matplotlib tight layout support")
 
 def plot_earth(fld, axis=None, scale=1.0, rot=0,
-               daycol='w', nightcol='k', crds="mhd"):
-    """ crds = "mhd" (Jimmy crds) or "gsm" (GSM crds)... gsm is the same
-    as mhd + rot=180. earth_plane is a string in the format 'y=0.2', this
-    says what the 3rd.nr_sdimsension is and sets the radius that the earth should
-    be """
+               daycol='w', nightcol='k', crd_system="mhd"):
+    """ crd_system = "mhd" (Jimmy crds) or "gse" (GSE crds)... gsm is the
+    same as mhd + rot=180. This is inferred from fld but defaults to whatever
+    is given. earth_plane is a string in the format 'y=0.2', this
+    says what the 3rd.nr_sdimsension is and sets the radius that the earth
+    should be """
     import matplotlib.patches as mpatches
+
+    crd_system = fld.info.get("crd_system", crd_system)
 
     # take only the 1st reduced.nr_sdims... this should just work
     try:
-        plane, value = fld.info["reduced"][0]
+        plane, value = fld.deep_meta["reduced"][0]
     except KeyError:
         logging.error("No reduced dims in the field, i don't know what 2d \n "
                       "plane, we're in and can't figure out the size of earth.")
@@ -389,7 +421,7 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
     if not axis:
         axis = plt.gca()
 
-    if crds == "gsm":
+    if crd_system == "gse":
         rot = 180
 
     if plane == 'y' or plane == 'z':

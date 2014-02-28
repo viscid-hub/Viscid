@@ -6,6 +6,7 @@ matters, it is assumed that if the coords are z, y, x then the data
 is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
+import warnings
 import logging
 from inspect import isclass
 
@@ -74,7 +75,7 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
     # shape = fldlist[0].data.shape
 
     vfield = VectorField(name, crds, fldlist, center=center, time=time,
-                         **kwargs)
+                         info=fldlist[0].info, **kwargs)
     return vfield
 
 def field_type(typ):
@@ -100,6 +101,10 @@ def wrap_field(typ, name, crds, data, **kwargs):
     else:
         raise NotImplementedError("can not decipher field")
 
+def rewrap_field(fld):
+    return type(fld)(fld.name, fld.crds, fld.data, center=fld.center,
+                     forget_source=True, _copy=True)
+
 class Field(object):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
@@ -112,8 +117,14 @@ class Field(object):
     name = None  # String
     crds = None  # Coordinate object
     time = None  # float
-    info = None  # dict
+    # dict, this stuff will be copied by self.wrap
+    info = None  #
+    # dict, used for stuff that won't be blindly copied by self.wrap
+    deep_meta = None
     pretty_name = None  # String
+
+    pre_reshape_transform_func = None
+    post_reshape_transform_func = None
 
     # these get reset when data is set
     _layout = None
@@ -124,8 +135,10 @@ class Field(object):
     # set when data is retrieved
     _cache = None  # this will always be a numpy array
 
-    def __init__(self, name, crds, data, center="Node", time=0.0,
-                 info=None, forget_source=False, pretty_name=None,
+    def __init__(self, name, crds, data, center="Node", time=0.0, info=None,
+                 deep_meta=None, forget_source=False, pretty_name=None,
+                 pre_reshape_transform_func=None,
+                 post_reshape_transform_func=None,
                  **kwargs):
         self.name = name
         self.center = center
@@ -138,16 +151,33 @@ class Field(object):
         else:
             self.pretty_name = pretty_name
 
-        self.info = {} if info is None else info
-        for k, v in kwargs.items():
-            self.info[k] = v
+        if pre_reshape_transform_func is not None:
+            self.pre_reshape_transform_func = pre_reshape_transform_func
+        if post_reshape_transform_func is not None:
+            self.post_reshape_transform_func = post_reshape_transform_func
 
-        if not "force_layout" in self.info:
-            self.info["force_layout"] = LAYOUT_DEFAULT
-        self.info["force_layout"] = self.info["force_layout"].lower()
+        self.info = {} if info is None else info
+        self.deep_meta = {} if deep_meta is None else deep_meta
+        for k, v in kwargs.items():
+            if k.startswith("_"):
+                self.deep_meta[k[1:]] = v
+            else:
+                self.info[k] = v
+
+        if not "force_layout" in self.deep_meta:
+            if "force_layout" in self.info:
+                warnings.warn("deprecated force_layout syntax: kwarg should "
+                              "be given as _force_layout")
+                self.deep_meta["force_layout"] = self.info["force_layout"]
+            else:
+                self.deep_meta["force_layout"] = LAYOUT_DEFAULT
+        self.deep_meta["force_layout"] = self.deep_meta["force_layout"].lower()
+
+        if not "copy" in self.deep_meta:
+            self.deep_meta["copy"] = False
 
         if forget_source:
-            self._src_data = self.data
+            self.forget_source()
 
     @property
     def type(self):
@@ -159,7 +189,7 @@ class Field(object):
     @center.setter
     def center(self, new_center):
         new_center = new_center.lower()
-        assert(new_center in self._CENTERING)
+        assert new_center in self._CENTERING
         self._center = new_center
 
     @property
@@ -167,11 +197,22 @@ class Field(object):
         """ get the layout type, 'interlaced' (AOS) | 'flat (SOA)'. This at most
         calls _detect_layout(_src_data) which tries to be lazy """
         if self._layout is None:
-            if self.info["force_layout"] != LAYOUT_DEFAULT:
-                self._layout = self.info["force_layout"]
+            if self.deep_meta["force_layout"] != LAYOUT_DEFAULT:
+                self._layout = self.deep_meta["force_layout"]
             else:
                 self._layout = self._detect_layout(self._src_data)
         return self._layout
+
+    @layout.setter
+    def layout(self, new_layout):
+        """ UNTESTED, unload data if layout changes """
+        new_layout = new_layout.lower()
+        if self.is_loaded():
+            current_layout = self.layout
+            if new_layout != current_layout:
+                self.unload()
+        self.deep_meta["force_layout"] = new_layout
+        self._layout = None
 
     @property
     def nr_dims(self):
@@ -303,6 +344,9 @@ class Field(object):
         self._translate_src_data()
         # do some sort of lazy pre-setup _src_data inspection?
 
+    def is_loaded(self):
+        return self._cache is not None
+
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
         self._cache = None
@@ -320,7 +364,7 @@ class Field(object):
         # override if a type does something fancy (eg, interlacing)
         # and dat.flags["OWNDATA"]  # might i want this?
         src_data_layout = self._detect_layout(self._src_data)
-        force_layout = self.info["force_layout"]
+        force_layout = self.deep_meta["force_layout"]
 
         # we will preserve layout or we already have the correct layout,
         # do no translation
@@ -363,7 +407,7 @@ class Field(object):
             return self._dat_to_ndarray(data_dest)
 
         # catch the remaining cases
-        elif self.info["force_layout"] == LAYOUT_OTHER:
+        elif self.deep_meta["force_layout"] == LAYOUT_OTHER:
             raise ValueError("How should I know how to force other layout?")
         else:
             raise ValueError("Bad argument for layout forcing")
@@ -379,19 +423,27 @@ class Field(object):
         but the coords have a 3rd dimension with length 1, reshape the array
         to include that extra dimension.
         """
+        # dtype.name is for pruning endianness out of dtype
         if isinstance(dat, np.ndarray):
-            arr = dat
+            arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
+        elif isinstance(dat, (list, tuple)):
+            dt = dat[0].dtype.name
+            arr = np.array([np.array(d, dtype=dt, copy=self.deep_meta["copy"])
+                            for d in dat], dtype=dt)
+        # elif isinstance(dat, Field):
+        #     arr = dat.data  # not the way
         else:
-            # dtype.name is for pruning endianness out of dtype
-            if isinstance(dat, (list, tuple)):
-                dt = dat[0].dtype.name
-                arr = np.array([np.array(d, dtype=dt) for d in dat], dtype=dt)
+            arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
 
-            elif isinstance(dat, Field):
-                arr = dat.data
-            else:
-                arr = np.array(dat, dtype=dat.dtype.name)
-        return self._reshape_ndarray_to_crds(arr)
+        if self.pre_reshape_transform_func is not None:
+            arr = self.pre_reshape_transform_func(self, arr)
+
+        arr = self._reshape_ndarray_to_crds(arr)
+
+        if self.post_reshape_transform_func is not None:
+            arr = self.post_reshape_transform_func(self, arr)
+
+        return arr
 
     def _reshape_ndarray_to_crds(self, arr):
         """ enforce same dimensionality as coords here!
@@ -470,7 +522,9 @@ class Field(object):
         if list(slices) == [slice(None)] * len(slices):
             return self
 
+        # coord transforms are not copied on purpose
         crds = coordinate.wrap_crds(self.crds.type, crdlst)
+
         try:
             slices.insert(self.nr_comp, comp_slc)
         except TypeError:
@@ -486,10 +540,13 @@ class Field(object):
                             {"name": self.name,
                              "crds": crds,
                             })
-            # if there are reduced dims, put them into the info dict
+            # if there are reduced dims, put them into the deep_meta dict
             if len(reduced) > 0:
-                fld.info["reduced"] = reduced
+                fld.deep_meta["reduced"] = reduced
             return fld
+
+    def forget_source(self):
+        self._src_data = self.data
 
     def slice(self, selection):
         """ Slice the field using a string like "y=3i:6i:2,z=0" or a standard
@@ -529,7 +586,7 @@ class Field(object):
     def set_slice(self, selection, value):
         cc = self.iscentered("Cell")
         selection = self._prepare_slice(selection)[0]
-        slices, crdlst = self.crds.make_slice(selection, cc=cc)[:2]
+        slices, _ = self.crds.make_slice(selection, cc=cc)[:2]
         self.data[tuple(slices)] = value
         return None
 
@@ -639,15 +696,11 @@ class Field(object):
     ## emulate a numeric type
 
     def __array__(self, dtype=None):
-        if dtype is None or np.dtype(dtype) == self.dtype:
-            return self.data
-        else:
-            ret = np.array(self.data, dtype=dtype)
-            return ret
-
+        # dtype = None is ok, datatype won't change
+        return np.array(self.data, dtype=dtype, copy=False)
 
     def wrap(self, arr, context=None, typ=None):
-        """ arr is the data to wrap... context is exta info to pass
+        """ arr is the data to wrap... context is exta deep_meta to pass
         to the constructor. The return is just a number if arr is a
         1 element ndarray, this is for ufuncs that reduce to a scalar """
         if arr is NotImplemented:
@@ -667,7 +720,8 @@ class Field(object):
             typ = type(self)
         else:
             typ = field_type(typ)
-        return typ(name, crds, arr, time=time, center=center, info=context)
+        return typ(name, crds, arr, time=time, center=center,
+                   info=self.info, deep_meta=context)
 
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
         # print("wrapping")
@@ -815,7 +869,7 @@ class ScalarField(Field):
                                dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
 
         downclist = self.crds.get_clist(np.s_[::2])
-        downcrds = coordinate.wrap_crds("Rectilinear", downclist)
+        downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist)
         return self.wrap(downdat, {"crds": downcrds})
 
     def transpose(self, *axes):
@@ -823,7 +877,7 @@ class ScalarField(Field):
         using np.transpose(fld) """
         if axes == (None, ) or len(axes) == 0:
             axes = range(self.nr_dims - 1, -1, -1)
-        if not (len(axes) == self.nr_dims):
+        if len(axes) != self.nr_dims:
             raise ValueError("transpose can not change number of axes")
         clist = self.crds.get_clist()
         new_clist = [clist[ax] for ax in axes]
@@ -841,7 +895,7 @@ class ScalarField(Field):
 
 class VectorField(Field):
     _TYPE = "vector"
-    _COMPONENT_NAMES = {0: 'x', 1: 'y', 2: 'z', 3: 'u', 4: 'v', 5: 'w'}
+    _COMPONENT_NAMES = "xyzuvw"
 
     def component_views(self):
         """ return numpy views to components individually, memory layout
@@ -864,9 +918,20 @@ class VectorField(Field):
         lst = [None] * len(views)
         for i, v in enumerate(views):
             lst[i] = ScalarField("{0}{1}".format(n, self._COMPONENT_NAMES[i]),
-                                 crds, v, center=c, time=t)
+                                 crds, v, center=c, time=t, info=self.info)
         return lst
 
+    def __getitem__(self, item):
+        if item in self._COMPONENT_NAMES:
+            i = self._COMPONENT_NAMES.index(item)
+            if self.layout == LAYOUT_FLAT:
+                dat = self.data[i, ...]
+            else:
+                dat = self.data[..., i]
+            return self.wrap(dat, typ="Scalar",
+                             context={"name": self.name + item})
+        else:
+            return super(VectorField, self).__getitem__(item)
 
 class MatrixField(Field):
     _TYPE = "matrix"

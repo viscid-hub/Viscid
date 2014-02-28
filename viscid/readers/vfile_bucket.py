@@ -41,7 +41,8 @@ class VFileBucket(Bucket):
 
         for fname in fnames:
             f = None
-            absfname = os.path.abspath(fname)
+            better_fname = os.path.expanduser(os.path.expandvars(fname))
+            absfname = os.path.abspath(better_fname)
 
             # if the file was already loaded, return it
             if absfname in self:

@@ -28,7 +28,7 @@ def get_dipole(m=None, twod=False):
     z = np.array(np.linspace(-10, 10, n), dtype=dtype)
     if twod:
         y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
-    crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y), ('x', x)))
+    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
 
     one = np.array([1.0], dtype=dtype) #pylint: disable=W0612
     three = np.array([3.0], dtype=dtype) #pylint: disable=W0612
@@ -47,7 +47,7 @@ def get_dipole(m=None, twod=False):
 
     fld = field.VectorField("B_cc", crds, [Bx, By, Bz],
                             center="Cell", forget_source=True,
-                            info={"force_layout": field.LAYOUT_INTERLACED},
+                            _force_layout=field.LAYOUT_INTERLACED,
                            )
     # fld_rsq = field.ScalarField("r", crds, hmm,
     #                             center="Cell", forget_source=True)

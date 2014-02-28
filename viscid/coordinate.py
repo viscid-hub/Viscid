@@ -6,7 +6,7 @@ should go z, y, x... this is the default order
 
 types:
      "Structured":
-         "Rectilinear"
+         "nonuniform_cartesian"
          "Cylindrical"
          "Spherical"
      "Unstructured":
@@ -61,13 +61,19 @@ class StructuredCrds(Coordinates):
 
     _src_crds_nc = None
 
+    transform_funcs = None
     has_cc = None
 
-    def __init__(self, init_clist=None, has_cc=True, **kwargs):
+    def __init__(self, init_clist, has_cc=True, transform_funcs=None,
+                 **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
         super(StructuredCrds, self).__init__(**kwargs)
         self.has_cc = has_cc
+
+        if transform_funcs is not None:
+            self.transform_funcs = transform_funcs
+
         if init_clist:
             self._axes = [d[0].lower() for d in init_clist]
         self.clear_crds()
@@ -120,11 +126,18 @@ class StructuredCrds(Coordinates):
 
     def clear_crds(self):
         self._src_crds_nc = {}
-        self.__crds = None
+        self._purge_cache()
         # for d in self.axes:
         #     for sfx in self.SUFFIXES:
         #         self.__crds[d + sfx] = None
         #         self.__crds[d.upper() + sfx] = None
+
+    def _purge_cache(self):
+        self.__crds = None
+
+    def unload(self):
+        """ does not guarentee that the memory will be freed """
+        self._purge_cache()
 
     def set_crds(self, clist):
         """ called with a list of lists:
@@ -150,6 +163,13 @@ class StructuredCrds(Coordinates):
             # axis = self.axis_name(axis)
             ind = self.ind(axis)
             arr = np.array(arr, dtype=arr.dtype.name)
+
+            if self.transform_funcs is not None:
+                if axis in self.transform_funcs:
+                    arr = self.transform_funcs[axis](self, arr)
+                elif ind in self.transform_funcs:
+                    arr = self.transform_funcs[ind](self, arr)
+
             flatarr, openarr = self._ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr
             self.__crds[axis.upper()] = openarr
@@ -274,6 +294,16 @@ class StructuredCrds(Coordinates):
             return sel
         elif isinstance(selection, (tuple, list)):
             ret = {}
+            try:
+                i = selection.index(Ellipsis)
+                sln = [slice(None)] * (self.nr_dims - (len(selection) - 1))
+                selection = selection[:i] + sln + selection[i + 1:]
+                for i in range(selection):
+                    if selection[i] == Ellipsis:
+                        selection[i] = slice(None)
+            except ValueError:
+                pass
+
             for sel, axis in zip(selection, self._axes):
                 ret[axis] = sel
             return ret
@@ -508,6 +538,32 @@ class StructuredCrds(Coordinates):
         sfx = self._CENTER[center.lower()]
         return [self._crds[self.axis_name(a) + sfx] for a in axes]
 
+    # def get_dcrd(self, axis, shaped=False, center="none"):
+    #     """ if axis is not specified, return all coords,
+    #     shaped makes axis capitalized and returns ogrid like crds
+    #     shaped is only used if axis == None
+    #     sfx can be none, node, cell, face, edge
+    #     raises KeyError if axis not found """
+    #     return self.get_dcrds([axis], shaped, center)[0]
+
+    # def get_dcrds(self, axes=None, shaped=False, center="none"):
+    #     """ axes: should be a list of names or integer indices, or None
+    #               to return all axes
+    #     shaped: boolean if you want a shaped or flat ndarray
+    #             (True is the same as capitalizing axis)
+    #     center: 'node' 'cell' 'edge' 'face', same as adding a suffix to axes
+    #     returns list of coords as ndarrays """
+    #     if axes == None:
+    #         axes = [a.upper() if shaped else a for a in self.axes]
+    #     if not isinstance(axes, (list, tuple)):
+    #         try:
+    #             axes = [a.upper() if shaped else a for a in axes]
+    #         except TypeError:
+    #             axes = [axes]
+    #     sfx = self._CENTER[center.lower()]
+    #     return [(self._crds[self.axis_name(a) + sfx][1:] -
+    #              self._crds[self.axis_name(a) + sfx][:-1]) for a in axes]
+
     def get_culled_axes(self, ignore=2):
         """ return list of axes names, but discard axes whose coords have
         length <= ignore... useful for 2d fields that only have 1 cell
@@ -594,10 +650,11 @@ class StructuredCrds(Coordinates):
         return self.nr_dims
 
     def __getitem__(self, axis):
-        """ returns coord identified by axis (shaped / centering encoded through
-            capitalization of crd, and suffix), ex: 'Xcc' is shaped cell centered,
-            'znc' is flat node centered, 'x' is flat node centered,
-            2 is self._axes[2] """
+        """ returns coord identified by axis (shaped / centering encoded
+        through capitalization of crd, and suffix), ex: 'Xcc' is shaped cell
+        centered, 'znc' is flat node centered, 'x' is flat node centered,
+        2 is self._axes[2]
+        """
         return self.get_crd(axis)
 
     def __setitem__(self, axis, arr):
@@ -613,28 +670,100 @@ class StructuredCrds(Coordinates):
             item = item[:-2].lower()
         return item in self._crds
 
-class RectilinearCrds(StructuredCrds):
-    _TYPE = "rectilinear"
+
+#FIXME: really, __init__ should be rewritten for uniform crds, since you
+#       don't need a full clist, just an origin + d[xyz], but this hack
+#       will kinda work for now
+class UniformCrds(StructuredCrds):
+    _TYPE = "uniform"
+
+    # def get_dcrd(self, axis, shaped=False, center="none"):
+    #     """ if axis is not specified, return all coords,
+    #     shaped makes axis capitalized and returns ogrid like crds
+    #     shaped is only used if axis == None
+    #     sfx can be none, node, cell, face, edge
+    #     raises KeyError if axis not found """
+    #     return self.get_dcrds([axis], shaped, center)[0]
+
+    # def get_dcrds(self, axes=None, shaped=False, center="none"):
+    #     """ axes: should be a list of names or integer indices, or None
+    #               to return all axes
+    #     shaped: boolean if you want a shaped or flat ndarray
+    #             (True is the same as capitalizing axis)
+    #     center: 'node' 'cell' 'edge' 'face', same as adding a suffix to axes
+    #     returns list of coords as ndarrays """
+    #     if axes == None:
+    #         axes = [a.upper() if shaped else a for a in self.axes]
+    #     if not isinstance(axes, (list, tuple)):
+    #         try:
+    #             axes = [a.upper() if shaped else a for a in axes]
+    #         except TypeError:
+    #             axes = [axes]
+    #     sfx = self._CENTER[center.lower()]
+    #     return [(self._crds[self.axis_name(a) + sfx][1] -
+    #              self._crds[self.axis_name(a) + sfx][0]) for a in axes]
+
+
+class NonuniformCrds(StructuredCrds):
+    _TYPE = "nonuniform"
+
+
+class UniformCartesianCrds(UniformCrds):
+    _TYPE = "uniform_cartesian"
     _axes = ["z", "y", "x"]
 
-    def __init__(self, init_clist=None, **kwargs):
-        super(RectilinearCrds, self).__init__(init_clist=init_clist, **kwargs)
+    def __init__(self, init_clist, **kwargs):
+        super(UniformCartesianCrds, self).__init__(init_clist, **kwargs)
 
 
-class CylindricalCrds(StructuredCrds):
-    _TYPE = "cylindrical"
-    _axes = ["z", "theta", "r"]
+class NonuniformCartesianCrds(NonuniformCrds):
+    _TYPE = "nonuniform_cartesian"
+    _axes = ["z", "y", "x"]
 
-    def __init__(self, init_clist=None, **kwargs):
-        super(CylindricalCrds, self).__init__(init_clist=init_clist, **kwargs)
+    def __init__(self, init_clist, **kwargs):
+        super(NonuniformCartesianCrds, self).__init__(init_clist, **kwargs)
 
 
-class SphericalCrds(StructuredCrds):
-    _TYPE = "spherical"
+# class UniformSphericalCrds(UniformCrds):
+#     _TYPE = "uniform_spherical"
+#     _axes = ["phi", "theta", "r"]
+
+#     def __init__(self, init_clist=None, **kwargs):
+#         super(UniformSphericalCrds, self).__init__(init_clist, **kwargs)
+
+
+class NonuniformSphericalCrds(NonuniformCrds):
+    _TYPE = "nonuniform_spherical"
     _axes = ["phi", "theta", "r"]
 
-    def __init__(self, init_clist=None, **kwargs):
-        super(SphericalCrds, self).__init__(init_clist=init_clist, **kwargs)
+    _target_nc_params = None
+
+    def __init__(self, init_clist, **kwargs):
+        """ This subclass is hackilly different from other crd types...
+        init_clist MUST be list of the form:
+        [
+            ['phi', [0.0, 360.0, 181]],
+            ['theta', [0.0, 180.0, 61]],
+            ['r', [0.95, 1.05, 2]],
+        ]
+        where the list is the first, last, num given to
+        numpy.linspace
+        """
+        self._axes = [d[0].lower() for d in init_clist]
+        self._target_nc_params = [d[1] for d in init_clist]
+        super(NonuniformSphericalCrds, self).__init__(None, **kwargs)
+
+    def _fill_crds_dict(self):
+        """ do the math to calc node, cell, face, edge crds from
+        the src crds """
+        # SUPERHACKY! ok, so we're ignoring the cordinates in the file, and
+        # just assuming they span the sphere... that way all we actually need
+        # is nphi, ntheta, so when we need the crds, fill _src_crds_nc as
+        # though we had them
+        self._src_crds_nc = {}
+        for ax, p in zip(self._axes, self._target_nc_params):
+            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2])
+        return super(NonuniformSphericalCrds, self)._fill_crds_dict()
 
 
 class UnstructuredCrds(Coordinates):

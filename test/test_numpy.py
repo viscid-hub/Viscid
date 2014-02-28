@@ -33,7 +33,7 @@ def main():
     y = np.array(np.linspace(-2, 2, 30), dtype=dtype)
     z = np.array(np.linspace(-5, 5, 90), dtype=dtype)
 
-    crds = coordinate.wrap_crds("Rectilinear", (('z', z), ('y', y),
+    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y),
                                                 ('x', x)))
     Z, Y, X = crds.get_crds_cc(shaped=True)
 
@@ -43,7 +43,7 @@ def main():
 
     v = field.VectorField("v", crds, [vx, vy, vz],
                               center="Cell", forget_source=True,
-                              info={"force_layout": field.LAYOUT_INTERLACED},
+                              _force_layout=field.LAYOUT_INTERLACED,
                              )
     vx, vy, vz = v.component_fields()
     mag = calc.magnitude(v)

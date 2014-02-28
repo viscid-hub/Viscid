@@ -6,11 +6,81 @@ try:
 except ImportError:
     izip = zip
 
-from . import readers
-from . import parallel
+import numpy as np
+try:
+    import numexpr as ne
+except ImportError:
+    pass
 
-def load_vfile(fname):
-    readers.load_file(fname)
+from . import parallel
+from . import field
+from . import coordinate
+
+def get_dipole(m=None, l=None, h=None, n=None, twod=False):
+    dtype = 'float64'
+    if l is None:
+        l = [-5] * 3
+    if h is None:
+        h = [5] * 3
+    if n is None:
+        n = [256] * 3
+    x = np.array(np.linspace(l[0], h[0], n[0]), dtype=dtype)
+    y = np.array(np.linspace(l[1], h[1], n[1]), dtype=dtype)
+    z = np.array(np.linspace(l[2], h[2], n[2]), dtype=dtype)
+    if twod:
+        y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
+    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
+
+    one = np.array([1.0], dtype=dtype) #pylint: disable=W0612
+    three = np.array([3.0], dtype=dtype) #pylint: disable=W0612
+    if m is None:
+        m = [0.0, 0.0, -1.0]
+    m = np.array(m, dtype=dtype)
+    mx, my, mz = m #pylint: disable=W0612
+
+    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True) #pylint: disable=W0612
+
+    rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
+    mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
+    Bx = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
+    By = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
+    Bz = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+
+    fld = field.VectorField("B_cc", crds, [Bx, By, Bz],
+                            center="Cell", forget_source=True,
+                            _force_layout=field.LAYOUT_INTERLACED,
+                           )
+    # fld_rsq = field.ScalarField("r", crds, hmm,
+    #                             center="Cell", forget_source=True)
+    return fld  # , fld_rsq
+
+def get_trilinear_field():
+    xl, xh, nx = -1.0, 1.0, 41
+    yl, yh, ny = -1.5, 1.5, 41
+    zl, zh, nz = -2.0, 2.0, 41
+    x = np.linspace(xl, xh, nx)
+    y = np.linspace(yl, yh, ny)
+    z = np.linspace(zl, zh, nz)
+    crds = coordinate.wrap_crds("nonuniform_cartesian",
+                                [('z', z), ('y', y), ('x', x)])
+    b = field.empty("Vector", "f", crds, 3, center="Cell",
+                      layout="interlaced")
+    Z, Y, X = b.get_crds(shaped=True)
+
+    x01, y01, z01 = 0.5, 0.5, 0.5
+    x02, y02, z02 = 0.5, 0.5, 0.5
+    x03, y03, z03 = 0.5, 0.5, 0.5
+
+    b['x'][:] = 0.0 + 1.0 * (X - x01) + 1.0 * (Y - y01) + 1.0 * (Z - z01) + \
+                1.0 * (X - x01) * (Y - y01) + 1.0 * (Y - y01) * (Z - z01) + \
+                1.0 * (X - x01) * (Y - y01) * (Z - z01)
+    b['y'][:] = 0.0 + 1.0 * (X - x02) - 1.0 * (Y - y02) + 1.0 * (Z - z02) + \
+                1.0 * (X - x02) * (Y - y02) + 1.0 * (Y - y02) * (Z - z02) - \
+                1.0 * (X - x02) * (Y - y02) * (Z - z02)
+    b['z'][:] = 0.0 + 1.0 * (X - x03) + 1.0 * (Y - y03) - 1.0 * (Z - z03) + \
+                1.0 * (X - x03) * (Y - y03) + 1.0 * (Y - y03) * (Z - z03) + \
+                1.0 * (X - x03) * (Y - y03) * (Z - z03)
+    return b
 
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                   show=False, kwopts=None):

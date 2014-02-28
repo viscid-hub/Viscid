@@ -16,6 +16,11 @@ from . import hdf5
 from . import numpy_binary
 from . import ascii
 
+# these imports register convenience readers for data from
+# specific sim packages
+from . import openggcm
+from . import psc
+
 __filebucket__ = vfile_bucket.VFileBucket()
 
 def load(fnames):
@@ -30,15 +35,26 @@ def load(fnames):
     else:
         return files[0]
 
-def load_file(fname):
+def load_file(fname, **kwargs):
     """ Load a single file and return a vFille.
-    This function is the primary means of loading a file. """
-    return __filebucket__.load_file(fname)
+    This function is the primary means of loading a file.
+    kwargs is passed to File constructor for changing the
+    grid_type and stuff.
+    """
+    return __filebucket__.load_file(fname, **kwargs)
 
-def load_files(fnames):
+def load_files(fnames, **kwargs):
     """ Load a single file and return a vFille.
-    This function is the primary means of loading a file. """
-    return __filebucket__.load_files(fnames)
+    This function is the primary means of loading a file.
+    kwargs is passed to File constructor for changing the
+    grid_type and stuff.
+    """
+    return __filebucket__.load_files(fnames, **kwargs)
+
+def get_file(handle):
+    """ return a file that's already been loaded by either
+    number (as in nth file loaded), of file name """
+    return __filebucket__[handle]
 
 def save_grid(fname, grd, **kwargs):
     """ save a grid, filetype is inferred from fname """

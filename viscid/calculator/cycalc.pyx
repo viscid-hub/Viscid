@@ -45,46 +45,48 @@ cdef inline int _c_int_min(int a, int b):
     else:
         return b
 
-cdef inline int _c_closest_ind(real_t[:] crd, real_t point,
-                               int *startind) except -1:
+def closest_ind(real_t[:] crd, point, int startind=0):
     cdef int i
     cdef int fallback
     cdef int n = crd.shape[0]
     cdef int forward = n > 1 and crd[1] > crd[0]
+    cdef real_t pt = point
 
-    if deref(startind) < 0:
-        startind[0] = 0
-    elif deref(startind) > n - 1:
-        startind[0] = n - 1
+    if startind < 0:
+        # startind[0] = 0
+        startind = 0
+    elif startind > n - 1:
+        # startind[0] = n - 1
+        startind = n - 1
 
     # search linearly... maybe branch prediction makes this better
     # than bisection for smallish arrays...
-    # point is 'upward' (index wise) of crd[startind]... only search up
-    if ((forward and crd[deref(startind)] <= point) or \
-        (not forward and crd[deref(startind)] >= point)):
-        for i from deref(startind) <= i < n - 1:
-            if forward and crd[i + 1] >= point:
-                startind[0] = i
+    # pt is 'upward' (index wise) of crd[startind]... only search up
+    if ((forward and crd[startind] <= pt) or \
+        (not forward and crd[startind] >= pt)):
+        for i from startind <= i < n - 1:
+            if forward and crd[i + 1] >= pt:
+                # startind[0] = i
                 return i
-            if not forward and crd[i + 1] <= point:
-                startind[0] = i
+            if not forward and crd[i + 1] <= pt:
+                # startind[0] = i
                 return i
         # if we've gone too far, pick the last index
         fallback = _c_int_max(n - 2, 0)
-        startind[0] = fallback
+        # startind[0] = fallback
         return fallback
 
     # startind was too large... go backwards
-    for i from deref(startind) - 1 >= i >= 0:
-        if forward and crd[i] <= point:
-            startind[0] = i
+    for i from startind - 1 >= i >= 0:
+        if forward and crd[i] <= pt:
+            # startind[0] = i
             return i
-        if not forward and crd[i] >= point:
-            startind[0] = i
+        if not forward and crd[i] >= pt:
+            # startind[0] = i
             return i
     # if we've gone too far, pick the first index
     fallback = 0
-    startind[0] = fallback
+    # startind[0] = fallback
     return fallback
 
 def interp_trilin(fld, seeds):
@@ -103,6 +105,9 @@ def interp_trilin(fld, seeds):
         raise RuntimeError("Dont touch me with that centering.")
 
     dtype = fld.dtype
+
+    if isinstance(seeds, list):
+        seeds = seed.Point(seeds)
 
     if fld.istype("Vector"):
         if not fld.layout == field.LAYOUT_INTERLACED:
@@ -131,11 +136,13 @@ def interp_trilin(fld, seeds):
         raise RuntimeError("That centering is not supported for interp_trilin")
 
 def _py_interp_trilin(dtype, real_t[:,:,:,::1] s, cnp.intp_t m,
-                      real_t[:] crdz, real_t[:] crdy, real_t[:] crdx, points,
-                      int nr_points):
+                      crdz_in, crdy_in, crdx_in, points, int nr_points):
     """ return the scalar value of 3d scalar array s trilinearly interpolated
     to the point x (in z, y, x order) """
     cdef unsigned int i
+    cdef real_t[:] crdz = crdz_in
+    cdef real_t[:] crdy = crdy_in
+    cdef real_t[:] crdx = crdx_in
     cdef real_t[:] *crds = [crdz, crdy, crdx]
     cdef int* start_inds = [0, 0, 0]
 
@@ -256,11 +263,14 @@ def interp_nearest(fld, seeds, fill=None):
         raise RuntimeError("That centering is not supported for interp_trilin")
 
 def _py_interp_nearest(dtype_fld, dtype_crds, fld_t[:,:,:,::1] s, cnp.intp_t m,
-                       real_t[:] crdz, real_t[:] crdy, real_t[:] crdx, points,
+                       real_t[:] crdz, crdy_in, crdx_in, points,
                        int nr_points, fld_t fill, bint use_fill):
     """ return the scalar value of 3d scalar array s trilinearly interpolated
     to the point x (in z, y, x order) """
     cdef unsigned int i
+    # cdef real_t[:] crdz = crdz_in  # need 1 crd to establish fused type
+    cdef real_t[:] crdy = crdy_in
+    cdef real_t[:] crdx = crdx_in
     cdef real_t[:] *crds = [crdz, crdy, crdx]
     cdef int* start_inds = [0, 0, 0]
 

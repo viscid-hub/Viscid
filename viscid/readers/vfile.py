@@ -11,7 +11,7 @@ import re
 from time import time
 
 from ..dataset import Dataset
-
+from .. import grid
 
 class DataWrapper(object):
     _shape = None
@@ -46,6 +46,8 @@ class VFile(Dataset):
     # _detector is a regex string used for file type detection
     _detector = None
     # _gc_warn = True  # i dont think this is used... it should go away?
+    _grid_type = grid.Grid
+    _grid_opts = {}
 
     vfilebucket = None
     load_time = None
@@ -57,15 +59,24 @@ class VFile(Dataset):
                  # for instance hdf5 File object
     # grids = None  # already part of Dataset
 
-    def __init__(self, fname, vfilebucket=None, **kwargs):
+    def __init__(self, fname, vfilebucket=None, grid_type=None, grid_opts=None,
+                 **kwargs):
         """  """
         super(VFile, self).__init__(fname, **kwargs)
+
+        if grid_type is not None:
+            self._grid_type = grid_type
+        if grid_opts is not None:
+            self.grid_opts = grid_opts
+        assert self._grid_type is not None
+        assert isinstance(self._grid_opts, dict)
 
         self.vfilebucket = vfilebucket
         self.load(fname)
 
     def load(self, fname):
         #self.unload()
+        fname = os.path.expanduser(os.path.expandvars(fname))
         self.fname = os.path.abspath(fname)
         self.dirname = os.path.dirname(self.fname)
         self.load_time = time()
@@ -134,7 +145,8 @@ class VFile(Dataset):
         class... that can also take care of the bucket / circular reference
         problem maybe
         """
-        for filetype in cls.__subclasses__(): #pylint: disable=E1101
+        # reversed gives precedence to the more recently declared classes
+        for filetype in reversed(cls.__subclasses__()): #pylint: disable=E1101
             td = filetype.detect_type(fname)
             if td:
                 return td

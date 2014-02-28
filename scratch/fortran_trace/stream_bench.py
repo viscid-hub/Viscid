@@ -26,7 +26,7 @@ from viscid.plot import mpl
 from viscid.plot import mvi
 from viscid.calculator import streamline
 from viscid.calculator import seed
-import topo_numba
+# import topo_numba
 
 gsize = (8, 8, 8)
 x1 = -10.0; x2 = -5.0 #pylint: disable=C0321
@@ -69,16 +69,15 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
 def trace_cython(fld_bx, fld_by, fld_bz):
     # print("Cython...")
     B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
-                                      info={"force_layout": field.LAYOUT_INTERLACED})
+                                      _force_layout=field.LAYOUT_INTERLACED)
     t0 = time()
     lines, topo = None, None
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
-                            maxit=5000, output=streamline.OUTPUT_TOPOLOGY,
+                            maxit=5000, output=streamline.OUTPUT_BOTH,
                             method=streamline.EULER1,
                             tol_lo=0.005, tol_hi=0.1,
                             fac_refine=0.75, fac_coarsen=1.5)
     t1 = time()
-
     topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
 
     cmap = plt.get_cmap('spectral')
@@ -111,7 +110,7 @@ def trace_cython(fld_bx, fld_by, fld_bz):
 
 def trace_numba(fld_bx, fld_by, fld_bz):
     B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
-                                      info={"force_layout": field.LAYOUT_INTERLACED})
+                                      _force_layout=field.LAYOUT_INTERLACED)
     topo_arr = np.empty(gsize, order='C', dtype='int')
     lines, topo = None, None
     t0 = time()
@@ -131,7 +130,8 @@ def main():
     # bx, by, bz = b3d.component_fields() #pylint: disable=W0612
 
     if args.file is None:
-        args.file = "/Users/kmaynard/dev/work/cen4000/cen4000.3d.xdmf"
+        # args.file = "/Users/kmaynard/dev/work/cen4000/cen4000.3d.xdmf"
+        args.file = "/Users/kmaynard/dev/work/tmp/cen2000.3d.004045.xdmf"
     f3d = readers.load_file(args.file)
 
     bx = f3d["bx"]

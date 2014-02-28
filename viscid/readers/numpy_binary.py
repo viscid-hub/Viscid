@@ -12,7 +12,6 @@ import logging
 import numpy as np
 
 from . import vfile
-from .. import grid
 from .. import coordinate
 from .. import field
 
@@ -101,7 +100,7 @@ class FileNumpyNPZ(vfile.VFile):
         return field.wrap_field(typ, fld_name, crds, lazy_arr, center=center)
 
     def _parse(self):
-        g = grid.Grid()
+        g = self._grid_type(**self._grid_opts)
 
         with np.load(self.fname) as f:
             fld_names = f.keys()
@@ -118,7 +117,7 @@ class FileNumpyNPZ(vfile.VFile):
                     if axisname in f:
                         crd_names.append(axisname)
             clist = [(cn, NPZDataWrapper(self.fname, cn)) for cn in crd_names]
-            crds = coordinate.wrap_crds("Rectilinear", clist)
+            crds = coordinate.wrap_crds("nonuniform_cartesian", clist)
             g.set_crds(crds)
             for c in clist:
                 # we should be sure by now that the keys exist

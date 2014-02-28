@@ -36,10 +36,10 @@ def main():
     hx = field.wrap_field("Scalar", "hx", jz.crds, np.zeros_like(jz.data),
                           center="Cell")
     h1 = field.scalar_fields_to_vector("H", [hx, f["hy"], f["hz"]],
-                                       force_layout="Interlaced",
+                                       _force_layout="Interlaced",
                                        forget_source=True)
     e = field.scalar_fields_to_vector("E", [f["ex"], f["ey"], f["ez"]],
-                                      force_layout="Interlaced",
+                                      _force_layout="Interlaced",
                                       forget_source=True)
 
     # plot magnetic fields, just a sanity check

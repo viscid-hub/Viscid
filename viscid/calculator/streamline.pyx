@@ -164,8 +164,7 @@ def _do_streamline_star(args):
     return ret
 
 @cython.wraparound(True)
-def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
-                   real_t[:] crdz, real_t[:] crdy, real_t[:] crdx,
+def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
                    int nr_streams, seed, seed_slice=(None, ), center="Cell",
                    ds0=0.0, ibound=0.0, obound0=None, obound1=None,
                    maxit=10000, max_length=0.0, stream_dir=DIR_BOTH,
@@ -188,6 +187,9 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv,
     topo is an ndarray with shape (nr_streams,) of topology bitmask """
     cdef:
         # cdefed versions of arguments
+        real_t[:] crdz = crdz_in
+        real_t[:] crdy = crdy_in
+        real_t[:] crdx = crdx_in
         real_t c_ds0 = ds0
         real_t c_ibound = ibound
         real_t c_obound0_carr[3]

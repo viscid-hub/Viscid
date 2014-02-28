@@ -99,9 +99,9 @@ def make_animation(args, program="ffmpeg"):
 
 def subclass_spider(cls):
     """ return recursive list of subclasses of cls (depth first) """
-    sub_classes = cls.__subclasses__()
     lst = [cls]
-    for c in sub_classes:
+    # reversed gives precedence to the more recently declared classes
+    for c in reversed(cls.__subclasses__()):
         lst += subclass_spider(c)
     return lst
 
@@ -113,6 +113,14 @@ def timereps(reps, func, *args, **kwargs):
         end = time()
         arr[i] = end - start
     return min(arr), max(arr), sum(arr) / reps
+
+def timeit(f, *args, **kwargs):
+    t0 = time()
+    ret = f(*args, **kwargs)
+    t1 = time()
+
+    print("Took {0:.03g} secs.".format(t1 - t0))
+    return ret
 
 ##
 ## EOF
