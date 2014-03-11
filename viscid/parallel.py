@@ -1,6 +1,7 @@
 """ module for common parallel processing """
 
-from __future__ import print_function
+from __future__ import print_function, division
+from math import ceil
 import multiprocessing as mp
 import multiprocessing.pool
 from contextlib import closing
@@ -29,11 +30,13 @@ class NoDaemonPool(multiprocessing.pool.Pool): #pylint: disable=W0223
     Process = NoDaemonProcess
 
 
-def chunk_list(seq, nchunks):
+def chunk_list(seq, nchunks, size=None):
     """
     slice seq into chunks if nchunks size, seq can be a anything sliceable
     such as lists, numpy arrays, etc. These chunks will be 'contiguous', see
     chunk_interslice for picking every nth element.
+
+    size: if given, set nchunks such that chunks have about 'size' elements
 
     Note: Use chunk_iterator to chunk up iterators
 
@@ -45,24 +48,32 @@ def chunk_list(seq, nchunks):
     it3 == range(6, 8)  # 2 vals
     """
     nel = len(seq)
+
+    if size is not None:
+        nchunks = int(ceil(nel / nchunks))
+
     ret = chunk_slices(nel, nchunks)
     for i in range(nchunks):
         ret[i] = seq[slice(*ret[i])]
     return ret
 
-def chunk_slices(nel, nchunks):
+def chunk_slices(nel, nchunks, size=None):
     """
     Get the slice info (can be unpacked & passed to the slice builtin as in
     slice(*ret[i])) for nchunks contiguous chunks in a list with nel elements
 
     nel: how many elements are in one pass of the original list
     nchunks: how many chunks to make
+    size: if given, set nchunks such that chunks have about 'size' elements
     Returns: a list of (start, stop) tuples with length nchunks
 
     ex: sl1, sl2 = chunk_slices(5, 2)
     -> sl1 == (0, 3)  # 3 vals
     -> sl2 == (3, 5)  # 2 vals
     """
+    if size is not None:
+        nchunks = int(ceil(nel / nchunks))
+
     nlong = nel % nchunks  # nshort guarenteed < nchunks
     lenshort = nel // nchunks
     lenlong = lenshort + 1
@@ -92,10 +103,11 @@ def chunk_interslices(nchunks):
         ret[i] = (i, None, nchunks)
     return ret
 
-def chunk_sizes(nel, nchunks):
+def chunk_sizes(nel, nchunks, size=None):
     """
     nel: how many elements are in one pass of the original list
     nchunks: is inferred from the length of iter_list
+    size: if given, set nchunks such that chunks have about 'size' elements
     Returns: an ndarray of the number of elements in each chunk, this
              should be the same for chunk_list, chunk_slices and
              chunk_interslices
@@ -104,6 +116,9 @@ def chunk_sizes(nel, nchunks):
     -> nel1 == 2
     -> nel2 == 3
     """
+    if size is not None:
+        nchunks = int(ceil(nel / nchunks))
+
     nlong = nel % nchunks  # nshort guarenteed < nchunks
     lenshort = nel // nchunks
     lenlong = lenshort + 1
