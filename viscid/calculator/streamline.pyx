@@ -7,7 +7,7 @@ what will happen on Windows """
 from __future__ import print_function
 from timeit import default_timer as time
 from logging import info, warning
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 from contextlib import closing
 from itertools import islice, repeat
 try:
@@ -109,6 +109,9 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1,
     crdz, crdy, crdx = fld.get_crds_cc()
     nr_streams = seed.nr_points(center=center)
     kwargs["center"] = center
+
+    if nr_procs == "all" or nr_procs == "auto":
+        nr_procs = cpu_count()
 
     if nr_procs == 1 and not force_parallel:
         lines, topo = _py_streamline(dtype, dat, crdz, crdy, crdx, nr_streams,
