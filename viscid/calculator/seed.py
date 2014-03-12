@@ -356,6 +356,13 @@ class SphericalCap(Sphere):
                           endpoint=False).astype(self.dtype)
         return theta, phi
 
+
+class Circle(SphericalCap):
+    def __init__(self, p0, p1, angle=90.0, resphi=20,
+                 r=None, cache=False):
+        super(Circle, self).__init__(p0, p1, angle, restheta=1,
+                                     resphi=resphi, r=r, cache=cache)
+
 # class SphericalCap2(SphericalCap):
 #     def _get_all_theta_phi(self):
 #         angle = self.params["angle"]
