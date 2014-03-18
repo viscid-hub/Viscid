@@ -205,6 +205,26 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     if action_ax is None:
         action_ax = ax
 
+    # ok, here's some raw hackery for contours
+    if style in ["contourf", "contour"]:
+        if "norm" in kwargs:
+            norm = kwargs["norm"]
+            if len(extra_args) > 0:
+                n = extra_args[0]
+                extra_args = extra_args[1:]
+            else:
+                # FIXME, this is a strange way to hardcode 10 contours
+                # by default
+                n = 10
+
+            if isinstance(norm, Normalize):
+                extra_args.insert(0, np.linspace(norm.vmin, norm.vmax, n))
+            elif isinstance(norm, LogNorm):
+                extra_args.insert(0, np.logspace(np.log10(norm.vmin),
+                                                 np.log10(norm.vmax), n))
+            else:
+                raise ValueError("I should never be here")
+
     earth = kwargs.pop("earth", False)
 
     if rotate_plot:
