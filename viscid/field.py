@@ -537,9 +537,7 @@ class Field(object):
             return slced_dat
         else:
             fld = self.wrap(slced_dat,
-                            {"name": self.name,
-                             "crds": crds,
-                            })
+                            {"crds": crds})
             # if there are reduced dims, put them into the deep_meta dict
             if len(reduced) > 0:
                 fld.deep_meta["reduced"] = reduced
@@ -712,6 +710,7 @@ class Field(object):
         if context is None:
             context = {}
         name = context.pop("name", self.name)
+        pretty_name = context.pop("pretty_name", self.pretty_name)
         crds = context.pop("crds", self.crds)
         center = context.pop("center", self.center)
         time = context.pop("time", self.time)
@@ -721,7 +720,7 @@ class Field(object):
         else:
             typ = field_type(typ)
         return typ(name, crds, arr, time=time, center=center,
-                   info=self.info, deep_meta=context)
+                   info=self.info, deep_meta=context, pretty_name=pretty_name)
 
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
         # print("wrapping")
