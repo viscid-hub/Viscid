@@ -265,7 +265,9 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
         c_obound1[...] = py_obound1
 
     if c_ds0 == 0.0:
-        c_ds0 = np.min([np.min(crdz), np.min(crdy), np.min(crdx)])
+        c_ds0 = 0.5 * np.min([np.min(crdz_in[1:] - crdz_in[:-1]),
+                              np.min(crdy_in[1:] - crdy_in[:-1]),
+                              np.min(crdx_in[1:] - crdx_in[:-1])])
 
     if method == EULER1:
         integrate_func = _c_euler1[real_t]
