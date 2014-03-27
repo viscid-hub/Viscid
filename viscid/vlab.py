@@ -82,6 +82,19 @@ def get_trilinear_field():
                 1.0 * (X - x03) * (Y - y03) * (Z - z03)
     return b
 
+def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
+              share_axes=False, show=False, kwopts=None):
+    grid_iter = izip(
+                     itertools.count(),
+                     file_.iter_times(time_slice),
+                     itertools.repeat(plot_vars),
+                     itertools.repeat(global_popts),
+                     itertools.repeat(share_axes),
+                     itertools.repeat(show),
+                     itertools.repeat(kwopts),
+                    )
+    parallel.map(nprocs, _do_multiplot, grid_iter)
+
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                   show=False, kwopts=None):
     import matplotlib.pyplot as plt
@@ -170,18 +183,6 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
         plt.show()
     plt.clf()
 
-def multiplot(file_, plot_vars, np=1, time_slice=":", global_popts=None,
-              share_axes=False, show=False, kwopts=None):
-    grid_iter = izip(
-                     itertools.count(),
-                     file_.iter_times(time_slice),
-                     itertools.repeat(plot_vars),
-                     itertools.repeat(global_popts),
-                     itertools.repeat(share_axes),
-                     itertools.repeat(show),
-                     itertools.repeat(kwopts),
-                    )
-    parallel.map(np, _do_multiplot, grid_iter)
 
 ##
 ## EOF

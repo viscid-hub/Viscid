@@ -84,8 +84,8 @@ def main():
              }
 
     file_ = readers.load_file(args.file[0])
-    vlab.multiplot(file_, args.plot_vars, np=args.np, time_slice=args.t,
-                   share_axes = (not args.own), global_popts=global_popts,
+    vlab.multiplot(file_, args.plot_vars, nprocs=args.np, time_slice=args.t,
+                   share_axes=(not args.own), global_popts=global_popts,
                    show=args.show, kwopts=kwopts)
 
     if args.animate:
