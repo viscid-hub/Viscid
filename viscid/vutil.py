@@ -51,7 +51,7 @@ def add_mpl_output_arguments(parser):
                         help="show plots with plt.show()")
     return parser
 
-def common_argparse(parser, **kwargs):
+def common_argparse(parser, default_verb=0, **kwargs):
     """ add some common verbosity stuff to argparse, parse the
     command line args, and setup the logging levels
     parser should be an ArgumentParser instance, and kwargs
@@ -60,7 +60,7 @@ def common_argparse(parser, **kwargs):
     general = parser.add_argument_group("Viscid general options")
     general.add_argument("--log", action="store", type=str, default=None,
                          help="Logging level (overrides verbosity)")
-    general.add_argument("-v", action="count", default=0,
+    general.add_argument("-v", action="count", default=default_verb,
                          help="increase verbosity")
     general.add_argument("-q", action="count", default=0,
                          help="decrease verbosity")
