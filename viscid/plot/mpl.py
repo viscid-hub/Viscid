@@ -408,10 +408,10 @@ def mplshow():
     # can't think of anything at this point...
     plt.show()
 
-def tighten():
+def tighten(**kwargs):
     """ tightens the layout so that axis labels dont get plotted over """
     try:
-        plt.tight_layout()
+        plt.tight_layout(**kwargs)
     except AttributeError:
         logging.warn("No matplotlib tight layout support")
 
