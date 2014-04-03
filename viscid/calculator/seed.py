@@ -358,10 +358,10 @@ class SphericalCap(Sphere):
 
 
 class Circle(SphericalCap):
-    def __init__(self, p0, p1, angle=90.0, resphi=20,
-                 r=None, cache=False):
+    def __init__(self, p0, p1, res=20, r=None,
+                 angle=90.0, cache=False):
         super(Circle, self).__init__(p0, p1, angle, restheta=1,
-                                     resphi=resphi, r=r, cache=cache)
+                                     resphi=res, r=r, cache=cache)
 
 # class SphericalCap2(SphericalCap):
 #     def _get_all_theta_phi(self):
