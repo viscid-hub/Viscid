@@ -316,7 +316,7 @@ class FileXDMF(vfile.VFile):
 
         if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
             crdtype = "uniform_cartesian"
-        if topotype in ['3DRectMesh', '2DRectMesh']:
+        elif topotype in ['3DRectMesh', '2DRectMesh']:
             crdtype = "nonuniform_cartesian"
         elif topotype in ['2DSMesh']:
             crdtype = "nonuniform_spherical"
@@ -357,7 +357,7 @@ class FileXDMF(vfile.VFile):
             crdlist = [['lat', [0.0, 180.0, nlat]],
                        ['lon', [0.0, 360.0, nlon]]]
 
-        elif topologytype in ['3DSMesh']:
+        elif topotype in ['3DSMesh']:
             raise NotImplementedError("3D spherical grids not yet supported")
         else:
             raise NotImplementedError("Unstructured grids not yet supported")
