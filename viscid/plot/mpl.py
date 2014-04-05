@@ -10,10 +10,10 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize, LogNorm
 from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 
-from .. import field
-from ..calculator import calc
-from ..calculator.topology import color_from_topology
-# from .. import vutil
+from viscid import field
+from viscid.calculator import calc
+from viscid.calculator.topology import color_from_topology
+# from viscid import vutil
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")

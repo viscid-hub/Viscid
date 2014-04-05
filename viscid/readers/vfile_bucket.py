@@ -5,8 +5,8 @@ import os
 import logging
 # import sys
 
-from ..bucket import Bucket
-from .vfile import VFile
+from viscid.bucket import Bucket
+from viscid.readers.vfile import VFile
 
 
 class VFileBucket(Bucket):

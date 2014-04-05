@@ -10,8 +10,8 @@ import os
 import re
 from time import time
 
-from ..dataset import Dataset
-from .. import grid
+from viscid.dataset import Dataset
+from viscid import grid
 
 class DataWrapper(object):
     _shape = None

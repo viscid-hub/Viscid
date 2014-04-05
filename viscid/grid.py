@@ -3,9 +3,9 @@
 
 from __future__ import print_function
 
-from . import field
-from .bucket import Bucket
-from .vutil import tree_prefix
+from viscid import field
+from viscid.bucket import Bucket
+from viscid.vutil import tree_prefix
 
 class Grid(object):
     """ Grids contain fields... Datasets recurse to grids using __getitem__

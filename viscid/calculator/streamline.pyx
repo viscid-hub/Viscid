@@ -17,9 +17,9 @@ except ImportError:
 
 import numpy as np
 
-from .. import parallel
-from .. import field
-from . import seed
+from viscid import parallel
+from viscid import field
+from viscid.calculator import seed
 
 ###########
 # cimports

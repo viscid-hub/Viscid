@@ -10,8 +10,8 @@ except ImportError:
 
 import numpy as np
 
-from .. import field
-from .. import coordinate
+from viscid import field
+from viscid import coordinate
 
 class SeedGen(object):
     _cache = None

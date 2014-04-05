@@ -18,7 +18,7 @@ import itertools
 
 import numpy as np
 
-from . import vutil
+from viscid import vutil
 
 
 def wrap_crds(typ, clist):

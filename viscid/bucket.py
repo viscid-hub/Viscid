@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-from .vutil import tree_prefix
 import logging
+
+# from viscid.vutil import tree_prefix
 
 class Bucket(object):
     """ This is an interface where  """

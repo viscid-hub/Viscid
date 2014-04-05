@@ -12,16 +12,16 @@ try:
 except ImportError:
     pass
 
-from . import parallel
-from . import field
-from . import coordinate
-from .calculator import seed
+from viscid import parallel
+from viscid import field
+from viscid import coordinate
+from viscid.calculator import seed
 
 # these compiled are needed for fluid following
 try:
-    from .calculator import cycalc
-    from .calculator import streamline
-    from .calculator.streamline import streamlines
+    from viscid.calculator import cycalc
+    from viscid.calculator import streamline
+    from viscid.calculator.streamline import streamlines
 except ImportError:
     pass
 

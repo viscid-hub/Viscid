@@ -5,9 +5,9 @@ from __future__ import print_function
 import numpy as np
 import h5py
 
-from .. import grid
-from .. import field
-from . import xdmf
+from viscid import grid
+from viscid import field
+from viscid.readers import xdmf
 
 
 class PscGrid(grid.Grid):

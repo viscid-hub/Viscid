@@ -8,13 +8,13 @@ from xml.etree import ElementTree
 
 import numpy as np
 
-from . import _xdmf_include
-from . import vfile
-from .vfile_bucket import VFileBucket
-from .hdf5 import FileLazyHDF5
-from .. import dataset
-from .. import coordinate
-from .. import field
+from viscid.readers import _xdmf_include
+from viscid.readers import vfile
+from viscid.readers.vfile_bucket import VFileBucket
+from viscid.readers.hdf5 import FileLazyHDF5
+from viscid import dataset
+from viscid import coordinate
+from viscid import field
 
 # class XDMFDataItem(data_item.DataItem):
 #     def set_precision():

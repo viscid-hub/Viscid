@@ -9,8 +9,8 @@ from mayavi.sources.vtk_data_source import VTKDataSource
 from mayavi.sources.builtin_surface import BuiltinSurface
 from tvtk.api import tvtk
 
-from .. import field
-from ..calculator.topology import color_from_topology
+from viscid import field
+from viscid.calculator.topology import color_from_topology
 
 # def data_source(fld):
 #     """ get a data source from a scalar field """

@@ -8,9 +8,9 @@ from __future__ import print_function
 
 import numpy as np
 
-from . import vfile
-from .. import coordinate
-from .. import field
+from viscid.readers import vfile
+from viscid import coordinate
+from viscid import field
 
 class FileASCII(vfile.VFile):  # pylint: disable=W0223
     """ open an ascii file with viscid format, or if not specified, assume

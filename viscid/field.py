@@ -12,8 +12,8 @@ from inspect import isclass
 
 import numpy as np
 
-from . import coordinate
-from . import vutil
+from viscid import coordinate
+from viscid import vutil
 
 LAYOUT_DEFAULT = "none"  # do not translate
 LAYOUT_INTERLACED = "interlaced"

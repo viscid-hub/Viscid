@@ -7,8 +7,8 @@ import logging
 
 import numpy as np
 
-from .bucket import Bucket
-from .vutil import tree_prefix
+from viscid.bucket import Bucket
+from viscid.vutil import tree_prefix
 
 class Dataset(object):
     """ datasets contain grids or other datasets

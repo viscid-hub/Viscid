@@ -10,9 +10,9 @@ try:
 except ImportError:
     _has_numexpr = False
 
-from . import xdmf
-from .. import grid
-from .. import field
+from viscid.readers import xdmf
+from viscid import grid
+from viscid import field
 
 
 class GGCMGrid(grid.Grid):

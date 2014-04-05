@@ -7,19 +7,19 @@
 # Also, look at csv for an example of overriding detect_type(...)
 
 # import vfile
-from .vfile import VFile
-from . import vfile_bucket
+from viscid.readers.vfile import VFile
+from viscid.readers import vfile_bucket
 
 # these imports are necessary to register file types
-from . import xdmf
-from . import hdf5
-from . import numpy_binary
-from . import ascii
+from viscid.readers import xdmf
+from viscid.readers import hdf5
+from viscid.readers import numpy_binary
+from viscid.readers import ascii
 
 # these imports register convenience readers for data from
 # specific sim packages
-from . import openggcm
-from . import psc
+from viscid.readers import openggcm
+from viscid.readers import psc
 
 __filebucket__ = vfile_bucket.VFileBucket()
 

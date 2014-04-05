@@ -10,7 +10,7 @@ except ImportError:
     HAS_H5PY = False
     logging.warn("h5py library not found, no hdf5 support.")
 
-from . import vfile
+from viscid.readers import vfile
 
 class H5pyDataWrapper(vfile.DataWrapper):
     """  """
