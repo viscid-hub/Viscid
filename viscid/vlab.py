@@ -176,7 +176,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                 mpl.plot(beta, selection=fld_slc, **fld_meta[1])
         else:
             with grid[fld_name] as fld:
-                mpl.plot(fld, selection=fld_slc, **fld_meta[1])
+                mpl.plot(fld, selection=fld_slc, mask_nan=True, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
 
     hrs = int(grid.time / 3600)

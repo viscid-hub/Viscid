@@ -260,6 +260,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     else:
         cbar = None
 
+    p.get_cmap().set_bad('k')
+
     plt.xlabel(namex)
     plt.ylabel(namey)
 
