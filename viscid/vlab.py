@@ -235,7 +235,7 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
             last_add_time = grid.time
         root_seeds = seed.Point(root_pts)
 
-    return None
+    return root_seeds
 
 def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
                        speed_scale):
