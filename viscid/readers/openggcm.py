@@ -2,6 +2,8 @@
 """ Wrapper grid for some OpenGGCM convenience """
 
 from __future__ import print_function
+import os
+import re
 
 import numpy as np
 try:
@@ -133,20 +135,39 @@ class GGCMGrid(grid.Grid):
     def _get_bz(self):
         return self['b'].component_fields()[2]
 
-    def _get_b(self):
-        with self['bx'] as bx, self['by'] as by, self['bz'] as bz:
-            b = field.scalar_fields_to_vector("B", [bx, by, bz],
-                            _force_layout=self.force_vector_layout,
-                            forget_source=True)
-        return b
+    def _assemble_vector(self, base_name, comp_names="xyz", forget_source=True,
+                         **kwargs):
 
-    def _get_v(self):
-        with self['vx'] as vx, self['vy'] as vy, self['vz'] as vz:
-            v = field.scalar_fields_to_vector("V", [vx, vy, vz],
-                            _force_layout=self.force_vector_layout,
-                            forget_source=True)
+        opts = dict(forget_source=forget_source, **kwargs)
+
+        if len(comp_names) == 3:
+            with self[base_name + comp_names[0]] as vx, \
+                 self[base_name + comp_names[1]] as vy, \
+                 self[base_name + comp_names[2]] as vz:
+                 v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
+                                                   **opts)
+        else:
+            comps = [self[basename + c] for c in comp_names]
+            v = field.scalar_fields_to_vector(base_name, comps, **opts)
+            for comp in comps:
+                comp.unload()
         return v
 
+    def _get_b(self):
+        return self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                     pretty_name="B")
+
+    def _get_v(self):
+        return self._assemble_vector("v", _force_layout=self.force_vector_layout,
+                                     pretty_name="V")
+
+    def _get_e(self):
+        return self._assemble_vector("e", _force_layout=self.force_vector_layout,
+                                     pretty_name="E")
+
+    def _get_j(self):
+        return self._assemble_vector("j", _force_layout=self.force_vector_layout,
+                                     pretty_name="J")
 
     @staticmethod
     def _calc_mag(vx, vy, vz):
@@ -177,9 +198,15 @@ class GGCMGrid(grid.Grid):
 
 
 class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
-    _detector = r"^\s*.*\.(p[xyz]_[0-9]+|3d|3df)" \
+    _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3d|3df)" \
                 r"(\.[0-9]{6})?\.(xmf|xdmf)\s*$"
     _grid_type = GGCMGrid
+
+    def load(self, fname):
+        super(GGCMFile, self).load(fname)
+        basename = os.path.basename(self.fname)
+        print(self.fname, basename)
+        self.info['run'] = re.match(self._detector, basename).group(1)
 
 ##
 ## EOF

@@ -26,12 +26,15 @@ class Dataset(object):
     geometry_info = None
     crds = None
 
+    info = None
+
     def __init__(self, name, time=None):
         self.name = name
         self.children = Bucket()
 
         self.active_child = None
         self.time = time
+        self.info = {}
 
     def add(self, child, set_active=True):
         self.children[child.name] = child
