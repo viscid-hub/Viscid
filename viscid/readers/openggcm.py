@@ -205,7 +205,6 @@ class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
     def load(self, fname):
         super(GGCMFile, self).load(fname)
         basename = os.path.basename(self.fname)
-        print(self.fname, basename)
         self.info['run'] = re.match(self._detector, basename).group(1)
 
 ##
