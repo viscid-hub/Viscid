@@ -273,7 +273,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         mplshow()
     return p, cbar
 
-def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
+def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
+                 action_ax=None, **kwargs):
     namex, = fld.crds.axes
     if fld.iscentered("Node"):
         x = fld.get_crd_nc(namex)
@@ -281,7 +282,14 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, **kwargs):
         x = fld.get_crd_cc(namex)
 
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
-    p = plt.plot(x, fld.data, **kwargs)
+    if action_ax is None:
+        action_ax = ax
+
+    dat = fld.data
+    if mask_nan:
+        dat = np.ma.masked_where(np.isnan(dat), dat)
+
+    p = action_ax.plot(x, dat, **kwargs)
     plt.xlabel(namex)
     plt.ylabel(fld.pretty_name)
     # _apply_acts(acts)
