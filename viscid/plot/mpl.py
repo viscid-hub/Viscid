@@ -289,6 +289,9 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
     if mask_nan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
 
+    if "label" not in kwargs:
+        kwargs["label"] = fld.pretty_name
+
     p = action_ax.plot(x, dat, **kwargs)
     plt.xlabel(namex)
     plt.ylabel(fld.pretty_name)

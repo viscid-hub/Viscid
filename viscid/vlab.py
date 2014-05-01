@@ -119,6 +119,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     out_prefix = kwopts.get("out_prefix", None)
     out_format = kwopts.get("out_format", "png")
     selection = kwopts.get("selection", None)
+    rawtime = kwopts.get("rawtime", False)
 
     nrows = len(plot_vars)
     ncols = 1
@@ -179,11 +180,15 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                 mpl.plot(fld, selection=fld_slc, mask_nan=True, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
 
-    hrs = int(grid.time / 3600)
-    mins = int((grid.time / 60) % 60)
-    secs = grid.time % 60
-    # plt.suptitle("t = {0:.2f}".format(grid.time))
-    plt.suptitle("t = {0}:{1:02}:{2:05.2f}".format(hrs, mins, secs))
+    if rawtime:
+        plt.suptitle("t = {0:g}".format(grid.time))
+    else:
+        hrs = int(grid.time / 3600)
+        mins = int((grid.time / 60) % 60)
+        secs = grid.time % 60
+        # plt.suptitle("t = {0:.2f}".format(grid.time))
+        plt.suptitle("t = {0}:{1:02}:{2:05.2f}".format(hrs, mins, secs))
+
     mpl.tighten(rect=[0, 0.03, 1, 0.90])
 
     if out_prefix:
