@@ -15,7 +15,7 @@ except ImportError:
 from viscid.readers import xdmf
 from viscid import grid
 from viscid import field
-
+from viscid.calculator import plasma
 
 class GGCMGrid(grid.Grid):
     """ This defines some cool openggcm convinience stuff...
@@ -124,6 +124,7 @@ class GGCMGrid(grid.Grid):
         rr = self["rr"]
         T = pp / rr
         T.name = "T"
+        T.pretty_name = "T"
         return T
 
     def _get_bx(self):
@@ -196,6 +197,8 @@ class GGCMGrid(grid.Grid):
         speed.name = "Speed"
         return speed
 
+    def _get_beta(self):
+        return plasma.calc_beta(self['pp'], self['b'])
 
 class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
     _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3d|3df)" \

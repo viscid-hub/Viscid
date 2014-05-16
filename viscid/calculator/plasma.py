@@ -72,7 +72,8 @@ def calc_beta(pp, B, norm=1.0):
                              local_dict=ldict)
     else:
         result = norm * two * pp / np.sqrt(bx**2 + by**2 + bz**2)
-    return pp.wrap(result, name="beta", pretty_name=r"$\beta_{pl}$")
+    context = dict(name="beta", pretty_name=r"$\beta_{pl}$")
+    return pp.wrap(result, context=context)
 
 ##
 ## EOF

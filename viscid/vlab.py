@@ -165,19 +165,8 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
             fld_meta[1]["plot_opts"] = "{0},{1}".format(
                 fld_meta[1]["plot_opts"], global_popts)
 
-        # FIXME: this method of plotting T, beta, etc. really sucks
-        # also... do i really need with statements here?
-        if fld_name == "T":
-            with grid["pp"] as pp, grid["rr"] as rr:
-                mpl.plot(pp / rr, selection=fld_slc, **fld_meta[1])
-        elif fld_name == "beta":
-            with grid["bx"] as bx, grid["by"] as by, \
-                 grid["bz"] as bz, grid["pp"] as pp:
-                beta = pp / (bx**2 + by**2 + bz**2)
-                mpl.plot(beta, selection=fld_slc, **fld_meta[1])
-        else:
-            with grid[fld_name] as fld:
-                mpl.plot(fld, selection=fld_slc, mask_nan=True, **fld_meta[1])
+        with grid[fld_name] as fld:
+            mpl.plot(fld, selection=fld_slc, mask_nan=True, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
 
     if fancytime:
