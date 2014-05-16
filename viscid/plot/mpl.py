@@ -28,6 +28,13 @@ def plot(fld, selection=None, **kwargs):
         if fld.nr_sdims == 1:
             return plot1d_field(fld, **kwargs)
         elif fld.nr_sdims == 2:
+            if "spherical" in fld.crds._TYPE:
+                try:
+                    from mpl_toolkits.basemap import Basemap
+                    return plot2d_mapfield(fld, **kwargs)
+                except ImportError:
+                    print("Note: Install basemap for better map projection "
+                          "plots")
             return plot2d_field(fld, **kwargs)
         else:
             raise ValueError("mpl can only do 1-D or 2-D fields")
@@ -133,7 +140,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
     if "norm" in kwargs and "cmap" not in kwargs:
         norm = kwargs["norm"]
         if norm.vmin and norm.vmax and np.abs(norm.vmax + 1.0*norm.vmin) < 1e-4:
-            kwargs["cmap"] =  plt.get_cmap('seismic')
+            kwargs["cmap"] = plt.get_cmap('seismic')
 
     # return axis, acts
     return axis
@@ -146,7 +153,8 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
                  show=False, mask_nan=False, mod=None, plot_opts=None,
                  colorbar=True, rotate_plot=False, label_cbar=True,
-                 action_ax=None, extra_args=[], **kwargs):
+                 action_ax=None, do_labels=True,
+                 extra_args=[], **kwargs):
     """ Plot a 2D Field using pcolormesh or contour or something like that...
 
     style: "pcolormesh", "contour", "pcolor", style of 2D plot
@@ -158,8 +166,10 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     mod: list of scaling factors for the coords
     plot_opts: string of options
     colorbar: is evaluated boolean to decide whether to plot a colorbar, if
-    it is a dict, it's passed to colorbar as keyword args
-    (note: bool({}) == False) """
+        it is a dict, it's passed to colorbar as keyword args
+        (note: bool({}) == False)
+    do_labels: whether or not to label x/y axes
+    """
     if fld.nr_sdims != 2:
         raise RuntimeError("I will only contour a 2d field")
 
@@ -187,6 +197,11 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
             X, Y = fld.get_crds_nc((namex, namey))
         elif fld.iscentered("Cell"):
             X, Y = fld.get_crds_cc((namex, namey))
+
+    if kwargs.get('latlon', False):
+        # translate latitude from 0..180 to -90..90
+        X, Y = np.meshgrid(X, 90 - Y)
+
     dat = fld.data
 
     if mod:
@@ -262,8 +277,9 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
 
     p.get_cmap().set_bad('k')
 
-    plt.xlabel(namex)
-    plt.ylabel(namey)
+    if do_labels:
+        plt.xlabel(namex)
+        plt.ylabel(namey)
 
     # _apply_acts(acts)
 
@@ -272,6 +288,64 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     if show:
         mplshow()
     return p, cbar
+
+def mlt_labels(longitude):
+    return "{0:g}".format(longitude * 24.0 / 360.0)
+
+def plot2d_mapfield(fld, **kwargs):
+    """Plot data on a map projection of a sphere using Basemap
+
+    Args:
+        fld (Field): field whose crds are spherical
+        **kwargs: either mapping keyword arguments, or those that should
+            be passed along to plot2d_field
+
+    Keyword Arguments:
+        hemisphere (string): 'north' or 'south'
+        projection (string): Basemap projection to use
+        lon_0 (float): center longitude
+        lat_0 (fload): center latitude
+        bounding_lat (float): bounding latitude (not for all projections)
+
+    """
+    from mpl_toolkits.basemap import Basemap
+
+    hemisphere = kwargs.pop("hemisphere", "north").lower()
+
+    if hemisphere == "north":
+        def_projection = "nplaea"
+        def_boundinglat = 40.0
+        latlabel_arr = np.linspace(50.0, 80.0, 4)
+    elif hemisphere == "south":
+        def_projection = "splaea"
+        def_boundinglat = -40.0
+        latlabel_arr = -1.0 * np.linspace(50.0, 80.0, 4)
+    else:
+        raise ValueError("hemisphere is either 'north' or 'south'")
+
+    boundinglat = kwargs.pop("boundinglat", def_boundinglat)
+    projection = kwargs.pop("projection", def_projection)
+    lon_0 = kwargs.pop("lon_0", 0.0)
+    lat_0 = kwargs.pop("lat_0", None)
+    drawcoastlines = kwargs.pop("drawcoastlines", False)
+    ax = kwargs.get("ax", None)
+
+    m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
+                boundinglat=boundinglat, ax=ax)
+
+    kwargs['latlon'] = True
+    kwargs['action_ax'] = m
+    kwargs['do_labels'] = False
+    kwargs['equalaxis'] = False
+    ret = plot2d_field(fld, **kwargs)
+    m.drawparallels(latlabel_arr, labels=[1, 1, 1, 1],
+                    linewidth=0.25)
+    m.drawmeridians(np.linspace(360.0, 0.0, 8, endpoint=False),
+                    labels=[1, 1, 1, 1], fmt=mlt_labels, linewidth=0.25)
+    if drawcoastlines:
+        m.drawcoastlines(linewidth=0.25)
+    return ret
+
 
 def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
                  action_ax=None, **kwargs):
