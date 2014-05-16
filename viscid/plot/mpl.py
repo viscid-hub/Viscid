@@ -133,7 +133,9 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             logging.warn("own axis doesn't seem to work yet...")
 
         else:
-            logging.warn("Unknown plot option ({0})".format(opt[0]))
+            # logging.warn("Unknown plot option ({0})".format(opt[0]))
+            kwargs[opt[0]] = opt[1]
+
 
     # things that i just want to be automagic...
     # use seismic cmap if the data looks centered around 0
