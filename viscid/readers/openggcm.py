@@ -147,7 +147,7 @@ class GGCMGrid(grid.Grid):
                  v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
                                                    **opts)
         else:
-            comps = [self[basename + c] for c in comp_names]
+            comps = [self[base_name + c] for c in comp_names]
             v = field.scalar_fields_to_vector(base_name, comps, **opts)
             for comp in comps:
                 comp.unload()
