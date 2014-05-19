@@ -200,6 +200,18 @@ class GGCMGrid(grid.Grid):
     def _get_beta(self):
         return plasma.calc_beta(self['pp'], self['b'])
 
+    def _get_psi(self):
+        B = self['b']
+        # try to guess if a dim of a 3D field is invariant
+        if B.nr_sdims > 2:
+            slcs = [slice(None)] * B.nr_sdims
+            for i, nxi in enumerate(B.sshape):
+                if nxi <= 2:
+                    slcs[i] = 0
+            B = B[slcs]
+        return plasma.calc_psi(B)
+
+
 class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
     _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3d|3df)" \
                 r"(\.[0-9]{6})?\.(xmf|xdmf)\s*$"
