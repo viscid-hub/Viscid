@@ -12,7 +12,7 @@
 			[
 				{
 					"name": "Develop",
-					"shell_cmd": "python setup.py dev"
+					"shell_cmd": "python setup.py dev -j4"
 				},
 				{
 					"name": "Clean",
@@ -20,7 +20,7 @@
 				},
 				{
 					"name": "Install",
-					"shell_cmd": "python setup.py install"
+					"shell_cmd": "python setup.py install -j4"
 				}
 			],
 			"working_dir": "${folder}"
