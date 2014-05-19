@@ -7,19 +7,22 @@ from __future__ import print_function
 import sys
 import os
 import glob
-from subprocess import Popen, CalledProcessError, STDOUT, PIPE
+from subprocess import Popen, CalledProcessError, PIPE
 from distutils.command.clean import clean
 from distutils import log
-from distutils.core import setup
-from distutils.extension import Extension
+# from distutils.core import setup
+# from distutils.extension import Extension
 from distutils import sysconfig
 
 import numpy as np
+from numpy.distutils.core import setup
+from numpy.distutils.extension import Extension as Extension
+npExtension = Extension
 
 from doc import ver
 
 try:
-    from Cython.Distutils import build_ext
+    from Cython.Build import cythonize
     has_cython = True
 except ImportError:
     has_cython = False
@@ -36,30 +39,39 @@ scripts = glob.glob(os.path.join('scripts', '*'))
 
 # list of extension objects
 ext_mods = []
-# cy_defs is [["path.to.module1", ["path/to/src1", "path/to/src2"], ["other"]],
-#             ["path.to.module2", ["path/to/src1", "path/to/src2"], ["other"]]]
+# cy_defs is [["path.to.module1", ["path/to/src1", "path/to/src2"], dict()],
+#             ["path.to.module2", ["path/to/src1", "path/to/src2"], dict()]]
 # note that sources should be without extension, .pyx will be
 # appended if building with cython, and .c will be appended
 # if using pre-generated c files
-# "other" files are files with set extensions, like .pxd dependancies
+# dict are kwargs that go into the Extension() constructor
 cy_ccflags = ["-Wno-unused-function"]
 cy_ldflags = []
 cy_defs = []
 cy_defs.append(["viscid.calculator.cycalc",
                 ["viscid/calculator/cycalc"],
-                ["viscid/calculator/cycalc_util.pxd"]
+                dict()
                ])
 cy_defs.append(["viscid.calculator.integrate",
                 ["viscid/calculator/integrate"],
-                ["viscid/calculator/cycalc_util.pxd",
-                 "viscid/calculator/cycalc.pxd"]
+                dict()
                ])
 cy_defs.append(["viscid.calculator.streamline",
                 ["viscid/calculator/streamline"],
-                ["viscid/calculator/cycalc_util.pxd",
-                 "viscid/calculator/cycalc.pxd",
-                 "viscid/calculator/integrate.pxd"]
+                dict()
                ])
+
+fort_fcflags = []
+fort_ldflags = []
+fort_defs = []
+fort_defs.append(["viscid.readers._fortfile",
+                  ["viscid/readers/_fortfile.F90"],
+                  dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
+                 ])
+fort_defs.append(["viscid.readers.jrrle",
+                  ["viscid/readers/jrrle.f90"],
+                  dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
+                 ])
 
 ############################################################################
 # below this line shouldn't need to be changed except for version and stuff
@@ -95,11 +107,30 @@ try:
 except ValueError:
     use_cython = False
 
+# check for multicore build
+_nprocs = 1
+for i, arg in enumerate(sys.argv):
+    if arg.startswith("-j"):
+        try:
+            if arg.endswith("-j"):
+                # get number from the next arg
+                _nprocs = int(sys.argv.pop(i + 1))
+            else:
+                _nprocs = int(arg[2:])
+            sys.argv.pop(i)
+            break
+        except IndexError:
+            raise RuntimeError("Syntax for multiple process build is "
+                               "-jN or -j N")
+            sys.exit(2)
+        except ValueError:
+            raise RuntimeError("Number of build procs must be an integer")
+            sys.exit(3)
+
 # decide which extension to add to cython sources (pyx or c)
 cy_ext = ".c"  # or ".cpp"?
 if has_cython and use_cython:
     cy_ext = ".pyx"
-    cmdclass["build_ext"] = build_ext
 
 # add extension to cython sources
 for i, d in enumerate(cy_defs):
@@ -109,16 +140,11 @@ for i, d in enumerate(cy_defs):
             cy_defs[i][1][j] = fname
         else:
             log.warn("{0} not found. Skipping extension: "
-                  "{1}".format(fname, cy_defs[i][0]))
+                     "{1}".format(fname, cy_defs[i][0]))
             print("To use this extension, please install cython",
                   file=sys.stderr)
             cy_defs[i] = None
             break
-
-    # remove cythonic dependancies if we're not using cython
-    if not (has_cython and use_cython):
-        for j, dep in reversed(list(enumerate(d[2]))):
-            d[2].pop(j)
 
 # get clean to remove inplace files
 class Clean(clean):
@@ -153,11 +179,23 @@ cmdclass["clean"] = Clean
 for d in cy_defs:
     if d is None:
         continue
+
     src_lst = d[1]
-    if has_cython:
-        src_lst += d[2]
-    ext_mods += [Extension(d[0], src_lst, extra_compile_args=cy_ccflags,
-                           extra_link_args=cy_ldflags)]
+
+    _ext = Extension(d[0], src_lst, extra_compile_args=cy_ccflags,
+                     extra_link_args=cy_ldflags, **d[2])
+    ext_mods += [_ext]
+
+if has_cython and use_cython:
+    ext_mods = cythonize(ext_mods, nthreads=_nprocs)
+
+# make fortran extension instances
+for d in fort_defs:
+    if d is None:
+        continue
+    src_lst = d[1]
+    ext_mods += [npExtension(d[0], src_lst, extra_compile_args=fort_fcflags,
+                             extra_link_args=fort_ldflags, **d[2])]
 
 # hack for OSX pythons that are compiled with gcc symlinked to llvm-gcc
 if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
