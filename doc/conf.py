@@ -28,6 +28,16 @@ sys.path.insert(0, os.path.abspath('..'))
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode']
 
+try:
+    from sphinx.ext import napoleon
+    extensions += ['sphinx.ext.napoleon']
+except ImportError:
+    try:
+        from sphinxcontrib import napoleon
+        extensions += ['sphinxcontrib.napoleon']
+    except ImportError:
+        print("You should install napoleon for Google style docstring formatting")
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

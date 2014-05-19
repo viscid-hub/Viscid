@@ -31,13 +31,13 @@ def main():
     ax1 = plt.subplot(121)
     mpl.plot(fac_tot, ax=ax1, hemisphere="north", style="contourf",
              plot_opts="lin_-300_300", extend="both",
-             extra_args=[50], drawcoastlines=True)
+             levels=50, drawcoastlines=True)
     ax2 = plt.subplot(122)
     mpl.plot(fac_tot, ax=ax2, hemisphere="south", style="contourf",
              plot_opts="lin_-300_300", extend="both",
-             extra_args=[50], drawcoastlines=True)
+             levels=50, drawcoastlines=True)
 
-    if True: #args.show:
+    if args.show:
         mpl.mplshow()
 
 if __name__ == "__main__":

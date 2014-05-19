@@ -1,5 +1,8 @@
-#!/usr/bin/env python
+"""Convenience module for making matplotlib plots
 
+Your best friend in this module is the :meth:`plot` function, but the
+best reference for all quirky options is :meth:`plot2d_field`.
+"""
 from __future__ import print_function
 import logging
 from distutils.version import LooseVersion
@@ -19,9 +22,36 @@ __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 
 def plot(fld, selection=None, **kwargs):
-    """ just plot... should generically dispatch to gen the right
-    matplotlib plot given the field. returns the mpl plot and color bar
-    as a tuple """
+    """Plot a field by dispatching to the most appropiate funciton
+
+    * If fld has 1 spatial dimensions, call
+      :meth:`plot1d_field(fld[selection], **kwargs)`
+    * If fld has 2 spatial dimensions, call
+      :meth:`plot2d_field(fld[selection], **kwargs)`
+    * If fld is 2-D and has spherical coordinates (as is the case for
+      ionospheric fields), try to use :meth:`plot2d_mapfield` which
+      uses basemap to make its axes.
+
+    Parameters:
+        selection (optional): something that describes a field slice
+        **kwargs: passed as keyword arguments to the actual plotting
+            function
+
+    Returns:
+        tuple: (plot, colorbar)
+            plot: matplotlib plot object
+            colorbar: matplotlib colorbar object
+
+    See Also:
+        * :meth:`plot1d_field`: target for 1d fields
+        * :meth:`plot2d_mapfield`: target for 2d spherical fields
+        * :meth:`plot2d_field`: target for 2d fields
+
+
+    Note:
+        Field slices are done using "slice_reduce", meaning extra
+        dimensions are reduced out.
+    """
     if isinstance(fld, field.ScalarField):
         fld = fld.slice_reduce(selection)
 
@@ -105,11 +135,6 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             if fld.nr_sdims == 2:
                 kwargs["norm"] = LogNorm(*opt[1:])
 
-        elif opt[0] in ["g", "grid"]:
-            kwargs["edgecolors"] = 'k'
-            kwargs["linewidths"] = 0.2
-            kwargs["antialiased"] = True
-
         elif opt[0] == "x":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
             axis.set_xlim(*opt[1:])
@@ -119,9 +144,6 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
             axis.set_ylim(*opt[1:])
             # acts.append([axis, "ylim", opt[1:]])
-
-        elif opt[0] == "earth":
-            kwargs["earth"] = True
 
         elif opt[0] == "own":
             logging.warn("own axis doesn't seem to work yet...")
@@ -133,8 +155,12 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             logging.warn("own axis doesn't seem to work yet...")
 
         else:
-            # logging.warn("Unknown plot option ({0})".format(opt[0]))
-            kwargs[opt[0]] = opt[1]
+            try:
+                kwargs[opt[0]] = opt[1]
+            except IndexError:
+                kwargs[opt[0]] = True
+                # logging.warn("Unknown plot option ({0}) didn't parse "
+                #              "correctly".format(opt[0]))
 
 
     # things that i just want to be automagic...
@@ -152,28 +178,92 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 #         print(act)
 #         plt.setp(act[0], act[1], act[2])
 
-def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
-                 show=False, mask_nan=False, mod=None, plot_opts=None,
-                 colorbar=True, rotate_plot=False, label_cbar=True,
-                 action_ax=None, do_labels=True,
-                 extra_args=[], **kwargs):
-    """ Plot a 2D Field using pcolormesh or contour or something like that...
+def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
+                 colorbar=True, rotate_plot=False, equalaxis=True,
+                 mask_nan=False, do_labels=True, show=False, action_ax=None,
+                 mod=None, extra_args=None, **kwargs):
+    """Plot a 2D Field using pcolormesh, contour, etc.
 
-    style: "pcolormesh", "contour", "pcolor", style of 2D plot
-    ax: axis to plot in (plt.gca() used if not specified)
-    equalaxis: whether or not the plot will enforce equal aspect ratio
-    earth: whether or not to plot
-    show: call mpl.show() afterward
-    mask_nan: mask nan values in fld.data
-    mod: list of scaling factors for the coords
-    plot_opts: string of options
-    colorbar: is evaluated boolean to decide whether to plot a colorbar, if
-        it is a dict, it's passed to colorbar as keyword args
-        (note: bool({}) == False)
-    do_labels: whether or not to label x/y axes
+    Parameters:
+        style (str, optional): One of pcolormesh, pcolor, contour, or
+            contourf
+        ax (matplotlib axis, optional): Plot in a specific axis object
+        plot_opts (str, optional): comma separated string of additional
+            options with underscore separated argument options. They are
+            summarized as follows...
+                ======  ===============================================
+                Option  Description
+                ======  ===============================================
+                lin     Use a linear scale for data with two optional
+                        sub-options giving a range. "lin_0" has the
+                        special meaning to make the range symmetric
+                        about 0
+                log     Use a log scale, with two sub-options for the
+                        range
+                loglog  same as log, but also make coordinates log
+                        scaled
+                x       Set limits of x axis using 2 manditory
+                        sub-options
+                y       Set limits of y axis using 2 manditory
+                        sub-options
+                grid    plot lines showing grid cells
+                earth   plot a black and white Earth
+                ======  ===============================================
+
+            If a plot_opt is not understood, it is added to kwargs.
+            Some plot_opt examples are:
+                * "lin_-300_300,earth",
+                * "log,x_-3_30,y_-10_10,cmap_afmhot"
+                * "lin_0,x_-10_20,grid,earth"
+        **kwargs: Some other keyword arguments are understood and
+            described below, and all others are passed as keyword
+            arguments to the matplotlib plotting functions. This way,
+            one can pass arguments like cmap and the like.
+
+    Other Parameters:
+        colorbar (bool or dict): If dict, the items are passed to
+            plt.colorbar as keyword arguments
+        rotate_plot (bool): flip x and y axes
+        equalaxis (bool, optional): Fix 1:1 aspect ratio for grid cells
+        mask_nan (bool, optional): Plot a masked array
+        levels (int): Number of contours to follow (default: 10)
+        do_labels: automatically label x/y axes and color bar
+        grid (bool): Plot lines showing grid cells
+        earth (bool): Plot a black and white circle representing Earth
+            showing the sunlit half
+        show (bool, optional): Call pyplot.show before returning
+        action_ax: axis on which to call matplotlib functions... I
+            don't even remember why this was necessary
+        mod (list of floats): DEPRECATED, scale x and y axes by some
+            factor
+        extra_args (list): DEPRECATED, was used to pass *args to
+            matplotlib functions, like contour levels, but there
+            is probably a better way to give these options
     """
     if fld.nr_sdims != 2:
         raise RuntimeError("I will only contour a 2d field")
+
+    if extra_args is None:
+        extra_args = []
+
+    if not ax:
+        ax = plt.gca()
+    if action_ax is None:
+        action_ax = ax
+
+    # parse plot_opts and apply them
+    ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+
+    # make customizing plot type from command line possible
+    style = kwargs.pop("style", style)
+    earth = kwargs.pop("earth", False)
+
+    show_grid = kwargs.pop("grid", False)
+    show_grid = kwargs.pop("g", show_grid)
+    if show_grid:
+        kwargs["edgecolors"] = 'k'
+        kwargs["linewidths"] = 0.2
+        kwargs["antialiased"] = True
 
     # THIS IS BACKWARD, on account of the convention for
     # Coordinates where z, y, x is used since that is how
@@ -214,35 +304,28 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
     if mask_nan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
 
-    if not ax:
-        ax = plt.gca()
     if equalaxis:
         ax.axis('equal')
-    ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
-    if action_ax is None:
-        action_ax = ax
 
     # ok, here's some raw hackery for contours
     if style in ["contourf", "contour"]:
+        if len(extra_args) > 0:
+            n = extra_args[0]
+        else:
+            n = 10
+        n = int(kwargs.pop("levels", n))
+        extra_args = [n] + extra_args[1:]
+
         if "norm" in kwargs:
             norm = kwargs["norm"]
-            if len(extra_args) > 0:
-                n = extra_args[0]
-                extra_args = extra_args[1:]
-            else:
-                # FIXME, this is a strange way to hardcode 10 contours
-                # by default
-                n = 10
 
             if isinstance(norm, Normalize):
-                extra_args.insert(0, np.linspace(norm.vmin, norm.vmax, n))
+                extra_args[0] = np.linspace(norm.vmin, norm.vmax, n)
             elif isinstance(norm, LogNorm):
-                extra_args.insert(0, np.logspace(np.log10(norm.vmin),
-                                                 np.log10(norm.vmax), n))
+                extra_args[0] = np.logspace(np.log10(norm.vmin),
+                                            np.log10(norm.vmax), n)
             else:
                 raise ValueError("I should never be here")
-
-    earth = kwargs.pop("earth", False)
 
     if rotate_plot:
         X, Y = Y.T, X.T
@@ -271,8 +354,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
             colorbar["use_gridspec"] = True
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
-        cbar = plt.colorbar(p, **colorbar) #pylint: disable=W0142
-        if label_cbar:
+        cbar = plt.colorbar(p, **colorbar)
+        if do_labels:
             cbar.set_label(fld.pretty_name)
     else:
         cbar = None
@@ -291,23 +374,28 @@ def plot2d_field(fld, style="pcolormesh", ax=None, equalaxis=True,
         mplshow()
     return p, cbar
 
-def mlt_labels(longitude):
+def _mlt_labels(longitude):
     return "{0:g}".format(longitude * 24.0 / 360.0)
 
 def plot2d_mapfield(fld, **kwargs):
     """Plot data on a map projection of a sphere using Basemap
 
-    Args:
+    Parameters:
         fld (Field): field whose crds are spherical
-        **kwargs: either mapping keyword arguments, or those that should
-            be passed along to plot2d_field
+        **kwargs: either mapping keyword arguments, or those that
+            should be passed along to `plot2d_field`
 
     Keyword Arguments:
         hemisphere (string): 'north' or 'south'
         projection (string): Basemap projection to use
         lon_0 (float): center longitude
         lat_0 (fload): center latitude
-        bounding_lat (float): bounding latitude (not for all projections)
+        bounding_lat (float): bounding latitude (not for all
+            projections)
+
+    See Also:
+        * :meth:`plot2d_field`: `plot2d_mapfield` basically just wraps
+        this function setting up a Basemap first
 
     """
     from mpl_toolkits.basemap import Basemap
@@ -343,14 +431,23 @@ def plot2d_mapfield(fld, **kwargs):
     m.drawparallels(latlabel_arr, labels=[1, 1, 1, 1],
                     linewidth=0.25)
     m.drawmeridians(np.linspace(360.0, 0.0, 8, endpoint=False),
-                    labels=[1, 1, 1, 1], fmt=mlt_labels, linewidth=0.25)
+                    labels=[1, 1, 1, 1], fmt=_mlt_labels, linewidth=0.25)
     if drawcoastlines:
         m.drawcoastlines(linewidth=0.25)
     return ret
 
 
 def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
-                 action_ax=None, **kwargs):
+                 do_labels=True, action_ax=None, **kwargs):
+    """Plot a 1D Field using lines
+
+    Parameters:
+        fld: Field to plot
+
+    See Also:
+        * :meth:`plot2d_field`: Describes plot_opts, and all other
+            keyword arguments
+    """
     namex, = fld.crds.axes
     if fld.iscentered("Node"):
         x = fld.get_crd_nc(namex)
@@ -369,8 +466,9 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
         kwargs["label"] = fld.pretty_name
 
     p = action_ax.plot(x, dat, **kwargs)
-    plt.xlabel(namex)
-    plt.ylabel(fld.pretty_name)
+    if do_labels:
+        plt.xlabel(namex)
+        plt.ylabel(fld.pretty_name)
     # _apply_acts(acts)
 
     if show:
@@ -379,6 +477,19 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
 
 def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
                      **kwargs):
+    """Plot lines on a matplotlib 3D plot, optionally colored by value
+
+    Parameters:
+        lines (list): A set of N lines. Elements should have the shape
+            3xP where 3 is the axes zyx (in that order) and P is the
+            number of points in the line. As an ndarray, the required
+            shape is Nx3xP.
+        topology (optional): Value used to color the lines. Should have
+            length N.
+        ax (matplotlib axis, optional): axis on which to plot
+        show (bool, optional): plt.show() before returning
+        equal (bool, optional): set 1:1 aspect ratio on axes
+    """
     if not ax:
         ax = plt.gca(projection='3d')
 
@@ -406,13 +517,24 @@ def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
         plt.show()
     return p, None
 
-def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
-                       equal=False, rotate_plot=False, **kwargs):
-    """ print streamlines given as a list of lines which are ndarrays with
-    dimension (3, npts). symmetry_dir says which dimension to ignore, so that
-    the lines are just parallel projected onto a plane. kwargs are passed to
-    plt.plot(...). topology can be an integer array (or field) of
-    size = nr_lines to color the lines by topology """
+def plot_streamlines2d(lines, symdir=None, topology=None, ax=None,
+                       show=False, rotate_plot=False, **kwargs):
+    """Project 3D lines onto a 2D plot
+
+    Parameters:
+        lines (list): A set of N lines. Elements should have the shape
+            3xP where 3 is the axes zyx (in that order) and P is the
+            number of points in the line. As an ndarray, the required
+            shape is Nx3xP.
+        symdir (str, optional): one of xyz for the plane on which to
+            orthogonally project lines. Not needed if lines are shaped
+            Nx2xP.
+        topology (optional): Value used to color the lines. Should have
+            length N.
+        ax (matplotlib axis, optional): axis on which to plot
+        show (bool, optional): plt.show() before returning
+        rotate_plot (bool, optional): swap plot's x/y axes
+    """
     if not ax:
         ax = plt.gca()
     p = None
@@ -427,17 +549,20 @@ def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
 
     for i, line in enumerate(lines):
         line = np.array(line, copy=False)
-        if symmetry_dir.lower() == "x":
+        if len(line) == 2:
             x = line[1]
             y = line[0]
-        elif symmetry_dir.lower() == "y":
+        elif symdir.lower() == "x":
+            x = line[1]
+            y = line[0]
+        elif symdir.lower() == "y":
             x = line[2]
             y = line[0]
-        elif symmetry_dir.lower() == "z":
+        elif symdir.lower() == "z":
             x = line[2]
             y = line[1]
         else:
-            raise ValueError("symmetry_dir should be x, y, or z")
+            raise ValueError("For 3d lines, symdir should be x, y, or z")
 
         if rotate_plot:
             x, y = y, x
@@ -451,6 +576,17 @@ def plot_streamlines2d(lines, symmetry_dir, topology=None, ax=None, show=False,
     return p, None
 
 def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
+    """Put quivers on a 2D plot
+
+    Parameters:
+        fld: Vector field to plot
+        symdir (str): One of xyz for direction orthogonal to 2D plane
+        downscale (int, optional): only quiver every Nth grid cell
+        **kwargs: passed along to :meth:`plt.quiver`
+
+    Note:
+        There are some edge cases where downscale doesn't work.
+    """
     # FIXME: with dowscale != 1, this reveals a problem when slice and
     # downscaling a field; i think this is a prickley one
     vx, vy, vz = fld.component_views()
@@ -474,8 +610,17 @@ def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
     return plt.quiver(X, Y, pvx, pvy, **kwargs)
 
 def scatter_3d(points, c='b', ax=None, show=True, equal=False, **kwargs):
-    """ c should be an array of values to use to color the points,
-    a la pyplot.scatter """
+    """Plot scattered points on a matplotlib 3d plot
+
+    Parameters:
+        points: something shaped 3xN for N points, where 3 are the
+            zyx cartesian directions in that order
+        c (str, optional): color (in matplotlib format)
+        ax (matplotlib Axis, optional): axis on which to plot (should
+            be a 3d axis)
+        show (bool, optional): show
+        kwargs: passed along to :meth:`plt.statter`
+    """
     if not ax:
         ax = plt.gca(projection='3d')
 
@@ -493,12 +638,13 @@ def scatter_3d(points, c='b', ax=None, show=True, equal=False, **kwargs):
 
 
 def mplshow():
+    """Calls :meth:`matplotlib.pyplot.show()`"""
     # do i need to do anything special before i show?
     # can't think of anything at this point...
     plt.show()
 
 def tighten(**kwargs):
-    """ tightens the layout so that axis labels dont get plotted over """
+    """Calls `matplotlib.pyplot.tight_layout(**kwargs)`"""
     try:
         plt.tight_layout(**kwargs)
     except AttributeError:
@@ -506,11 +652,21 @@ def tighten(**kwargs):
 
 def plot_earth(fld, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="mhd"):
-    """ crd_system = "mhd" (Jimmy crds) or "gse" (GSE crds)... gsm is the
-    same as mhd + rot=180. This is inferred from fld but defaults to whatever
-    is given. earth_plane is a string in the format 'y=0.2', this
-    says what the 3rd.nr_sdimsension is and sets the radius that the earth
-    should be """
+    """Plot a black and white Earth to show sunward direction
+
+    Parameters:
+        fld: Chances are you want to add earth to a plot of a field,
+            this is that field. It's used for deducing info about the
+            plot.
+        axis (matplotlib Axis): axis on which to plot
+        scale (float, optional): scale of earth
+        rot (float, optional): Rotation of day/night side... I forget all
+            the details :(
+        daycol (str, optional): color of dayside (matplotlib format)
+        nightcol (str, optional): color of nightside (matplotlib format)
+        crd_system (str, optional): 'mhd' or 'gse', can usually be
+            deduced from fld
+    """
     import matplotlib.patches as mpatches
 
     crd_system = fld.info.get("crd_system", crd_system)
