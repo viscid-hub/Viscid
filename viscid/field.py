@@ -6,6 +6,7 @@ matters, it is assumed that if the coords are z, y, x then the data
 is iz, iy, ix. This can be permuted any which way, but order matters. """
 
 from __future__ import print_function
+from six import string_types
 import warnings
 import logging
 from inspect import isclass
@@ -672,6 +673,9 @@ class Field(object):
         shaped==False, or shaped if shaped==True """
         return self.crds.get_crds_ec(axes=axes, shaped=shaped)
 
+    def is_spherical(self):
+        return self.crds.is_spherical()
+
     #######################
     ## emulate a container
 
@@ -921,7 +925,7 @@ class VectorField(Field):
         return lst
 
     def __getitem__(self, item):
-        if item in self._COMPONENT_NAMES:
+        if isinstance(item, string_types) and item in self._COMPONENT_NAMES:
             i = self._COMPONENT_NAMES.index(item)
             if self.layout == LAYOUT_FLAT:
                 dat = self.data[i, ...]

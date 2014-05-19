@@ -44,6 +44,9 @@ class Coordinates(object):
     def istype(cls, type_str):
         return cls._TYPE == type_str.lower()
 
+    def is_spherical(self):
+        return "spherical" in self._TYPE
+
     def __init__(self):
         pass
 

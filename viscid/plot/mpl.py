@@ -28,9 +28,9 @@ def plot(fld, selection=None, **kwargs):
         if fld.nr_sdims == 1:
             return plot1d_field(fld, **kwargs)
         elif fld.nr_sdims == 2:
-            if "spherical" in fld.crds._TYPE:
+            if fld.is_spherical():
                 try:
-                    from mpl_toolkits.basemap import Basemap
+                    from mpl_toolkits.basemap import Basemap  # pylint: disable=unused-variable
                     return plot2d_mapfield(fld, **kwargs)
                 except ImportError:
                     print("Note: Install basemap for better map projection "
