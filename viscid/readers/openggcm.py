@@ -18,27 +18,33 @@ from viscid import field
 from viscid.calculator import plasma
 
 class GGCMGrid(grid.Grid):
-    """ This defines some cool openggcm convinience stuff...
-    The following attributes can be set by saying,
-        `viscid.grid.readers.openggcm.GGCMGrid.flag = value`.
-    This should be done before a call to readers.load_file so that all grids
-    that are instantiated have the flags you want.
+    r""" This defines some cool openggcm convinience stuff...
+    The following attributes can be set by saying
 
-    mhd_to_gse_on_read = True|False, flips arrays on load to be in GSE crds
-                         (default=True)
-    copy_on_transform = True|False, True means array will be contiguous
-                        after transform (if one is done), but makes data
-                        load 50%-60% slower (default=True)
-    force_vector_layout = inherited from grid.Grid, enforces layout for
-                          vector fields on load (default=LAYOUT_DEFAULT)
+        ``viscid.grid.readers.openggcm.GGCMGrid.flag = value``.
 
-    derived quantities accessable by dictionary lookup:
-      - T (Temperature, for now, just pressure / density)
-      - bx, by, bz (CC mag field components, if not already stored by
-                    component)
-      - b (mag field as vector, layout affected by
-           GGCMGrid.derived_vector_layout)
-      - v (velocity as vector, same idea as b)
+    This should be done before a call to readers.load_file so that all
+    grids that are instantiated have the flags you want.
+
+    Derived quantities accessable by dictionary lookup
+        - T: Temperature, for now, just pressure / density
+        - bx, by, bz: CC mag field components, if not already stored by
+          component)
+        - b: mag field as vector, layout affected by
+          GGCMGrid.derived_vector_layout
+        - v: velocity as vector, same idea as b
+        - beta: plasma beta, just pp/b^2
+        - psi: flux function (only works for 2d files/grids)
+
+    Attributes:
+        mhd_to_gse_on_read (bool): flips arrays on load to be in
+            GSE crds (default is False)
+        copy_on_transform (bool): True means array will be contiguous
+            after transform (if one is done), but makes data load
+            50\%-60\% slower (default is True)
+        force_vector_layout (str): inherited from grid.Grid, enforces
+            layout for vector fields on load (default is
+            :py:const:`viscid.field.LAYOUT_DEFAULT`)
     """
     _flip_vect_comp_names = "bx, by, b1x, b1y, " \
                             "vx, vy, rv1x, rv1y, " \

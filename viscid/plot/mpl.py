@@ -34,7 +34,7 @@ def plot(fld, selection=None, **kwargs):
 
     Parameters:
         selection (optional): something that describes a field slice
-        **kwargs: passed as keyword arguments to the actual plotting
+        kwargs: passed as keyword arguments to the actual plotting
             function
 
     Returns:
@@ -156,7 +156,12 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
         else:
             try:
-                kwargs[opt[0]] = opt[1]
+                val = opt[1].lower()
+                if val == "true":
+                    val = True
+                elif val == "false":
+                    val = False
+                kwargs[opt[0]] = val
             except IndexError:
                 kwargs[opt[0]] = True
                 # logging.warn("Unknown plot option ({0}) didn't parse "
@@ -179,9 +184,8 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 #         plt.setp(act[0], act[1], act[2])
 
 def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
-                 colorbar=True, rotate_plot=False, equalaxis=True,
-                 mask_nan=False, do_labels=True, show=False, action_ax=None,
-                 mod=None, extra_args=None, **kwargs):
+                 colorbar=True, mask_nan=False, do_labels=True, show=False,
+                 action_ax=None, mod=None, extra_args=None, **kwargs):
     """Plot a 2D Field using pcolormesh, contour, etc.
 
     Parameters:
@@ -191,31 +195,36 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
         plot_opts (str, optional): comma separated string of additional
             options with underscore separated argument options. They are
             summarized as follows...
-                ======  ===============================================
-                Option  Description
-                ======  ===============================================
-                lin     Use a linear scale for data with two optional
-                        sub-options giving a range. "lin_0" has the
-                        special meaning to make the range symmetric
-                        about 0
-                log     Use a log scale, with two sub-options for the
-                        range
-                loglog  same as log, but also make coordinates log
-                        scaled
-                x       Set limits of x axis using 2 manditory
-                        sub-options
-                y       Set limits of y axis using 2 manditory
-                        sub-options
-                grid    plot lines showing grid cells
-                earth   plot a black and white Earth
-                ======  ===============================================
+
+            ================  ======================================
+            Option            Description
+            ================  ======================================
+            lin               Use a linear scale for data with two
+                              optional sub-options giving a range.
+                              ``lin_0`` has the special meaning to
+                              make the range symmetric about 0
+            log               Use a log scale, with two sub-options
+                              for the range
+            loglog            same as log, but also make coordinates
+                              log scaled
+            x                 Set limits of x axis using 2 manditory
+                              sub-options
+            y                 Set limits of y axis using 2 manditory
+                              sub-options
+            grid [#f1]_       plot lines showing grid cells
+            earth [#f1]_      plot a black and white Earth
+            equalaxis [#f1]_  Use 1:1 aspect ratio for grid cells
+                              (True by default)
+            flip_plot [#f1]_  flip x and y axes (2d fields only)
+            ================  ======================================
+            .. [#f1] These options can be given as kwargs
 
             If a plot_opt is not understood, it is added to kwargs.
             Some plot_opt examples are:
-                * "lin_-300_300,earth",
-                * "log,x_-3_30,y_-10_10,cmap_afmhot"
-                * "lin_0,x_-10_20,grid,earth"
-        **kwargs: Some other keyword arguments are understood and
+                * ``lin_-300_300,earth``
+                * ``log,x_-3_30,y_-10_10,cmap_afmhot``
+                * ``lin_0,x_-10_20,grid,earth``
+        kwargs: Some other keyword arguments are understood and
             described below, and all others are passed as keyword
             arguments to the matplotlib plotting functions. This way,
             one can pass arguments like cmap and the like.
@@ -223,8 +232,6 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     Other Parameters:
         colorbar (bool or dict): If dict, the items are passed to
             plt.colorbar as keyword arguments
-        rotate_plot (bool): flip x and y axes
-        equalaxis (bool, optional): Fix 1:1 aspect ratio for grid cells
         mask_nan (bool, optional): Plot a masked array
         levels (int): Number of contours to follow (default: 10)
         do_labels: automatically label x/y axes and color bar
@@ -257,6 +264,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     # make customizing plot type from command line possible
     style = kwargs.pop("style", style)
     earth = kwargs.pop("earth", False)
+    equalaxis = kwargs.pop("equalaxis", True)
+    flip_plot = kwargs.pop("flip_plot", False)
 
     show_grid = kwargs.pop("grid", False)
     show_grid = kwargs.pop("g", show_grid)
@@ -327,7 +336,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
             else:
                 raise ValueError("I should never be here")
 
-    if rotate_plot:
+    if flip_plot:
         X, Y = Y.T, X.T
         dat = dat.T
         namex, namey = namey, namex
@@ -382,7 +391,7 @@ def plot2d_mapfield(fld, **kwargs):
 
     Parameters:
         fld (Field): field whose crds are spherical
-        **kwargs: either mapping keyword arguments, or those that
+        kwargs: either mapping keyword arguments, or those that
             should be passed along to `plot2d_field`
 
     Keyword Arguments:
@@ -395,7 +404,7 @@ def plot2d_mapfield(fld, **kwargs):
 
     See Also:
         * :meth:`plot2d_field`: `plot2d_mapfield` basically just wraps
-        this function setting up a Basemap first
+          this function setting up a Basemap first
 
     """
     from mpl_toolkits.basemap import Basemap
@@ -446,7 +455,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
 
     See Also:
         * :meth:`plot2d_field`: Describes plot_opts, and all other
-            keyword arguments
+          keyword arguments
     """
     namex, = fld.crds.axes
     if fld.iscentered("Node"):
@@ -518,7 +527,7 @@ def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
     return p, None
 
 def plot_streamlines2d(lines, symdir=None, topology=None, ax=None,
-                       show=False, rotate_plot=False, **kwargs):
+                       show=False, flip_plot=False, **kwargs):
     """Project 3D lines onto a 2D plot
 
     Parameters:
@@ -533,7 +542,7 @@ def plot_streamlines2d(lines, symdir=None, topology=None, ax=None,
             length N.
         ax (matplotlib axis, optional): axis on which to plot
         show (bool, optional): plt.show() before returning
-        rotate_plot (bool, optional): swap plot's x/y axes
+        flip_plot (bool, optional): swap plot's x/y axes
     """
     if not ax:
         ax = plt.gca()
@@ -564,7 +573,7 @@ def plot_streamlines2d(lines, symdir=None, topology=None, ax=None,
         else:
             raise ValueError("For 3d lines, symdir should be x, y, or z")
 
-        if rotate_plot:
+        if flip_plot:
             x, y = y, x
 
         if topo_color:
@@ -582,7 +591,7 @@ def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
         fld: Vector field to plot
         symdir (str): One of xyz for direction orthogonal to 2D plane
         downscale (int, optional): only quiver every Nth grid cell
-        **kwargs: passed along to :meth:`plt.quiver`
+        kwargs: passed along to :meth:`plt.quiver`
 
     Note:
         There are some edge cases where downscale doesn't work.

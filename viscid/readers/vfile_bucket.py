@@ -11,8 +11,9 @@ from viscid.readers.vfile import VFile
 
 class VFileBucket(Bucket):
     """ manages open files, create / get with get_file_bucket() as you
-        generally only need one instance, but you can construct directly
-        if you need more than one manager """
+    generally only need one instance, but you can construct directly
+    if you need more than one manager
+    """
 
     def __init__(self, **kwargs):
         super(VFileBucket, self).__init__(**kwargs)
@@ -24,17 +25,19 @@ class VFileBucket(Bucket):
 
     def load_file(self, fname, index_handle=True, **kwargs):
         """ load a single file and return a vFile instance, not a list
-        of vFiles like load does """
+        of vFiles like load does
+        """
         return self.load_files([fname], index_handle=index_handle, **kwargs)[0]
 
     def load_files(self, fnames, index_handle=True, file_type=None, **kwargs):
         """ initialize obj before it's put into the list, whatever is returned
-            is what gets stored, returning None means object init failed, do
-            not add to the _objs list
+        is what gets stored, returning None means object init failed, do
+        not add to the _objs list
 
-            file_type: a class that is a subclass of VFile, if given, use this
-                       file type, don't use the autodetect mechanism
-            kwargs is passed to file constructor """
+        file_type: a class that is a subclass of VFile, if given, use this
+                   file type, don't use the autodetect mechanism
+        kwargs is passed to file constructor
+        """
         if not isinstance(fnames, (list, tuple)):
             fnames = [fnames]
         file_lst = []

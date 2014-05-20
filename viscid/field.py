@@ -1,9 +1,11 @@
-#!/usr/bin/env python
-""" Fields belong in grids, or by themselves as a result of a calculation.
-Important: The field must be able to reshape itself to the shape of its
-coordinates, else there will be blood. Also, the order of the coords
-matters, it is assumed that if the coords are z, y, x then the data
-is iz, iy, ix. This can be permuted any which way, but order matters. """
+# pylint: disable=too-many-lines
+"""Fields are the basis of Viscid's data abstration
+
+Fields belong in grids, or by themselves as a result of a calculation.
+They can belong to a :class:`Grid` as the result of a file load, or
+by themselves as the result of a calculation. This module has some
+convenience functions for creating fields similar to `Numpy`.
+"""
 
 from __future__ import print_function
 from six import string_types
@@ -24,9 +26,21 @@ LAYOUT_OTHER = "other"
 
 def empty(typ, name, crds, nr_comps=0, layout=LAYOUT_FLAT, center="Cell",
           dtype="float64", **kwargs):
-    """ creates an empty field of type typ with the same shape as crds,
-    dtype is just something that can be understood by np.array() and
-    kwargs get passed to the field constructor """
+    """Analogous to `numpy.empty` (uninitialized array)
+
+    Parameters:
+        typ (str): 'Scaler' / 'Vector'
+        name (str): a way to refer to the field programatically
+        crds (Coordinates): coordinates that describe the shape / grid
+            of the field
+        nr_comps (int, optional): for vector fields, nr of components
+        layout (str, optional): how data is stored, is in "flat" or
+            "interlaced" (interlaced == AOS)
+        center (str, optional): cell or node, there really isn't
+            support for edge / face yet
+        dtype (optional): some way to describe numpy dtype of data
+        kwargs: passed through to Field constructor
+    """
     if center.lower() == "cell":
         sshape = crds.shape_cc
     elif center.lower() == "node":
@@ -47,27 +61,61 @@ def empty(typ, name, crds, nr_comps=0, layout=LAYOUT_FLAT, center="Cell",
     return wrap_field(typ, name, crds, dat, center=center, **kwargs)
 
 def empty_like(name, fld, **kwargs):
-    """ create empty field with 'name' whose shape / meta data match fld """
+    """Analogous to `numpy.empty_like`
+
+    Makes a new, unitilialized :class:`Field`. Copies as much meta data
+    as it can from `fld`.
+
+    Parameters:
+        name: name for this field
+        fld: field to get coordinates / metadata from
+        kwargs: passed through to :class:`Field` constructor
+
+    Returns:
+        new uninitialized :class:`Field`
+    """
     dat = np.empty(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
     return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
 def zeros_like(name, fld, **kwargs):
-    """ create field of zeros with 'name' whose shape / meta data match fld """
+    """Analogous to `numpy.zeros_like`
+
+    Returns:
+        new :class:`Field` initialized to 0
+
+    See Also: :meth:`empty_like`
+    """
     dat = np.zeros(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
     return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
 def ones_like(name, fld, **kwargs):
-    """ create field of ones with 'name' whose shape / meta data match fld """
+    """Analogous to `numpy.ones_like`
+
+    Returns:
+        new :class:`Field` initialized to 1
+
+    See Also: :meth:`empty_like`
+    """
     dat = np.ones(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
     return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
 
 def scalar_fields_to_vector(name, fldlist, **kwargs):
+    """Convert scaler fields to a vector field
+
+    Parameters:
+        name (str): name for the vector field
+        fldlist: list of :class:`ScalarField`s
+        kwargs: passed to :class:`VectorField` constructor
+
+    Returns:
+        A new :class:`VectorField`.
+    """
     if not name:
         name = fldlist[0].name
     center = fldlist[0].center
@@ -80,9 +128,18 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
     return vfield
 
 def field_type(typ):
-    """ @returns: a class where class.type matches typ
-    the magic lookup happens when typ is a string, if typ is a class
-    then just return the class for convenience """
+    """Lookup a Field type
+
+    The magic lookup happens when typ is a string, if typ is a class
+    then just return the class for convenience.
+
+    Parameters:
+        typ: python class object or string describing a field type in
+            some way
+
+    Returns:
+        a :class:`Field` subclass
+    """
     if isclass(typ) and issubclass(typ, Field):
         return typ
     else:
@@ -93,7 +150,20 @@ def field_type(typ):
     return None
 
 def wrap_field(typ, name, crds, data, **kwargs):
-    """ **kwargs passed to field constructor """
+    """Convenience script for wrapping ndarrays
+
+    Parameters:
+        typ (str): 'Scaler' / 'Vector'
+        name (str): a way to refer to the field programatically
+        crds (Coordinates): coordinates that describe the shape / grid
+            of the field
+        data: Some data container, most likely a `numpy.ndarray`
+        kwargs: passed through to :class:`Field` constructor
+
+    Returns:
+        A :class:`Field` instance.
+
+    **kwargs passed to field constructor """
     #
     #len(clist), clist[0][0], len(clist[0][1]), type)
     cls = field_type(typ)
