@@ -68,8 +68,8 @@ fort_defs.append(["viscid.readers._fortfile",
                   ["viscid/readers/_fortfile.F90"],
                   dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
                  ])
-fort_defs.append(["viscid.readers.jrrle",
-                  ["viscid/readers/jrrle.f90"],
+fort_defs.append(["viscid.readers._jrrle",
+                  ["viscid/readers/_jrrle.f90"],
                   dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
                  ])
 
