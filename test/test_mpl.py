@@ -11,7 +11,7 @@ import numpy as np
 import numexpr as ne
 import matplotlib.pyplot as plt
 
-_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
+_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 

@@ -18,7 +18,7 @@ Here, we just open up an OpenGGCM xdmf file and plot the plasma pressure with a 
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
     pp = f3d["pp"]["y=0"]
     mpl.plot(pp, plot_opts="log")
 
@@ -33,7 +33,7 @@ Two Plots, One Figure
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
 
     ax1 = plt.subplot2grid((2, 1), (0, 0))
     mpl.plot(f3d["pp"]["y=0"], plot_opts="log,earth")
@@ -58,7 +58,7 @@ To get access to a specific time slice, just ask the file object.
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
 
     ax1 = plt.subplot2grid((2, 1), (0, 0))
     f3d.activate_time(0)
@@ -80,7 +80,7 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
 
     times = np.array([grid.time for grid in f3d.iter_times()])
     nr_times = len(times)
@@ -100,6 +100,6 @@ Fields can be sliced just like Numpy ndarrays, but you can also use an extended 
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
     pp = f3d["pp"]["x=50i:-30i,y=0,z=-10:10"]
     mpl.plot(pp, plot_opts="log,earth")

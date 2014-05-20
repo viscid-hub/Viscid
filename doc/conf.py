@@ -260,7 +260,7 @@ texinfo_documents = [
 plot_pre_code = """# this is for finding the path to the sample data
 import sys
 import os
-_viscid_root = os.path.realpath('../src/viscid/')
+_viscid_root = os.path.realpath('../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 

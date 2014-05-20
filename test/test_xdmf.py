@@ -8,7 +8,7 @@ import argparse
 
 import matplotlib.pyplot as plt
 
-_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
+_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
@@ -22,11 +22,11 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f2d = readers.load_file(_viscid_root + '/../../sample/sample.py_0.xdmf')
+    f2d = readers.load_file(_viscid_root + '/../sample/sample.py_0.xdmf')
     b2d = field.scalar_fields_to_vector("b", [f2d['bx'], f2d['by'], f2d['bz']])
     bx2d, by2d, bz2d = b2d.component_fields() #pylint: disable=W0612
 
-    f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = readers.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
     b3d = f3d['b']
     bx, by, bz = b3d.component_fields() #pylint: disable=W0612
 
