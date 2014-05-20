@@ -44,9 +44,9 @@ def main():
 
     # plot magnetic fields, just a sanity check
     # ax1 = plt.subplot(211)
-    # mpl.plot(f["hy"], rotate_plot=True)
+    # mpl.plot(f["hy"], flip_plot=True)
     # ax2 = plt.subplot(212, sharex=ax1, sharey=ax1)
-    # mpl.plot(f["hz"], rotate_plot=True)
+    # mpl.plot(f["hz"], flip_plot=True)
     # mpl.mplshow()
 
     # make a line of 30 seeds straight along the z axis (z, y, x ordered)
@@ -63,9 +63,9 @@ def main():
     logging.info("Topology flags: {0}".format(topo1))
 
     # rotate plot puts the z axis along the horizontal
-    rotate_plot = True
-    mpl.plot(jz, rotate_plot=rotate_plot, plot_opts="lin_-.05_.05")
-    # mpl.plot_streamlines2d(lines1, "x", rotate_plot=rotate_plot, color='k')
+    flip_plot = True
+    mpl.plot(jz, flip_plot=flip_plot, plot_opts="lin_-.05_.05")
+    # mpl.plot_streamlines2d(lines1, "x", flip_plot=flip_plot, color='k')
     plt.xlim([0, 1024])
     plt.ylim([-128, 128])
     plt.show()

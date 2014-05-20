@@ -63,7 +63,7 @@ class GGCMGrid(grid.Grid):
 
         if self.copy_on_transform:
             if _has_numexpr:
-                m1 = np.array([-1.0], dtype=arr.dtype)
+                m1 = np.array([-1.0], dtype=arr.dtype)  # pylint: disable=unused-variable
                 a = numexpr.evaluate("a * m1")
             else:
                 a = a * -1
@@ -135,6 +135,15 @@ class GGCMGrid(grid.Grid):
 
     def _get_bz(self):
         return self['b'].component_fields()[2]
+
+    def _get_vx(self):
+        return self['v'].component_fields()[0]
+
+    def _get_vy(self):
+        return self['v'].component_fields()[1]
+
+    def _get_vz(self):
+        return self['v'].component_fields()[2]
 
     def _assemble_vector(self, base_name, comp_names="xyz", forget_source=True,
                          **kwargs):
