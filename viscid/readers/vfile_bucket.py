@@ -75,3 +75,9 @@ class VFileBucket(Bucket):
             file_lst.append(f)
 
         return file_lst
+
+    def remove_all_items(self):
+        for item in self:
+            if item is not None:
+                item.unload()
+        super(VFileBucket, self).remove_all_items()

@@ -1,77 +1,5 @@
-viscid Package
+viscid package
 ==============
-
-:mod:`viscid` Package
----------------------
-
-.. automodule:: viscid.__init__
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`bucket` Module
---------------------
-
-.. automodule:: viscid.bucket
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`coordinate` Module
-------------------------
-
-.. automodule:: viscid.coordinate
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`dataset` Module
----------------------
-
-.. automodule:: viscid.dataset
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`field` Module
--------------------
-
-.. automodule:: viscid.field
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`grid` Module
-------------------
-
-.. automodule:: viscid.grid
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`verror` Module
---------------------
-
-.. automodule:: viscid.verror
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`vlab` Module
-------------------
-
-.. automodule:: viscid.vlab
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`vutil` Module
--------------------
-
-.. automodule:: viscid.vutil
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 Subpackages
 -----------
@@ -79,7 +7,90 @@ Subpackages
 .. toctree::
 
     viscid.calculator
+    viscid.compat
     viscid.plot
     viscid.readers
-    viscid.tools
 
+Submodules
+----------
+
+viscid.bucket module
+--------------------
+
+.. automodule:: viscid.bucket
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.coordinate module
+------------------------
+
+.. automodule:: viscid.coordinate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.dataset module
+---------------------
+
+.. automodule:: viscid.dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.field module
+-------------------
+
+.. automodule:: viscid.field
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.grid module
+------------------
+
+.. automodule:: viscid.grid
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.parallel module
+----------------------
+
+.. automodule:: viscid.parallel
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.verror module
+--------------------
+
+.. automodule:: viscid.verror
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.vlab module
+------------------
+
+.. automodule:: viscid.vlab
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.vutil module
+-------------------
+
+.. automodule:: viscid.vutil
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: viscid
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -70,3 +70,6 @@ def save_fields(fname, flds, **kwargs):
     """ save a list of fields, filetype is inferred from fname """
     ftype = VFile.detect_type(fname)
     ftype.save_fields(fname, flds, **kwargs)
+
+def unload_all_files():
+    __filebucket__.remove_all_items()

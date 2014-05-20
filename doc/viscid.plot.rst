@@ -1,27 +1,30 @@
-plot Package
-============
+viscid.plot package
+===================
 
-:mod:`plot` Package
--------------------
+Submodules
+----------
 
-.. automodule:: viscid.plot
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-:mod:`mpl` Module
------------------
+viscid.plot.mpl module
+----------------------
 
 .. automodule:: viscid.plot.mpl
     :members:
     :undoc-members:
     :show-inheritance:
 
-:mod:`mvi` Module
------------------
+viscid.plot.mvi module
+----------------------
 
 .. automodule:: viscid.plot.mvi
     :members:
     :undoc-members:
     :show-inheritance:
 
+
+Module contents
+---------------
+
+.. automodule:: viscid.plot
+    :members:
+    :undoc-members:
+    :show-inheritance:
