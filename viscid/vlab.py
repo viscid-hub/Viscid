@@ -121,7 +121,8 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     selection = kwopts.get("selection", None)
     fancytime = kwopts.get("fancytime", False)
 
-    nrows = len(plot_vars)
+    # nrows = len(plot_vars)
+    nrows = len([pv[0] for pv in plot_vars if not pv[0].startswith('^')])
     ncols = 1
     if transpose:
         nrows, ncols = ncols, nrows
@@ -138,8 +139,16 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
 
     shareax = None
 
+    this_row = -1
     for i, fld_meta in enumerate(plot_vars):
-        fld_name_split = fld_meta[0].split(',')
+        if not fld_meta[0].startswith('^'):
+            this_row += 1
+            same_axis = False
+        else:
+            same_axis = True
+
+        fld_name_meta = fld_meta[0].lstrip('^')
+        fld_name_split = fld_name_meta.split(',')
         fld_name = fld_name_split[0]
         fld_slc = ",".join(fld_name_split[1:])
         if selection is not None:
@@ -150,12 +159,15 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                 fld_slc = selection
 
         # print("fld_time:", fld.time)
-        row = i
+        if this_row < 0:
+            raise ValueError("first plot can't begin with a +")
+        row = this_row
         col = 0
         if transpose:
             row, col = col, row
-        ax = plt.subplot2grid((nrows, ncols), (row, col),
-                              sharex=shareax, sharey=shareax)
+        if not same_axis:
+            ax = plt.subplot2grid((nrows, ncols), (row, col),
+                                  sharex=shareax, sharey=shareax)
         if i == 0 and share_axes:
             shareax = ax
 
