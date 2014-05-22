@@ -19,41 +19,20 @@ module.exports = function(grunt) {
         }
       }
     },
-    copy: {
-      fonts: {
-        files: [
-          // includes files within path
-          {expand: true, flatten: true, src: ['bower_components/font-awesome/fonts/*'], dest: 'sphinx_rtd_theme/static/fonts/', filter: 'isFile'}
-        ]
-      }
-    },
 
-    sass: {
-      dev: {
-        options: {
-          style: 'expanded',
-          loadPath: ['bower_components/bourbon/app/assets/stylesheets', 'bower_components/neat/app/assets/stylesheets', 'bower_components/font-awesome/scss', 'bower_components/wyrm/sass']
-        },
-        files: [{
-          expand: true,
-          cwd: 'sass',
-          src: ['*.sass'],
-          dest: 'sphinx_rtd_theme/static/css',
-          ext: '.css'
-        }]
-      },
+    compass: {
       build: {
         options: {
-          style: 'compressed',
-          loadPath: ['bower_components/bourbon/app/assets/stylesheets', 'bower_components/neat/app/assets/stylesheets', 'bower_components/font-awesome/scss', 'bower_components/wyrm/sass']
-        },
-        files: [{
-          expand: true,
-          cwd: 'sass',
-          src: ['*.sass'],
-          dest: 'sphinx_rtd_theme/static/css',
-          ext: '.css'
-        }]
+          config: 'compass.rb',
+          environment: 'production',
+          force: true
+        }
+      },
+      dev: {
+        options: {
+          config: 'compass.rb',
+          force: true
+        }
       }
     },
 
@@ -66,19 +45,18 @@ module.exports = function(grunt) {
       }
     },
     clean: {
-      build: ["demo_docs/build"],
-      fonts: ["sphinx_rtd_theme/static/fonts"]
+      build: ["demo_docs/build"]
     },
 
     watch: {
       /* Compile sass changes into theme directory */
       sass: {
         files: ['sass/*.sass', 'bower_components/**/*.sass'],
-        tasks: ['sass:dev']
+        tasks: ['compass:dev']
       },
       /* Changes in theme dir rebuild sphinx */
       sphinx: {
-        files: ['sphinx_rtd_theme/**/*', 'demo_docs/**/*.rst', 'demo_docs/**/*.py'],
+        files: ['sphinx_rtd_theme/**/*'],
         tasks: ['clean:build','exec:build_sphinx']
       },
       /* live-reload the demo_docs if sphinx re-builds */
@@ -93,13 +71,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-open');
 
-  grunt.registerTask('fonts', ['clean:fonts','copy:fonts']);
-  grunt.registerTask('default', ['exec:bower_update','clean:build','sass:dev','exec:build_sphinx','connect','open','watch']);
-  grunt.registerTask('build', ['exec:bower_update','clean:build','sass:build','exec:build_sphinx']);
+  grunt.registerTask('default', ['exec:bower_update','clean:build','compass:dev','exec:build_sphinx','connect','open','watch']);
+  grunt.registerTask('build', ['exec:bower_update','clean:build','compass:build','exec:build_sphinx']);
 }
 
