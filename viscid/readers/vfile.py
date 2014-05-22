@@ -154,6 +154,24 @@ class VFile(Dataset):
             return cls
         return None
 
+    @classmethod
+    def group_fnames(cls, fnames):
+        """Group File names
+
+        The default implementation just returns fnames, but some file
+        types might do something fancy here
+
+        Parameters:
+            fnames (list): names that can be logically grouped, as in
+                a bunch of file names that are different time steps
+                of a given run
+
+        Returns:
+            A list of things that can be given to the constructor of
+            this class
+        """
+        return fnames
+
 ##
 ## EOF
 ##

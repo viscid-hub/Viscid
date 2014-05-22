@@ -24,6 +24,17 @@ from viscid.readers import psc
 __filebucket__ = vfile_bucket.VFileBucket()
 
 def load(fnames):
+    """Generic load
+
+    Dispatches to :meth:`load_file` or :meth:`load_files`. This
+    function is deprecated.
+
+    Parameters:
+        fnames: One or many file names
+
+    Returns:
+        one or many VFiles
+    """
     from warnings import warn
     # this is not a deprecated warning since by default those aren't shown
     # and i want this to be a loud and clear do not use :)
@@ -36,38 +47,51 @@ def load(fnames):
         return files[0]
 
 def load_file(fname, **kwargs):
-    """ Load a single file and return a vFille.
-    This function is the primary means of loading a file.
-    kwargs is passed to File constructor for changing the
-    grid_type and stuff.
+    """Load a file
+
+    Parameters:
+        fname (str): a file name, relative to CWD
+        kwargs: passed to the VFile constructor
+
+    Returns:
+        A VFile instance
     """
     return __filebucket__.load_file(fname, **kwargs)
 
 def load_files(fnames, **kwargs):
-    """ Load a single file and return a vFille.
-    This function is the primary means of loading a file.
-    kwargs is passed to File constructor for changing the
-    grid_type and stuff.
+    """Load a list of files
+
+    Parameters:
+        fnames (list): list of file names, glob patterns accepted
+        kwargs: passed to the VFile constructor
+
+    Returns:
+        A list of VFile instances. The length may not be the same
+        as the length of fnames, and the order may not be the same
+        in order to accomidate globs and file grouping.
     """
     return __filebucket__.load_files(fnames, **kwargs)
 
 def get_file(handle):
     """ return a file that's already been loaded by either
-    number (as in nth file loaded), of file name """
+    number (as in nth file loaded), of file name
+    """
     return __filebucket__[handle]
 
 def save_grid(fname, grd, **kwargs):
-    """ save a grid, filetype is inferred from fname """
+    """ save a grid, filetype is inferred from fname
+    """
     ftype = VFile.detect_type(fname)
     ftype.save_grid(fname, grd, **kwargs)
 
 def save_field(fname, fld, **kwargs):
-    """ save a field, filetype is inferred from fname """
+    """ save a field, filetype is inferred from fname"""
     ftype = VFile.detect_type(fname)
     ftype.save_field(fname, fld, **kwargs)
 
 def save_fields(fname, flds, **kwargs):
-    """ save a list of fields, filetype is inferred from fname """
+    """ save a list of fields, filetype is inferred from fname
+    """
     ftype = VFile.detect_type(fname)
     ftype.save_fields(fname, flds, **kwargs)
 
