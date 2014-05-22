@@ -51,7 +51,8 @@
         padding: $gutter / 4 $gutter * 1.5
         &:hover
           background: darken($section-background-color, 15%)
-  // On state for the first level
+        .current
+          background: darken($section-background-color, 20%)
   li.on a, li.current > a
     color: $text-color
     padding: $gutter / 4 $gutter
@@ -60,23 +61,15 @@
     background: $section-background-color
     border: none
     border-bottom: solid 1px darken($section-background-color, 20%)
-    border-top: solid 1px darken($section-background-color, 20%)
     padding-left: $gutter -4px
     +font-smooth
     &:hover
       background: $section-background-color
-  // This is the on state for pages beyond second level
-  li.toctree-l2.current > a
-    background: darken($section-background-color, 20%)
-    padding: $gutter / 4 $gutter * 1.5 
   li.current ul
     display: block
   li ul
     margin-bottom: 0
     display: none
-  .local-toc
-    li ul
-      display: block
   li ul li a
     margin-bottom: 0
     color: $text-light
@@ -226,28 +219,6 @@
     display: block
 footer
   color: $gray-light
-  p
-    margin-bottom: $base-line-height / 2
-
-.rst-footer-buttons
-  +clearfix
-
-#search-results
-  .search li
-    margin-bottom: $base-line-height
-    border-bottom: solid 1px $table_border_color
-    padding-bottom: $base-line-height
-  .search li:first-child
-    border-top: solid 1px $table_border_color
-    padding-top: $base-line-height
-  .search li a
-    font-size: 120%
-    margin-bottom: $base-line-height / 2
-    display: inline-block
-  .context
-    color: $text-medium
-    font-size: 90%
-
 
 +media($tablet)
   .wy-body-for-nav
@@ -287,6 +258,3 @@ footer
   .wy-nav-content-wrap
     margin-left: 0
 
-nav.stickynav
-  position: fixed
-  top: 0
