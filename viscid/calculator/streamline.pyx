@@ -343,8 +343,8 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
         c_obound0[...] = py_obound0
 
     if obound1 is not None:
-        py_obound0 = obound0
-        c_obound0[...] = py_obound0
+        py_obound1 = obound1
+        c_obound1[...] = py_obound1
 
     # these hoops are required for processing 2d fields
     for i in range(3):
