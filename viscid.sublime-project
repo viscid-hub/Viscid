@@ -21,9 +21,25 @@
 				{
 					"name": "Install",
 					"shell_cmd": "python setup.py install -j4"
-				}
+				},
 			],
 			"working_dir": "${folder}"
+		},
+		{
+			"name": "viscid docs",
+			"shell": true,
+			"variants":
+			[
+				{
+					"name": "html",
+					"shell_cmd": "make html"
+				},
+				{
+					"name": "clean",
+					"shell_cmd": "make clean"
+				}
+			],
+			"working_dir": "${folder}/doc"
 		}
 	],
 	"folders":
@@ -49,7 +65,9 @@
 			"viscid#Develop",
 			"viscid#Clean",
 			"viscid#Install",
-			"viscid"
+			"viscid",
+			"viscid docs#html",
+			"viscid docs#clean"
 		]
 	}
 }

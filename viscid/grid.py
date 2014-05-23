@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# i guess this is the 'new' one???
+"""Grids contain fields and coordinates"""
 
 from __future__ import print_function
 
@@ -8,13 +8,23 @@ from viscid.bucket import Bucket
 from viscid.vutil import tree_prefix
 
 class Grid(object):
-    """ Grids contain fields... Datasets recurse to grids using __getitem__
-    and get_field in order to find fields
+    """Comptational grid container
 
-    The following attributes are for customizing data reads, intended to
-    be changed by `grid.Grid.flag = value`:
-    force_vector_layout = field.LAYOUT_*, force all vectors to be of a certain
-                          layout when they're created (default: LAYOUT_DEFAULT)
+    Grids contain fields and coordinates. Datasets recurse to grids
+    using ``__getitem__`` and get_field in order to find fields. Grids
+    can also calculate fields by defining ``_get_*`` methods.
+
+    Attributes can be overridden globally to affect all data reads of
+    a given grid type. Subclasses of Grid document their own special
+    attributes. For example, one can change the default vector layout
+    with:
+
+        ``viscid.grid.Grid.force_vector_layout = LAYOUT_INTERLACED``
+
+    Attributes:
+        force_vecter_layout (``field.LAYOUT_*``): force all vectors to
+            be of a certain layout when they're created
+            (default: LAYOUT_DEFAULT)
     """
     topology_info = None
     geometry_info = None
@@ -52,7 +62,8 @@ class Grid(object):
 
     def add_field(self, *fields):
         """ Note: in XDMF reader, the grid will NOT have crds when adding
-        fields, so any grid crd transforms won't be set """
+        fields, so any grid crd transforms won't be set
+        """
         for f in fields:
             if isinstance(f, field.VectorField):
                 f.layout = self.force_vector_layout
@@ -61,7 +72,8 @@ class Grid(object):
     def unload(self):
         """ unload is meant to give children a chance to free caches, the idea
         being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload """
+        preserved, so data is accessable without an explicit reload
+        """
         for fld in self.fields:
             fld.unload()
         # TODO: does anything else need to be unloaded in here?
@@ -78,7 +90,8 @@ class Grid(object):
 
     def iter_fields(self, named=None, **kwargs): #pylint: disable=W0613
         """ iterate over fields in a grid, if named is given, it should be a
-        list of field names to iterate over """
+        list of field names to iterate over
+        """
         if named is not None:
             for name in named:
                 with self.fields[name] as f:
@@ -97,44 +110,52 @@ class Grid(object):
     # or self.crds.get_crd()
     def get_crd_nc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.crds.get_nc(axis, shaped=shaped)
 
     def get_crd_cc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.crds.get_cc(axis, shaped=shaped)
 
     def get_crd_ec(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.crds.get_ec(axis, shaped=shaped)
 
     def get_crd_fc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.crds.get_fc(axis, shaped=shaped)
 
     ## these return all crd dimensions
     # these are the same as something like self.crds.get_crds()
     def get_crds_nc(self, axes=None, shaped=False):
         """ returns all node centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        shaped==False, or shaped if shaped==True
+        """
         return self.crds.get_crds_nc(axes=axes, shaped=shaped)
 
     def get_crds_cc(self, axes=None, shaped=False):
         """ returns all cell centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        shaped==False, or shaped if shaped==True
+        """
         return self.crds.get_crds_cc(axes=axes, shaped=shaped)
 
     def get_crds_fc(self, axes=None, shaped=False):
         """ returns all face centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        shaped==False, or shaped if shaped==True
+        """
         return self.crds.get_crds_fc(axes=axes, shaped=shaped)
 
     def get_crds_ec(self, axes=None, shaped=False):
         """ returns all edge centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        shaped==False, or shaped if shaped==True
+        """
         return self.crds.get_crds_ec(axes=axes, shaped=shaped)
 
     ##
@@ -159,7 +180,8 @@ class Grid(object):
 
     def __getitem__(self, item):
         """ returns a field by name, or if no field is found, a coordinate by
-        name some crd identifier, see Coordinate.get_item for details """
+        name some crd identifier, see Coordinate.get_item for details
+        """
         try:
             return self.get_field(item)
         except KeyError:

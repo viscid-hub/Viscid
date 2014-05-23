@@ -1,8 +1,15 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
-""" NOTE: when nr_procs > 1, fields are shared to child processes using
-a global variable so that on Unix there is no need to picklel and copy the
-entire field. This will only work on Unix, and I have absolutely no idea
-what will happen on Windows """
+r"""All streamlines all the time
+
+Calculate streamlines of a vector field on as many processors your
+heart desires. The only function you need here is :meth:`streamlines`
+
+Note:
+    When nr_procs > 1, fields are shared to child processes using
+    a global variable so that on \*nix there is no need to picklel and
+    copy the entire field. This will only work on \*nix, and I have
+    absolutely no idea what will happen on Windows.
+"""
 
 from __future__ import print_function
 from timeit import default_timer as time
@@ -86,21 +93,56 @@ _global_crds = None
 
 #####################
 # now the good stuff
-def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1, **kwargs):
-    """
-    fld:      Some vector field
-    seed:     can be a Seeds instance or a Coordinates instance... basically anything
-              which exposes an iter_points method
-    nr_procs: how many processes to calc streamlines on (>1 only works on unix systems)
-    force_parallel: always calc streamlines in a separate process, even if nr_procs == 1
-    nr_chunks_factor: nchunks = nr_procs * nr_chunks_factor, if streamlines are really
-                      unbalanced, try bumping this up
-    kwargs:   keyword arguments for _py_streamline
-    Returns (lines, topo), either of which can be None depending on output
-    lines: list or ndarray of objects (if nr_procs > 1) of nr_streams ndarrays,
-           each ndarray has shape (3, nr_points_in_stream)
-           the nr_points_in_stream can be different for each line
-    topo is an ndarray with shape (nr_streams,) of topology bitmask
+def streamlines(fld, seed, nr_procs=1, force_parallel=False,
+                nr_chunks_factor=1, **kwargs):
+    r"""Trace streamlines
+
+    Parameters:
+        fld: Some vector field
+        seed: can be a Seeds instance or a Coordinates instance, or
+            anything that exposes an iter_points method
+        nr_procs: how many processes to calc streamlines on (>1 only
+            works on \*nix systems)
+        force_parallel: always calc streamlines in a separate process,
+            even if nr_procs == 1
+        nr_chunks_factor: If streamlines are really unbalanced in
+            length, try bumping this up
+        kwargs: more arguments for streamlines, described below
+
+    Keyword Arguments:
+        ds0 (float): initial spatial step for streamlines (if 0.0, it
+            will be half the minimum d[xyz])
+        ibound (float): Inner boundary as distance from (0, 0, 0)
+        obound0 (array-like): lower corner of outer boundary (z, y, x)
+        obound1 (array-like): upper corner of outer boundary (z, y, x)
+        maxit (int): maximum number of line segments
+        max_length (float): maximum streamline length
+        stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
+        output (int): which output to provide, one of
+            OUTPUT_STREAMLINE, OUTPUT_TOPOLOGY, or OUTPUT_BOTH
+        method (int): integrator, one of EULER1, EULER1a (adaptive),
+            RK2, RK12 (adaptive)
+        tol_lo (float): lower acuracy tolerance for adaptive
+            integrators. More acurate than, this ds goes up.
+        tol_hi (float): upper acuracy tolerance for adaptive
+            integrators. Less acurate than, this ds goes down.
+        fac_refine (float): When refining ds, ds \*= fac_refine
+        fac_coarsen (float): When coarsening ds, ds \*= fac_coarsen
+        smallest_step (float): smallest spatial step
+        largest_step (float): largest spatial step
+        topo_style (str): how to map end point bitmask to a topology.
+            'msphere' to map to ``TOPOLOGY_MS_*``, or 'generic' to
+            leave topology as a bitmask of ``END_*``
+
+    Returns:
+        (lines, topo), either can be ``None`` depending on ``output``
+
+        * lines, list of nr_streams ndarrays, each ndarray has shape
+          (3, nr_points_in_stream) the nr_points_in_stream can be
+          different for each line
+        * topo, ndarray with shape (nr_streams,) of topology
+          bitmask with values depending on the topo_style
+
     """
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
@@ -180,24 +222,46 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
                    output=OUTPUT_BOTH, method=EULER1, tol_lo=1e-3, tol_hi=1e-2,
                    fac_refine=0.5, fac_coarsen=1.25, smallest_step=1e-4,
                    largest_step=1e2, topo_style="msphere"):
-    """ Start calculating a streamline at x0
+    r""" Start calculating a streamline at x0
 
     Parameters:
-        stream_dir:  DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
-        ibound: stop streamline if within inner_bound of the origin
-            ignored if 0
-        obound0: corner of box beyond which to stop streamline
-            (smallest values)
-        obound1: corner of box beyond which to stop streamline
-            (largest values)
-        ds0: initial spatial step for the streamline
-        seed_slice: a tuple of arguments for slice(...), so it's
-            stop or start, stop, [step]
-        output: OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY | OUTPUT_BOTH
-        topo_style: 'msphere' or 'generic' (None == generic)
+        dtype: anything to describe Numpy dtype of v_mv
+        v_mv (typed memory view): some array
+        crdz_in (ndarray): z coorinates, same centering as ``center``
+        crdy_in (ndarray): z coorinates, same centering as ``center``
+        crdx_in (ndarray): z coorinates, same centering as ``center``
+        nr_streams (int):
+        seed: something with an iter_points method
+            (:class:`viscid.calculator.seed.Seed`,
+            :class:`viscid.coordinate.Coordinates`, etc.)
+        seed_slice (tuple): arguments for slice, (start, stop, [step])
+        center (str): "Cell" | "Node"
+        ds0 (float): initial spatial step for streamlines (if 0.0, it
+            will be half the minimum d[xyz])
+        ibound (float): Inner boundary as distance from (0, 0, 0)
+        obound0 (array-like): lower corner of outer boundary (z, y, x)
+        obound1 (array-like): upper corner of outer boundary (z, y, x)
+        maxit (int): maximum number of line segments
+        max_length (float): maximum streamline length
+        stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
+        output (int): which output to provide, one of
+            OUTPUT_STREAMLINE, OUTPUT_TOPOLOGY, or OUTPUT_BOTH
+        method (int): integrator, one of EULER1, EULER1a (adaptive),
+            RK2, RK12 (adaptive)
+        tol_lo (float): lower acuracy tolerance for adaptive
+            integrators. More acurate than, this ds goes up.
+        tol_hi (float): upper acuracy tolerance for adaptive
+            integrators. Less acurate than, this ds goes down.
+        fac_refine (float): When refining ds, ds \*= fac_refine
+        fac_coarsen (float): When coarsening ds, ds \*= fac_coarsen
+        smallest_step (float): smallest spatial step
+        largest_step (float): largest spatial step
+        topo_style (str): how to map end point bitmask to a topology.
+            'msphere' to map to ``TOPOLOGY_MS_*``, or 'generic' to
+            leave topology as a bitmask of ``END_*``
 
     Returns:
-        (lines, topo), either of which can be None depending on output
+        (lines, topo), either can be ``None`` depending on ``output``
         lines: list of nr_streams ndarrays, each ndarray has shape
             (3, nr_points_in_stream) the nr_points_in_stream can be
             different for each line

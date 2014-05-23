@@ -93,6 +93,11 @@ def get_trilinear_field():
 
 def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
               share_axes=False, show=False, kwopts=None):
+    """Make lots of plots
+
+    This is the function used by the ``p2d`` script. It may be useful
+    to you.
+    """
     grid_iter = izip(
                      itertools.count(),
                      file_.iter_times(time_slice),
@@ -202,18 +207,24 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
 def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
                  stream_opts, add_seed_cadence=0.0, add_seed_pts=None,
                  speed_scale=1.0):
-    """ vfile: a vFile object that we can call iter_times on
-    time_slice: string, slice notation, like 1200:2400:1
-    initial_seeds: any SeedGen object
-    plot_function: function that is called each time step, arguments
-                   should be exactly: (i [int], grid, v [Vector Field],
-                                       v_lines [result of streamline trace],
-                                       root_seeds [SeedGen])
-    stream_opts: a dict of streamline options for flow lines
-    add_seed_cadence: how often to add the add_seeds points
-    add_seeds: an n x 3 ndarray of n points to add every add_seed_cadence (zyx)
-    speed_scale: speed_scale * v should be in units of ds0 / dt
-    stream_opts must have ds0 and max_length, maxit will be automatically calculated
+    """Trace fluid elements
+
+    Parameters:
+        vfile: a vFile object that we can call iter_times on
+        time_slice: string, slice notation, like 1200:2400:1
+        initial_seeds: any SeedGen object
+        plot_function: function that is called each time step,
+            arguments should be exactly: (i [int], grid, v [Vector
+            Field], v_lines [result of streamline trace],
+            root_seeds [SeedGen])
+        stream_opts: a dict of streamline options for flow lines
+        add_seed_cadence: how often to add the add_seeds points
+        add_seeds: an n x 3 ndarray of n points to add every add_seed_cadence (zyx)
+        speed_scale: speed_scale * v should be in units of ds0 / dt
+        stream_opts must have ds0 and max_length, maxit will be automatically calculated
+
+    Returns:
+        root points after following the fluid
     """
     times = np.array([grid.time for grid in vfile.iter_times(time_slice)])
     dt = np.roll(times, -1) - times  # Note: last element makes no sense

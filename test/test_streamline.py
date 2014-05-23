@@ -40,6 +40,7 @@ def main():
                                          output=streamline.OUTPUT_BOTH,
                                          tol_lo=5e-3, tol_hi=2e-1,
                                          fac_refine=0.75, fac_coarsen=1.5)
+    print(topo)
     t1 = time()
     logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
     mpl.plot_streamlines(lines, show=args.show)

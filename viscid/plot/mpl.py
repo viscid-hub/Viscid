@@ -217,13 +217,14 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
                               (True by default)
             flip_plot [#f1]_  flip x and y axes (2d fields only)
             ================  ======================================
+
             .. [#f1] These options can be given as kwargs
 
             If a plot_opt is not understood, it is added to kwargs.
             Some plot_opt examples are:
-                * ``lin_-300_300,earth``
-                * ``log,x_-3_30,y_-10_10,cmap_afmhot``
-                * ``lin_0,x_-10_20,grid,earth``
+            * ``lin_-300_300,earth``
+            * ``log,x_-3_30,y_-10_10,cmap_afmhot``
+            * ``lin_0,x_-10_20,grid,earth``
         kwargs: Some other keyword arguments are understood and
             described below, and all others are passed as keyword
             arguments to the matplotlib plotting functions. This way,
@@ -243,7 +244,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
             don't even remember why this was necessary
         mod (list of floats): DEPRECATED, scale x and y axes by some
             factor
-        extra_args (list): DEPRECATED, was used to pass *args to
+        extra_args (list): DEPRECATED, was used to pass args to
             matplotlib functions, like contour levels, but there
             is probably a better way to give these options
     """

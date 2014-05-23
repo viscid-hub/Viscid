@@ -1,4 +1,4 @@
-""" I don't know if this is worth keeping as its own module,
+"""I don't know if this is worth keeping as its own module,
 TOPOLOGY_* is copied here so that one can import this module
 without needing to have built the cython module streamline.pyx
 """
@@ -34,10 +34,21 @@ TOPOLOGY_OTHER = TOPOLOGY_MS_OTHER
 color_map = color_map_msphere
 
 def color_from_topology(topology, topo_style="msphere"):
-    """ topology is an integer described by calculator.streamline.TOPOLOGY_*
-    returns a color tuple
-    Note: to override this color scheme, just set
-          topoloy.color_from_topology = some_function
+    """Determine RGB from topology value
+
+    Parameters:
+      topology (int): some value in
+          ``calculator.streamline.TOPOLOGY_*``
+      topo_style (string): msphere, or a dict with its own
+          mapping
+
+    Returns:
+        (R, G, B)
+
+    Note:
+        to override this color scheme, just set
+
+            topoloy.color_from_topology = some_function
     """
     if isinstance(topo_style, dict):
         mapping = topo_style

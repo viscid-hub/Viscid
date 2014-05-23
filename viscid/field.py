@@ -110,7 +110,7 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
 
     Parameters:
         name (str): name for the vector field
-        fldlist: list of :class:`ScalarField`s
+        fldlist: list of :class:`ScalarField`
         kwargs: passed to :class:`VectorField` constructor
 
     Returns:
@@ -157,13 +157,12 @@ def wrap_field(typ, name, crds, data, **kwargs):
         name (str): a way to refer to the field programatically
         crds (Coordinates): coordinates that describe the shape / grid
             of the field
-        data: Some data container, most likely a `numpy.ndarray`
+        data: Some data container, most likely a ``numpy.ndarray``
         kwargs: passed through to :class:`Field` constructor
 
     Returns:
         A :class:`Field` instance.
-
-    **kwargs passed to field constructor """
+    """
     #
     #len(clist), clist[0][0], len(clist[0][1]), type)
     cls = field_type(typ)

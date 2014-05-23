@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Helpers to generate seed points for streamlines """
+"""Helpers to generate seed points for streamlines"""
 
 from __future__ import print_function
 import itertools
@@ -14,6 +14,13 @@ from viscid import field
 from viscid import coordinate
 
 class SeedGen(object):
+    """All about seeds
+
+    These objects are good for defining the root points of streamlines
+    for :meth:`vicid.calculator.streamline.streamlines`, or
+    interpolation points a la
+    :meth:`vicid.calculator.cycalc.interp_trilin`.
+    """
     _cache = None
     _points = None
     dtype = None
@@ -25,7 +32,11 @@ class SeedGen(object):
         self.params = {}
 
     def points(self):
-        """ 3 x n ndarray of n seed points """
+        """Get points an ndarray
+
+        Returns:
+            3 x n ndarray of n seed point
+        """
         if self._points is not None:
             return self._points
         pts = self.genr_points()
@@ -34,12 +45,14 @@ class SeedGen(object):
         return pts
 
     def iter_points(self, **kwargs):
-        """ always returns an iterator, this can be overridden in a subclass
-        if it's more efficient to iterate than a call to genr_points,
-        calling iter_points should make an effort to be the fastest way to
-        iterate through the points, ignorant of caching. In cython, it seems to
-        take twice the time to iterate over a generator, than to use a for loop
-        over indices of an array, but only if the array already exists """
+        """always returns an iterator, this can be overridden in a
+        subclass if it's more efficient to iterate than a call to
+        :meth:`genr_points`, calling iter_points should make an effort
+        to be the fastest way to iterate through the points, ignorant
+        of caching. In cython, it seems to take twice the time to
+        iterate over a generator, than to use a for loop over indices
+        of an array, but only if the array already exists
+        """
         pts = self.points()
         return izip(pts[0, :], pts[1, :], pts[2, :])
 
@@ -47,22 +60,27 @@ class SeedGen(object):
         raise NotImplementedError()
 
     def as_coordinates(self):
-        """ basically, wrap_crds on something meaningful """
+        """basically, wrap_crds on something meaningful"""
         raise NotImplementedError()
 
     def genr_points(self):
-        """ this should return an iterable of (z, y, x) points """
+        """this should return an iterable of (z, y, x) points"""
         raise NotImplementedError()
 
     def wrap_field(self, fld_typ, name, data, **kwargs):
-        """ fld_type is 'Scalar' or 'Vector' or something like that """
+        """fld_type is 'Scalar' or 'Vector' or something like that"""
         crds = self.as_coordinates()
         return field.wrap_field(fld_typ, name, crds, data, **kwargs)
 
 
 class Point(SeedGen):
+    """Collection of points
+
+    This is useful for wrapping up an ndarray of points to go
+    into :meth:`vicid.calculator.streamline.streamlines`.
+    """
     def __init__(self, points, cache=False, dtype=None):
-        """ points should be an n x 3 array of zyx points """
+        """points should be an n x 3 array of zyx points"""
         super(Point, self).__init__(cache=cache, dtype=dtype)
         self.params["points"] = points
 
@@ -92,6 +110,10 @@ class Point(SeedGen):
 
 
 class Line(SeedGen):
+    """A line of seed points
+
+    Defined by to endpoints
+    """
     def __init__(self, p0, p1, res=20, cache=False, dtype=None):
         """ p0 & p1 are (z, y, x) points as list, tuple, or ndarray
         res is the number of need points to generate """
@@ -125,6 +147,11 @@ class Line(SeedGen):
 
 
 class Plane(SeedGen):
+    """A plane of seed points
+
+    Defined by a point, a normal direction, a direction in the plane,
+    and the length and width of the plane
+    """
     def __init__(self, p0, Ndir, Ldir, len_l, len_m, res_l=20, res_m=20,
                  cache=False):
         """ plane is specified in L,M,N coords where N is normal to the plane,
@@ -207,6 +234,10 @@ class Plane(SeedGen):
 
 
 class Volume(SeedGen):
+    """A volume of seed points
+
+    Defined by two opposite corners of a box in 3d
+    """
     def __init__(self, p0, p1, res=(20, 20, 20), cache=False):
         """ p1 & p2 are (z, y, x) points as list, tuple, or ndarray
         res is the number of need points to generate (nz, ny, nx) """
@@ -248,6 +279,10 @@ class Volume(SeedGen):
 
 
 class Sphere(SeedGen):
+    """A sphere of points
+
+    Defined by a center, and a radius
+    """
     def __init__(self, p0, r, restheta=20, resphi=20, cache=False):
         super(Sphere, self).__init__(cache=cache)
         self.params["p0"] = np.array(p0, copy=False)
@@ -296,6 +331,11 @@ class Sphere(SeedGen):
         return a
 
 class SphericalCap(Sphere):
+    """A spherical cone or cap of seeds
+
+    Defined by a center, and a point indicating the direction of the
+    cone, and the half angle of the cone.
+    """
     _euler_rot = None  # rotation matrix for 2 euler rotations
 
     def __init__(self, p0, p1, angle,
@@ -358,6 +398,10 @@ class SphericalCap(Sphere):
 
 
 class Circle(SphericalCap):
+    """A circle of seeds
+
+    Defined by a center and a point normal to the plane of the circle
+    """
     def __init__(self, p0, p1, res=20, r=None,
                  angle=90.0, cache=False):
         super(Circle, self).__init__(p0, p1, angle, restheta=1,
@@ -408,12 +452,12 @@ if __name__ == "__main__":
     interp_vals = cycalc.interp_trilin(bmag, cap)
     t1 = time()
     # logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
-    pts = cap.points()
+    _pts = cap.points()
     mlab.points3d(_p0[2], _p0[1], _p0[0],
                   scale_factor=0.07, color=(0.0, 0.0, 0.0))
     mlab.points3d(_p1[2], _p1[1], _p1[0],
                   scale_factor=0.07, color=(1.0, 1.0, 1.0))
-    mlab.points3d(pts[2], pts[1], pts[0], interp_vals,
+    mlab.points3d(_pts[2], _pts[1], _pts[0], interp_vals,
                   scale_factor=0.07, scale_mode="none")
     mlab.axes(nb_labels=5)
     mlab.show()
