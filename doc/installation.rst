@@ -19,7 +19,7 @@ installed.
 Standard Setup
 --------------
 
-Just call the usual distutils commands. This compiles all the cython code (cython is not required for this).
+Just call the usual distutils commands. This compiles all the cython code (cython is not required for this).::
 
     ./setup.py build
     ./setup.py install
@@ -28,12 +28,12 @@ For Developers
 --------------
 
 For a better dev experience, I recommend adding Viscid to your PYTHONPATH,
-viscid/scripts to your PATH, and building in-place with
+viscid/scripts to your PATH, and building in-place with::
 
     ./setup.py build_ext -i --with-cython
 
 If you want to ensure the cython generated code is up to date, you can use the
-shortcut
+shortcut::
 
     ./setup.py dev
 
