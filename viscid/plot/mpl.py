@@ -155,17 +155,14 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             logging.warn("own axis doesn't seem to work yet...")
 
         else:
-            try:
-                val = opt[1].lower()
-                if val == "true":
-                    val = True
-                elif val == "false":
-                    val = False
-                kwargs[opt[0]] = val
-            except IndexError:
-                kwargs[opt[0]] = True
-                # logging.warn("Unknown plot option ({0}) didn't parse "
-                #              "correctly".format(opt[0]))
+            val = "_".join(opt[1:]).lower()
+            if val == "" or val == "true":
+                val = True
+            elif val == "false":
+                val = False
+            kwargs[opt[0]] = val
+            # logging.warn("Unknown plot option ({0}) didn't parse "
+            #              "correctly".format(opt[0]))
 
 
     # things that i just want to be automagic...
@@ -259,6 +256,10 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     if action_ax is None:
         action_ax = ax
 
+    if colorbar is not None:
+        if not isinstance(colorbar, dict):
+            colorbar = {}
+
     # parse plot_opts and apply them
     ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
 
@@ -328,12 +329,15 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
 
         if "norm" in kwargs:
             norm = kwargs["norm"]
+            norm.autoscale_None(dat)
 
-            if isinstance(norm, Normalize):
-                extra_args[0] = np.linspace(norm.vmin, norm.vmax, n)
-            elif isinstance(norm, LogNorm):
+            if isinstance(norm, LogNorm):
                 extra_args[0] = np.logspace(np.log10(norm.vmin),
                                             np.log10(norm.vmax), n)
+                if colorbar is not None and not "ticks" in colorbar:
+                    colorbar["ticks"] = matplotlib.ticker.LogLocator()
+            elif isinstance(norm, Normalize):
+                extra_args[0] = np.linspace(norm.vmin, norm.vmax, n)
             else:
                 raise ValueError("I should never be here")
 
@@ -356,9 +360,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
     # figure out the colorbar...
-    if colorbar:
-        if not isinstance(colorbar, dict):
-            colorbar = {}
+    if colorbar is not None:
         # unless otherwise specified, use_gridspec for
         if has_colorbar_gridspec and not "use_gridspec" in colorbar:
             colorbar["use_gridspec"] = True
