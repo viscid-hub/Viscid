@@ -20,3 +20,14 @@ viscid_diff
 
 .. image:: images/viscid_diff_ex.png
     :align: center
+
+bitmaskbits
+-----------
+
+Give it a number and it tells you which bits were on. Useful for decoding topology bitmasks.::
+
+    $ bitmaskbits 552
+    The following bits were on (bit, 2**bit)...
+    3 (8)
+    5 (32)
+    9 (512)
