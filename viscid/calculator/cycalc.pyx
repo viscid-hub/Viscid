@@ -208,6 +208,21 @@ cdef real_t _c_interp_trilin(real_t[:,:,:,::1] s, cnp.intp_t m, real_t[:] *crds,
     c1 = c01 + xd[1] * (c11 - c01)
     c = c0 + xd[2] * (c1 - c0)
 
+    # if c == 0.0:
+    #     # print("??0:", c00, c10, c01, c11, '|', c0, c1, c, '|', xd[0], xd[1], xd[2])
+    #     # print("!!0:", crds[0][ix[0]], crds[1][ix[1]], crds[2][ix[2]], '|',
+    #     #       x[0], x[1], x[2], '|',
+    #     #       crds[0][ix[0] + 1], crds[1][ix[1] + 1], crds[2][ix[2] + 1])
+    #     print("**0", ix[0], ix[1], ix[2], '|', p[0], p[1], p[2])
+    #     print("AA0:", s[ix[0]       , ix[1]       , ix[2]       , m],
+    #                   s[ix[0] + p[0], ix[1]       , ix[2]       , m])
+    #     print("BB0:", s[ix[0]       , ix[1] + p[1], ix[2]       , m],
+    #                   s[ix[0] + p[0], ix[1] + p[1], ix[2]       , m])
+    #     print("CC0:", s[ix[0]       , ix[1]       , ix[2] + p[2], m],
+    #                   s[ix[0] + p[0], ix[1]       , ix[2] + p[2], m])
+    #     print("DD0:", s[ix[0]       , ix[1] + p[1], ix[2] + p[2], m],
+    #                   s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2], m])
+
     return c
 
 def interp_nearest(fld, seeds, fill=None):

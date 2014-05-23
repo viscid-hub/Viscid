@@ -42,7 +42,8 @@ cdef int _c_euler1(real_t[:,:,:,::1] s, real_t[:] *crds,
     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
     vmag = sqrt(vx**2 + vy**2 + vz**2)
     if vmag == 0.0 or isnan(vmag):
-        # logging.warning("vmag issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logging.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+        #                 x[0], x[1], x[2], vx, vy, vz, vmag))
         return 1
     x[0] += deref(ds) * vz / vmag
     x[1] += deref(ds) * vy / vmag
