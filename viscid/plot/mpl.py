@@ -94,7 +94,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
     plot_acts are set using plt.set(act[0], act[1], act[2]) """
 
     plot_opts = _parse_str(plot_opts_str)
-    # acts = []
+    actions = []
 
     if not axis:
         axis = plt.gca()
@@ -102,8 +102,8 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
     for opt in plot_opts:
         if opt[0] == "lin":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            axis.set_xscale("linear")
-            axis.set_yscale("linear")
+            actions.append([axis.set_xscale, ["linear"]])
+            actions.append([axis.set_yscale, ["linear"]])
 
             # scale will be centered around 0
             if len(opt) == 2 and float(opt[1]) == 0.0:
@@ -111,7 +111,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
                 opt = [opt[0], -1.0 * absmax, 1.0 * absmax]
 
             if fld.nr_sdims == 1:
-                axis.set_ylim(*opt[1:])
+                actions.append([axis.set_ylim, opt[1:]])
             elif fld.nr_sdims == 2:
                 # plt.normalize is deprecated
                 # kwargs["norm"] = plt.normalize(*opt[1:])
@@ -119,31 +119,31 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
 
         elif opt[0] == "log":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            axis.set_xscale("linear")
+            actions.append([axis.set_xscale, ["linear"]])
 
             if fld.nr_sdims == 1:
-                axis.set_yscale("log")
-                axis.set_ylim(*opt[1:])
+                actions.append([axis.set_yscale, ["log"]])
+                actions.append([axis.set_ylim, opt[1:]])
             elif fld.nr_sdims == 2:
-                axis.set_yscale("linear")
+                actions.append([axis.set_yscale, ["linear"]])
                 kwargs["norm"] = LogNorm(*opt[1:])
 
         elif opt[0] == "loglog":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            axis.set_xscale("log")
-            axis.set_yscale("log")
+            actions.append([axis.set_xscale, ["log"]])
+            actions.append([axis.set_yscale, ["log"]])
             if fld.nr_sdims == 2:
                 kwargs["norm"] = LogNorm(*opt[1:])
 
         elif opt[0] == "x":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            axis.set_xlim(*opt[1:])
-            # acts.append([axis, "xlim", opt[1:]])
+            # axis.set_xlim(*opt[1:])
+            actions.append([axis.set_xlim, opt[1:]])
 
         elif opt[0] == "y":
             opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            axis.set_ylim(*opt[1:])
-            # acts.append([axis, "ylim", opt[1:]])
+            # axis.set_ylim(*opt[1:])
+            actions.append([axis.set_ylim, opt[1:]])
 
         elif opt[0] == "own":
             logging.warn("own axis doesn't seem to work yet...")
@@ -172,13 +172,11 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
         if norm.vmin and norm.vmax and np.abs(norm.vmax + 1.0*norm.vmin) < 1e-4:
             kwargs["cmap"] = plt.get_cmap('seismic')
 
-    # return axis, acts
-    return axis
+    return axis, actions
 
-# def _apply_acts(acts):
-#     for act in acts:
-#         print(act)
-#         plt.setp(act[0], act[1], act[2])
+def _apply_actions(acts):
+    for act in acts:
+        act[0](*act[1])
 
 def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
                  colorbar=True, mask_nan=False, do_labels=True, show=False,
@@ -256,12 +254,14 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     if action_ax is None:
         action_ax = ax
 
-    if colorbar is not None:
+    if colorbar:
         if not isinstance(colorbar, dict):
             colorbar = {}
+    else:
+        colorbar = None
 
     # parse plot_opts and apply them
-    ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
 
     # make customizing plot type from command line possible
     style = kwargs.pop("style", style)
@@ -317,6 +317,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
 
     if equalaxis:
         ax.axis('equal')
+    _apply_actions(actions)
 
     # ok, here's some raw hackery for contours
     if style in ["contourf", "contour"]:
@@ -351,7 +352,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     elif style == "contour":
         p = action_ax.contour(X, Y, dat, *extra_args, **kwargs)
         if "colors" in kwargs:
-            colorbar = False
+            colorbar = None
     elif style == "contourf":
         p = action_ax.contourf(X, Y, dat, *extra_args, **kwargs)
     elif style == "pcolor":
@@ -466,7 +467,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
     elif fld.iscentered("Cell"):
         x = fld.get_crd_cc(namex)
 
-    ax = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
     if action_ax is None:
         action_ax = ax
 
@@ -481,7 +482,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
     if do_labels:
         plt.xlabel(namex)
         plt.ylabel(fld.pretty_name)
-    # _apply_acts(acts)
+    _apply_actions(actions)
 
     if show:
         mplshow()
