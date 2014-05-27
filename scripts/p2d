@@ -61,6 +61,7 @@ def main():
                         "x and y")
     parser.add_argument("-n", "--np", type=int, default=1,
                         help="run n simultaneous processes (not yet working)")
+    parser.add_argument("--tighten", action="store_true")
     parser.add_argument('file', nargs=1, help='input file')
     args = vutil.common_argparse(parser)
 
@@ -83,7 +84,8 @@ def main():
               "plot_size": args.plot_size,
               "dpi": args.dpi,
               "selection": args.slice,
-              "fancytime": args.fancytime
+              "fancytime": args.fancytime,
+              "tighten": args.tighten
              }
 
     file_ = readers.load_file(args.file[0])

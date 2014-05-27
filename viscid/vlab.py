@@ -125,6 +125,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     out_format = kwopts.get("out_format", "png")
     selection = kwopts.get("selection", None)
     fancytime = kwopts.get("fancytime", False)
+    tighten = kwopts.get("tighten", False)
 
     # nrows = len(plot_vars)
     nrows = len([pv[0] for pv in plot_vars if not pv[0].startswith('^')])
@@ -196,7 +197,8 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     else:
         plt.suptitle("t = {0:g}".format(grid.time))
 
-    mpl.tighten(rect=[0, 0.03, 1, 0.90])
+    if tighten:
+        mpl.tighten(rect=[0, 0.03, 1, 0.90])
 
     if out_prefix:
         plt.savefig("{0}_{1:06d}.{2}".format(out_prefix, tind + 1, out_format))
