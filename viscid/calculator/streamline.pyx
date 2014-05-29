@@ -535,26 +535,28 @@ cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
 
 cdef int end_flags_to_topology_msphere(int end_flags):
     cdef int topo = 0
+    cdef int mask_open_north = END_IBOUND_NORTH | END_OBOUND
+    cdef int mask_open_south = END_IBOUND_SOUTH | END_OBOUND
 
     # order of these if statements matters!
-    if (topo & END_OTHER):
-        return end_flags
+    if (end_flags & END_OTHER):
+        topo = end_flags
     # elif (topo & END_CYCLIC):
     #     return TOPOLOGY_MS_CYCLYC
-    elif (topo & END_IBOUND_NORTH) and (topo & END_OBOUND):
+    elif end_flags & (mask_open_north) == mask_open_north:
         topo = TOPOLOGY_MS_OPEN_NORTH
-    elif (topo & END_IBOUND_SOUTH) and (topo & END_OBOUND):
+    elif end_flags & (mask_open_south) == mask_open_south:
         topo = TOPOLOGY_MS_OPEN_SOUTH
-    elif end_flags == 5 or end_flags == 6 or end_flags == 7:
+    elif end_flags == 3 or end_flags == 5 or end_flags == 7:
         topo = TOPOLOGY_MS_CLOSED
     else:
-        topo = end_flags
+        topo = TOPOLOGY_MS_SW
 
     return topo
 
 cdef int end_flags_to_topology_generic(int end_flags):
     return end_flags
-
+5
 ##
 ## EOF
 ##
