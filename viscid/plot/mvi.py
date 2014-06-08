@@ -143,7 +143,7 @@ def _finalize_source(fld, arr, grid, dat_target):
         dat_target.vectors.name = fld.name
     return VTKDataSource(data=grid)
 
-def plot_lines(lines, topology=None, **kwargs):
+def plot_lines(lines, topology=None, scalar=None, **kwargs):
     """Make 3D mayavi plot of lines
 
     Parameters:
@@ -163,7 +163,11 @@ def plot_lines(lines, topology=None, **kwargs):
     for i, line in enumerate(lines):
         if topo_color:
             kwargs["color"] = color_from_topology(topology[i])
-        mlab.plot3d(line[2], line[1], line[0], **kwargs)
+
+        if scalar is not None:
+            mlab.plot3d(line[2], line[1], line[0], scalar, **kwargs)
+        else:
+            mlab.plot3d(line[2], line[1], line[0], **kwargs)
 
 def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
                crd_system="mhd"):
