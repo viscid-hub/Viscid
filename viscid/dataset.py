@@ -231,19 +231,36 @@ class DatasetTemporal(Dataset):
     def _slice_time(self, slice_str=":"):
         times = np.array([child[0] for child in self.children])
         slc_lst = [s.strip() for s in slice_str.split(":")]
-        # slc_lst[:2] = [float(t) if t != "" else None for t in slc_lst[:2]]
-        slc_lst[:2] = [np.argmin(np.abs(float(t) - times)) if t != "" else None
-                       for t in slc_lst[:2]]
-        # make the slice inclusive, no matter what
-        if len(slc_lst) > 1 and slc_lst[1] is not None:
-            if slc_lst[0] <= slc_lst[1]:
-                slc_lst[1] += 1
-            else:
-                slc_lst[1] -= 1
-        slc_lst[2:] = [int(s) if s != "" else None for s in slc_lst[2:]]
+
         if len(slc_lst) == 1:
-            slc_lst = [slc_lst[0], slc_lst[0] + 1]
-        slc = slice(*slc_lst) #pylint: disable=W0142
+            s = slc_lst[0]
+            if s[-1] in "ij":
+                slc = int(s[:-1])
+            else:
+                slc = np.argmin(np.abs(float(s) - times))
+        else:
+            for i, s in enumerate(slc_lst):
+                if s == "":
+                    slc_lst[i] = None
+                elif i > 1 or s[-1] in "ij":
+                    try:
+                        slc_lst[i] = int(s[:-1])
+                    except ValueError:
+                        slc_lst[i] = np.argmin(np.abs(float(s[:-1]) - times))
+                else:
+                    slc_lst[i] = np.argmin(np.abs(float(s) - times))
+
+            # make the slice inclusive unless we're using backward
+            # indexing like ":-1"
+            if slc_lst[1] is not None:
+                if slc_lst[1] >= 0:
+                    if slc_lst[0] <= slc_lst[1]:
+                        slc_lst[1] += 1
+                    else:
+                        slc_lst[1] -= 1
+
+            slc = slice(*slc_lst)  # pylint: disable=star-args
+
         return slc
 
     def nr_times(self, slice_str=":"):
