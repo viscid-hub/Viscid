@@ -47,7 +47,7 @@ def calc_psi(B):
     # to any two directions, so hy isn't necessarily hy, but it's
     # easier to see at a glance if it's correct using a specific
     # example
-    zcc, ycc = B.get_crds_cc(comps)
+    zcc, ycc = B.get_crds(comps)
     comp_views = B.component_views()
     hz, hy = comp_views[comp_inds[0]], comp_views[comp_inds[1]]
     dz = zcc[1:] - zcc[:-1]
@@ -63,7 +63,7 @@ def calc_psi(B):
         A[:, j] = A[:, j - 1] - dy[j - 1] * 0.5 * (hz[:, j - 1] + hz[:, j])
 
     return field.wrap_field("Scalar", "psi", B.crds, A,
-                            center="Cell", pretty_name=r"$\psi$")
+                            center=B.center, pretty_name=r"$\psi$")
 
 def calc_beta(pp, B, scale=1.0):
     """Calc plasma beta (2*p/B^2)
