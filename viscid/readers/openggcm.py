@@ -160,8 +160,8 @@ class GGCMGrid(grid.Grid):
             with self[base_name + comp_names[0]] as vx, \
                  self[base_name + comp_names[1]] as vy, \
                  self[base_name + comp_names[2]] as vz:
-                 v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
-                                                   **opts)
+                v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
+                                                  **opts)
         else:
             comps = [self[base_name + c] for c in comp_names]
             v = field.scalar_fields_to_vector(base_name, comps, **opts)
@@ -180,6 +180,16 @@ class GGCMGrid(grid.Grid):
     def _get_e(self):
         return self._assemble_vector("e", _force_layout=self.force_vector_layout,
                                      pretty_name="E")
+
+
+    def _get_e_cc(self):
+        with self["ex_cc"] as ex, \
+             self["ey_cc"] as ey, \
+             self["ez_cc"] as ez:
+            v = field.scalar_fields_to_vector("e", [ex, ey, ez],
+                                              _force_layout=self.force_vector_layout,
+                                              pretty_name="E")
+        return v
 
     def _get_j(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
