@@ -312,6 +312,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
         Y *= mod[1]
 
     # print(x.shape, y.shape, fld.data.shape)
+    mask_nan = False
     if mask_nan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
 
@@ -360,6 +361,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
+    p.get_cmap().set_bad('k')
+
     # figure out the colorbar...
     if colorbar is not None:
         # unless otherwise specified, use_gridspec for
@@ -367,13 +370,14 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
             colorbar["use_gridspec"] = True
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
-        cbar = plt.colorbar(p, **colorbar)
-        if do_labels:
-            cbar.set_label(fld.pretty_name)
+        if mask_nan and dat.mask.all():
+            cbar = None
+        else:
+            cbar = plt.colorbar(p, **colorbar)
+            if do_labels:
+                cbar.set_label(fld.pretty_name)
     else:
         cbar = None
-
-    p.get_cmap().set_bad('k')
 
     if do_labels:
         plt.xlabel(namex)
