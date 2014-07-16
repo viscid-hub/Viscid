@@ -250,16 +250,24 @@ class DatasetTemporal(Dataset):
                 else:
                     slc_lst[i] = np.argmin(np.abs(float(s) - times))
 
-            # make the slice inclusive unless we're using backward
-            # indexing like ":-1"
+            # make the slice inclusive, no matter what
             if slc_lst[1] is not None:
-                if slc_lst[1] >= 0:
-                    if slc_lst[0] <= slc_lst[1]:
-                        slc_lst[1] += 1
-                    else:
-                        slc_lst[1] -= 1
+                if slc_lst[0] <= slc_lst[1]:
+                    slc_lst[1] += 1
+                else:
+                    slc_lst[1] -= 1
 
-            slc = slice(*slc_lst)  # pylint: disable=star-args
+            slc = slice(*slc_lst)
+
+        # otherwise the slice would reduce the dimension, which isn't what
+        # we want in iter_times
+        if isinstance(slc, int):
+            if slc == -1:
+                slc = slice(-1, None)
+            else:
+                slc = slice(slc, slc + 1)
+
+        # print("time slc list:", slc_lst, slc)
 
         return slc
 
