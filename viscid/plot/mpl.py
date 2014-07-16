@@ -667,14 +667,16 @@ def tighten(**kwargs):
     except AttributeError:
         logging.warn("No matplotlib tight layout support")
 
-def plot_earth(fld, axis=None, scale=1.0, rot=0,
-               daycol='w', nightcol='k', crd_system="mhd"):
+def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
+               daycol='w', nightcol='k', crd_system="mhd",
+               zorder=-10):
     """Plot a black and white Earth to show sunward direction
 
     Parameters:
-        fld: Chances are you want to add earth to a plot of a field,
-            this is that field. It's used for deducing info about the
-            plot.
+        plane_spec: Specifies the plane for determining sunlit portion.
+            This can be a :class:`viscid.field.Field` object to try to
+            auto-discover the plane and crd_system, or it can be a
+            string like "y=0".
         axis (matplotlib Axis): axis on which to plot
         scale (float, optional): scale of earth
         rot (float, optional): Rotation of day/night side... I forget all
@@ -682,19 +684,24 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
         daycol (str, optional): color of dayside (matplotlib format)
         nightcol (str, optional): color of nightside (matplotlib format)
         crd_system (str, optional): 'mhd' or 'gse', can usually be
-            deduced from fld
+            deduced from plane_spec if it's a Field instance.
     """
     import matplotlib.patches as mpatches
 
-    crd_system = fld.info.get("crd_system", crd_system)
+    # this is kind of a hacky way to
+    if isinstance(fld, field.Field):
+        crd_system = fld.info.get("crd_system", crd_system)
 
-    # take only the 1st reduced.nr_sdims... this should just work
-    try:
-        plane, value = fld.deep_meta["reduced"][0]
-    except KeyError:
-        logging.error("No reduced dims in the field, i don't know what 2d \n "
-                      "plane, we're in and can't figure out the size of earth.")
-        return None
+        # take only the 1st reduced.nr_sdims... this should just work
+        try:
+            plane, value = fld.deep_meta["reduced"][0]
+        except KeyError:
+            logging.error("No reduced dims in the field, i don't know what 2d \n "
+                          "plane, we're in and can't figure out the size of earth.")
+            return None
+    else:
+        plane, value = [s.strip() for s in fld.split("=")]
+        value = float(value)
 
     if value**2 >= scale**2:
         return None
@@ -708,16 +715,16 @@ def plot_earth(fld, axis=None, scale=1.0, rot=0,
 
     if plane == 'y' or plane == 'z':
         axis.add_patch(mpatches.Wedge((0, 0), radius, 90 + rot, 270 + rot,
-                                      ec=nightcol, fc=daycol))
+                                      ec=nightcol, fc=daycol, zorder=zorder))
         axis.add_patch(mpatches.Wedge((0, 0), radius, 270 + rot, 450 + rot,
-                                      ec=nightcol, fc=nightcol))
+                                      ec=nightcol, fc=nightcol, zorder=zorder))
     elif plane == 'x':
         if value < 0:
             axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
-                                           fc=daycol))
+                                           fc=daycol, zorder=zorder))
         else:
             axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
-                                           fc=nightcol))
+                                           fc=nightcol, zorder=zorder))
     return None
 
 ##
