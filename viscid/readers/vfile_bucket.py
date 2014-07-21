@@ -95,7 +95,11 @@ class VFileBucket(Bucket):
         for ftype, vals in types_detected.items():
             names = [v[0] for v in vals]
             # group all file names of a given type
-            groups = ftype.group_fnames(names)
+            try:
+                groups = ftype.group_fnames(names)
+            except AttributeError:
+                # can't group fnames for this type, that's ok
+                groups = names
 
             # iterate all the groups and add them
             for group in groups:

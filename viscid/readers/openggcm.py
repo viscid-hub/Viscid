@@ -4,6 +4,7 @@
 from __future__ import print_function
 import os
 import re
+import logging
 
 import numpy as np
 try:
@@ -12,10 +13,44 @@ try:
 except ImportError:
     _has_numexpr = False
 
+from viscid.readers.vfile_bucket import VFileBucket
+from viscid.readers.ggcm_logfile import GGCMLogFile
 from viscid.readers import xdmf
 from viscid import grid
 from viscid import field
 from viscid.calculator import plasma
+
+
+def find_file_uptree(directory, basename, max_depth=8, _depth=0):
+    """Find basename by going up the file tree
+
+    Keep going up a directory until you find one that has the file
+    "basename"
+
+    Parameters:
+        directory (str): directory to start the search
+        basename (str): bare file name
+        max_depth (int): max number of directories to seach
+
+    Returns:
+        Relative path to file, or None if not found
+    """
+    max_depth = 5
+
+    if not os.path.isdir(directory):
+        raise RuntimeError("this is non-sensicle")
+
+    fname = os.path.join(directory, basename)
+    # log_fname = "{0}/{1}.log".format(d, self.info["run"])
+    if os.path.isfile(fname):
+        return fname
+
+    if _depth > max_depth or os.path.abspath(directory) == '/':
+        return None
+
+    return find_file_uptree(os.path.join(directory, ".."), basename,
+                            _depth=(_depth + 1))
+
 
 class GGCMGrid(grid.Grid):
     r""" This defines some cool openggcm convinience stuff...
@@ -238,14 +273,50 @@ class GGCMGrid(grid.Grid):
 
 
 class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
+    """File type for GGCM style convenience stuff
+
+    Attributes:
+        read_log_file (bool): search for a log file to load some of the
+            libmrc runtime parameters. This does not read parameters
+            from all libmrc classes, but can be customized with
+            :py:const`viscid.readers.ggcm_logfile.GGCMLogFile.
+            watched_classes`. Defaults to False for performance.
+    """
     _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3d|3df)" \
                 r"(\.[0-9]{6})?\.(xmf|xdmf)\s*$"
     _grid_type = GGCMGrid
+
+    # this can be set to true if these parameters are needed
+    read_log_file = False
 
     def load(self, fname):
         super(GGCMFile, self).load(fname)
         basename = os.path.basename(self.fname)
         self.info['run'] = re.match(self._detector, basename).group(1)
+
+        # look for a log file to auto-load some parameters about the run
+        if self.read_log_file:
+            log_basename = "{0}.log".format(self.info['run'])
+            # FYI, default max_depth should be 8
+            log_fname = find_file_uptree(self.dirname, log_basename)
+            if log_fname is None:
+                log_fname = find_file_uptree(".", log_basename)
+            if log_fname is None:
+                log_fname = find_file_uptree(self.dirname, "log.txt")
+            if log_fname is None:
+                log_fname = find_file_uptree(".", "log.txt")
+
+            if log_fname is not None:
+                self.info["log_fname"] = log_fname
+                if self.vfilebucket is None:
+                    self.vfilebucket = VFileBucket()
+                log_f = self.vfilebucket.load_file(log_fname,
+                                                   file_type=GGCMLogFile)
+                self.info.update(log_f.info)
+            else:
+                logging.warn("You wanted to read parameters from the logfile, but "
+                             "I couldn't find one. Maybe you need to copy it from "
+                             "somewhere?")
 
 ##
 ## EOF
