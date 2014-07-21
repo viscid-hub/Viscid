@@ -21,3 +21,6 @@ from viscid import readers
 load_file = readers.load_file
 load_files = readers.load_files
 get_file = readers.get_file
+
+from viscid import rc
+rc.load_rc_file("~/.viscidrc")
