@@ -22,7 +22,7 @@ class VFileBucket(Bucket):
     """
 
     def __init__(self, **kwargs):
-        super(VFileBucket, self).__init__(**kwargs)
+        super(VFileBucket, self).__init__(ordered=True, **kwargs)
 
     # This routine is just sort of confusing
     # def add(self, fname, file):
@@ -138,16 +138,14 @@ class VFileBucket(Bucket):
 
         return file_lst
 
-    def remove_all_items(self):
-        for item in self:
-            if item is not None:
-                item.unload()
-        super(VFileBucket, self).remove_all_items()
+    def remove_item(self, item):
+        item.unload()
+        super(VFileBucket, self).remove_item(item)
 
-    def get_item(self, handle):
-        if isinstance(handle, six.string_types):
-            handle = os.path.expanduser(os.path.expandvars(handle))
-        return super(VFileBucket, self).get_item(handle)
+    def remove_all_items(self):
+        for item in self._items.keys():
+            item.unload()
+        super(VFileBucket, self).remove_all_items()
 
     def __getitem__(self, handle):
         if isinstance(handle, six.string_types):
