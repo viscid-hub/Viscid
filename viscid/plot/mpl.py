@@ -689,18 +689,18 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
     import matplotlib.patches as mpatches
 
     # this is kind of a hacky way to
-    if isinstance(fld, field.Field):
-        crd_system = fld.info.get("crd_system", crd_system)
+    if isinstance(plane_spec, field.Field):
+        crd_system = plane_spec.info.get("crd_system", crd_system)
 
         # take only the 1st reduced.nr_sdims... this should just work
         try:
-            plane, value = fld.deep_meta["reduced"][0]
+            plane, value = plane_spec.deep_meta["reduced"][0]
         except KeyError:
             logging.error("No reduced dims in the field, i don't know what 2d \n "
                           "plane, we're in and can't figure out the size of earth.")
             return None
     else:
-        plane, value = [s.strip() for s in fld.split("=")]
+        plane, value = [s.strip() for s in plane_spec.split("=")]
         value = float(value)
 
     if value**2 >= scale**2:
