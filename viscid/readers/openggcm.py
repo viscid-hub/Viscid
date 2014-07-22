@@ -311,7 +311,8 @@ class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
                 if self.vfilebucket is None:
                     self.vfilebucket = VFileBucket()
                 log_f = self.vfilebucket.load_file(log_fname,
-                                                   file_type=GGCMLogFile)
+                                                   file_type=GGCMLogFile,
+                                                   index_handle=False)
                 self.info.update(log_f.info)
             else:
                 logging.warn("You wanted to read parameters from the logfile, but "
