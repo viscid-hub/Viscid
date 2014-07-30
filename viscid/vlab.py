@@ -264,7 +264,7 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
     logging.debug("finished reading V field")
 
     logging.debug("calculating new streamline positions")
-    flow_lines = streamlines(v, root_seeds,  # pylint: disable=W0142
+    flow_lines = streamlines(v, root_seeds,
                              output=streamline.OUTPUT_STREAMLINES,
                              **stream_opts)[0]
 

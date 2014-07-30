@@ -177,7 +177,7 @@ class FileNumpyNPZ(vfile.VFile):
 
         if fname.endswith(".npz"):
             fname = fname[:-4]
-        np.savez(fname, **fld_dict) #pylint: disable=W0142
+        np.savez(fname, **fld_dict)
 
 ##
 ## EOF

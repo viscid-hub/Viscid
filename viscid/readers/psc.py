@@ -37,11 +37,11 @@ class PscGrid(grid.Grid):
             with self[base_name + comp_names[0]] as vx, \
                  self[base_name + comp_names[1]] as vy, \
                  self[base_name + comp_names[2]] as vz:
-                v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],  # pylint: disable=star-args
+                v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
                                                   **opts)
         else:
             comps = [self[base_name + c] for c in comp_names]
-            v = field.scalar_fields_to_vector(base_name, comps, **opts)  # pylint: disable=star-args
+            v = field.scalar_fields_to_vector(base_name, comps, **opts)
             for comp in comps:
                 comp.unload()
         return v
