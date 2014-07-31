@@ -209,7 +209,7 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
             os.environ["CC"] = cc
             cc = cc.decode()
             print("switching compiler to", cc)
-    except CalledProcessError:
+    except (CalledProcessError, OSError):
         print("I think there's a problem with your compiler ( CC =", cc,
               "), but I'll continue anyway...")
 
