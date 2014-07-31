@@ -65,13 +65,13 @@ def main():
     bmag = f3d["bmag"]
 
     plt.subplot(141)
-    mpl.plot(pp, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(pp, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
     plt.subplot(142)
-    mpl.plot(rr, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(rr, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
     plt.subplot(143)
-    mpl.plot(T, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(T, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
     plt.subplot(144)
-    mpl.plot(bmag, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(bmag, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
 
     if args.show:
         mpl.mplshow()

@@ -16,7 +16,7 @@ This is just one way to customize the OpenGGCM reader. For more, check out :clas
     openggcm.GGCMGrid.mhd_to_gse_on_read = True
 
     f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
-    pp = f3d["pp"]["x=-20:20,y=0,z=-10:10"]
+    pp = f3d["pp"]["x=-20.0:20.0,y=0.0,z=-10.0:10.0"]
     mpl.plot(pp, plot_opts="log,x_-30_15", earth=True)
 
 Ionosphere Files

@@ -34,22 +34,22 @@ def main():
     ncols = 2
 
     plt.subplot2grid((nrows, ncols), (0, 0))
-    mpl.plot(bx, "z=0i,x=:30i", earth=True, show=False)
+    mpl.plot(bx, "z=0,x=:30", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (1, 0))
-    mpl.plot(bx, "z=0.5,x=0i:2i,y=-100:100", earth=True, show=False)
+    mpl.plot(bx, "z=0.5,x=0:2,y=-100.0:100.0", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (2, 0))
-    mpl.plot(bx, "z=-1i,x=-10:,y=-100:100", earth=True, show=False)
+    mpl.plot(bx, "z=-1,x=-10.0:,y=-100.0:100.0", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (3, 0))
-    mpl.plot(bx, "x=0,y=-5:5,z=-5:5", earth=True, show=False)
+    mpl.plot(bx, "x=0.0,y=-5.0:5.0,z=-5.0:5.0", earth=True, show=False)
 
     plt.subplot2grid((nrows, ncols), (0, 1))
-    mpl.plot(bx2d, "y=20,z=-100:100", earth=True, show=False)
+    mpl.plot(bx2d, "y=20.0,z=-100.0:100.0", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (1, 1))
-    mpl.plot(bx2d, "x=0i:20i,y=0,z=0", show=False)
+    mpl.plot(bx2d, "x=0:20,y=0.0,z=0.0", show=False)
     plt.subplot2grid((nrows, ncols), (2, 1))
     mpl.plot(bx2d, earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (3, 1))
-    mpl.plot(bx2d, "z=0,x=-20:0", show=False)
+    mpl.plot(bx2d, "z=0.0,x=-20.0:0.0", show=False)
 
     if args.show:
         mpl.mplshow()

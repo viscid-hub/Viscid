@@ -271,11 +271,11 @@ class StructuredCrds(Coordinates):
             return self.axes[axis]
 
     def _parse_slice(self, selection):
-        """ parse a selection string or dict. a trailing i means the number is
-        an index, else numbers are interpreted as coordinates... ex:
-        selection = 'y=12.32,z-1.0' is line of data
+        """ parse a selection string or dict. integers are interpreted
+        as indices, floats are interpreted as coordinates... ex:
+        selection = 'y=12.32,z=-1.0' is line of data
         closest to (x, y=12.32, z=-1.0)
-        selection = {'y=12i:14i,z=1i is the slice [:,12:14,1]
+        selection = {'y=12:14,z=1 is the slice [:,12:14,1]
         """
         # parse string to dict if necessary
         if isinstance(selection, dict):
@@ -303,10 +303,11 @@ class StructuredCrds(Coordinates):
                 for i, val in enumerate(slclst):
                     if len(val) == 0:
                         slclst[i] = None
-                    elif val[-1] in ['i', 'j'] or i == 2:
-                        slclst[i] = int(val.rstrip('ij'))
                     else:
-                        slclst[i] = float(val)
+                        try:
+                            slclst[i] = int(val)
+                        except ValueError:
+                            slclst[i] = float(val)
                 sel[dim] = slclst
             return sel
         elif isinstance(selection, (tuple, list)):
@@ -334,14 +335,14 @@ class StructuredCrds(Coordinates):
         syntax. This function is more for internal use; however it
         does document the slice string syntax.
 
-        In practice, selection can be a string like "y=3i:6i:2,z=0"
-        where i indicates slice by index as opposed to bare numbers
+        In practice, selection can be a string like "y=3:6:2,z=0.0"
+        where integers indicate an index as opposed to floats
         which slice by crd value. The example slice would be the 3rd
         and 5th crds in y, and the z = 0.0 plane. Selection can also
         be the usual tuple of slice objects / integers like one would
         give to numpy.
 
-        "y=3i:6i:2,z=0" will give (if z[32] is closest to z=0.0)
+        "y=3:6:2,z=0.0" will give (if z[32] is closest to z=0.0)
 
             ([slice(None), slice(3, 6, 2), 32],
             [['x', ndarray(all nc x crds)], ['y', array(y[3], y[5])]],

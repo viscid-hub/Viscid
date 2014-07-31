@@ -63,7 +63,7 @@ def main():
     logging.info("Testing field lines on 3d field...")
     B = get_dipole(m=[0.0, 0.0, -1.0])
 
-    mygrid = B.crds.slice_keep("z=1:3,y=1i:3i,x=0.0", cc=True)
+    mygrid = B.crds.slice_keep("z=1.0:3.0,y=1:3,x=0.0", cc=True)
 
     # print(B.crds.get_crd(center="Node"))
     # print(mygrid.get_crd(center="Cell"))

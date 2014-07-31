@@ -234,21 +234,28 @@ class DatasetTemporal(Dataset):
 
         if len(slc_lst) == 1:
             s = slc_lst[0]
-            if s[-1] in "ij":
-                slc = int(s[:-1])
-            else:
+
+            # i'm not keen on the whole ij thing since it makes
+            # arr["1"] different from arr[1], i think i prefer to
+            # require arr["1.0"] to slice by a float value
+            # if s[-1] in "ij":
+            #     slc = int(s[:-1])
+            # else:
+            #     slc = np.argmin(np.abs(float(s) - times))
+
+            try:
+                slc = int(s)
+            except ValueError:
                 slc = np.argmin(np.abs(float(s) - times))
         else:
             for i, s in enumerate(slc_lst):
                 if s == "":
                     slc_lst[i] = None
-                elif i > 1 or s[-1] in "ij":
+                else:
                     try:
                         slc_lst[i] = int(s[:-1])
                     except ValueError:
                         slc_lst[i] = np.argmin(np.abs(float(s[:-1]) - times))
-                else:
-                    slc_lst[i] = np.argmin(np.abs(float(s) - times))
 
             # make the slice inclusive, no matter what
             if slc_lst[1] is not None:

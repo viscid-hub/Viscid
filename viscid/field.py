@@ -625,7 +625,7 @@ class Field(object):
         self._src_data = self.data
 
     def slice(self, selection):
-        """ Slice the field using a string like "y=3i:6i:2,z=0" or a standard
+        """ Slice the field using a string like "y=3:6:2,z=0" or a standard
         list of slice objects like one would give to numpy. In a string, i
         means by index, and bare numbers mean by the index closest to that
         value; see Coordinate.make_slice docs for an example. The semantics
