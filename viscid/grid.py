@@ -101,7 +101,7 @@ class Grid(object):
                 with fld as f:
                     yield f
 
-    def print_tree(self, recursive=False, prefix=""): #pylint: disable=W0613
+    def print_tree(self, depth=-1, prefix=""): #pylint: disable=W0613
         self.fields.print_tree(prefix=prefix + tree_prefix)
 
     ##################################

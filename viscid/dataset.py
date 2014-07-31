@@ -94,7 +94,7 @@ class Dataset(object):
         else:
             return child.iter_fields(time=time, named=named)
 
-    def print_tree(self, recursive=True, prefix=""):
+    def print_tree(self, depth=-1, prefix=""):
         if prefix == "":
             print(self)
             prefix += tree_prefix
@@ -104,8 +104,8 @@ class Dataset(object):
             if child is self.active_child:
                 suffix = " <-- active"
             print("{0}{1}{2}".format(prefix, child, suffix))
-            if recursive:
-                child.print_tree(recursive=True, prefix=prefix + tree_prefix)
+            if depth != 0:
+                child.print_tree(depth=depth - 1, prefix=prefix + tree_prefix)
 
     # def get_non_dataset(self):
     #     """ recurse down datasets until active_grid is not a subclass
@@ -297,7 +297,7 @@ class DatasetTemporal(Dataset):
         else:
             return child.iter_fields(time=time, named=named)
 
-    def print_tree(self, recursive=True, prefix=""):
+    def print_tree(self, depth=-1, prefix=""):
         if prefix == "":
             print(self)
             prefix += tree_prefix
@@ -307,8 +307,8 @@ class DatasetTemporal(Dataset):
             if child[1] is self.active_child:
                 suffix = " <-- active"
             print("{0}{1} (t={2}){3}".format(prefix, child, child[0], suffix))
-            if recursive:
-                child[1].print_tree(recursive=True, prefix=prefix + tree_prefix)
+            if depth != 0:
+                child[1].print_tree(depth=depth - 1, prefix=prefix + tree_prefix)
 
     def get_field(self, fldname, time=None):
         """ recurse down active children to get a field """
