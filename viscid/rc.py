@@ -54,7 +54,7 @@ def load_rc_file(fname):
         with open(os.path.expanduser(os.path.expandvars(fname)), 'r') as f:
             for line in f:
                 line = line.strip()
-                if line.startswith("#"):
+                if not line or line.startswith("#"):
                     continue
 
                 lst = line.split(":")
