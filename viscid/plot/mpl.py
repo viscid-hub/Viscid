@@ -12,8 +12,14 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize, LogNorm
 from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
+try:
+    from mpl_toolkits.basemap import Basemap
+    _HAS_BASEMAP = True
+except ImportError:
+    _HAS_BASEMAP = False
 
 from viscid import field
+from viscid import coordinate
 from viscid.calculator import calc
 from viscid.calculator.topology import color_from_topology
 # from viscid import vutil
@@ -59,12 +65,7 @@ def plot(fld, selection=None, **kwargs):
             return plot1d_field(fld, **kwargs)
         elif fld.nr_sdims == 2:
             if fld.is_spherical():
-                try:
-                    from mpl_toolkits.basemap import Basemap  # pylint: disable=unused-variable
-                    return plot2d_mapfield(fld, **kwargs)
-                except ImportError:
-                    print("Note: Install basemap for better map projection "
-                          "plots")
+                return plot2d_mapfield(fld, **kwargs)
             return plot2d_field(fld, **kwargs)
         else:
             raise ValueError("mpl can only do 1-D or 2-D fields")
@@ -415,16 +416,16 @@ def plot2d_mapfield(fld, **kwargs):
           this function setting up a Basemap first
 
     """
-    from mpl_toolkits.basemap import Basemap
+    hemisphere = kwargs.pop("hemisphere", "north").lower().strip()
 
-    hemisphere = kwargs.pop("hemisphere", "north").lower()
+    def_projection = "polar"
 
     if hemisphere == "north":
-        def_projection = "nplaea"
+        # def_projection = "nplaea"
         def_boundinglat = 40.0
         latlabel_arr = np.linspace(50.0, 80.0, 4)
     elif hemisphere == "south":
-        def_projection = "splaea"
+        # def_projection = "splaea"
         def_boundinglat = -40.0
         latlabel_arr = -1.0 * np.linspace(50.0, 80.0, 4)
     else:
@@ -437,21 +438,72 @@ def plot2d_mapfield(fld, **kwargs):
     drawcoastlines = kwargs.pop("drawcoastlines", False)
     ax = kwargs.get("ax", None)
 
-    m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
-                boundinglat=boundinglat, ax=ax)
+    if projection != "polar" and not _HAS_BASEMAP:
+        print("NOTE: install the basemap for the desired spherical "
+              "projection; falling back to matplotlib's polar plot.")
+        projection = "polar"
 
-    kwargs['latlon'] = True
-    kwargs['action_ax'] = m
-    kwargs['do_labels'] = False
-    kwargs['equalaxis'] = False
-    ret = plot2d_field(fld, **kwargs)
-    m.drawparallels(latlabel_arr, labels=[1, 1, 1, 1],
-                    linewidth=0.25)
-    m.drawmeridians(np.linspace(360.0, 0.0, 8, endpoint=False),
-                    labels=[1, 1, 1, 1], fmt=_mlt_labels, linewidth=0.25)
-    if drawcoastlines:
-        m.drawcoastlines(linewidth=0.25)
-    return ret
+    if projection == "polar":
+        # FIXME: this is not good practice since grid means something
+        # different for all other plots, and it defaults to False
+        dogrid = kwargs.pop("grid", True)
+
+        boundinglat = np.abs(boundinglat)
+
+        if ax is None:
+            ax = plt.gca()
+        if not hasattr(ax, "set_thetagrids"):
+            ax = plt.subplot(*ax.get_geometry(), projection='polar')
+
+        ax.set_thetagrids((45, 90, 135, 180, 225, 270, 315, 360),
+                          (9, 12, 15, 18, 21, 24, 3, 6))
+        trange = (None, boundinglat)
+        grid_dr = 10
+        ax.set_rgrids(np.arange(grid_dr, trange[1], grid_dr), fmt='%.0f')
+
+        if hemisphere == "north":
+            sl_fld = fld["lat=:{0}".format(boundinglat)]
+            maxlat = sl_fld.get_crd_nc('lat')[-1]
+        elif hemisphere == "south":
+            sl_fld = fld["lat={0}:".format(180.0 - boundinglat)]["lat=::-1"]
+            maxlat = 180.0 - sl_fld.get_crd_nc('lat')[-1]
+
+        lat, lon = sl_fld.get_crds_nc(['lat', 'lon'])
+        new_lat = np.linspace(0.0, maxlat, len(lat))
+        # FIXME: Matt's code had a - 0.5 * (lon[1] - lon[0]) here...
+        # I'm omiting it
+        new_lon = (lon - 90.0) * np.pi / 180.0
+        new_crds = coordinate.wrap_crds("nonuniform_spherical",
+                                        [('lat', new_lat), ('lon', new_lon)])
+        new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
+
+        # print(fld.get_crds())
+
+        kwargs['ax'] = ax
+        kwargs['action_ax'] = ax
+        kwargs['do_labels'] = False
+        kwargs['equalaxis'] = False
+
+        ret = plot2d_field(new_fld, **kwargs)
+        if dogrid:
+            ax.grid(True)
+        return ret
+
+    else:
+        m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
+                    boundinglat=boundinglat, ax=ax)
+        kwargs['latlon'] = True
+        kwargs['action_ax'] = m
+        kwargs['do_labels'] = False
+        kwargs['equalaxis'] = False
+        ret = plot2d_field(fld, **kwargs)
+        m.drawparallels(latlabel_arr, labels=[1, 1, 1, 1],
+                        linewidth=0.25)
+        m.drawmeridians(np.linspace(360.0, 0.0, 8, endpoint=False),
+                        labels=[1, 1, 1, 1], fmt=_mlt_labels, linewidth=0.25)
+        if drawcoastlines:
+            m.drawcoastlines(linewidth=0.25)
+        return ret
 
 
 def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
