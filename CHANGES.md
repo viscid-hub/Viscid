@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.60.0 dev
+
+Features:
+  - Implement Ionosphere reading / plotting
+  - Implement a Jrrle Openggcm Reader
+
 ## 0.50.2
 
 Features:
