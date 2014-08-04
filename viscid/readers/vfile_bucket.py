@@ -127,13 +127,11 @@ class VFileBucket(Bucket):
                         # what's this about?
                         pass
 
-                if f is not None:
-                    # group can either be 1 item or a list
-                    if isinstance(group, list):
-                        handles = group
-                    else:
-                        handles = [group]
-                    self.set_item(handles, f, index_handle=index_handle)
+                try:
+                    handle_name = f.collective_name(group)
+                except AttributeError:
+                    handle_name = VFile.collective_name(group)
+                self.set_item([handle_name], f, index_handle=index_handle)
                 file_lst.append(f)
 
         return file_lst

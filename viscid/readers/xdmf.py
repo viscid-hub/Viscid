@@ -99,6 +99,14 @@ class FileXDMF(vfile.VFile):
         super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
 
     def _parse(self):
+        grids = self._parse_file(self.fname)
+        for grid in grids:
+            self.add(grid)
+
+        if len(self.children) > 0:
+            self.activate(0)
+
+    def _parse_file(self, fname):
         # lxml has better xpath support, so it's preferred, but it stops
         # if an xinclude doesn't exist, so for now use our custom extension
         # of the default python xml lib
@@ -107,18 +115,17 @@ class FileXDMF(vfile.VFile):
         #     tree = etree.parse(self.fname) #pylint: disable=E0602
         #     tree.xinclude()  # TODO: gracefully ignore include problems
         #     root = tree.getroot()
-        tree = ElementTree.parse(self.fname)
+        grids = []
+        tree = ElementTree.parse(fname)
         root = tree.getroot()
-        _xdmf_include.include(root, base_url=self.fname)
+        _xdmf_include.include(root, base_url=fname)
 
         # search for all root grids, and parse them
         domain_grids = root.findall("./Domain/Grid")
         for dg in domain_grids:
             grd = self._parse_grid(dg)
-            self.add(grd)
-
-        if len(self.children) > 0:
-            self.activate(0)
+            grids.append(grd)
+        return grids
 
     def _fill_attrs(self, el):
         defs = self._xdmf_defaults[el.tag]

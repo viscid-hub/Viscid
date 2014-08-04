@@ -5,6 +5,8 @@ from __future__ import print_function
 import os
 import re
 import logging
+from itertools import islice
+from operator import itemgetter
 
 import numpy as np
 try:
@@ -15,9 +17,12 @@ except ImportError:
 
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.ggcm_logfile import GGCMLogFile
+from viscid.readers import vfile
 from viscid.readers import xdmf
+from viscid import dataset
 from viscid import grid
 from viscid import field
+from viscid.coordinate import wrap_crds
 from viscid.calculator import plasma
 
 
@@ -50,6 +55,43 @@ def find_file_uptree(directory, basename, max_depth=8, _depth=0):
 
     return find_file_uptree(os.path.join(directory, ".."), basename,
                             _depth=(_depth + 1))
+
+def group_ggcm_files_common(detector, fnames):
+    infolst = []
+    for name in fnames:
+        m = re.match(detector, name)
+        grps = m.groups()
+        d = dict(runname=grps[0], ftype=grps[1],
+                 fname=m.string)
+        try:
+            d["time"] = int(grps[2])
+        except TypeError:
+            # grps[2] is none for "RUN.3d.xdmf" files
+            d["time"] = -1
+        infolst.append(d)
+
+    infolst.sort(key=itemgetter("runname"))
+    infolst.sort(key=itemgetter("ftype"))
+    infolst.sort(key=itemgetter("time"))
+
+    info_groups = []
+    info_group = [infolst[0]]
+    for info in infolst[1:]:
+        last = info_group[-1]
+        if info['runname'] == last['runname'] and \
+           info['ftype'] == last['ftype']:
+            info_group.append(info)
+        else:
+            info_groups.append(info_group)
+            info_group = [info]
+    info_groups.append(info_group)
+
+    # turn info_groups into groups of just file names
+    groups = []
+    for info_group in info_groups:
+        groups.append([info['fname'] for info in info_group])
+
+    return groups
 
 
 class GGCMGrid(grid.Grid):
@@ -134,7 +176,7 @@ class GGCMGrid(grid.Grid):
             a *= factor
         return a
 
-    def mhd2gse_crds(self, crds, arr):  # pylint: disable=W0613
+    def mhd2gse_crds(self, crds, arr):  # pylint: disable=unused-argument
         return np.array(-1.0 * arr[::-1], copy=self.copy_on_transform)
 
     def set_crds(self, crds_object):
@@ -272,8 +314,8 @@ class GGCMGrid(grid.Grid):
         return plasma.calc_psi(B)
 
 
-class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
-    """File type for GGCM style convenience stuff
+class GGCMFile(object):
+    """Mixin some GGCM convenience stuff
 
     Attributes:
         read_log_file (bool): search for a log file to load some of the
@@ -282,19 +324,20 @@ class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
             :py:const`viscid.readers.ggcm_logfile.GGCMLogFile.
             watched_classes`. Defaults to False for performance.
     """
-    _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3d|3df)" \
-                r"(\.[0-9]{6})?\.(xmf|xdmf)\s*$"
     _grid_type = GGCMGrid
+    _iono = False
 
     # this can be set to true if these parameters are needed
+    # i thought that reading a log file over sshfs would be a big
+    # bottle neck, but it seems opening files over sshfs is appropriately
+    # buffered, so maybe it's no big deal since we're only reading the
+    # "views" printed at the beginning anyway
     read_log_file = False
 
-    def load(self, fname):
-        super(GGCMFile, self).load(fname)
-        basename = os.path.basename(self.fname)
-        self.info['run'] = re.match(self._detector, basename).group(1)
+    _collection = None
+    vfilebucket = None
 
-        # look for a log file to auto-load some parameters about the run
+    def read_logfile(self):
         if self.read_log_file:
             log_basename = "{0}.log".format(self.info['run'])
             # FYI, default max_depth should be 8
@@ -315,9 +358,158 @@ class GGCMFile(xdmf.FileXDMF):  # pylint: disable=W0223
                                                    index_handle=False)
                 self.info.update(log_f.info)
             else:
-                logging.warn("You wanted to read parameters from the logfile, but "
-                             "I couldn't find one. Maybe you need to copy it from "
-                             "somewhere?")
+                logging.warn("You wanted to read parameters from the "
+                             "logfile, but I couldn't find one. Maybe "
+                             "you need to copy it from somewhere?")
+
+
+class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
+    _detector = None
+
+    _crds = None
+    _fld_templates = None
+    grid2 = None
+
+    def __init__(self, fname, vfilebucket=None, crds=None, fld_templates=None,
+                 **kwargs):
+        if vfilebucket is None:
+            vfilebucket = VFileBucket()
+
+        self._crds = crds
+        self._fld_templates = fld_templates
+
+        super(GGCMFileFortran, self).__init__(fname, vfilebucket, **kwargs)
+
+    @classmethod
+    def group_fnames(cls, fnames):
+        """Group File names
+
+        The default implementation just returns fnames, but some file
+        types might do something fancy here
+
+        Parameters:
+            fnames (list): names that can be logically grouped, as in
+                a bunch of file names that are different time steps
+                of a given run
+
+        Returns:
+            A list of things that can be given to the constructor of
+            this class
+        """
+        return group_ggcm_files_common(cls._detector, fnames)
+
+    @classmethod
+    def collective_name_from_group(cls, fnames):
+        fname0 = fnames[0]
+        basename = os.path.basename(fname0)
+        run = re.match(cls._detector, basename).group(1)
+        fldtype = re.match(cls._detector, basename).group(2)
+        new_basename = "{0}.{1}".format(run, fldtype)
+        return os.path.join(os.path.dirname(fname0), new_basename)
+
+    def load(self, fname):
+        if isinstance(fname, list):
+            self._collection = fname
+        else:
+            self._collection = [fname]
+
+        fname0 = self._collection[0]
+        fname1 = self.collective_name(fname)
+
+        # info['run'] is needed for finding the grid2 file
+        basename = os.path.basename(fname0)
+        self.info['run'] = re.match(self._detector, basename).group(1)
+        self.info['fieldtype'] = re.match(self._detector, basename).group(2)
+
+        super(GGCMFileFortran, self).load(fname1)
+
+    def _parse(self):
+        # look for and parse grid2 file or whatever else needs be done
+        if self._crds is None:
+            self._crds = self.make_crds()
+
+        if len(self._collection) == 1:
+            # load a single file
+            _grid = self._parse_file(self.fname)
+            self.add(_grid)
+            self.activate(0)
+        else:
+            # load each file, and add it to teh bucket
+            data_temporal = dataset.DatasetTemporal("GGCMTemporalCollection")
+
+            self._fld_templates = self._make_template(self._collection[0])
+
+            for fname in self._collection:
+                f = self.vfilebucket.load_file(fname, index_handle=False,
+                                               file_type=type(self),
+                                               crds=self._crds,
+                                               fld_templates=self._fld_templates)
+                data_temporal.add(f)
+            data_temporal.activate(0)
+            self.add(data_temporal)
+            self.activate(0)
+
+    def make_crds(self):
+        if self.info['fieldtype'] == 'iof':
+            nlat, nlon = 181, 61
+            crdlst = [['lat', [0.0, 180.0, nlat]],
+                      ['lon', [0.0, 360.0, nlon]]]
+            return wrap_crds("nonuniform_spherical", crdlst)
+
+        else:
+            return self.read_grid2()
+
+    def read_grid2(self):
+        # TODO: iof files can be hacked in here
+        grid2_basename = "{0}.grid2".format(self.info['run'])
+        self.grid2 = find_file_uptree(self.dirname, grid2_basename)
+        if self.grid2 is None:
+            self.grid2 = find_file_uptree(".", grid2_basename)
+        if self.grid2 is None:
+            raise IOError("Could not find a grid2 file for "
+                          "{0}".format(self.fname))
+
+        # load the cell centered grid
+        with open(self.grid2, 'r') as fin:
+            nx = int(next(fin).split()[0])
+            gx = list(islice(fin, 0, nx, 1))
+            gx = np.array(gx, dtype=float)
+
+            ny = int(next(fin).split()[0])
+            gy = list(islice(fin, 0, ny, 1))
+            gy = np.array(gy, dtype=float)
+
+            nz = int(next(fin).split()[0])
+            gz = list(islice(fin, 0, nz, 1))
+            gz = np.array(gz, dtype=float)
+
+        xnc = np.empty(len(gx) + 1)
+        ync = np.empty(len(gy) + 1)
+        znc = np.empty(len(gz) + 1)
+
+        for cc, nc in [(gx, xnc), (gy, ync), (gz, znc)]:
+            hd = 0.5 * (cc[1:] - cc[:-1])
+            nc[:] = np.hstack([cc[0] - hd[0], cc[:-1] + hd, cc[-1] + hd[-1]])
+
+        # for 2d files
+        crdlst = []
+        for dim, nc, cc in zip("zyx", [znc, ync, xnc], [gz, gy, gx]):
+            if self.info['fieldtype'].startswith('p'):
+                self.info['plane'] = self.info['fieldtype'][2]
+                if self.info['plane'] == dim:
+                    planeloc = float(self.info['fieldtype'].split('_')[1])
+                    self.info['planeloc'] = planeloc
+                    ccind = np.indmax(np.abs(cc - planeloc))
+                    nc = nc[ccind:ccind + 2]
+            crdlst.append([dim, nc])
+
+        return wrap_crds("nonuniform_cartesian", crdlst)
+
+    # def _parse_many(fnames):
+    #     pass
+
+    # def _parse_single(fnames):
+    #     pass
 
 ##
 ## EOF

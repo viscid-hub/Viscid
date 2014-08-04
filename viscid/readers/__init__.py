@@ -18,7 +18,9 @@ from viscid.readers import ascii
 
 # these imports register convenience readers for data from
 # specific sim packages
-from viscid.readers import openggcm
+from viscid.readers import ggcm_xdmf
+from viscid.readers import ggcm_jrrle
+# from viscid.readers import ggcm_fortbin
 from viscid.readers import psc
 
 __filebucket__ = vfile_bucket.VFileBucket()

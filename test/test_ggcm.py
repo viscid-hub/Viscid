@@ -30,7 +30,7 @@ class MyGGCMGrid(openggcm.GGCMGrid):
 # So, you can make a class that derrives from an existing vFile type.
 # That way you just define this class, and when it comes time to call
 # load_file(file_name), you don't have to give it grid_type=...
-# class MyGGCMFile(openggcm.GGCMFile):  # pylint: disable=W0223
+# class MyGGCMFile(openggcm.GGCMFileXDMF):  # pylint: disable=W0223
 #     # you can change the detector, or you can not and you will
 #     # completely override the parent reader
 #     _detector = r"^\s*.*\.(p[xyz]_[0-9]+|3d|3df|iof)" \

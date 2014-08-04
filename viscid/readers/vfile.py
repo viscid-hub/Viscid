@@ -172,6 +172,28 @@ class VFile(Dataset):
         """
         return fnames
 
+    @classmethod
+    def collective_name_from_group(cls, group):
+        raise NotImplementedError()
+
+    @classmethod
+    def collective_name(cls, group):
+        """
+        Parameters:
+            group: single file name or list of file names that would
+                be grouped by group_fnames
+
+        Returns:
+            str: a single name
+        """
+        if not isinstance(group, (list, tuple)):
+            group = [group]
+
+        if len(group) > 1:
+            return cls.collective_name_from_group(group)
+        else:
+            return group[0]
+
 ##
 ## EOF
 ##
