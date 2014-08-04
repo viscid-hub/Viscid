@@ -12,6 +12,11 @@ types:
          "Spherical"
      "Unstructured":
          -> Not Implemented <-
+
+FIXME: uniform coordinates are generally unsupported, but they're just
+       a special case of nonuniform coordinates, so the functionality
+       is still there... it's just unnatural to use full crd arrays
+       with uniform coordinates
 """
 
 from __future__ import print_function
@@ -23,13 +28,13 @@ import numpy as np
 from viscid import vutil
 
 
-def wrap_crds(typ, clist):
+def wrap_crds(typ, clist, **kwargs):
     """  """
     # print(len(clist), clist[0][0], len(clist[0][1]), typ)
     for cls in vutil.subclass_spider(Coordinates):
         if cls.istype(typ):
             # return an instance
-            return cls(clist)
+            return cls(clist, **kwargs)
     raise NotImplementedError("can not decipher crds")
 
 
@@ -793,7 +798,7 @@ class NonuniformSphericalCrds(NonuniformCrds):
 
     _target_nc_params = None
 
-    def __init__(self, init_clist, **kwargs):
+    def __init__(self, init_clist, fill_by_linspace=False, **kwargs):
         """This subclass is hackilly different from other crd types...
         init_clist MUST be list of the form:
         [
@@ -805,8 +810,14 @@ class NonuniformSphericalCrds(NonuniformCrds):
         numpy.linspace
         """
         self._axes = [d[0].lower() for d in init_clist]
-        self._target_nc_params = [d[1] for d in init_clist]
-        super(NonuniformSphericalCrds, self).__init__(None, **kwargs)
+        if fill_by_linspace:
+            self._target_nc_params = [d[1] for d in init_clist]
+            init_clist = None
+        else:
+            self._target_nc_params = []
+
+        super(NonuniformSphericalCrds, self).__init__(init_clist, **kwargs)
+
 
     def _fill_crds_dict(self):
         """do the math to calc node, cell, face, edge crds from
@@ -816,9 +827,10 @@ class NonuniformSphericalCrds(NonuniformCrds):
         # just assuming they span the sphere... that way all we actually need
         # is nphi, ntheta, so when we need the crds, fill _src_crds_nc as
         # though we had them
-        self._src_crds_nc = {}
-        for ax, p in zip(self._axes, self._target_nc_params):
-            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2])
+        if len(self._target_nc_params) > 0:
+            self._src_crds_nc = {}
+            for ax, p in zip(self._axes, self._target_nc_params):
+                self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2])
         return super(NonuniformSphericalCrds, self)._fill_crds_dict()
 
 

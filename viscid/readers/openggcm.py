@@ -454,7 +454,8 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
             nlat, nlon = 181, 61
             crdlst = [['lat', [0.0, 180.0, nlat]],
                       ['lon', [0.0, 360.0, nlon]]]
-            return wrap_crds("nonuniform_spherical", crdlst)
+            return wrap_crds("nonuniform_spherical", crdlst,
+                             fill_by_linspace=True)
 
         else:
             return self.read_grid2()

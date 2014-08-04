@@ -242,6 +242,7 @@ class FileXDMF(vfile.VFile):
         # crds = None
         crdlist = None
         crdtype = None
+        crdkwargs = {}
 
         topotype = topoattrs["TopologyType"]
 
@@ -363,13 +364,14 @@ class FileXDMF(vfile.VFile):
             nlat, nlon = [int(s) for s in topoattrs["Dimensions"].split(' ')]
             crdlist = [['lat', [0.0, 180.0, nlat]],
                        ['lon', [0.0, 360.0, nlon]]]
+            crdkwargs['fill_by_linspace'] = True
 
         elif topotype in ['3DSMesh']:
             raise NotImplementedError("3D spherical grids not yet supported")
         else:
             raise NotImplementedError("Unstructured grids not yet supported")
 
-        crds = coordinate.wrap_crds(crdtype, crdlist)
+        crds = coordinate.wrap_crds(crdtype, crdlist, **crdkwargs)
         return crds, geoattrs
 
     def _parse_attribute(self, item, crds, topoattrs, time=0.0):
