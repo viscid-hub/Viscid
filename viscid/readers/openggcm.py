@@ -398,15 +398,6 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
         """
         return group_ggcm_files_common(cls._detector, fnames)
 
-    @classmethod
-    def collective_name_from_group(cls, fnames):
-        fname0 = fnames[0]
-        basename = os.path.basename(fname0)
-        run = re.match(cls._detector, basename).group(1)
-        fldtype = re.match(cls._detector, basename).group(2)
-        new_basename = "{0}.{1}".format(run, fldtype)
-        return os.path.join(os.path.dirname(fname0), new_basename)
-
     def load(self, fname):
         if isinstance(fname, list):
             self._collection = fname

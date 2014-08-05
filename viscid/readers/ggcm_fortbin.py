@@ -1,4 +1,7 @@
 from __future__ import print_function
+import struct
+import os
+import re
 try:
     from collections import OrderedDict
 except ImportError:
@@ -12,13 +15,17 @@ from viscid.readers import vfile
 from viscid.readers import openggcm
 
 
+# raise NotImplementedError("fortbin reader is not at all")
+
+
 class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method
-    """Fortran binary dump files"""
-    _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3df|iof)" \
-                r"\.([0-9]{6})\.b\s*$"
+    """Jimmy's run length encoding files"""
+    _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3df)" \
+                r"\.([0-9]{6}).b\s*$"
 
     _file_wrapper = None
     _data_item_templates = None
+    _def_fld_center = "Cell"
 
     def __init__(self, filename, vfilebucket=None, **kwargs):
         super(GGCMFileFortbinMHD, self).__init__(filename, vfilebucket, **kwargs)
@@ -29,13 +36,12 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         # file in the group, and package them up into grids
 
         # find the time from the first field's meta data
-        self._file_wrapper = JrrleFileWrapper(filename)
+        self._file_wrapper = GGCMFortbinFileWrapper(filename)
 
-        with self._file_wrapper as f:
-            _, meta = f.inquire_next()
-            time = float(str(meta['timestr'])[6:].split()[0])
+        timestr = self._file_wrapper.file_meta['timestr']
+        time = float(str(timestr)[6:].split()[0])
 
-        _grid = self._grid_type("<JrrleGrid>", **self._grid_opts)
+        _grid = self._grid_type("<FortbinGrid>", **self._grid_opts)
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)
@@ -48,15 +54,16 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         # have from the first file that we parsed, then add it to
         # the _grid
         if self._iono:
-            data_wrapper = JrrleIonoDataWrapper
+            data_wrapper = FortbinDataWrapper
         else:
-            data_wrapper = JrrleDataWrapper
+            data_wrapper = FortbinDataWrapper
 
         for item in templates:
             data = data_wrapper(self._file_wrapper, item['fld_name'],
-                                item['shape'])
+                                item['shape'], item['file_position'])
             fld = field.wrap_field("Scalar", item['fld_name'], self._crds,
-                                   data, center="Cell", time=time)
+                                   data, center=self._def_fld_center,
+                                   time=time)
             _grid.add_field(fld)
         return _grid
 
@@ -64,50 +71,87 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
     def _make_template(filename):
         """read meta data for all fields in a file to get
         a list of field names and shapes, all the required info
-        to make a JrrleDataWrapper
+        to make a FortbinDataWrapper
         """
-        with JrrleFileWrapper(filename) as f:
+        with GGCMFortbinFileWrapper(filename) as f:
             f.inquire_all_fields()
             template = []
             for fld_name, meta in f.fields_seen.items():
                 d = dict(fld_name=fld_name,
-                         shape=meta['dims'])
+                         shape=meta['dims'],
+                         file_position=meta['file_position'])
                 template.append(d)
         return template
 
-class GGCMFileJrrleIono(GGCMFileJrrleMHD):  # pylint: disable=abstract-method
+    @classmethod
+    def collective_name_from_group(cls, fnames):
+        fname0 = fnames[0]
+        basename = os.path.basename(fname0)
+        run = re.match(cls._detector, basename).group(1)
+        fldtype = re.match(cls._detector, basename).group(2)
+        new_basename = "{0}.{1}.b".format(run, fldtype)
+        return os.path.join(os.path.dirname(fname0), new_basename)
+
+
+class GGCMFileFortbinIono(GGCMFileFortbinMHD):  # pylint: disable=abstract-method
     """Jimmy's run length encoding files"""
-    _detector = r"^\s*(.*)\.(iof)\.([0-9]{6})\s*$"
+    _detector = r"^\s*(.*)\.(iof)\.([0-9]{6}).b\s*$"
     _iono = True
     _grid_type = grid.Grid
+    _def_fld_center = "Node"
 
-class JrrleFileWrapper(FortranFile):
-    """Interface for actually opening / reading a jrrle file"""
-    _read_func = [_jrrle.read_jrrle1d, _jrrle.read_jrrle2d,
-                  _jrrle.read_jrrle3d]
 
+class GGCMFortbinFileWrapper(object):
+    """A File-like object for interfacing with OpenGGCM binary files"""
+    _file = None
+    _endian = None
+
+    filename = None
+    _file_meta = None
     fields_seen = None
     seen_all_fields = None
 
     def __init__(self, filename):
+        self.filename = filename
         self.fields_seen = OrderedDict()
         self.seen_all_fields = False
-        super(JrrleFileWrapper, self).__init__(filename)
 
-    def read_field(self, fld_name, ndim):
+    def __del__(self):
+        self.close()
+
+    @property
+    def file_meta(self):
+        if self._file_meta is None:
+            with self as _:
+                # just opening the file makes it read the meta data
+                pass
+        return self._file_meta
+
+    def read_field(self, fld_name, pos=None):
         """Read a field given a seekable location
 
         Parameters:
-            loc(int): position in file we can seek to
-            ndim(int): dimensionality of field
+            fld_name(str): name of field we're expecting to read
+            pos(int): position in file we can seek to
 
         Returns:
             tuple (field name, dict of meta data, array)
         """
-        meta = self.inquire(fld_name)
-        arr = np.empty(meta['dims'], dtype='float32', order='F')
-        self._read_func[ndim - 1](self.unit, arr, fld_name)
-        return meta, arr
+
+        if pos is not None:
+            self._file.seek(pos)
+            found_fld, meta = self.inquire_next()
+            if found_fld != fld_name:
+                raise ValueError("The file {0} didn't contain field {1} at "
+                                 "position {2}".format(self.filename,
+                                 fld_name, pos))
+        else:
+            meta = self.inquire(fld_name)
+
+        self._file.seek(meta['file_position'] + meta['header_size'])
+        data = np.fromfile(self._file, dtype=np.dtype(self._endian + 'f'),
+                           count=meta['nelem'])
+        return meta, data.reshape(meta['dims'], order='F')
 
     def inquire_all_fields(self, reinquire=False):
         if reinquire:
@@ -117,13 +161,10 @@ class JrrleFileWrapper(FortranFile):
         if self.seen_all_fields:
             return
 
-        self.rewind()
+        self._file.seek(0)
         while not self.seen_all_fields:
             self.inquire_next()
-            # last_seen, meta = self.inquire_next()
-            # if meta is not None:
-            #     print(last_seen, "lives at", meta["file_position"])
-            self.advance_one_line()
+            self._file.seek(self.file_meta['nbytes'], 1)
 
     def inquire(self, fld_name):
         try:
@@ -131,15 +172,19 @@ class JrrleFileWrapper(FortranFile):
             self.seek(meta['file_position'])
             return meta
         except KeyError:
-            last_added = next(reversed(self.fields_seen))
-            self.seek(self.fields_seen[last_added]['file_position'])
-            self.advance_one_line()
+            try:
+                last_added = next(reversed(self.fields_seen))
+                # go to the last seen field and go one field past it
+                self.seek(self.fields_seen[last_added]['file_position'] +
+                          self.file_meta['nbytes'])
+            except StopIteration:
+                self._file.seek(0)
 
             while not self.seen_all_fields:
                 found_fld_name, meta = self.inquire_next()
                 if found_fld_name == fld_name:
                     return meta
-                self.advance_one_line()
+                self._file.seek(self.file_meta['nbytes'], 1)
 
             raise KeyError("file '{0}' has no field '{1}'".format(
                            self.filename, fld_name))
@@ -158,31 +203,104 @@ class JrrleFileWrapper(FortranFile):
         if not self.isopen:
             raise RuntimeError("file is not open")
 
-        varname = np.array(" "*80)
-        tstring = np.array(" "*80)
-        found_field, ndim, nx, ny, nz, it = _jrrle.inquire_next(self._unit,
-                                                                varname,
-                                                                tstring)
-        if not found_field:
+        try:
+            fld_name, meta = self._read_header()
+        except IOError:
+            fld_name, meta = None, None
+
+        if not fld_name:
             self.seen_all_fields = True
             return None, None
 
-        vname = (str(varname)).strip()
+        if fld_name not in self.fields_seen:
+            self.fields_seen[fld_name] = meta
 
-        if vname in self.fields_seen:
-            meta = self.fields_seen[vname]
-        else:
-            dims = tuple(x for x in (nx, ny, nz) if x > 0)
+        return fld_name, meta
 
-            meta = dict(timestr=tstring,
-                        inttime=it,
-                        ndim=ndim,
-                        dims=dims,
-                        file_position=self.tell())
-            self.fields_seen[vname] = meta
+    def open(self):
+        if self._file is None:
+            self._file = open(self.filename, 'rb')
+            try:
+                if self._endian is None or self._file_meta is None:
+                    self._read_file_header()
+            except IOError as e:
+                self.close()
+                raise e
 
-        return vname, meta
+    @property
+    def isopen(self):
+        return self._file is not None
 
+    def close(self):
+        if self._file is not None:
+            f = self._file
+            self._file = None
+            f.close()
+
+    def __enter__(self):
+        self.open()
+        return self
+
+    def __exit__(self, typ, value, traceback):
+        self.close()
+
+    def _read_file_header(self, data_size=4):
+        """load up the file's meta data"""
+        assert self._file.tell() == 0
+        _, meta = self._read_header(data_size=data_size)
+        self._file_meta = meta
+
+    def _read_header(self, data_size=4):
+        """read a field's header; returns None, None if EOF
+        Raises:
+            Both of the following are raised if there are no more
+            fields in a file (although it'll more likely be an IOError)
+
+            IOError: couldn't detect endian
+            struct.error: not enough lines in file to get a header
+        """
+        if not self.isopen:
+            raise RuntimeError("Trying to read header, but file is closed.")
+
+        try:
+            pos = self._file.tell()
+            endian_marker = self._file.read(4)
+            if endian_marker == struct.pack('<i', 2):
+                self._endian = '<'
+            elif endian_marker == struct.pack('>i', 2):
+                self._endian = '>'
+            else:
+                raise IOError("Can't detect endian, not a fortbin file: "
+                              "{0}".format(self.filename))
+
+            inttime = struct.unpack(self._endian + 'i', self._file.read(4))[0]
+            ndim = struct.unpack(self._endian + 'i', self._file.read(4))[0]
+            dims = struct.unpack(self._endian + '{0}i'.format(ndim),
+                                 self._file.read(4 * ndim))
+
+            fld_name = self._file.read(80).decode().strip()
+            asciitime = self._file.read(80).decode()
+
+            header_size = 4 + 4 + 4 + (4 * ndim) + (2 * 80)
+            nelem = np.prod(dims)
+            nbytes = header_size + data_size * nelem
+
+            fld_meta = dict(header_size=header_size,
+                            timestr=asciitime,
+                            inttime=inttime,
+                            ndim=ndim,
+                            dims=dims,
+                            nelem=nelem,
+                            nbytes=nbytes,
+                            file_position=pos)
+            self._file.seek(pos)
+
+            if fld_name == "":
+                return None, None
+            else:
+                return fld_name, fld_meta
+        except struct.error:
+            return None, None
 
 class FortbinDataWrapper(vfile.DataWrapper):
     """  """
@@ -190,9 +308,10 @@ class FortbinDataWrapper(vfile.DataWrapper):
     filename = None
     fld_name = None
     expected_shape = None
+    file_position = None
 
-    def __init__(self, file_wrapper, fld_name, expected_shape):
-        """Lazy wrapper for a field in a jrrle file
+    def __init__(self, file_wrapper, fld_name, expected_shape, file_position):
+        """Lazy wrapper for a field in a Fortbin file
 
         Parameters:
             expected_shape (tuple): shape of data in the file (xyz)
@@ -203,6 +322,7 @@ class FortbinDataWrapper(vfile.DataWrapper):
         self.fld_name = fld_name
         # translate to zyx
         self.expected_shape = expected_shape
+        self.file_position = file_position
 
     @property
     def shape(self):
@@ -218,9 +338,8 @@ class FortbinDataWrapper(vfile.DataWrapper):
 
     def __array__(self, *args, **kwargs):
         with self.file_wrapper as f:
-            ndim = len(self.expected_shape)
             # fld_name, meta, arr = f.read_field_at(self.loc, ndim)
-            meta, arr = f.read_field(self.fld_name, ndim)
+            meta, arr = f.read_field(self.fld_name, pos=self.file_position)
             arr = np.array(arr.flatten(order='F').reshape(meta['dims'][::-1]),
                            order='C')
 
@@ -242,15 +361,16 @@ class FortbinDataWrapper(vfile.DataWrapper):
         return self.__array__().__getitem__(item)
 
 
-class FortbinIonoDataWrapper(FortbinDataWrapper):
-    @property
-    def shape(self):
-        return tuple([n - 1 for n in self.expected_shape])
+# class FortbinIonoDataWrapper(FortbinDataWrapper):
+#     @property
+#     def shape(self):
+#         ret = tuple([n - 1 for n in reversed(self.expected_shape)])
+#         return ret
 
-    def __array__(self, *args, **kwargs):
-        arr = super(FortbinIonoDataWrapper, self).__array__(*args, **kwargs)
-        ndim = len(self.expected_shape)
-        return arr[[slice(None, -1)]*ndim]
+#     def __array__(self, *args, **kwargs):
+#         arr = super(FortbinIonoDataWrapper, self).__array__(*args, **kwargs)
+#         ndim = len(self.expected_shape)
+#         return arr[[slice(None, -1)]*ndim]
 
 ##
 ## EOF

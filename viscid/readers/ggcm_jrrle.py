@@ -1,4 +1,6 @@
 from __future__ import print_function
+import os
+import re
 try:
     from collections import OrderedDict
 except ImportError:
@@ -78,6 +80,16 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
                          shape=meta['dims'])
                 template.append(d)
         return template
+
+    @classmethod
+    def collective_name_from_group(cls, fnames):
+        fname0 = fnames[0]
+        basename = os.path.basename(fname0)
+        run = re.match(cls._detector, basename).group(1)
+        fldtype = re.match(cls._detector, basename).group(2)
+        new_basename = "{0}.{1}".format(run, fldtype)
+        return os.path.join(os.path.dirname(fname0), new_basename)
+
 
 class GGCMFileJrrleIono(GGCMFileJrrleMHD):  # pylint: disable=abstract-method
     """Jimmy's run length encoding files"""
