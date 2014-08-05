@@ -12,6 +12,30 @@ viscid.readers.ascii module
     :undoc-members:
     :show-inheritance:
 
+viscid.readers.ggcm_jrrle module
+--------------------------------
+
+.. automodule:: viscid.readers.ggcm_jrrle
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.readers.ggcm_logfile module
+----------------------------------
+
+.. automodule:: viscid.readers.ggcm_logfile
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+viscid.readers.ggcm_xdmf module
+-------------------------------
+
+.. automodule:: viscid.readers.ggcm_xdmf
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 viscid.readers.hdf5 module
 --------------------------
 

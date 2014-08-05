@@ -263,8 +263,10 @@ texinfo_documents = [
 
 # autosummary_generate = True
 
+os.environ['ETS_TOOLKIT'] = 'null'
+
 # plot configuration
-plot_pre_code = """# this is for finding the path to the sample data
+plot_pre_code = r"""# this is for finding the path to the sample data
 import sys
 import os
 _viscid_root = os.path.realpath('../viscid/')
