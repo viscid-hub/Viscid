@@ -121,6 +121,9 @@ class GGCMLogFile(object):  # pylint: disable=W0223
         val = cls._parse_value(val)
         return key, val
 
+    def unload(self):
+        self.info = {}
+
 ##
 ## EOF
 ##
