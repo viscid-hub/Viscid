@@ -496,11 +496,11 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
         crdlst = []
         for dim, nc, cc in zip("zyx", [znc, ync, xnc], [gz, gy, gx]):
             if self.info['fieldtype'].startswith('p'):
-                self.info['plane'] = self.info['fieldtype'][2]
+                self.info['plane'] = self.info['fieldtype'][1]
                 if self.info['plane'] == dim:
                     planeloc = float(self.info['fieldtype'].split('_')[1])
                     self.info['planeloc'] = planeloc
-                    ccind = np.indmax(np.abs(cc - planeloc))
+                    ccind = np.argmin(np.abs(cc - planeloc))
                     nc = nc[ccind:ccind + 2]
             crdlst.append([dim, nc])
 
