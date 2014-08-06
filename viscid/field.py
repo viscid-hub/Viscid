@@ -195,6 +195,7 @@ class Field(object):
 
     pre_reshape_transform_func = None
     post_reshape_transform_func = None
+    transform_func_kwargs = None
 
     # these get reset when data is set
     _layout = None
@@ -209,6 +210,7 @@ class Field(object):
                  deep_meta=None, forget_source=False, pretty_name=None,
                  pre_reshape_transform_func=None,
                  post_reshape_transform_func=None,
+                 transform_func_kwargs=None,
                  **kwargs):
         self.name = name
         self.center = center
@@ -225,6 +227,10 @@ class Field(object):
             self.pre_reshape_transform_func = pre_reshape_transform_func
         if post_reshape_transform_func is not None:
             self.post_reshape_transform_func = post_reshape_transform_func
+        if transform_func_kwargs:
+            self.transform_func_kwargs = transform_func_kwargs
+        else:
+            self.transform_func_kwargs = {}
 
         self.info = {} if info is None else info
         self.deep_meta = {} if deep_meta is None else deep_meta
@@ -506,12 +512,14 @@ class Field(object):
             arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
 
         if self.pre_reshape_transform_func is not None:
-            arr = self.pre_reshape_transform_func(self, arr)
+            arr = self.pre_reshape_transform_func(self, arr,
+                                                  **self.transform_func_kwargs)
 
         arr = self._reshape_ndarray_to_crds(arr)
 
         if self.post_reshape_transform_func is not None:
-            arr = self.post_reshape_transform_func(self, arr)
+            arr = self.post_reshape_transform_func(self, arr,
+                                                   **self.transform_func_kwargs)
 
         return arr
 

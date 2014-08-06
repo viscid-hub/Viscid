@@ -72,10 +72,11 @@ class StructuredCrds(Coordinates):
     _src_crds_nc = None
 
     transform_funcs = None
+    transform_kwargs = None
     has_cc = None
 
     def __init__(self, init_clist, has_cc=True, transform_funcs=None,
-                 **kwargs):
+                 transform_kwargs=None, **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
         super(StructuredCrds, self).__init__(**kwargs)
@@ -83,6 +84,10 @@ class StructuredCrds(Coordinates):
 
         if transform_funcs is not None:
             self.transform_funcs = transform_funcs
+        if transform_kwargs:
+            self.transform_kwargs = transform_kwargs
+        else:
+            self.transform_kwargs = {}
 
         if init_clist:
             self._axes = [d[0].lower() for d in init_clist]
@@ -176,9 +181,11 @@ class StructuredCrds(Coordinates):
 
             if self.transform_funcs is not None:
                 if axis in self.transform_funcs:
-                    arr = self.transform_funcs[axis](self, arr)
+                    arr = self.transform_funcs[axis](self, arr,
+                                                     **self.transform_kwargs)
                 elif ind in self.transform_funcs:
-                    arr = self.transform_funcs[ind](self, arr)
+                    arr = self.transform_funcs[ind](self, arr,
+                                                    **self.transform_kwargs)
 
             flatarr, openarr = self._ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr

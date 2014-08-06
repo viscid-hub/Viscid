@@ -94,6 +94,55 @@ def group_ggcm_files_common(detector, fnames):
     return groups
 
 
+# these are just functions because refrences to instance methods can't be pickled,
+# so grids couldn't be pickled over to other precesses
+def mhd2gse_field_scalar_m1(fld, arr, copy_on_transform=False):  # pylint: disable=unused-argument
+    # This is always copied since the -1.0 * arr will need new
+    # memory anyway
+    a = np.array(arr[:, ::-1, ::-1], copy=False)
+
+    if copy_on_transform:
+        if _has_numexpr:
+            m1 = np.array([-1.0], dtype=arr.dtype)  # pylint: disable=unused-variable
+            a = numexpr.evaluate("a * m1")
+        else:
+            a = a * -1
+    else:
+        a *= -1.0
+    return a
+
+def mhd2gse_field_scalar(fld, arr, copy_on_transform=False):  # pylint: disable=unused-argument
+    # Note: field._data will be set to whatever is returned (after
+    # being reshaped to the crd shape), so if you return a view,
+    # field._data will be a view
+    return np.array(arr[:, ::-1, ::-1], copy=copy_on_transform)
+
+def mhd2gse_field_vector(fld, arr, copy_on_transform=False):
+    layout = fld.layout
+    if layout == field.LAYOUT_INTERLACED:
+        a = np.array(arr[:, ::-1, ::-1, :], copy=False)
+        factor = np.array([-1.0, -1.0, 1.0],
+                          dtype=arr.dtype).reshape(1, 1, 1, -1)
+    elif layout == field.LAYOUT_FLAT:
+        a = np.array(arr[:, :, ::-1, ::-1], copy=False)
+        factor = np.array([-1.0, -1.0, 1.0],
+                          dtype=arr.dtype).reshape(-1, 1, 1, 1)
+    else:
+        raise RuntimeError("well what am i looking at then...")
+
+    if copy_on_transform:
+        if _has_numexpr:
+            a = numexpr.evaluate("arr * factor")
+        else:
+            a = a * factor
+    else:
+        a *= factor
+    return a
+
+def mhd2gse_crds(crds, arr, copy_on_transform=False):  # pylint: disable=unused-argument
+    return np.array(-1.0 * arr[::-1], copy=copy_on_transform)
+
+
 class GGCMGrid(grid.Grid):
     r""" This defines some cool openggcm convinience stuff...
     The following attributes can be set by saying
@@ -133,58 +182,13 @@ class GGCMGrid(grid.Grid):
     mhd_to_gse_on_read = False
     copy_on_transform = False
 
-    def mhd2gse_field_scalar(self, fld, arr):  # pylint: disable=W0613
-        # Note: field._data will be set to whatever is returned (after
-        # being reshaped to the crd shape), so if you return a view,
-        # field._data will be a view
-        return np.array(arr[:, ::-1, ::-1], copy=self.copy_on_transform)
-
-    def mhd2gse_field_scalar_m1(self, fld, arr):  # pylint: disable=W0613
-        # This is always copied since the -1.0 * arr will need new
-        # memory anyway
-        a = np.array(arr[:, ::-1, ::-1], copy=False)
-
-        if self.copy_on_transform:
-            if _has_numexpr:
-                m1 = np.array([-1.0], dtype=arr.dtype)  # pylint: disable=unused-variable
-                a = numexpr.evaluate("a * m1")
-            else:
-                a = a * -1
-        else:
-            a *= -1.0
-        return a
-
-    def mhd2gse_field_vector(self, fld, arr):
-        layout = fld.layout
-        if layout == field.LAYOUT_INTERLACED:
-            a = np.array(arr[:, ::-1, ::-1, :], copy=False)
-            factor = np.array([-1.0, -1.0, 1.0],
-                              dtype=arr.dtype).reshape(1, 1, 1, -1)
-        elif layout == field.LAYOUT_FLAT:
-            a = np.array(arr[:, :, ::-1, ::-1], copy=False)
-            factor = np.array([-1.0, -1.0, 1.0],
-                              dtype=arr.dtype).reshape(-1, 1, 1, 1)
-        else:
-            raise RuntimeError("well what am i looking at then...")
-
-        if self.copy_on_transform:
-            if _has_numexpr:
-                a = numexpr.evaluate("arr * factor")
-            else:
-                a = a * factor
-        else:
-            a *= factor
-        return a
-
-    def mhd2gse_crds(self, crds, arr):  # pylint: disable=unused-argument
-        return np.array(-1.0 * arr[::-1], copy=self.copy_on_transform)
-
     def set_crds(self, crds_object):
         if self.mhd_to_gse_on_read:
             transform_dict = {}
-            transform_dict['y'] = self.mhd2gse_crds
-            transform_dict['x'] = self.mhd2gse_crds
+            transform_dict['y'] = mhd2gse_crds
+            transform_dict['x'] = mhd2gse_crds
             crds_object.transform_funcs = transform_dict
+            crds_object.transform_kwargs = dict(copy_on_transform=self.copy_on_transform)
         super(GGCMGrid, self).set_crds(crds_object)
 
     def add_field(self, *fields):
@@ -192,11 +196,12 @@ class GGCMGrid(grid.Grid):
             if self.mhd_to_gse_on_read:
                 # what a pain... vector components also need to be flipped
                 if f.name in self._flip_vect_comp_names:
-                    f.post_reshape_transform_func = self.mhd2gse_field_scalar_m1
+                    f.post_reshape_transform_func = mhd2gse_field_scalar_m1
                 elif f.name in self._flip_vect_names:
-                    f.post_reshape_transform_func = self.mhd2gse_field_vector
+                    f.post_reshape_transform_func = mhd2gse_field_vector
                 else:
-                    f.post_reshape_transform_func = self.mhd2gse_field_scalar
+                    f.post_reshape_transform_func = mhd2gse_field_scalar
+                f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
                 f.info["crd_system"] = "gse"
             else:
                 f.info["crd_system"] = "mhd"
