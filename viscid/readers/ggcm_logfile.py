@@ -3,10 +3,10 @@
 Parses the view info """
 
 from __future__ import print_function
-
 import itertools
 import re
 
+import numpy as np
 
 class GGCMLogFile(object):  # pylint: disable=W0223
     """Libmrc log file reader
@@ -22,6 +22,8 @@ class GGCMLogFile(object):  # pylint: disable=W0223
     _grid_type = None
 
     watched_classes = ["ggcm_mhd",
+                       "mrc_domain",
+                       "mrc_crds",
                        "ggcm_mhd_ic",
                        "ggcm_dipole"]
 
@@ -45,7 +47,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                 if armed:
                     try:
                         key, val = self._parse_param(line)
-                        _info[key] = val
+                        _info["{0}_{1}".format(armed, key)] = val
                     except ValueError:
                         # this is expected for lines that look like
                         # "-------+------ type -- ???"
@@ -58,7 +60,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                         c = re.match(r"=+ class == (.+)", line).group(1)
                         c = c.strip()
                         if c in self.watched_classes:
-                            armed = True
+                            armed = c
                             # the next lines just say
                             # "parameter  | value"
                             # "-----------|------"
@@ -93,8 +95,8 @@ class GGCMLogFile(object):  # pylint: disable=W0223
             pass
 
         s = s.strip()
-        if re.match(r"[A-Za-z\d\.]+(\s*:\s*[A-Za-z\d\.]+)+", s):
-            l = s.split(":")
+        if re.match(r"[\d\.]+(\s*,\s*[\d\.]+)+", s):
+            l = s.split(",")
             for i, s in enumerate(l):
                 try:
                     l[i] = int(s)
@@ -103,7 +105,9 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                         l[i] = float(s)
                     except ValueError:
                         l[i] = s.strip()
-            return l
+            return np.array(l)
+        elif re.match(r"[A-Za-z\d\.]+(\s*:\s*[A-Za-z\d\.]+)+", s):
+            return s.split(":")
         else:
             return s
 
