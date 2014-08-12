@@ -119,7 +119,8 @@ class VFileBucket(Bucket):
                     try:
                         f = ftype(group, vfilebucket=self, **kwargs)
                     except IOError as e:
-                        s = " IOError on file: {0}\n".format(group)
+                        cname = ftype.collective_name(group)
+                        s = " IOError on file: {0}\n".format(cname)
                         s += "              File Type: {0}\n".format(file_type)
                         s += "              {0}".format(e.message)
                         logging.warn(s)
