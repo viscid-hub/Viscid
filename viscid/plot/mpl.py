@@ -396,7 +396,10 @@ def _mlt_labels(longitude):
     return "{0:g}".format(longitude * 24.0 / 360.0)
 
 def plot2d_mapfield(fld, **kwargs):
-    """Plot data on a map projection of a sphere using Basemap
+    """Plot data on a map projection of a sphere
+
+    The default projection is polar, but any other basemap projection
+    can be used.
 
     Parameters:
         fld (Field): field whose crds are spherical
@@ -405,7 +408,7 @@ def plot2d_mapfield(fld, **kwargs):
 
     Keyword Arguments:
         hemisphere (string): 'north' or 'south'
-        projection (string): Basemap projection to use
+        projection (string): 'polar' or Basemap projection to use
         lon_0 (float): center longitude
         lat_0 (fload): center latitude
         bounding_lat (float): bounding latitude (not for all
@@ -448,24 +451,18 @@ def plot2d_mapfield(fld, **kwargs):
         # different for all other plots, and it defaults to False
         dogrid = kwargs.pop("grid", True)
 
-        boundinglat = np.abs(boundinglat)
+        absboundinglat = np.abs(boundinglat)
 
         if ax is None:
             ax = plt.gca()
         if not hasattr(ax, "set_thetagrids"):
             ax = plt.subplot(*ax.get_geometry(), projection='polar')
 
-        ax.set_thetagrids((45, 90, 135, 180, 225, 270, 315, 360),
-                          (9, 12, 15, 18, 21, 24, 3, 6))
-        trange = (None, boundinglat)
-        grid_dr = 10
-        ax.set_rgrids(np.arange(grid_dr, trange[1], grid_dr), fmt='%.0f')
-
         if hemisphere == "north":
-            sl_fld = fld["lat=:{0}".format(boundinglat)]
+            sl_fld = fld["lat=:{0}".format(absboundinglat)]
             maxlat = sl_fld.get_crd_nc('lat')[-1]
         elif hemisphere == "south":
-            sl_fld = fld["lat={0}:".format(180.0 - boundinglat)]["lat=::-1"]
+            sl_fld = fld["lat={0}:".format(180.0 - absboundinglat)]["lat=::-1"]
             maxlat = 180.0 - sl_fld.get_crd_nc('lat')[-1]
 
         lat, lon = sl_fld.get_crds_nc(['lat', 'lon'])
@@ -487,6 +484,16 @@ def plot2d_mapfield(fld, **kwargs):
         ret = plot2d_field(new_fld, **kwargs)
         if dogrid:
             ax.grid(True)
+            ax.set_thetagrids((45, 90, 135, 180, 225, 270, 315, 360),
+                              (9, 12, 15, 18, 21, 24, 3, 6))
+            abs_grid_dr = 10
+            grid_dr = abs_grid_dr * np.sign(boundinglat)
+            ax.set_rgrids(np.arange(abs_grid_dr, absboundinglat, abs_grid_dr),
+                          np.arange(grid_dr, boundinglat, grid_dr), fmt='%.0f')
+        else:
+            ax.grid(False)
+            ax.set_xticklabels([])
+            ax.set_yticklabels([])
         return ret
 
     else:
