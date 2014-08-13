@@ -387,7 +387,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     # _apply_acts(acts)
 
     if earth:
-        plot_earth(fld)
+        plot_earth(fld, axis=action_ax)
     if show:
         mplshow()
     return p, cbar
@@ -728,7 +728,7 @@ def tighten(**kwargs):
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="mhd",
-               zorder=-10):
+               zorder=1):
     """Plot a black and white Earth to show sunward direction
 
     Parameters:
