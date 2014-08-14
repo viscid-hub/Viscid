@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.60.1 dev
+
 ## 0.60.0
 
 Features:
