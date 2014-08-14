@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.60.0 dev
+## 0.60.0
 
 Features:
   - Implement Ionosphere reading / plotting
