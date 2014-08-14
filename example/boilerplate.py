@@ -24,7 +24,7 @@ def main():
     print()
 
     for f in files:
-        f.print_tree(recursive=True)
+        f.print_tree(depth=-1)
 
 if __name__ == "__main__":
     main()

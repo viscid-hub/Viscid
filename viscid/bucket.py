@@ -1,21 +1,35 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-from .vutil import tree_prefix
 import logging
+
+# from viscid.vutil import tree_prefix
+try:
+    from collections import OrderedDict
+except ImportError:
+    from viscid.compat.ordered_dict_backport import OrderedDict
 
 class Bucket(object):
     """ This is an interface where  """
-    _items = None
-    _handles = None
+    _ordered = False
+
+    _items = None  # keys are items, values are list of handles
+    _handles = None  # keys are handles, values are items
+
     # if index handle, set_item adds this number as a handle and increments it
     # this is useful for hiding loads that are not user initiated, such as
     # an xdmf file loading an h5 file under the covers
     _int_counter = None
 
-    def __init__(self):
-        self._items = []
-        self._handles = {}
+    def __init__(self, ordered=False):
+        self._ordered = ordered
+
+        if self._ordered:
+            self._items = OrderedDict()
+            self._handles = OrderedDict()
+        else:
+            self._items = {}
+            self._handles = {}
         self._int_counter = 0
 
     def set_item(self, handles, item, index_handle=True):
@@ -27,55 +41,63 @@ class Bucket(object):
         if not isinstance(handles, list):
             raise TypeError("handle must by of list type")
 
-        try:
-            self.index(item)
-        except ValueError:
+        if item not in self._items:
             if index_handle:
-                handles += [self._int_counter] # handles += [onum]
+                handles += [self._int_counter]
                 self._int_counter += 1
-            self._items.append(item)
+            self._items[item] = handles
 
-        self._set_handles(handles, item)
+            if len(handles) == 0:
+                raise ValueError("item {0} must have at least one "
+                                 "handle".format(item))
+
+        for h in handles:
+            # check if we're stealing a handle from another item
+            if (h in self._handles) and  (item is not self._handles[h]):
+                logging.warn("The handle {0} is being hijacked! Memory leak "
+                             "could ensue.".format(h))
+                # romove handle from old item, since this check is here,
+                # there sholdn't be 2 items with the same handle in the
+                # items dict
+                old_item = self._handles[h]
+                self._items[old_item].remove(h)
+                if len(self._items[h]) == 0:
+                    self.remove_item(old_item)
+
+            self._handles[h] = item
+
         return None
 
     def remove_item(self, item):
         """ remove item, raises ValueError if item is not found """
-        self.remove_item_onum(self.index(item))
-    def remove_item_handle(self, handle):
+        handles = self._items[item]
+        del self._items[item]
+        for h in handles:
+            del self._handles[h]
+
+    def remove_item_by_handle(self, handle):
         """ remove item by handle, raises KeyError if handle is not found """
-        self.remove_item_onum(self._handles[handle])
-    def remove_item_onum(self, onum):
-        for k in self._handles.keys():
-            if self._handles[k] == onum:
-                self._handles.pop(k)
-        self._items[onum] = None
+        self.remove_item(self._handles[handle])
 
     def remove_all_items(self):
         """ unload all items """
-        for i in range(len(self._items)):
-            self.remove_item_onum(i)
-
-    def get_item(self, handle):
-        """ look up the file using the handle dictionary, raises KeyError
-            if handle not found """
-        return self._items[self._handles[handle]]
+        # TODO: maybe unload things explicitly?
+        if self._ordered:
+            self._items = OrderedDict()
+            self._handles = OrderedDict()
+        else:
+            self._items = {}
+            self._handles = {}
 
     def items_as_list(self):
-        return self._items
-
-    def index(self, item):
-        """ find index of item, comparison is made using object id """
-        for i, it in enumerate(self._items):
-            if item is it:
-                return i
-        raise ValueError("item's object id not in list")
+        return list(self._items.keys())
 
     def handle_string(self, prefix=""):
         """ return string representation of handles and items """
         # this is inefficient, but probably doesn't matter
         s = ""
-        for i, item in enumerate(self._items):
-            hands = [repr(h) for h, onum in self._handles.items() if onum == i]
+        for item, handles in self._items.items():
+            hands = [repr(h) for h in handles]
             s += "{0}handles: {1}\n".format(prefix, ", ".join(hands))
             s += "{0}  item: {1}\n".format(prefix, str(item))
         return s
@@ -83,18 +105,8 @@ class Bucket(object):
     def print_tree(self, prefix=""):
         print(self.handle_string(prefix=prefix), end='')
 
-    def _set_handles(self, handles, item):
-        """ this should only be called for items that are in _items...
-            a ValueError will result otherwise """
-        onum = self.index(item)
-        for h in handles:
-            if (h in self._handles) and (not item is self._items[onum]):
-                logging.warn("The handle {0} is being hijacked!".format(h))
-            self._handles[h] = onum
-        return None
-
     def __getitem__(self, handle):
-        return self.get_item(handle)
+        return self._handles[handle]
 
     def __setitem__(self, key, value):
         if isinstance(key, (list, tuple)):
@@ -104,15 +116,21 @@ class Bucket(object):
         self.set_item(key, value)
 
     def __delitem__(self, handle):
-        self.remove_item_handle(handle)
+        try:
+            self.remove_item_by_handle(handle)
+        except KeyError:
+            # maybe we are asking to remove an item explicitly
+            self.remove_item(handle)
 
     def __iter__(self):
-        return self._items.__iter__()
+        return self._items.keys().__iter__()
 
     def __contains__(self, handle):
-        return handle in self._handles
+        return handle in self._handles or handle in self._items
+
     def __len__(self):
         return len(self._items)
+
     def __str__(self):
         return self.handle_string()
 

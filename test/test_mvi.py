@@ -9,7 +9,7 @@ import argparse
 
 from mayavi import mlab
 
-_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
+_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
@@ -23,7 +23,7 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = readers.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
 
     if "b" in f3d:
         b = f3d["b"]

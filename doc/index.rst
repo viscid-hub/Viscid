@@ -6,13 +6,19 @@
 Welcome to Viscid's documentation!
 ==================================
 
-Note: This documentation is super preliminary, and many docstrings are likely out of date. Not to mention it is poorly organized.
+Below are some simple examples to get you started with Viscid. There are some far more interesting examples in the ``Viscid/tests`` directory, but they are not always as straight forward or documented as the examples here.
 
 Contents:
 
 .. toctree::
   :maxdepth: 2
 
+  installation
+  philosophy
+  ex_reader
+  ex_openggcm
+  ex_calc
+  command_line
   modules
 
 Indices and tables

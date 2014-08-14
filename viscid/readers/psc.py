@@ -2,12 +2,12 @@
 
 from __future__ import print_function
 
-import numpy as np
 import h5py
 
-from .. import grid
-from .. import field
-from . import xdmf
+from viscid import grid
+from viscid import field
+from viscid.readers import xdmf
+from viscid.calculator import plasma
 
 
 class PscGrid(grid.Grid):
@@ -28,29 +28,54 @@ class PscGrid(grid.Grid):
         ex, ey, ez = self["ex"], self["ey"], self["ez"]
         return (ex * hx + ey * hy + ez * hz) * (hx**2 + hy**2 + hz**2)**-.5
 
+    def _assemble_vector(self, base_name, comp_names="xyz", forget_source=True,
+                         **kwargs):
+
+        opts = dict(forget_source=forget_source, **kwargs)
+
+        if len(comp_names) == 3:
+            with self[base_name + comp_names[0]] as vx, \
+                 self[base_name + comp_names[1]] as vy, \
+                 self[base_name + comp_names[2]] as vz:
+                v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
+                                                  **opts)
+        else:
+            comps = [self[base_name + c] for c in comp_names]
+            v = field.scalar_fields_to_vector(base_name, comps, **opts)
+            for comp in comps:
+                comp.unload()
+        return v
+
+    def _get_b(self):
+        return self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                     pretty_name="B")
+
+    def _get_h(self):
+        return self._assemble_vector("h", _force_layout=self.force_vector_layout,
+                                     pretty_name="H")
+
+    def _get_e(self):
+        return self._assemble_vector("e", _force_layout=self.force_vector_layout,
+                                     pretty_name="E")
+
+    def _get_j(self):
+        return self._assemble_vector("j", _force_layout=self.force_vector_layout,
+                                     pretty_name="J")
+
     def _get_psi(self):
-        hz, hy = self["hz"], self["hy"]
-        crd_z, crd_y = hz.get_crds_nc(['z', 'y'])
-        dz = crd_z[1] - crd_z[0]
-        dy = crd_y[1] - crd_y[0]
-        nz, ny, _ = hy.shape
-
-        A = np.empty((nz, ny))
-        hz = hz.data.reshape(nz, ny)
-        hy = hy.data.reshape(nz, ny)
-        A[0, 0] = 0.0
-        for i in range(1, nz):
-            A[i, 0] = A[i - 1, 0] + dz * (hy[i, 0] + hy[i - 1, 0]) / 2.0
-
-        for j in range(1, ny):
-            A[:, j] = A[:, j - 1] - dy * (hz[:, j - 1] + hz[:, j]) / 2.0
-
-        return field.wrap_field("Scalar", "psi", self["hz"].crds, A,
-                                center="Cell")
+        B = self['b']
+        # try to guess if a dim of a 3D field is invariant
+        if B.nr_sdims > 2:
+            slcs = [slice(None)] * B.nr_sdims
+            for i, nxi in enumerate(B.sshape):
+                if nxi <= 2:
+                    slcs[i] = 0
+            B = B[slcs]
+        return plasma.calc_psi(B)
 
 
 class PscFieldFile(xdmf.FileXDMF):  # pylint: disable=W0223
-    _detector = r"^\s*(.*/)?(.*)fd\.([0-9]{6}).xdmf"
+    _detector = r"^\s*(.*/)?(.*)fd(?:\.([0-9]{6}))?\.xdmf"
     _grid_type = PscGrid
 
     def __init__(self, fname, *args, **kwargs):

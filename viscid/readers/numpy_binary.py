@@ -11,9 +11,9 @@ import logging
 
 import numpy as np
 
-from . import vfile
-from .. import coordinate
-from .. import field
+from viscid.readers import vfile
+from viscid import coordinate
+from viscid import field
 
 class NPZDataWrapper(vfile.DataWrapper):
     """  """
@@ -177,7 +177,7 @@ class FileNumpyNPZ(vfile.VFile):
 
         if fname.endswith(".npz"):
             fname = fname[:-4]
-        np.savez(fname, **fld_dict) #pylint: disable=W0142
+        np.savez(fname, **fld_dict)
 
 ##
 ## EOF

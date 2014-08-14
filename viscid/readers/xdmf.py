@@ -8,13 +8,13 @@ from xml.etree import ElementTree
 
 import numpy as np
 
-from . import _xdmf_include
-from . import vfile
-from .vfile_bucket import VFileBucket
-from .hdf5 import FileLazyHDF5
-from .. import dataset
-from .. import coordinate
-from .. import field
+from viscid.readers import _xdmf_include
+from viscid.readers import vfile
+from viscid.readers.vfile_bucket import VFileBucket
+from viscid.readers.hdf5 import FileLazyHDF5
+from viscid import dataset
+from viscid import coordinate
+from viscid import field
 
 # class XDMFDataItem(data_item.DataItem):
 #     def set_precision():
@@ -99,6 +99,14 @@ class FileXDMF(vfile.VFile):
         super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
 
     def _parse(self):
+        grids = self._parse_file(self.fname)
+        for grid in grids:
+            self.add(grid)
+
+        if len(self.children) > 0:
+            self.activate(0)
+
+    def _parse_file(self, fname):
         # lxml has better xpath support, so it's preferred, but it stops
         # if an xinclude doesn't exist, so for now use our custom extension
         # of the default python xml lib
@@ -107,18 +115,17 @@ class FileXDMF(vfile.VFile):
         #     tree = etree.parse(self.fname) #pylint: disable=E0602
         #     tree.xinclude()  # TODO: gracefully ignore include problems
         #     root = tree.getroot()
-        tree = ElementTree.parse(self.fname)
+        grids = []
+        tree = ElementTree.parse(fname)
         root = tree.getroot()
-        _xdmf_include.include(root, base_url=self.fname)
+        _xdmf_include.include(root, base_url=fname)
 
         # search for all root grids, and parse them
         domain_grids = root.findall("./Domain/Grid")
         for dg in domain_grids:
             grd = self._parse_grid(dg)
-            self.add(grd)
-
-        if len(self.children) > 0:
-            self.activate(0)
+            grids.append(grd)
+        return grids
 
     def _fill_attrs(self, el):
         defs = self._xdmf_defaults[el.tag]
@@ -235,6 +242,7 @@ class FileXDMF(vfile.VFile):
         # crds = None
         crdlist = None
         crdtype = None
+        crdkwargs = {}
 
         topotype = topoattrs["TopologyType"]
 
@@ -316,7 +324,7 @@ class FileXDMF(vfile.VFile):
 
         if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
             crdtype = "uniform_cartesian"
-        if topotype in ['3DRectMesh', '2DRectMesh']:
+        elif topotype in ['3DRectMesh', '2DRectMesh']:
             crdtype = "nonuniform_cartesian"
         elif topotype in ['2DSMesh']:
             crdtype = "nonuniform_spherical"
@@ -356,13 +364,14 @@ class FileXDMF(vfile.VFile):
             nlat, nlon = [int(s) for s in topoattrs["Dimensions"].split(' ')]
             crdlist = [['lat', [0.0, 180.0, nlat]],
                        ['lon', [0.0, 360.0, nlon]]]
+            crdkwargs['fill_by_linspace'] = True
 
-        elif topologytype in ['3DSMesh']:
+        elif topotype in ['3DSMesh']:
             raise NotImplementedError("3D spherical grids not yet supported")
         else:
             raise NotImplementedError("Unstructured grids not yet supported")
 
-        crds = coordinate.wrap_crds(crdtype, crdlist)
+        crds = coordinate.wrap_crds(crdtype, crdlist, **crdkwargs)
         return crds, geoattrs
 
     def _parse_attribute(self, item, crds, topoattrs, time=0.0):

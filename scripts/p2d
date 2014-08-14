@@ -46,6 +46,8 @@ def main():
     parser.add_argument("-t", default=":", help="times to plot in slice "
                         "notation: ex : for all 60.0: for 60 mins on, and "
                         ":120 for the first 120mins")
+    parser.add_argument("--fancytime", action="store_true",
+                        help="raw time (useful for harris)")
     parser.add_argument("--slice", help="spatial slice applied to all fields")
     parser.add_argument("-p", "--var", dest="plot_vars", action=AddPlotVar,
                         help="plot variable")
@@ -59,6 +61,7 @@ def main():
                         "x and y")
     parser.add_argument("-n", "--np", type=int, default=1,
                         help="run n simultaneous processes (not yet working)")
+    parser.add_argument("--tighten", action="store_true")
     parser.add_argument('file', nargs=1, help='input file')
     args = vutil.common_argparse(parser)
 
@@ -81,11 +84,13 @@ def main():
               "plot_size": args.plot_size,
               "dpi": args.dpi,
               "selection": args.slice,
+              "fancytime": args.fancytime,
+              "tighten": args.tighten
              }
 
     file_ = readers.load_file(args.file[0])
-    vlab.multiplot(file_, args.plot_vars, np=args.np, time_slice=args.t,
-                   share_axes = (not args.own), global_popts=global_popts,
+    vlab.multiplot(file_, args.plot_vars, nprocs=args.np, time_slice=args.t,
+                   share_axes=(not args.own), global_popts=global_popts,
                    show=args.show, kwopts=kwopts)
 
     if args.animate:

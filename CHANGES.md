@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.60.0
+
+Features:
+  - Implement Ionosphere reading / plotting
+  - Implement a Jrrle Openggcm Reader
+
+Backward Incompatible Changes:
+  - CHANGE FIELD SLICING SYNTAX! No more trailing 'i' to slice by index. Instead, use an integer to mean an index. For slicing by coordinate value, the decimal now needs to be explicit, so all code that slices like "y=0" now needs to be refactored to "y=0.0"
+
 ## 0.50.2
 
 Features:

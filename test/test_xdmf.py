@@ -8,7 +8,7 @@ import argparse
 
 import matplotlib.pyplot as plt
 
-_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
+_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
@@ -22,11 +22,11 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f2d = readers.load_file(_viscid_root + '/../../sample/sample.py_0.xdmf')
+    f2d = readers.load_file(_viscid_root + '/../sample/sample.py_0.xdmf')
     b2d = field.scalar_fields_to_vector("b", [f2d['bx'], f2d['by'], f2d['bz']])
     bx2d, by2d, bz2d = b2d.component_fields() #pylint: disable=W0612
 
-    f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
+    f3d = readers.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
     b3d = f3d['b']
     bx, by, bz = b3d.component_fields() #pylint: disable=W0612
 
@@ -34,22 +34,22 @@ def main():
     ncols = 2
 
     plt.subplot2grid((nrows, ncols), (0, 0))
-    mpl.plot(bx, "z=0i,x=:30i", earth=True, show=False)
+    mpl.plot(bx, "z=0,x=:30", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (1, 0))
-    mpl.plot(bx, "z=0.5,x=0i:2i,y=-100:100", earth=True, show=False)
+    mpl.plot(bx, "z=0.5,x=0:2,y=-100.0:100.0", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (2, 0))
-    mpl.plot(bx, "z=-1i,x=-10:,y=-100:100", earth=True, show=False)
+    mpl.plot(bx, "z=-1,x=-10.0:,y=-100.0:100.0", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (3, 0))
-    mpl.plot(bx, "x=0,y=-5:5,z=-5:5", earth=True, show=False)
+    mpl.plot(bx, "x=0.0,y=-5.0:5.0,z=-5.0:5.0", earth=True, show=False)
 
     plt.subplot2grid((nrows, ncols), (0, 1))
-    mpl.plot(bx2d, "y=20,z=-100:100", earth=True, show=False)
+    mpl.plot(bx2d, "y=20.0,z=-100.0:100.0", earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (1, 1))
-    mpl.plot(bx2d, "x=0i:20i,y=0,z=0", show=False)
+    mpl.plot(bx2d, "x=0:20,y=0.0,z=0.0", show=False)
     plt.subplot2grid((nrows, ncols), (2, 1))
     mpl.plot(bx2d, earth=True, show=False)
     plt.subplot2grid((nrows, ncols), (3, 1))
-    mpl.plot(bx2d, "z=0,x=-20:0", show=False)
+    mpl.plot(bx2d, "z=0.0,x=-20.0:0.0", show=False)
 
     if args.show:
         mpl.mplshow()

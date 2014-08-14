@@ -8,7 +8,7 @@ import argparse
 
 from matplotlib import pyplot as plt
 
-_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../src/viscid/')
+_viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
@@ -30,7 +30,7 @@ class MyGGCMGrid(openggcm.GGCMGrid):
 # So, you can make a class that derrives from an existing vFile type.
 # That way you just define this class, and when it comes time to call
 # load_file(file_name), you don't have to give it grid_type=...
-# class MyGGCMFile(openggcm.GGCMFile):  # pylint: disable=W0223
+# class MyGGCMFile(openggcm.GGCMFileXDMF):  # pylint: disable=W0223
 #     # you can change the detector, or you can not and you will
 #     # completely override the parent reader
 #     _detector = r"^\s*.*\.(p[xyz]_[0-9]+|3d|3df|iof)" \
@@ -55,7 +55,7 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = readers.load_file(_viscid_root + '/../../sample/sample.3df.xdmf',
+    f3d = readers.load_file(_viscid_root + '/../sample/sample.3df.xdmf',
                             grid_type=MyGGCMGrid)
 
     pp = f3d['pp']
@@ -65,13 +65,13 @@ def main():
     bmag = f3d["bmag"]
 
     plt.subplot(141)
-    mpl.plot(pp, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(pp, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
     plt.subplot(142)
-    mpl.plot(rr, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(rr, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
     plt.subplot(143)
-    mpl.plot(T, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(T, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
     plt.subplot(144)
-    mpl.plot(bmag, "y=0,x=-20:10", plot_opts="log", earth=True, show=False)
+    mpl.plot(bmag, "y=0.0,x=-20.0:10.0", plot_opts="log", earth=True, show=False)
 
     if args.show:
         mpl.mplshow()

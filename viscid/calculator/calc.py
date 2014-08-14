@@ -9,22 +9,20 @@ import logging
 try:
     from collections import OrderedDict
 except ImportError:
-    from ..compat import OrderedDict
+    from viscid.compat import OrderedDict
 
 import numpy as np
 
-# from .. import field
-# from .. import vutil
-from .. import verror
+from viscid import verror
 
 try:
-    from . import cycalc
+    from viscid.calculator import cycalc
     has_cython = True
 except ImportError:
     has_cython = False
 
 try:
-    from . import necalc
+    from viscid.calculator import necalc
     has_numexpr = True
 except ImportError as e:
     has_numexpr = False

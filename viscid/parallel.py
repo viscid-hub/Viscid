@@ -1,6 +1,7 @@
-""" module for common parallel processing """
+"""common tools for parallel processing"""
 
-from __future__ import print_function
+from __future__ import print_function, division
+from math import ceil
 import multiprocessing as mp
 import multiprocessing.pool
 from contextlib import closing
@@ -15,6 +16,7 @@ import numpy as np
 
 # Non daemonic processes are probably a really bad idea
 class NoDaemonProcess(mp.Process):
+    """Using this is probably a bad idea"""
     # make 'daemon' attribute always return False
     @staticmethod
     def _get_daemon():
@@ -25,44 +27,74 @@ class NoDaemonProcess(mp.Process):
 
 class NoDaemonPool(multiprocessing.pool.Pool): #pylint: disable=W0223
     """ I am vulnerable to armies of undead worker processes, chances
-    are you don't actually want to use me """
+    are you don't actually want to use me
+    """
     Process = NoDaemonProcess
 
 
-def chunk_list(seq, nchunks):
-    """
-    slice seq into chunks if nchunks size, seq can be a anything sliceable
-    such as lists, numpy arrays, etc. These chunks will be 'contiguous', see
-    chunk_interslice for picking every nth element.
+def chunk_list(seq, nchunks, size=None):
+    """Chunk a list
 
-    Note: Use chunk_iterator to chunk up iterators
+    slice seq into chunks of nchunks size, seq can be a anything
+    sliceable such as lists, numpy arrays, etc. These chunks will be
+    'contiguous', see :meth:`chunk_interslice` for picking every nth
+    element.
 
-    Returns: nchunks slices of length N = (len(lst) // nchunks) or N - 1
+    Parameters:
+        size: if given, set nchunks such that chunks have about 'size'
+            elements
 
-    ex: it1, it2, it3 = chunk_list(range(8), 3)
-    it1 == range(0, 3)  # 3 vals
-    it2 == range(3, 6)  # 3 vals
-    it3 == range(6, 8)  # 2 vals
+    Returns:
+        nchunks slices of length N = (len(lst) // nchunks) or N - 1
+
+    See Also:
+        Use :meth:`chunk_iterator` to chunk up iterators
+
+    Example:
+        >>> it1, it2, it3 = chunk_list(range(8), 3)
+        >>> it1 == range(0, 3)  # 3 vals
+        True
+        >>> it2 == range(3, 6)  # 3 vals
+        True
+        >>> it3 == range(6, 8)  # 2 vals
+        True
     """
     nel = len(seq)
+
+    if size is not None:
+        nchunks = int(ceil(nel / nchunks))
+
     ret = chunk_slices(nel, nchunks)
     for i in range(nchunks):
         ret[i] = seq[slice(*ret[i])]
     return ret
 
-def chunk_slices(nel, nchunks):
-    """
-    Get the slice info (can be unpacked & passed to the slice builtin as in
-    slice(*ret[i])) for nchunks contiguous chunks in a list with nel elements
+def chunk_slices(nel, nchunks, size=None):
+    r"""Make continuous chunks
 
-    nel: how many elements are in one pass of the original list
-    nchunks: how many chunks to make
-    Returns: a list of (start, stop) tuples with length nchunks
+    Get the slice info (can be unpacked and passed to the slice builtin
+    as in slice(\*ret[i])) for nchunks contiguous chunks in a list with
+    nel elements
 
-    ex: sl1, sl2 = chunk_slices(5, 2)
-    -> sl1 == (0, 3)  # 3 vals
-    -> sl2 == (3, 5)  # 2 vals
+    Parameters:
+        nel: how many elements are in one pass of the original list
+        nchunks: how many chunks to make
+        size: if given, set nchunks such that chunks have about 'size'
+            elements
+
+    Returns:
+        a list of (start, stop) tuples with length nchunks
+
+    Example:
+        >>> sl1, sl2 = chunk_slices(5, 2)
+        >>> sl1 == (0, 3)  # 3 vals
+        True
+        >>> sl2 == (3, 5)  # 2 vals
+        True
     """
+    if size is not None:
+        nchunks = int(ceil(nel / nchunks))
+
     nlong = nel % nchunks  # nshort guarenteed < nchunks
     lenshort = nel // nchunks
     lenlong = lenshort + 1
@@ -78,32 +110,49 @@ def chunk_slices(nel, nchunks):
     return ret
 
 def chunk_interslices(nchunks):
-    """
-    Similar to chunk_slices, but pick every nth element instead of getting
-    a contiguous block for each chunk
+    """Make staggered chunks
 
-    nchunks: how many chunks to make
-    Returns: a list of (start, stop, step) tuples with length nchunks
+    Similar to chunk_slices, but pick every nth element instead of
+    getting a contiguous block for each chunk
 
-    ex: chunk_slices(2) == [(0, None, 2), (1, None, 2)]
+    Parameters:
+        nchunks: how many chunks to make
+
+    Returns:
+        a list of (start, stop, step) tuples with length nchunks
+
+    Example:
+        >>> chunk_slices(2) == [(0, None, 2), (1, None, 2)]
+        True
     """
     ret = [None] * nchunks
     for i in range(nchunks):
         ret[i] = (i, None, nchunks)
     return ret
 
-def chunk_sizes(nel, nchunks):
-    """
-    nel: how many elements are in one pass of the original list
-    nchunks: is inferred from the length of iter_list
-    Returns: an ndarray of the number of elements in each chunk, this
-             should be the same for chunk_list, chunk_slices and
-             chunk_interslices
+def chunk_sizes(nel, nchunks, size=None):
+    """For chunking up lists, how big is each chunk
 
-    ex: nel1, nel2 = chunk_sizes(5, 2)
-    -> nel1 == 2
-    -> nel2 == 3
+    Parameters:
+        nel: how many elements are in one pass of the original list
+        nchunks: is inferred from the length of iter_list
+        size: if given, set nchunks such that chunks have about 'size'
+            elements
+    Returns:
+        an ndarray of the number of elements in each chunk, this
+        should be the same for chunk_list, chunk_slices and
+        chunk_interslices
+
+    Example:
+        >>> nel1, nel2 = chunk_sizes(5, 2)
+        >>> nel1 == 2
+        True
+        >>> nel2 == 3
+        True
     """
+    if size is not None:
+        nchunks = int(ceil(nel / nchunks))
+
     nlong = nel % nchunks  # nshort guarenteed < nchunks
     lenshort = nel // nchunks
     lenlong = lenshort + 1
@@ -118,9 +167,12 @@ def _star_passthrough(args):
     return args[0](*(args[1]), **(args[2]))
 
 def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True, pool=None,
-        **kwargs):
-    """ same as map_async, except it waits for the result to be ready
-    and returns it """
+        **kwargs):  # pylint: disable=redefined-builtin
+    """Just like ``subprocessing.map``?
+
+    same as :meth:`map_async`, except it waits for the result to
+    be ready and returns it
+    """
     # don't waste time spinning up a new process
     if nr_procs == 1:
         args_iter = izip(repeat(func), args_iter, repeat(kwargs))
@@ -135,25 +187,31 @@ def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True, pool=None,
         return ret
 
 def map_async(nr_procs, func, args_iter, daemonic=True, pool=None, **kwargs):
-    """
-    run func on nr_procs with arguments given by args_iter. args_iter
+    """Wrap python's ``map_async``
+
+    This has some utility stuff like star passthrough
+
+    Run func on nr_procs with arguments given by args_iter. args_iter
     should be an iterable of the list of arguments that can be unpacked
     for each invocation. kwargs are passed to func as keyword arguments
-    Returns (pool, multiprocessing.pool.AsyncResult)
-    IMPORTANT: daemonic can be set to False if one needs to spawn child
-               processes in func, BUT this could be vulnerable to creating
-               an undead army of worker processes, only use this if you
-               really really need it, and know what you're doing
-    ex:
-    func = lambda i, letter: print i, letter
-    p, r = map_async(2, func, itertools.izip(itertools.count(), 'abc'))
-    r.get(1e8)
-    p.join()
-    will print
-    0 a
-    1 b
-    2 c
-    on two processes
+
+    Returns:
+        (tuple) (pool, multiprocessing.pool.AsyncResult)
+
+    Note: daemonic can be set to False if one needs to spawn child
+        processes in func, BUT this could be vulnerable to creating
+        an undead army of worker processes, only use this if you
+        really really need it, and know what you're doing
+
+    Example:
+        >>> func = lambda i, letter: print i, letter
+        >>> p, r = map_async(2, func, itertools.izip(itertools.count(), 'abc'))
+        >>> r.get(1e8)
+        >>> p.join()
+        >>> # the following is printed from 2 processes
+        0 a
+        1 b
+        2 c
     """
     args_iter = izip(repeat(func), args_iter, repeat(kwargs))
 

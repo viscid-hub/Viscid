@@ -7,8 +7,8 @@ import logging
 
 import numpy as np
 
-from .bucket import Bucket
-from .vutil import tree_prefix
+from viscid.bucket import Bucket
+from viscid.vutil import tree_prefix
 
 class Dataset(object):
     """ datasets contain grids or other datasets
@@ -26,12 +26,15 @@ class Dataset(object):
     geometry_info = None
     crds = None
 
+    info = None
+
     def __init__(self, name, time=None):
         self.name = name
         self.children = Bucket()
 
         self.active_child = None
         self.time = time
+        self.info = {}
 
     def add(self, child, set_active=True):
         self.children[child.name] = child
@@ -91,7 +94,7 @@ class Dataset(object):
         else:
             return child.iter_fields(time=time, named=named)
 
-    def print_tree(self, recursive=True, prefix=""):
+    def print_tree(self, depth=-1, prefix=""):
         if prefix == "":
             print(self)
             prefix += tree_prefix
@@ -101,8 +104,8 @@ class Dataset(object):
             if child is self.active_child:
                 suffix = " <-- active"
             print("{0}{1}{2}".format(prefix, child, suffix))
-            if recursive:
-                child.print_tree(recursive=True, prefix=prefix + tree_prefix)
+            if depth != 0:
+                child.print_tree(depth=depth - 1, prefix=prefix + tree_prefix)
 
     # def get_non_dataset(self):
     #     """ recurse down datasets until active_grid is not a subclass
@@ -228,19 +231,51 @@ class DatasetTemporal(Dataset):
     def _slice_time(self, slice_str=":"):
         times = np.array([child[0] for child in self.children])
         slc_lst = [s.strip() for s in slice_str.split(":")]
-        # slc_lst[:2] = [float(t) if t != "" else None for t in slc_lst[:2]]
-        slc_lst[:2] = [np.argmin(np.abs(float(t) - times)) if t != "" else None
-                       for t in slc_lst[:2]]
-        # make the slice inclusive, no matter what
-        if len(slc_lst) > 1 and slc_lst[1] is not None:
-            if slc_lst[0] <= slc_lst[1]:
-                slc_lst[1] += 1
-            else:
-                slc_lst[1] -= 1
-        slc_lst[2:] = [int(s) if s != "" else None for s in slc_lst[2:]]
+
         if len(slc_lst) == 1:
-            slc_lst = [slc_lst[0], slc_lst[0] + 1]
-        slc = slice(*slc_lst) #pylint: disable=W0142
+            s = slc_lst[0]
+
+            # i'm not keen on the whole ij thing since it makes
+            # arr["1"] different from arr[1], i think i prefer to
+            # require arr["1.0"] to slice by a float value
+            # if s[-1] in "ij":
+            #     slc = int(s[:-1])
+            # else:
+            #     slc = np.argmin(np.abs(float(s) - times))
+
+            try:
+                slc = int(s)
+            except ValueError:
+                slc = np.argmin(np.abs(float(s) - times))
+        else:
+            for i, s in enumerate(slc_lst):
+                if s == "":
+                    slc_lst[i] = None
+                else:
+                    try:
+                        slc_lst[i] = int(s[:-1])
+                    except ValueError:
+                        slc_lst[i] = np.argmin(np.abs(float(s[:-1]) - times))
+
+            # make the slice inclusive, no matter what
+            if slc_lst[1] is not None:
+                if slc_lst[0] <= slc_lst[1]:
+                    slc_lst[1] += 1
+                else:
+                    slc_lst[1] -= 1
+
+            slc = slice(*slc_lst)
+
+        # otherwise the slice would reduce the dimension, which isn't what
+        # we want in iter_times
+        if isinstance(slc, int):
+            if slc == -1:
+                slc = slice(-1, None)
+            else:
+                slc = slice(slc, slc + 1)
+
+        # print("time slc list:", slc_lst, slc)
+
         return slc
 
     def nr_times(self, slice_str=":"):
@@ -269,7 +304,7 @@ class DatasetTemporal(Dataset):
         else:
             return child.iter_fields(time=time, named=named)
 
-    def print_tree(self, recursive=True, prefix=""):
+    def print_tree(self, depth=-1, prefix=""):
         if prefix == "":
             print(self)
             prefix += tree_prefix
@@ -279,8 +314,8 @@ class DatasetTemporal(Dataset):
             if child[1] is self.active_child:
                 suffix = " <-- active"
             print("{0}{1} (t={2}){3}".format(prefix, child, child[0], suffix))
-            if recursive:
-                child[1].print_tree(recursive=True, prefix=prefix + tree_prefix)
+            if depth != 0:
+                child[1].print_tree(depth=depth - 1, prefix=prefix + tree_prefix)
 
     def get_field(self, fldname, time=None):
         """ recurse down active children to get a field """

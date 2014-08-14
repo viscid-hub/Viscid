@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+"""Convevience module for making 3d plots with Mayavi"""
 from __future__ import print_function
 import code
 
@@ -9,8 +8,8 @@ from mayavi.sources.vtk_data_source import VTKDataSource
 from mayavi.sources.builtin_surface import BuiltinSurface
 from tvtk.api import tvtk
 
-from .. import field
-from ..calculator.topology import color_from_topology
+from viscid import field
+from viscid.calculator.topology import color_from_topology
 
 # def data_source(fld):
 #     """ get a data source from a scalar field """
@@ -48,6 +47,18 @@ from ..calculator.topology import color_from_topology
 #     collection.unload()
 
 def field_to_source(fld):
+    """Convert a field to a mayavi source
+
+    This dispatches to either :meth:`field_to_point_source` or
+    :meth:`field_to_cell_source` depending on the centering of
+    `fld`.
+
+    Parameters:
+        fld: field to convert
+
+    Returns:
+        mayavi source
+    """
     if fld.iscentered("Node"):
         return field_to_point_source(fld)
     elif fld.iscentered("Cell"):
@@ -56,6 +67,14 @@ def field_to_source(fld):
         raise NotImplementedError("cell / node only for now")
 
 def field_to_point_source(fld):
+    """Convert a field to a mayavi source
+
+    Parameters:
+        fld: field to convert
+
+    Returns:
+        mayavi point source
+    """
     grid, arr = _prep_field(fld)
     dat_target = grid.point_data
 
@@ -77,6 +96,14 @@ def field_to_point_source(fld):
     return _finalize_source(fld, arr, grid, dat_target)
 
 def field_to_cell_source(fld):
+    """Convert a field to a mayavi cell source
+
+    Parameters:
+        fld: field to convert
+
+    Returns:
+        mayavi cell source
+    """
     grid, arr = _prep_field(fld)
     dat_target = grid.cell_data
 
@@ -116,7 +143,16 @@ def _finalize_source(fld, arr, grid, dat_target):
         dat_target.vectors.name = fld.name
     return VTKDataSource(data=grid)
 
-def plot_lines(lines, topology=None, **kwargs):
+def plot_lines(lines, topology=None, scalar=None, **kwargs):
+    """Make 3D mayavi plot of lines
+
+    Parameters:
+        lines: list of lines. Each line should have shape 3xP for 3
+            spatial dimensions and P points along the line
+        topology (optional): an array of values that describe how to
+            color the line.
+        kwargs: forwarded to :meth:`mayavi.mlab.plot3d`
+    """
     if "color" not in kwargs and topology is not None:
         if isinstance(topology, field.Field):
             topology = topology.data.reshape(-1)
@@ -127,10 +163,25 @@ def plot_lines(lines, topology=None, **kwargs):
     for i, line in enumerate(lines):
         if topo_color:
             kwargs["color"] = color_from_topology(topology[i])
-        mlab.plot3d(line[2], line[1], line[0], **kwargs)
+
+        if scalar is not None:
+            mlab.plot3d(line[2], line[1], line[0], scalar, **kwargs)
+        else:
+            mlab.plot3d(line[2], line[1], line[0], **kwargs)
 
 def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
                crd_system="mhd"):
+    """Plot a black and white sphere (Earth) showing sunward direction
+
+    Parameters:
+        pipeline (optional): Use if you want to plot using an existing
+            pipeline
+        daycol (tuple, optional): color of dayside (RGB)
+        nightcol (tuple, optional): color of nightside (RGB)
+        res (optional): rosolution of teh sphere
+        crd_system (str, optional): 'mhd' or 'gse', can be gotten from
+            an openggcm field using ``fld.info["crd_system"]``.
+    """
     if pipeline is None:
         pipeline = mlab.pipeline
 
@@ -153,10 +204,19 @@ def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
     pipeline.surface(day, color=daycol)
 
 def show(stop=True):
+    """Calls :meth:`mayavi.mlab.show(stop=stop)`"""
     mlab.show(stop=stop)
 
 def interact(local=None):
-    """ you probably want to use interact(local=locals()) """
+    """Switch to interactive interpreter
+
+    This can be handy if you want to interact with a 3d plot using
+    python.
+
+    Parameters:
+        local (dict, optional): Local namespace for the interactive
+            session. Usually you want ``interact(local=locals())``
+    """
     banner = """Have some fun with mayavi :)
     hints:
         - use locals() to explore the namespace

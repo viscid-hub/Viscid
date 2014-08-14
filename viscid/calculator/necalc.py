@@ -5,8 +5,8 @@ from __future__ import print_function
 import numpy as np
 import numexpr as ne
 
-from .. import field
-from .. import coordinate
+from viscid import field
+from viscid import coordinate
 
 # ne.set_num_threads(1)  # for performance checking
 

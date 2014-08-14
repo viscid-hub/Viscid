@@ -1,3 +1,7 @@
-""" docstring for calculator """
-# from calc import *
-# from mhdcalc import *
+"""Calculate using fields
+
+This package has some general purpose calculator stuff, like
+interpolation, streamline tracing, Div, Curl, calculate flux function,
+etc.
+
+"""

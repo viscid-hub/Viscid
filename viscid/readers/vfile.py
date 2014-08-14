@@ -10,8 +10,8 @@ import os
 import re
 from time import time
 
-from ..dataset import Dataset
-from .. import grid
+from viscid.dataset import Dataset
+from viscid import grid
 
 class DataWrapper(object):
     _shape = None
@@ -153,6 +153,46 @@ class VFile(Dataset):
         if cls._detector and re.match(cls._detector, fname):
             return cls
         return None
+
+    @classmethod
+    def group_fnames(cls, fnames):
+        """Group File names
+
+        The default implementation just returns fnames, but some file
+        types might do something fancy here
+
+        Parameters:
+            fnames (list): names that can be logically grouped, as in
+                a bunch of file names that are different time steps
+                of a given run
+
+        Returns:
+            A list of things that can be given to the constructor of
+            this class
+        """
+        return fnames
+
+    @classmethod
+    def collective_name_from_group(cls, group):
+        raise NotImplementedError()
+
+    @classmethod
+    def collective_name(cls, group):
+        """
+        Parameters:
+            group: single file name or list of file names that would
+                be grouped by group_fnames
+
+        Returns:
+            str: a single name
+        """
+        if not isinstance(group, (list, tuple)):
+            group = [group]
+
+        if len(group) > 1:
+            return cls.collective_name_from_group(group)
+        else:
+            return group[0]
 
 ##
 ## EOF

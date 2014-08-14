@@ -1,8 +1,9 @@
-#!/usr/bin/env python
-""" Coordinates get put into fields
-The order of coords in the clist should mirror the data layout, as in
-if data[iz, iy, ix] (C-order, ix is fastest varying index) then list
-should go z, y, x... this is the default order
+""" Container for grid coordinates
+
+Coordinates primarily go into Field objects. The order of coords in
+the clist should mirror the data layout, as in if data[iz, iy, ix]
+(C-order, ix is fastest varying index) then list should go z, y, x...
+this is the default order
 
 types:
      "Structured":
@@ -10,7 +11,13 @@ types:
          "Cylindrical"
          "Spherical"
      "Unstructured":
-         -> Not Implemented <- """
+         -> Not Implemented <-
+
+FIXME: uniform coordinates are generally unsupported, but they're just
+       a special case of nonuniform coordinates, so the functionality
+       is still there... it's just unnatural to use full crd arrays
+       with uniform coordinates
+"""
 
 from __future__ import print_function
 # from timeit import default_timer as time
@@ -18,16 +25,16 @@ import itertools
 
 import numpy as np
 
-from . import vutil
+from viscid import vutil
 
 
-def wrap_crds(typ, clist):
+def wrap_crds(typ, clist, **kwargs):
     """  """
     # print(len(clist), clist[0][0], len(clist[0][1]), typ)
     for cls in vutil.subclass_spider(Coordinates):
         if cls.istype(typ):
             # return an instance
-            return cls(clist)
+            return cls(clist, **kwargs)
     raise NotImplementedError("can not decipher crds")
 
 
@@ -43,6 +50,9 @@ class Coordinates(object):
     @classmethod
     def istype(cls, type_str):
         return cls._TYPE == type_str.lower()
+
+    def is_spherical(self):
+        return "spherical" in self._TYPE
 
     def __init__(self):
         pass
@@ -62,10 +72,11 @@ class StructuredCrds(Coordinates):
     _src_crds_nc = None
 
     transform_funcs = None
+    transform_kwargs = None
     has_cc = None
 
     def __init__(self, init_clist, has_cc=True, transform_funcs=None,
-                 **kwargs):
+                 transform_kwargs=None, **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
         super(StructuredCrds, self).__init__(**kwargs)
@@ -73,6 +84,10 @@ class StructuredCrds(Coordinates):
 
         if transform_funcs is not None:
             self.transform_funcs = transform_funcs
+        if transform_kwargs:
+            self.transform_kwargs = transform_kwargs
+        else:
+            self.transform_kwargs = {}
 
         if init_clist:
             self._axes = [d[0].lower() for d in init_clist]
@@ -166,9 +181,11 @@ class StructuredCrds(Coordinates):
 
             if self.transform_funcs is not None:
                 if axis in self.transform_funcs:
-                    arr = self.transform_funcs[axis](self, arr)
+                    arr = self.transform_funcs[axis](self, arr,
+                                                     **self.transform_kwargs)
                 elif ind in self.transform_funcs:
-                    arr = self.transform_funcs[ind](self, arr)
+                    arr = self.transform_funcs[ind](self, arr,
+                                                    **self.transform_kwargs)
 
             flatarr, openarr = self._ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr
@@ -254,11 +271,11 @@ class StructuredCrds(Coordinates):
             return self.axes[axis]
 
     def _parse_slice(self, selection):
-        """ parse a selection string or dict. a trailing i means the number is
-        an index, else numbers are interpreted as coordinates... ex:
-        selection = 'y=12.32,z-1.0' is line of data
+        """ parse a selection string or dict. integers are interpreted
+        as indices, floats are interpreted as coordinates... ex:
+        selection = 'y=12.32,z=-1.0' is line of data
         closest to (x, y=12.32, z=-1.0)
-        selection = {'y=12i:14i,z=1i is the slice [:,12:14,1]
+        selection = {'y=12:14,z=1 is the slice [:,12:14,1]
         """
         # parse string to dict if necessary
         if isinstance(selection, dict):
@@ -286,10 +303,11 @@ class StructuredCrds(Coordinates):
                 for i, val in enumerate(slclst):
                     if len(val) == 0:
                         slclst[i] = None
-                    elif val[-1] in ['i', 'j'] or i == 2:
-                        slclst[i] = int(val.rstrip('ij'))
                     else:
-                        slclst[i] = float(val)
+                        try:
+                            slclst[i] = int(val)
+                        except ValueError:
+                            slclst[i] = float(val)
                 sel[dim] = slclst
             return sel
         elif isinstance(selection, (tuple, list)):
@@ -311,22 +329,40 @@ class StructuredCrds(Coordinates):
             raise TypeError()
 
     def make_slice(self, selection, cc=False):
-        """ In practice, selection can be a string like "y=3i:6i:2,z=0"
-        where i indicates slice by index as opposed to bare numbers which
-        slice by crd value. The example slice would be the 3rd and 5th crds
-        in y, and the z = 0.0 plane. Selection can also be the usual tuple
-        of slice objects / integers like one would give to numpy.
-        Returns slices, slcrds, reduced
-        slices: list of slice objects, one for each axis in self
-        slcrds: a clist for what the coords will be after the slice
-        reduced: a list of (axis, location) pairs of which axes are sliced out
-        The previous example would return (if z[32] is closest to z=0.0):
-        ([slice(None), slice(3, 6, 2), 32],  # list of data slices
-         [['x', ndarray(all nc x crds)], ['y', array(y[3], y[5])]], # new clist
-         [['z', 0.0]],  # list of coords that are taken out by the slices
-        )
+        """Turns a slice string into a slice (should be private?)
+
+        Slices should be made using the normal ``field[selecton]``
+        syntax. This function is more for internal use; however it
+        does document the slice string syntax.
+
+        In practice, selection can be a string like "y=3:6:2,z=0.0"
+        where integers indicate an index as opposed to floats
+        which slice by crd value. The example slice would be the 3rd
+        and 5th crds in y, and the z = 0.0 plane. Selection can also
+        be the usual tuple of slice objects / integers like one would
+        give to numpy.
+
+        "y=3:6:2,z=0.0" will give (if z[32] is closest to z=0.0)
+
+            ([slice(None), slice(3, 6, 2), 32],
+            [['x', ndarray(all nc x crds)], ['y', array(y[3], y[5])]],
+            [['z', 0.0]],
+            )
+
+        Parameters:
+            selecton (str): slice string
+            cc (bool): cell centered slice
+
+        Returns:
+            tuple (slices, slcrds, reduced)
+            slices: list of slice objects, one for each axis in self
+            slcrds: a clist for what the coords will be after the
+            slice
+            reduced: a list of (axis, location) pairs of which axes
+            are sliced out
+
         Note: cc is necessary for finding the closest plane, otherwise it
-              might be off by half a grid cell
+            might be off by half a grid cell
         """
         # this turns all types of selection input styles into a selection dict
         # which looks like {'axis': (start,stop?,step?), ...}
@@ -419,7 +455,7 @@ class StructuredCrds(Coordinates):
         return slices, slcrds, reduced
 
     def make_slice_reduce(self, selection, cc=False):
-        """ make slice, and reduce dims that were not explicitly sliced """
+        """make slice, and reduce dims that were not explicitly sliced"""
         slices, crdlst, reduced = self.make_slice(selection, cc=cc)
         # augment slices / reduced
         for i, axis in enumerate(self.axes):
@@ -447,7 +483,7 @@ class StructuredCrds(Coordinates):
         return slices, crdlst, reduced
 
     def make_slice_keep(self, selection, cc=False):
-        """ make slice, but put back dims that were explicitly reduced """
+        """make slice, but put back dims that were explicitly reduced"""
         slices, crdlst, reduced = self.make_slice(selection, cc=cc)
         # put reduced dims back, reduced will be in the same order as self.axes
         # since make_slice loops over self.axes to do the slices; this enables
@@ -486,9 +522,10 @@ class StructuredCrds(Coordinates):
         return slices, crdlst, reduced
 
     def slice(self, selection, cc=False):
-        """ Get crds that describe a slice (subset) of this grid. Reduces dims
-        the same way numpy / fields do. Chances are you want either slice_reduce
-        or slice_keep """
+        """Get crds that describe a slice (subset) of this grid.
+        Reduces dims the same way numpy / fields do. Chances are
+        you want either slice_reduce or slice_keep
+        """
         slices, crdlst, reduced = self.make_slice(selection, cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
@@ -496,8 +533,10 @@ class StructuredCrds(Coordinates):
         return wrap_crds(self._TYPE, crdlst)
 
     def slice_reduce(self, selection, cc=False):
-        """ Get crds that describe a slice (subset) of this grid. Go through,
-        and if the slice didn't touch a dim with only one crd, reduce it """
+        """Get crds that describe a slice (subset) of this grid. Go
+        through, and if the slice didn't touch a dim with only one crd,
+        reduce it
+        """
         slices, crdlst, reduced = self.make_slice_reduce(selection,
                                                          cc=cc)
         # pass through if nothing happened
@@ -514,20 +553,27 @@ class StructuredCrds(Coordinates):
         return wrap_crds(self._TYPE, crdlst)
 
     def get_crd(self, axis, shaped=False, center="none"):
-        """ if axis is not specified, return all coords,
+        """if axis is not specified, return all coords,
         shaped makes axis capitalized and returns ogrid like crds
         shaped is only used if axis == None
         sfx can be none, node, cell, face, edge
-        raises KeyError if axis not found """
+        raises KeyError if axis not found
+        """
         return self.get_crds([axis], shaped, center)[0]
 
     def get_crds(self, axes=None, shaped=False, center="none"):
-        """ axes: should be a list of names or integer indices, or None
-                  to return all axes
-        shaped: boolean if you want a shaped or flat ndarray
+        """Get coordinate arrays
+
+        Parameters:
+            axes: should be a list of names or integer indices, or None
+                to return all axes
+            shaped: boolean if you want a shaped or flat ndarray
                 (True is the same as capitalizing axis)
-        center: 'node' 'cell' 'edge' 'face', same as adding a suffix to axes
-        returns list of coords as ndarrays """
+            center: 'node' 'cell' 'edge' 'face', same as adding a suffix
+                to axes
+        Returns:
+            list of coords as ndarrays
+        """
         if axes == None:
             axes = [a.upper() if shaped else a for a in self.axes]
         if not isinstance(axes, (list, tuple)):
@@ -565,14 +611,25 @@ class StructuredCrds(Coordinates):
     #              self._crds[self.axis_name(a) + sfx][:-1]) for a in axes]
 
     def get_culled_axes(self, ignore=2):
-        """ return list of axes names, but discard axes whose coords have
-        length <= ignore... useful for 2d fields that only have 1 cell
-        center in the 3rd direction """
+        """Get only good axes
+
+        Discard axes whose coords have length <= ignore... useful for
+        2d fields that only have 1 cell
+
+        Returns
+            list of axes names
+        """
         return [name for name in self.axes if len(self[name]) > ignore]
 
     def get_clist(self, axes=None, slc=None):
-        """ return a clist of the coordinates sliced if you wish
-        I recommend using numpy.s_ for making the slice """
+        """??
+
+        Returns:
+            a clist of the coordinates sliced if you wish
+
+        Note:
+            I recommend using ``numpy.s_`` for making the slice
+        """
         if slc is None:
             slc = slice(None)
         if axes is None:
@@ -581,49 +638,58 @@ class StructuredCrds(Coordinates):
 
     ## These methods just return one crd axis
     def get_nc(self, axis, shaped=False):
-        """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        """returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.get_crd(axis, shaped=shaped, center="node")
 
     def get_cc(self, axis, shaped=False):
-        """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        """returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.get_crd(axis, shaped=shaped, center="cell")
 
     def get_fc(self, axis, shaped=False):
-        """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        """returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.get_crd(axis, shaped=shaped, center="face")
 
     def get_ec(self, axis, shaped=False):
-        """ returns a flat ndarray of coordinates along a given axis
-        axis can be crd name as string, or index, as in x==2, y==1, z==2 """
+        """returns a flat ndarray of coordinates along a given axis
+        axis can be crd name as string, or index, as in x==2, y==1, z==2
+        """
         return self.get_crd(axis, shaped=shaped, center="edge")
 
     ## These methods return all crd axes
     def get_crds_nc(self, axes=None, shaped=False):
-        """ returns all node centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        """returns all node centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True
+        """
         return self.get_crds(axes=axes, center="node", shaped=shaped)
 
     def get_crds_cc(self, axes=None, shaped=False):
-        """ returns all cell centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        """returns all cell centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True
+        """
         return self.get_crds(axes=axes, center="cell", shaped=shaped)
 
     def get_crds_ec(self, axes=None, shaped=False):
-        """ return all edge centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        """return all edge centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True
+        """
         return self.get_crds(axes=axes, center="edge", shaped=shaped)
 
     def get_crds_fc(self, axes=None, shaped=False):
-        """ returns all face centered coords as a list of ndarrays, flat if
-        shaped==False, or shaped if shaped==True """
+        """returns all face centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True
+        """
         return self.get_crds(axes=axes, center="face", shaped=shaped)
 
     def points(self, center="none"):
-        """ returns all points in a grid defined by crds as a
-        nr_dims x nr_points ndarray """
+        """returns all points in a grid defined by crds as a
+        nr_dims x nr_points ndarray
+        """
         crds = self.get_crds(shaped=False, center=center)
         shape = [len(c) for c in crds]
         arr = np.empty([len(shape)] + [np.prod(shape)])
@@ -633,12 +699,13 @@ class StructuredCrds(Coordinates):
         return arr
 
     def nr_points(self, center="none"):
-        """ returns the number of points in a grid defined by these crds """
+        """returns the number of points in a grid defined by these crds"""
         return np.prod([len(crd) for crd in self.get_crds(center=center)])
 
     def iter_points(self, center="none", **kwargs): #pylint: disable=W0613
-        """ returns an iterator over all the points in a grid, each nextitem
-        will be a list of nr_dims numbers """
+        """returns an iterator over all the points in a grid, each
+        nextitem will be a list of nr_dims numbers
+        """
         return itertools.product(*self.get_crds(shaped=False, center=center))
 
     def print_tree(self):
@@ -658,8 +725,9 @@ class StructuredCrds(Coordinates):
         return self.get_crd(axis)
 
     def __setitem__(self, axis, arr):
-        """ I recommend against doing this since there may be unintended
-        side effects """
+        """I recommend against doing this since there may be unintended
+        side effects
+        """
         return self.set_crds((axis, arr))
 
     def __delitem__(self, item):
@@ -738,8 +806,8 @@ class NonuniformSphericalCrds(NonuniformCrds):
 
     _target_nc_params = None
 
-    def __init__(self, init_clist, **kwargs):
-        """ This subclass is hackilly different from other crd types...
+    def __init__(self, init_clist, fill_by_linspace=False, **kwargs):
+        """This subclass is hackilly different from other crd types...
         init_clist MUST be list of the form:
         [
             ['phi', [0.0, 360.0, 181]],
@@ -750,19 +818,27 @@ class NonuniformSphericalCrds(NonuniformCrds):
         numpy.linspace
         """
         self._axes = [d[0].lower() for d in init_clist]
-        self._target_nc_params = [d[1] for d in init_clist]
-        super(NonuniformSphericalCrds, self).__init__(None, **kwargs)
+        if fill_by_linspace:
+            self._target_nc_params = [d[1] for d in init_clist]
+            init_clist = None
+        else:
+            self._target_nc_params = []
+
+        super(NonuniformSphericalCrds, self).__init__(init_clist, **kwargs)
+
 
     def _fill_crds_dict(self):
-        """ do the math to calc node, cell, face, edge crds from
-        the src crds """
+        """do the math to calc node, cell, face, edge crds from
+        the src crds
+        """
         # SUPERHACKY! ok, so we're ignoring the cordinates in the file, and
         # just assuming they span the sphere... that way all we actually need
         # is nphi, ntheta, so when we need the crds, fill _src_crds_nc as
         # though we had them
-        self._src_crds_nc = {}
-        for ax, p in zip(self._axes, self._target_nc_params):
-            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2])
+        if len(self._target_nc_params) > 0:
+            self._src_crds_nc = {}
+            for ax, p in zip(self._axes, self._target_nc_params):
+                self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2])
         return super(NonuniformSphericalCrds, self)._fill_crds_dict()
 
 

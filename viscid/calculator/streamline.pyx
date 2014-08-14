@@ -1,13 +1,20 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
-""" NOTE: when nr_procs > 1, fields are shared to child processes using
-a global variable so that on Unix there is no need to picklel and copy the
-entire field. This will only work on Unix, and I have absolutely no idea
-what will happen on Windows """
+r"""All streamlines all the time
+
+Calculate streamlines of a vector field on as many processors your
+heart desires. The only function you need here is :meth:`streamlines`
+
+Note:
+    When nr_procs > 1, fields are shared to child processes using
+    a global variable so that on \*nix there is no need to picklel and
+    copy the entire field. This will only work on \*nix, and I have
+    absolutely no idea what will happen on Windows.
+"""
 
 from __future__ import print_function
 from timeit import default_timer as time
 from logging import info, warning
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 from contextlib import closing
 from itertools import islice, repeat
 try:
@@ -17,9 +24,9 @@ except ImportError:
 
 import numpy as np
 
-from .. import parallel
-from .. import field
-from . import seed
+from viscid import parallel
+from viscid import field
+from viscid.calculator import seed
 
 ###########
 # cimports
@@ -48,29 +55,35 @@ OUTPUT_TOPOLOGY = 2
 OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
 # topology will be 1+ of these flags binary or-ed together
-#                              bit #   8 6 4 2 0
-END_NONE = 0                       # 0b000000000 not ended yet
-END_IBOUND = 4                     # 0b000000100
-END_IBOUND_NORTH = 5               # 0b000000101  == END_IBOUND | 1
-END_IBOUND_SOUTH = 6               # 0b000000110  == END_IBOUND | 2
-END_OBOUND = 8                     # 0b000001000
-# END_CYCLIC = 16                    # 0b000010000
-END_OTHER = 32                     # 0b000100000
-END_MAXIT = 64 | END_OTHER         # 0b001100000
-END_MAX_LENGTH = 128 | END_OTHER   # 0b010100000
-END_ZERO_LENGTH = 256 | END_OTHER  # 0b100100000
+#                                bit #   4 2 0 8 6 4 2 0  Notes         bit
+END_NONE = 0                         # 0b000000000000000 not ended yet    X
+END_IBOUND = 1                       # 0b000000000000001                  0
+END_IBOUND_NORTH = 2 | END_IBOUND    # 0b000000000000011  == 3            1
+END_IBOUND_SOUTH = 4 | END_IBOUND    # 0b000000000000101  == 5            2
+END_OBOUND = 8                       # 0b000000000001000                  3
+END_OBOUND_XL = 16 | END_OBOUND      # 0b000000000011000  == 24           4
+END_OBOUND_XH = 32 | END_OBOUND      # 0b000000000101000  == 40           5
+END_OBOUND_YL = 64 | END_OBOUND      # 0b000000001001000  == 72           6
+END_OBOUND_YH = 128 | END_OBOUND     # 0b000000010001000  == 136          7
+END_OBOUND_ZL = 256 | END_OBOUND     # 0b000000100001000  == 264          8
+END_OBOUND_ZH = 512 | END_OBOUND     # 0b000001000001000  == 520          9
+END_CYCLIC = 1024                    # 0b000010000000000  !!NOT USED!!   10
+END_OTHER = 2048                     # 0b000100000000000                 11
+END_MAXIT = 4096 | END_OTHER         # 0b001100000000000  == 6144        12
+END_MAX_LENGTH = 8192 | END_OTHER    # 0b010100000000000  == 10240       13
+END_ZERO_LENGTH = 16384 | END_OTHER  # 0b100100000000000  == 18432       14
 
 # ok, this is over complicated, but the goal was to or the topology value
 # with its neighbors to find a separator line... To this end, or-ing two
 # END_* values doesn't help, so before streamlines returns, it will
 # replace the numbers that mean closed / open with powers of 2, that way
 # we end up with topology as an actual bit mask
-TOPOLOGY_NONE = 0  # no translation needed
-TOPOLOGY_CLOSED = 1  # translated from 5, 6, 7(4|5|6)
-TOPOLOGY_OPEN_NORTH = 2  # translated from 13 (8|5)
-TOPOLOGY_OPEN_SOUTH = 4  # translated from 14 (8|6)
-TOPOLOGY_SW = 8  # no translation needed
-# TOPOLOGY_CYCLIC = 16  # no translation needed
+TOPOLOGY_MS_NONE = 0  # no translation needed
+TOPOLOGY_MS_CLOSED = 1  # translated from 5, 6, 7(4|5|6)
+TOPOLOGY_MS_OPEN_NORTH = 2  # translated from 13 (8|5)
+TOPOLOGY_MS_OPEN_SOUTH = 4  # translated from 14 (8|6)
+TOPOLOGY_MS_SW = 8  # no translation needed
+# TOPOLOGY_MS_CYCLIC = 16  # no translation needed
 
 # these are set if there is a pool of workers doing streamlines, they are
 # always set back to None when the streamlines are done
@@ -80,21 +93,56 @@ _global_crds = None
 
 #####################
 # now the good stuff
-def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1, **kwargs):
-    """
-    fld:      Some vector field
-    seed:     can be a Seeds instance or a Coordinates instance... basically anything
-              which exposes an iter_points method
-    nr_procs: how many processes to calc streamlines on (>1 only works on unix systems)
-    force_parallel: always calc streamlines in a separate process, even if nr_procs == 1
-    nr_chunks_factor: nchunks = nr_procs * nr_chunks_factor, if streamlines are really
-                      unbalanced, try bumping this up
-    kwargs:   keyword arguments for _py_streamline
-    Returns (lines, topo), either of which can be None depending on output
-    lines: list or ndarray of objects (if nr_procs > 1) of nr_streams ndarrays,
-           each ndarray has shape (3, nr_points_in_stream)
-           the nr_points_in_stream can be different for each line
-    topo is an ndarray with shape (nr_streams,) of topology bitmask
+def streamlines(fld, seed, nr_procs=1, force_parallel=False,
+                nr_chunks_factor=1, **kwargs):
+    r"""Trace streamlines
+
+    Parameters:
+        fld: Some vector field
+        seed: can be a Seeds instance or a Coordinates instance, or
+            anything that exposes an iter_points method
+        nr_procs: how many processes to calc streamlines on (>1 only
+            works on \*nix systems)
+        force_parallel: always calc streamlines in a separate process,
+            even if nr_procs == 1
+        nr_chunks_factor: If streamlines are really unbalanced in
+            length, try bumping this up
+        kwargs: more arguments for streamlines, described below
+
+    Keyword Arguments:
+        ds0 (float): initial spatial step for streamlines (if 0.0, it
+            will be half the minimum d[xyz])
+        ibound (float): Inner boundary as distance from (0, 0, 0)
+        obound0 (array-like): lower corner of outer boundary (z, y, x)
+        obound1 (array-like): upper corner of outer boundary (z, y, x)
+        maxit (int): maximum number of line segments
+        max_length (float): maximum streamline length
+        stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
+        output (int): which output to provide, one of
+            OUTPUT_STREAMLINE, OUTPUT_TOPOLOGY, or OUTPUT_BOTH
+        method (int): integrator, one of EULER1, EULER1a (adaptive),
+            RK2, RK12 (adaptive)
+        tol_lo (float): lower acuracy tolerance for adaptive
+            integrators. More acurate than, this ds goes up.
+        tol_hi (float): upper acuracy tolerance for adaptive
+            integrators. Less acurate than, this ds goes down.
+        fac_refine (float): When refining ds, ds \*= fac_refine
+        fac_coarsen (float): When coarsening ds, ds \*= fac_coarsen
+        smallest_step (float): smallest spatial step
+        largest_step (float): largest spatial step
+        topo_style (str): how to map end point bitmask to a topology.
+            'msphere' to map to ``TOPOLOGY_MS_*``, or 'generic' to
+            leave topology as a bitmask of ``END_*``
+
+    Returns:
+        (lines, topo), either can be ``None`` depending on ``output``
+
+        * lines, list of nr_streams ndarrays, each ndarray has shape
+          (3, nr_points_in_stream) the nr_points_in_stream can be
+          different for each line
+        * topo, ndarray with shape (nr_streams,) of topology
+          bitmask with values depending on the topo_style
+
     """
     if not fld.layout == field.LAYOUT_INTERLACED:
         raise ValueError("Streamlines only written for interlaced data.")
@@ -109,6 +157,9 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False, nr_chunks_factor=1,
     crdz, crdy, crdx = fld.get_crds_cc()
     nr_streams = seed.nr_points(center=center)
     kwargs["center"] = center
+
+    if nr_procs == "all" or nr_procs == "auto":
+        nr_procs = cpu_count()
 
     if nr_procs == 1 and not force_parallel:
         lines, topo = _py_streamline(dtype, dat, crdz, crdy, crdx, nr_streams,
@@ -167,24 +218,56 @@ def _do_streamline_star(args):
 def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
                    int nr_streams, seed, seed_slice=(None, ), center="Cell",
                    ds0=0.0, ibound=0.0, obound0=None, obound1=None,
-                   maxit=10000, max_length=0.0, stream_dir=DIR_BOTH,
+                   maxit=10000, max_length=1e30, stream_dir=DIR_BOTH,
                    output=OUTPUT_BOTH, method=EULER1, tol_lo=1e-3, tol_hi=1e-2,
                    fac_refine=0.5, fac_coarsen=1.25, smallest_step=1e-4,
-                   largest_step=1e2):
-    """ Start calculating a streamline at x0
-    stream_dir:  DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
-    ibound:      stop streamline if within inner_bound of the origin
-                 ignored if 0
-    obound0:     corner of box beyond which to stop streamline (smallest values)
-    obound1:     corner of box beyond which to stop streamline (smallest values)
-    ds0:         initial spatial step for the streamline
-    seed_slice:  a tuple of arguments for slice(...), so it's
-                 stop or start, stop, [step]
-    output:      OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY | OUTPUT_BOTH
-    Returns (lines, topo), either of which can be None depending on output
-    lines: list of nr_streams ndarrays, each ndarray has shape (3, nr_points_in_stream)
-           the nr_points_in_stream can be different for each line
-    topo is an ndarray with shape (nr_streams,) of topology bitmask """
+                   largest_step=1e2, topo_style="msphere"):
+    r""" Start calculating a streamline at x0
+
+    Parameters:
+        dtype: anything to describe Numpy dtype of v_mv
+        v_mv (typed memory view): some array
+        crdz_in (ndarray): z coorinates, same centering as ``center``
+        crdy_in (ndarray): z coorinates, same centering as ``center``
+        crdx_in (ndarray): z coorinates, same centering as ``center``
+        nr_streams (int):
+        seed: something with an iter_points method
+            (:class:`viscid.calculator.seed.Seed`,
+            :class:`viscid.coordinate.Coordinates`, etc.)
+        seed_slice (tuple): arguments for slice, (start, stop, [step])
+        center (str): "Cell" | "Node"
+        ds0 (float): initial spatial step for streamlines (if 0.0, it
+            will be half the minimum d[xyz])
+        ibound (float): Inner boundary as distance from (0, 0, 0)
+        obound0 (array-like): lower corner of outer boundary (z, y, x)
+        obound1 (array-like): upper corner of outer boundary (z, y, x)
+        maxit (int): maximum number of line segments
+        max_length (float): maximum streamline length
+        stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
+        output (int): which output to provide, one of
+            OUTPUT_STREAMLINE, OUTPUT_TOPOLOGY, or OUTPUT_BOTH
+        method (int): integrator, one of EULER1, EULER1a (adaptive),
+            RK2, RK12 (adaptive)
+        tol_lo (float): lower acuracy tolerance for adaptive
+            integrators. More acurate than, this ds goes up.
+        tol_hi (float): upper acuracy tolerance for adaptive
+            integrators. Less acurate than, this ds goes down.
+        fac_refine (float): When refining ds, ds \*= fac_refine
+        fac_coarsen (float): When coarsening ds, ds \*= fac_coarsen
+        smallest_step (float): smallest spatial step
+        largest_step (float): largest spatial step
+        topo_style (str): how to map end point bitmask to a topology.
+            'msphere' to map to ``TOPOLOGY_MS_*``, or 'generic' to
+            leave topology as a bitmask of ``END_*``
+
+    Returns:
+        (lines, topo), either can be ``None`` depending on ``output``
+        lines: list of nr_streams ndarrays, each ndarray has shape
+            (3, nr_points_in_stream) the nr_points_in_stream can be
+            different for each line
+        topo: is an ndarray with shape (nr_streams,) of topology
+            bitmask with values depending on the topo_style
+    """
     cdef:
         # cdefed versions of arguments
         real_t[:] crdz = crdz_in
@@ -194,6 +277,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
         real_t c_ibound = ibound
         real_t c_obound0_carr[3]
         real_t c_obound1_carr[3]
+        real_t min_dx[3]
         real_t[:] c_obound0 = c_obound0_carr
         real_t[:] c_obound1 = c_obound1_carr
         real_t[:] py_obound0
@@ -210,8 +294,12 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
 
         # just for c
         int (*integrate_func)(real_t[:,:,:,::1], real_t[:]*,
-                      real_t*, real_t[:], real_t, real_t, real_t, real_t,
-                      real_t, real_t, int[3]) except -1
+                real_t*, real_t[:], real_t, real_t, real_t, real_t,
+                real_t, real_t, int[3]) except -1
+        # int (*classify_endpoint)(real_t[3], real_t, real_t,
+        #         real_t[3], real_t[3],
+        #         real_t, real_t, real_t[3])
+        int (*end_flags_to_topology)(int end_flags)
         int i, j, it
         int i_stream
         int nprogress = max(nr_streams / 50, 1)  # progeress at every 5%
@@ -240,30 +328,43 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
         int[:] line_ends_mv = line_ends_carr
         real_t[:] s_mv = s_carr
     cdef real_t[:] *crds = [crdz, crdy, crdx]
+    crds_in = [crdz_in, crdy_in, crdx_in]
 
     lines = None
     line_ndarr = None
     topology_ndarr = None
 
-    if obound0 is None:
-        c_obound0[0] = crds[0][0]
-        c_obound0[1] = crds[1][0]
-        c_obound0[2] = crds[2][0]
-    else:
+    if c_ds0 == 0.0:
+        find_ds0 = True
+        c_ds0 = 1e30
+
+    if obound0 is not None:
         py_obound0 = obound0
         c_obound0[...] = py_obound0
 
-    if obound1 is None:
-        c_obound1[0] = crds[0][-1]
-        c_obound1[1] = crds[1][-1]
-        c_obound1[2] = crds[2][-1]
-    else:
+    if obound1 is not None:
         py_obound1 = obound1
         c_obound1[...] = py_obound1
 
-    if c_ds0 == 0.0:
-        c_ds0 = np.min([np.min(crdz), np.min(crdy), np.min(crdx)])
+    # these hoops are required for processing 2d fields
+    for i in range(3):
+        if len(crds[i]) == 1:
+            if obound0 is None:
+                c_obound0[i] = -1e30
+            if obound1 is None:
+                c_obound1[i] = 1e30
+        else:
+            if obound0 is None:
+                c_obound0[i] = crds[i][0]
+            if obound1 is None:
+                c_obound1[i] = crds[i][-1]
+            if find_ds0:
+                c_ds0 = np.min([c_ds0, np.min(crds_in[i][1:] - crds_in[i][:-1])])
 
+    if find_ds0:
+        c_ds0 *= 0.5
+
+    # which integrator are we using?
     if method == EULER1:
         integrate_func = _c_euler1[real_t]
     elif method == RK2:
@@ -275,6 +376,16 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
     else:
         raise ValueError("unknown integration method")
 
+    # determine which functions to use for understanding endpoints
+    # and
+    if topo_style == "msphere":
+        # classify_endpoint = classify_endpoint_msphere[real_t]
+        end_flags_to_topology = end_flags_to_topology_msphere
+    else:
+        # classify_endpoint = classify_endpoint_generic[real_t]
+        end_flags_to_topology = end_flags_to_topology_generic
+
+    # establish arrays for output
     if output & OUTPUT_STREAMLINES:
         # 2 (0=backward, 1=forward), 3 z,y,x, c_maxit points in the line
         line_ndarr = np.empty((2, 3, c_maxit), dtype=dtype)
@@ -342,7 +453,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
                 #     print(s_mv[2], s_mv[1], s_mv[0])
                 # ret is non 0 when |v_mv| == 0
                 if ret != 0:
-                    done = END_OTHER | END_ZERO_LENGTH
+                    done = END_ZERO_LENGTH
                     break
 
                 if line_mv is not None:
@@ -352,37 +463,9 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
                 it += d
 
                 # end conditions
-                rsq = s_mv[0]**2 + s_mv[1]**2 + s_mv[2]**2
-
-                # hit the inner boundary
-                if rsq <= c_ibound**2:
-                    # print("inner boundary")
-                    if s_mv[0] >= 0.0:
-                        done = END_IBOUND_NORTH
-                    else:
-                        done = END_IBOUND_SOUTH
-                    break
-
-                for j from 0 <= j < 3:
-                    # hit the outer boundary
-                    if s_mv[j] <= c_obound0[j] or s_mv[j] >= c_obound1[j]:
-                        # print("outer boundary")
-                        done = END_OBOUND
-                        break
-
-                if c_max_length > 0.0 and stream_length > c_max_length:
-                    done = END_OTHER | END_MAX_LENGTH
-                    break
-
-                # if we are within 0.5 * ds of the initial position
-                # distsq = (x0_mv[0] - s_mv[0])**2 + \
-                #          (x0_mv[1] - s_mv[1])**2 + \
-                #          (x0_mv[2] - s_mv[2])**2
-                # if distsq < (0.05 * ds0)**2:
-                #     # print("cyclic field line")
-                #     done = END_CYCLIC
-                #     break
-
+                done = classify_endpoint(s_carr, stream_length, c_ibound,
+                                         c_obound0_carr, c_obound1_carr,
+                                         c_max_length, ds, x0_carr)
                 if done:
                     break
 
@@ -401,16 +484,7 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
             lines.append(line_cat)
 
         if topology_mv is not None:
-            if end_flags == 13:
-                topology_mv[i_stream] = TOPOLOGY_OPEN_NORTH
-            elif end_flags == 14:
-                topology_mv[i_stream] = TOPOLOGY_OPEN_SOUTH
-            elif end_flags == 5 or end_flags == 6 or end_flags == 7:
-                topology_mv[i_stream] = TOPOLOGY_CLOSED
-            else:
-                topology_mv[i_stream] = end_flags
-            # info("{0}: {1}, [{2}, {3}]".format(i_stream, end_flags,
-            #                       line_ends_mv[0], line_ends_mv[1]))
+            topology_mv[i_stream] = end_flags_to_topology(end_flags)
 
     # for timing
     # t1_all = time()
@@ -420,6 +494,69 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
 
     return lines, topology_ndarr
 
+cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
+                           real_t obound0[3], real_t obound1[3],
+                           real_t max_length, real_t ds, real_t pt0[3]):
+    cdef int done = END_NONE
+    cdef real_t rsq = pt[0]**2 + pt[1]**2 + pt[2]**2
+
+    # print(pt[0], obound0[0], obound0[0])
+
+    if rsq < ibound**2:
+        if pt[0] >= 0.0:
+            done = END_IBOUND_NORTH
+        else:
+            done = END_IBOUND_SOUTH
+    elif pt[0] < obound0[0]:
+        done = END_OBOUND_ZL
+    elif pt[1] < obound0[1]:
+        done = END_OBOUND_YL
+    elif pt[2] < obound0[2]:
+        done = END_OBOUND_XL
+    elif pt[0] > obound1[0]:
+        done = END_OBOUND_ZH
+    elif pt[1] > obound1[1]:
+        done = END_OBOUND_YH
+    elif pt[2] > obound1[2]:
+        done = END_OBOUND_XH
+    elif length > max_length:
+        done = END_MAX_LENGTH
+
+    # if we are within 0.05 * ds of the initial position
+    # distsq = (pt0[0] - pt[0])**2 + \
+    #          (pt0[1] - pt[1])**2 + \
+    #          (pt0[2] - pt[2])**2
+    # if distsq < (0.05 * ds)**2:
+    #     # print("cyclic field line")
+    #     done = END_CYCLIC
+    #     break
+
+    return done
+
+cdef int end_flags_to_topology_msphere(int end_flags):
+    cdef int topo = 0
+    cdef int mask_open_north = END_IBOUND_NORTH | END_OBOUND
+    cdef int mask_open_south = END_IBOUND_SOUTH | END_OBOUND
+
+    # order of these if statements matters!
+    if (end_flags & END_OTHER):
+        topo = end_flags
+    # elif (topo & END_CYCLIC):
+    #     return TOPOLOGY_MS_CYCLYC
+    elif end_flags & (mask_open_north) == mask_open_north:
+        topo = TOPOLOGY_MS_OPEN_NORTH
+    elif end_flags & (mask_open_south) == mask_open_south:
+        topo = TOPOLOGY_MS_OPEN_SOUTH
+    elif end_flags == 3 or end_flags == 5 or end_flags == 7:
+        topo = TOPOLOGY_MS_CLOSED
+    else:
+        topo = TOPOLOGY_MS_SW
+
+    return topo
+
+cdef int end_flags_to_topology_generic(int end_flags):
+    return end_flags
+5
 ##
 ## EOF
 ##
