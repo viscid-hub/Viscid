@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.60.1 dev
+## 0.60.2 dev
+
+## 0.60.1
+
+Bugfix:
+  - Time slices were acting silly
 
 ## 0.60.0
 
