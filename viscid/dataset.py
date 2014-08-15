@@ -253,9 +253,9 @@ class DatasetTemporal(Dataset):
                     slc_lst[i] = None
                 else:
                     try:
-                        slc_lst[i] = int(s[:-1])
+                        slc_lst[i] = int(s)
                     except ValueError:
-                        slc_lst[i] = np.argmin(np.abs(float(s[:-1]) - times))
+                        slc_lst[i] = np.argmin(np.abs(float(s) - times))
 
             # make the slice inclusive, no matter what
             if slc_lst[1] is not None:
