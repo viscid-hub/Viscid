@@ -159,7 +159,7 @@ class Grid(object):
         return self.crds.get_crds_ec(axes=axes, shaped=shaped)
 
     ##
-    def get_field(self, fldname, time=None): #pylint: disable=W0613
+    def get_field(self, fldname, time=None):  # pylint: disable=unused-argument
         try:
             return self.fields[fldname]
         except KeyError:
@@ -169,7 +169,7 @@ class Grid(object):
             else:
                 raise KeyError("field not found")
 
-    def get_grid(self, time=None): #pylint: disable=W0613
+    def get_grid(self, time=None):  # pylint: disable=unused-argument
         return self
 
     def __contains__(self, item):

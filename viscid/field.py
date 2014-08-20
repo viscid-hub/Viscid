@@ -212,6 +212,12 @@ class Field(object):
                  post_reshape_transform_func=None,
                  transform_func_kwargs=None,
                  **kwargs):
+        """
+        Other Parameters:
+            kwargs with a leading underscore (like _copy) are added to
+            the deep_meta dict without the leading _. Everything else
+            is added to the info dict
+        """
         self.name = name
         self.center = center
         self.time = time
@@ -417,7 +423,7 @@ class Field(object):
         self._nr_comps = None
         self._dtype = None
         self._src_data = dat
-        self._translate_src_data()
+        # self._translate_src_data()  # um, what's this for? looks dangerous
         # do some sort of lazy pre-setup _src_data inspection?
 
     def is_loaded(self):
@@ -431,8 +437,9 @@ class Field(object):
         """ actually load data into the cache """
         self._cache = self._src_data_to_ndarray()
 
-    def _translate_src_data(self):
-        pass
+    # um, what was this for? looks dangerous
+    # def _translate_src_data(self):
+    #     pass
 
     def _src_data_to_ndarray(self):
         """ prep the src data into something usable and enforce a layout """
@@ -800,6 +807,8 @@ class Field(object):
             typ = type(self)
         else:
             typ = field_type(typ)
+        # Transform functions are intentionally omitted. The idea being that
+        # the transform was already applied when creating arr
         return typ(name, crds, arr, time=time, center=center,
                    info=self.info, deep_meta=context, pretty_name=pretty_name)
 
