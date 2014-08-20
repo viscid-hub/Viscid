@@ -15,6 +15,7 @@ Contents:
 
   installation
   philosophy
+  custom_behavior
   ex_reader
   ex_openggcm
   ex_calc

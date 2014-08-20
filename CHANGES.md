@@ -5,6 +5,9 @@
 Features:
   - The attribute `grid.Grid.longterm_field_caches` controls how long caches hang around
 
+Other:
+  - Customization attributes have their own sphinx page for easy lookup
+
 ## 0.60.1
 
 Bugfix:
