@@ -25,6 +25,12 @@ class Grid(object):
         force_vecter_layout (``field.LAYOUT_*``): force all vectors to
             be of a certain layout when they're created
             (default: LAYOUT_DEFAULT)
+        longterm_field_caches (bool): If True, then when a field is
+            cached, it must be explicitly removed from memory with
+            "unload" or using the 'with' statemnt. If False,
+            "shell copies" of fields are made so that memory is freed
+            when the returned instance is garbage collected.
+            Default: False
     """
     topology_info = None
     geometry_info = None
@@ -40,6 +46,7 @@ class Grid(object):
     # they can be customized by setting the class value, and inherited
     # by grids that get created in the future
     force_vector_layout = field.LAYOUT_DEFAULT
+    longterm_field_caches = False
 
     def __init__(self, name=None, **kwargs):
         """ all kwargs are added to the grid as attributes """
@@ -92,6 +99,7 @@ class Grid(object):
         """ iterate over fields in a grid, if named is given, it should be a
         list of field names to iterate over
         """
+        # Note: using 'with' here is better than making a shell copy
         if named is not None:
             for name in named:
                 with self.fields[name] as f:
@@ -159,9 +167,12 @@ class Grid(object):
         return self.crds.get_crds_ec(axes=axes, shaped=shaped)
 
     ##
-    def get_field(self, fldname, time=None):  # pylint: disable=unused-argument
+    def get_field(self, fldname, time=None, force_longterm_caches=False):  # pylint: disable=unused-argument
         try:
-            return self.fields[fldname]
+            if force_longterm_caches or self.longterm_field_caches:
+                return self.fields[fldname]
+            else:
+                return self.fields[fldname].shell_copy(force=False)
         except KeyError:
             func = "_get_" + fldname
             if hasattr(self, func):

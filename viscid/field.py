@@ -760,6 +760,48 @@ class Field(object):
     def is_spherical(self):
         return self.crds.is_spherical()
 
+    ######################
+    def shell_copy(self, force=False, **kwargs):
+        """Get a field just like this one with a new cache
+
+        So, fields that belong to files are kept around for the
+        lifetime of the file bucket, which is probably the lifetime
+        of the main script. That means you have to explicitly unload
+        to clear the cache (important if reading a timeseries of fields
+        > 1GB). This function will return a new field instance with
+        references to all the same internals as self, except for the
+        cache. Effectively, this turns the parent field into a
+        lightweight "field shell", from which a memory intensive field
+        can be made on the fly.
+
+        Parameters:
+            force(bool): without force, only make a new field if the
+                cache is not already loaded. If set to True, a field's
+                data could be in ram twice since _cache will be filled
+                for the new field when needed. This is probably not what
+                you want.
+            kwargs: additional keyword arguments to give to the Field
+                constructor
+
+        Returns:
+            a field as described above (could be self)
+        """
+        if self._cache is not None and not force:
+            return self
+
+        # Note: this is fragile if a subclass takes additional parameters
+        # in an overridden __init__; in that case, the developer MUST
+        # override shell_copy and pass the extra kwargs in to here.
+        f = type(self)(self.name, self.crds, self._src_data, center=self.center,
+            time=self.time, info=self.info, deep_meta=self.deep_meta,
+            forget_source=False,
+            pretty_name=self.pretty_name,
+            pre_reshape_transform_func=self.pre_reshape_transform_func,
+            post_reshape_transform_func=self.post_reshape_transform_func,
+            transform_func_kwargs=self.transform_func_kwargs,
+            **kwargs)
+        return f
+
     #######################
     ## emulate a container
 

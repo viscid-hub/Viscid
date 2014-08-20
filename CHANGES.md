@@ -2,6 +2,9 @@
 
 ## 0.60.2 dev
 
+Features:
+  - The attribute `grid.Grid.longterm_field_caches` controls how long caches hang around
+
 ## 0.60.1
 
 Bugfix:

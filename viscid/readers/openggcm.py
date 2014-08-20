@@ -208,9 +208,7 @@ class GGCMGrid(grid.Grid):
         super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):
-        pp = self["pp"]
-        rr = self["rr"]
-        T = pp / rr
+        T = self["pp"] / self["rr"]
         T.name = "T"
         T.pretty_name = "T"
         return T
@@ -233,23 +231,12 @@ class GGCMGrid(grid.Grid):
     def _get_vz(self):
         return self['v'].component_fields()[2]
 
-    def _assemble_vector(self, base_name, comp_names="xyz", forget_source=True,
-                         **kwargs):
-
+    def _assemble_vector(self, base_name, comp_names="xyz", suffix="",
+                         forget_source=True, **kwargs):
         opts = dict(forget_source=forget_source, **kwargs)
-
-        if len(comp_names) == 3:
-            with self[base_name + comp_names[0]] as vx, \
-                 self[base_name + comp_names[1]] as vy, \
-                 self[base_name + comp_names[2]] as vz:
-                v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
-                                                  **opts)
-        else:
-            comps = [self[base_name + c] for c in comp_names]
-            v = field.scalar_fields_to_vector(base_name, comps, **opts)
-            for comp in comps:
-                comp.unload()
-        return v
+        # caching behavior depends on self.longterm_field_caches
+        comps = [self[base_name + c + suffix] for c in comp_names]
+        return field.scalar_fields_to_vector(base_name, comps, **opts)
 
     def _get_b(self):
         return self._assemble_vector("b", _force_layout=self.force_vector_layout,
@@ -263,15 +250,10 @@ class GGCMGrid(grid.Grid):
         return self._assemble_vector("e", _force_layout=self.force_vector_layout,
                                      pretty_name="E")
 
-
     def _get_e_cc(self):
-        with self["ex_cc"] as ex, \
-             self["ey_cc"] as ey, \
-             self["ez_cc"] as ez:
-            v = field.scalar_fields_to_vector("e", [ex, ey, ez],
-                                              _force_layout=self.force_vector_layout,
-                                              pretty_name="E")
-        return v
+        return self._assemble_vector("e", suffix="_cc",
+                                     _force_layout=self.force_vector_layout,
+                                     pretty_name="E")
 
     def _get_j(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
@@ -287,24 +269,28 @@ class GGCMGrid(grid.Grid):
             return vmag
 
     def _get_bmag(self):
+        # caching behavior depends on self.longterm_field_caches
         bx, by, bz = self['bx'], self['by'], self['bz']
         bmag = self._calc_mag(bx, by, bz)
         bmag.name = "|B|"
         return bmag
 
     def _get_jmag(self):
+        # caching behavior depends on self.longterm_field_caches
         jx, jy, jz = self['jx'], self['jy'], self['jz']
         jmag = self._calc_mag(jx, jy, jz)
         jmag.name = "|J|"
         return jmag
 
     def _get_speed(self):
+        # caching behavior depends on self.longterm_field_caches
         vx, vy, vz = self['vx'], self['vy'], self['vz']
         speed = self._calc_mag(vx, vy, vz)
         speed.name = "Speed"
         return speed
 
     def _get_beta(self):
+        # caching behavior depends on self.longterm_field_caches
         return plasma.calc_beta(self['pp'], self['b'])
 
     def _get_psi(self):
