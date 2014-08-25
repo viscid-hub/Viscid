@@ -6,6 +6,8 @@
 # care must be taken when crafting the detector regex.
 # Also, look at csv for an example of overriding detect_type(...)
 
+__DEBUG_IMPORT_ERRORS = False
+
 # import vfile
 from viscid.readers.vfile import VFile
 from viscid.readers import vfile_bucket
@@ -19,9 +21,13 @@ from viscid.readers import ascii
 # these imports register convenience readers for data from
 # specific sim packages
 from viscid.readers import ggcm_xdmf
-from viscid.readers import ggcm_jrrle
 from viscid.readers import ggcm_fortbin
 from viscid.readers import psc
+try:
+    from viscid.readers import ggcm_jrrle
+except ImportError:
+    if __DEBUG_IMPORT_ERRORS:
+        raise
 
 __filebucket__ = vfile_bucket.VFileBucket()
 
