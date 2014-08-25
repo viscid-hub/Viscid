@@ -154,7 +154,7 @@ class FileNumpyNPZ(vfile.VFile):
 
     @classmethod
     def save_fields(cls, fname, flds, **kwargs):
-        assert(len(flds) > 0)
+        assert len(flds) > 0
         fname = os.path.expanduser(os.path.expandvars(fname))
         fld_dict = {}
 
@@ -171,7 +171,7 @@ class FileNumpyNPZ(vfile.VFile):
         # fld_names = {key.lower(): [] for key in cls._KEY_FLDS.keys()}
         fld_names = {}
         for key in cls._KEY_FLDS.keys():
-            fld_names[key.lower()] = ()
+            fld_names[key.lower()] = []
 
         for fld in flds:
             fld_names[fld.center.lower()].append(fld.name)
