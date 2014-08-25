@@ -153,14 +153,16 @@ class AthenaTabFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
         if dims is None:
             dims = cls.parse_header(fname)['dims']
         dat = np.loadtxt(fname, usecols=range(len(dims), 2 * len(dims)),
-                         unpack=True)
+                         unpack=True, ndmin=2)
 
         dxmin = np.inf
         cclist = []
         nclist = []
 
         for i, dim, axis in zip(count(), dims, "xyz"):
-            cc = dat[i][:np.prod(dims[:i + 1]):np.prod(dims[:i])]
+            stop = int(np.prod(dims[:i + 1]))
+            step = int(np.prod(dims[:i]))
+            cc = dat[i][:stop:step]
             dxmin = np.min(dxmin, np.min(cc[1:] - cc[:-1]))
             assert len(cc) == dim
             cclist.append((axis, cc))
