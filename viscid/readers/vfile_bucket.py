@@ -4,13 +4,13 @@ from __future__ import print_function
 import os
 from glob import glob
 import logging
-import six
-# import sys
+
 try:
     from collections import OrderedDict
 except ImportError:
     from viscid.compat import OrderedDict
 
+from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid.readers.vfile import VFile
 
@@ -124,10 +124,17 @@ class VFileBucket(Bucket):
                         s += "              File Type: {0}\n".format(file_type)
                         s += "              {0}".format(e.message)
                         logging.warn(s)
-                    except ValueError:
-                        # what's this about?
-                        pass
-
+                    except ValueError, e:
+                        # ... why am i explicitly catching ValueErrors?
+                        # i'm probably breaking something by re-raising
+                        # this expeception, but i didn't document what :(
+                        cname = ftype.collective_name(group)
+                        s = " ValueError on file load: {0}\n".format(cname)
+                        s += "              File Type: {0}\n".format(file_type)
+                        s += "              {0}".format(e.message)
+                        logging.warn(s)
+                        # re-raise the last expection
+                        raise
                 try:
                     handle_name = f.collective_name(group)
                 except AttributeError:
@@ -147,11 +154,11 @@ class VFileBucket(Bucket):
         super(VFileBucket, self).remove_all_items()
 
     def __getitem__(self, handle):
-        if isinstance(handle, six.string_types):
+        if isinstance(handle, string_types):
             handle = os.path.expanduser(os.path.expandvars(handle))
         return super(VFileBucket, self).__getitem__(handle)
 
     def __contains__(self, handle):
-        if isinstance(handle, six.string_types):
+        if isinstance(handle, string_types):
             handle = os.path.expanduser(os.path.expandvars(handle))
         return super(VFileBucket, self).__contains__(handle)

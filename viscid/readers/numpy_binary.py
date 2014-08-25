@@ -167,7 +167,12 @@ class FileNumpyNPZ(vfile.VFile):
         fld_dict[cls._KEY_CRDS] = np.array(axis_names)
 
         # setup fields
-        fld_names = {key.lower(): [] for key in cls._KEY_FLDS.keys()}
+        # dict comprehension invalid in Python 2.6
+        # fld_names = {key.lower(): [] for key in cls._KEY_FLDS.keys()}
+        fld_names = {}
+        for key in cls._KEY_FLDS.keys():
+            fld_names[key.lower()] = ()
+
         for fld in flds:
             fld_names[fld.center.lower()].append(fld.name)
             fld_dict[fld.name] = fld.data

@@ -8,13 +8,13 @@ convenience functions for creating fields similar to `Numpy`.
 """
 
 from __future__ import print_function
-from six import string_types
 import warnings
 import logging
 from inspect import isclass
 
 import numpy as np
 
+from viscid.compat import string_types
 from viscid import coordinate
 from viscid import vutil
 
