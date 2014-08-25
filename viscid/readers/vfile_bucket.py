@@ -33,7 +33,7 @@ class VFileBucket(Bucket):
         """ load a single file and return a vFile instance, not a list
         of vFiles like load does
         """
-        fls = self.load_files([fname], index_handle=index_handle, **kwargs)
+        fls = self.load_files(fname, index_handle=index_handle, **kwargs)
         if len(fls) == 0:
             logging.warn("No files loaded for '{0}', is the path "
                          "correct?".format(fname))
