@@ -22,6 +22,9 @@ from viscid.readers import ascii
 # specific sim packages
 from viscid.readers import ggcm_xdmf
 from viscid.readers import ggcm_fortbin
+from viscid.readers import athena_bin
+from viscid.readers import athena_tab
+from viscid.readers import athena_hst
 from viscid.readers import psc
 try:
     from viscid.readers import ggcm_jrrle

@@ -4,6 +4,7 @@
 
 Features:
   - The attribute `grid.Grid.longterm_field_caches` controls how long caches hang around
+  - Athena binary / ascii / hst readers (doesn't read SMR grids)
 
 Other:
   - Customization attributes have their own sphinx page for easy lookup
