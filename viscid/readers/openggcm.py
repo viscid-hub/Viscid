@@ -347,8 +347,10 @@ class GGCMFile(object):
                 log_f = self.vfilebucket.load_file(log_fname,
                                                    file_type=GGCMLogFile,
                                                    index_handle=False)
+                # print("!!", log_f)
                 self.info.update(log_f.info)
             else:
+                print("**", log_f)
                 logging.warn("You wanted to read parameters from the "
                              "logfile, but I couldn't find one. Maybe "
                              "you need to copy it from somewhere?")
@@ -404,6 +406,8 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
         self.info['fieldtype'] = re.match(self._detector, basename).group(2)
 
         super(GGCMFileFortran, self).load(fname1)
+
+        self.read_logfile()
 
     def _parse(self):
         # look for and parse grid2 file or whatever else needs be done
