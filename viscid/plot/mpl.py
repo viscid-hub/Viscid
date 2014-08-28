@@ -61,6 +61,9 @@ def plot(fld, selection=None, **kwargs):
     if isinstance(fld, field.ScalarField):
         fld = fld.slice_reduce(selection)
 
+        if not isinstance(fld, field.ScalarField):
+            raise ValueError("Selection '{0}' sliced away too many "
+                             "dimensions".format(selection))
         if fld.nr_sdims == 1:
             return plot1d_field(fld, **kwargs)
         elif fld.nr_sdims == 2:
