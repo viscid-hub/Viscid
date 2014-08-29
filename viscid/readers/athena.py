@@ -24,8 +24,9 @@ def group_athena_files_common(detector, fnames):
         d = dict(runname=grps[0], time=int(grps[1]), fname=m.string)
         infolst.append(d)
 
-    infolst.sort(key=itemgetter("runname"))
+    # careful with sorting, only consecutive files will be grouped
     infolst.sort(key=itemgetter("time"))
+    infolst.sort(key=itemgetter("runname"))
 
     info_groups = []
     info_group = [infolst[0]]

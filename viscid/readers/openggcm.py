@@ -70,9 +70,10 @@ def group_ggcm_files_common(detector, fnames):
             d["time"] = -1
         infolst.append(d)
 
-    infolst.sort(key=itemgetter("runname"))
-    infolst.sort(key=itemgetter("ftype"))
+    # careful with sorting, only consecutive files will be grouped
     infolst.sort(key=itemgetter("time"))
+    infolst.sort(key=itemgetter("ftype"))
+    infolst.sort(key=itemgetter("runname"))
 
     info_groups = []
     info_group = [infolst[0]]
