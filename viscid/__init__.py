@@ -17,6 +17,13 @@ __all__ = ['calculator',
            'vutil'
           ]
 
+import logging
+logger = logging.getLogger("viscid")
+_handler = logging.StreamHandler()
+_handler.setFormatter(logging.Formatter())
+logger.addHandler(_handler)
+del _handler
+
 from viscid import readers
 load_file = readers.load_file
 load_files = readers.load_files

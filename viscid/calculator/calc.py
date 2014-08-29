@@ -5,7 +5,6 @@ TODO: this dispatch mechanism is very simple, maybe something a little more
 flexable would be useful down the line? """
 
 from __future__ import print_function
-import logging
 try:
     from collections import OrderedDict
 except ImportError:
@@ -13,6 +12,7 @@ except ImportError:
 
 import numpy as np
 
+from viscid import logger
 from viscid import verror
 
 try:
@@ -61,7 +61,7 @@ class Operation(object):
         msg = "{0} :: {1}".format(self.opname, preferred)
         if only:
             raise verror.BackendNotFound(msg)
-        logging.info("No preferred backends available: " + msg)
+        logger.info("No preferred backends available: " + msg)
 
         for name in self.default_backends:
             if name in self._imps:

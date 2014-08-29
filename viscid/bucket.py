@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import logging
 
 # from viscid.vutil import tree_prefix
 try:
     from collections import OrderedDict
 except ImportError:
     from viscid.compat.ordered_dict_backport import OrderedDict
+
+from viscid import logger
 
 class Bucket(object):
     """ This is an interface where  """
@@ -54,7 +55,7 @@ class Bucket(object):
         for h in handles:
             # check if we're stealing a handle from another item
             if (h in self._handles) and  (item is not self._handles[h]):
-                logging.warn("The handle {0} is being hijacked! Memory leak "
+                logger.warn("The handle {0} is being hijacked! Memory leak "
                              "could ensue.".format(h))
                 # romove handle from old item, since this check is here,
                 # there sholdn't be 2 items with the same handle in the

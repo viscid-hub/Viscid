@@ -3,11 +3,11 @@
 from __future__ import print_function
 import sys
 import argparse
-import logging
 
 import numpy as np
 from matplotlib import pyplot as plt
 
+from viscid import logger
 from viscid import vutil
 from viscid import readers
 from viscid import field
@@ -60,7 +60,7 @@ def main():
                                            obound0=obound0, obound1=obound1,
                                            ibound=0.0)
     # run with -v to see this
-    logging.info("Topology flags: {0}".format(topo1))
+    logger.info("Topology flags: {0}".format(topo1))
 
     # rotate plot puts the z axis along the horizontal
     flip_plot = True

@@ -4,7 +4,6 @@
 from __future__ import print_function
 import os
 import re
-import logging
 from itertools import islice
 from operator import itemgetter
 
@@ -15,6 +14,7 @@ try:
 except ImportError:
     _has_numexpr = False
 
+from viscid import logger
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.ggcm_logfile import GGCMLogFile
 from viscid.readers import vfile
@@ -350,8 +350,8 @@ class GGCMFile(object):
                 # print("!!", log_f)
                 self.info.update(log_f.info)
             else:
-                print("**", log_f)
-                logging.warn("You wanted to read parameters from the "
+                # print("**", log_f)
+                logger.warn("You wanted to read parameters from the "
                              "logfile, but I couldn't find one. Maybe "
                              "you need to copy it from somewhere?")
 

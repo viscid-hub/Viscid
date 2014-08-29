@@ -10,7 +10,6 @@ from __future__ import print_function
 import sys
 import os
 from time import time
-import logging
 import argparse
 
 import numpy as np
@@ -21,6 +20,7 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+from viscid import logger
 from viscid import vutil
 # from viscid import readers
 from viscid import field
@@ -32,24 +32,24 @@ def run_div_test(fld, exact, show=False):
     t0 = time()
     result_numexpr = calc.div(fld, preferred="numexpr", only=True)
     t1 = time()
-    logging.info("numexpr magnitude runtime: {0}".format(t1 - t0))
+    logger.info("numexpr magnitude runtime: {0}".format(t1 - t0))
 
     # cython div doesnt work since switch to 4d only arrays
     # t0 = time()
     # result_cython = calc.div(fld, preferred="cython", only=True)
     # t1 = time()
-    # logging.info("cython runtime: {0}".format(t1 - t0))
+    # logger.info("cython runtime: {0}".format(t1 - t0))
 
     # backend_diff = calc.diff(result_numexpr, result_cython)
     # if not (backend_diff.data < 1e-14).all():
-    #     logging.warn("numexpr result not exactly cython result")
-    # logging.info("min/max(abs(numexpr - cython)): {0} = {1}".format(
+    #     logger.warn("numexpr result not exactly cython result")
+    # logger.info("min/max(abs(numexpr - cython)): {0} = {1}".format(
     #              np.min(backend_diff.data), np.max(backend_diff.data)))
 
     result_diff = calc.diff(result_numexpr, exact[1:-1, 1:-1, 1:-1])
     if not (result_diff.data < 5e-5).all():
-        logging.warn("numexpr result is far from the exact result")
-    logging.info("min/max(abs(numexpr - exact)): {0} / {1}".format(
+        logger.warn("numexpr result is far from the exact result")
+    logger.info("min/max(abs(numexpr - exact)): {0} / {1}".format(
                  np.min(result_diff.data), np.max(result_diff.data)))
 
     planes = ["y=0.", "z=0."]
@@ -90,7 +90,7 @@ def main():
     Z, Y, X = crds.get_crds_nc(shaped=True) #pylint: disable=W0612
     Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True) #pylint: disable=W0612
 
-    logging.info("cell centered tests")
+    logger.info("cell centered tests")
 
     vx = ne.evaluate("(sin(Xcc))")  # + Zcc
     vy = ne.evaluate("(cos(Ycc))")  # + Xcc# + Zcc
@@ -108,7 +108,7 @@ def main():
                                   center="Cell", forget_source=True)
     run_div_test(fld_v, fld_exact, show=args.show)
 
-    logging.info("node centered tests")
+    logger.info("node centered tests")
 
     vx = ne.evaluate("(sin(X))")  # + Zcc
     vy = ne.evaluate("(cos(Y))")  # + Xcc# + Zcc

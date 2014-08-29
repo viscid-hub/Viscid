@@ -5,7 +5,6 @@
 # to template both float32 and float64 versions
 
 from __future__ import print_function
-import logging
 
 import numpy as np
 
@@ -13,6 +12,7 @@ from cython.operator cimport dereference as deref
 from cython.view cimport array as cvarray
 # from cython.parallel import prange
 
+# from viscid import logger
 from viscid import field
 from viscid import coordinate
 from viscid.calculator import seed

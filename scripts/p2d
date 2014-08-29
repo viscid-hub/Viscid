@@ -62,6 +62,8 @@ def main():
     parser.add_argument("-n", "--np", type=int, default=1,
                         help="run n simultaneous processes (not yet working)")
     parser.add_argument("--tighten", action="store_true")
+    parser.add_argument("--reader_opts", default="",
+                        help="optional arguments passed to file constructor")
     parser.add_argument('file', nargs='+', help='input file')
     args = vutil.common_argparse(parser)
 
@@ -88,7 +90,15 @@ def main():
               "tighten": args.tighten
              }
 
-    file_ = readers.load_file(args.file)
+    reader_opts = {}
+    for opt in args.reader_opts.split(','):
+        if opt:
+            if not "=" in opt:
+                raise ValueError("reader_opts syntax: opt1=value,opt2=value")
+            k, v = opt.split('=')
+            reader_opts[k] = v
+
+    file_ = readers.load_file(args.file, **reader_opts)
     vlab.multiplot(file_, args.plot_vars, nprocs=args.np, time_slice=args.t,
                    share_axes=(not args.own), global_popts=global_popts,
                    show=args.show, kwopts=kwopts)

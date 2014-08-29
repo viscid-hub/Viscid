@@ -1,16 +1,17 @@
 from __future__ import print_function
 import os
-import logging
 
 import numpy as np
+
+from viscid import logger
+from viscid.readers import vfile
+
 try:
     import h5py
     HAS_H5PY = True
 except ImportError:
     HAS_H5PY = False
-    logging.warn("h5py library not found, no hdf5 support.")
-
-from viscid.readers import vfile
+    logger.warn("h5py library not found, no hdf5 support.")
 
 class H5pyDataWrapper(vfile.DataWrapper):
     """  """
@@ -35,7 +36,7 @@ class H5pyDataWrapper(vfile.DataWrapper):
                 self._shape = dset.shape
                 self._dtype = dset.dtype
         except IOError as e:
-            logging.error("Problem opening hdf5 file, '{0}'".format(self.fname))
+            logger.error("Problem opening hdf5 file, '{0}'".format(self.fname))
             raise e
 
     @property

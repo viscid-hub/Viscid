@@ -451,7 +451,7 @@ if __name__ == "__main__":
     cap = SphericalCap(_p0, _p1, 120.0, r=1.0, cache=True)
     interp_vals = cycalc.interp_trilin(bmag, cap)
     t1 = time()
-    # logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
+    # logger.info("interp took {0:.3e}s to compute.".format(t1 - t0))
     _pts = cap.points()
     mlab.points3d(_p0[2], _p0[1], _p0[0],
                   scale_factor=0.07, color=(0.0, 0.0, 0.0))

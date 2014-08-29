@@ -7,7 +7,6 @@ import cProfile
 import pstats
 from timeit import default_timer as time
 import argparse
-import logging
 
 import numpy as np
 from mayavi import mlab

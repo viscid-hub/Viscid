@@ -9,11 +9,11 @@ convenience functions for creating fields similar to `Numpy`.
 
 from __future__ import print_function
 import warnings
-import logging
 from inspect import isclass
 
 import numpy as np
 
+from viscid import logger
 from viscid.compat import string_types
 from viscid import coordinate
 from viscid import vutil
@@ -146,7 +146,7 @@ def field_type(typ):
         for cls in vutil.subclass_spider(Field):
             if cls.istype(typ):
                 return cls
-    logging.warn("Field type {0} not understood".format(typ))
+    logger.warn("Field type {0} not understood".format(typ))
     return None
 
 def wrap_field(typ, name, crds, data, **kwargs):
@@ -377,7 +377,7 @@ class Field(object):
         elif self.iscentered("cell"):
             return list(self.crds.shape_cc)
         else:
-            logging.warn("edge/face vectors not implemented, assuming "
+            logger.warn("edge/face vectors not implemented, assuming "
                          "node shape")
             return self.crds.shape
 
@@ -457,7 +457,7 @@ class Field(object):
 
         # if layout is found to be other, i cant do anything with that
         elif src_data_layout == LAYOUT_OTHER:
-            logging.warn("Cannot auto-detect layout; not translating; "
+            logger.warn("Cannot auto-detect layout; not translating; "
                          "performance may suffer")
             return self._dat_to_ndarray(self._src_data)
 
@@ -585,7 +585,7 @@ class Field(object):
             layout = LAYOUT_FLAT
         else:
             # if this happens, don't ignore it even if it happens to work
-            logging.warn("could not detect layout for '{0}': shape = {1} "
+            logger.warn("could not detect layout for '{0}': shape = {1} "
                          "target shape = {2}"
                          "".format(self.name, dat.shape, sshape))
             layout = LAYOUT_OTHER

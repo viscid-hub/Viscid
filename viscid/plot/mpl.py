@@ -4,7 +4,6 @@ Your best friend in this module is the :meth:`plot` function, but the
 best reference for all quirky options is :meth:`plot2d_field`.
 """
 from __future__ import print_function
-import logging
 from distutils.version import LooseVersion
 
 import numpy as np
@@ -18,6 +17,7 @@ try:
 except ImportError:
     _HAS_BASEMAP = False
 
+from viscid import logger
 from viscid import field
 from viscid import coordinate
 from viscid.calculator import calc
@@ -150,13 +150,13 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             actions.append([axis.set_ylim, opt[1:]])
 
         elif opt[0] == "own":
-            logging.warn("own axis doesn't seem to work yet...")
+            logger.warn("own axis doesn't seem to work yet...")
 
         elif opt[0] == "ownx":
-            logging.warn("own axis doesn't seem to work yet...")
+            logger.warn("own axis doesn't seem to work yet...")
 
         elif opt[0] == "owny":
-            logging.warn("own axis doesn't seem to work yet...")
+            logger.warn("own axis doesn't seem to work yet...")
 
         else:
             val = "_".join(opt[1:]).lower()
@@ -165,7 +165,7 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             elif val == "false":
                 val = False
             kwargs[opt[0]] = val
-            # logging.warn("Unknown plot option ({0}) didn't parse "
+            # logger.warn("Unknown plot option ({0}) didn't parse "
             #              "correctly".format(opt[0]))
 
 
@@ -727,7 +727,7 @@ def tighten(**kwargs):
     try:
         plt.tight_layout(**kwargs)
     except AttributeError:
-        logging.warn("No matplotlib tight layout support")
+        logger.warn("No matplotlib tight layout support")
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="mhd",
@@ -758,7 +758,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
         try:
             plane, value = plane_spec.deep_meta["reduced"][0]
         except KeyError:
-            logging.error("No reduced dims in the field, i don't know what 2d \n "
+            logger.error("No reduced dims in the field, i don't know what 2d \n "
                           "plane, we're in and can't figure out the size of earth.")
             return None
     else:

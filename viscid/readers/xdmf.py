@@ -3,11 +3,11 @@
 
 from __future__ import print_function
 import os
-import logging
 from xml.etree import ElementTree
 
 import numpy as np
 
+from viscid import logger
 from viscid.readers import _xdmf_include
 from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
@@ -182,7 +182,7 @@ class FileXDMF(vfile.VFile):
             elif ct == "Spatial":
                 grd = dataset.Dataset(attrs["Name"])
             else:
-                logging.warn("Unknown collection type {0}, ignoring "
+                logger.warn("Unknown collection type {0}, ignoring "
                              "grid".format(ct))
 
             for i, subgrid in enumerate(el.findall("./Grid")):
@@ -195,7 +195,7 @@ class FileXDMF(vfile.VFile):
 
         elif gt == "Uniform":
             if not (topoattrs and geoattrs):
-                logging.warn("Xdmf Uniform grids must have "
+                logger.warn("Xdmf Uniform grids must have "
                              "topology / geometry.")
             else:
                 grd = self._grid_type(attrs["Name"], **self._grid_opts)
@@ -207,13 +207,13 @@ class FileXDMF(vfile.VFile):
                     grd.add_field(fld)
 
         elif gt == "Tree":
-            logging.warn("Xdmf Tree Grids not implemented, ignoring "
+            logger.warn("Xdmf Tree Grids not implemented, ignoring "
                          "this grid")
         elif gt == "Subset":
-            logging.warn("Xdmf Subset Grids not implemented, ignoring "
+            logger.warn("Xdmf Subset Grids not implemented, ignoring "
                          "this grid")
         else:
-            logging.warn("Unknown grid type {0}, ignoring this grid".format(gt))
+            logger.warn("Unknown grid type {0}, ignoring this grid".format(gt))
 
         # fill attributes / data items
         # if grid and gt == "Uniform":
@@ -320,7 +320,7 @@ class FileXDMF(vfile.VFile):
                 crdlist[i] = (crd, crd_arr)
 
         else:
-            logging.warn("Invalid GeometryType: {0}".format(geotype))
+            logger.warn("Invalid GeometryType: {0}".format(geotype))
 
         if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
             crdtype = "uniform_cartesian"
@@ -416,7 +416,7 @@ class FileXDMF(vfile.VFile):
         if fmt == "Binary":
             raise NotImplementedError("binary xdmf data not implemented")
 
-        logging.warn("Invalid DataItem Format.")
+        logger.warn("Invalid DataItem Format.")
         return (None, None)
 
     def _parse_time(self, timetag):
@@ -444,7 +444,7 @@ class FileXDMF(vfile.VFile):
             arr = np.array([dat[0] + i * dat[1] for i in range(int(dat[2]))])
             return arr, attrs
         else:
-            logging.warn("invalid TimeType.\n")
+            logger.warn("invalid TimeType.\n")
 
 
 if __name__ == '__main__':

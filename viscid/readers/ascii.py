@@ -4,10 +4,10 @@ WARNING: not lazy """
 
 # import string
 from __future__ import print_function
-# import logging
 
 import numpy as np
 
+# from viscid import logger
 from viscid.readers import vfile
 from viscid import coordinate
 from viscid import field

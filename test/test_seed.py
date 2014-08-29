@@ -4,12 +4,12 @@
 from __future__ import print_function
 from timeit import default_timer as time
 import argparse
-import logging
 
 import numpy as np
 import numexpr as ne
 import matplotlib.pyplot as plt
 
+from viscid import logger
 from viscid import vutil
 from viscid import field
 from viscid import coordinate
@@ -60,7 +60,7 @@ def main():
     args = vutil.common_argparse(parser)
     args = parser.parse_args()
 
-    logging.info("Testing field lines on 3d field...")
+    logger.info("Testing field lines on 3d field...")
     B = get_dipole(m=[0.0, 0.0, -1.0])
 
     mygrid = B.crds.slice_keep("z=1.0:3.0,y=1:3,x=0.0", cc=True)
@@ -75,20 +75,20 @@ def main():
     # print("======")
     # print(mygrid.points(center="Cell")[:][0])
 
-    logging.info("testing streamlines")
+    logger.info("testing streamlines")
     t0 = time()
     lines, topo = streamline.streamlines(B, mygrid, ds0=0.01, ibound=0.05,
                                          maxit=10000)
     t1 = time()
-    logging.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
+    logger.info("streamlines took {0:.3e}s to compute.".format(t1 - t0))
     mpl.plot_streamlines(lines, show=args.show)
 
-    logging.info("testing interp")
+    logger.info("testing interp")
     bmag = calc.magnitude(B)
     t0 = time()
     interp_vals = cycalc.interp_trilin(bmag, mygrid)
     t1 = time()
-    logging.info("interp took {0:.3e}s to compute.".format(t1 - t0))
+    logger.info("interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
     mpl.scatter_3d(mygrid.points(center="Cell"), interp_vals, show=args.show)

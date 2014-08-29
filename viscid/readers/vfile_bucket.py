@@ -3,13 +3,13 @@
 from __future__ import print_function
 import os
 from glob import glob
-import logging
 
 try:
     from collections import OrderedDict
 except ImportError:
     from viscid.compat import OrderedDict
 
+from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid.readers.vfile import VFile
@@ -35,12 +35,10 @@ class VFileBucket(Bucket):
         """
         fls = self.load_files(fname, index_handle=index_handle, **kwargs)
         if len(fls) == 0:
-            logging.warn("No files loaded for '{0}', is the path "
-                         "correct?".format(fname))
             return None
         else:
             if len(fls) > 1:
-                logging.warn("Loaded > 1 file for '{0}', did you mean to call "
+                logger.warn("Loaded > 1 file for '{0}', did you mean to call "
                              "load_files()?".format(fname))
             return fls[0]
 
@@ -63,6 +61,8 @@ class VFileBucket(Bucket):
             as the length of fnames, and the order may not be the same
             in order to accomidate globs and file grouping.
         """
+        orig_fnames = fnames
+
         if not isinstance(fnames, (list, tuple)):
             fnames = [fnames]
         file_lst = []
@@ -104,44 +104,39 @@ class VFileBucket(Bucket):
             # iterate all the groups and add them
             for group in groups:
                 f = None
-                if isinstance(group, list):
-                    # FIXME: if the glob has changed since it was loaded,
-                    # this won't know that it has changed... I'm not sure
-                    # if there's a good way to figure this out... the user
-                    # can always just unload / reload
-                    g0 = group[0]
-                else:
-                    g0 = group
 
-                if g0 in self:
-                    f = self[g0]
-                else:
+                try:
+                    handle_name = ftype.collective_name(group)
+                except AttributeError:
+                    handle_name = VFile.collective_name(group)
+
+                try:
+                    f = self[handle_name]
+                except KeyError:
                     try:
                         f = ftype(group, vfilebucket=self, **kwargs)
                     except IOError as e:
-                        cname = ftype.collective_name(group)
-                        s = " IOError on file: {0}\n".format(cname)
-                        s += "              File Type: {0}\n".format(file_type)
+                        s = " IOError on file: {0}\n".format(handle_name)
+                        s += "              File Type: {0}\n".format(handle_name)
                         s += "              {0}".format(e.message)
-                        logging.warn(s)
+                        logger.warn(s)
                     except ValueError, e:
                         # ... why am i explicitly catching ValueErrors?
                         # i'm probably breaking something by re-raising
                         # this expeception, but i didn't document what :(
-                        cname = ftype.collective_name(group)
-                        s = " ValueError on file load: {0}\n".format(cname)
-                        s += "              File Type: {0}\n".format(file_type)
+                        s = " ValueError on file load: {0}\n".format(handle_name)
+                        s += "              File Type: {0}\n".format(handle_name)
                         s += "              {0}".format(e.message)
-                        logging.warn(s)
+                        logger.warn(s)
                         # re-raise the last expection
                         raise
-                try:
-                    handle_name = f.collective_name(group)
-                except AttributeError:
-                    handle_name = VFile.collective_name(group)
+
                 self.set_item([handle_name], f, index_handle=index_handle)
                 file_lst.append(f)
 
+        if len(file_lst) == 0:
+            logger.warn("No files loaded for '{0}', is the path "
+                         "correct?".format(orig_fnames))
         return file_lst
 
     def remove_item(self, item):

@@ -3,8 +3,10 @@
 from __future__ import print_function
 # from itertools import islice
 from timeit import default_timer as time
-import logging
 import subprocess as sub
+import logging
+
+from viscid import logger
 
 tree_prefix = ".   "
 
@@ -51,11 +53,11 @@ def add_mpl_output_arguments(parser):
                         help="show plots with plt.show()")
     return parser
 
-def common_argparse(parser, default_verb=0, **kwargs):
+def common_argparse(parser, default_verb=0, logging_fmt=None):
     """ add some common verbosity stuff to argparse, parse the
     command line args, and setup the logging levels
     parser should be an ArgumentParser instance, and kwargs
-    should be options that get passed to logging.basicConfig
+    should be options that get passed to logger.basicConfig
     returns the args namespace  """
     general = parser.add_argument_group("Viscid general options")
     general.add_argument("--log", action="store", type=str, default=None,
@@ -67,16 +69,17 @@ def common_argparse(parser, default_verb=0, **kwargs):
     args = parser.parse_args()
 
     # setup the logging level
-    if not "level" in kwargs:
-        if args.log is not None:
-            kwargs["level"] = getattr(logging, args.log.upper())
-        else:
-            # default = 30 WARNING
-            verb = args.v - args.q
-            kwargs["level"] = int(30 - 10 * verb)
-    if not "format" in kwargs:
-        kwargs["format"] = "%(levelname)s: %(message)s"
-    logging.basicConfig(**kwargs)
+    if args.log is not None:
+        logger.setLevel(getattr(logging, args.log.upper()))
+    else:
+        # default = 30 WARNING
+        verb = args.v - args.q
+        logger.setLevel(int(30 - 10 * verb))
+
+    # the 0th handler going to stderr should always be setup
+    if not logging_fmt:
+        logging_fmt = "(%(levelname)s): %(message)s"
+    logger.handlers[0].setFormatter(logging.Formatter(logging_fmt))
 
     return args
 

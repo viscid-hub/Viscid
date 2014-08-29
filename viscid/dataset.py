@@ -2,11 +2,11 @@
 """ test docstring """
 
 from __future__ import print_function
-import logging
 # import bisect
 
 import numpy as np
 
+from viscid import logger
 from viscid.bucket import Bucket
 from viscid.vutil import tree_prefix
 
@@ -89,7 +89,7 @@ class Dataset(object):
         child = self.active_child
 
         if child is None:
-            logging.warn("Could not get appropriate child...")
+            logger.warn("Could not get appropriate child...")
             return None
         else:
             return child.iter_fields(time=time, named=named)
@@ -120,7 +120,7 @@ class Dataset(object):
         child = self.active_child
 
         if child is None:
-            logging.warn("Could not get appropriate child...")
+            logger.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time)
@@ -130,7 +130,7 @@ class Dataset(object):
         child = self.active_child
 
         if child is None:
-            logging.warn("Could not get appropriate child...")
+            logger.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_grid(time=time)
@@ -202,7 +202,7 @@ class DatasetTemporal(Dataset):
             raise RuntimeError()
         if child.time is None:
             child.time = 0.0
-            logging.warn("A child with no time? Something is strange...")
+            logger.warn("A child with no time? Something is strange...")
         # this keeps the children in time order
         self.children.append((child.time, child))
         self.children.sort()
@@ -299,7 +299,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            logging.warn("Could not get appropriate child...")
+            logger.warn("Could not get appropriate child...")
             return None
         else:
             return child.iter_fields(time=time, named=named)
@@ -325,7 +325,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            logging.warn("Could not get appropriate child...")
+            logger.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time)
@@ -338,7 +338,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            logging.warn("Could not get appropriate child...")
+            logger.warn("Could not get appropriate child...")
             return None
         else:
             return child.get_grid(time=time)

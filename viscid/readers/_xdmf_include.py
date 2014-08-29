@@ -4,7 +4,6 @@
 # limited support for XPointers.
 
 import copy
-import logging
 from xml.etree import ElementTree
 try:
     from urlparse import urljoin #pylint: disable=E0611
@@ -19,6 +18,8 @@ try:
 except NameError:
     # Python 2.3
     from sets import Set as set #pylint: disable=W0622
+
+from viscid import logger
 
 XINCLUDE = "{http://www.w3.org/2001/XInclude}"
 
@@ -78,7 +79,7 @@ def include(elem, loader=None, base_url="./", _parent_hrefs=None):
                 node = loader(href, parse, e)
 
                 if node is None:
-                    logging.debug("XInclude: File '{0}' not found".format(href))
+                    logger.debug("XInclude: File '{0}' not found".format(href))
                     del elem[i]
                     continue
 

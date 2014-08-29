@@ -5,7 +5,6 @@ from __future__ import print_function
 import sys
 import os
 import argparse
-import logging
 
 import numpy as np
 import numexpr as ne
@@ -15,6 +14,7 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+from viscid import logger
 from viscid import vutil
 from viscid import field
 from viscid import coordinate
@@ -23,7 +23,7 @@ from viscid.plot import mpl
 dtype = 'float64'
 
 def run_mpl_testA(show=False):
-    logging.info("2D cell centered tests")
+    logger.info("2D cell centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
@@ -54,7 +54,7 @@ def run_mpl_testA(show=False):
         mpl.mplshow()
 
 def run_mpl_testB(show=False):
-    logging.info("3D node centered tests")
+    logger.info("3D node centered tests")
 
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)

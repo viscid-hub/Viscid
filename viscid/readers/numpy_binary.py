@@ -7,10 +7,10 @@ grid """
 # import string
 from __future__ import print_function
 import os
-import logging
 
 import numpy as np
 
+from viscid import logger
 from viscid.readers import vfile
 from viscid import coordinate
 from viscid import field
@@ -38,7 +38,7 @@ class NPZDataWrapper(vfile.DataWrapper):
                 self._shape = dset.shape
                 self._dtype = dset.dtype
         except IOError as e:
-            logging.error("Problem opening npz file, '{0}'".format(self.fname))
+            logger.error("Problem opening npz file, '{0}'".format(self.fname))
             raise e
 
     @property

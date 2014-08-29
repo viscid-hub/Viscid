@@ -1,5 +1,4 @@
 from __future__ import print_function
-import logging
 import itertools
 try:
     from itertools import izip
@@ -12,6 +11,7 @@ try:
 except ImportError:
     pass
 
+from viscid import logger
 from viscid import parallel
 from viscid import field
 from viscid import coordinate
@@ -114,7 +114,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     import matplotlib.pyplot as plt
     from viscid.plot import mpl
 
-    logging.info("Plotting timestep: {0}, {1}".format(tind, grid.time))
+    logger.info("Plotting timestep: {0}, {1}".format(tind, grid.time))
 
     if kwopts is None:
         kwopts = {}
@@ -134,7 +134,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
         nrows, ncols = ncols, nrows
 
     if nrows == 0:
-        logging.warn("I have no variables to plot")
+        logger.warn("I have no variables to plot")
         return
 
     fig = plt.gcf()
@@ -259,21 +259,21 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
 
 def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
                        speed_scale):
-    logging.info("working on timestep {0} {1}".format(i, grid.time))
+    logger.info("working on timestep {0} {1}".format(i, grid.time))
     v = grid["v"]
-    logging.debug("finished reading V field")
+    logger.debug("finished reading V field")
 
-    logging.debug("calculating new streamline positions")
+    logger.debug("calculating new streamline positions")
     flow_lines = streamlines(v, root_seeds,
                              output=streamline.OUTPUT_STREAMLINES,
                              **stream_opts)[0]
 
-    logging.debug("done with that, now i'm plotting...")
+    logger.debug("done with that, now i'm plotting...")
     plot_function(i, grid, v, flow_lines, root_seeds)
 
     ############################################################
     # now recalculate the seed positions for the next timestep
-    logging.debug("finding new seed positions...")
+    logger.debug("finding new seed positions...")
     root_pts = root_seeds.genr_points()
     valid_pt_inds = []
     for i in range(root_pts.shape[1]):
@@ -300,7 +300,7 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
                 # has gone out of our region of interest
                 ind = max(min(ind, v_interp.shape[0] - 1), 0)
                 valid_pt = False
-                logging.warning("OOPS: ran out of streamline, increase "
+                logger.warning("OOPS: ran out of streamline, increase "
                                 "max_length when tracing flow lines if this "
                                 "is unexpected")
                 break
@@ -315,7 +315,7 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
     # (aka, beyond the flow line we drew)
     root_pts = root_pts[:, valid_pt_inds]
 
-    logging.debug("ok, done with all that :)")
+    logger.debug("ok, done with all that :)")
     return root_pts
 
 ##
