@@ -28,6 +28,8 @@ from viscid import readers
 load_file = readers.load_file
 load_files = readers.load_files
 get_file = readers.get_file
+save_grid = readers.save_grid
+save_field = readers.save_field
 
 from viscid import rc
 rc.load_rc_file("~/.viscidrc")

@@ -102,7 +102,7 @@ class VFile(Dataset):
 
     @classmethod
     def save_grid(cls, fname, grd, **kwargs):
-        flds = list(grd.iter_fields)
+        flds = list(grd.iter_fields())
         cls.save_fields(fname, flds, **kwargs)
 
     @classmethod

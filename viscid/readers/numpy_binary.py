@@ -149,7 +149,7 @@ class FileNumpyNPZ(vfile.VFile):
     def save(self, fname=None, **kwargs):
         if fname is None:
             fname = self.fname
-        flds = list(self.iter_fields)
+        flds = list(self.iter_fields())
         self.save_fields(fname, flds)
 
     @classmethod
