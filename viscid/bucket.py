@@ -93,6 +93,10 @@ class Bucket(object):
     def items_as_list(self):
         return list(self._items.keys())
 
+    def get_primary_handles(self):
+        """Return a list of the first handles for all items"""
+        return [handles[0] for handles in self._items.values()]
+
     def handle_string(self, prefix=""):
         """ return string representation of handles and items """
         # this is inefficient, but probably doesn't matter

@@ -51,7 +51,7 @@ class Grid(object):
     def __init__(self, name=None, **kwargs):
         """ all kwargs are added to the grid as attributes """
         self.name = name
-        self.fields = Bucket()
+        self.fields = Bucket(ordered=True)
 
         self.crds = None  # Coordinates()
         for opt, value in kwargs.items():
@@ -60,6 +60,10 @@ class Grid(object):
     @staticmethod
     def null_transform(something):
         return something
+
+    @property
+    def field_names(self):
+        return self.fields.get_primary_handles()
 
     # def set_time(self, time):
     #     self.time = time
