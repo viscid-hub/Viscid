@@ -485,6 +485,7 @@ def plot2d_mapfield(fld, **kwargs):
         kwargs['equalaxis'] = False
 
         ret = plot2d_field(new_fld, **kwargs)
+        plt.title(new_fld.pretty_name)
         if dogrid:
             ax.grid(True)
             ax.set_thetagrids((45, 90, 135, 180, 225, 270, 315, 360),
