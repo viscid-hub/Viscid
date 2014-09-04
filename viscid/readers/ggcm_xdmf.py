@@ -85,3 +85,9 @@ class GGCMIonoFileXDMF(GGCMFileXDMF):  # pylint: disable=abstract-method
     _detector = r"^\s*(.*)\.(iof)(?:\.([0-9]{6}))?\.(xmf|xdmf)\s*$"
     _iono = True
     _grid_type = grid.Grid
+
+
+class GGCMAncFileXDMF(GGCMFileXDMF):  # pylint: disable=abstract-method
+    """Jimmy's run length encoding files"""
+    _detector = r"^\s*(.*)\.(mp_info)(?:\.([0-9]{6}))?\.(xmf|xdmf)\s*$"
+    _grid_type = grid.Grid
