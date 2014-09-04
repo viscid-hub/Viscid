@@ -78,16 +78,19 @@ class VFileBucket(Bucket):
         # detect file types
         types_detected = OrderedDict()
         for i, fname in enumerate(fnames):
+            _ftype = None
             if file_type is None:
-                file_type = VFile.detect_type(fname)
-            if not file_type:
+                _ftype = VFile.detect_type(fname)
+            else:
+                _ftype = file_type
+            if not _ftype:
                 raise RuntimeError("Can't determine type "
                                    "for {0}".format(fname))
             value = (fname, i)
             try:
-                types_detected[file_type].append(value)
+                types_detected[_ftype].append(value)
             except KeyError:
-                types_detected[file_type] = [value]
+                types_detected[_ftype] = [value]
 
         # see if the file's already been loaded, or load it, and add it
         # to the bucket and all that good stuff
