@@ -529,9 +529,10 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
             grid_dr = abs_grid_dr * np.sign(bounding_lat)
             lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
             lat_labels = np.arange(grid_dr, bounding_lat, grid_dr)
+            lat_labels = ["{0:g}".format(l) for l in lat_labels]
             if not label_lat:
                 lat_labels = []
-            ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels, fmt="%.0f")
+            ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
         else:
             ax.grid(False)
             ax.set_xticklabels([])
