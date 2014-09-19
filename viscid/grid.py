@@ -6,6 +6,7 @@ from __future__ import print_function
 from viscid import field
 from viscid.bucket import Bucket
 from viscid.vutil import tree_prefix
+from viscid.calculator.evaluator import evaluate
 
 class Grid(object):
     """Comptational grid container
@@ -181,6 +182,9 @@ class Grid(object):
             func = "_get_" + fldname
             if hasattr(self, func):
                 return getattr(self, func)()
+            elif len(fldname.split('=')) == 2:
+                result_name, eqn = (s.strip() for s in fldname.split('='))
+                return evaluate(self, result_name, eqn)
             else:
                 raise KeyError("field not found")
 
