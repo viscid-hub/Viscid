@@ -5,7 +5,6 @@ a movie too """
 from __future__ import print_function
 import argparse
 import subprocess as sub
-import logging
 import copy as _copy
 import os
 
@@ -25,7 +24,6 @@ class AddPlotOpts(argparse.Action):
         if dst is None:
             setattr(namespace, "global_popts", values)
             return None
-        logging.info("setting {0} plotopts to {1}".format(dst[-1][0], values))
         dst[-1][1]["plot_opts"] = values
 
 
