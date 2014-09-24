@@ -155,8 +155,15 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
 
         fld_name_meta = fld_meta[0].lstrip('^')
         fld_name_split = fld_name_meta.split(',')
-        fld_name = fld_name_split[0]
-        fld_slc = ",".join(fld_name_split[1:])
+        if '=' in fld_name_split[0]:
+            # if fld_name is actually an equation, assume
+            # there's no slice, and commas are part of the
+            # equation
+            fld_name = ",".join(fld_name_split)
+            fld_slc = ""
+        else:
+            fld_name = fld_name_split[0]
+            fld_slc = ",".join(fld_name_split[1:])
         if selection is not None:
             # fld_slc += ",{0}".format(selection)
             if fld_slc != "":

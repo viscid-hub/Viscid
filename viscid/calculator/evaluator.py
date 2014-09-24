@@ -19,9 +19,9 @@ try:
 except ImportError as e:
     _has_numexpr = False
 
-from viscid.compat import OrderedDict
 from viscid import logger
 from viscid import field
+from viscid.calculator import calc
 
 enabled = False
 
@@ -125,12 +125,14 @@ def _evaluate_numpy(grid, result_name, eqn):
 
     # salt variable names
     salt = "_"
-    _symbol_re = r"\b([_A-Za-z][_a-zA-Z0-9]*)\b"
+    _symbol_re = r"(['\"]?\b[_A-Za-z][_a-zA-Z0-9]*)\b"
     var_re = _symbol_re + r"(?!\s*\()"
     local_dict = dict()
 
     def var_salter(symbols):
         symbol = symbols.groups()[0]
+        if symbol.startswith("'"):
+            return symbol
         salted_symbol = salt + symbol
         # yes, i'm not using dict.update on purpose since grid's
         # getitem might copy the array
@@ -144,8 +146,11 @@ def _evaluate_numpy(grid, result_name, eqn):
     def func_salter(symbols):
         symbol = symbols.groups()[0]
         salted_symbol = salt + symbol
-        if salted_symbol not in local_dict and hasattr(np, symbol):
-            local_dict[salted_symbol] = getattr(np, symbol)
+        if salted_symbol not in local_dict:
+            if hasattr(calc, symbol):
+                local_dict[salted_symbol] = getattr(calc, symbol)
+            elif hasattr(np, symbol):
+                local_dict[salted_symbol] = getattr(np, symbol)
         return salted_symbol + "("
     salted_eqn = re.sub(func_re, func_salter, salted_eqn)
 
