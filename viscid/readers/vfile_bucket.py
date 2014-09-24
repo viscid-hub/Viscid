@@ -123,7 +123,7 @@ class VFileBucket(Bucket):
                         s += "              File Type: {0}\n".format(handle_name)
                         s += "              {0}".format(e.message)
                         logger.warn(s)
-                    except ValueError, e:
+                    except ValueError as e:
                         # ... why am i explicitly catching ValueErrors?
                         # i'm probably breaking something by re-raising
                         # this expeception, but i didn't document what :(
