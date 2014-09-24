@@ -160,11 +160,19 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             logger.warn("own axis doesn't seem to work yet...")
 
         else:
-            val = "_".join(opt[1:]).lower()
-            if val == "" or val == "true":
+            val = "_".join(opt[1:])
+            if val == "" or val.lower() == "true":
                 val = True
-            elif val == "false":
+            elif val.lower() == "false":
                 val = False
+            else:
+                try:
+                    val = int(val)
+                except ValueError:
+                    try:
+                        val = float(val)
+                    except ValueError:
+                        pass
             kwargs[opt[0]] = val
             # logger.warn("Unknown plot option ({0}) didn't parse "
             #              "correctly".format(opt[0]))
@@ -262,14 +270,15 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     if action_ax is None:
         action_ax = ax
 
+    # parse plot_opts and apply them
+    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+
+    colorbar = kwargs.pop("colorbar", colorbar)
     if colorbar:
         if not isinstance(colorbar, dict):
             colorbar = {}
     else:
         colorbar = None
-
-    # parse plot_opts and apply them
-    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
 
     # make customizing plot type from command line possible
     style = kwargs.pop("style", style)
