@@ -438,13 +438,15 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
         show_grid (bool): draw grid lines
         lon_0 (float): center longitude (basemap projections only)
         lat_0 (fload): center latitude (basemap projections only)
-        bounding_lat (float): bounding latitude (not for all
-            projections)
+        bounding_lat (float): bounding latitude in degrees from the
+            nearest pole (not for all projections)
         title (bool, str): put a specific title on the plot, or with
             if a boolean, use the field's pretty_name.
-        label_lat (bool): label latitudes at 10, 20, 30 degrees. Note
-            that basemap projections won't label latitudes unless they
-            hit the edge of the plot.
+        label_lat (bool, str): label latitudes at 80, 70, 60 degrees
+            with sign indicating northern / southern hemisphere.
+            if label_lat is 'from_pole', then the labels are 10, 20,
+            30 for both hemispheres. Note that basemap projections
+            won't label latitudes unless they hit the edge of the plot.
         label_mlt (bool): label magnetic local time
         kwargs: either mapping keyword arguments, or those that
             should be passed along to `plot2d_field`
@@ -537,9 +539,16 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
             abs_grid_dr = 10
             grid_dr = abs_grid_dr * np.sign(bounding_lat)
             lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
-            lat_labels = np.arange(grid_dr, bounding_lat, grid_dr)
-            lat_labels = ["{0:g}".format(l) for l in lat_labels]
-            if not label_lat:
+            lat_labels = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
+            if label_lat == "from_pole":
+                lat_labels = ["{0:g}".format(l) for l in lat_labels]
+            elif label_lat:
+                if hemisphere == 'north':
+                    lat_labels = 90 - lat_labels
+                else:
+                    lat_labels = -90 + lat_labels
+                lat_labels = ["{0:g}".format(l) for l in lat_labels]
+            else:
                 lat_labels = []
             ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
         else:
