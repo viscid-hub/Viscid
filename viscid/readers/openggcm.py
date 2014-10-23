@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """ Wrapper grid for some OpenGGCM convenience """
 
-from __future__ import print_function
+from __future__ import print_function, division
 import os
 import re
 from itertools import islice
@@ -485,7 +485,16 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
             if self.info['fieldtype'].startswith('p'):
                 self.info['plane'] = self.info['fieldtype'][1]
                 if self.info['plane'] == dim:
-                    planeloc = float(self.info['fieldtype'].split('_')[1])
+                    # in the file name, the value is tenths of an Re
+                    planeloc = float(self.info['fieldtype'].split('_')[1]) / 10
+                    # FIXME: it is not good to depend on an attribute of
+                    # GGCMGrid like this... it could lead to unexpected
+                    # behavior if the user starts playing with the value
+                    # of an instance, but I'm not sure in practice how or why
+                    # since reading the grid should happen fairly early in
+                    # the construction process
+                    if GGCMGrid.mhd_to_gse_on_read and dim in 'xy':
+                        planeloc *= -1
                     self.info['planeloc'] = planeloc
                     ccind = np.argmin(np.abs(cc - planeloc))
                     nc = nc[ccind:ccind + 2]
