@@ -192,7 +192,7 @@ def _apply_actions(acts):
         act[0](*act[1])
 
 def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
-                 colorbar=True, mask_nan=False, do_labels=True, show=False,
+                 colorbar=True, do_labels=True, show=False,
                  action_ax=None, scale=None, mod=None, extra_args=None,
                  **kwargs):
     """Plot a 2D Field using pcolormesh, contour, etc.
@@ -225,6 +225,9 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
             equalaxis [#f1]_  Use 1:1 aspect ratio for grid cells
                               (True by default)
             flip_plot [#f1]_  flip x and y axes (2d fields only)
+            masknan           if true, nan values are masked, so
+                              black if pcolor, or missing for
+                              countours
             ================  ======================================
 
             .. [#f1] These options can be given as kwargs
@@ -242,7 +245,6 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     Other Parameters:
         colorbar (bool or dict): If dict, the items are passed to
             plt.colorbar as keyword arguments
-        mask_nan (bool, optional): Plot a masked array
         levels (int): Number of contours to follow (default: 10)
         do_labels: automatically label x/y axes and color bar
         show_grid (bool): Plot lines showing grid cells
@@ -285,6 +287,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     earth = kwargs.pop("earth", False)
     equalaxis = kwargs.pop("equalaxis", True)
     flip_plot = kwargs.pop("flip_plot", False)
+    masknan = kwargs.pop("masknan", False)
 
     show_grid = kwargs.pop("show_grid", False)
     show_grid = kwargs.pop("g", show_grid)
@@ -331,8 +334,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
         Y *= mod[1]
 
     # print(x.shape, y.shape, fld.data.shape)
-    mask_nan = False
-    if mask_nan:
+    if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
 
     if equalaxis:
@@ -380,7 +382,13 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
-    p.get_cmap().set_bad('k')
+    try:
+        if masknan:
+            p.get_cmap().set_bad(masknan)
+        else:
+            raise ValueError()
+    except ValueError:
+        p.get_cmap().set_bad('k')
 
     # figure out the colorbar...
     if colorbar is not None:
@@ -389,7 +397,7 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
             colorbar["use_gridspec"] = True
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
-        if mask_nan and dat.mask.all():
+        if masknan and dat.mask.all():
             cbar = None
         else:
             cbar = plt.colorbar(p, **colorbar)
@@ -585,7 +593,7 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
         return ret
 
 
-def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
+def plot1d_field(fld, ax=None, plot_opts=None, show=False,
                  do_labels=True, action_ax=None, **kwargs):
     """Plot a 1D Field using lines
 
@@ -605,9 +613,10 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
     ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
     if action_ax is None:
         action_ax = ax
+    masknan = kwargs.pop('masknan', False)
 
     dat = fld.data
-    if mask_nan:
+    if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
 
     if "label" not in kwargs:

@@ -191,7 +191,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                 fld_meta[1]["plot_opts"], global_popts)
 
         with grid[fld_name] as fld:
-            mpl.plot(fld, selection=fld_slc, mask_nan=True, **fld_meta[1])
+            mpl.plot(fld, selection=fld_slc, masknan=True, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
 
     if fancytime:
