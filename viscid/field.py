@@ -511,8 +511,11 @@ class Field(object):
             arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
         elif isinstance(dat, (list, tuple)):
             dt = dat[0].dtype.name
-            arr = np.array([np.array(d, dtype=dt, copy=self.deep_meta["copy"])
-                            for d in dat], dtype=dt)
+            tmp = [np.array(d, dtype=dt, copy=self.deep_meta["copy"]) for d in dat]
+            _shape = tmp[0].shape
+            arr = np.empty([len(tmp)] + list(_shape), dtype=dt)
+            for i, t in enumerate(tmp):
+                arr[i] = t
         # elif isinstance(dat, Field):
         #     arr = dat.data  # not the way
         else:
