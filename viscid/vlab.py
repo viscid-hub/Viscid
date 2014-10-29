@@ -115,16 +115,16 @@ def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
     hack_opts = {}
     if "subplot_params" not in kwopts:
         r = parallel.map(1, _do_multiplot, [next(grid_iter)],
-                         force_subprocess=(nprocs > 1),
-                         _return_subplot_params=True)
+                         args_kw=dict(_return_subplot_params=True),
+                         force_subprocess=(nprocs > 1))
         hack_opts['_subplot_params'] = r[0]
 
     # now get back to your regularly scheduled programming
-    parallel.map(nprocs, _do_multiplot, grid_iter, **hack_opts)
+    parallel.map(nprocs, _do_multiplot, grid_iter, args_kw=hack_opts)
 
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                   show=False, kwopts=None, _subplot_params=None,
-                  _return_subplot_params=False):
+                  _return_subplot_params=True):
     import matplotlib.pyplot as plt
     from viscid.plot import mpl
 
