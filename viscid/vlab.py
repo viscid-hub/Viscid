@@ -107,10 +107,24 @@ def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
                      itertools.repeat(show),
                      itertools.repeat(kwopts),
                     )
-    parallel.map(nprocs, _do_multiplot, grid_iter)
+
+    # FIXME: this is a wicked hack, it does one plot before splitting off
+    # in order to make the subplot adjustments the same for all plots
+    # this matters when making movies since gridspec is very badly
+    # behaved and subplots will dance around during the movie; bad gridspec
+    hack_opts = {}
+    if "subplot_params" not in kwopts:
+        r = parallel.map(1, _do_multiplot, [next(grid_iter)],
+                         force_subprocess=(nprocs > 1),
+                         _return_subplot_params=True)
+        hack_opts['_subplot_params'] = r[0]
+
+    # now get back to your regularly scheduled programming
+    parallel.map(nprocs, _do_multiplot, grid_iter, **hack_opts)
 
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
-                  show=False, kwopts=None):
+                  show=False, kwopts=None, _subplot_params=None,
+                  _return_subplot_params=False):
     import matplotlib.pyplot as plt
     from viscid.plot import mpl
 
@@ -126,6 +140,8 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     selection = kwopts.get("selection", None)
     fancytime = kwopts.get("fancytime", False)
     tighten = kwopts.get("tighten", False)
+    # wicked hacky
+    subplot_params = kwopts.get("subplot_params", _subplot_params)
 
     # nrows = len(plot_vars)
     nrows = len([pv[0] for pv in plot_vars if not pv[0].startswith('^')])
@@ -207,11 +223,24 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     if tighten:
         mpl.tighten(rect=[0, 0.03, 1, 0.90])
 
+    # for movies where plots wiggle
+    if subplot_params:
+        plt.gcf().subplots_adjust(**subplot_params)
+
+    if _return_subplot_params:
+        p = plt.gcf().subplotpars
+        ret = {'left': p.left, 'right': p.right, 'top': p.top,
+               'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
+    else:
+        ret = None
+
     if out_prefix:
         plt.savefig("{0}_{1:06d}.{2}".format(out_prefix, tind + 1, out_format))
     if show:
         plt.show()
     plt.clf()
+
+    return ret
 
 def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
                  stream_opts, add_seed_cadence=0.0, add_seed_pts=None,
