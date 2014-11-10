@@ -5,6 +5,7 @@ TODO: this dispatch mechanism is very simple, maybe something a little more
 flexable would be useful down the line? """
 
 from __future__ import print_function
+from itertools import count
 try:
     from collections import OrderedDict
 except ImportError:
@@ -14,6 +15,7 @@ import numpy as np
 
 from viscid import logger
 from viscid import verror
+from viscid.calculator import seed
 
 try:
     from viscid.calculator import cycalc
@@ -147,6 +149,137 @@ def magnitude_native(fld):
     return vx.wrap(mag, context={"name": "{0} magnitude".format(fld.name)})
 
 magnitude.add_implementation("native", magnitude_native)
+
+def local_vector_points(B, z, y, x, dz=None, dy=None, dx=None):
+    """
+    Get B at 6 points surrounding X = [z, y, x] with
+    spacing [+/-dz, +/-dy, +/-dx]
+
+    If dz|dy|ix == None, then their set to the grid spacing
+    at the point of interest
+
+    Returns:
+        bs: ndarray with shape (6, 3) where 0-3 -> Bx,By,Bz
+            and 0-6 -> X-dz, X+dz, X-dy, X+dy, X-dx, X+dx
+        pts: ndarray with shape 6, 3 of the location of the
+            points of the bs, but this time, 0-3 -> z,y,x
+        dcrd: list of dz, dy, dx
+    """
+    assert has_cython  # if a problem, you need to build Viscid
+    assert B.iscentered("Cell")
+
+    z, y, x = [np.array(c).reshape(1, 1) for c in [z, y, x]]
+    crds = B.get_crds("zyx")
+    inds = [0] * len(crds)
+    dcrd = [0] * len(crds)
+    # This makes points in zyx order
+    pts = np.tile([z, y, x], 6).reshape(3, -1).T
+    for i, crd, loc, d in zip(count(), crds, [z, y, x], [dz, dy, dx]):
+        inds[i] = cycalc.closest_ind(crd, loc)
+        if d is None:
+            dcrd[i] = crd[inds[i] + 1] - crd[inds[i]]
+        else:
+            dcrd[i] = d
+        pts[2 * i + 1, i] += dcrd[i]
+        pts[2 * i + 0, i] -= dcrd[i]
+    bs = cycalc.interp_trilin(B, seed.Point(pts))
+    # import code; code.interact("in local_vector_points", local=locals())
+    return bs, pts, dcrd
+
+def jacobian_at_point(B, z, y, x, dz=None, dy=None, dx=None):
+    """Get the Jacobian at a point
+
+    If dz|dy|ix == None, then their set to the grid spacing
+    at the point of interest
+
+    Returns: The jacobian as a 3x3 ndarray
+        The result is in xyz order, in other words:
+        [ [d_x Bx, d_y Bx, d_z Bx],
+          [d_x By, d_y By, d_z By],
+          [d_x Bz, d_y Bz, d_z Bz] ]
+    """
+    bs, _, dcrd = local_vector_points(B, z, y, x, dz, dy, dx)
+    gradb = np.empty((3, 3), dtype=B.dtype)
+
+    # bs is in zyx spatial order, but components are in xyz order
+    # dcrd is in zyx order
+    # gradb has xyz order for everything
+    for i in range(3):
+        gradb[i, 0] = (bs[5, i] - bs[4, i]) / (2.0 * dcrd[2])  # d_x Bi
+        gradb[i, 1] = (bs[3, i] - bs[2, i]) / (2.0 * dcrd[1])  # d_y Bi
+        gradb[i, 2] = (bs[1, i] - bs[0, i]) / (2.0 * dcrd[0])  # d_z Bi
+    return gradb
+
+def jacobian_at_ind(B, iz, iy, ix):
+    """Get the Jacobian at index
+
+    Returns: The jacobian as a 3x3 ndarray
+        The result is in xyz order, in other words:
+        [ [d_x Bx, d_y Bx, d_z Bx],
+          [d_x By, d_y By, d_z By],
+          [d_x Bz, d_y Bz, d_z Bz] ]
+    """
+    bx, by, bz = B.component_views()
+    z, y, x = B.get_crds("zyx")
+    gradb = np.empty((3, 3), dtype=B.dtype)
+    for i, bi in enumerate([bz, by, bx]):
+        gradb[i, 0] = (bi[iz, iy, ix + 1] - bi[iz, iy, ix - 1]) / (x[ix + 1] - x[ix - 1])  # d_x Bi
+        gradb[i, 1] = (bi[iz, iy + 1, iz] - bi[iz, iy - 1, iz]) / (y[iy + 1] - y[iy - 1])  # d_y Bi
+        gradb[i, 2] = (bi[iz + 1, iy, ix] - bi[iz - 1, iy, ix]) / (z[iz + 1] - z[iz - 1])  # d_z Bi
+    return gradb
+
+def jacobian_eig_at_point(B, z, y, x, dz=None, dy=None, dx=None):
+    """Get the eigen vals/vecs of the jacobian
+
+    Returns: evals, evecs (3x3 ndarray)
+        The evec[:, i] corresponds to evals[i].
+        Eigen vectors are returned in zyx order, aka
+        evec[:, 0] is [z, y, x] for the 0th eigen vector
+    """
+    gradb = jacobian_at_point(B, z, y, x, dz, dy, dx)
+    evals, evecs = np.linalg.eig(gradb)
+    # change eigen vectors xyz -> zyx
+    for i in range(3):
+        evecs[:, i] = evecs[::-1, i]
+    return evals, evecs
+
+def jacobian_eig_at_ind(B, iz, iy, ix):
+    """Get the eigen vals/vecs of the jacobian
+
+    Returns: evals, evecs (3x3 ndarray)
+        The evec[:, i] corresponds to evals[i].
+        Eigen vectors are returned in zyx order, aka
+        evec[:, 0] is [z, y, x] for the 0th eigen vector
+    """
+    gradb = jacobian_at_ind(B, iz, iy, ix)
+    evals, evecs = np.linalg.eig(gradb)
+    # change eigen vectors xyz -> zyx
+    for i in range(3):
+        evecs[:, i] = evecs[::-1, i]
+    return evals, evecs
+
+def div_at_point(A, z, y, x, dz=None, dy=None, dx=None):
+    """Returns divergence at a point"""
+    As, _, dcrd = local_vector_points(A, z, y, x, dz, dy, dx)
+    d = 0.0
+    for i in range(3):
+        d += (As[2 * i + 1, i] - As[2 * i + 0, i]) / (2.0 * dcrd[i])
+    return d
+
+def curl_at_point(A, z, y, x, dz=None, dy=None, dx=None):
+    """Returns curl at point as ndarray with shape (3,) xyz"""
+    As, _, dcrd = local_vector_points(A, z, y, x, dz, dy, dx)
+    c = np.zeros(3, dtype=A.dtype)
+
+    # this is confusing: In As, first index is zyx, 2nd index is xyz
+    #             xi+dxi  comp      xi-dxi   comp /   (2 * dxi)
+    c[0] =  (As[2 * 1 + 1, 2] - As[2 * 1 + 0, 2]) / (2.0 * dcrd[1]) - \
+            (As[2 * 0 + 1, 1] - As[2 * 0 + 0, 1]) / (2.0 * dcrd[0])
+    c[1] = -(As[2 * 2 + 1, 2] - As[2 * 2 + 0, 2]) / (2.0 * dcrd[2]) + \
+            (As[2 * 0 + 1, 0] - As[2 * 0 + 0, 0]) / (2.0 * dcrd[0])
+    c[2] =  (As[2 * 2 + 1, 1] - As[2 * 2 + 0, 1]) / (2.0 * dcrd[2]) - \
+            (As[2 * 1 + 1, 0] - As[2 * 1 + 0, 0]) / (2.0 * dcrd[1])
+    return c
 
 def closest1d_ind(arr, val):
     """ DEPRECATED """
