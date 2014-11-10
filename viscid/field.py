@@ -602,7 +602,7 @@ class Field(object):
             selection = list(selection)
         if isinstance(selection, list):
             if self.nr_comps > 0 and len(selection) == self.nr_dims:
-                comp_slc = selection.pop[self.nr_comp]
+                comp_slc = selection.pop(self.nr_comp)
         return selection, comp_slc
 
     def _finalize_slice(self, slices, crdlst, reduced, comp_slc):

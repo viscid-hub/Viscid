@@ -89,10 +89,10 @@ class StructuredCrds(Coordinates):
         else:
             self.transform_kwargs = {}
 
-        if init_clist:
+        if init_clist is not None:
             self._axes = [d[0].lower() for d in init_clist]
         self.clear_crds()
-        if init_clist:
+        if init_clist is not None:
             self.set_crds(init_clist)
 
     @property
@@ -386,7 +386,7 @@ class StructuredCrds(Coordinates):
                 slc = sel
 
             # expect val to be a list to describe start, stop, stride
-            if isinstance(sel, (int, float)):
+            if isinstance(sel, (int, float, np.number)):
                 sel = [sel]
 
             if isinstance(sel, (list, tuple)):
@@ -394,7 +394,7 @@ class StructuredCrds(Coordinates):
                 # elements only, the third would be a stride, no lookup
                 # necessary
                 for i, v in enumerate(sel[:2]):
-                    if isinstance(v, float):
+                    if isinstance(v, (float, np.floating)):
                         # find index of closest node
                         if cc:
                             diff = v - self.get_cc(axis)
