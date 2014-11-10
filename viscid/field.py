@@ -197,6 +197,13 @@ class Field(object):
     post_reshape_transform_func = None
     transform_func_kwargs = None
 
+    # this is a hacky way to keep a 'parent' field in sync when data
+    # is loaded... this is used for converting cell centered data ->
+    # node centered and back... this only works because _fill_cache
+    # ONLY sets self._cache... if other meta data were set by
+    # _fill_cache, that would need to propogate upstream too
+    _parent_field = None
+
     # these get reset when data is set
     _layout = None
     _nr_comps = None
@@ -211,6 +218,7 @@ class Field(object):
                  pre_reshape_transform_func=None,
                  post_reshape_transform_func=None,
                  transform_func_kwargs=None,
+                 _parent_field=None,
                  **kwargs):
         """
         Other Parameters:
@@ -257,6 +265,8 @@ class Field(object):
 
         if not "copy" in self.deep_meta:
             self.deep_meta["copy"] = False
+
+        self._parent_field = _parent_field
 
         if forget_source:
             self.forget_source()
@@ -378,7 +388,7 @@ class Field(object):
             return list(self.crds.shape_cc)
         else:
             logger.warn("edge/face vectors not implemented, assuming "
-                         "node shape")
+                        "node shape")
             return self.crds.shape
 
     @property
@@ -432,10 +442,14 @@ class Field(object):
     def _purge_cache(self):
         """ does not guarentee that the memory will be freed """
         self._cache = None
+        if self._parent_field is not None:
+            self._parent_field._cache = self._cache
 
     def _fill_cache(self):
         """ actually load data into the cache """
         self._cache = self._src_data_to_ndarray()
+        if self._parent_field is not None:
+            self._parent_field._cache = self._cache
 
     # um, what was this for? looks dangerous
     # def _translate_src_data(self):
@@ -458,7 +472,7 @@ class Field(object):
         # if layout is found to be other, i cant do anything with that
         elif src_data_layout == LAYOUT_OTHER:
             logger.warn("Cannot auto-detect layout; not translating; "
-                         "performance may suffer")
+                        "performance may suffer")
             return self._dat_to_ndarray(self._src_data)
 
         # ok, we demand FLAT arrays, make it so
@@ -589,8 +603,8 @@ class Field(object):
         else:
             # if this happens, don't ignore it even if it happens to work
             logger.warn("could not detect layout for '{0}': shape = {1} "
-                         "target shape = {2}"
-                         "".format(self.name, dat.shape, sshape))
+                        "target shape = {2}"
+                        "".format(self.name, dat.shape, sshape))
             layout = LAYOUT_OTHER
 
         return layout
@@ -796,14 +810,95 @@ class Field(object):
         # in an overridden __init__; in that case, the developer MUST
         # override shell_copy and pass the extra kwargs in to here.
         f = type(self)(self.name, self.crds, self._src_data, center=self.center,
-            time=self.time, info=self.info, deep_meta=self.deep_meta,
-            forget_source=False,
-            pretty_name=self.pretty_name,
-            pre_reshape_transform_func=self.pre_reshape_transform_func,
-            post_reshape_transform_func=self.post_reshape_transform_func,
-            transform_func_kwargs=self.transform_func_kwargs,
-            **kwargs)
+                       time=self.time, info=self.info, deep_meta=self.deep_meta,
+                       forget_source=False,
+                       pretty_name=self.pretty_name,
+                       pre_reshape_transform_func=self.pre_reshape_transform_func,
+                       post_reshape_transform_func=self.post_reshape_transform_func,
+                       transform_func_kwargs=self.transform_func_kwargs,
+                       **kwargs)
         return f
+
+    #####################
+    ## convert centering
+    # Note: these are kind of specific to cartesian connected grids
+
+    def as_cell_centered(self):
+        """Convert field to cell centered field without discarding
+        any data; this goes through hacky pains to make sure the data
+        is the same as self (including the state of cachedness)"""
+        if self.iscentered('cell'):
+            return self
+
+        elif self.iscentered('node'):
+            # construct new crds
+            axes = self.crds.axes
+            crds_cc = self.get_crds_cc()
+            for i, x in enumerate(crds_cc):
+                dxl = x[1] - x[0]
+                dxh = x[-1] - x[-2]
+                crds_cc[i] = np.concatenate([[x[0] - dxl],
+                                             x,
+                                             [x[-1] + dxh]])
+            new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
+            new_crds = type(self.crds)(new_clist)
+
+            # this is similar to a shell copy, but it's intimately
+            # linked to self as a parent
+            f = type(self)(self.name, new_crds, None, center="cell",
+                           time=self.time, info=self.info,
+                           deep_meta=self.deep_meta, forget_source=False,
+                           pretty_name=self.pretty_name,
+                           pre_reshape_transform_func=self.pre_reshape_transform_func,
+                           post_reshape_transform_func=self.post_reshape_transform_func,
+                           transform_func_kwargs=self.transform_func_kwargs,
+                           _parent_field=self)
+            #FIME: this is such a hack to try our hardest to keep the
+            # reference to the data the same
+            f._src_data = self._src_data
+            f._cache = self._cache
+
+            return f
+
+        else:
+            raise NotImplementedError("can't yet move {0} to node "
+                                      "centers".format(self.center))
+
+
+    def as_node_centered(self):
+        """Convert field to node centered field without discarding
+        any data;  this goes through hacky pains to make sure the data
+        is the same as self (including the state of cachedness)"""
+        if self.iscentered('node'):
+            return self
+
+        elif self.iscentered('cell'):
+            # construct new crds
+            axes = self.crds.axes
+            crds_cc = self.get_crds_cc()
+            new_clist = [(ax, cc) for ax, cc in zip(axes, crds_cc)]
+            new_crds = type(self.crds)(new_clist)
+
+            # this is similar to a shell copy, but it's intimately
+            # linked to self as a parent
+            f = type(self)(self.name, new_crds, None, center="node",
+                           time=self.time, info=self.info,
+                           deep_meta=self.deep_meta, forget_source=False,
+                           pretty_name=self.pretty_name,
+                           pre_reshape_transform_func=self.pre_reshape_transform_func,
+                           post_reshape_transform_func=self.post_reshape_transform_func,
+                           transform_func_kwargs=self.transform_func_kwargs,
+                           _parent_field=self)
+            #FIME: this is such a hack to try our hardest to keep the
+            # reference to the data the same
+            f._src_data = self._src_data
+            f._cache = self._cache
+
+            return f
+
+        else:
+            raise NotImplementedError("can't yet move {0} to node "
+                                      "centers".format(self.center))
 
     #######################
     ## emulate a container
