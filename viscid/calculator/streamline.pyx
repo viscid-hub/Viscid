@@ -556,7 +556,7 @@ cdef int end_flags_to_topology_msphere(int end_flags):
 
 cdef int end_flags_to_topology_generic(int end_flags):
     return end_flags
-5
+
 ##
 ## EOF
 ##

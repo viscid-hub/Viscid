@@ -16,7 +16,7 @@ import numpy as np
 try:
     import numexpr as ne
     _has_numexpr = True
-except ImportError as e:
+except ImportError:
     _has_numexpr = False
 
 from viscid import logger
@@ -82,7 +82,7 @@ def _evaluate_numexpr(grid, result_name, eqn):
         RuntimeError, if no numexpr, or if evaluate is not enabled
         TypeError, if numexpr couldn't understand a math input
     """
-    if not (enabled or _has_numexpr):
+    if not _has_numexpr:
         raise RuntimeError("Evaluate not enabled, or numexpr not installed.")
 
     # salt symbols that don't look like math functions and look them up

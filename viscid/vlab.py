@@ -98,6 +98,12 @@ def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
     This is the function used by the ``p2d`` script. It may be useful
     to you.
     """
+    # make sure time slice yields >= 1 actual time slice
+    try:
+        next(file_.iter_times(time_slice))
+    except StopIteration:
+        raise ValueError("Time slice '{0}' yields no data".format(time_slice))
+
     grid_iter = izip(
                      itertools.count(),
                      file_.iter_times(time_slice),
