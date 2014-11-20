@@ -152,7 +152,7 @@ class AthenaTabFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
         # dims are xyz order unlike all other interfaces
         if dims is None:
             dims = cls.parse_header(fname)['dims']
-        dat = np.loadtxt(fname, usecols=range(len(dims), 2 * len(dims)),
+        dat = np.loadtxt(fname, usecols=list(range(len(dims), 2 * len(dims))),
                          unpack=True, ndmin=2)
 
         dxmin = np.inf

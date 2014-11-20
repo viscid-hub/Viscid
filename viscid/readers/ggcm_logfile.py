@@ -65,8 +65,8 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                             # "parameter  | value"
                             # "-----------|------"
                             # ignore them
-                            lines_iter.next()
-                            lines_iter.next()
+                            next(lines_iter)
+                            next(lines_iter)
                     except AttributeError:
                         # not the start of a new class view, that's ok
                         pass

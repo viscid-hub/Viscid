@@ -1105,7 +1105,7 @@ class ScalarField(Field):
         """ same behavior as numpy transpose, alse accessable
         using np.transpose(fld) """
         if axes == (None, ) or len(axes) == 0:
-            axes = range(self.nr_dims - 1, -1, -1)
+            axes = list(range(self.nr_dims - 1, -1, -1))
         if len(axes) != self.nr_dims:
             raise ValueError("transpose can not change number of axes")
         clist = self.crds.get_clist()

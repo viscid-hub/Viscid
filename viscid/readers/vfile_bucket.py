@@ -39,7 +39,7 @@ class VFileBucket(Bucket):
         else:
             if len(fls) > 1:
                 logger.warn("Loaded > 1 file for '{0}', did you mean to call "
-                             "load_files()?".format(fname))
+                            "load_files()?".format(fname))
             return fls[0]
 
     def load_files(self, fnames, index_handle=True, file_type=None, **kwargs):
@@ -139,7 +139,7 @@ class VFileBucket(Bucket):
 
         if len(file_lst) == 0:
             logger.warn("No files loaded for '{0}', is the path "
-                         "correct?".format(orig_fnames))
+                        "correct?".format(orig_fnames))
         return file_lst
 
     def remove_item(self, item):
