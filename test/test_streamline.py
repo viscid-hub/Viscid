@@ -80,7 +80,7 @@ def main():
     logger.info("volume interp took {0:.3e}s to compute.".format(t1 - t0))
     # interp_vals is now a 1d array of interpolated values
     # interp_vals[i] is located at sphere.points[i]
-    mpl.scatter_3d(vol.points(), interp_vals, show=args.show)
+    mpl.scatter_3d(vol.points(center=bmag.center), interp_vals, show=args.show)
 
     sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0, 200, 200)
 
