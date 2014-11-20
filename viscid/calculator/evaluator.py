@@ -87,10 +87,12 @@ def _evaluate_numexpr(grid, result_name, eqn):
 
     # salt symbols that don't look like math functions and look them up
     # in the grid
-    salt = "_"
+    salt = "SALT"
     _symbol_re = r"\b([_A-Za-z][_a-zA-Z0-9]*)\b"
     var_re = _symbol_re + r"(?!\s*\()"
     flds = []
+    # for security
+    eqn = eqn.replace("__", "")
     local_dict = dict()
 
     def var_salter(symbols):
@@ -105,7 +107,8 @@ def _evaluate_numexpr(grid, result_name, eqn):
 
     salted_eqn = re.sub(var_re, var_salter, eqn)
 
-    arr = ne.evaluate(salted_eqn, local_dict=local_dict, global_dict=None)
+    arr = ne.evaluate(salted_eqn, local_dict=local_dict,
+                      global_dict={"__builtins__": {}})
 
     # FIXME: actually detect the type of field instead of asserting it's
     # a scalar... also maybe auto-detect reduction operations?
@@ -124,9 +127,11 @@ def _evaluate_numpy(grid, result_name, eqn):
         raise RuntimeError("Evaluate is not enabled")
 
     # salt variable names
-    salt = "_"
+    salt = "SALT"
     _symbol_re = r"(['\"]?\b[_A-Za-z][_a-zA-Z0-9]*)\b"
     var_re = _symbol_re + r"(?!\s*\()"
+    # for security
+    eqn = eqn.replace("__", "")
     local_dict = dict()
 
     def var_salter(symbols):
@@ -155,7 +160,7 @@ def _evaluate_numpy(grid, result_name, eqn):
     salted_eqn = re.sub(func_re, func_salter, salted_eqn)
 
     # run eval
-    fld = eval(salted_eqn, {}, local_dict)
+    fld = eval(salted_eqn, {"__builtins__": {}}, local_dict)  # pylint: disable=eval-used
     try:
         fld.name = result_name
         fld.pretty_name = result_name
