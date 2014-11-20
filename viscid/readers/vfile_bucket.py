@@ -147,8 +147,8 @@ class VFileBucket(Bucket):
         super(VFileBucket, self).remove_item(item)
 
     def remove_all_items(self):
-        for item in self._items.keys():
-            item.unload()
+        for val in self.values():
+            val.unload()
         super(VFileBucket, self).remove_all_items()
 
     def __getitem__(self, handle):
