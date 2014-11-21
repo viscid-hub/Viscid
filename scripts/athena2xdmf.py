@@ -14,10 +14,6 @@ from __future__ import division, print_function
 import sys
 import argparse
 from itertools import count
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
 
@@ -25,6 +21,7 @@ import viscid
 from viscid import vutil
 from viscid.readers.athena import AthenaGrid
 from viscid import coordinate
+from viscid.compat import izip
 
 def main():
     # tollerences for if endpoints of crd arrays are equal

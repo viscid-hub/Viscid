@@ -4,15 +4,11 @@ from __future__ import print_function
 import os
 from glob import glob
 
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat import OrderedDict
-
 from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid.readers.vfile import VFile
+from viscid.compat import OrderedDict
 
 
 class VFileBucket(Bucket):

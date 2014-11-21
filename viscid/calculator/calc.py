@@ -6,16 +6,13 @@ flexable would be useful down the line? """
 
 from __future__ import print_function
 from itertools import count
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat import OrderedDict
 
 import numpy as np
 
 from viscid import logger
 from viscid import verror
 from viscid.calculator import seed
+from viscid.compat import OrderedDict
 
 try:
     from viscid.calculator import cycalc

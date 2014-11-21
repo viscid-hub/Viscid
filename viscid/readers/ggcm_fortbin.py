@@ -2,10 +2,6 @@ from __future__ import print_function
 import struct
 import os
 import re
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat import OrderedDict
 
 import numpy as np
 
@@ -13,6 +9,7 @@ from viscid import field
 from viscid import grid
 from viscid.readers import vfile
 from viscid.readers import openggcm
+from viscid.compat import OrderedDict
 
 
 # raise NotImplementedError("fortbin reader is not at all")

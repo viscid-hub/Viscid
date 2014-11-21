@@ -17,16 +17,13 @@ from logging import info, warning
 from multiprocessing import Pool, cpu_count
 from contextlib import closing
 from itertools import islice, repeat
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
 
 from viscid import parallel
 from viscid import field
 from viscid.calculator import seed
+from viscid.compat import izip
 
 ###########
 # cimports

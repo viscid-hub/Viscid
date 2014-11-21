@@ -1,10 +1,6 @@
 from __future__ import print_function
 import os
 import re
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat import OrderedDict
 
 import numpy as np
 
@@ -14,6 +10,7 @@ from viscid.readers import vfile
 from viscid.readers import openggcm
 from viscid.readers._fortfile_wrapper import FortranFile
 from viscid.readers import _jrrle
+from viscid.compat import OrderedDict
 
 
 class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method

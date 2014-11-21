@@ -1,9 +1,5 @@
 from __future__ import print_function
 import itertools
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
 try:
@@ -16,6 +12,7 @@ from viscid import parallel
 from viscid import field
 from viscid import coordinate
 from viscid.calculator import seed
+from viscid.compat import izip
 
 # these compiled are needed for fluid following
 try:

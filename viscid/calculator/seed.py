@@ -3,15 +3,12 @@
 
 from __future__ import print_function
 import itertools
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
 
 from viscid import field
 from viscid import coordinate
+from viscid.compat import izip
 
 class SeedGen(object):
     """All about seeds

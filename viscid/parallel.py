@@ -6,13 +6,10 @@ import multiprocessing as mp
 import multiprocessing.pool
 from contextlib import closing
 from itertools import repeat
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
 
+from viscid.compat import izip
 
 # Non daemonic processes are probably a really bad idea
 class NoDaemonProcess(mp.Process):

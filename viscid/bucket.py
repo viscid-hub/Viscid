@@ -4,7 +4,6 @@ from __future__ import print_function
 
 # from viscid.vutil import tree_prefix
 from viscid.compat import OrderedDict
-
 from viscid import logger
 
 class Bucket(object):
