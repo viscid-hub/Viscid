@@ -4,7 +4,6 @@ from __future__ import print_function
 from itertools import count
 
 import numpy as np
-from matplotlib import pyplot as plt
 from mayavi import mlab
 
 from viscid import field
@@ -12,6 +11,7 @@ from viscid import coordinate
 from viscid.plot import mpl
 from viscid.plot import mvi
 from viscid.calculator import cycalc
+from viscid.plot.mpl import plt
 
 np.seterr(divide='ignore')
 

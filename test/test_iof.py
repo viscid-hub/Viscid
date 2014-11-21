@@ -6,8 +6,6 @@ import sys
 import os
 import argparse
 
-from matplotlib import pyplot as plt
-
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
@@ -15,6 +13,7 @@ if not _viscid_root in sys.path:
 import viscid
 from viscid import vutil
 from viscid.plot import mpl
+from viscid.plot.mpl import plt
 
 def lon_fmt(lon):
     return "{0:g}".format(lon * 24.0 / 360.0)

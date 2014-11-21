@@ -171,9 +171,9 @@ def _evaluate_numpy(grid, result_name, eqn):
 
 if __name__ == "__main__":
     import os
-    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import mpl
+    from viscid.plot.mpl import plt
     enabled = True
     _d = os.path.dirname(viscid.__file__)
     _g = viscid.load_file(_d + "/../sample/sample.py_0.xdmf").get_grid()

@@ -5,7 +5,6 @@ import sys
 import argparse
 
 import numpy as np
-from matplotlib import pyplot as plt
 
 from viscid import logger
 from viscid import vutil
@@ -15,6 +14,7 @@ from viscid.calculator import cycalc
 from viscid.calculator import streamline
 from viscid.calculator import seed
 from viscid.plot import mpl
+from viscid.plot.mpl import plt
 
 def main():
     parser = argparse.ArgumentParser(description="Streamline a PSC file")
