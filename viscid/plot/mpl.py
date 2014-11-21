@@ -2,6 +2,8 @@
 
 Your best friend in this module is the :meth:`plot` function, but the
 best reference for all quirky options is :meth:`plot2d_field`.
+
+Note: you can't set rc parameters for this module
 """
 from __future__ import print_function
 from distutils.version import LooseVersion
@@ -18,15 +20,17 @@ except ImportError:
     _HAS_BASEMAP = False
 
 from viscid import logger
+from viscid.compat import string_types
 from viscid import field
 from viscid import coordinate
 from viscid.calculator import calc
 from viscid.calculator.topology import color_from_topology
-from viscid.compat import string_types
-# from viscid import vutil
+from viscid.plot import seaborn
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
+seaborn.activate_from_viscid()
+
 
 def plot(fld, selection=None, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton

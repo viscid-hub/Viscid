@@ -1,4 +1,7 @@
-"""Convevience module for making 3d plots with Mayavi"""
+"""Convevience module for making 3d plots with Mayavi
+
+Note: you can't set rc parameters for this module
+"""
 from __future__ import print_function
 import code
 

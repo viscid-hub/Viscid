@@ -3,4 +3,5 @@ other libraries (Matplotlib / Mayavi)"""
 
 __all__ = ["mpl",
            "mvi",
+           "sandborn"
           ]

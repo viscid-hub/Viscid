@@ -11,7 +11,7 @@ import os
 from viscid import readers
 from viscid import vutil
 from viscid import vlab
-
+from viscid.plot import seaborn
 
 def _ensure_value(namespace, name, value):
     if getattr(namespace, name, None) is None:
