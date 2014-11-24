@@ -15,10 +15,10 @@ except ImportError:
     _has_numexpr = False
 
 from viscid import logger
+from viscid.compat import string_types
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.ggcm_logfile import GGCMLogFile
 from viscid.readers import vfile
-from viscid.readers import xdmf
 from viscid import dataset
 from viscid import grid
 from viscid import field
@@ -164,8 +164,10 @@ class GGCMGrid(grid.Grid):
         - psi: flux function (only works for 2d files/grids)
 
     Attributes:
-        mhd_to_gse_on_read (bool): flips arrays on load to be in
-            GSE crds (default is False)
+        mhd_to_gse_on_read (bool, str): flips arrays on load to be in
+            GSE crds. If 'auto', then try to use the runtime parameters
+            to figure out if conversion is needed; auto requires
+            reading the logfile. (default is False)
         copy_on_transform (bool): True means array will be contiguous
             after transform (if one is done), but makes data load
             50\%-60\% slower (default is True)
@@ -180,11 +182,66 @@ class GGCMGrid(grid.Grid):
     # _flip_vect_comp_names = []
     # _flip_vect_names = []
 
-    mhd_to_gse_on_read = False
+    mhd_to_gse_on_read = False  # True, False, auto, or auto_true
     copy_on_transform = False
 
+    def _do_mhd_to_gse_on_read(self):
+        """Return True if we """
+        if isinstance(self.mhd_to_gse_on_read, string_types):
+            # we already know what this data file needs
+            if "_viscid_do_mhd_to_gse_on_read" in self.info:
+                return self.info["_viscid_do_mhd_to_gse_on_read"]
+
+            # what are we asking for?
+            request = self.mhd_to_gse_on_read.lower()
+            if request.startswith("auto"):
+                # setup the default
+                ret = False
+                if request.endswith("true"):
+                    ret = True
+
+                # sanity check the logfile stuffs
+                log_fname = self.info["_viscid_log_fname"]
+                if log_fname == False:
+                    raise RuntimeError("If you're using 'auto' for mhd->gse "
+                                       "conversion, reading the logfile "
+                                       "MUST be turned on.")
+                elif log_fname == None:
+                    logger.warn("Tried to determine coordinate system using "
+                                "logfile parameters, but no logfile found. "
+                                "Copy over the log file to use auto mhd->gse "
+                                "conversion. (Using default {0})".format(ret))
+                else:
+                    # ok, we want auto, and we have a logfile so let's figure
+                    # out the current layout
+                    try:
+                        # if we're using a mirdip IC, and low edge is at least
+                        # twice smaller than the high edge, then assume
+                        # it's a magnetosphere box with xl < 0.0 is the sunward
+                        # edge in "MHD" coordinates
+                        is_openggcm = ("mirdip" in self.info['ggcm_mhd_ic_type'])
+                        xl = float(self.info['mrc_crds_l'][0])
+                        xh = float(self.info['mrc_crds_h'][0])
+                        if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
+                            ret = True
+                    except KeyError as e:
+                        raise RuntimeError("Could not determine coordiname system; "
+                                           "either the logfile is mangled, or "
+                                           "the libmrc options I'm using in infer "
+                                           "crd system have changed ({0})"
+                                           "".format(e.args[0]))
+                self.info["_viscid_do_mhd_to_gse_on_read"] = ret
+                return ret
+            else:
+                raise ValueError("Invalid value for mhd_to_gse_on_read: "
+                                 "'{0}'; valid choices: (True, False, auto, "
+                                 "auto_true)".format(self.mhd_to_gse_on_read))
+            return True
+        else:
+            return self.mhd_to_gse_on_read
+
     def set_crds(self, crds_object):
-        if self.mhd_to_gse_on_read:
+        if self._do_mhd_to_gse_on_read():
             transform_dict = {}
             transform_dict['y'] = mhd2gse_crds
             transform_dict['x'] = mhd2gse_crds
@@ -194,7 +251,7 @@ class GGCMGrid(grid.Grid):
 
     def add_field(self, *fields):
         for f in fields:
-            if self.mhd_to_gse_on_read:
+            if self._do_mhd_to_gse_on_read():
                 # what a pain... vector components also need to be flipped
                 if f.name in self._flip_vect_comp_names:
                     f.post_reshape_transform_func = mhd2gse_field_scalar_m1
@@ -342,7 +399,7 @@ class GGCMFile(object):
                 log_fname = find_file_uptree(".", "log.txt")
 
             if log_fname is not None:
-                self.info["log_fname"] = log_fname
+                self.info["_viscid_log_fname"] = log_fname
                 if self.vfilebucket is None:
                     self.vfilebucket = VFileBucket()
                 log_f = self.vfilebucket.load_file(log_fname,
@@ -352,9 +409,12 @@ class GGCMFile(object):
                 self.info.update(log_f.info)
             else:
                 # print("**", log_f)
+                self.info["_viscid_log_fname"] = None
                 logger.warn("You wanted to read parameters from the "
-                             "logfile, but I couldn't find one. Maybe "
-                             "you need to copy it from somewhere?")
+                            "logfile, but I couldn't find one. Maybe "
+                            "you need to copy it from somewhere?")
+        else:
+            self.info["_viscid_log_fname"] = False
 
 
 class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
@@ -406,9 +466,13 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
         self.info['run'] = re.match(self._detector, basename).group(1)
         self.info['fieldtype'] = re.match(self._detector, basename).group(2)
 
-        super(GGCMFileFortran, self).load(fname1)
-
+        # HACKY- setting dirname is done in super().load, but we
+        # need it to read the log file, which needs to happen before
+        # parsing since it sets flags for data transformation and
+        # all that stuff
+        self.dirname = os.path.dirname(os.path.abspath(fname1))
         self.read_logfile()
+        super(GGCMFileFortran, self).load(fname1)
 
     def _parse(self):
         # look for and parse grid2 file or whatever else needs be done

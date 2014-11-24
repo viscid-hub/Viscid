@@ -57,13 +57,18 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
             self._collection = fname
         else:
             self._collection = None
-        super(GGCMFileXDMF, self).load(fname[0])
 
-        basename = os.path.basename(self.fname)
+        # HACKY- setting dirname is done in super().load, but we
+        # need it to read the log file, which needs to happen before
+        # parsing since it sets flags for data transformation and
+        # all that stuff
+        _fname = os.path.expanduser(os.path.expandvars(fname[0]))
+        basename = os.path.basename(_fname)
         self.info['run'] = re.match(self._detector, basename).group(1)
-
-        # look for a log file to auto-load some parameters about the run
+        self.dirname = os.path.dirname(os.path.abspath(_fname))
         self.read_logfile()
+
+        super(GGCMFileXDMF, self).load(fname[0])
 
     def _parse(self):
         if self._collection is not None:

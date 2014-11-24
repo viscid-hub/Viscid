@@ -117,7 +117,7 @@ class VFileBucket(Bucket):
                     except IOError as e:
                         s = " IOError on file: {0}\n".format(handle_name)
                         s += "              File Type: {0}\n".format(handle_name)
-                        s += "              {0}".format(e.message)
+                        s += "              {0}".format(str(e))
                         logger.warn(s)
                     except ValueError as e:
                         # ... why am i explicitly catching ValueErrors?
@@ -125,7 +125,7 @@ class VFileBucket(Bucket):
                         # this expeception, but i didn't document what :(
                         s = " ValueError on file load: {0}\n".format(handle_name)
                         s += "              File Type: {0}\n".format(handle_name)
-                        s += "              {0}".format(e.message)
+                        s += "              {0}".format(str(e))
                         logger.warn(s)
                         # re-raise the last expection
                         raise

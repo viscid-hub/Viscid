@@ -155,8 +155,8 @@ class JrrleFileWrapper(FortranFile):
                     return meta
                 self.advance_one_line()
 
-            raise KeyError("file '{0}' has no field '{1}'".format(
-                           self.filename, fld_name))
+            raise KeyError("file '{0}' has no field '{1}'"
+                           "".format(self.filename, fld_name))
 
     def inquire_next(self):
         """Collect the meta-data from the next field in the file

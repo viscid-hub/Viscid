@@ -99,7 +99,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
             pass
 
         s = s.strip()
-        if re.match(r"[\d\.]+(\s*,\s*[\d\.]+)+", s):
+        if re.match(r"\-?[\d\.]+(\s*,\s*\-?[\d\.]+)+", s):
             l = s.split(",")
             for i, s in enumerate(l):
                 try:
@@ -110,7 +110,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                     except ValueError:
                         l[i] = s.strip()
             return np.array(l)
-        elif re.match(r"[A-Za-z\d\.]+(\s*:\s*[A-Za-z\d\.]+)+", s):
+        elif re.match(r"[A-Za-z\d\.\-]+(\s*:\s*[A-Za-z\d\.\-]+)+", s):
             return s.split(":")
         else:
             return s
