@@ -632,9 +632,16 @@ class Field(object):
         except TypeError:
             pass
 
+        # be intelligent here, if we haven't loaded the data and
+        # the source is an h5py-like source, we don't have to read
+        # the whole filed, h5py will deal with the hyperslicing for us
+        if self._cache is None and getattr(self._src_data, "_hypersliceable", False):
+            slced_dat = self._src_data[tuple(slices)]
+        else:
+            slced_dat = self.data[tuple(slices)]
+
         # if we sliced the hell out of the array, just
         # return the value that's left, ndarrays have the same behavior
-        slced_dat = self.data[tuple(slices)]
         if len(reduced) == len(slices) or slced_dat.size == 1:
             return slced_dat
         else:

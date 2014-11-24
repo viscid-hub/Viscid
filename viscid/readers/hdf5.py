@@ -15,6 +15,8 @@ except ImportError:
 
 class H5pyDataWrapper(vfile.DataWrapper):
     """  """
+    _hypersliceable = True  # can read slices from disk
+
     fname = None
     loc = None
 
@@ -80,7 +82,7 @@ class FileLazyHDF5(vfile.VFile):
     _detector = None
 
     def __init__(self, fname, **kwargs):
-        assert(HAS_H5PY)
+        assert HAS_H5PY
         super(FileLazyHDF5, self).__init__(fname, **kwargs)
 
     def _parse(self):

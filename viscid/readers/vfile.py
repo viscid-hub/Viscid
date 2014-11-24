@@ -14,6 +14,8 @@ from viscid.dataset import Dataset
 from viscid import grid
 
 class DataWrapper(object):
+    _hypersliceable = False  # can read slices from disk
+
     _shape = None
     _dtype = None
 
