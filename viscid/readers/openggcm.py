@@ -219,7 +219,7 @@ class GGCMGrid(grid.Grid):
                         # twice smaller than the high edge, then assume
                         # it's a magnetosphere box with xl < 0.0 is the sunward
                         # edge in "MHD" coordinates
-                        is_openggcm = ("mirdip" in self.info['ggcm_mhd_ic_type'])
+                        is_openggcm = (self.info['ggcm_mhd_type'] == "ggcm")
                         xl = float(self.info['mrc_crds_l'][0])
                         xh = float(self.info['mrc_crds_h'][0])
                         if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
@@ -396,7 +396,7 @@ class GGCMFile(object):
             if log_fname is None:
                 log_fname = find_file_uptree(self.dirname, "log.txt")
             if log_fname is None:
-                log_fname = find_file_uptree(".", "log.txt")
+                log_fname = find_file_uptree(self.dirname, "log.log")
 
             if log_fname is not None:
                 self.info["_viscid_log_fname"] = log_fname
