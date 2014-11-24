@@ -35,7 +35,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
 
         with self._file_wrapper as f:
             _, meta = f.inquire_next()
-            time = float(str(meta['timestr'])[6:].split()[0])
+            time = float(str(meta['timestr']).split('=')[1].split()[0])
 
         _grid = self._make_grid("<JrrleGrid>", **self._grid_opts)
         self.time = time
@@ -172,8 +172,8 @@ class JrrleFileWrapper(FortranFile):
         if not self.isopen:
             raise RuntimeError("file is not open")
 
-        varname = np.array(" "*80)
-        tstring = np.array(" "*80)
+        varname = np.array(" "*80, dtype="S80")
+        tstring = np.array(" "*80, dtype="S80")
         found_field, ndim, nx, ny, nz, it = _jrrle.inquire_next(self._unit,
                                                                 varname,
                                                                 tstring)
