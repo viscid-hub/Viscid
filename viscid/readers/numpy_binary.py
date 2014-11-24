@@ -100,7 +100,7 @@ class FileNumpyNPZ(vfile.VFile):
         return field.wrap_field(typ, fld_name, crds, lazy_arr, center=center)
 
     def _parse(self):
-        g = self._grid_type(**self._grid_opts)
+        g = self._make_grid(**self._grid_opts)
 
         with np.load(self.fname) as f:
             fld_names = f.keys()

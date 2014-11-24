@@ -92,7 +92,7 @@ class AthenaTabFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
         meta = self.parse_header(filename)
         time = meta['time']
 
-        _grid = self._grid_type("<AthenaGrid>")
+        _grid = self._make_grid("<AthenaGrid>")
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)

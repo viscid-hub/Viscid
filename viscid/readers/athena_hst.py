@@ -1,14 +1,11 @@
 """ Wrapper grid for some OpenGGCM convenience """
 
 from __future__ import print_function
-import os
 import re
 
 import numpy as np
 
 from viscid.readers import vfile
-from viscid import grid
-from viscid import dataset
 from viscid import field
 from viscid import coordinate
 
@@ -38,7 +35,7 @@ class AthenaHstFile(vfile.VFile):  # pylint: disable=abstract-method
         t = dat[0]
         crds = coordinate.wrap_crds("nonuniform_cartesian", [('t', t)])
 
-        g = grid.Grid("AthenaHstGrid")
+        g = self._make_grid("AthenaHstGrid")
         g.set_crds(crds)
         g.time = 0
         for i in range(1, len(fld_names)):

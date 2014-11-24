@@ -114,6 +114,14 @@ class VFile(Dataset):
         """ save some fields using the format given by the class """
         raise NotImplementedError()
 
+    def _make_grid(self, name=None, **kwargs):
+        other = dict(self._grid_opts)
+        other.update(kwargs)
+        info = other.pop("info", None)
+        if info is None:
+            info = self.info
+        return self._grid_type(name=name, info=info, **other)
+
     # already implemented in dataset
     #def add_grid(self, grid):
     #    self.grids[grid.name] = grid

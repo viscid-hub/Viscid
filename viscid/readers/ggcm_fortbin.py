@@ -38,7 +38,7 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         timestr = self._file_wrapper.file_meta['timestr']
         time = float(str(timestr)[6:].split()[0])
 
-        _grid = self._grid_type("<FortbinGrid>", **self._grid_opts)
+        _grid = self._make_grid("<FortbinGrid>", **self._grid_opts)
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)

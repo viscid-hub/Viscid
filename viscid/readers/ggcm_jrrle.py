@@ -37,7 +37,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
             _, meta = f.inquire_next()
             time = float(str(meta['timestr'])[6:].split()[0])
 
-        _grid = self._grid_type("<JrrleGrid>", **self._grid_opts)
+        _grid = self._make_grid("<JrrleGrid>", **self._grid_opts)
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)

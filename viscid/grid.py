@@ -37,6 +37,7 @@ class Grid(object):
     geometry_info = None
     crds = None
     fields = None
+    info = None
     # so... not all grids have times? if we try to access time on a grid
     # that doesnt have one, there is probably a bug somewhere
     # time = None
@@ -49,12 +50,19 @@ class Grid(object):
     force_vector_layout = field.LAYOUT_DEFAULT
     longterm_field_caches = False
 
-    def __init__(self, name=None, **kwargs):
+    def __init__(self, name=None, info=None, **kwargs):
         """ all kwargs are added to the grid as attributes """
+        if name is None:
+            name = "<{0} @ {1}>".format(self.__class__.__name__, hex(id(self)))
         self.name = name
         self.fields = Bucket(ordered=True)
 
         self.crds = None  # Coordinates()
+
+        if info is None:
+            info = {}
+        self.info = info
+
         for opt, value in kwargs.items():
             setattr(self, opt, value)
 

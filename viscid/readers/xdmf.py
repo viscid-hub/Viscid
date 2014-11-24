@@ -198,7 +198,7 @@ class FileXDMF(vfile.VFile):
                 logger.warn("Xdmf Uniform grids must have "
                              "topology / geometry.")
             else:
-                grd = self._grid_type(attrs["Name"], **self._grid_opts)
+                grd = self._make_grid(attrs["Name"], **self._grid_opts)
                 for attribute in el.findall("./Attribute"):
                     fld = self._parse_attribute(attribute, crds, topoattrs,
                                                 time)
