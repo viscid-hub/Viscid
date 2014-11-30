@@ -20,7 +20,7 @@ except ImportError:
 
 ##############################################
 # Global config; override before importing
-# mpl or callign activate_from_visicd either
+# mpl or calling activate_from_visicd either
 #  in script, or in rc file
 ##############################################
 enabled = False
@@ -42,9 +42,35 @@ def activate_from_viscid():
     if enabled:
         try:
             import seaborn as real_seaborn
+            # just some fancyness so i can specify an arbitrary
+            # color palette function with arbitrary arguments
+            # from the rc file
+            _palette_func = real_seaborn.color_palette
+            ##### NOPE, letting the user run an attribute of
+            ##### seaborn might be a security problem... I could
+            ##### remove "__" and the like, but even still
+            if isinstance(palette, (list, tuple)):
+                _palette = palette
+                # ##### NOPE, letting the user run an attribute of
+                # ##### seaborn might be a security problem...
+                # try:
+                #     func_name = palette[0].strip().strip("_")
+                #     func = getattr(real_seaborn, func_name)
+                #     if hasattr(func, "__call__"):
+                #         _palette_func = func
+                #         _palette = palette[1:]
+                # except (AttributeError, TypeError):
+                #     pass
+                # #####
+            else:
+                _palette = [palette]
+            _palette = _palette_func(*_palette)
+
+            # Ok, now set the defaults
             real_seaborn.set(context=context, style=style,
-                             palette=palette, font=font,
+                             palette=_palette, font=font,
                              font_scale=font_scale, rc=rc)
+
             # now pull in the public namespace
             g = globals()
             for key, value in real_seaborn.__dict__.items():
