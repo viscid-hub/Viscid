@@ -44,6 +44,9 @@ def _parse_rc_value(s):
                                    "".format(item))
     elif s.startswith('[') and s.endswith(']'):
         # parse a list
+        ret = tuple([_parse_rc_value(item) for item in s.split(',')])
+    elif s.startswith('(') and s.endswith(')'):
+        # parse a list
         ret = [_parse_rc_value(item) for item in s.split(',')]
     else:
         # parse and int / float / bool in that order
