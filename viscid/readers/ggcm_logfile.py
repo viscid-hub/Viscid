@@ -56,7 +56,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                         typ = re.match(r"-+\+-+ type -- (\w+)", line)
                         if typ:
                             _info["{0}_type".format(armed)] = typ.group(1)
-                            armed = True  # yes, true, for super's parameters
+                            # yes, keep armed, for super's parameters
                         elif line == "":
                             armed = False
                 else:
