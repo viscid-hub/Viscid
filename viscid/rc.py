@@ -7,6 +7,7 @@ readers.openggcm.GGCMFile.read_log_file: true
 from __future__ import print_function
 import os
 import importlib
+import ast
 
 import viscid
 
@@ -23,47 +24,43 @@ class RCValueError(Exception):
         self.message = message
         super(RCValueError, self).__init__(message)
 
+class _Transformer(ast.NodeTransformer):
+    """Turn a string into python objects (strings, numbers, as basic types)"""
+    ALLOWED_NODE_TYPES = set([
+        'Expression', # a top node for an expression
+        'Name',       # an identifier...
+        'NameConstant',
+        'Attribute',
+        'Load',       # loads a value of a variable with given identifier
+        'Str',        # a string literal
+        'Num',        # allow numbers too
+        'Tuple',      # makes a tuple
+        'List',       # and list literals
+        'Dict',       # and dicts...
+    ])
+
+    def visit_Name(self, node):
+        if node.id.lower() == "true":
+            node = ast.copy_location(ast.NameConstant(True), node)
+        elif node.id.lower() == "false":
+            node = ast.copy_location(ast.NameConstant(False), node)
+        else:
+            node = ast.copy_location(ast.Str(s=node.id), node)
+        return self.generic_visit(node)
+
+    # def generic_visit(self, node):
+    #     # nodetype = type(node).__name__
+    #     # if nodetype not in self.ALLOWED_NODE_TYPES:
+    #     #     raise RCValueError("Invalid expression: %s not allowed" % nodetype)
+    #     return ast.NodeTransformer.generic_visit(self, node)
 
 def _parse_rc_value(s):
-    s = s.strip()
-
-    ret = None
-
-    if s.startswith('{') and s.endswith('}'):
-        # parse a dict
-        s = s[1:-1]
-        ret = {}
-        for item in s.split(','):
-            try:
-                key, value = item.split(":")
-                ret[key.strip()] = _parse_rc_value(value)
-            except ValueError:
-                if len(item.strip()) == 0:
-                    continue
-                raise RCValueError("Malformed dictionary: '{0}'"
-                                   "".format(item))
-    elif s.startswith('[') and s.endswith(']'):
-        # parse a list
-        ret = tuple([_parse_rc_value(item) for item in s.split(',')])
-    elif s.startswith('(') and s.endswith(')'):
-        # parse a list
-        ret = [_parse_rc_value(item) for item in s.split(',')]
-    else:
-        # parse and int / float / bool in that order
-        # if all else fails, just retorn the string we got in
-        try:
-            ret = int(s)
-        except ValueError:
-            try:
-                ret = float(s)
-            except ValueError:
-                if s.lower() == "true":
-                    ret = True
-                elif s.lower() == "false":
-                    ret = False
-                else:
-                    ret = s
-    return ret
+    try:
+        tree = ast.parse(s.strip(), mode='eval')
+        _Transformer().visit(tree)
+        return ast.literal_eval(tree)
+    except ValueError as e:
+        raise RCValueError("ast parser vomited")
 
 def _get_obj(rt, path):
     if len(path) == 0:
@@ -92,7 +89,8 @@ def set_attribute(path, value):
     try:
         value = _parse_rc_value(value)
     except RCValueError as e:
-        print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(e.message))
+        print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(value))
+        print("                                          {0}".format(e.message))
         return None
 
     obj = _get_obj(viscid, p[:-1])
