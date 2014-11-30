@@ -289,9 +289,8 @@ class StructuredCrds(Coordinates):
             for i, s in enumerate(selection.replace('_', ',').split(',')):
                 swhole = s
                 s = s.split('=')
-                if not len(s) == 2:
-                    raise IndexError("There must be exactly 1 '=' per dim, "
-                                     "I see '{0}'".format(swhole))
+                if len(s) < 2:
+                    s.insert(0, self.axes[i])
                 # this extra : split is for asking for a subset in one
                 # dimension
                 dim = s[0].strip()
@@ -313,9 +312,11 @@ class StructuredCrds(Coordinates):
         elif isinstance(selection, (tuple, list)):
             ret = {}
             try:
+                # put ':' slices in for an Ellipsis
                 i = selection.index(Ellipsis)
                 sln = [slice(None)] * (self.nr_dims - (len(selection) - 1))
                 selection = selection[:i] + sln + selection[i + 1:]
+
                 for i in range(selection):
                     if selection[i] == Ellipsis:
                         selection[i] = slice(None)
@@ -383,7 +384,11 @@ class StructuredCrds(Coordinates):
             sel = selection[axis]
 
             if isinstance(sel, slice):
-                slc = sel
+                if isinstance(sel.start, (float, np.floating)) or \
+                   isinstance(sel.stop, (float, np.floating)):
+                    sel = [sel.start, sel.stop, sel.step]
+                else:
+                    slc = sel
 
             # expect val to be a list to describe start, stop, stride
             if isinstance(sel, (int, float, np.number)):
