@@ -7,6 +7,7 @@ successful, then the entire namespace is imported here and
 seaborn can be used from this module.
 """
 
+from __future__ import print_function
 import imp
 
 from viscid import logger
@@ -46,9 +47,6 @@ def activate_from_viscid():
             # color palette function with arbitrary arguments
             # from the rc file
             _palette_func = real_seaborn.color_palette
-            ##### NOPE, letting the user run an attribute of
-            ##### seaborn might be a security problem... I could
-            ##### remove "__" and the like, but even still
             if isinstance(palette, (list, tuple)):
                 _palette = palette
                 # ##### NOPE, letting the user run an attribute of

@@ -25,11 +25,11 @@ from viscid import field
 from viscid import coordinate
 from viscid.calculator import calc
 from viscid.calculator.topology import color_from_topology
-from viscid.plot import seaborn
+from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
-seaborn.activate_from_viscid()
+vseaborn.activate_from_viscid()
 
 
 def plot(fld, selection=None, **kwargs):
