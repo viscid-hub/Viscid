@@ -24,35 +24,22 @@ class RCValueError(Exception):
         self.message = message
         super(RCValueError, self).__init__(message)
 
+
 class _Transformer(ast.NodeTransformer):
     """Turn a string into python objects (strings, numbers, as basic types)"""
-    ALLOWED_NODE_TYPES = set([
-        'Expression', # a top node for an expression
-        'Name',       # an identifier...
-        'NameConstant',
-        'Attribute',
-        'Load',       # loads a value of a variable with given identifier
-        'Str',        # a string literal
-        'Num',        # allow numbers too
-        'Tuple',      # makes a tuple
-        'List',       # and list literals
-        'Dict',       # and dicts...
-    ])
-
     def visit_Name(self, node):
-        if node.id.lower() == "true":
-            node = ast.copy_location(ast.NameConstant(True), node)
-        elif node.id.lower() == "false":
-            node = ast.copy_location(ast.NameConstant(False), node)
+        if node.id.lower() in ["true", "false"]:
+            # turn 'true' / 'True' / 'TRUE' / etc. into True
+            val = True if node.id.lower() == "true" else False
+            try:
+                node = ast.copy_location(ast.NameConstant(val), node)
+            except AttributeError:
+                node = ast.copy_location(ast.Name(str(val), node.ctx), node)
         else:
+            # turn other bare names into strings
             node = ast.copy_location(ast.Str(s=node.id), node)
         return self.generic_visit(node)
 
-    # def generic_visit(self, node):
-    #     # nodetype = type(node).__name__
-    #     # if nodetype not in self.ALLOWED_NODE_TYPES:
-    #     #     raise RCValueError("Invalid expression: %s not allowed" % nodetype)
-    #     return ast.NodeTransformer.generic_visit(self, node)
 
 def _parse_rc_value(s):
     try:
