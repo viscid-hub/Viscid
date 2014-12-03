@@ -635,9 +635,22 @@ class Field(object):
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
         # the whole filed, h5py will deal with the hyperslicing for us
+        slced_dat = None
         if self._cache is None and getattr(self._src_data, "_hypersliceable", False):
-            slced_dat = self._src_data[tuple(slices)]
-        else:
+            # FIXME: this is a bad hack for the fact that fields and the slices
+            # 3 spatial dimensions, but the src_data may have fewer
+            _slices = slices
+            if len(self._src_data.shape) != len(slices):
+                _slices = []
+                j = 0  # trailing index
+                for i, slc in enumerate(slices):
+                    if self._src_data.shape[j] == self.shape[i]:
+                        _slices.append(slc)
+                        j += 1
+            if len(self._src_data.shape) == len(_slices):
+                slced_dat = self._src_data[tuple(_slices)]
+        # either not hypersliceable, or the shapes didn't match up
+        if slced_dat is None:
             slced_dat = self.data[tuple(slices)]
 
         # if we sliced the hell out of the array, just
