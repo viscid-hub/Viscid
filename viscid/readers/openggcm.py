@@ -220,6 +220,9 @@ class GGCMGrid(grid.Grid):
                         # it's a magnetosphere box with xl < 0.0 is the sunward
                         # edge in "MHD" coordinates
                         is_openggcm = (self.info['ggcm_mhd_type'] == "ggcm")
+                        # this 2nd check is in case the ggcm_mhd view in the
+                        # log file is mangled... this happens sometimes
+                        is_openggcm |= (self.info['ggcm_mhd_ic_type'].startswith("mirdip"))
                         xl = float(self.info['mrc_crds_l'][0])
                         xh = float(self.info['mrc_crds_h'][0])
                         if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
