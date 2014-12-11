@@ -636,7 +636,14 @@ class Field(object):
         # the source is an h5py-like source, we don't have to read
         # the whole filed, h5py will deal with the hyperslicing for us
         slced_dat = None
-        if self._cache is None and getattr(self._src_data, "_hypersliceable", False):
+
+        # FIXME: this is a hell of an if statement, further complicated
+        # by the fact that transform funcs don't play nice with this
+        # sort of lazy slicing
+        if self._cache is None and \
+           self.pre_reshape_transform_func is None and \
+           self.post_reshape_transform_func is None and \
+           getattr(self._src_data, "_hypersliceable", False):
             # FIXME: this is a bad hack for the fact that fields and the slices
             # 3 spatial dimensions, but the src_data may have fewer
             _slices = slices

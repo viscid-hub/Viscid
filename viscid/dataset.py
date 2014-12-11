@@ -247,6 +247,7 @@ class DatasetTemporal(Dataset):
                 slc = int(s)
             except ValueError:
                 slc = np.argmin(np.abs(float(s) - times))
+            slc = slice(slc, slc + 1)
         else:
             for i, s in enumerate(slc_lst):
                 if s == "":
