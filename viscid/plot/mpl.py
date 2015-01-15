@@ -95,6 +95,7 @@ def _parse_str(plot_opts):
         elif not isinstance(plot_opts[i], (list, tuple)):
             plot_opts[i] = [plot_opts[i]]
 
+    plot_opts = [o for o in plot_opts if o[0] != ""]
     return plot_opts
 
 def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
