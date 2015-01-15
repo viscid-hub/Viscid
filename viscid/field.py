@@ -9,12 +9,13 @@ convenience functions for creating fields similar to `Numpy`.
 
 from __future__ import print_function
 import warnings
+from itertools import count, islice
 from inspect import isclass
 
 import numpy as np
 
 from viscid import logger
-from viscid.compat import string_types
+from viscid.compat import string_types, izip_longest
 from viscid import coordinate
 from viscid import vutil
 
@@ -123,7 +124,9 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
     time = fldlist[0].time
     # shape = fldlist[0].data.shape
 
-    vfield = VectorField(name, crds, fldlist, center=center, time=time,
+    _crds = type(crds)(crds.get_clist())
+
+    vfield = VectorField(name, _crds, fldlist, center=center, time=time,
                          info=fldlist[0].info, **kwargs)
     return vfield
 
@@ -178,6 +181,7 @@ def rewrap_field(fld):
 class Field(object):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
+    _COMPONENT_NAMES = ""
 
     # set on __init__
     # NOTE: _src_data is allowed by be a list to support creating vectors from
@@ -193,7 +197,6 @@ class Field(object):
     deep_meta = None
     pretty_name = None  # String
 
-    pre_reshape_transform_func = None
     post_reshape_transform_func = None
     transform_func_kwargs = None
 
@@ -215,7 +218,6 @@ class Field(object):
 
     def __init__(self, name, crds, data, center="Node", time=0.0, info=None,
                  deep_meta=None, forget_source=False, pretty_name=None,
-                 pre_reshape_transform_func=None,
                  post_reshape_transform_func=None,
                  transform_func_kwargs=None,
                  _parent_field=None,
@@ -237,8 +239,13 @@ class Field(object):
         else:
             self.pretty_name = pretty_name
 
-        if pre_reshape_transform_func is not None:
-            self.pre_reshape_transform_func = pre_reshape_transform_func
+        # # i think this is a mistake
+        # if isinstance(data, (list, tuple)) and isinstance(data[0], Field):
+        #     if post_reshape_transform_func is None:
+        #         post_reshape_transform_func = data[0].post_reshape_transform_func
+        #     if transform_func_kwargs is None:
+        #         transform_func_kwargs = data[0].transform_func_kwargs
+
         if post_reshape_transform_func is not None:
             self.post_reshape_transform_func = post_reshape_transform_func
         if transform_func_kwargs:
@@ -444,7 +451,6 @@ class Field(object):
         self._cache = None
         if self._parent_field is not None:
             self._parent_field._cache = self._cache
-
     def _fill_cache(self):
         """ actually load data into the cache """
         self._cache = self._src_data_to_ndarray()
@@ -535,14 +541,18 @@ class Field(object):
         else:
             arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
 
-        if self.pre_reshape_transform_func is not None:
-            arr = self.pre_reshape_transform_func(self, arr,
-                                                  **self.transform_func_kwargs)
-
         arr = self._reshape_ndarray_to_crds(arr)
+        try:
+            nr_comp = self.nr_comp
+            nr_comps = self.nr_comps
+        except TypeError:
+            nr_comp = None
+            nr_comps = None
+        arr = self.crds.reflect_fld_arr(arr, self.iscentered("Cell"),
+                                        nr_comp, nr_comps)
 
         if self.post_reshape_transform_func is not None:
-            arr = self.post_reshape_transform_func(self, arr,
+            arr = self.post_reshape_transform_func(self, self.crds, arr,
                                                    **self.transform_func_kwargs)
 
         return arr
@@ -611,66 +621,172 @@ class Field(object):
 
     def _prepare_slice(self, selection):
         """ if selection has a slice for component dimension, set it aside """
-        comp_slc = slice(None)
-        if isinstance(selection, tuple):
-            selection = list(selection)
-        if isinstance(selection, list):
-            if self.nr_comps > 0 and len(selection) == self.nr_dims:
-                comp_slc = selection.pop(self.nr_comp)
+        comp_slc = None
+
+        # try to look for a vector component slice
+        if self.nr_comps > 0:
+            try:
+                if isinstance(selection, (list, tuple)):
+                    sel_lst = list(selection)
+                    _isstr = False
+                elif isinstance(selection, string_types):
+                    _ = selection.replace('_', ',')
+                    sel_lst = [s for s in _.split(",")]  # pylint: disable=maybe-no-member
+                    _isstr = True
+                else:
+                    raise TypeError()
+
+                for i, s in enumerate(sel_lst):
+                    try:
+                        if len(s.strip()) == 1 and s in self._COMPONENT_NAMES:
+                            # ok, this is asking for a component
+                            comp_slc = s
+                            sel_lst.pop(i)
+                            break
+                    except AttributeError:
+                        continue
+                if len(sel_lst) == self.nr_dims and comp_slc is None:
+                    comp_slc = sel_lst.pop(self.nr_comp)
+
+                if isinstance(comp_slc, string_types):
+                    comp_slc = self._COMPONENT_NAMES.index(comp_slc)
+                if _isstr:
+                    selection = ",".join(sel_lst)
+                else:
+                    selection = sel_lst
+            except TypeError:
+                pass
+
+        if comp_slc is None:
+            comp_slc = slice(None)
+
         return selection, comp_slc
 
     def _finalize_slice(self, slices, crdlst, reduced, comp_slc):
+        all_none = (list(slices) == [slice(None)] * len(slices))
+        no_sslices = slices is None or all_none
+        no_compslice = comp_slc is None or comp_slc == slice(None)
+
         # no slice necessary, just pass the field through
-        if list(slices) == [slice(None)] * len(slices):
+        if no_sslices and no_compslice:
             return self
+
+        # if we're doing a component slice, and the underlying
+        # data is a list/tuple of Field objects, we don't need
+        # to do any more work
+        src_is_fld_list = (isinstance(self._src_data, (list, tuple)) and
+                           all([isinstance(f, Field) for f in self._src_data]))
+        if no_sslices and src_is_fld_list:
+            if self.post_reshape_transform_func is not None:
+                raise NotImplementedError()
+            return self._src_data[comp_slc]
 
         # coord transforms are not copied on purpose
         crds = coordinate.wrap_crds(self.crds.type, crdlst)
 
-        try:
-            slices.insert(self.nr_comp, comp_slc)
-        except TypeError:
-            pass
-
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
-        # the whole filed, h5py will deal with the hyperslicing for us
+        # the whole field; h5py will deal with the hyperslicing for us
         slced_dat = None
 
-        # FIXME: this is a hell of an if statement, further complicated
-        # by the fact that transform funcs don't play nice with this
-        # sort of lazy slicing
-        if self._cache is None and \
-           self.pre_reshape_transform_func is None and \
-           self.post_reshape_transform_func is None and \
-           getattr(self._src_data, "_hypersliceable", False):
-            # FIXME: this is a bad hack for the fact that fields and the slices
-            # 3 spatial dimensions, but the src_data may have fewer
-            _slices = slices
-            if len(self._src_data.shape) != len(slices):
-                _slices = []
+        hypersliceable = getattr(self._src_data, "_hypersliceable", False)
+        single_comp_slc = isinstance(comp_slc, (int, np.integer))
+        cc = self.iscentered("Cell")
+
+        if self._cache is None and src_is_fld_list:
+            if single_comp_slc:
+                # this may not work as advertised since slices may
+                # not be complete?
+                slced_dat = self._src_data[comp_slc][slices]
+            else:
+                comps = self._src_data[comp_slc]
+                slced_dat = [c[slices] for c in comps]
+        elif self._cache is None and hypersliceable:
+            # we have to flip the slice, meaning: if the array looks like
+            # ind     : 0    1     2    3    4    5    6
+            # x       : -1.0 -0.5  0.0  0.5  1.0  1.5  2.0
+            # -x[::-1]: -2.0 -1.5 -1.0 -0.5  0.0  0.5  1.0
+            # if the slice is [-0.5:1.0], the crds figured out the slice
+            # indices after doing -x[::-1], so the slice will be [3:7],
+            # but in _src_dat, that data lives at indices [0:3]
+            # so what we want is _src_data[::-1][3:6], but a more efficient
+            # way to do this for large data sets is _src_data[0:3][::-1]
+            # We will always read _src_data forward, then flip it since
+            # h5py won't do a slice of [3:0:-1]
+            first_slc, second_slc = self.crds.reflect_slices(slices, cc, False)
+
+            # now put component slice back in
+            try:
+                nr_comp = self.nr_comp
+                first_slc.insert(self.nr_comp, comp_slc)
+                if not single_comp_slc:
+                    second_slc.insert(self.nr_comp, slice(None))
+            except TypeError:
+                nr_comp = None
+
+            # this is a bad hack for the fact that fields and the slices
+            # have 3 spatial dimensions, but the src_data may have fewer
+            _first, _second = first_slc, second_slc
+            if len(self._src_data.shape) != len(_first):
+                _first, _second = [], []
                 j = 0  # trailing index
-                for i, slc in enumerate(slices):
+                it = izip_longest(count(), first_slc, second_slc,
+                                  fillvalue=None)
+                for i, a, b in islice(it, None, len(first_slc)):
                     if self._src_data.shape[j] == self.shape[i]:
-                        _slices.append(slc)
+                        _first.append(a)
+                        _second.append(b)
                         j += 1
-            if len(self._src_data.shape) == len(_slices):
-                slced_dat = self._src_data[tuple(_slices)]
-        # either not hypersliceable, or the shapes didn't match up
+
+            # ok, now cull out from the second slice
+            _second = [s for s in _second if s is not None]
+
+            # only hyperslice _src_data if our slice has the right shape
+            if len(self._src_data.shape) == len(_first):
+                # do the hyper-slice
+                slced_dat = self._src_data[tuple(_first)][tuple(_second)]
+
+                # post-reshape-transform
+                if self.post_reshape_transform_func is not None:
+                    if cc:
+                        target_shape = crds.shape_cc
+                    else:
+                        target_shape = crds.shape_nc
+                    if nr_comp is not None:
+                        target_shape.insert(nr_comp, -1)
+                    slced_dat = self.post_reshape_transform_func(
+                        self, crds, slced_dat.reshape(target_shape),
+                        comp_slc=comp_slc, **self.transform_func_kwargs)
+
+        # fallback: either not hypersliceable, or the shapes didn't match up
         if slced_dat is None:
+            try:
+                slices.insert(self.nr_comp, comp_slc)
+            except TypeError:
+                pass
             slced_dat = self.data[tuple(slices)]
 
-        # if we sliced the hell out of the array, just
-        # return the value that's left, ndarrays have the same behavior
-        if len(reduced) == len(slices) or slced_dat.size == 1:
-            return slced_dat
+        if len(reduced) == len(slices) or getattr(slced_dat, 'size', 0) == 1:
+            # if we sliced the hell out of the array, just
+            # return the value that's left, ndarrays have the same behavior
+            ret = slced_dat
         else:
-            fld = self.wrap(slced_dat,
-                            {"crds": crds})
+            ctx = dict(crds=crds)
+            typ = None
+            # if we sliced a vector down to one component
+            if self.nr_comps is not None:
+                if single_comp_slc:
+                    comp_name = self._COMPONENT_NAMES[comp_slc]
+                    ctx['name'] = self.name + comp_name
+                    ctx['pretty_name'] = (self.pretty_name +
+                                          "$_{0}$".format(comp_name))
+                    typ = "Scalar"
+            ret = self.wrap(slced_dat, ctx, typ=typ)
+
             # if there are reduced dims, put them into the deep_meta dict
             if len(reduced) > 0:
-                fld.deep_meta["reduced"] = reduced
-            return fld
+                ret.deep_meta["reduced"] = reduced
+        return ret
 
     def forget_source(self):
         self._src_data = self.data
@@ -711,9 +827,18 @@ class Field(object):
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def set_slice(self, selection, value):
+        """Used for fld.__setitem__
+
+        NOTE:
+            This is only lightly tested
+        """
         cc = self.iscentered("Cell")
-        selection = self._prepare_slice(selection)[0]
+        selection, comp_slc = self._prepare_slice(selection)
         slices, _ = self.crds.make_slice(selection, cc=cc)[:2]
+        try:
+            slices.insert(self.nr_comp, comp_slc)
+        except TypeError:
+            pass
         self.data[tuple(slices)] = value
         return None
 
@@ -840,7 +965,6 @@ class Field(object):
                        time=self.time, info=self.info, deep_meta=self.deep_meta,
                        forget_source=False,
                        pretty_name=self.pretty_name,
-                       pre_reshape_transform_func=self.pre_reshape_transform_func,
                        post_reshape_transform_func=self.post_reshape_transform_func,
                        transform_func_kwargs=self.transform_func_kwargs,
                        **kwargs)
@@ -876,7 +1000,6 @@ class Field(object):
                            time=self.time, info=self.info,
                            deep_meta=self.deep_meta, forget_source=False,
                            pretty_name=self.pretty_name,
-                           pre_reshape_transform_func=self.pre_reshape_transform_func,
                            post_reshape_transform_func=self.post_reshape_transform_func,
                            transform_func_kwargs=self.transform_func_kwargs,
                            _parent_field=self)
@@ -888,7 +1011,7 @@ class Field(object):
             return f
 
         else:
-            raise NotImplementedError("can't yet move {0} to node "
+            raise NotImplementedError("can't yet move {0} to cell "
                                       "centers".format(self.center))
 
 
@@ -912,7 +1035,6 @@ class Field(object):
                            time=self.time, info=self.info,
                            deep_meta=self.deep_meta, forget_source=False,
                            pretty_name=self.pretty_name,
-                           pre_reshape_transform_func=self.pre_reshape_transform_func,
                            post_reshape_transform_func=self.post_reshape_transform_func,
                            transform_func_kwargs=self.transform_func_kwargs,
                            _parent_field=self)
@@ -938,7 +1060,7 @@ class Field(object):
 
     def __setitem__(self, key, value):
         """ just act as if you setitem on underlying data """
-        self.data.__setitem__(key, value)
+        self.set_slice(key, value)
 
     def __delitem__(self, item):
         """ just act as if you delitem on underlying data, probably raises a
@@ -1156,38 +1278,22 @@ class VectorField(Field):
     def component_views(self):
         """ return numpy views to components individually, memory layout
         of the original field is maintained """
-        nr_comps = self.nr_comps
-        # comp_slc = [slice(None)] * self.nr_dims
-        if self.layout == LAYOUT_FLAT:
-            return [self.data[i, ...] for i in range(nr_comps)]
-        elif self.layout == LAYOUT_INTERLACED:
-            return [self.data[..., i] for i in range(nr_comps)]
-        else:
-            return [self.data[..., i] for i in range(nr_comps)]
+        flds = self.component_fields()
+        return [f.data for f in flds]
 
     def component_fields(self):
-        n = self.name
-        crds = self.crds
-        c = self.center
-        t = self.time
-        views = self.component_views()
-        lst = [None] * len(views)
-        for i, v in enumerate(views):
-            lst[i] = ScalarField("{0}{1}".format(n, self._COMPONENT_NAMES[i]),
-                                 crds, v, center=c, time=t, info=self.info)
-        return lst
+        if (self.layout == LAYOUT_FLAT and
+            isinstance(self._src_data, (list, tuple)) and
+            all([isinstance(f, Field) for f in self._src_data])):
+            # if all elements are fields
+            return self._src_data
 
-    def __getitem__(self, item):
-        if isinstance(item, string_types) and item in self._COMPONENT_NAMES:
-            i = self._COMPONENT_NAMES.index(item)
-            if self.layout == LAYOUT_FLAT:
-                dat = self.data[i, ...]
-            else:
-                dat = self.data[..., i]
-            return self.wrap(dat, typ="Scalar",
-                             context={"name": self.name + item})
-        else:
-            return super(VectorField, self).__getitem__(item)
+        lst = [None] * self.nr_comps
+        for i in range(self.nr_comps):
+            slc = [slice(None)] * (len(self.shape))
+            slc[self.nr_comp] = i
+            lst[i] = self[slc]
+        return lst
 
 class MatrixField(Field):
     _TYPE = "matrix"

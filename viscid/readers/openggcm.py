@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """ Wrapper grid for some OpenGGCM convenience """
 
+# look at what 'copy_on_transform' actually does... the fact
+# that it's here is awkward
+
 from __future__ import print_function, division
 import os
 import re
@@ -97,51 +100,59 @@ def group_ggcm_files_common(detector, fnames):
 
 # these are just functions because refrences to instance methods can't be pickled,
 # so grids couldn't be pickled over to other precesses
-def mhd2gse_field_scalar_m1(fld, arr, copy_on_transform=False):  # pylint: disable=unused-argument
+def mhd2gse_field_scalar_m1(fld, crds, arr, comp_slc=None,
+                            copy_on_transform=False):  # pylint: disable=unused-argument
     # This is always copied since the -1.0 * arr will need new
     # memory anyway
-    a = np.array(arr[:, ::-1, ::-1], copy=False)
-
+    # a = np.array(arr[:, ::-1, ::-1], copy=False)
     if copy_on_transform:
         if _has_numexpr:
             m1 = np.array([-1.0], dtype=arr.dtype)  # pylint: disable=unused-variable
-            a = numexpr.evaluate("a * m1")
+            arr = numexpr.evaluate("a * m1")
         else:
-            a = a * -1
+            arr = arr * -1
     else:
-        a *= -1.0
-    return a
+        arr *= -1.0
+    return arr
 
-def mhd2gse_field_scalar(fld, arr, copy_on_transform=False):  # pylint: disable=unused-argument
+def mhd2gse_field_scalar(fld, crds, arr, comp_slc=None,
+                         copy_on_transform=False):
     # Note: field._data will be set to whatever is returned (after
     # being reshaped to the crd shape), so if you return a view,
     # field._data will be a view
-    return np.array(arr[:, ::-1, ::-1], copy=copy_on_transform)
+    if copy_on_transform:
+        return np.array(arr, copy=True)
+    else:
+        return arr
 
-def mhd2gse_field_vector(fld, arr, copy_on_transform=False):
+def mhd2gse_field_vector(fld, crds, arr, comp_slc=None,
+                         copy_on_transform=False):
     layout = fld.layout
+    shp = [1] * len(crds.shape)
     if layout == field.LAYOUT_INTERLACED:
-        a = np.array(arr[:, ::-1, ::-1, :], copy=False)
-        factor = np.array([-1.0, -1.0, 1.0],
-                          dtype=arr.dtype).reshape(1, 1, 1, -1)
+        shp.append(-1)
     elif layout == field.LAYOUT_FLAT:
-        a = np.array(arr[:, :, ::-1, ::-1], copy=False)
-        factor = np.array([-1.0, -1.0, 1.0],
-                          dtype=arr.dtype).reshape(-1, 1, 1, 1)
+        shp.insert(0, -1)
     else:
         raise RuntimeError("well what am i looking at then...")
-
+    factor = np.array([-1.0, -1.0, 1.0], dtype=arr.dtype).reshape(shp)
+    if comp_slc is not None:
+        tmpslc = [slice(None) if s == 1 else comp_slc for s in shp]
+        factor = factor[tmpslc]
+    # print("** factor", factor.shape, factor.flatten())
     if copy_on_transform:
         if _has_numexpr:
-            a = numexpr.evaluate("arr * factor")
+            arr = numexpr.evaluate("arr * factor")
         else:
-            a = a * factor
+            arr = arr * factor
     else:
-        a *= factor
-    return a
+        arr *= factor
+    return arr
 
-def mhd2gse_crds(crds, arr, copy_on_transform=False):  # pylint: disable=unused-argument
-    return np.array(-1.0 * arr[::-1], copy=copy_on_transform)
+# def mhd2gse_crds(crds, arr, copy_on_transform=False):  # pylint: disable=unused-argument
+#     # print("transforming crds")
+#     raise RuntimeError("This functionality is now in crds")
+#     return np.array(-1.0 * arr[::-1], copy=copy_on_transform)
 
 
 class GGCMGrid(grid.Grid):
@@ -245,21 +256,25 @@ class GGCMGrid(grid.Grid):
 
     def set_crds(self, crds_object):
         if self._do_mhd_to_gse_on_read():
-            transform_dict = {}
-            transform_dict['y'] = mhd2gse_crds
-            transform_dict['x'] = mhd2gse_crds
-            crds_object.transform_funcs = transform_dict
-            crds_object.transform_kwargs = dict(copy_on_transform=self.copy_on_transform)
+            # transform_dict = {}
+            # transform_dict['y'] = mhd2gse_crds
+            # transform_dict['x'] = mhd2gse_crds
+            # crds_object.transform_funcs = transform_dict
+            # crds_object.transform_kwargs = dict(copy_on_transform=self.copy_on_transform)
+            crds_object.reflect_axes = "xy"
         super(GGCMGrid, self).set_crds(crds_object)
 
     def add_field(self, *fields):
         for f in fields:
             if self._do_mhd_to_gse_on_read():
                 # what a pain... vector components also need to be flipped
-                if f.name in self._flip_vect_comp_names:
+                if isinstance(f, field.VectorField):
+                    f.post_reshape_transform_func = mhd2gse_field_vector
+                elif f.name in self._flip_vect_comp_names:
                     f.post_reshape_transform_func = mhd2gse_field_scalar_m1
                 elif f.name in self._flip_vect_names:
-                    f.post_reshape_transform_func = mhd2gse_field_vector
+                    raise NotImplementedError("this shouldn't happen")
+                    # f.post_reshape_transform_func = mhd2gse_field_vector
                 else:
                     f.post_reshape_transform_func = mhd2gse_field_scalar
                 f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
@@ -275,25 +290,25 @@ class GGCMGrid(grid.Grid):
         return T
 
     def _get_bx(self):
-        return self['b'].component_fields()[0]
+        return self['b']['x']
 
     def _get_by(self):
-        return self['b'].component_fields()[1]
+        return self['b']['y']
 
     def _get_bz(self):
-        return self['b'].component_fields()[2]
+        return self['b']['z']
 
     def _get_vx(self):
-        return self['v'].component_fields()[0]
+        return self['v']['x']
 
     def _get_vy(self):
-        return self['v'].component_fields()[1]
+        return self['v']['y']
 
     def _get_vz(self):
-        return self['v'].component_fields()[2]
+        return self['v']['z']
 
     def _assemble_vector(self, base_name, comp_names="xyz", suffix="",
-                         forget_source=True, **kwargs):
+                         forget_source=False, **kwargs):
         opts = dict(forget_source=forget_source, **kwargs)
         # caching behavior depends on self.longterm_field_caches
         comps = [self[base_name + c + suffix] for c in comp_names]

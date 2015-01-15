@@ -25,6 +25,7 @@ import itertools
 
 import numpy as np
 
+from viscid.compat import string_types
 from viscid import vutil
 
 
@@ -64,30 +65,24 @@ class Coordinates(object):
 class StructuredCrds(Coordinates):
     _TYPE = "structured"
     _CENTER = {"none": "", "node": "nc", "cell": "cc",
-              "face": "fc", "edge": "ec"}
+               "face": "fc", "edge": "ec"}
     SUFFIXES = list(_CENTER.values())
 
     _axes = ["z", "y", "x"]
 
     _src_crds_nc = None
 
-    transform_funcs = None
-    transform_kwargs = None
+    _reflect_axes = None
     has_cc = None
 
-    def __init__(self, init_clist, has_cc=True, transform_funcs=None,
-                 transform_kwargs=None, **kwargs):
+    def __init__(self, init_clist, has_cc=True, reflect_axes=None,
+                 **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
         super(StructuredCrds, self).__init__(**kwargs)
         self.has_cc = has_cc
 
-        if transform_funcs is not None:
-            self.transform_funcs = transform_funcs
-        if transform_kwargs:
-            self.transform_kwargs = transform_kwargs
-        else:
-            self.transform_kwargs = {}
+        self.reflect_axes = reflect_axes
 
         if init_clist is not None:
             self._axes = [d[0].lower() for d in init_clist]
@@ -133,6 +128,16 @@ class StructuredCrds(Coordinates):
         return np.product(self.shape_cc)
 
     @property
+    def reflect_axes(self):
+        return self._reflect_axes
+
+    @reflect_axes.setter
+    def reflect_axes(self, val):
+        if not val:
+            val = []
+        self._reflect_axes = val
+
+    @property
     def _crds(self):
         "!!! BIG NOTE: THIS PROPERTY IS STILL PRIVATE !!!"
         if self.__crds is None:
@@ -166,6 +171,38 @@ class StructuredCrds(Coordinates):
             # ind = self.ind(axis)
             self._src_crds_nc[axis.lower()] = data
 
+    def _reflect_axis_arr(self, arr):  # pylint: disable=no-self-use
+        return np.array(-1.0 * arr[::-1])
+
+    def reflect_fld_arr(self, arr, cc=False, nr_comp=None, nr_comps=None):
+        fudge = 0 if nr_comp is None else 1
+        assert len(arr.shape) == len(self._axes) + fudge
+
+        rev = [True if ax in self.reflect_axes else False for ax in self._axes]
+        if cc:
+            shape = self.shape_cc
+        else:
+            shape = self.shape_nc
+
+        if nr_comp is not None:
+            shape.insert(nr_comp, nr_comps)
+            rev.insert(nr_comp, False)
+        first, second = vutil.make_fwd_slice(shape, [], rev)
+        return arr[tuple(first)][tuple(second)]
+
+    def reflect_slices(self, slices, cc=False, cull_second=True):
+        """This is tricky, only use if you know what's going on"""
+        assert len(slices) == len(self._axes)
+
+        rev = [True if ax in self.reflect_axes else False for ax in self._axes]
+        if cc:
+            shape = self.shape_cc
+        else:
+            shape = self.shape_nc
+        first, second = vutil.make_fwd_slice(shape, slices, rev,
+                                             cull_second=cull_second)
+        return first, second
+
     def _fill_crds_dict(self):
         """ do the math to calc node, cell, face, edge crds from
         the src crds """
@@ -179,13 +216,18 @@ class StructuredCrds(Coordinates):
             ind = self.ind(axis)
             arr = np.array(arr, dtype=arr.dtype.name)
 
-            if self.transform_funcs is not None:
-                if axis in self.transform_funcs:
-                    arr = self.transform_funcs[axis](self, arr,
-                                                     **self.transform_kwargs)
-                elif ind in self.transform_funcs:
-                    arr = self.transform_funcs[ind](self, arr,
-                                                    **self.transform_kwargs)
+            if axis in self.reflect_axes:
+                arr = self._reflect_axis_arr(arr)
+
+            # ====================================================================
+            # if self.transform_funcs is not None:
+            #     if axis in self.transform_funcs:
+            #         arr = self.transform_funcs[axis](self, arr,
+            #                                          **self.transform_kwargs)
+            #     elif ind in self.transform_funcs:
+            #         arr = self.transform_funcs[ind](self, arr,
+            #                                         **self.transform_kwargs)
+            # ====================================================================
 
             flatarr, openarr = self._ogrid_single(ind, arr)
             self.__crds[axis.lower()] = flatarr
@@ -284,10 +326,9 @@ class StructuredCrds(Coordinates):
             return {self._axes[0]: selection}
         elif selection is None or len(selection) == 0:
             return {}
-        elif isinstance(selection, str):
+        elif isinstance(selection, string_types):
             sel = {}
             for i, s in enumerate(selection.replace('_', ',').split(',')):
-                swhole = s
                 s = s.split('=')
                 if len(s) < 2:
                     s.insert(0, self.axes[i])
