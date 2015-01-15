@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-# from itertools import islice
+from itertools import count
 from timeit import default_timer as time
 import subprocess as sub
 import logging
 
 from viscid import logger
+from viscid.compat import izip
+
+import numpy as np
 
 tree_prefix = ".   "
 
@@ -124,6 +127,149 @@ def timeit(f, *args, **kwargs):
 
     print("Took {0:.03g} secs.".format(t1 - t0))
     return ret
+
+def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
+    """Make sure slices go forward
+
+    This function returns two slices equivalent to `slices` such
+    that the first slice always goes forward. This is necessary because
+    h5py can't deal with reverse slices such as [::-1].
+
+    The optional `reverse` can be used to interpret a dimension as
+    flipped. This is used if the indices in a slice are based on a
+    coordinate array that has already been flipped. For instance, the
+    result is equivalent to `arr[::-1][slices]`, but in a way that can
+    be  handled by h5py. This lets us efficiently load small subsets
+    of large arrays on disk, which is most useful when the large array
+    is coming through sshfs.
+
+    Note: The only restriction on slices is that neither start nor stop
+        can be outide the range [-L, L].
+
+    Args:
+        shape: shape of the array that is to be sliced
+        slices: a tuple of slices to work with
+        reverse (optional): list of bools that indicate if the
+            corresponding value in slices should be ineterpreted as
+            flipped
+        cull_second (bool, optional): iff True, remove elements of
+            the second slice for dimensions that don't exist after
+            the first slice has completed. This is only here for
+            a super-hacky case when slicing fields.
+    Returns:
+        (first_slice, second_slice)
+
+        first_slice: a forward-only slice that retrieves the
+            desired elements of an array
+        second_slice: a slice that does [::1] or [::-1] as needed
+            to make the result equivalent to slices. If keep_all,
+            then this may contain None indicating that this
+            dimension no longer exists after the first slice.
+
+    Examples:
+        >> a = np.arange(8)
+        >> first, second = make_fwd_slice(len(a),slice(None, None, -1))
+        >> (a[::-1] == a[first][second]).all()
+        True
+
+        >> a = np.arange(4*5*6).reshape((4, 5, 6))
+        >> first, second = make_fwd_slice(a.shape,
+                                          [slice(None, -1, 1),
+                                           slice(-1, None, 1),
+                                           slice(-4, -1, 2)],
+                                          [True, True, True])
+        >> a1 = a[::-1, ::-1, ::-1][:-1, -1:, -4:-1:2]
+        >> a2 = a[first][second]
+        >> a1 == a2
+        True
+    """
+    if reverse is None:
+        reverse = []
+
+    if not isinstance(shape, (list, tuple)):
+        shape = [shape]
+    if not isinstance(slices, (list, tuple)):
+        slices = [slices]
+    if not isinstance(reverse, (list, tuple)):
+        reverse = [reverse]
+
+    # ya know, lets just go through all the dimensions in shape
+    # just to be safe and default to an empty slice / no reverse
+    slices = slices + [slice(None)] * (len(shape) - len(slices))
+    reverse = reverse + [False] * (len(slices) - len(reverse))
+
+    first_slc = [slice(None)] * len(shape)
+    second_slc = [slice(None, None, 1)] * len(first_slc)
+
+    for i, slc, L, rev in izip(count(), slices, shape, reverse):
+        if isinstance(slc, slice):
+            step = slc.step if slc.step is not None else 1
+            start = slc.start if slc.start is not None else 0
+            stop = slc.stop if slc.stop is not None else L
+            if start < 0:
+                start += L
+            if stop < 0:
+                stop += L
+
+            # sanity check the start/stop since we're gunna be playing
+            # fast and loose with them
+            if start < 0 or stop < 0:
+                raise IndexError("((start = {0}) or (stop = {1})) < 0"
+                                 "".format(start, stop))
+            if start > L or stop > L:
+                raise IndexError("((start={0}) or (stop={1})) > (L={2})"
+                                 "".format(start, stop, L))
+
+            # now do the math of flipping the slice if needed, these branches
+            # change start, stop, and step so they can be used to create a new
+            # slice below
+            if rev:
+                if step < 0:
+                    step = -step
+                    if slc.start is None:
+                        start = L - 1
+                    if slc.stop is None:
+                        start = L - 1 - start
+                        stop = None
+                    else:
+                        start, stop = L - 1 - start, L - 1 - stop
+                else:
+                    start, stop = L - stop, L - start
+                    start += ((stop - 1 - start) % step)
+                    second_slc[i] = slice(None, None, -1)
+            elif step < 0:
+                step = -step
+                if slc.start is None:
+                    start = L - 1
+
+                if slc.stop is None:
+                    start, stop = 0, start + 1
+                    start = ((stop - 1 - start) % step)
+                else:
+                    start, stop = stop + 1, start + 1
+                    start += ((stop - 1 - start) % step)
+
+                second_slc[i] = slice(None, None, -1)
+
+            # check that our slice is valid
+            assert start is None or (0 <= start and start <= L), \
+                   "start (={0}) is outside range".format(start)
+            assert start is None or (0 <= start and start <= L), \
+                   "start (={0}) is outside range".format(start)
+            assert start is None or stop is None or start < stop
+            assert step > 0
+            slc = slice(start, stop, step)
+
+        elif isinstance(slc, (int, np.integer)):
+            second_slc[i] = None
+            if rev:
+                slc = (L - 1) - slc
+
+        first_slc[i] = slc
+
+    if cull_second:
+        second_slc = [s for s in second_slc if s is not None]
+    return first_slc, second_slc
 
 ##
 ## EOF
