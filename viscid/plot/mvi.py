@@ -129,7 +129,12 @@ def _prep_field(fld):
     if isinstance(fld, field.ScalarField):
         arr = np.reshape(fld.data, (-1,))
     elif isinstance(fld, field.VectorField):
-        arr = np.reshape(fld.data, (-1, 3))
+        if fld.layout == field.LAYOUT_INTERLACED:
+            arr = np.reshape(fld.data, (-1, 3))
+        elif fld.layout == field.LAYOUT_FLAT:
+            arr = np.reshape(np.rollaxis(fld.data, 0, len(fld.shape)), (-1, 3))
+        else:
+            raise ValueError()
     else:
         raise ValueError("Unexpected fld type: {0}".format(type(fld)))
     # swap endian if needed
