@@ -59,7 +59,7 @@ class Bucket(object):
         return self._handles.values()
 
     def values(self):
-        return self._items.values()
+        return self._hash_lookup.values()
 
     def set_item(self, handles, item, index_handle=True):
         """ if index_handle is true then the index of item will be included as
