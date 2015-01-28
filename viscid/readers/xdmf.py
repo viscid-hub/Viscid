@@ -410,7 +410,7 @@ class FileXDMF(vfile.VFile):
                 fname = os.path.join(self.dirname, fname)
             h5file = self.vfilebucket.load_file(fname, index_handle=False,
                                                 file_type=FileLazyHDF5)
-            arr = h5file.get_data(loc)  #pylint: disable=E1103
+            arr = h5file.get_data(loc)
             return arr, attrs
 
         if fmt == "Binary":
