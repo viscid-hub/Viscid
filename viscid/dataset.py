@@ -2,13 +2,17 @@
 """ test docstring """
 
 from __future__ import print_function
-# import bisect
+import re
+from string import ascii_letters
+from datetime import datetime
+from itertools import islice, chain
 
 import numpy as np
 
 from viscid import logger
+from viscid.compat import string_types
 from viscid.bucket import Bucket
-from viscid.vutil import tree_prefix
+from viscid.vutil import tree_prefix, convert_floating_slice
 
 class Dataset(object):
     """ datasets contain grids or other datasets
@@ -228,68 +232,200 @@ class DatasetTemporal(Dataset):
         temporal datasets """
         self.activate(time)
 
-    def _slice_time(self, slice_str=":"):
-        times = np.array([child[0] for child in self.children])
-        slc_lst = [s.strip() for s in slice_str.split(":")]
+    #############################################################################
+    ## here begins a slew of functions that make specifying a time / time slice
+    ## super general
+    @staticmethod
+    def _parse_time_slice_str(slc_str):
+        r"""
+        Args:
+            slc_str (str): must be a single string containing a single
+                time slice
 
-        if len(slc_lst) == 1:
-            s = slc_lst[0]
+        Returns:
+            one of {int, float, string, or slice (can contain ints,
+            floats, or strings)}
 
-            # i'm not keen on the whole ij thing since it makes
-            # arr["1"] different from arr[1], i think i prefer to
-            # require arr["1.0"] to slice by a float value
-            # if s[-1] in "ij":
-            #     slc = int(s[:-1])
-            # else:
-            #     slc = np.argmin(np.abs(float(s) - times))
+        Note:
+            Individual elements of the slice can look like an int,
+            float, or they can have the form [A-Z]+[\d:]+\.\d*. This
+            last one is a datetime-like representation with some
+            preceding letters. The preceding letters are
+        """
+        # regex parse the sting into a list of datetime-like strings,
+        # integers, floats, and bare colons that mark the slices
+        # Note: for datetime-like strings, the letters preceeding a datetime
+        # are necessary, otherwise 02:20:30.01 would have more than one meaning
+        rstr = r"\s*(?:(?!:)[A-Z]+[-\d:]+\.\d*|:|(?=.)-?\d*(?:\.\d*)?)\s*"
+        r = re.compile(rstr, re.I)
 
-            try:
-                slc = int(s)
-            except ValueError:
-                slc = np.argmin(np.abs(float(s) - times))
-            slc = slice(slc, slc + 1)
-        else:
-            for i, s in enumerate(slc_lst):
-                if s == "":
-                    slc_lst[i] = None
-                else:
-                    try:
-                        slc_lst[i] = int(s)
-                    except ValueError:
-                        slc_lst[i] = np.argmin(np.abs(float(s) - times))
+        all_times = r.findall(slc_str)
+        if len(all_times) == 1 and all_times[0] != ":":
+            return all_times[0]
 
-            # make the slice inclusive, no matter what
-            if slc_lst[1] is not None:
-                if slc_lst[0] <= slc_lst[1]:
-                    slc_lst[1] += 1
-                else:
-                    slc_lst[1] -= 1
-
-            slc = slice(*slc_lst)
-
-        # otherwise the slice would reduce the dimension, which isn't what
-        # we want in iter_times
-        if isinstance(slc, int):
-            if slc == -1:
-                slc = slice(-1, None)
+        # fill in implied slice colons, then replace them with something
+        # unique... like !!
+        all_times += [':'] * (2 - all_times.count(':'))
+        all_times = [s if s != ":" else "!!" for s in all_times]
+        # this is kinda silly, but turn all times back into a string,
+        # then split it again, this is the easiest way to parse something
+        # like '1::2'
+        ret = "".join(all_times).split("!!")
+        # convert empty -> None, ints -> ints and floats->floats
+        for i, val in enumerate(ret):
+            if val == "":
+                ret[i] = None
             else:
-                slc = slice(slc, slc + 1)
+                try:
+                    ret[i] = int(val)
+                except ValueError:
+                    try:
+                        ret[i] = float(val)
+                    except ValueError:
+                        pass
+        if len(ret) > 3:
+            raise ValueError("Could not decipher slice: {0}. Perhaps you're "
+                             "missing some letters in front of a time "
+                             "string?".format(slc_str))
+        return slice(*ret)
 
-        # print("time slc list:", slc_lst, slc)
+    def _translate_time(self, time):
+        """Translate time from one representation to a float
 
-        return slc
+        Note:
+            for subclasses that override this function: if you
+            don't understand the representation, you should
+            always return the result of super instead of returning
+            NotImplemented
+
+        Returns:
+            NotImplemented or float representation of time for the
+            current dataset
+        """
+        # parse a string, if that's what time is
+        if isinstance(time, string_types):
+            time = time.lstrip(ascii_letters)
+            # there MUST be a better way to do this than 3 nested trys
+            try:
+                time = datetime.strptime(time, "%H:%M:%S.%f")
+            except ValueError:
+                try:
+                    time = datetime.strptime(time, "%d:%H:%M:%S.%f")
+                except ValueError:
+                    try:
+                        time = datetime.strptime(time, "%m:%d:%H:%M:%S.%f")
+                    except ValueError:
+                        pass
+
+        # figure out the datetime, if that's what time is
+        if isinstance(time, datetime):
+            delta = time - datetime.strptime("00", "%S")
+            return delta.total_seconds()
+
+        return NotImplemented
+
+    def _slice_time(self, slc=":"):
+        """
+        Args:
+            slc (str, slice, list): can be a single string containing
+                slices, slices, ints, floats, datetime objects, or a
+                list of any of the above.
+
+        Returns:
+            list of slices (containing integers only) or ints
+        """
+        # print("SLC::", slc)
+        if not isinstance(slc, (list, tuple)):
+            slc = [slc]
+
+        # expand strings that are comma separated lists of strings
+        _slc = []
+        for s in slc:
+            if isinstance(s, string_types):
+                for _ in s.split(','):
+                    _slc.append(_)
+            else:
+                _slc.append(s)
+        slc = _slc
+
+        ret = []
+        times = np.array([child[0] for child in self.children])
+        for s in slc:
+            if isinstance(s, string_types):
+                s = self._parse_time_slice_str(s)
+
+            if isinstance(s, slice):
+                slc_lst = [s.start, s.stop, s.step]
+            else:
+                slc_lst = [s]
+
+            # do translation from string/datetime/etc -> floats
+            for i in range(min(len(slc_lst), 2)):
+                translation = self._translate_time(slc_lst[i])
+                if translation != NotImplemented:
+                    slc_lst[i] = translation
+
+            # convert floats in the slice to integers
+            if len(slc_lst) == 1:
+                slc_lst = [np.argmin(np.abs(times - slc_lst[0]))]
+            else:
+                slc_lst = convert_floating_slice(times, *slc_lst)
+
+            inttypes = (int, np.integer)
+            isint = [isinstance(v, inttypes) for v in slc_lst if v is not None]
+            if not all(isint):
+                raise ValueError("Could not decipher time slice: "
+                                 "{0}".format(s))
+
+            if len(slc_lst) == 1:
+                ret += slc_lst
+            else:
+                # make the slice inclusive, no matter what
+                slc_lst = [None if _s is None else int(_s) for _s in slc_lst]
+                ret.append(slice(*slc_lst))
+        return ret
+
+    def _time_slice_to_iterator(self, slc):
+        """
+        Args:
+            slc: a slice (containing ints only) or an int, or a list
+                of any of the above
+
+        Returns:
+            a flat iterator of self.children of all the slices chained
+        """
+        if not isinstance(slc, (list, tuple)):
+            slc = [slc]
+
+        child_iter_lst = []
+        for s in slc:
+            if isinstance(s, slice):
+                start, stop, step = s.start, s.stop, s.step
+                if start is not None and start < 0:
+                    start += len(self.children)
+                if stop is not None and stop < 0:
+                    stop += len(self.children)
+                this_islice = islice(self.children, start, stop, step)
+                child_iter_lst.append(this_islice)
+            else:
+                child_iter_lst.append([self.children[s]])
+        return chain(*child_iter_lst)
 
     def nr_times(self, slice_str=":"):
-        slc = self._slice_time(slice_str=slice_str)
-        return len(self.children[slc])
+        slc = self._slice_time(slice_str)
+        child_iterator = self._time_slice_to_iterator(slc)
+        return len(list(child_iterator))
 
     def iter_times(self, slice_str=":"):
-        slc = self._slice_time(slice_str=slice_str)
-        for child in self.children[slc]:
+        slc = self._slice_time(slice_str)
+        child_iterator = self._time_slice_to_iterator(slc)
+
+        for child in child_iterator:
             with child[1] as target:
                 yield target
-        # this old way lead to a 'memory leak' of sorts
-        # return (child[1] for child in self.children[slc])
+
+    ## ok, that's enough for the time stuff
+    ########################################
 
     def iter_fields(self, time=None, named=None):
         """ generator for fields in the active dataset,
@@ -347,59 +483,11 @@ class DatasetTemporal(Dataset):
     def get_child(self, item):
         """ if item is an int and < len(children), it is an index in a list,
         else I will find the cloest time to float(item) """
-        if len(self.children) <= 1:
-            # it's appropriate to get an index error if len == 0
-            self._last_ind = 0
-            return self.children[0][1]
-        elif isinstance(item, int) and item < len(self.children):
-            #print('integering')
-            self._last_ind = item
-            return self.children[item][1]
-        else:
-            # NOTE: this has gone too far
-            time = float(item)
-            last_ind = self._last_ind
-            closest_ind = -1
-            # print(time, last_ind)
-            if time >= self.children[last_ind][0]:
-                # print("forward")
-                i = last_ind + 1
-                while i < len(self.children):
-                    this_time = self.children[i][0]
-                    # print(i, this_time)
-                    if time <= this_time:
-                        avg = 0.5 * (self.children[i - 1][0] + this_time)
-                        if time >= avg:
-                            # print(">= ", avg)
-                            closest_ind = i
-                        else:
-                            # print("< ", avg)
-                            closest_ind = i - 1
-                        break
-                    i += 1
-                if closest_ind < 0:
-                    closest_ind = len(self.children) - 1
-            else:
-                # print("backward")
-                i = last_ind - 1
-                while i >= 0:
-                    this_time = self.children[i][0]
-                    # print(i, this_time)
-                    if time >= self.children[i][0]:
-                        avg = 0.5 * (self.children[i + 1][0] + this_time)
-                        if time >= avg:
-                            # print(">= ", avg)
-                            closest_ind = i + 1
-                        else:
-                            # print("< ", avg)
-                            closest_ind = i
-                        break
-                    i -= 1
-                if closest_ind < 0:
-                    closest_ind = 0
-            # print("closest_ind: ", closest_ind)
-            self._last_ind = closest_ind
-            return self.children[closest_ind][1]
+        # print(">> get_child:", item)
+        # print(">> slice is:", self._slice_time(item))
+        # always just return the first slice's child... is this wrong?
+        child = self.children[self._slice_time(item)[0]][1]
+        return child
 
     def __contains__(self, item):
         if isinstance(item, int) and item < len(self.children):
