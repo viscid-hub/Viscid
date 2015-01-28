@@ -271,6 +271,131 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
         second_slc = [s for s in second_slc if s is not None]
     return first_slc, second_slc
 
+def convert_floating_slice(arr, start, stop=None, step=None,
+                           endpoint=True, tol=100):
+    """Be able to slice using floats relative to an array
+
+    The idea is that [0.1, 0.2, 0.3, 0.4, 0.5, 0.6][0.2:0.6:2] should
+    be able to give you [0.2, 0.4, 0.6]. This function will handle all
+    the paticulars, like when to include what and what if step < 1 etc.
+
+    The rules for when something is included are:
+        - The slice will never include elements whose value in arr
+          are < start (or > if the slice is backward)
+        - The slice will never include elements whose value in arr
+          are > stop (or < if the slice is backward)
+        - !! The slice WILL INCLUDE stop if you don't change endpoint.
+          This is different from normal slicing, but
+          it's more natural when specifying a slice as a float.
+          To this end, an epsilon tolerance can be given to
+          determine what's close enough.
+        - TODO: implement floating point steps, this is tricky
+          since arr need not be uniformly spaced, so step is
+          ambiguous in this case
+
+    Args:
+        arr (ndarray): filled with floats to do the lookup
+        start (None, int, float): like slice().start
+        stop (None, int, float): like slice().start
+        step (None, int, float): like slice().start
+        endpoint (bool): iff True then include stop in the slice.
+            Set to False to get python slicing symantics when it
+            comes to excluding stop, but fair warning, python
+            symantics feel awkward here. Consider the case
+            [0.1, 0.2, 0.3][:0.25]. If you think this should include
+            0.2, then leave keep endpoint=True.
+        tol (int): number of machine epsilons to consider
+            "close enough"
+
+    Returns:
+        start, stop, step after floating point vals have been
+        converted to integers
+    """
+    try:
+        epsilon = tol * np.finfo(arr.dtype).eps
+    except ValueError:
+        # array is probably of type numpy.int*
+        epsilon = 0
+
+    _step = 1 if step is None else step
+    epsilon_step = epsilon if _step > 0 else -epsilon
+
+    if isinstance(start, (float, np.floating)):
+        diff = arr - start + epsilon_step
+        if epsilon_step > 0:
+            diff = np.ma.masked_less_equal(diff, 0)
+        else:
+            diff = np.ma.masked_greater_equal(diff, 0)
+
+        if np.ma.count(diff) == 0:
+            # start value is past the wrong end of the array
+            if epsilon_step > 0:
+                start = len(arr)
+            else:
+                # start = -len(arr) - 1
+                # having a value < -len(arr) won't play
+                # nice with make_fwd_slice, but in this
+                # case, the slice will have no data, so...
+                return 0, 0, step
+        else:
+            start = int(np.argmin(np.abs(diff)))
+
+    if isinstance(stop, (float, np.floating)):
+        diff = arr - stop - epsilon_step
+        if epsilon_step > 0:
+            diff = np.ma.masked_greater_equal(diff, 0)
+            if np.ma.count(diff) == 0:
+                # stop value is past the wong end of the array
+                stop = 0
+            else:
+                stop = int(np.argmin(np.abs(diff)))
+                if endpoint:
+                    stop += 1
+        else:
+            diff = np.ma.masked_less_equal(diff, 0)
+            if np.ma.count(diff) == 0:
+                # stop value is past the wrong end of the array
+                stop = len(arr)
+            else:
+                stop = int(np.argmin(np.abs(diff)))
+                if endpoint:
+                    if stop > 0:
+                        stop -= 1
+                    else:
+                        # 0 - 1 == -1 which would wrap to the end of
+                        # of the array... instead, just make it None
+                        stop = None
+
+    return start, stop, step
+
+def make_slice_inclusive(start, stop=None, step=None):
+    """Extend the end of a slice by 1 element
+
+    Chances are you don't want to use this function.
+
+    Args:
+        start (int, None): same as a slice.start
+        stop (int, None): same as a slice.stop
+        step (int, None): same as a slice.step
+
+    Returns:
+        (start, stop, step) To be given to slice()
+    """
+    if stop is None:
+        return start, stop, step
+
+    if step is None or step > 0:
+        if stop == -1:
+            stop = None
+        else:
+            stop += 1
+    else:
+        if stop == 0:
+            stop = None
+        else:
+            stop -= 1
+    return start, stop, step
+
 ##
 ## EOF
 ##
