@@ -66,9 +66,15 @@ class VFileBucket(Bucket):
         # glob and convert to absolute paths
         globbed_fnames = []
         for fname in fnames:
-            better_fname = os.path.expanduser(os.path.expandvars(fname))
-            absfnames = [os.path.abspath(fn) for fn in glob(better_fname)]
-            globbed_fnames += absfnames
+            expanded_fname = os.path.expanduser(os.path.expandvars(fname))
+            absfname = os.path.abspath(expanded_fname)
+            if '*' in absfname or '?' in absfname:
+                globbed_fnames += glob(absfname)
+            else:
+                globbed_fnames += [absfname]
+            # Is it necessary to recall abspath here? We did it before
+            # the glob to make sure it didn't start with a '.' since that
+            # tells glob not to fill wildcards
         fnames = globbed_fnames
 
         # detect file types
@@ -122,7 +128,7 @@ class VFileBucket(Bucket):
                     except ValueError as e:
                         # ... why am i explicitly catching ValueErrors?
                         # i'm probably breaking something by re-raising
-                        # this expeception, but i didn't document what :(
+                        # this exception, but i didn't document what :(
                         s = " ValueError on file load: {0}\n".format(handle_name)
                         s += "              File Type: {0}\n".format(handle_name)
                         s += "              {0}".format(str(e))
