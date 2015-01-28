@@ -439,19 +439,15 @@ class StructuredCrds(Coordinates):
                 # do plane finding if vals are floats for the first two
                 # elements only, the third would be a stride, no lookup
                 # necessary
-                for i, v in enumerate(sel[:2]):
-                    if isinstance(v, (float, np.floating)):
-                        # find index of closest node
-                        if cc:
-                            diff = v - self.get_cc(axis)
-                        else:
-                            diff = v - self.get_nc(axis)
-                        closest_ind = np.argmin(np.abs(diff))
+                if cc:
+                    crd_arr = self.get_cc(axis)
+                else:
+                    crd_arr = self.get_nc(axis)
 
-                        if i == 0:
-                            sel[i] = closest_ind  # always a node
-                        else:  # i == 1 due to slice sel[:2]
-                            sel[i] = closest_ind + 1  # + 1 to be inclusive
+                if len(sel) == 1:
+                    sel = [np.argmin(np.abs(crd_arr - sel[0]))]
+                else:
+                    sel = vutil.convert_floating_slice(crd_arr, *sel)
 
                 # ok, if one value specified, numpy semantics say reduce that
                 # dimension out
