@@ -68,7 +68,7 @@ class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
         fname1 = self.collective_name(fname)
 
         basename = os.path.basename(fname0)
-        self.info['run'] = re.match(self._detector, basename).group(1)
+        self.set_info('run', re.match(self._detector, basename).group(1))
 
         super(AthenaBinFile, self).load(fname1)
 
@@ -78,38 +78,39 @@ class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
 
         if len(self._collection) == 1:
             # load a single file
-            _grid = self._parse_file(self.fname)
+            _grid = self._parse_file(self.fname, self)
             self.add(_grid)
             self.activate(0)
         else:
             # load each file, and add it to teh bucket
-            data_temporal = dataset.DatasetTemporal("AthenaTemporalCollection")
+            data_temporal = self._make_dataset(self, dset_type="temporal",
+                                               name="AthenaTemporalCollection")
 
             for fname in self._collection:
                 f = self.vfilebucket.load_file(fname, index_handle=False,
-                    file_type=type(self),
-                    crds=self._crds,
-                    float_type_name=self.float_type_name,
-                    var_type=self.var_type)
+                                               file_type=type(self),
+                                               crds=self._crds,
+                                               float_type_name=self.float_type_name,
+                                               var_type=self.var_type)
                 data_temporal.add(f)
             data_temporal.activate(0)
             self.add(data_temporal)
             self.activate(0)
 
-    def _parse_file(self, filename):
+    def _parse_file(self, filename, parent_node):
         # we do minimal file parsing here for performance. we just
         # make data wrappers from the templates we got from the first
         # file in the group, and package them up into grids
 
         # find the time from the first field's meta data
         self._file_wrapper = AthenaBinFileWrapper(filename,
-            float_type_name=self.float_type_name,
-            var_type=self.var_type)
+                                                  float_type_name=self.float_type_name,
+                                                  var_type=self.var_type)
 
         self._file_wrapper.read_header()
         time = self._file_wrapper.time
 
-        _grid = self._make_grid("<AthenaGrid>")
+        _grid = self._make_grid(parent_node, name="<AthenaGrid>")
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)
@@ -127,9 +128,9 @@ class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
 
             data = data_wrapper(self._file_wrapper, fld_name,
                                 shape, i)
-            fld = field.wrap_field("Scalar", fld_name, self._crds,
-                                   data, center=self._def_fld_center,
-                                   time=time)
+            fld = self._make_field(_grid, "Scalar", fld_name,
+                                   self._crds, data, time=time,
+                                   center=self._def_fld_center)
             _grid.add_field(fld)
         return _grid
 

@@ -828,7 +828,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
 
     # this is kind of a hacky way to
     if isinstance(plane_spec, field.Field):
-        crd_system = plane_spec.info.get("crd_system", crd_system)
+        crd_system = plane_spec.meta.get("crd_system", crd_system)
 
         # take only the 1st reduced.nr_sdims... this should just work
         try:

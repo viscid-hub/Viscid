@@ -4,15 +4,39 @@ Custom Behavior (rc file)
 Some classes have attributes that customize how specific files, datasets and grids behave. These attributes can be set globally, or on a per-instance basis. An instance picks up the value from the class when it's created, so changing things globally is recommended before any files are loaded. These attributes can also be set from `~/.viscidrc`. Here is an example::
 
     # ~/.viscidrc
-    # try to get extra run information
-    readers.openggcm.GGCMFile.read_log_file: true
-    # everyone likes GSE coords :)
-    readers.openggcm.GGCMGrid.mhd_to_gse_on_read: true
-    # use shell copies so we don't have to call unload()
+    ### For Everything
+    ## use shell copies so we don't have to call unload()
     grid.Grid.longterm_field_caches: false
 
+    ### for OpenGGCM
+    ## try to get extra run information
+    readers.openggcm.GGCMFile.read_log_file: true
+    ## everyone likes GSE coords :)
+    readers.openggcm.GGCMGrid.mhd_to_gse_on_read: auto
+
+    ### For Athena
+    ## this doesn't work for some reason
+    # readers.athena_bin.AthenaBinFileWrapper.var_type: prim
+
+    # evaluator control for security
+    calculator.evaluator.enabled: false
+
+    # pretty plotting
+    plot.vseaborn.enabled: true
+    plot.vseaborn.context: poster
+    plot.vseaborn.style: ticks
+    plot.vseaborn.palette: husl, 8
+    # plot.vseaborn.palette: [["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71"]]
+    # plot.vseaborn.rc: {"lines.markeredgewidth": 0.01, "image.cmap": cubehelix}
+    # plot.vseaborn.rc: {"lines.markeredgewidth": 0.01, "image.cmap": jet}
+    plot.vseaborn.rc: {"image.cmap": cubehelix}
+
+    ##
+    ## EOF
+    ##
+
 Common Customizations
-=====================
+---------------------
 
 viscid.grid.Grid
 ----------------

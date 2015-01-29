@@ -28,7 +28,7 @@ class NPZDataWrapper(vfile.DataWrapper):
         self.fname = fname
         self.loc = loc
 
-    def _get_info(self):
+    def _read_info(self):
         # this takes super long when reading 3 hrs worth of ggcm data
         # over sshfs
         # import pdb; pdb.set_trace()
@@ -37,16 +37,16 @@ class NPZDataWrapper(vfile.DataWrapper):
                 dset = f[self.loc]
                 self._shape = dset.shape
                 self._dtype = dset.dtype
-        except IOError as e:
-            logger.error("Problem opening npz file, '{0}'".format(self.fname))
-            raise e
+        except IOError:
+            logger.error("Problem opening npz file, '%s'", self.fname)
+            raise
 
     @property
     def shape(self):
         """ only ask for this if you really need it; can be a speed problem
         for large temporal datasets over sshfs """
         if self._shape is None:
-            self._get_info()
+            self._read_info()
         return self._shape
 
     @property
@@ -54,7 +54,7 @@ class NPZDataWrapper(vfile.DataWrapper):
         """ only ask for this if you really need it; can be a speed problem
         for large temporal datasets over sshfs """
         if self._dtype is None:
-            self._get_info()
+            self._read_info()
         return self._dtype
 
     def wrap_func(self, func_name, *args, **kwargs):
@@ -88,8 +88,7 @@ class FileNumpyNPZ(vfile.VFile):
     def __init__(self, fname, **kwargs):
         super(FileNumpyNPZ, self).__init__(fname, **kwargs)
 
-    @staticmethod
-    def _wrap_lazy_field(file_name, fld_name, crds, center):
+    def _wrap_lazy_field(self, parent_node, file_name, fld_name, crds, center):
         lazy_arr = NPZDataWrapper(file_name, fld_name)
         if len(lazy_arr.shape) == crds.nr_dims:
             typ = "Scalar"
@@ -97,10 +96,11 @@ class FileNumpyNPZ(vfile.VFile):
             typ = "Vector"
         else:
             raise IOError("can't infer field type")
-        return field.wrap_field(typ, fld_name, crds, lazy_arr, center=center)
+        return self._make_field(parent_node, typ, fld_name, crds, lazy_arr,
+                                center=center)
 
     def _parse(self):
-        g = self._make_grid(**self._grid_opts)
+        g = self._make_grid(self, **self._grid_opts)
 
         with np.load(self.fname) as f:
             fld_names = f.keys()
@@ -133,14 +133,14 @@ class FileNumpyNPZ(vfile.VFile):
                     names = []
 
                 for name in names:
-                    fld = self._wrap_lazy_field(self.fname, name, crds,
+                    fld = self._wrap_lazy_field(g, self.fname, name, crds,
                                                 fld_center)
                     g.add_field(fld)
                     fld_names.remove(name)
 
             # load any remaining fields as though they were node centered
             for name in fld_names:
-                fld = self._wrap_lazy_field(self.fname, name, crds, "Node")
+                fld = self._wrap_lazy_field(g, self.fname, name, crds, "Node")
                 g.add_field(fld)
 
         self.add(g)

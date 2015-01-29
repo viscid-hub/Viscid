@@ -64,7 +64,7 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
         # all that stuff
         _fname = os.path.expanduser(os.path.expandvars(fname[0]))
         basename = os.path.basename(_fname)
-        self.info['run'] = re.match(self._detector, basename).group(1)
+        self.set_info('run', re.match(self._detector, basename).group(1))
         self.dirname = os.path.dirname(os.path.abspath(_fname))
         self.read_logfile()
 
@@ -73,9 +73,11 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
     def _parse(self):
         if self._collection is not None:
             # assume we have a collection of temporal files, because why not
-            data_temporal = dataset.DatasetTemporal("GGCMXDMFTemporalCollection")
+            data_temporal = self._make_dataset(self, dset_type="temporal",
+                                               name="GGCMXDMFTemporalCollection")
+
             for fname in self._collection:
-                grids = self._parse_file(fname)
+                grids = self._parse_file(fname, data_temporal)
                 for _grid in grids:
                     data_temporal.add(_grid)
             data_temporal.activate(0)

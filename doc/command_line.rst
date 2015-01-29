@@ -11,6 +11,13 @@ p2d
 .. image:: images/p2d_dip_0288.png
     :align: center
 
+If the evaluator is enabled in your viscidrc file (off by default for security reasons), you can also do math from the command line.
+
+``p2d -t T1:00:00.00 -o x_-15.0_15.0,y_-8.0_8.0 --slice y=0 -p "B$^2$=bx**2+by**2+bz**2" -o log,style_contourf,levels_30 --timeformat dhms $DEV/src/Viscid/sample/*.3df.xdmf``
+
+.. image:: images/sample_bsq.png
+    :align: center
+
 viscid_diff
 -----------
 

@@ -35,11 +35,11 @@ class AthenaHstFile(vfile.VFile):  # pylint: disable=abstract-method
         t = dat[0]
         crds = coordinate.wrap_crds("nonuniform_cartesian", [('t', t)])
 
-        g = self._make_grid("AthenaHstGrid")
+        g = self._make_grid(self, name="AthenaHstGrid")
         g.set_crds(crds)
         g.time = 0
         for i in range(1, len(fld_names)):
-            fld = field.wrap_field("Scalar", fld_names[i], crds, dat[i],
+            fld = self._make_field(g, "Scalar", fld_names[i], crds, dat[i],
                                    center="Node")
             g.add_field(fld)
         self.add(g)

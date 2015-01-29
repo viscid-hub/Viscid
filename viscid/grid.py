@@ -5,11 +5,12 @@ from __future__ import print_function
 
 from viscid import field
 from viscid.bucket import Bucket
+from viscid import tree
 from viscid.vutil import tree_prefix
 from viscid.calculator.evaluator import evaluate
 
-class Grid(object):
-    """Comptational grid container
+class Grid(tree.Node):
+    """Computational grid container
 
     Grids contain fields and coordinates. Datasets recurse to grids
     using ``__getitem__`` and get_field in order to find fields. Grids
@@ -37,12 +38,9 @@ class Grid(object):
     geometry_info = None
     crds = None
     fields = None
-    info = None
     # so... not all grids have times? if we try to access time on a grid
     # that doesnt have one, there is probably a bug somewhere
     # time = None
-
-    name = None
 
     # these attributes are intended to control how fields are read
     # they can be customized by setting the class value, and inherited
@@ -50,21 +48,10 @@ class Grid(object):
     force_vector_layout = field.LAYOUT_DEFAULT
     longterm_field_caches = False
 
-    def __init__(self, name=None, info=None, **kwargs):
-        """ all kwargs are added to the grid as attributes """
-        if name is None:
-            name = "<{0} @ {1}>".format(self.__class__.__name__, hex(id(self)))
-        self.name = name
+    def __init__(self, *args, **kwargs):
+        super(Grid, self).__init__(*args, **kwargs)
         self.fields = Bucket(ordered=True)
-
         self.crds = None  # Coordinates()
-
-        if info is None:
-            info = {}
-        self.info = info
-
-        for opt, value in kwargs.items():
-            setattr(self, opt, value)
 
     @staticmethod
     def null_transform(something):
@@ -87,6 +74,7 @@ class Grid(object):
         for f in fields:
             if isinstance(f, field.VectorField):
                 f.layout = self.force_vector_layout
+            self.prepare_child(f)
             self.fields[f.name] = f
 
     def unload(self):
@@ -107,6 +95,12 @@ class Grid(object):
         # i guess there is some ambiguity if there is no temporal dataset...
         with self as me:
             yield me
+
+    def get_times(self, *args, **kwargs):
+        return list(self.iter_times(*args, **kwargs))
+
+    def get_time(self, *args, **kwargs):
+        return self.get_times(*args, **kwargs)[0]
 
     def iter_fields(self, named=None, **kwargs): #pylint: disable=W0613
         """ iterate over fields in a grid, if named is given, it should be a

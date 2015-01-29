@@ -188,7 +188,7 @@ def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
         crd_system (str, optional): 'mhd' or 'gse', can be gotten from
-            an openggcm field using ``fld.info["crd_system"]``.
+            an openggcm field using ``fld.meta["crd_system"]``.
     """
     if pipeline is None:
         pipeline = mlab.pipeline

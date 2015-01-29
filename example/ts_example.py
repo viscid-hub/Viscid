@@ -28,7 +28,8 @@ f = viscid.load_file("combined_txsmall/target/*.3df.*")
 # UT ourselves if that's how we want to slice time...
 try:
     time_fmt = "%Y:%m:%d:%H:%M:%S.%f"
-    dipole_time = datetime.strptime(f.info["ggcm_dipole_dipoltime"], time_fmt)
+    dipole_time = datetime.strptime(f.find_info("ggcm_dipole_dipoltime"),
+                                    time_fmt)
     # t0 and t1 are datetime.timedelta objects
     t0 = datetime.strptime("1967:01:01:00:00:00.00", time_fmt) - dipole_time
     t1 = datetime.strptime("1967:01:01:00:00:02.00", time_fmt) - dipole_time
@@ -50,7 +51,7 @@ for i, grid in enumerate(f.iter_times(time_slice)):
 plt.plot(times, bz_ts)
 plt.xlabel("Time [s]")
 plt.ylabel("$V_z$ [nT]")
-plt.title(f.info['run'])
+plt.title(f.find_info('run'))
 plt.show()
 
 ##

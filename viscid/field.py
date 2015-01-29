@@ -11,6 +11,7 @@ from __future__ import print_function
 import warnings
 from itertools import count, islice
 from inspect import isclass
+import types
 
 import numpy as np
 
@@ -18,6 +19,7 @@ from viscid import logger
 from viscid.compat import string_types, izip_longest
 from viscid import coordinate
 from viscid import vutil
+from viscid import tree
 
 LAYOUT_DEFAULT = "none"  # do not translate
 LAYOUT_INTERLACED = "interlaced"
@@ -78,7 +80,8 @@ def empty_like(name, fld, **kwargs):
     dat = np.empty(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
-    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t,
+                      parents=[fld], **kwargs)
 
 def zeros_like(name, fld, **kwargs):
     """Analogous to `numpy.zeros_like`
@@ -91,7 +94,8 @@ def zeros_like(name, fld, **kwargs):
     dat = np.zeros(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
-    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t,
+                      parents=[fld], **kwargs)
 
 def ones_like(name, fld, **kwargs):
     """Analogous to `numpy.ones_like`
@@ -104,7 +108,8 @@ def ones_like(name, fld, **kwargs):
     dat = np.ones(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
-    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t, **kwargs)
+    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t,
+                      parents=[fld], **kwargs)
 
 def scalar_fields_to_vector(name, fldlist, **kwargs):
     """Convert scaler fields to a vector field
@@ -127,7 +132,8 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
     _crds = type(crds)(crds.get_clist())
 
     vfield = VectorField(name, _crds, fldlist, center=center, time=time,
-                         info=fldlist[0].info, **kwargs)
+                         meta=fldlist[0].meta, parents=[fldlist[0]],
+                         **kwargs)
     return vfield
 
 def field_type(typ):
@@ -175,10 +181,11 @@ def wrap_field(typ, name, crds, data, **kwargs):
         raise NotImplementedError("can not decipher field")
 
 def rewrap_field(fld):
-    return type(fld)(fld.name, fld.crds, fld.data, center=fld.center,
-                     forget_source=True, _copy=True)
+    ret = type(fld)(fld.name, fld.crds, fld.data, center=fld.center,
+                    forget_source=True, _copy=True, parents=[fld])
+    return ret
 
-class Field(object):
+class Field(tree.Leaf):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
     _COMPONENT_NAMES = ""
@@ -188,11 +195,9 @@ class Field(object):
     # some scalar fields without necessarilly loading the data
     _center = "none"  # String in CENTERING
     _src_data = None  # numpy-like object (h5py too), or list of these objects
-    name = None  # String
     crds = None  # Coordinate object
-    time = None  # float
     # dict, this stuff will be copied by self.wrap
-    info = None  #
+    meta = None  #
     # dict, used for stuff that won't be blindly copied by self.wrap
     deep_meta = None
     pretty_name = None  # String
@@ -200,12 +205,13 @@ class Field(object):
     post_reshape_transform_func = None
     transform_func_kwargs = None
 
-    # this is a hacky way to keep a 'parent' field in sync when data
+    # _parent_field is a hacky way to keep a 'parent' field in sync when data
     # is loaded... this is used for converting cell centered data ->
     # node centered and back... this only works because _fill_cache
     # ONLY sets self._cache... if other meta data were set by
     # _fill_cache, that would need to propogate upstream too
     _parent_field = None
+
 
     # these get reset when data is set
     _layout = None
@@ -216,21 +222,28 @@ class Field(object):
     # set when data is retrieved
     _cache = None  # this will always be a numpy array
 
-    def __init__(self, name, crds, data, center="Node", time=0.0, info=None,
+    def __init__(self, name, crds, data, center="Node", time=0.0, meta=None,
                  deep_meta=None, forget_source=False, pretty_name=None,
                  post_reshape_transform_func=None,
                  transform_func_kwargs=None,
-                 _parent_field=None,
+                 info=None, parents=None, _parent_field=None,
                  **kwargs):
         """
+        Args:
+            parents: Dataset, Grid, Field, or list of any of
+                those. These parents are the sources for find_info, and
+                and monkey-pached methods.
+            _parent_field (Field): special parent where data can be taken
+                for lazy loading. This field is added to parents
+                automatically
+
         Other Parameters:
             kwargs with a leading underscore (like _copy) are added to
             the deep_meta dict without the leading _. Everything else
-            is added to the info dict
+            is added to the meta dict
         """
-        self.name = name
+        super(Field, self).__init__(name, time, info, parents)
         self.center = center
-        self.time = time
         self.crds = crds
         self.data = data
 
@@ -253,19 +266,19 @@ class Field(object):
         else:
             self.transform_func_kwargs = {}
 
-        self.info = {} if info is None else info
+        self.meta = {} if meta is None else meta
         self.deep_meta = {} if deep_meta is None else deep_meta
         for k, v in kwargs.items():
             if k.startswith("_"):
                 self.deep_meta[k[1:]] = v
             else:
-                self.info[k] = v
+                self.meta[k] = v
 
         if not "force_layout" in self.deep_meta:
-            if "force_layout" in self.info:
+            if "force_layout" in self.meta:
                 warnings.warn("deprecated force_layout syntax: kwarg should "
                               "be given as _force_layout")
-                self.deep_meta["force_layout"] = self.info["force_layout"]
+                self.deep_meta["force_layout"] = self.meta["force_layout"]
             else:
                 self.deep_meta["force_layout"] = LAYOUT_DEFAULT
         self.deep_meta["force_layout"] = self.deep_meta["force_layout"].lower()
@@ -274,6 +287,8 @@ class Field(object):
             self.deep_meta["copy"] = False
 
         self._parent_field = _parent_field
+        if _parent_field is not None:
+            self.parents.insert(0, _parent_field)
 
         if forget_source:
             self.forget_source()
@@ -962,11 +977,12 @@ class Field(object):
         # in an overridden __init__; in that case, the developer MUST
         # override shell_copy and pass the extra kwargs in to here.
         f = type(self)(self.name, self.crds, self._src_data, center=self.center,
-                       time=self.time, info=self.info, deep_meta=self.deep_meta,
+                       time=self.time, meta=self.meta, deep_meta=self.deep_meta,
                        forget_source=False,
                        pretty_name=self.pretty_name,
                        post_reshape_transform_func=self.post_reshape_transform_func,
                        transform_func_kwargs=self.transform_func_kwargs,
+                       parents=[self],
                        **kwargs)
         return f
 
@@ -997,7 +1013,7 @@ class Field(object):
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
             f = type(self)(self.name, new_crds, None, center="cell",
-                           time=self.time, info=self.info,
+                           time=self.time, meta=self.meta,
                            deep_meta=self.deep_meta, forget_source=False,
                            pretty_name=self.pretty_name,
                            post_reshape_transform_func=self.post_reshape_transform_func,
@@ -1032,7 +1048,7 @@ class Field(object):
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
             f = type(self)(self.name, new_crds, None, center="node",
-                           time=self.time, info=self.info,
+                           time=self.time, meta=self.meta,
                            deep_meta=self.deep_meta, forget_source=False,
                            pretty_name=self.pretty_name,
                            post_reshape_transform_func=self.post_reshape_transform_func,
@@ -1099,7 +1115,8 @@ class Field(object):
         # Transform functions are intentionally omitted. The idea being that
         # the transform was already applied when creating arr
         return typ(name, crds, arr, time=time, center=center,
-                   info=self.info, deep_meta=context, pretty_name=pretty_name)
+                   meta=self.meta, deep_meta=context, parents=[self],
+                   pretty_name=pretty_name)
 
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
         # print("wrapping")

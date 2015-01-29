@@ -5,9 +5,23 @@
 Features:
   - The attribute `grid.Grid.longterm_field_caches` controls how long caches hang around
   - Athena binary / ascii / hst readers (doesn't read SMR grids)
+  - Can hyperslice into xdmf/HDF5 datasets so only data that is needed is read
+  - Slicing in time can now take H:M:S styled times
+  - New ways to print / get the time of a Dataset/Grid/Field
+    - `format_time`
+    - `time_as_datetime`
+
+Changes:
+  - Spatial slices completely rewritten
+  - info dicts (for Datasets/Grids/Fields) are now private
+    - `get_info(key)`: gets info from a specific object
+    - `find_info(key)`: gets info from an object, or its parents
+    - `set_info(key)`: sets info for an object
+    - `update_info(key)`: updates info wherever in the tree it exists
 
 Other:
   - Customization attributes have their own sphinx page for easy lookup
+  - performance enhancements when globbing files on a remote server
 
 ## 0.60.1
 

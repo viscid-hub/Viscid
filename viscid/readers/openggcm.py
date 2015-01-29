@@ -9,6 +9,7 @@ import os
 import re
 from itertools import islice
 from operator import itemgetter
+from datetime import datetime
 
 import numpy as np
 try:
@@ -22,7 +23,8 @@ from viscid.compat import string_types
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.ggcm_logfile import GGCMLogFile
 from viscid.readers import vfile
-from viscid import dataset
+# from viscid.dataset import Dataset, DatasetTemporal
+# from viscid.vutil import time_as_datetime, time_as_timedelta
 from viscid import grid
 from viscid import field
 from viscid.coordinate import wrap_crds
@@ -49,7 +51,7 @@ def find_file_uptree(directory, basename, max_depth=8, _depth=0):
         raise RuntimeError("this is non-sensicle")
 
     fname = os.path.join(directory, basename)
-    # log_fname = "{0}/{1}.log".format(d, self.info["run"])
+    # log_fname = "{0}/{1}.log".format(d, self.find_info("run"))
     if os.path.isfile(fname):
         return fname
 
@@ -200,8 +202,8 @@ class GGCMGrid(grid.Grid):
         """Return True if we """
         if isinstance(self.mhd_to_gse_on_read, string_types):
             # we already know what this data file needs
-            if "_viscid_do_mhd_to_gse_on_read" in self.info:
-                return self.info["_viscid_do_mhd_to_gse_on_read"]
+            if self.has_info("_viscid_do_mhd_to_gse_on_read"):
+                return self.find_info("_viscid_do_mhd_to_gse_on_read")
 
             # what are we asking for?
             request = self.mhd_to_gse_on_read.lower()
@@ -212,7 +214,7 @@ class GGCMGrid(grid.Grid):
                     ret = True
 
                 # sanity check the logfile stuffs
-                log_fname = self.info["_viscid_log_fname"]
+                log_fname = self.find_info("_viscid_log_fname")
                 if log_fname == False:
                     raise RuntimeError("If you're using 'auto' for mhd->gse "
                                        "conversion, reading the logfile "
@@ -230,12 +232,13 @@ class GGCMGrid(grid.Grid):
                         # twice smaller than the high edge, then assume
                         # it's a magnetosphere box with xl < 0.0 is the sunward
                         # edge in "MHD" coordinates
-                        is_openggcm = (self.info['ggcm_mhd_type'] == "ggcm")
+                        is_openggcm = (self.find_info('ggcm_mhd_type') == "ggcm")
                         # this 2nd check is in case the ggcm_mhd view in the
                         # log file is mangled... this happens sometimes
-                        is_openggcm |= (self.info['ggcm_mhd_ic_type'].startswith("mirdip"))
-                        xl = float(self.info['mrc_crds_l'][0])
-                        xh = float(self.info['mrc_crds_h'][0])
+                        ic_type = self.find_info('ggcm_mhd_ic_type')
+                        is_openggcm |= (ic_type.startswith("mirdip"))
+                        xl = float(self.find_info('mrc_crds_l')[0])
+                        xh = float(self.find_info('mrc_crds_h')[0])
                         if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
                             ret = True
                     except KeyError as e:
@@ -244,7 +247,7 @@ class GGCMGrid(grid.Grid):
                                            "the libmrc options I'm using in infer "
                                            "crd system have changed ({0})"
                                            "".format(e.args[0]))
-                self.info["_viscid_do_mhd_to_gse_on_read"] = ret
+                self.set_info("_viscid_do_mhd_to_gse_on_read", ret)
                 return ret
             else:
                 raise ValueError("Invalid value for mhd_to_gse_on_read: "
@@ -278,9 +281,9 @@ class GGCMGrid(grid.Grid):
                 else:
                     f.post_reshape_transform_func = mhd2gse_field_scalar
                 f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
-                f.info["crd_system"] = "gse"
+                f.meta["crd_system"] = "gse"
             else:
-                f.info["crd_system"] = "mhd"
+                f.meta["crd_system"] = "mhd"
         super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):
@@ -406,7 +409,7 @@ class GGCMFile(object):
 
     def read_logfile(self):
         if self.read_log_file:
-            log_basename = "{0}.log".format(self.info['run'])
+            log_basename = "{0}.log".format(self.find_info('run'))
             # FYI, default max_depth should be 8
             log_fname = find_file_uptree(self.dirname, log_basename)
             if log_fname is None:
@@ -417,22 +420,109 @@ class GGCMFile(object):
                 log_fname = find_file_uptree(self.dirname, "log.log")
 
             if log_fname is not None:
-                self.info["_viscid_log_fname"] = log_fname
+                self.set_info("_viscid_log_fname", log_fname)
                 if self.vfilebucket is None:
                     self.vfilebucket = VFileBucket()
                 log_f = self.vfilebucket.load_file(log_fname,
                                                    file_type=GGCMLogFile,
                                                    index_handle=False)
                 # print("!!", log_f)
-                self.info.update(log_f.info)
+
+                # self.parents.append(log_f)  # this way makes me uncomfortable
+                self._info.update(log_f.info)
             else:
                 # print("**", log_f)
-                self.info["_viscid_log_fname"] = None
+                self.set_info("_viscid_log_fname", None)
                 logger.warn("You wanted to read parameters from the "
                             "logfile, but I couldn't find one. Maybe "
                             "you need to copy it from somewhere?")
         else:
-            self.info["_viscid_log_fname"] = False
+            self.set_info("_viscid_log_fname", False)
+
+    def _get_dipoletime_as_datetime(self):
+        try:
+            # FIXME: this should be STARTTIME, but that's not part
+            # of a libmrc object
+            diptime = ":".join(self.find_info('ggcm_dipole_dipoltime'))
+            dipoletime = datetime.strptime(diptime, "%Y:%m:%d:%H:%M:%S.%f")
+        except KeyError:
+            raise KeyError("Can't use UT times without reading "
+                           "a logfile that has a value for "
+                           "ggcm_dipole_dipoltime")
+        except ValueError:
+            raise ValueError("Dipoletime from the logfile is mangled "
+                             "({0}). You may need to fix the log file"
+                             "by hand.".format(diptime))
+        return dipoletime
+
+    def _sub_translate_time(self, time):
+        if isinstance(time, string_types):
+            try:
+                time = datetime.strptime(time, "UT%Y:%m:%d:%H:%M:%S.%f")
+            except ValueError:
+                pass
+
+        if isinstance(time, datetime):
+            if time.year < 1967:
+                # times < 1967 are not valid GGCM UT times, so pass them to
+                # the super class
+                return NotImplemented
+            dipoletime = self._get_dipoletime_as_datetime()
+            delta = dipoletime - datetime.strptime("00", "%S")
+            return delta.total_seconds()
+
+        return NotImplemented
+
+    def _sub_format_time(self, time, style=".02f"):
+        """
+        Args:
+            t (float): time
+            info (dict): info dict
+            style (str): for this method, can be anything
+                :func:`viscid.vutil.format_time` can understand, or
+                'UT' to print a UT time
+
+        Returns:
+            string or NotImplemented if style is not understood
+        """
+        style = style.lower()
+        if style.startswith("ut"):
+            precision = 1
+            fmt = "%Y:%m:%d:%H:%M:%S.%f"
+            for opt in style.split('_')[1:]:
+                try:
+                    precision = int(opt)
+                except ValueError:
+                    fmt = opt
+
+            if fmt.endswith("%f"):
+                if precision <= 0:
+                    precision = None
+                    fmt = fmt[:-2]
+                    if fmt.endswith('.'):
+                        fmt = fmt[:-1]
+                elif precision >= 6:
+                    precision = None
+                else:
+                    precision = -(6 - precision)
+
+            else:
+                precision = None
+
+            dipoletime = self._get_dipoletime_as_datetime()
+            ut_time = dipoletime + self.time_as_timedelta(time)
+            return datetime.strftime(ut_time, fmt)[:precision]
+        else:
+            return NotImplemented
+
+    def _sub_time_as_datetime(self, time, epoch):
+        try:
+            dipoletime = self._get_dipoletime_as_datetime()
+            ut_time = dipoletime + self.time_as_timedelta(time)
+            return ut_time
+        except (KeyError, ValueError):
+            pass
+        return NotImplemented
 
 
 class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
@@ -481,8 +571,8 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
 
         # info['run'] is needed for finding the grid2 file
         basename = os.path.basename(fname0)
-        self.info['run'] = re.match(self._detector, basename).group(1)
-        self.info['fieldtype'] = re.match(self._detector, basename).group(2)
+        self.set_info('run', re.match(self._detector, basename).group(1))
+        self.set_info('fieldtype', re.match(self._detector, basename).group(2))
 
         # HACKY- setting dirname is done in super().load, but we
         # need it to read the log file, which needs to happen before
@@ -499,12 +589,13 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
 
         if len(self._collection) == 1:
             # load a single file
-            _grid = self._parse_file(self.fname)
+            _grid = self._parse_file(self.fname, self)
             self.add(_grid)
             self.activate(0)
         else:
-            # load each file, and add it to teh bucket
-            data_temporal = dataset.DatasetTemporal("GGCMTemporalCollection")
+            # load each file, and add it to the bucket
+            data_temporal = self._make_dataset(self, dset_type="temporal",
+                                               name="GGCMTemporalCollection")
 
             self._fld_templates = self._make_template(self._collection[0])
 
@@ -519,7 +610,7 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
             self.activate(0)
 
     def make_crds(self):
-        if self.info['fieldtype'] == 'iof':
+        if self.get_info('fieldtype') == 'iof':
             nlat, nlon = 181, 61
             crdlst = [['lat', [0.0, 180.0, nlat]],
                       ['lon', [0.0, 360.0, nlon]]]
@@ -531,7 +622,7 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
 
     def read_grid2(self):
         # TODO: iof files can be hacked in here
-        grid2_basename = "{0}.grid2".format(self.info['run'])
+        grid2_basename = "{0}.grid2".format(self.find_info('run'))
         self.grid2 = find_file_uptree(self.dirname, grid2_basename)
         if self.grid2 is None:
             self.grid2 = find_file_uptree(".", grid2_basename)
@@ -564,11 +655,12 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
         # for 2d files
         crdlst = []
         for dim, nc, cc in zip("zyx", [znc, ync, xnc], [gz, gy, gx]):
-            if self.info['fieldtype'].startswith('p'):
-                self.info['plane'] = self.info['fieldtype'][1]
-                if self.info['plane'] == dim:
-                    # in the file name, the value is tenths of an Re
-                    planeloc = float(self.info['fieldtype'].split('_')[1]) / 10
+            fieldtype = self.get_info('fieldtype')
+            if fieldtype.startswith('p'):
+                self.set_info('plane', fieldtype[1])
+                if fieldtype[1] == dim:
+                    planeloc = float(fieldtype.split('_')[1])
+                    planeloc /= 10  # value is in tenths of Re
                     # FIXME: it is not good to depend on an attribute of
                     # GGCMGrid like this... it could lead to unexpected
                     # behavior if the user starts playing with the value
@@ -577,7 +669,7 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
                     # the construction process
                     if GGCMGrid.mhd_to_gse_on_read and dim in 'xy':
                         planeloc *= -1
-                    self.info['planeloc'] = planeloc
+                    self.set_info('planeloc', planeloc)
                     ccind = np.argmin(np.abs(cc - planeloc))
                     nc = nc[ccind:ccind + 2]
             crdlst.append([dim, nc])

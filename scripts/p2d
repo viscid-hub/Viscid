@@ -43,8 +43,9 @@ def main():
     parser.add_argument("-t", default=":", help="times to plot in slice "
                         "notation: ex : for all 60.0: for 60 mins on, and "
                         ":120 for the first 120mins")
-    parser.add_argument("--fancytime", action="store_true",
-                        help="raw time (useful for harris)")
+    parser.add_argument("--timeformat", default=".02f",
+                        help="one of hms, dhms, ut, or some way to format a "
+                             "float like .02f")
     parser.add_argument("--slice", help="spatial slice applied to all fields")
     parser.add_argument("-p", "--var", dest="plot_vars", action=AddPlotVar,
                         help="plot variable")
@@ -83,7 +84,7 @@ def main():
               "plot_size": args.plot_size,
               "dpi": args.dpi,
               "selection": args.slice,
-              "fancytime": args.fancytime,
+              "timeformat": args.timeformat,
               "tighten": args.tighten
              }
 

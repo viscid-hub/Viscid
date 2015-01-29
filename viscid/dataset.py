@@ -12,17 +12,21 @@ import numpy as np
 from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
+from viscid import tree
 from viscid.vutil import tree_prefix, convert_floating_slice
 
-class Dataset(object):
-    """ datasets contain grids or other datasets
-    (GridCollection derrives from Dataset)
+class Dataset(tree.Node):
+    """Datasets contain grids or other datasets
+
+    Note:
+        Datasets should probably be created using a vfile's
+        `_make_dataset` to make sure the info dict is propogated
+        appropriately
+
     It is the programmer's responsibility to ensure objects added to a AOEUIDH
     dataset have __getitem__ and get_fields methods, this is not
     enforced
     """
-    name = None
-    time = None
     children = None  # Bucket or (time, grid)
     active_child = None
 
@@ -30,17 +34,17 @@ class Dataset(object):
     geometry_info = None
     crds = None
 
-    info = None
 
-    def __init__(self, name, time=None):
-        self.name = name
+    def __init__(self, *args, **kwargs):
+        """info is for information that is shared for a whole
+        tree, from vfile all the way down to fields
+        """
+        super(Dataset, self).__init__(*args, **kwargs)
         self.children = Bucket()
-
         self.active_child = None
-        self.time = time
-        self.info = {}
 
     def add(self, child, set_active=True):
+        self.prepare_child(child)
         self.children[child.name] = child
         if set_active:
             self.active_child = child
@@ -86,6 +90,15 @@ class Dataset(object):
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
+
+    def get_times(self, slice_str=":"):
+        return list(self.iter_times(slice_str=slice_str))
+
+    def get_time(self, slice_str=":"):
+        try:
+            return next(self.iter_times(slice_str))
+        except StopIteration:
+            raise RuntimeError("Dataset has no time slices")
 
     def iter_fields(self, time=None, named=None):
         """ generator for fields in the active dataset,
@@ -190,11 +203,17 @@ class Dataset(object):
 
 
 class DatasetTemporal(Dataset):
+    """
+    Note:
+        Datasets should probably be created using a vfile's
+        `_make_dataset` to make sure the info dict is propogated
+        appropriately
+    """
     _last_ind = 0
     # _all_times = None
 
-    def __init__(self, name, time=None):
-        super(DatasetTemporal, self).__init__(name, time=time)
+    def __init__(self, *args, **kwargs):
+        super(DatasetTemporal, self).__init__(*args, **kwargs)
         # ok, i want more control over my childen than a bucket can give
         # TODO: it's kind of a kludge to create a bucket then destroy it
         # so soon, but it's not a big deal
@@ -208,6 +227,7 @@ class DatasetTemporal(Dataset):
             child.time = 0.0
             logger.warn("A child with no time? Something is strange...")
         # this keeps the children in time order
+        self.prepare_child(child)
         self.children.append((child.time, child))
         self.children.sort()
         # binary in sorting... maybe more efficient?
@@ -289,41 +309,6 @@ class DatasetTemporal(Dataset):
                              "string?".format(slc_str))
         return slice(*ret)
 
-    def _translate_time(self, time):
-        """Translate time from one representation to a float
-
-        Note:
-            for subclasses that override this function: if you
-            don't understand the representation, you should
-            always return the result of super instead of returning
-            NotImplemented
-
-        Returns:
-            NotImplemented or float representation of time for the
-            current dataset
-        """
-        # parse a string, if that's what time is
-        if isinstance(time, string_types):
-            time = time.lstrip(ascii_letters)
-            # there MUST be a better way to do this than 3 nested trys
-            try:
-                time = datetime.strptime(time, "%H:%M:%S.%f")
-            except ValueError:
-                try:
-                    time = datetime.strptime(time, "%d:%H:%M:%S.%f")
-                except ValueError:
-                    try:
-                        time = datetime.strptime(time, "%m:%d:%H:%M:%S.%f")
-                    except ValueError:
-                        pass
-
-        # figure out the datetime, if that's what time is
-        if isinstance(time, datetime):
-            delta = time - datetime.strptime("00", "%S")
-            return delta.total_seconds()
-
-        return NotImplemented
-
     def _slice_time(self, slc=":"):
         """
         Args:
@@ -367,7 +352,8 @@ class DatasetTemporal(Dataset):
 
             # convert floats in the slice to integers
             if len(slc_lst) == 1:
-                slc_lst = [np.argmin(np.abs(times - slc_lst[0]))]
+                if isinstance(slc_lst[0], (float, np.floating)):
+                    slc_lst = [np.argmin(np.abs(times - slc_lst[0]))]
             else:
                 slc_lst = convert_floating_slice(times, *slc_lst)
 
@@ -423,6 +409,12 @@ class DatasetTemporal(Dataset):
         for child in child_iterator:
             with child[1] as target:
                 yield target
+
+    def get_times(self, slice_str=":"):
+        return list(self.iter_times(slice_str=slice_str))
+
+    def get_time(self, slice_str=":"):
+        return self.get_times(slice_str)[0]
 
     ## ok, that's enough for the time stuff
     ########################################

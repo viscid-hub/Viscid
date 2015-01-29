@@ -25,7 +25,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
     def __init__(self, filename, vfilebucket=None, **kwargs):
         super(GGCMFileJrrleMHD, self).__init__(filename, vfilebucket, **kwargs)
 
-    def _parse_file(self, filename):
+    def _parse_file(self, filename, parent_node):
         # we do minimal file parsing here for performance. we just
         # make data wrappers from the templates we got from the first
         # file in the group, and package them up into grids
@@ -37,7 +37,8 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
             _, meta = f.inquire_next()
             time = float(str(meta['timestr']).split('=')[1].split()[0])
 
-        _grid = self._make_grid("<JrrleGrid>", **self._grid_opts)
+        _grid = self._make_grid(parent_node, name="<JrrleGrid>",
+                                **self._grid_opts)
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)
@@ -57,9 +58,9 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         for item in templates:
             data = data_wrapper(self._file_wrapper, item['fld_name'],
                                 item['shape'])
-            fld = field.wrap_field("Scalar", item['fld_name'], self._crds,
-                                   data, center=self._def_fld_center,
-                                   time=time)
+            fld = self._make_field(_grid, "Scalar", item['fld_name'],
+                                   self._crds, data,
+                                   center=self._def_fld_center, time=time)
             _grid.add_field(fld)
         return _grid
 

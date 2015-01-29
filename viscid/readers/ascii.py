@@ -21,7 +21,7 @@ class FileASCII(vfile.VFile):  # pylint: disable=W0223
         super(FileASCII, self).__init__(fname, **kwargs)
 
     def _parse(self):
-        g = self._make_grid()
+        g = self._make_grid(self)
 
         arr = np.loadtxt(self.fname)
         crds = coordinate.wrap_crds("nonuniform_cartesian", [['x', arr[:, 0]]])
@@ -29,7 +29,7 @@ class FileASCII(vfile.VFile):  # pylint: disable=W0223
 
         if len(arr.shape) > 1:
             for i in range(arr.shape[1] - 1):
-                fld = field.wrap_field("Scalar", str(i), crds, arr[:, i + 1])
+                fld = self._make_field(g, "Scalar", str(i), crds, arr[:, i + 1])
                 g.add_field(fld)
 
         self.add(g)

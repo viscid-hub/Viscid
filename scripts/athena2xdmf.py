@@ -34,7 +34,7 @@ def main():
     files = viscid.load_files(args.files)
 
     # sort of lucky that the 0th id is just the RUN, not RUN-id0
-    runname = files[0].info['run']
+    runname = files[0].find_info('run')
     print(runname)
 
     times_iter = [f.iter_times(":") for f in files]

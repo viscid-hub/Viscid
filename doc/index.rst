@@ -17,6 +17,7 @@ Contents:
   philosophy
   custom_behavior
   ex_reader
+  ex_slicing
   ex_openggcm
   ex_calc
   command_line
