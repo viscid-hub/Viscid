@@ -5,6 +5,7 @@ from string import ascii_letters
 from datetime import datetime, timedelta
 
 from viscid.compat import string_types
+from viscid.vutil import format_time as generic_format_time
 
 class Node(object):
     """Base class for Datasets and Grids"""
@@ -214,50 +215,27 @@ class Node(object):
 
         return NotImplemented
 
-    def format_time(self, style=".02f"):
+    def format_time(self, style=".02f", time=None):
         """Format time as a string
 
-        Args:
-            style (str): for this method, can be::
-                    style          |   time   | string
-                    --------------------------------------------------
-                    'hms'          | 90015.0  | "25:00:15.000"
-                    'hms'          | 90000.0  | "1 day 01:00:15.000"
-                    'dhms'         |   900.0  | "0 days 00:15:00.000"
-                    '.02f'         |   900.0  | '900.00'
+        See Also:
+            :py:func:`viscid.vutil.format_time`
 
         Returns:
             string
         """
         style = style.lower()
+        if time is None:
+            time = self.time
 
-        getvalue = lambda obj: obj._sub_format_time(self.time, style)  # pylint: disable=protected-access
+        getvalue = lambda obj: obj._sub_format_time(time, style)  # pylint: disable=protected-access
         condition = lambda obj, val: val != NotImplemented
         _, val = self._parent_bfs(condition, getvalue)  # pylint: disable=unpacking-non-sequence,unbalanced-tuple-unpacking
         if val is not None:
             return val
+        return generic_format_time(time, style)
 
-        if style.endswith("hms"):
-            days = int(self.time // (24 * 3600))
-            hrs = int((self.time // 3600) % 24)
-            mins = int((self.time // 60) % 60)
-            secs = self.time % 60
-
-            if style == "dhms":
-                daystr = "day" if days == 1 else "days"
-                return "{0} {1} {2:02d}:{3:02d}:{4:05.02f}".format(days, daystr,
-                                                                   hrs, mins, secs)
-            elif style == "hms":
-                hrs += 24 * days
-                return "{0:02d}:{1:02d}:{2:05.2f}".format(hrs, mins, secs)
-            else:
-                raise ValueError("Unknown time style: {0}".format(style))
-        elif style == "none":
-            return ""
-        else:
-            return "{0:{1}}".format(self.time, style)
-
-    def time_as_datetime(self, epoch=None):
+    def time_as_datetime(self, time=None, epoch=None):
         """Convert floating point time to datetime
 
         Args:
@@ -275,8 +253,10 @@ class Node(object):
             epoch = datetime.utcfromtimestamp(0)
         return epoch + dt
 
-    def time_as_timedelta(self, time):  # pylint: disable=no-self-use
+    def time_as_timedelta(self, time=None):  # pylint: disable=no-self-use
         """Convert floating point time to a timedelta"""
+        if time is None:
+            time = self.time
         return timedelta(seconds=time)
 
 

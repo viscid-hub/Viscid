@@ -488,7 +488,7 @@ class GGCMFile(object):
         style = style.lower()
         if style.startswith("ut"):
             precision = 1
-            fmt = "%Y:%m:%d:%H:%M:%S.%f"
+            fmt = "%Y-%m-%d %H:%M:%S.%f"
             for opt in style.split('_')[1:]:
                 try:
                     precision = int(opt)

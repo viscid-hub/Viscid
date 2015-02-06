@@ -129,6 +129,42 @@ def timeit(f, *args, **kwargs):
     print("Took {0:.03g} secs.".format(t1 - t0))
     return ret
 
+def format_time(t, style='.02f'):
+    """Format time as a string
+
+    Args:
+        t (float): time
+        style (str): for this method, can be::
+                style          |   time   | string
+                --------------------------------------------------
+                'hms'          | 90015.0  | "25:00:15.000"
+                'hms'          | 90000.0  | "1 day 01:00:15.000"
+                'dhms'         |   900.0  | "0 days 00:15:00.000"
+                '.02f'         |   900.0  | '900.00'
+
+    Returns:
+        string
+    """
+    if style.endswith("hms"):
+        days = int(t // (24 * 3600))
+        hrs = int((t // 3600) % 24)
+        mins = int((t // 60) % 60)
+        secs = t % 60
+
+        if style == "dhms":
+            daystr = "day" if days == 1 else "days"
+            return "{0} {1}, {2}:{3:02d}:{4:04.01f}".format(days, daystr,
+                                                            hrs, mins, secs)
+        elif style == "hms":
+            hrs += 24 * days
+            return "{0:02d}:{1:02d}:{2:05.2f}".format(hrs, mins, secs)
+        else:
+            raise ValueError("Unknown time style: {0}".format(style))
+    elif style == "none":
+        return ""
+    else:
+        return "{0:{1}}".format(t, style)
+
 def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     """Make sure slices go forward
 
