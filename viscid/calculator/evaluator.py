@@ -14,6 +14,7 @@ import re
 
 import numpy as np
 try:
+    # raise ImportError
     import numexpr as ne
     _has_numexpr = True
 except ImportError:
@@ -26,7 +27,7 @@ from viscid.calculator import calc
 enabled = False
 
 
-def evaluate(grid, result_name, eqn, try_numexpr=True):
+def evaluate(grid, result_name, eqn, try_numexpr=True, slc=None):
     """Evaluate an equation on a grid
 
     Examples:
@@ -64,16 +65,16 @@ def evaluate(grid, result_name, eqn, try_numexpr=True):
 
     if try_numexpr:
         try:
-            return _evaluate_numexpr(grid, result_name, eqn)
+            return _evaluate_numexpr(grid, result_name, eqn, slc=slc)
         except RuntimeError:
             pass
         except TypeError:
             logger.warn("Numexpr couldn't understand a math function you "
                         "tried to use in '{0}', falling back to numpy"
                         "".format(eqn))
-    return _evaluate_numpy(grid, result_name, eqn)
+    return _evaluate_numpy(grid, result_name, eqn, slc=slc)
 
-def _evaluate_numexpr(grid, result_name, eqn):
+def _evaluate_numexpr(grid, result_name, eqn, slc=None):
     """
     Returns:
         Field
@@ -101,8 +102,9 @@ def _evaluate_numexpr(grid, result_name, eqn):
         # yes, i'm not using dict.update on purpose since grid's
         # getitem might copy the array
         if not salted_symbol in local_dict:
-            flds.append(grid[symbol])
-            local_dict[salted_symbol] = flds[-1].data
+            if len(flds) == 0:
+                flds.append(grid.get_field(symbol))
+            local_dict[salted_symbol] = grid.get_field(symbol, slc=slc)
         return salted_symbol
 
     salted_eqn = re.sub(var_re, var_salter, eqn)
@@ -118,7 +120,7 @@ def _evaluate_numexpr(grid, result_name, eqn):
     else:
         return field.wrap_field("Scalar", result_name, grid.crds, arr)
 
-def _evaluate_numpy(grid, result_name, eqn):
+def _evaluate_numpy(grid, result_name, eqn, slc=None):
     """
     Returns:
         Field
@@ -142,7 +144,7 @@ def _evaluate_numpy(grid, result_name, eqn):
         # yes, i'm not using dict.update on purpose since grid's
         # getitem might copy the array
         if not salted_symbol in local_dict:
-            local_dict[salted_symbol] = grid[symbol]
+            local_dict[salted_symbol] = grid.get_field(symbol, slc=slc)
         return salted_symbol
     salted_eqn = re.sub(var_re, var_salter, eqn)
 

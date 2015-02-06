@@ -174,21 +174,30 @@ class Grid(tree.Node):
         return self.crds.get_crds_ec(axes=axes, shaped=shaped)
 
     ##
-    def get_field(self, fldname, time=None, force_longterm_caches=False):  # pylint: disable=unused-argument
+    def get_field(self, fldname, time=None, force_longterm_caches=False,
+                  slc=None):  # pylint: disable=unused-argument
+        ret = None
+        try_final_slice = True
+
         try:
             if force_longterm_caches or self.longterm_field_caches:
-                return self.fields[fldname]
+                ret = self.fields[fldname]
             else:
-                return self.fields[fldname].shell_copy(force=False)
+                ret = self.fields[fldname].shell_copy(force=False)
         except KeyError:
             func = "_get_" + fldname
             if hasattr(self, func):
-                return getattr(self, func)()
+                ret = getattr(self, func)()
             elif len(fldname.split('=')) == 2:
                 result_name, eqn = (s.strip() for s in fldname.split('='))
-                return evaluate(self, result_name, eqn)
+                ret = evaluate(self, result_name, eqn, slc=slc)
+                try_final_slice = False
             else:
                 raise KeyError("field not found")
+
+        if slc is not None and try_final_slice:
+            ret = ret[slc]
+        return ret
 
     def get_grid(self, time=None):  # pylint: disable=unused-argument
         return self

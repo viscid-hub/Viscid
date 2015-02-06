@@ -1,22 +1,34 @@
 Command Line Utilities
 ======================
 
-p2d
----
+viscid_2d
+---------
 
-``p2d`` is a command line script for quickly generating plots. Here is an example.
+``viscid_2d`` is a command line script for quickly generating 2D plots. Here is an example.
 
-``p2d -t 30 --slice z=0 -p beta -o log -p jz -o lin_0 -p psi -o style_contour,levels_30 dip_0288_0.00500_0.50/*.3df.xdmf``
+``viscid_2d -t 30 --slice z=0 -p beta -o log -p jz -o lin_0 -p psi -o style_contour,levels_30 dip_0288_0.00500_0.50/*.3df.xdmf``
 
 .. image:: images/p2d_dip_0288.png
     :align: center
 
 If the evaluator is enabled in your viscidrc file (off by default for security reasons), you can also do math from the command line.
 
-``p2d -t T1:00:00.00 -o x_-15.0_15.0,y_-8.0_8.0 --slice y=0 -p "B$^2$=bx**2+by**2+bz**2" -o log,style_contourf,levels_30 --timeformat dhms $DEV/src/Viscid/sample/*.3df.xdmf``
+``viscid_2d -t T1:00:00.00 -o x_-15.0_15.0,y_-8.0_8.0 --slice y=0 -p "B$^2$=bx**2+by**2+bz**2" -o log,style_contourf,levels_30 --timeformat dhms $DEV/src/Viscid/sample/*.3df.xdmf``
 
 .. image:: images/sample_bsq.png
     :align: center
+
+
+viscid_ts
+---------
+
+``viscid_ts`` is a script for quickly generating time series plots...
+
+``viscid_2d -t T1:00:00.00 -o x_-15.0_15.0,y_-8.0_8.0 --slice y=0 -p "B$^2$=bx**2+by**2+bz**2" -o log,style_contourf,levels_30 --timeformat dhms $DEV/src/Viscid/sample/*.3df.xdmf``
+
+.. image:: images/sample_bsq.png
+    :align: center
+
 
 viscid_diff
 -----------
@@ -27,6 +39,13 @@ viscid_diff
 
 .. image:: images/viscid_diff_ex.png
     :align: center
+
+
+athena2xdmf
+-----------
+
+Convert athena data files to xdmf files.
+
 
 bitmaskbits
 -----------

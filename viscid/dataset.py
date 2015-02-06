@@ -132,7 +132,7 @@ class Dataset(tree.Node):
     #     else:
     #         return self.active_grid
 
-    def get_field(self, fldname, time=None):
+    def get_field(self, fldname, time=None, slc=None):
         """ recurse down active children to get a field """
         child = self.active_child
 
@@ -140,7 +140,7 @@ class Dataset(tree.Node):
             logger.warn("Could not get appropriate child...")
             return None
         else:
-            return child.get_field(fldname, time=time)
+            return child.get_field(fldname, time=time, slc=slc)
 
     def get_grid(self, time=None):
         """ recurse down active children to get a field """
@@ -446,7 +446,7 @@ class DatasetTemporal(Dataset):
             if depth != 0:
                 child[1].print_tree(depth=depth - 1, prefix=prefix + tree_prefix)
 
-    def get_field(self, fldname, time=None):
+    def get_field(self, fldname, time=None, slc=None):
         """ recurse down active children to get a field """
         if time is not None:
             child = self.get_child(time)
@@ -457,7 +457,7 @@ class DatasetTemporal(Dataset):
             logger.warn("Could not get appropriate child...")
             return None
         else:
-            return child.get_field(fldname, time=time)
+            return child.get_field(fldname, time=time, slc=None)
 
     def get_grid(self, time=None):
         """ recurse down active children to get a field """

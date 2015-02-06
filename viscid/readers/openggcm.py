@@ -110,7 +110,7 @@ def mhd2gse_field_scalar_m1(fld, crds, arr, comp_slc=None,
     if copy_on_transform:
         if _has_numexpr:
             m1 = np.array([-1.0], dtype=arr.dtype)  # pylint: disable=unused-variable
-            arr = numexpr.evaluate("a * m1")
+            arr = numexpr.evaluate("arr * m1")
         else:
             arr = arr * -1
     else:
@@ -365,7 +365,8 @@ class GGCMGrid(grid.Grid):
         # caching behavior depends on self.longterm_field_caches
         vx, vy, vz = self['vx'], self['vy'], self['vz']
         speed = self._calc_mag(vx, vy, vz)
-        speed.name = "Speed"
+        speed.name = "speed"
+        speed.pretty_name = "|V|"
         return speed
 
     def _get_beta(self):

@@ -189,6 +189,8 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
                 fld_slc = ",".join([fld_slc, selection])
             else:
                 fld_slc = selection
+        if fld_slc.strip() == "":
+            fld_slc = None
 
         # print("fld_time:", fld.time)
         if this_row < 0:
@@ -209,8 +211,8 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
             fld_meta[1]["plot_opts"] = "{0},{1}".format(
                 fld_meta[1]["plot_opts"], global_popts)
 
-        with grid[fld_name] as fld:
-            mpl.plot(fld, selection=fld_slc, masknan=True, **fld_meta[1])
+        with grid.get_field(fld_name, slc=fld_slc) as fld:
+            mpl.plot(fld, masknan=True, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
 
     if timeformat and timeformat.lower() != "none":
