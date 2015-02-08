@@ -125,7 +125,7 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
     if not name:
         name = fldlist[0].name
     center = fldlist[0].center
-    crds = fldlist[0].crds
+    crds = fldlist[0]._src_crds
     time = fldlist[0].time
     # shape = fldlist[0].data.shape
 
@@ -195,7 +195,10 @@ class Field(tree.Leaf):
     # some scalar fields without necessarilly loading the data
     _center = "none"  # String in CENTERING
     _src_data = None  # numpy-like object (h5py too), or list of these objects
-    crds = None  # Coordinate object
+
+    _src_crds = None  # Coordinate object
+    _crds = None  # Coordinate object
+
     # dict, this stuff will be copied by self.wrap
     meta = None  #
     # dict, used for stuff that won't be blindly copied by self.wrap
@@ -211,7 +214,6 @@ class Field(tree.Leaf):
     # ONLY sets self._cache... if other meta data were set by
     # _fill_cache, that would need to propogate upstream too
     _parent_field = None
-
 
     # these get reset when data is set
     _layout = None
@@ -244,7 +246,7 @@ class Field(tree.Leaf):
         """
         super(Field, self).__init__(name, time, info, parents)
         self.center = center
-        self.crds = crds
+        self._src_crds = crds
         self.data = data
 
         if pretty_name is None:
@@ -339,7 +341,7 @@ class Field(tree.Leaf):
     def nr_sdims(self):
         """ number of spatial dims, same as crds.nr_dims, does not
         explicitly load the data """
-        return self.crds.nr_dims
+        return self._src_crds.nr_dims
 
     @property
     def nr_comps(self):
@@ -374,12 +376,12 @@ class Field(tree.Leaf):
             if layout == LAYOUT_FLAT:
                 self._nr_comp = 0
             elif layout == LAYOUT_INTERLACED:
-                self._nr_comp = self.crds.nr_dims
+                self._nr_comp = self._src_crds.nr_dims
             elif layout == LAYOUT_SCALAR:
                 # use same as interlaced for slicing convenience, note
                 # this is only for a one component vector, for scalars
                 # nr_comp is None
-                self._nr_comp = self.crds.nr_dims
+                self._nr_comp = self._src_crds.nr_dims
             else:
                 raise RuntimeError("Could not detect data layout; "
                                    "can't give nr_comp")
@@ -405,13 +407,13 @@ class Field(tree.Leaf):
         # the coords by _reshape_ndarray_to_crds... actually, that method
         # requires this method to depend on the crd shape
         if self.iscentered("node"):
-            return list(self.crds.shape_nc)
+            return list(self._src_crds.shape_nc)
         elif self.iscentered("cell"):
-            return list(self.crds.shape_cc)
+            return list(self._src_crds.shape_cc)
         else:
             logger.warn("edge/face vectors not implemented, assuming "
                         "node shape")
-            return self.crds.shape
+            return self._src_crds.shape
 
     @property
     def size(self):
@@ -438,6 +440,17 @@ class Field(tree.Leaf):
             else:
                 self._dtype = np.dtype(dt)
         return self._dtype
+
+    @property
+    def crds(self):
+        if self._crds is None:
+            self._crds = self._src_crds.apply_reflections()
+        return self._crds
+
+    @crds.setter
+    def crds(self, val):
+        self._crds = None
+        self._src_crds = val
 
     @property
     def data(self):
@@ -563,11 +576,11 @@ class Field(tree.Leaf):
         except TypeError:
             nr_comp = None
             nr_comps = None
-        arr = self.crds.reflect_fld_arr(arr, self.iscentered("Cell"),
+        arr = self._src_crds.reflect_fld_arr(arr, self.iscentered("Cell"),
                                         nr_comp, nr_comps)
 
         if self.post_reshape_transform_func is not None:
-            arr = self.post_reshape_transform_func(self, self.crds, arr,
+            arr = self.post_reshape_transform_func(self, self._src_crds, arr,
                                                    **self.transform_func_kwargs)
 
         return arr
@@ -697,7 +710,7 @@ class Field(tree.Leaf):
             return self._src_data[comp_slc]
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(self.crds.type, crdlst)
+        crds = coordinate.wrap_crds(self._src_crds.type, crdlst)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -728,7 +741,7 @@ class Field(tree.Leaf):
             # way to do this for large data sets is _src_data[0:3][::-1]
             # We will always read _src_data forward, then flip it since
             # h5py won't do a slice of [3:0:-1]
-            first_slc, second_slc = self.crds.reflect_slices(slices, cc, False)
+            first_slc, second_slc = self._src_crds.reflect_slices(slices, cc, False)
 
             # now put component slice back in
             try:
@@ -818,7 +831,7 @@ class Field(tree.Leaf):
         """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self.crds.make_slice(selection, cc=cc)
+        slices, crdlst, reduced = self._src_crds.make_slice(selection, cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def slice_reduce(self, selection):
@@ -827,7 +840,7 @@ class Field(tree.Leaf):
         field """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self.crds.make_slice_reduce(selection,
+        slices, crdlst, reduced = self._src_crds.make_slice_reduce(selection,
                                                               cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
@@ -837,7 +850,7 @@ class Field(tree.Leaf):
         in the new field """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self.crds.make_slice_keep(selection,
+        slices, crdlst, reduced = self._src_crds.make_slice_keep(selection,
                                                             cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
@@ -849,7 +862,7 @@ class Field(tree.Leaf):
         """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, _ = self.crds.make_slice(selection, cc=cc)[:2]
+        slices, _ = self._src_crds.make_slice(selection, cc=cc)[:2]
         try:
             slices.insert(self.nr_comp, comp_slc)
         except TypeError:
@@ -871,7 +884,7 @@ class Field(tree.Leaf):
     def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center is None:
             center = self.center
-        return self.crds.iter_points(center=center)
+        return self._src_crds.iter_points(center=center)
 
     def __enter__(self):
         return self
@@ -888,61 +901,61 @@ class Field(tree.Leaf):
 
     ##################################
     ## Utility methods to get at crds
-    # these are the same as something like self.crds['xnc']
-    # or self.crds.get_crd()
+    # these are the same as something like self._src_crds['xnc']
+    # or self._src_crds.get_crd()
     def get_crd(self, axis, shaped=False):
         """ return crd along axis with same centering as field
         axis can be crd name as string, or index, as in x==2, y==1, z==2 """
-        return self.crds.get_crd(axis, center=self.center, shaped=shaped)
+        return self._src_crds.get_crd(axis, center=self.center, shaped=shaped)
 
     def get_crd_nc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2 """
-        return self.crds.get_nc(axis, shaped=shaped)
+        return self._src_crds.get_nc(axis, shaped=shaped)
 
     def get_crd_cc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2 """
-        return self.crds.get_cc(axis, shaped=shaped)
+        return self._src_crds.get_cc(axis, shaped=shaped)
 
     def get_crd_ec(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2 """
-        return self.crds.get_ec(axis, shaped=shaped)
+        return self._src_crds.get_ec(axis, shaped=shaped)
 
     def get_crd_fc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2 """
-        return self.crds.get_fc(axis, shaped=shaped)
+        return self._src_crds.get_fc(axis, shaped=shaped)
 
     ## these return all crd dimensions
-    # these are the same as something like self.crds.get_crds()
+    # these are the same as something like self._src_crds.get_crds()
     def get_crds(self, axes=None, shaped=False):
         """ return all crds as list of ndarrays with same centering as field """
-        return self.crds.get_crds(axes=axes, center=self.center, shaped=shaped)
+        return self._src_crds.get_crds(axes=axes, center=self.center, shaped=shaped)
 
     def get_crds_nc(self, axes=None, shaped=False):
         """ returns all node centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True """
-        return self.crds.get_crds_nc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_nc(axes=axes, shaped=shaped)
 
     def get_crds_cc(self, axes=None, shaped=False):
         """ returns all cell centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True """
-        return self.crds.get_crds_cc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_cc(axes=axes, shaped=shaped)
 
     def get_crds_fc(self, axes=None, shaped=False):
         """ returns all face centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True """
-        return self.crds.get_crds_fc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_fc(axes=axes, shaped=shaped)
 
     def get_crds_ec(self, axes=None, shaped=False):
         """ returns all edge centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True """
-        return self.crds.get_crds_ec(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_ec(axes=axes, shaped=shaped)
 
     def is_spherical(self):
-        return self.crds.is_spherical()
+        return self._src_crds.is_spherical()
 
     ######################
     def shell_copy(self, force=False, **kwargs):
@@ -976,7 +989,7 @@ class Field(tree.Leaf):
         # Note: this is fragile if a subclass takes additional parameters
         # in an overridden __init__; in that case, the developer MUST
         # override shell_copy and pass the extra kwargs in to here.
-        f = type(self)(self.name, self.crds, self._src_data, center=self.center,
+        f = type(self)(self.name, self._src_crds, self._src_data, center=self.center,
                        time=self.time, meta=self.meta, deep_meta=self.deep_meta,
                        forget_source=False,
                        pretty_name=self.pretty_name,
@@ -999,7 +1012,7 @@ class Field(tree.Leaf):
 
         elif self.iscentered('node'):
             # construct new crds
-            axes = self.crds.axes
+            axes = self._src_crds.axes
             crds_cc = self.get_crds_cc()
             for i, x in enumerate(crds_cc):
                 dxl = x[1] - x[0]
@@ -1008,7 +1021,7 @@ class Field(tree.Leaf):
                                              x,
                                              [x[-1] + dxh]])
             new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
-            new_crds = type(self.crds)(new_clist)
+            new_crds = type(self._src_crds)(new_clist)
 
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
@@ -1040,10 +1053,10 @@ class Field(tree.Leaf):
 
         elif self.iscentered('cell'):
             # construct new crds
-            axes = self.crds.axes
+            axes = self._src_crds.axes
             crds_cc = self.get_crds_cc()
             new_clist = [(ax, cc) for ax, cc in zip(axes, crds_cc)]
-            new_crds = type(self.crds)(new_clist)
+            new_crds = type(self._src_crds)(new_clist)
 
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
@@ -1263,7 +1276,7 @@ class ScalarField(Field):
                                dat[:end[0]:2, 1:end[1]:2, 1:end[2]:2] +
                                dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
 
-        downclist = self.crds.get_clist(np.s_[::2])
+        downclist = self._src_crds.get_clist(np.s_[::2])
         downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist)
         return self.wrap(downdat, {"crds": downcrds})
 
@@ -1274,16 +1287,16 @@ class ScalarField(Field):
             axes = list(range(self.nr_dims - 1, -1, -1))
         if len(axes) != self.nr_dims:
             raise ValueError("transpose can not change number of axes")
-        clist = self.crds.get_clist()
+        clist = self._src_crds.get_clist()
         new_clist = [clist[ax] for ax in axes]
-        t_crds = coordinate.wrap_crds(self.crds.type, new_clist)
+        t_crds = coordinate.wrap_crds(self._src_crds.type, new_clist)
         t_data = self.data.transpose(axes)
         return self.wrap(t_data, {"crds": t_crds})
 
     def swap_axes(self, a, b):
-        new_clist = self.crds.get_clist()
+        new_clist = self._src_crds.get_clist()
         new_clist[a], new_clist[b] = new_clist[b], new_clist[a]
-        new_crds = coordinate.wrap_crds(self.crds.type, new_clist)
+        new_crds = coordinate.wrap_crds(self._src_crds.type, new_clist)
         new_data = self.data.swap_axes(a, b)
         return self.wrap(new_data, {"crds": new_crds})
 

@@ -171,6 +171,16 @@ class StructuredCrds(Coordinates):
             # ind = self.ind(axis)
             self._src_crds_nc[axis.lower()] = data
 
+    def apply_reflections(self):
+        """
+        Returns:
+            Coordinates with reflections applied
+        """
+        if len(self.reflect_axes) > 0:
+            return type(self)(self.get_clist(), has_cc=self.has_cc)
+        else:
+            return self
+
     def _reflect_axis_arr(self, arr):  # pylint: disable=no-self-use
         return np.array(-1.0 * arr[::-1])
 

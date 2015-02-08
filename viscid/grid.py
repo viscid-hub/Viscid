@@ -36,7 +36,8 @@ class Grid(tree.Node):
     """
     topology_info = None
     geometry_info = None
-    crds = None
+    _src_crds = None
+    _crds = None
     fields = None
     # so... not all grids have times? if we try to access time on a grid
     # that doesnt have one, there is probably a bug somewhere
@@ -51,7 +52,6 @@ class Grid(tree.Node):
     def __init__(self, *args, **kwargs):
         super(Grid, self).__init__(*args, **kwargs)
         self.fields = Bucket(ordered=True)
-        self.crds = None  # Coordinates()
 
     @staticmethod
     def null_transform(something):
@@ -60,6 +60,17 @@ class Grid(tree.Node):
     @property
     def field_names(self):
         return self.fields.get_primary_handles()
+
+    @property
+    def crds(self):
+        if self._crds is None:
+            self._crds = self._src_crds.apply_reflections()
+        return self._crds
+
+    @crds.setter
+    def crds(self, val):
+        self._crds = None
+        self._src_crds = val
 
     # def set_time(self, time):
     #     self.time = time
@@ -121,57 +132,57 @@ class Grid(tree.Node):
 
     ##################################
     ## Utility methods to get at crds
-    # these are the same as something like self.crds['xnc']
-    # or self.crds.get_crd()
+    # these are the same as something like self._src_crds['xnc']
+    # or self._src_crds.get_crd()
     def get_crd_nc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_nc(axis, shaped=shaped)
+        return self._src_crds.get_nc(axis, shaped=shaped)
 
     def get_crd_cc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_cc(axis, shaped=shaped)
+        return self._src_crds.get_cc(axis, shaped=shaped)
 
     def get_crd_ec(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_ec(axis, shaped=shaped)
+        return self._src_crds.get_ec(axis, shaped=shaped)
 
     def get_crd_fc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_fc(axis, shaped=shaped)
+        return self._src_crds.get_fc(axis, shaped=shaped)
 
     ## these return all crd dimensions
-    # these are the same as something like self.crds.get_crds()
+    # these are the same as something like self._src_crds.get_crds()
     def get_crds_nc(self, axes=None, shaped=False):
         """ returns all node centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_nc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_nc(axes=axes, shaped=shaped)
 
     def get_crds_cc(self, axes=None, shaped=False):
         """ returns all cell centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_cc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_cc(axes=axes, shaped=shaped)
 
     def get_crds_fc(self, axes=None, shaped=False):
         """ returns all face centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_fc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_fc(axes=axes, shaped=shaped)
 
     def get_crds_ec(self, axes=None, shaped=False):
         """ returns all edge centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_ec(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_ec(axes=axes, shaped=shaped)
 
     ##
     def get_field(self, fldname, time=None, force_longterm_caches=False,
@@ -215,8 +226,8 @@ class Grid(tree.Node):
         try:
             return self.get_field(item)
         except KeyError:
-            if self.crds is not None and item in self.crds:
-                return self.crds[item]
+            if self._src_crds is not None and item in self._src_crds:
+                return self._src_crds[item]
             else:
                 raise KeyError(item)
 
