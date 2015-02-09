@@ -551,12 +551,12 @@ class StructuredCrds(Coordinates):
                 if loc_ind == -1:
                     crd = crd_nc[-2:]
                     slc = slice(-1, None)
-                if loc_ind == -2:
+                elif loc_ind == -2:
                     crd = crd_nc[-2:]
-                    slc = slice(axis_ind, axis_ind + 1)
+                    slc = slice(-2, -1)
                 else:
                     crd = crd_nc[loc_ind:loc_ind + 2]
-                    slc = slice(axis_ind, axis_ind + 1)
+                    slc = slice(loc_ind, loc_ind + 1)
             else:
                 if loc_ind == -1:
                     crd = crd_nc[-1:]

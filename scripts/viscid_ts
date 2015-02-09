@@ -93,8 +93,10 @@ def main():
                 plot_names[j] = grid[pvar[0]].pretty_name
             val = grid.get_field(pvar[0], slc=args.slice)
 
-            if len(val.shape) > 0:
+            if val.size > 1:
                 raise RuntimeError("you didn't slice away enough")
+            elif val.size == 0:
+                raise RuntimeError("you sliced away too much?")
 
             plot_arrs[j][i] = val
 

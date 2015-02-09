@@ -207,7 +207,7 @@ class Grid(tree.Node):
                 raise KeyError("field not found")
 
         if slc is not None and try_final_slice:
-            ret = ret[slc]
+            ret = ret.slice_and_keep(slc)
         return ret
 
     def get_grid(self, time=None):  # pylint: disable=unused-argument

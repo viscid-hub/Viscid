@@ -102,9 +102,13 @@ def _evaluate_numexpr(grid, result_name, eqn, slc=None):
         # yes, i'm not using dict.update on purpose since grid's
         # getitem might copy the array
         if not salted_symbol in local_dict:
+            this_fld = grid.get_field(symbol, slc=slc)
+            local_dict[salted_symbol] = this_fld
             if len(flds) == 0:
-                flds.append(grid.get_field(symbol))
-            local_dict[salted_symbol] = grid.get_field(symbol, slc=slc)
+                if isinstance(this_fld, field.Field):
+                    flds.append(this_fld)
+                else:
+                    raise RuntimeError("reduced to scalar, no need for numexpr")
         return salted_symbol
 
     salted_eqn = re.sub(var_re, var_salter, eqn)
@@ -118,6 +122,7 @@ def _evaluate_numexpr(grid, result_name, eqn, slc=None):
         ctx = dict(name=result_name, pretty_name=result_name)
         return flds[0].wrap(arr, context=ctx)
     else:
+        logger.warn("Strange input to numexpr evaluator: %s", eqn)
         return field.wrap_field("Scalar", result_name, grid.crds, arr)
 
 def _evaluate_numpy(grid, result_name, eqn, slc=None):
