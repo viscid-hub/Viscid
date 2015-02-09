@@ -455,7 +455,8 @@ class StructuredCrds(Coordinates):
                     crd_arr = self.get_nc(axis)
 
                 if len(sel) == 1:
-                    sel = [np.argmin(np.abs(crd_arr - sel[0]))]
+                    if isinstance(sel[0], (float, np.floating)):
+                        sel = [np.argmin(np.abs(crd_arr - sel[0]))]
                 else:
                     sel = vutil.convert_floating_slice(crd_arr, *sel)
 
