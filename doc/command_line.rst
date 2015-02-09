@@ -4,29 +4,30 @@ Command Line Utilities
 viscid_2d
 ---------
 
-``viscid_2d`` is a command line script for quickly generating 2D plots. Here is an example.
+``viscid_2d`` is a command line script for quickly generating 2D plots. In the following example, the `-p` options that have equations require that the evaluator is enabled in your viscidrc file (off by default for security reasons)::
 
-``viscid_2d -t 30 --slice z=0 -p beta -o log -p jz -o lin_0 -p psi -o style_contour,levels_30 dip_0288_0.00500_0.50/*.3df.xdmf``
+  viscid_2d -o x_-15_10,y_-10_10,earth \
+    -p 'P=pp' -o log \
+    -p '^tmp=abs(psi)' -o log,style_contour,levels_30,linewidths=0.8,colors=grey,linestyles_solid \
+    -p 'B$^2$=bx**2+by**2+bz**2' -o log \
+    -p '$\rho v^2$=rr*(vx**2+vy**2+vz**2)' -o log \
+    --slice x=-20.0:15.0,y=0.0,z=-10.0:10.0 -t T1:00:00.0 -s 7,15 --tighten \
+    $DEV/src/Viscid/sample/*.py_0.xdmf
 
-.. image:: images/p2d_dip_0288.png
+.. image:: images/sample_2d.png
     :align: center
-
-If the evaluator is enabled in your viscidrc file (off by default for security reasons), you can also do math from the command line.
-
-``viscid_2d -t T1:00:00.00 -o x_-15.0_15.0,y_-8.0_8.0 --slice y=0 -p "B$^2$=bx**2+by**2+bz**2" -o log,style_contourf,levels_30 --timeformat dhms $DEV/src/Viscid/sample/*.3df.xdmf``
-
-.. image:: images/sample_bsq.png
-    :align: center
-
+    :width: 75%
 
 viscid_ts
 ---------
 
-``viscid_ts`` is a script for quickly generating time series plots...
+``viscid_ts`` is a script for quickly generating time series plots::
 
-``viscid_2d -t T1:00:00.00 -o x_-15.0_15.0,y_-8.0_8.0 --slice y=0 -p "B$^2$=bx**2+by**2+bz**2" -o log,style_contourf,levels_30 --timeformat dhms $DEV/src/Viscid/sample/*.3df.xdmf``
+    viscid_ts -p 'P=pp' -o log -p 'B$_x$=bx' -p '|V|=sqrt(vx**2+vy**2+vz**2)' \
+    --slice x=9.5,y=0.0,z=0.0 --timeformat hms --rl -t T1:00:00.0:T1:20:00.0 \
+    --nofname $MNT/trillian/scratch/da*e3/target/*.py_0.xdmf
 
-.. image:: images/sample_bsq.png
+.. image:: images/sample_ts.png
     :align: center
 
 
@@ -52,8 +53,8 @@ bitmaskbits
 
 Give it a number and it tells you which bits were on. Useful for decoding topology bitmasks.::
 
-    $ bitmaskbits 552
-    The following bits were on (bit, 2**bit)...
-    3 (8)
-    5 (32)
-    9 (512)
+  $ bitmaskbits 552
+  The following bits were on (bit, 2**bit)...
+  3 (8)
+  5 (32)
+  9 (512)
