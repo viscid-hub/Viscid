@@ -382,7 +382,10 @@ class GGCMGrid(grid.Grid):
                 if nxi <= 2:
                     slcs[i] = 0
             B = B[slcs]
-        return plasma.calc_psi(B)
+
+        rev = True if B.meta["crd_system"] == "gse" else False
+        psi = plasma.calc_psi(B, reversed=rev)
+        return psi
 
 
 class GGCMFile(object):
