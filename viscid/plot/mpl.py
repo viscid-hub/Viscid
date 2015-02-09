@@ -807,7 +807,7 @@ def tighten(**kwargs):
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="mhd",
-               zorder=1):
+               zorder=10):
     """Plot a black and white Earth to show sunward direction
 
     Parameters:
