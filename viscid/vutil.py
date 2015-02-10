@@ -139,13 +139,15 @@ def format_time(t, style='.02f'):
                 --------------------------------------------------
                 'hms'          | 90015.0  | "25:00:15.000"
                 'hms'          | 90000.0  | "1 day 01:00:15.000"
+                'hmss'         | 90015.0  | "25:00:15.000 (90015)"
                 'dhms'         |   900.0  | "0 days 00:15:00.000"
                 '.02f'         |   900.0  | '900.00'
 
     Returns:
         string
     """
-    if style.endswith("hms"):
+    style = style.lower()
+    if "hms" in style:
         days = int(t // (24 * 3600))
         hrs = int((t // 3600) % 24)
         mins = int((t // 60) % 60)
@@ -155,9 +157,12 @@ def format_time(t, style='.02f'):
             daystr = "day" if days == 1 else "days"
             return "{0} {1}, {2}:{3:02d}:{4:04.01f}".format(days, daystr,
                                                             hrs, mins, secs)
-        elif style == "hms":
+        elif style.startswith("hms"):
             hrs += 24 * days
-            return "{0:02d}:{1:02d}:{2:05.2f}".format(hrs, mins, secs)
+            s = "{0:02d}:{1:02d}:{2:05.2f}".format(hrs, mins, secs)
+            if style == "hmss":
+                s += " ({0:d})".format(int(t))
+            return s
         else:
             raise ValueError("Unknown time style: {0}".format(style))
     elif style == "none":
