@@ -90,7 +90,10 @@ def main():
                 # the calculation on the whole grid just to
                 # get the name of the resulting field, but the
                 # call to get_field will return a scalar, so...
-                plot_names[j] = grid[pvar[0]].pretty_name
+                try:
+                    plot_names[j] = grid[pvar[0]].pretty_name
+                except AttributeError:
+                    plot_names[j] = pvar[0]
             val = grid.get_field(pvar[0], slc=args.slice)
 
             if val.size > 1:
