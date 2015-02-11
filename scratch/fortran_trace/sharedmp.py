@@ -4,12 +4,10 @@ import ctypes
 import multiprocessing as mp
 from contextlib import closing
 from itertools import islice, repeat, count
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
+
+from viscid.compat import izip
 
 def do_business_star(*args, **kwargs):
     # print "args", len(args), len(args[0])

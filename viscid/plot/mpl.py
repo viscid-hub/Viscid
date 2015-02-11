@@ -2,9 +2,10 @@
 
 Your best friend in this module is the :meth:`plot` function, but the
 best reference for all quirky options is :meth:`plot2d_field`.
+
+Note: you can't set rc parameters for this module
 """
 from __future__ import print_function
-import logging
 from distutils.version import LooseVersion
 
 import numpy as np
@@ -18,14 +19,18 @@ try:
 except ImportError:
     _HAS_BASEMAP = False
 
+from viscid import logger
+from viscid.compat import string_types
 from viscid import field
 from viscid import coordinate
 from viscid.calculator import calc
 from viscid.calculator.topology import color_from_topology
-# from viscid import vutil
+from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
+vseaborn.activate_from_viscid()
+
 
 def plot(fld, selection=None, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
@@ -61,6 +66,9 @@ def plot(fld, selection=None, **kwargs):
     if isinstance(fld, field.ScalarField):
         fld = fld.slice_reduce(selection)
 
+        if not isinstance(fld, field.ScalarField):
+            raise ValueError("Selection '{0}' sliced away too many "
+                             "dimensions".format(selection))
         if fld.nr_sdims == 1:
             return plot1d_field(fld, **kwargs)
         elif fld.nr_sdims == 2:
@@ -87,6 +95,7 @@ def _parse_str(plot_opts):
         elif not isinstance(plot_opts[i], (list, tuple)):
             plot_opts[i] = [plot_opts[i]]
 
+    plot_opts = [o for o in plot_opts if o[0] != ""]
     return plot_opts
 
 def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
@@ -147,22 +156,30 @@ def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
             actions.append([axis.set_ylim, opt[1:]])
 
         elif opt[0] == "own":
-            logging.warn("own axis doesn't seem to work yet...")
+            logger.warn("own axis doesn't seem to work yet...")
 
         elif opt[0] == "ownx":
-            logging.warn("own axis doesn't seem to work yet...")
+            logger.warn("own axis doesn't seem to work yet...")
 
         elif opt[0] == "owny":
-            logging.warn("own axis doesn't seem to work yet...")
+            logger.warn("own axis doesn't seem to work yet...")
 
         else:
-            val = "_".join(opt[1:]).lower()
-            if val == "" or val == "true":
+            val = "_".join(opt[1:])
+            if val == "" or val.lower() == "true":
                 val = True
-            elif val == "false":
+            elif val.lower() == "false":
                 val = False
+            else:
+                try:
+                    val = int(val)
+                except ValueError:
+                    try:
+                        val = float(val)
+                    except ValueError:
+                        pass
             kwargs[opt[0]] = val
-            # logging.warn("Unknown plot option ({0}) didn't parse "
+            # logger.warn("Unknown plot option ({0}) didn't parse "
             #              "correctly".format(opt[0]))
 
 
@@ -180,8 +197,9 @@ def _apply_actions(acts):
         act[0](*act[1])
 
 def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
-                 colorbar=True, mask_nan=False, do_labels=True, show=False,
-                 action_ax=None, mod=None, extra_args=None, **kwargs):
+                 colorbar=True, do_labels=True, show=False,
+                 action_ax=None, scale=None, mod=None, extra_args=None,
+                 **kwargs):
     """Plot a 2D Field using pcolormesh, contour, etc.
 
     Parameters:
@@ -212,6 +230,9 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
             equalaxis [#f1]_  Use 1:1 aspect ratio for grid cells
                               (True by default)
             flip_plot [#f1]_  flip x and y axes (2d fields only)
+            masknan           if true, nan values are masked, so
+                              black if pcolor, or missing for
+                              countours
             ================  ======================================
 
             .. [#f1] These options can be given as kwargs
@@ -229,15 +250,16 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     Other Parameters:
         colorbar (bool or dict): If dict, the items are passed to
             plt.colorbar as keyword arguments
-        mask_nan (bool, optional): Plot a masked array
         levels (int): Number of contours to follow (default: 10)
         do_labels: automatically label x/y axes and color bar
-        grid (bool): Plot lines showing grid cells
+        show_grid (bool): Plot lines showing grid cells
         earth (bool): Plot a black and white circle representing Earth
             showing the sunlit half
         show (bool, optional): Call pyplot.show before returning
         action_ax: axis on which to call matplotlib functions... I
             don't even remember why this was necessary
+        scale (float): multiply field by scalar before plotting, useful
+            for changing units
         mod (list of floats): DEPRECATED, scale x and y axes by some
             factor
         extra_args (list): DEPRECATED, was used to pass args to
@@ -255,22 +277,24 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     if action_ax is None:
         action_ax = ax
 
+    # parse plot_opts and apply them
+    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
+
+    colorbar = kwargs.pop("colorbar", colorbar)
     if colorbar:
         if not isinstance(colorbar, dict):
             colorbar = {}
     else:
         colorbar = None
 
-    # parse plot_opts and apply them
-    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
-
     # make customizing plot type from command line possible
     style = kwargs.pop("style", style)
     earth = kwargs.pop("earth", False)
     equalaxis = kwargs.pop("equalaxis", True)
     flip_plot = kwargs.pop("flip_plot", False)
+    masknan = kwargs.pop("masknan", False)
 
-    show_grid = kwargs.pop("grid", False)
+    show_grid = kwargs.pop("show_grid", False)
     show_grid = kwargs.pop("g", show_grid)
     if show_grid:
         kwargs["edgecolors"] = 'k'
@@ -287,15 +311,8 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     # trim the edges of the data... maybe i should just be
     # extapolating the crds and keeping the edges...
     if style in ["pcolormesh", "pcolor"]:
-        if fld.iscentered("Node"):
-            X, Y = fld.get_crds_cc((namex, namey))
-            # extrapolate the crds to plot the boundary cells
-            dx = X[1:] - X[:-1]
-            X = np.concatenate([[X[0] - dx[0]], X, [X[-1] + dx[-1]]])
-            dy = Y[1:] - Y[:-1]
-            Y = np.concatenate([[Y[0] - dy[0]], Y, [Y[-1] + dy[-1]]])
-        elif fld.iscentered("Cell"):
-            X, Y = fld.get_crds_nc((namex, namey))
+        fld = fld.as_cell_centered()
+        X, Y = fld.get_crds_nc((namex, namey))
     else:
         if fld.iscentered("Node"):
             X, Y = fld.get_crds_nc((namex, namey))
@@ -307,14 +324,15 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
         X, Y = np.meshgrid(X, 90 - Y)
 
     dat = fld.data
+    if scale is not None:
+        dat *= scale
 
     if mod:
         X *= mod[0]
         Y *= mod[1]
 
     # print(x.shape, y.shape, fld.data.shape)
-    mask_nan = False
-    if mask_nan:
+    if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
 
     if equalaxis:
@@ -362,16 +380,22 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
-    p.get_cmap().set_bad('k')
+    try:
+        if masknan:
+            p.get_cmap().set_bad(masknan)
+        else:
+            raise ValueError()
+    except ValueError:
+        p.get_cmap().set_bad('k')
 
     # figure out the colorbar...
     if colorbar is not None:
         # unless otherwise specified, use_gridspec for
-        if has_colorbar_gridspec and not "use_gridspec" in colorbar:
+        if not "use_gridspec" not in colorbar:
             colorbar["use_gridspec"] = True
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
-        if mask_nan and dat.mask.all():
+        if masknan and dat.mask.all():
             cbar = None
         else:
             cbar = plt.colorbar(p, **colorbar)
@@ -395,50 +419,67 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
 def _mlt_labels(longitude):
     return "{0:g}".format(longitude * 24.0 / 360.0)
 
-def plot2d_mapfield(fld, **kwargs):
+def plot2d_mapfield(fld, projection="polar", hemisphere="north",
+                    drawcoastlines=False, show_grid=True,
+                    lon_0=0.0, lat_0=None, bounding_lat=40.0,
+                    title=True, label_lat=True, label_mlt=True, **kwargs):
     """Plot data on a map projection of a sphere
 
     The default projection is polar, but any other basemap projection
     can be used.
 
+    Note:
+        Parameters are in degrees, but if the projection is 'polar',
+        then the plot is actually made in radians, which is important
+        if you want to annotate a plot.
+
     Parameters:
         fld (Field): field whose crds are spherical
+        projection (string): 'polar' or Basemap projection to use
+        hemisphere (string): 'north' or 'south'
+        drawcoastlines (bool): If projection is a basemap projection,
+            then draw coastlines, pretty cool, but not actually useful.
+            NOTE: coastlines do NOT reflect UT time; London is always
+            at midnight.
+        show_grid (bool): draw grid lines
+        lon_0 (float): center longitude (basemap projections only)
+        lat_0 (fload): center latitude (basemap projections only)
+        bounding_lat (float): bounding latitude in degrees from the
+            nearest pole (not for all projections)
+        title (bool, str): put a specific title on the plot, or with
+            if a boolean, use the field's pretty_name.
+        label_lat (bool, str): label latitudes at 80, 70, 60 degrees
+            with sign indicating northern / southern hemisphere.
+            if label_lat is 'from_pole', then the labels are 10, 20,
+            30 for both hemispheres. Note that basemap projections
+            won't label latitudes unless they hit the edge of the plot.
+        label_mlt (bool): label magnetic local time
         kwargs: either mapping keyword arguments, or those that
             should be passed along to `plot2d_field`
-
-    Keyword Arguments:
-        hemisphere (string): 'north' or 'south'
-        projection (string): 'polar' or Basemap projection to use
-        lon_0 (float): center longitude
-        lat_0 (fload): center latitude
-        bounding_lat (float): bounding latitude (not for all
-            projections)
 
     See Also:
         * :meth:`plot2d_field`: `plot2d_mapfield` basically just wraps
           this function setting up a Basemap first
-
     """
-    hemisphere = kwargs.pop("hemisphere", "north").lower().strip()
-
-    def_projection = "polar"
-
+    hemisphere = hemisphere.lower().strip()
     if hemisphere == "north":
         # def_projection = "nplaea"
-        def_boundinglat = 40.0
+        # def_boundinglat = 40.0
         latlabel_arr = np.linspace(50.0, 80.0, 4)
     elif hemisphere == "south":
         # def_projection = "splaea"
-        def_boundinglat = -40.0
+        # def_boundinglat = -40.0
+        # FIXME: should I be doing this?
+        if bounding_lat > 0.0:
+            bounding_lat *= -1.0
         latlabel_arr = -1.0 * np.linspace(50.0, 80.0, 4)
     else:
         raise ValueError("hemisphere is either 'north' or 'south'")
 
-    boundinglat = kwargs.pop("boundinglat", def_boundinglat)
-    projection = kwargs.pop("projection", def_projection)
-    lon_0 = kwargs.pop("lon_0", 0.0)
-    lat_0 = kwargs.pop("lat_0", None)
-    drawcoastlines = kwargs.pop("drawcoastlines", False)
+    # boundinglat = kwargs.pop("boundinglat", def_boundinglat)
+    # lon_0 = kwargs.pop("lon_0", 0.0)
+    # lat_0 = kwargs.pop("lat_0", None)
+    # drawcoastlines = kwargs.pop("drawcoastlines", False)
     ax = kwargs.get("ax", None)
 
     if projection != "polar" and not _HAS_BASEMAP:
@@ -447,16 +488,20 @@ def plot2d_mapfield(fld, **kwargs):
         projection = "polar"
 
     if projection == "polar":
-        # FIXME: this is not good practice since grid means something
-        # different for all other plots, and it defaults to False
-        dogrid = kwargs.pop("grid", True)
+        if LooseVersion(__mpl_ver__) < LooseVersion("1.1"):
+            raise RuntimeError("polar plots are annoying for matplotlib < ",
+                               "version 1.1. Update your matplotlib and "
+                               "profit.")
 
-        absboundinglat = np.abs(boundinglat)
+        absboundinglat = np.abs(bounding_lat)
 
         if ax is None:
             ax = plt.gca()
         if not hasattr(ax, "set_thetagrids"):
             ax = plt.subplot(*ax.get_geometry(), projection='polar')
+            logger.warn("Clobbering axis for subplot {0}; please give a polar "
+                        "axis to plot2d_mapfield if you indend to use it "
+                        "later.".format(ax.get_geometry()))
 
         if hemisphere == "north":
             sl_fld = fld["lat=:{0}".format(absboundinglat)]
@@ -466,10 +511,12 @@ def plot2d_mapfield(fld, **kwargs):
             maxlat = 180.0 - sl_fld.get_crd_nc('lat')[-1]
 
         lat, lon = sl_fld.get_crds_nc(['lat', 'lon'])
-        new_lat = np.linspace(0.0, maxlat, len(lat))
+        new_lat = (np.pi / 180.0) * np.linspace(0.0, maxlat, len(lat))
         # FIXME: Matt's code had a - 0.5 * (lon[1] - lon[0]) here...
         # I'm omiting it
-        new_lon = (lon - 90.0) * np.pi / 180.0
+        ax.set_theta_offset(-90 * np.pi / 180.0)
+        # new_lon = (lon - 90.0) * np.pi / 180.0
+        new_lon = lon * np.pi / 180.0
         new_crds = coordinate.wrap_crds("nonuniform_spherical",
                                         [('lat', new_lat), ('lon', new_lon)])
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
@@ -481,15 +528,35 @@ def plot2d_mapfield(fld, **kwargs):
         kwargs['do_labels'] = False
         kwargs['equalaxis'] = False
 
-        ret = plot2d_field(new_fld, **kwargs)
-        if dogrid:
+        ret = plot2d_field(new_fld, show_grid=False, **kwargs)
+        if title:
+            if not isinstance(title, string_types):
+                title = new_fld.pretty_name
+            plt.title(title)
+        if show_grid:
             ax.grid(True)
-            ax.set_thetagrids((45, 90, 135, 180, 225, 270, 315, 360),
-                              (9, 12, 15, 18, 21, 24, 3, 6))
+
+            mlt_grid_pos = (0, 45, 90, 135, 180, 225, 270, 315)
+            mlt_labels = (24, 3, 6, 9, 12, 15, 18, 21)
+            if not label_mlt:
+                mlt_labels = []
+            ax.set_thetagrids(mlt_grid_pos, mlt_labels)
+
             abs_grid_dr = 10
-            grid_dr = abs_grid_dr * np.sign(boundinglat)
-            ax.set_rgrids(np.arange(abs_grid_dr, absboundinglat, abs_grid_dr),
-                          np.arange(grid_dr, boundinglat, grid_dr), fmt='%.0f')
+            grid_dr = abs_grid_dr * np.sign(bounding_lat)
+            lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
+            lat_labels = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
+            if label_lat == "from_pole":
+                lat_labels = ["{0:g}".format(l) for l in lat_labels]
+            elif label_lat:
+                if hemisphere == 'north':
+                    lat_labels = 90 - lat_labels
+                else:
+                    lat_labels = -90 + lat_labels
+                lat_labels = ["{0:g}".format(l) for l in lat_labels]
+            else:
+                lat_labels = []
+            ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
         else:
             ax.grid(False)
             ax.set_xticklabels([])
@@ -498,22 +565,33 @@ def plot2d_mapfield(fld, **kwargs):
 
     else:
         m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
-                    boundinglat=boundinglat, ax=ax)
+                    boundinglat=bounding_lat, ax=ax)
         kwargs['latlon'] = True
         kwargs['action_ax'] = m
         kwargs['do_labels'] = False
         kwargs['equalaxis'] = False
         ret = plot2d_field(fld, **kwargs)
-        m.drawparallels(latlabel_arr, labels=[1, 1, 1, 1],
-                        linewidth=0.25)
-        m.drawmeridians(np.linspace(360.0, 0.0, 8, endpoint=False),
-                        labels=[1, 1, 1, 1], fmt=_mlt_labels, linewidth=0.25)
+        if show_grid:
+            if label_lat:
+                lat_lables = [1, 1, 1, 1]
+            else:
+                lat_lables = [0, 0, 0, 0]
+            m.drawparallels(latlabel_arr, labels=lat_lables,
+                            linewidth=0.25)
+
+            if label_mlt:
+                mlt_labels = [1, 1, 1, 1]
+            else:
+                mlt_labels = [0, 0, 0, 0]
+            m.drawmeridians(np.linspace(360.0, 0.0, 8, endpoint=False),
+                            labels=mlt_labels, fmt=_mlt_labels,
+                            linewidth=0.25)
         if drawcoastlines:
             m.drawcoastlines(linewidth=0.25)
         return ret
 
 
-def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
+def plot1d_field(fld, ax=None, plot_opts=None, show=False,
                  do_labels=True, action_ax=None, **kwargs):
     """Plot a 1D Field using lines
 
@@ -533,9 +611,10 @@ def plot1d_field(fld, ax=None, plot_opts=None, show=False, mask_nan=False,
     ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
     if action_ax is None:
         action_ax = ax
+    masknan = kwargs.pop('masknan', False)
 
     dat = fld.data
-    if mask_nan:
+    if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
 
     if "label" not in kwargs:
@@ -724,11 +803,11 @@ def tighten(**kwargs):
     try:
         plt.tight_layout(**kwargs)
     except AttributeError:
-        logging.warn("No matplotlib tight layout support")
+        logger.warn("No matplotlib tight layout support")
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="mhd",
-               zorder=1):
+               zorder=10):
     """Plot a black and white Earth to show sunward direction
 
     Parameters:
@@ -749,13 +828,13 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
 
     # this is kind of a hacky way to
     if isinstance(plane_spec, field.Field):
-        crd_system = plane_spec.info.get("crd_system", crd_system)
+        crd_system = plane_spec.meta.get("crd_system", crd_system)
 
         # take only the 1st reduced.nr_sdims... this should just work
         try:
             plane, value = plane_spec.deep_meta["reduced"][0]
         except KeyError:
-            logging.error("No reduced dims in the field, i don't know what 2d \n "
+            logger.error("No reduced dims in the field, i don't know what 2d \n "
                           "plane, we're in and can't figure out the size of earth.")
             return None
     else:

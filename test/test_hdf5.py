@@ -7,7 +7,6 @@ import os
 import argparse
 
 import numpy as np
-from matplotlib import pyplot as plt
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
@@ -18,6 +17,7 @@ from viscid import readers
 from viscid import coordinate
 from viscid import field
 from viscid.plot import mpl
+from viscid.plot.mpl import plt
 
 def main():
     parser = argparse.ArgumentParser(description="Test xdmf")

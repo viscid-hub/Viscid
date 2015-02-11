@@ -1,36 +1,65 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import logging
 
 # from viscid.vutil import tree_prefix
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat.ordered_dict_backport import OrderedDict
+from viscid.compat import OrderedDict
+from viscid import logger
 
 class Bucket(object):
-    """ This is an interface where  """
+    """ This is basically a glorified dict
+
+    It's a convenient dict-like object if you want lots of
+    keys for a given value.
+
+    NOTE:
+        You can add non-hashable items, but this is poorly tested.
+        When adding / removing non-hashable items (items, not handles)
+        the comparison is done using the object's id. This is
+        fundamentally different than using an object's __hash__, but
+        it should be fairly transparent.
+    """
     _ordered = False
 
-    _items = None  # keys are items, values are list of handles
-    _handles = None  # keys are handles, values are items
+    _hash_lookup = None  # keys are hashable items, values are actual items
+    _handles = None  # keys are hashable items, values are list of handles
+    _items = None  # keys are handles, values are actual items
 
     # if index handle, set_item adds this number as a handle and increments it
     # this is useful for hiding loads that are not user initiated, such as
     # an xdmf file loading an h5 file under the covers
     _int_counter = None
 
+    @staticmethod
+    def _make_hashable(item):
+        try:
+            hash(item)
+            return item
+        except TypeError:
+            return "<{0} @ {1}>".format(type(item), hex(id(item)))
+
     def __init__(self, ordered=False):
         self._ordered = ordered
 
         if self._ordered:
-            self._items = OrderedDict()
+            self._hash_lookup = OrderedDict()
             self._handles = OrderedDict()
+            self._items = OrderedDict()
         else:
-            self._items = {}
+            self._hash_lookup = {}
             self._handles = {}
+            self._items = {}
         self._int_counter = 0
+
+    def items(self):
+        for hashable_item, item in self._hash_lookup.items():
+            yield self._handles[hashable_item], item
+
+    def keys(self):
+        return self._handles.values()
+
+    def values(self):
+        return self._hash_lookup.values()
 
     def set_item(self, handles, item, index_handle=True):
         """ if index_handle is true then the index of item will be included as
@@ -41,62 +70,89 @@ class Bucket(object):
         if not isinstance(handles, list):
             raise TypeError("handle must by of list type")
 
-        if item not in self._items:
+        # make sure we have a hashable "item" for doing reverse
+        # lookups of handles using an item
+        hashable_item = self._make_hashable(item)
+        if hashable_item not in self._hash_lookup:
             if index_handle:
                 handles += [self._int_counter]
                 self._int_counter += 1
-            self._items[item] = handles
 
-            if len(handles) == 0:
-                raise ValueError("item {0} must have at least one "
-                                 "handle".format(item))
-
+        handles_added = []
         for h in handles:
             # check if we're stealing a handle from another item
-            if (h in self._handles) and  (item is not self._handles[h]):
-                logging.warn("The handle {0} is being hijacked! Memory leak "
-                             "could ensue.".format(h))
+            try:
+                hash(h)
+            except TypeError:
+                logger.warn("A bucket says handle '{0}' is not hashable, "
+                            "ignoring it".format(h))
+                continue
+
+            if (h in self._items) and (item is self._items[h]):
+                continue
+            elif h in self._items:
+                logger.warn("The handle '{0}' is being hijacked! Memory leak "
+                            "could ensue.".format(h))
                 # romove handle from old item, since this check is here,
                 # there sholdn't be 2 items with the same handle in the
                 # items dict
-                old_item = self._handles[h]
-                self._items[old_item].remove(h)
-                if len(self._items[h]) == 0:
+                old_item = self._items[h]
+                old_hashable_item = self._make_hashable(old_item)
+                self._handles[old_hashable_item].remove(h)
+                if len(self._handles[old_hashable_item]) == 0:
                     self.remove_item(old_item)
+            self._items[h] = item
+            handles_added.append(h)
 
-            self._handles[h] = item
+        try:
+            self._handles[hashable_item] += handles_added
+        except KeyError:
+            if len(handles_added) == 0:
+                logger.warn("No valid handles given, item '{0}' not added to "
+                            "bucket".format(hashable_item))
+            else:
+                self._handles[hashable_item] = handles_added
+                self._hash_lookup[hashable_item] = item
 
         return None
 
     def remove_item(self, item):
         """ remove item, raises ValueError if item is not found """
-        handles = self._items[item]
-        del self._items[item]
+        hashable_item = self._make_hashable(item)
+        handles = self._handles[hashable_item]
         for h in handles:
-            del self._handles[h]
+            del self._items[h]
+        del self._hash_lookup[hashable_item]
+        del self._handles[hashable_item]
 
     def remove_item_by_handle(self, handle):
         """ remove item by handle, raises KeyError if handle is not found """
-        self.remove_item(self._handles[handle])
+        self.remove_item(self._items[handle])
 
     def remove_all_items(self):
         """ unload all items """
         # TODO: maybe unload things explicitly?
         if self._ordered:
-            self._items = OrderedDict()
+            self._hash_lookup = OrderedDict()
             self._handles = OrderedDict()
+            self._items = OrderedDict()
         else:
-            self._items = {}
+            self._hash_lookup = {}
             self._handles = {}
+            self._items = {}
 
     def items_as_list(self):
-        return list(self._items.keys())
+        return list(self._hash_lookup.values())
+
+    def get_primary_handles(self):
+        """Return a list of the first handles for all items"""
+        return [handles[0] for handles in self._handles.values()]
 
     def handle_string(self, prefix=""):
         """ return string representation of handles and items """
         # this is inefficient, but probably doesn't matter
         s = ""
-        for item, handles in self._items.items():
+        for item, handles in self._handles.items():
             hands = [repr(h) for h in handles]
             s += "{0}handles: {1}\n".format(prefix, ", ".join(hands))
             s += "{0}  item: {1}\n".format(prefix, str(item))
@@ -106,7 +162,7 @@ class Bucket(object):
         print(self.handle_string(prefix=prefix), end='')
 
     def __getitem__(self, handle):
-        return self._handles[handle]
+        return self._items[handle]
 
     def __setitem__(self, key, value):
         if isinstance(key, (list, tuple)):
@@ -118,18 +174,28 @@ class Bucket(object):
     def __delitem__(self, handle):
         try:
             self.remove_item_by_handle(handle)
-        except KeyError:
+        except (KeyError, TypeError):
             # maybe we are asking to remove an item explicitly
             self.remove_item(handle)
 
     def __iter__(self):
-        return self._items.keys().__iter__()
+        return self.values().__iter__()
+
+    def contains_item(self, item):
+        hashable_item = self._make_hashable(item)
+        return hashable_item in self._handles
+
+    def contains_handle(self, handle):
+        try:
+            return handle in self._items
+        except TypeError:
+            return False
 
     def __contains__(self, handle):
-        return handle in self._handles or handle in self._items
+        return self.contains_handle(handle) or self.contains_item(handle)
 
     def __len__(self):
-        return len(self._items)
+        return len(self._hash_lookup)
 
     def __str__(self):
         return self.handle_string()

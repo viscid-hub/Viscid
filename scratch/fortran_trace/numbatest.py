@@ -94,7 +94,7 @@ def euler1(v, crdx, crdy, crdz, x, ds, startinds):
     vz = interp_trilin(v, 2, crdz, crdy, crdx, x, startinds)
     vmag = np.sqrt(vx**2 + vy**2 + vz**2)
     # if vmag == 0.0 or isnan(vmag):
-    #     logging.warning("vmag issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+    #     logger.warning("vmag issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
     #     return 1
     x[0] += ds * vz / vmag
     x[1] += ds * vy / vmag

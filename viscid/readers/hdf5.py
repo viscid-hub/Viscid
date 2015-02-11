@@ -1,19 +1,22 @@
 from __future__ import print_function
 import os
-import logging
 
 import numpy as np
+
+from viscid import logger
+from viscid.readers import vfile
+
 try:
     import h5py
     HAS_H5PY = True
 except ImportError:
     HAS_H5PY = False
-    logging.warn("h5py library not found, no hdf5 support.")
-
-from viscid.readers import vfile
+    logger.warn("h5py library not found, no hdf5 support.")
 
 class H5pyDataWrapper(vfile.DataWrapper):
     """  """
+    _hypersliceable = True  # can read slices from disk
+
     fname = None
     loc = None
 
@@ -25,7 +28,7 @@ class H5pyDataWrapper(vfile.DataWrapper):
         self.fname = fname
         self.loc = loc
 
-    def _get_info(self):
+    def _read_info(self):
         # this takes super long when reading 3 hrs worth of ggcm data
         # over sshfs
         # import pdb; pdb.set_trace()
@@ -34,16 +37,16 @@ class H5pyDataWrapper(vfile.DataWrapper):
                 dset = f[self.loc]
                 self._shape = dset.shape
                 self._dtype = dset.dtype
-        except IOError as e:
-            logging.error("Problem opening hdf5 file, '{0}'".format(self.fname))
-            raise e
+        except IOError:
+            logger.error("Problem opening hdf5 file, '%s'", self.fname)
+            raise
 
     @property
     def shape(self):
         """ only ask for this if you really need it; can be a speed problem
         for large temporal datasets over sshfs """
         if self._shape is None:
-            self._get_info()
+            self._read_info()
         return self._shape
 
     @property
@@ -51,7 +54,7 @@ class H5pyDataWrapper(vfile.DataWrapper):
         """ only ask for this if you really need it; can be a speed problem
         for large temporal datasets over sshfs """
         if self._dtype is None:
-            self._get_info()
+            self._read_info()
         return self._dtype
 
     def wrap_func(self, func_name, *args, **kwargs):
@@ -79,7 +82,7 @@ class FileLazyHDF5(vfile.VFile):
     _detector = None
 
     def __init__(self, fname, **kwargs):
-        assert(HAS_H5PY)
+        assert HAS_H5PY
         super(FileLazyHDF5, self).__init__(fname, **kwargs)
 
     def _parse(self):

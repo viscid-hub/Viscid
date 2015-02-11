@@ -3,18 +3,16 @@
 
 from __future__ import print_function
 import os
-import logging
 from xml.etree import ElementTree
 
 import numpy as np
 
+from viscid import logger
 from viscid.readers import _xdmf_include
 from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.hdf5 import FileLazyHDF5
-from viscid import dataset
 from viscid import coordinate
-from viscid import field
 
 # class XDMFDataItem(data_item.DataItem):
 #     def set_precision():
@@ -76,7 +74,7 @@ class FileXDMF(vfile.VFile):
             "Dimensions": None,
             "Order": None,
             "BaseOffset": 0
-             },
+            },
         "Time": {
             "Type": "Single",
             "Value": None
@@ -99,14 +97,14 @@ class FileXDMF(vfile.VFile):
         super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
 
     def _parse(self):
-        grids = self._parse_file(self.fname)
+        grids = self._parse_file(self.fname, self)
         for grid in grids:
             self.add(grid)
 
         if len(self.children) > 0:
             self.activate(0)
 
-    def _parse_file(self, fname):
+    def _parse_file(self, fname, parent_node):
         # lxml has better xpath support, so it's preferred, but it stops
         # if an xinclude doesn't exist, so for now use our custom extension
         # of the default python xml lib
@@ -123,7 +121,7 @@ class FileXDMF(vfile.VFile):
         # search for all root grids, and parse them
         domain_grids = root.findall("./Domain/Grid")
         for dg in domain_grids:
-            grd = self._parse_grid(dg)
+            grd = self._parse_grid(dg, parent_node)
             grids.append(grd)
         return grids
 
@@ -137,7 +135,7 @@ class FileXDMF(vfile.VFile):
                 ret[opt] = type(defval)(el.get(opt, defval))
         return ret
 
-    def _parse_grid(self, el, parent_grid=None, time=None):
+    def _parse_grid(self, el, parent_node=None, time=None):
         attrs = self._fill_attrs(el)
         grd = None
         crds = None
@@ -147,17 +145,17 @@ class FileXDMF(vfile.VFile):
         topoattrs = None
         if topology is not None:
             topoattrs = self._fill_attrs(topology)
-        elif parent_grid and parent_grid.topology_info:
-            topoattrs = parent_grid.topology_info
+        elif parent_node and parent_node.topology_info:
+            topoattrs = parent_node.topology_info
 
         # parse geometry, or cascade parent grid's geometry
         geometry = el.find("./Geometry")
         geoattrs = None
         if geometry is not None:
             crds, geoattrs = self._parse_geometry(geometry, topoattrs)
-        elif parent_grid and parent_grid.geometry_info:
-            geoattrs = parent_grid.geometry_info
-            crds = parent_grid.crds  # this can be None and that's ok
+        elif parent_node and parent_node.geometry_info:
+            geoattrs = parent_node.geometry_info
+            crds = parent_node.crds  # this can be None and that's ok
 
         # parse time
         if time is None:
@@ -167,53 +165,54 @@ class FileXDMF(vfile.VFile):
                 if tattrs["Type"] == "Single":
                     time = pt
         # cascade a parent grid's time
-        if time is None and parent_grid and parent_grid.time is not None:
-            time = parent_grid.time
+        if time is None and parent_node and parent_node.time is not None:
+            time = parent_node.time
 
         gt = attrs["GridType"]
         if gt == "Collection":
             times = None
             ct = attrs["CollectionType"]
             if ct == "Temporal":
-                grd = dataset.DatasetTemporal(attrs["Name"])
+                grd = self._make_dataset(parent_node, dset_type="temporal",
+                                         name=attrs["Name"])
                 ttag = el.find("./Time")
                 if ttag is not None:
                     times, tattrs = self._parse_time(ttag)
             elif ct == "Spatial":
-                grd = dataset.Dataset(attrs["Name"])
+                grd = self._make_dataset(parent_node, name=attrs["Name"])
             else:
-                logging.warn("Unknown collection type {0}, ignoring "
-                             "grid".format(ct))
+                logger.warn("Unknown collection type %s, ignoring grid", ct)
 
             for i, subgrid in enumerate(el.findall("./Grid")):
 
                 t = times[i] if (times is not None and i < len(times)) else time
                 # print(subgrid, grd, t)
-                self._parse_grid(subgrid, parent_grid=grd, time=t)
+                self._parse_grid(subgrid, parent_node=grd, time=t)
             if len(grd.children) > 0:
                 grd.activate(0)
 
         elif gt == "Uniform":
             if not (topoattrs and geoattrs):
-                logging.warn("Xdmf Uniform grids must have "
-                             "topology / geometry.")
+                logger.warn("Xdmf Uniform grids must have "
+                            "topology / geometry.")
             else:
-                grd = self._grid_type(attrs["Name"], **self._grid_opts)
+                grd = self._make_grid(parent_node, name=attrs["Name"],
+                                      **self._grid_opts)
                 for attribute in el.findall("./Attribute"):
-                    fld = self._parse_attribute(attribute, crds, topoattrs,
-                                                time)
+                    fld = self._parse_attribute(grd, attribute, crds,
+                                                topoattrs, time)
                     if time:
                         fld.time = time
                     grd.add_field(fld)
 
         elif gt == "Tree":
-            logging.warn("Xdmf Tree Grids not implemented, ignoring "
-                         "this grid")
+            logger.warn("Xdmf Tree Grids not implemented, ignoring "
+                        "this grid")
         elif gt == "Subset":
-            logging.warn("Xdmf Subset Grids not implemented, ignoring "
-                         "this grid")
+            logger.warn("Xdmf Subset Grids not implemented, ignoring "
+                        "this grid")
         else:
-            logging.warn("Unknown grid type {0}, ignoring this grid".format(gt))
+            logger.warn("Unknown grid type %s, ignoring this grid", gt)
 
         # fill attributes / data items
         # if grid and gt == "Uniform":
@@ -230,8 +229,8 @@ class FileXDMF(vfile.VFile):
                 grd.geometry_info = geoattrs
             if crds is not None:
                 grd.set_crds(crds)
-            if parent_grid is not None:
-                parent_grid.add(grd)
+            if parent_node is not None:
+                parent_node.add(grd)
 
         return grd  # can be None
 
@@ -320,7 +319,7 @@ class FileXDMF(vfile.VFile):
                 crdlist[i] = (crd, crd_arr)
 
         else:
-            logging.warn("Invalid GeometryType: {0}".format(geotype))
+            logger.warn("Invalid GeometryType: %s", geotype)
 
         if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
             crdtype = "uniform_cartesian"
@@ -374,13 +373,20 @@ class FileXDMF(vfile.VFile):
         crds = coordinate.wrap_crds(crdtype, crdlist, **crdkwargs)
         return crds, geoattrs
 
-    def _parse_attribute(self, item, crds, topoattrs, time=0.0):
+    def _parse_attribute(self, parent_node, item, crds, topoattrs, time=0.0):
+        """
+        Args:
+            parent_node (Dataset, Grid, or None): Hint what the parent will
+                be. Necessary if _make_field makes decisions based on the
+                info dict
+        """
         attrs = self._fill_attrs(item)
         data, dataattrs = self._parse_dataitem(item.find("./DataItem"))
         name = attrs["Name"]
         center = attrs["Center"]
         typ = attrs["AttributeType"]
-        fld = field.wrap_field(typ, name, crds, data, center=center, time=time)
+        fld = self._make_field(parent_node, typ, name, crds, data,
+                               center=center, time=time)
         return fld
 
     def _parse_dataitem(self, item, keep_flat=False):
@@ -394,7 +400,7 @@ class FileXDMF(vfile.VFile):
         numbertype = attrs["NumberType"]
         precision = attrs["Precision"]
         nptype = np.dtype({'Float': 'float', 'Int': 'int', 'UInt': 'unit',
-               'Char': 'int', 'UChar': 'int'}[numbertype] + str(8 * precision))
+            'Char': 'int', 'UChar': 'int'}[numbertype] + str(8 * precision))
 
         fmt = attrs["Format"]
 
@@ -410,13 +416,13 @@ class FileXDMF(vfile.VFile):
                 fname = os.path.join(self.dirname, fname)
             h5file = self.vfilebucket.load_file(fname, index_handle=False,
                                                 file_type=FileLazyHDF5)
-            arr = h5file.get_data(loc)  #pylint: disable=E1103
+            arr = h5file.get_data(loc)
             return arr, attrs
 
         if fmt == "Binary":
             raise NotImplementedError("binary xdmf data not implemented")
 
-        logging.warn("Invalid DataItem Format.")
+        logger.warn("Invalid DataItem Format.")
         return (None, None)
 
     def _parse_time(self, timetag):
@@ -444,7 +450,7 @@ class FileXDMF(vfile.VFile):
             arr = np.array([dat[0] + i * dat[1] for i in range(int(dat[2]))])
             return arr, attrs
         else:
-            logging.warn("invalid TimeType.\n")
+            logger.warn("invalid TimeType.\n")
 
 
 if __name__ == '__main__':

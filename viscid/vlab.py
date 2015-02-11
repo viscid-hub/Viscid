@@ -1,10 +1,5 @@
 from __future__ import print_function
-import logging
 import itertools
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
 try:
@@ -12,10 +7,12 @@ try:
 except ImportError:
     pass
 
+from viscid import logger
 from viscid import parallel
 from viscid import field
 from viscid import coordinate
 from viscid.calculator import seed
+from viscid.compat import izip
 
 # these compiled are needed for fluid following
 try:
@@ -98,6 +95,12 @@ def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
     This is the function used by the ``p2d`` script. It may be useful
     to you.
     """
+    # make sure time slice yields >= 1 actual time slice
+    try:
+        next(file_.iter_times(time_slice))
+    except StopIteration:
+        raise ValueError("Time slice '{0}' yields no data".format(time_slice))
+
     grid_iter = izip(
                      itertools.count(),
                      file_.iter_times(time_slice),
@@ -107,14 +110,28 @@ def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
                      itertools.repeat(show),
                      itertools.repeat(kwopts),
                     )
-    parallel.map(nprocs, _do_multiplot, grid_iter)
+
+    # FIXME: this is a wicked hack, it does one plot before splitting off
+    # in order to make the subplot adjustments the same for all plots
+    # this matters when making movies since gridspec is very badly
+    # behaved and subplots will dance around during the movie; bad gridspec
+    hack_opts = {}
+    if "subplot_params" not in kwopts:
+        r = parallel.map(1, _do_multiplot, [next(grid_iter)],
+                         args_kw=dict(_return_subplot_params=True),
+                         force_subprocess=(nprocs > 1))
+        hack_opts['_subplot_params'] = r[0]
+
+    # now get back to your regularly scheduled programming
+    parallel.map(nprocs, _do_multiplot, grid_iter, args_kw=hack_opts)
 
 def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
-                  show=False, kwopts=None):
+                  show=False, kwopts=None, _subplot_params=None,
+                  _return_subplot_params=True):
     import matplotlib.pyplot as plt
     from viscid.plot import mpl
 
-    logging.info("Plotting timestep: {0}, {1}".format(tind, grid.time))
+    logger.info("Plotting timestep: {0}, {1}".format(tind, grid.time))
 
     if kwopts is None:
         kwopts = {}
@@ -124,8 +141,10 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     out_prefix = kwopts.get("out_prefix", None)
     out_format = kwopts.get("out_format", "png")
     selection = kwopts.get("selection", None)
-    fancytime = kwopts.get("fancytime", False)
+    timeformat = kwopts.get("timeformat", ".02f")
     tighten = kwopts.get("tighten", False)
+    # wicked hacky
+    subplot_params = kwopts.get("subplot_params", _subplot_params)
 
     # nrows = len(plot_vars)
     nrows = len([pv[0] for pv in plot_vars if not pv[0].startswith('^')])
@@ -134,7 +153,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
         nrows, ncols = ncols, nrows
 
     if nrows == 0:
-        logging.warn("I have no variables to plot")
+        logger.warn("I have no variables to plot")
         return
 
     fig = plt.gcf()
@@ -155,14 +174,23 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
 
         fld_name_meta = fld_meta[0].lstrip('^')
         fld_name_split = fld_name_meta.split(',')
-        fld_name = fld_name_split[0]
-        fld_slc = ",".join(fld_name_split[1:])
+        if '=' in fld_name_split[0]:
+            # if fld_name is actually an equation, assume
+            # there's no slice, and commas are part of the
+            # equation
+            fld_name = ",".join(fld_name_split)
+            fld_slc = ""
+        else:
+            fld_name = fld_name_split[0]
+            fld_slc = ",".join(fld_name_split[1:])
         if selection is not None:
             # fld_slc += ",{0}".format(selection)
             if fld_slc != "":
                 fld_slc = ",".join([fld_slc, selection])
             else:
                 fld_slc = selection
+        if fld_slc.strip() == "":
+            fld_slc = None
 
         # print("fld_time:", fld.time)
         if this_row < 0:
@@ -183,28 +211,34 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
             fld_meta[1]["plot_opts"] = "{0},{1}".format(
                 fld_meta[1]["plot_opts"], global_popts)
 
-        with grid[fld_name] as fld:
-            mpl.plot(fld, selection=fld_slc, mask_nan=True, **fld_meta[1])
+        with grid.get_field(fld_name, slc=fld_slc) as fld:
+            mpl.plot(fld, masknan=True, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
 
-    if fancytime:
-        # TODO: look for actual UT time in the grid?
-        hrs = int(grid.time / 3600)
-        mins = int((grid.time / 60) % 60)
-        secs = grid.time % 60
-        # plt.suptitle("t = {0:.2f}".format(grid.time))
-        plt.suptitle("t = {0}:{1:02}:{2:05.2f}".format(hrs, mins, secs))
-    else:
-        plt.suptitle("t = {0:g}".format(grid.time))
+    if timeformat and timeformat.lower() != "none":
+        plt.suptitle(grid.format_time(timeformat))
 
     if tighten:
         mpl.tighten(rect=[0, 0.03, 1, 0.90])
+
+    # for movies where plots wiggle
+    if subplot_params:
+        plt.gcf().subplots_adjust(**subplot_params)
+
+    if _return_subplot_params:
+        p = plt.gcf().subplotpars
+        ret = {'left': p.left, 'right': p.right, 'top': p.top,
+               'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
+    else:
+        ret = None
 
     if out_prefix:
         plt.savefig("{0}_{1:06d}.{2}".format(out_prefix, tind + 1, out_format))
     if show:
         plt.show()
     plt.clf()
+
+    return ret
 
 def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
                  stream_opts, add_seed_cadence=0.0, add_seed_pts=None,
@@ -259,21 +293,21 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
 
 def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
                        speed_scale):
-    logging.info("working on timestep {0} {1}".format(i, grid.time))
+    logger.info("working on timestep {0} {1}".format(i, grid.time))
     v = grid["v"]
-    logging.debug("finished reading V field")
+    logger.debug("finished reading V field")
 
-    logging.debug("calculating new streamline positions")
+    logger.debug("calculating new streamline positions")
     flow_lines = streamlines(v, root_seeds,
                              output=streamline.OUTPUT_STREAMLINES,
                              **stream_opts)[0]
 
-    logging.debug("done with that, now i'm plotting...")
+    logger.debug("done with that, now i'm plotting...")
     plot_function(i, grid, v, flow_lines, root_seeds)
 
     ############################################################
     # now recalculate the seed positions for the next timestep
-    logging.debug("finding new seed positions...")
+    logger.debug("finding new seed positions...")
     root_pts = root_seeds.genr_points()
     valid_pt_inds = []
     for i in range(root_pts.shape[1]):
@@ -300,7 +334,7 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
                 # has gone out of our region of interest
                 ind = max(min(ind, v_interp.shape[0] - 1), 0)
                 valid_pt = False
-                logging.warning("OOPS: ran out of streamline, increase "
+                logger.warning("OOPS: ran out of streamline, increase "
                                 "max_length when tracing flow lines if this "
                                 "is unexpected")
                 break
@@ -315,7 +349,7 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
     # (aka, beyond the flow line we drew)
     root_pts = root_pts[:, valid_pt_inds]
 
-    logging.debug("ok, done with all that :)")
+    logger.debug("ok, done with all that :)")
     return root_pts
 
 ##

@@ -6,41 +6,80 @@ readers.openggcm.GGCMFile.read_log_file: true
 
 from __future__ import print_function
 import os
+import importlib
+import ast
 
 import viscid
 
 class RCPathError(Exception):
-    pass
+    message = ""
+    def __init__(self, message=""):
+        self.message = message
+        super(RCPathError, self).__init__(message)
+
+
+class RCValueError(Exception):
+    message = ""
+    def __init__(self, message=""):
+        self.message = message
+        super(RCValueError, self).__init__(message)
+
+
+class _Transformer(ast.NodeTransformer):
+    """Turn a string into python objects (strings, numbers, as basic types)"""
+    def visit_Name(self, node):
+        if node.id.lower() in ["true", "false"]:
+            # turn 'true' / 'True' / 'TRUE' / etc. into True
+            val = True if node.id.lower() == "true" else False
+            try:
+                node = ast.copy_location(ast.NameConstant(val), node)
+            except AttributeError:
+                node = ast.copy_location(ast.Name(str(val), node.ctx), node)
+        else:
+            # turn other bare names into strings
+            node = ast.copy_location(ast.Str(s=node.id), node)
+        return self.generic_visit(node)
+
 
 def _parse_rc_value(s):
     try:
-        return int(s)
-    except ValueError:
-        try:
-            return float(s)
-        except ValueError:
-            if s.lower() == "true":
-                return True
-            elif s.lower() == "false":
-                return False
-            else:
-                return s
+        tree = ast.parse(s.strip(), mode='eval')
+        _Transformer().visit(tree)
+        return ast.literal_eval(tree)
+    except ValueError as e:
+        raise RCValueError("ast parser vomited")
 
 def _get_obj(rt, path):
     if len(path) == 0:
         return rt
     try:
+        if not hasattr(rt, path[0]):
+            try:
+                # if path[0] is not an attribute of rt, then try
+                # importing it
+                module_name = "{0}.{1}".format(rt.__name__, path[0])
+                importlib.import_module(module_name)
+            except ImportError:
+                # nope, the attribute really doesn't exist
+                raise AttributeError("root {0} has no attribute "
+                                     "{1}".format(rt, path[0]))
         return _get_obj(getattr(rt, path[0]), path[1:])
     except AttributeError:
         # can't re-raise AttributeError since this is recursive
         # and we're catching AttributeError, so the info about
         # what part of the path DNE would be lost
-        raise RCPathError("'{0}' has no attribute '{1}'".format(
-                          rt.__name__, path[0]))
+        raise RCPathError("'{0}' has no attribute '{1}'"
+                          "".format(rt.__name__, path[0]))
 
 def set_attribute(path, value):
     p = path.split('.')
-    value = _parse_rc_value(value)
+    try:
+        value = _parse_rc_value(value)
+    except RCValueError as e:
+        print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(value))
+        print("                                          {0}".format(e.message))
+        return None
+
     obj = _get_obj(viscid, p[:-1])
 
     if not hasattr(obj, p[-1]):

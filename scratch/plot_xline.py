@@ -4,7 +4,6 @@
 from __future__ import print_function
 from os import path
 import sys
-import logging
 
 import numpy as np
 import numexpr as ne
@@ -16,6 +15,7 @@ from mayavi import mlab
 # from mayavi.modules.iso_surface import IsoSurface
 # from mayavi.modules.streamline import Streamline
 
+from viscid import logger
 from viscid import vlab, field, coordinate
 from viscid.tools import topology
 from viscid.calculator import calc
@@ -127,13 +127,13 @@ if __name__=='__main__':
         pass
         plot_line_file(lines_file)
     else:
-        logging.warn("Lines file not found".format(lines_file))
+        logger.warn("Lines file not found".format(lines_file))
 
     markers_file = "{0}/li.recon-markers.{1}".format(dir, strtime)
     if path.exists(markers_file):
         plot_marker_file(markers_file)
     else:
-        logging.warn("Lines file not found".format(markers_file))
+        logger.warn("Lines file not found".format(markers_file))
 
     itopfile = "{0}/{1}.3df{2}.itop.{3}.txt".format(dir, run, strtime, strres)
     ihemfile = "{0}/{1}.3df{2}.ihem.{3}.txt".format(dir, run, strtime, strres)
@@ -160,7 +160,7 @@ if __name__=='__main__':
         # mlab.colorbar(orientation='vertical')
         # mlab.outline()
     else:
-        logging.warn("topology file {0} does not exist".format(itopfile))
+        logger.warn("topology file {0} does not exist".format(itopfile))
 
     shear_msx = None
     xdmf_file = "{0}/{1}.3df.{2}.xdmf".format(dir, run, strtime)
@@ -292,7 +292,7 @@ if __name__=='__main__':
         #         bslmp.seed.widget.enabled = True
 
     else:
-        logging.warn("xdmf file {0} not found".format(xdmf_file))
+        logger.warn("xdmf file {0} not found".format(xdmf_file))
 
     # mlab.outline()
 
@@ -301,7 +301,7 @@ if __name__=='__main__':
         pass
         # plot_meeting_file(meeting_file)
     else:
-        logging.warn("Meeting file {0} not found".format(meeting_file))
+        logger.warn("Meeting file {0} not found".format(meeting_file))
 
     #mlab.colorbar(orientation='vertical')
     mvi.mlab_earth(mlab.pipeline)

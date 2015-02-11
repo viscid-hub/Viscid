@@ -5,7 +5,6 @@ from __future__ import print_function
 import sys
 import os
 from time import time
-import logging
 import argparse
 # import resource
 

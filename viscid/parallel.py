@@ -6,13 +6,10 @@ import multiprocessing as mp
 import multiprocessing.pool
 from contextlib import closing
 from itertools import repeat
-try:
-    from itertools import izip
-except ImportError:
-    izip = zip
 
 import numpy as np
 
+from viscid.compat import izip
 
 # Non daemonic processes are probably a really bad idea
 class NoDaemonProcess(mp.Process):
@@ -166,27 +163,31 @@ def _star_passthrough(args):
     # args[0] is function, args[1] is positional args, and args[2] is kwargs
     return args[0](*(args[1]), **(args[2]))
 
-def map(nr_procs, func, args_iter, timeout=1e8, daemonic=True, pool=None,
-        **kwargs):  # pylint: disable=redefined-builtin
+def map(nr_procs, func, args_iter, args_kw=None, timeout=1e8,
+        daemonic=True, pool=None, force_subprocess=False):
     """Just like ``subprocessing.map``?
 
     same as :meth:`map_async`, except it waits for the result to
     be ready and returns it
     """
+    if args_kw is None:
+        args_kw = {}
+
     # don't waste time spinning up a new process
-    if nr_procs == 1:
-        args_iter = izip(repeat(func), args_iter, repeat(kwargs))
+    if nr_procs == 1 and not force_subprocess:
+        args_iter = izip(repeat(func), args_iter, repeat(args_kw))
         return [_star_passthrough(args) for args in args_iter]
     else:
-        p, r = map_async(nr_procs, func, args_iter, daemonic=daemonic,
-                         pool=pool, **kwargs)
+        p, r = map_async(nr_procs, func, args_iter, args_kw,
+                         daemonic=daemonic, pool=pool)
         ret = r.get(timeout)
         # in principle this join should return almost immediately since
         # we already called r.get
         p.join()
         return ret
 
-def map_async(nr_procs, func, args_iter, daemonic=True, pool=None, **kwargs):
+def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
+              pool=None):
     """Wrap python's ``map_async``
 
     This has some utility stuff like star passthrough
@@ -213,7 +214,9 @@ def map_async(nr_procs, func, args_iter, daemonic=True, pool=None, **kwargs):
         1 b
         2 c
     """
-    args_iter = izip(repeat(func), args_iter, repeat(kwargs))
+    if args_kw is None:
+        args_kw = {}
+    args_iter = izip(repeat(func), args_iter, repeat(args_kw))
 
     # if given a pool, don't close it when we're done delegating tasks
     if pool is not None:

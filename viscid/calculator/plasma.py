@@ -14,12 +14,16 @@ from viscid import field
 # from viscid.calculator import calc
 
 
-def calc_psi(B):
+def calc_psi(B, reversed=False):
     """Calc Flux function (only valid in 2d)
 
     Parameters:
         B (VectorField): magnetic field, should only have two
             spatial dimensions so we can infer the symmetry dimension
+        reversed (bool): since this integration doesn't like going
+            through undefined regions (like within 1 earth radius of
+            the origin for openggcm), you can use this to start
+            integrating from the opposite corner.
 
     Returns:
         ScalarField: 2-D scalar flux function
@@ -55,15 +59,25 @@ def calc_psi(B):
     nz, ny = len(zcc), len(ycc)
 
     A = np.empty((nz, ny), dtype=B.dtype)
-    A[0, 0] = 0.0
-    for i in range(1, nz):
-        A[i, 0] = A[i - 1, 0] + dz[i - 1] * 0.5 * (hy[i, 0] + hy[i - 1, 0])
 
-    for j in range(1, ny):
-        A[:, j] = A[:, j - 1] - dy[j - 1] * 0.5 * (hz[:, j - 1] + hz[:, j])
+    if reversed:
+        A[-1, -1] = 0.0
+        for i in range(nz - 2, -1, -1):
+            A[i, -1] = A[i + 1, -1] - dz[i] * 0.5 * (hy[i, -1] + hy[i + 1, -1])
+
+        for j in range(ny - 2, -1, -1):
+            A[:, j] = A[:, j + 1] + dy[j] * 0.5 * (hz[:, j + 1] + hz[:, j])
+    else:
+        A[0, 0] = 0.0
+        for i in range(1, nz):
+            A[i, 0] = A[i - 1, 0] + dz[i - 1] * 0.5 * (hy[i, 0] + hy[i - 1, 0])
+
+        for j in range(1, ny):
+            A[:, j] = A[:, j - 1] - dy[j - 1] * 0.5 * (hz[:, j - 1] + hz[:, j])
 
     return field.wrap_field("Scalar", "psi", B.crds, A,
-                            center=B.center, pretty_name=r"$\psi$")
+                            center=B.center, pretty_name=r"$\psi$",
+                            parents=[B])
 
 def calc_beta(pp, B, scale=1.0):
     """Calc plasma beta (2*p/B^2)

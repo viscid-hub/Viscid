@@ -1,4 +1,7 @@
-"""Convevience module for making 3d plots with Mayavi"""
+"""Convevience module for making 3d plots with Mayavi
+
+Note: you can't set rc parameters for this module
+"""
 from __future__ import print_function
 import code
 
@@ -126,7 +129,12 @@ def _prep_field(fld):
     if isinstance(fld, field.ScalarField):
         arr = np.reshape(fld.data, (-1,))
     elif isinstance(fld, field.VectorField):
-        arr = np.reshape(fld.data, (-1, 3))
+        if fld.layout == field.LAYOUT_INTERLACED:
+            arr = np.reshape(fld.data, (-1, 3))
+        elif fld.layout == field.LAYOUT_FLAT:
+            arr = np.reshape(np.rollaxis(fld.data, 0, len(fld.shape)), (-1, 3))
+        else:
+            raise ValueError()
     else:
         raise ValueError("Unexpected fld type: {0}".format(type(fld)))
     # swap endian if needed
@@ -180,7 +188,7 @@ def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
         crd_system (str, optional): 'mhd' or 'gse', can be gotten from
-            an openggcm field using ``fld.info["crd_system"]``.
+            an openggcm field using ``fld.meta["crd_system"]``.
     """
     if pipeline is None:
         pipeline = mlab.pipeline
@@ -206,6 +214,70 @@ def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
 def show(stop=True):
     """Calls :meth:`mayavi.mlab.show(stop=stop)`"""
     mlab.show(stop=stop)
+
+def clf():
+    """Clear source data, then clear figure"""
+    clear_data()
+    mlab.clf()
+
+def remove_source(src):
+    """Safely remove a specific vtk source
+
+    Args:
+        src (vtk_data_source): vtk data source to remove
+    """
+    src.stop()
+    try:
+        src.data.release_data_flag = 1
+        src.cell_scalars_name = ''
+        src.cell_tensors_name = ''
+        src.cell_vectors_name = ''
+        src.point_scalars_name = ''
+        src.point_tensors_name = ''
+        src.point_vectors_name = ''
+    except AttributeError:
+        pass
+    src.start()
+    src.stop()
+    src.remove()
+
+def clear_data(scenes=None):
+    """Workaround for Mayavi / VTK memory leak
+
+    This is needed when Mayavi/VTK keeps a reference to source data
+    when you would expect it to be freed like on a call to `mlab.clf()`
+    or when removing sources from the pipeline.
+
+    Note:
+        This must be called when the pipeline still has the source, so
+        before a call to `mlab.clf()`, etc.
+
+    1. Set release_data_flag on all sources' data
+    2. Remove reference to the data
+    3. Remove the data source
+
+    Args:
+        scene (None, mayavi.core.scene.Scene, or 'all'): if None, gets
+            current scene; if Scene object, just that one; if 'all',
+            act on all scenes in the current engine. Can also be a list
+            of Scene objects
+    """
+    if scenes is None:
+        scenes = [mlab.get_engine().current_scene]
+    elif scenes == "all":
+        scenes = mlab.get_engine().scenes
+
+    if not isinstance(scenes, (list, tuple)):
+        scenes = [scenes]
+    if all(s is None for s in scenes):
+        return
+
+    for s in scenes:
+        s.stop()
+        for child in list(s.children):
+            remove_source(child)
+        s.start()
+    return
 
 def interact(local=None):
     """Switch to interactive interpreter

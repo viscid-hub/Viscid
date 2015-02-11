@@ -2,8 +2,8 @@
 
 from __future__ import print_function
 import argparse
-import logging
 
+from viscid import logger
 from viscid import readers
 from viscid import vutil
 
@@ -12,11 +12,11 @@ def main():
     parser.add_argument('files', nargs="*", help='input files')
     args = vutil.common_argparse(parser)
 
-    print("args", args)
-    # logging.error(args)
-    # logging.warn(args)
-    # logging.info(args)
-    # logging.debug(args)
+    # print("args", args)
+    # logger.error(args)
+    # logger.warn(args)
+    logger.info("args: {0}".format(args))
+    # logger.debug(args)
     print()
 
     files = readers.load_files(args.files)

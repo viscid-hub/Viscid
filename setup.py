@@ -27,6 +27,11 @@ try:
 except ImportError:
     has_cython = False
 
+if sys.version_info >= (3,0):
+    PY3K = True
+else:
+    PY3K = False
+
 # listing the sources
 cmdclass = {}
 pkgs = ['viscid',
@@ -202,12 +207,16 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
     cc = sysconfig.get_config_var("CC")
     try:
         cc_version = Popen([cc, "--version"], stdout=PIPE,
-                            stderr=PIPE).communicate()[0].decode()
+                           stderr=PIPE).communicate()[0]
+        if PY3K:
+            cc_version = cc_version.decode()
         if "MacPorts" in cc_version:
             cc = "llvm-gcc"
-            cc = Popen(["which", cc], stdout=PIPE).communicate()[0].strip()
+            cc = Popen(["which", cc], stdout=PIPE).communicate()[0]
+            if PY3K:
+                cc = cc.decode()
+            cc = cc.strip()
             os.environ["CC"] = cc
-            cc = cc.decode()
             print("switching compiler to", cc)
     except (CalledProcessError, OSError):
         print("I think there's a problem with your compiler ( CC =", cc,
@@ -219,9 +228,9 @@ setup(name='viscid',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',
       packages=pkgs,
-      cmdclass = cmdclass,
-      include_dirs = [np.get_include()],
-      ext_modules = ext_mods,
+      cmdclass=cmdclass,
+      include_dirs=[np.get_include()],
+      ext_modules=ext_mods,
       scripts=scripts,
      )
 

@@ -10,7 +10,7 @@ TOPOLOGY_MS_OPEN_SOUTH = 4  # translated from 14 (8|6)
 TOPOLOGY_MS_SW = 8  # no translation needed
 # TOPOLOGY_MS_CYCLIC = 16  # no translation needed
 TOPOLOGY_MS_INVALID = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
-TOPOLOGY_MS_OTHER = range(32, 512)  # >= 16
+# TOPOLOGY_MS_OTHER = list(range(32, 512))  # >= 16
 
 TOPOLOGY_G_NONE = 0
 
@@ -30,7 +30,7 @@ TOPOLOGY_OPEN_SOUTH = TOPOLOGY_MS_OPEN_SOUTH
 TOPOLOGY_SW = TOPOLOGY_MS_SW
 # TOPOLOGY_CYCLIC = TOPOLOGY_MS_CYCLIC
 TOPOLOGY_INVALID = TOPOLOGY_MS_INVALID
-TOPOLOGY_OTHER = TOPOLOGY_MS_OTHER
+# TOPOLOGY_OTHER = TOPOLOGY_MS_OTHER
 color_map = color_map_msphere
 
 def color_from_topology(topology, topo_style="msphere"):

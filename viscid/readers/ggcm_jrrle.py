@@ -1,10 +1,6 @@
 from __future__ import print_function
 import os
 import re
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat import OrderedDict
 
 import numpy as np
 
@@ -14,6 +10,7 @@ from viscid.readers import vfile
 from viscid.readers import openggcm
 from viscid.readers._fortfile_wrapper import FortranFile
 from viscid.readers import _jrrle
+from viscid.compat import OrderedDict
 
 
 class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method
@@ -28,7 +25,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
     def __init__(self, filename, vfilebucket=None, **kwargs):
         super(GGCMFileJrrleMHD, self).__init__(filename, vfilebucket, **kwargs)
 
-    def _parse_file(self, filename):
+    def _parse_file(self, filename, parent_node):
         # we do minimal file parsing here for performance. we just
         # make data wrappers from the templates we got from the first
         # file in the group, and package them up into grids
@@ -38,9 +35,10 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
 
         with self._file_wrapper as f:
             _, meta = f.inquire_next()
-            time = float(str(meta['timestr'])[6:].split()[0])
+            time = float(str(meta['timestr']).split('=')[1].split()[0])
 
-        _grid = self._grid_type("<JrrleGrid>", **self._grid_opts)
+        _grid = self._make_grid(parent_node, name="<JrrleGrid>",
+                                **self._grid_opts)
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)
@@ -60,9 +58,9 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         for item in templates:
             data = data_wrapper(self._file_wrapper, item['fld_name'],
                                 item['shape'])
-            fld = field.wrap_field("Scalar", item['fld_name'], self._crds,
-                                   data, center=self._def_fld_center,
-                                   time=time)
+            fld = self._make_field(_grid, "Scalar", item['fld_name'],
+                                   self._crds, data,
+                                   center=self._def_fld_center, time=time)
             _grid.add_field(fld)
         return _grid
 
@@ -158,8 +156,8 @@ class JrrleFileWrapper(FortranFile):
                     return meta
                 self.advance_one_line()
 
-            raise KeyError("file '{0}' has no field '{1}'".format(
-                           self.filename, fld_name))
+            raise KeyError("file '{0}' has no field '{1}'"
+                           "".format(self.filename, fld_name))
 
     def inquire_next(self):
         """Collect the meta-data from the next field in the file
@@ -175,8 +173,8 @@ class JrrleFileWrapper(FortranFile):
         if not self.isopen:
             raise RuntimeError("file is not open")
 
-        varname = np.array(" "*80)
-        tstring = np.array(" "*80)
+        varname = np.array(" "*80, dtype="S80")
+        tstring = np.array(" "*80, dtype="S80")
         found_field, ndim, nx, ny, nz, it = _jrrle.inquire_next(self._unit,
                                                                 varname,
                                                                 tstring)

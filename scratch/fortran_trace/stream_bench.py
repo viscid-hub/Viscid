@@ -7,23 +7,23 @@ import cProfile
 import pstats
 from timeit import default_timer as time
 import argparse
-import logging
 
 import numpy as np
 from mayavi import mlab
-from matplotlib import pyplot as plt
 from matplotlib.colors import BoundaryNorm
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../../src/viscid/') #pylint: disable=C0301
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+from viscid import logger
 import tracer
 from viscid import vutil
 from viscid import readers
 from viscid import field
 from viscid.plot import mpl
 from viscid.plot import mvi
+from viscid.plot.mpl import plt
 from viscid.calculator import streamline
 from viscid.calculator import seed
 # import topo_numba
@@ -44,15 +44,15 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
     topo = np.zeros(gsize, order='F', dtype='int32')
     nsegs = np.zeros((1,), order='F', dtype='int32')
 
-    logging.info((np.ravel(bx_farr, order='K') == np.ravel(fld_bx.data, order='K')).all()) #pylint: disable=C0301
-    logging.info((np.ravel(by_farr, order='K') == np.ravel(fld_by.data, order='K')).all()) #pylint: disable=C0301
-    logging.info((np.ravel(bz_farr, order='K') == np.ravel(fld_bz.data, order='K')).all()) #pylint: disable=C0301
-    logging.info("bx_arr")
-    logging.info(bx_farr.strides)
-    logging.info(bx_farr.flags)
-    logging.info("topo")
-    logging.info(topo.strides)
-    logging.info(topo.shape)
+    logger.info((np.ravel(bx_farr, order='K') == np.ravel(fld_bx.data, order='K')).all()) #pylint: disable=C0301
+    logger.info((np.ravel(by_farr, order='K') == np.ravel(fld_by.data, order='K')).all()) #pylint: disable=C0301
+    logger.info((np.ravel(bz_farr, order='K') == np.ravel(fld_bz.data, order='K')).all()) #pylint: disable=C0301
+    logger.info("bx_arr")
+    logger.info(bx_farr.strides)
+    logger.info(bx_farr.flags)
+    logger.info("topo")
+    logger.info(topo.strides)
+    logger.info(topo.shape)
 
     t0 = time()
     tracer.get_topo(gx, gy, gz, bx_farr, by_farr, bz_farr, topo,

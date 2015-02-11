@@ -53,7 +53,11 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                         # "-------+------ type -- ???"
                         # as well as blank lines that mark the end of a
                         # section
-                        if line == "":
+                        typ = re.match(r"-+\+-+ type -- (\w+)", line)
+                        if typ:
+                            _info["{0}_type".format(armed)] = typ.group(1)
+                            # yes, keep armed, for super's parameters
+                        elif line == "":
                             armed = False
                 else:
                     try:
@@ -65,8 +69,8 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                             # "parameter  | value"
                             # "-----------|------"
                             # ignore them
-                            lines_iter.next()
-                            lines_iter.next()
+                            next(lines_iter)
+                            next(lines_iter)
                     except AttributeError:
                         # not the start of a new class view, that's ok
                         pass
@@ -95,7 +99,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
             pass
 
         s = s.strip()
-        if re.match(r"[\d\.]+(\s*,\s*[\d\.]+)+", s):
+        if re.match(r"\-?[\d\.]+(\s*,\s*\-?[\d\.]+)+", s):
             l = s.split(",")
             for i, s in enumerate(l):
                 try:
@@ -106,7 +110,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                     except ValueError:
                         l[i] = s.strip()
             return np.array(l)
-        elif re.match(r"[A-Za-z\d\.]+(\s*:\s*[A-Za-z\d\.]+)+", s):
+        elif re.match(r"[A-Za-z\d\.\-]+(\s*:\s*[A-Za-z\d\.\-]+)+", s):
             return s.split(":")
         else:
             return s

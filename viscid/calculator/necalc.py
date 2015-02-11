@@ -118,7 +118,7 @@ def div(fld):
     div_arr = ne.evaluate("(vxp-vxm)/(xp-xm) + (vyp-vym)/(yp-ym) + "
                           "(vzp-vzm)/(zp-zm)")
     return field.wrap_field("Scalar", "div " + fld.name, divcrds, div_arr,
-                            center=divcenter, time=fld.time)
+                            center=divcenter, time=fld.time, parents=[fld])
 
 def curl(fld):
     """ first order """
@@ -157,7 +157,8 @@ def curl(fld):
 
     return field.wrap_field("Vector", "curl " + fld.name, curlcrds,
                             [curl_x, curl_y, curl_z],
-                            center=curlcenter, time=fld.time)
+                            center=curlcenter, time=fld.time,
+                            parents=[fld])
 
 ##
 ## EOF

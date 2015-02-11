@@ -3,16 +3,12 @@
 from __future__ import print_function
 import os
 from glob import glob
-import logging
-import six
-# import sys
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat import OrderedDict
 
+from viscid import logger
+from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid.readers.vfile import VFile
+from viscid.compat import OrderedDict
 
 
 class VFileBucket(Bucket):
@@ -33,15 +29,13 @@ class VFileBucket(Bucket):
         """ load a single file and return a vFile instance, not a list
         of vFiles like load does
         """
-        fls = self.load_files([fname], index_handle=index_handle, **kwargs)
+        fls = self.load_files(fname, index_handle=index_handle, **kwargs)
         if len(fls) == 0:
-            logging.warn("No files loaded for '{0}', is the path "
-                         "correct?".format(fname))
             return None
         else:
             if len(fls) > 1:
-                logging.warn("Loaded > 1 file for '{0}', did you mean to call "
-                             "load_files()?".format(fname))
+                logger.warn("Loaded > 1 file for '{0}', did you mean to call "
+                            "load_files()?".format(fname))
             return fls[0]
 
     def load_files(self, fnames, index_handle=True, file_type=None, **kwargs):
@@ -63,6 +57,8 @@ class VFileBucket(Bucket):
             as the length of fnames, and the order may not be the same
             in order to accomidate globs and file grouping.
         """
+        orig_fnames = fnames
+
         if not isinstance(fnames, (list, tuple)):
             fnames = [fnames]
         file_lst = []
@@ -70,24 +66,33 @@ class VFileBucket(Bucket):
         # glob and convert to absolute paths
         globbed_fnames = []
         for fname in fnames:
-            better_fname = os.path.expanduser(os.path.expandvars(fname))
-            absfnames = [os.path.abspath(fn) for fn in glob(better_fname)]
-            globbed_fnames += absfnames
+            expanded_fname = os.path.expanduser(os.path.expandvars(fname))
+            absfname = os.path.abspath(expanded_fname)
+            if '*' in absfname or '?' in absfname:
+                globbed_fnames += glob(absfname)
+            else:
+                globbed_fnames += [absfname]
+            # Is it necessary to recall abspath here? We did it before
+            # the glob to make sure it didn't start with a '.' since that
+            # tells glob not to fill wildcards
         fnames = globbed_fnames
 
         # detect file types
         types_detected = OrderedDict()
         for i, fname in enumerate(fnames):
+            _ftype = None
             if file_type is None:
-                file_type = VFile.detect_type(fname)
-            if not file_type:
+                _ftype = VFile.detect_type(fname)
+            else:
+                _ftype = file_type
+            if not _ftype:
                 raise RuntimeError("Can't determine type "
                                    "for {0}".format(fname))
             value = (fname, i)
             try:
-                types_detected[file_type].append(value)
+                types_detected[_ftype].append(value)
             except KeyError:
-                types_detected[file_type] = [value]
+                types_detected[_ftype] = [value]
 
         # see if the file's already been loaded, or load it, and add it
         # to the bucket and all that good stuff
@@ -104,37 +109,39 @@ class VFileBucket(Bucket):
             # iterate all the groups and add them
             for group in groups:
                 f = None
-                if isinstance(group, list):
-                    # FIXME: if the glob has changed since it was loaded,
-                    # this won't know that it has changed... I'm not sure
-                    # if there's a good way to figure this out... the user
-                    # can always just unload / reload
-                    g0 = group[0]
-                else:
-                    g0 = group
 
-                if g0 in self:
-                    f = self[g0]
-                else:
+                try:
+                    handle_name = ftype.collective_name(group)
+                except AttributeError:
+                    handle_name = VFile.collective_name(group)
+
+                try:
+                    f = self[handle_name]
+                except KeyError:
                     try:
                         f = ftype(group, vfilebucket=self, **kwargs)
                     except IOError as e:
-                        cname = ftype.collective_name(group)
-                        s = " IOError on file: {0}\n".format(cname)
-                        s += "              File Type: {0}\n".format(file_type)
-                        s += "              {0}".format(e.message)
-                        logging.warn(s)
-                    except ValueError:
-                        # what's this about?
-                        pass
+                        s = " IOError on file: {0}\n".format(handle_name)
+                        s += "              File Type: {0}\n".format(handle_name)
+                        s += "              {0}".format(str(e))
+                        logger.warn(s)
+                    except ValueError as e:
+                        # ... why am i explicitly catching ValueErrors?
+                        # i'm probably breaking something by re-raising
+                        # this exception, but i didn't document what :(
+                        s = " ValueError on file load: {0}\n".format(handle_name)
+                        s += "              File Type: {0}\n".format(handle_name)
+                        s += "              {0}".format(str(e))
+                        logger.warn(s)
+                        # re-raise the last expection
+                        raise
 
-                try:
-                    handle_name = f.collective_name(group)
-                except AttributeError:
-                    handle_name = VFile.collective_name(group)
                 self.set_item([handle_name], f, index_handle=index_handle)
                 file_lst.append(f)
 
+        if len(file_lst) == 0:
+            logger.warn("No files loaded for '{0}', is the path "
+                        "correct?".format(orig_fnames))
         return file_lst
 
     def remove_item(self, item):
@@ -142,16 +149,16 @@ class VFileBucket(Bucket):
         super(VFileBucket, self).remove_item(item)
 
     def remove_all_items(self):
-        for item in self._items.keys():
-            item.unload()
+        for val in self.values():
+            val.unload()
         super(VFileBucket, self).remove_all_items()
 
     def __getitem__(self, handle):
-        if isinstance(handle, six.string_types):
+        if isinstance(handle, string_types):
             handle = os.path.expanduser(os.path.expandvars(handle))
         return super(VFileBucket, self).__getitem__(handle)
 
     def __contains__(self, handle):
-        if isinstance(handle, six.string_types):
+        if isinstance(handle, string_types):
             handle = os.path.expanduser(os.path.expandvars(handle))
         return super(VFileBucket, self).__contains__(handle)

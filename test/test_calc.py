@@ -7,7 +7,6 @@ from __future__ import print_function
 import sys
 import os
 from time import time
-import logging
 import argparse
 # import resource
 
@@ -19,6 +18,7 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+from viscid import logger
 from viscid import vutil
 from viscid import field
 from viscid import coordinate
@@ -32,18 +32,18 @@ def run_mag_test(fld, show=False):
     t0 = time()
     mag_ne = calc.magnitude(fld, preferred="numexpr", only=True)
     t1 = time()
-    logging.info("numexpr mag runtime: {0}".format(t1 - t0))
+    logger.info("numexpr mag runtime: {0}".format(t1 - t0))
     t0 = time()
     # cython magnitude doesn't work since switch to only 4d arrays
     # mag_cy = calc.magnitude(fld, preferred="cython", only=True)
     # t1 = time()
-    # logging.info("cython mag runtime: {0}".format(t1 - t0))
+    # logger.info("cython mag runtime: {0}".format(t1 - t0))
 
     # diff1 = calc.diff(mag_ne, mag_cy)
     # absdiff1 = calc.abs_val(diff1)
     # if not (absdiff1.data < 1e-14).all():
-    #     logging.warn("numexpr result not exactly cython result")
-    # logging.info("min/max(numexpr - cython): {0} / {1}".format(
+    #     logger.warn("numexpr result not exactly cython result")
+    # logger.info("min/max(numexpr - cython): {0} / {1}".format(
     #              np.min(absdiff1.data), np.max(absdiff1.data)))
 
     planes = ["z=0", "y=0"]
@@ -80,7 +80,7 @@ def main():
     crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y),
                                                 ('x', x)))
 
-    logging.info("Testing node centered magnitudes")
+    logger.info("Testing node centered magnitudes")
     Z, Y, X = crds.get_crds_nc(shaped=True)
 
     vx = 0.5 * X**2 +       Y    + 0.0 * Z
@@ -93,7 +93,7 @@ def main():
                              )
     run_mag_test(fld_v, show=args.show)
 
-    logging.info("Testing cell centered magnitudes")
+    logger.info("Testing cell centered magnitudes")
     Z, Y, X = crds.get_crds_cc(shaped=True)
 
     vx = 0.5 * X**2 + Y + 0.0 * Z

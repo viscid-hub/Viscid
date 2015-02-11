@@ -1,0 +1,988 @@
+ open timehist
+ ggcm_init
+ readpa
+==================================================== class == ggcm
+   ==================================================== class == mrc_mod
+
+                  0 | 'MHD': 2 procs
+                  2 | 'IONOSPHERE': 1 proc
+                  3 | 'DIAGSC': 1 proc
+   
+
+ c_ggcm_run
+ mhd_init
+
+parameter           | value
+--------------------+---------------------------------------- diagsrv
+   diagsrv_format      | xdmf_serial
+   diagsrv_server      | cache
+==================================================== class == ggcm_iono
+parameter           | value
+--------------------+----------------------------------------
+   ==================================================== class == ggcm_dipole
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- fortran
+   dipoltime           | 1967:01:01:00:00:00.000
+   do_diprotate        | no
+   moddipcoeff         | 100
+   moddipfield         | 1
+   
+   ==================================================== class == ggcm_diag
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- c
+   run                 | txsmall
+   
+   ==================================================== class == ggcm_mhd_satout
+   --------------------+-------------------------------- type -- fortran
+   
+
+ bndswi
+ mhd_satout
+==================================================== class == ggcm_mhd
+parameter           | value
+--------------------+----------------------------------------
+gamma               | 1.66667
+rrmin               | 0.1
+bbnorm              | 30574
+vvnorm              | 6692.98
+rrnorm              | 10000
+ppnorm              | 7.43866e+08
+ccnorm              | 3.81885
+eenorm              | 204631
+resnorm             | 5.35845e+07
+tnorm               | 0.951899
+diffconstant        | 100
+diffthreshold       | 0.75
+diffsphere          | 6
+speedlimit          | 1500
+thx                 | 0.4
+isphere             | 3
+timelo              | 50
+d_i                 | 0
+dtmin               | 0.0002
+dbasetime           | 3.1536e+07
+modnewstep          | 50
+magdiffu            | const
+diff_timelo         | 600
+diff_swbnd          | -15
+diff_obnd           | 4
+--------------------+-------------------------------- type -- ggcm
+earth_mag_moment    | 7.90648e+22
+re                  | 6.37104e+06
+ionodens            | 1e+10
+mu0                 | 1.25664e-06
+amu                 | 1.66057e-27
+bbnorm0             | 1e-09
+vvnorm0             | 1000
+rrnorm0             | 1e+06
+ppnorm0             | 1e-12
+ccnorm0             | 1e-06
+eenorm0             | 0.001
+resnorm0            | 1
+push_fortran        | no
+
+   ==================================================== class == mrc_domain
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- simple
+   lm                  | 128, 64, 32
+   m                   | 128, 64, 64
+   np                  | 1, 1, 2
+   bcx                 | none
+   bcy                 | none
+   bcz                 | none
+   
+      ==================================================== class == mrc_crds
+      parameter           | value
+      --------------------+----------------------------------------
+      l                   | -30, -50, -50
+      h                   | 300, 50, 50
+      sw                  | 3
+      --------------------+-------------------------------- type -- rectilinear
+      
+         ==================================================== class == crd[0]
+         parameter           | value
+         --------------------+----------------------------------------
+         offs                | [3] 0,0,0
+         dims                | [3] 128,1,1
+         sw                  | [3] 3,0,0
+         nr_spatial_dims     | 1
+         dim                 | 0
+         nr_comps            | 1
+         nr_ghosts           | 3
+         --------------------+-------------------------------- type -- float
+         
+            ==================================================== class == mrc_vec
+            parameter           | value
+            --------------------+----------------------------------------
+            len                 | 134
+            --------------------+-------------------------------- type -- float
+            
+         ==================================================== class == crd[1]
+         parameter           | value
+         --------------------+----------------------------------------
+         offs                | [3] 0,0,0
+         dims                | [3] 64,1,1
+         sw                  | [3] 3,0,0
+         nr_spatial_dims     | 1
+         dim                 | 1
+         nr_comps            | 1
+         nr_ghosts           | 3
+         --------------------+-------------------------------- type -- float
+         
+            ==================================================== class == mrc_vec
+            parameter           | value
+            --------------------+----------------------------------------
+            len                 | 70
+            --------------------+-------------------------------- type -- float
+            
+         ==================================================== class == crd[2]
+         parameter           | value
+         --------------------+----------------------------------------
+         offs                | [3] 0,0,0
+         dims                | [3] 32,1,1
+         sw                  | [3] 3,0,0
+         nr_spatial_dims     | 1
+         dim                 | 2
+         nr_comps            | 1
+         nr_ghosts           | 3
+         --------------------+-------------------------------- type -- float
+         
+            ==================================================== class == mrc_vec
+            parameter           | value
+            --------------------+----------------------------------------
+            len                 | 38
+            --------------------+-------------------------------- type -- float
+            
+         ==================================================== class == dcrd[0]
+         parameter           | value
+         --------------------+----------------------------------------
+         offs                | [3] 0,0,0
+         dims                | [3] 128,1,1
+         sw                  | [3] 3,0,0
+         nr_spatial_dims     | 1
+         dim                 | 0
+         nr_comps            | 1
+         nr_ghosts           | 3
+         --------------------+-------------------------------- type -- double
+         
+            ==================================================== class == mrc_vec
+            parameter           | value
+            --------------------+----------------------------------------
+            len                 | 134
+            --------------------+-------------------------------- type -- double
+            
+         ==================================================== class == dcrd[1]
+         parameter           | value
+         --------------------+----------------------------------------
+         offs                | [3] 0,0,0
+         dims                | [3] 64,1,1
+         sw                  | [3] 3,0,0
+         nr_spatial_dims     | 1
+         dim                 | 1
+         nr_comps            | 1
+         nr_ghosts           | 3
+         --------------------+-------------------------------- type -- double
+         
+            ==================================================== class == mrc_vec
+            parameter           | value
+            --------------------+----------------------------------------
+            len                 | 70
+            --------------------+-------------------------------- type -- double
+            
+         ==================================================== class == dcrd[2]
+         parameter           | value
+         --------------------+----------------------------------------
+         offs                | [3] 0,0,0
+         dims                | [3] 32,1,1
+         sw                  | [3] 3,0,0
+         nr_spatial_dims     | 1
+         dim                 | 2
+         nr_comps            | 1
+         nr_ghosts           | 3
+         --------------------+-------------------------------- type -- double
+         
+            ==================================================== class == mrc_vec
+            parameter           | value
+            --------------------+----------------------------------------
+            len                 | 38
+            --------------------+-------------------------------- type -- double
+            
+         ==================================================== class == crds_gen_x
+         parameter           | value
+         --------------------+----------------------------------------
+         d                   | 0
+         n                   | 128
+         sw                  | 3
+         xl                  | -30
+         xh                  | 300
+         --------------------+-------------------------------- type -- ggcm_x_tanh
+         x1                  | -24
+         x3                  | -8.5
+         dmm                 | 3
+         x5                  | 50
+         h0                  | 12
+         hn                  | 100
+         hm                  | 3
+         hmm                 | 0.15
+         b1                  | 0.3
+         b2                  | 0.05
+         b3                  | 0.5
+         
+         ==================================================== class == crds_gen_y
+         parameter           | value
+         --------------------+----------------------------------------
+         d                   | 1
+         n                   | 64
+         sw                  | 3
+         xl                  | -50
+         xh                  | 50
+         --------------------+-------------------------------- type -- ggcm_yz
+         center_spacing      | 0.1
+         center_shift        | 0
+         xn                  | 2
+         xm                  | 0.5
+         
+         ==================================================== class == crds_gen_z
+         parameter           | value
+         --------------------+----------------------------------------
+         d                   | 2
+         n                   | 64
+         sw                  | 3
+         xl                  | -50
+         xh                  | 50
+         --------------------+-------------------------------- type -- ggcm_yz
+         center_spacing      | 0.1
+         center_shift        | 0
+         xn                  | 2
+         xm                  | 0.5
+         
+      ==================================================== class == mrc_ddc
+      parameter           | value
+      --------------------+----------------------------------------
+      size_of_type        | 4
+      max_n_fields        | 1
+      ibn                 | 0, 0, 0
+      --------------------+-------------------------------- type -- multi
+      
+   ==================================================== class == ggcm_mhd_fld
+   parameter           | value
+   --------------------+----------------------------------------
+   offs                | [5] 0,0,0,0,0
+   dims                | [5] 128,64,32,47,1
+   sw                  | [5] 2,2,2,0,0
+   nr_spatial_dims     | 3
+   dim                 | -1
+   nr_comps            | 47
+   nr_ghosts           | 2
+   mhd_type            | 1
+   --------------------+-------------------------------- type -- float
+   
+      ==================================================== class == mrc_vec
+      parameter           | value
+      --------------------+----------------------------------------
+      len                 | 15187392
+      --------------------+-------------------------------- type -- float
+      
+   ==================================================== class == ggcm_mhd_crds
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- fortran
+   
+      ==================================================== class == ggcm_mhd_crds_gen
+      parameter           | value
+      --------------------+----------------------------------------
+      legacy_fd1          | no
+      --------------------+-------------------------------- type -- mrc
+      
+   ==================================================== class == ggcm_mhd_step
+   parameter           | value
+   --------------------+----------------------------------------
+   do_nwst             | no
+   profile_every       | 10
+   --------------------+-------------------------------- type -- fortran
+   
+   ==================================================== class == ggcm_mhd_diag
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- c
+   run                 | txsmall
+   fields              | rr:pp:v:b:j:e_cc
+   outplanex           | 10000
+   outplaney           | 0
+   outplanez           | 10000
+   
+      ==================================================== class == ggcm_mhd_diag_item
+      parameter           | value
+      --------------------+----------------------------------------
+      --------------------+-------------------------------- type -- rr
+      
+      ==================================================== class == ggcm_mhd_diag_item
+      parameter           | value
+      --------------------+----------------------------------------
+      --------------------+-------------------------------- type -- pp
+      
+      ==================================================== class == ggcm_mhd_diag_item
+      parameter           | value
+      --------------------+----------------------------------------
+      --------------------+-------------------------------- type -- v
+      
+      ==================================================== class == ggcm_mhd_diag_item
+      parameter           | value
+      --------------------+----------------------------------------
+      --------------------+-------------------------------- type -- b
+      
+      ==================================================== class == ggcm_mhd_diag_item
+      parameter           | value
+      --------------------+----------------------------------------
+      --------------------+-------------------------------- type -- j
+      
+      ==================================================== class == ggcm_mhd_diag_item
+      parameter           | value
+      --------------------+----------------------------------------
+      --------------------+-------------------------------- type -- e_cc
+      
+   ==================================================== class == ggcm_mhd_bnd
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- fortran
+   
+   ==================================================== class == ggcm_mhd_ic
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- mirdip
+   xxx1                | 14
+   xxx2                | 12
+   xmir                | -15
+   rrini               | 3
+   r1lim               | 1.5
+   
+   ==================================================== class == mrc_ts
+   parameter           | value
+   --------------------+----------------------------------------
+   max_time            | 1
+   max_steps           | 100000
+   dt                  | 0.01
+   --------------------+-------------------------------- type -- step
+   
+   ==================================================== class == ggcm_mhd_bndsw
+   parameter           | value
+   --------------------+----------------------------------------
+   alphafak            | 1.1
+   --------------------+-------------------------------- type -- fortran
+      ==================================================== class == bndata
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 13,3
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 39
+         --------------------+-------------------------------- type -- float
+         
+   
+   ==================================================== class == ggcm_mhd_iono
+   parameter           | value
+   --------------------+-------------------------------- type -- fortran
+   
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [1] 0
+      dims                | [1] 21966
+      sw                  | [1] 0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 21966
+         --------------------+-------------------------------- type -- float
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [1] 0
+      dims                | [1] 21966
+      sw                  | [1] 0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 21966
+         --------------------+-------------------------------- type -- float
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 8,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 175728
+         --------------------+-------------------------------- type -- float
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 8,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 175728
+         --------------------+-------------------------------- type -- float
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 8,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 175728
+         --------------------+-------------------------------- type -- float
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 8,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- int
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 175728
+         --------------------+-------------------------------- type -- int
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 8,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- int
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 175728
+         --------------------+-------------------------------- type -- int
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 8,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- int
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 175728
+         --------------------+-------------------------------- type -- int
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 3,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 65898
+         --------------------+-------------------------------- type -- float
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 3,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- int
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 65898
+         --------------------+-------------------------------- type -- int
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 9,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 197694
+         --------------------+-------------------------------- type -- float
+         
+      ==================================================== class == mrc_fld
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 5,21966
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- int
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 109830
+         --------------------+-------------------------------- type -- int
+         
+   ==================================================== class == ggcm_mhd_rcm
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- none
+   
+   ==================================================== class == ggcm_mhd_satout
+   --------------------+-------------------------------- type -- fortran
+   
+   ==================================================== class == ggcm_dipole
+   parameter           | value
+   --------------------+----------------------------------------
+   --------------------+-------------------------------- type -- fortran
+   dipoltime           | 1967:01:01:00:00:00.000
+   do_diprotate        | no
+   moddipcoeff         | 100
+   moddipfield         | 1
+   
+      ==================================================== class == bndata
+      parameter           | value
+      --------------------+----------------------------------------
+      offs                | [2] 0,0
+      dims                | [2] 13,3
+      sw                  | [2] 0,0
+      nr_spatial_dims     | -1
+      dim                 | -1
+      nr_comps            | 1
+      nr_ghosts           | 0
+      --------------------+-------------------------------- type -- float
+      
+         ==================================================== class == mrc_vec
+         parameter           | value
+         --------------------+----------------------------------------
+         len                 | 39
+         --------------------+-------------------------------- type -- float
+         
+switched dt 1 <- 0.0003
+                           avg        min        max
+ymaskn_f                  2.83       2.77       2.89
+vgrupd_f                  0.53       0.47       0.58
+obndra1_f                 1.93       1.79       2.06
+obndrb1_f                 0.31       0.25       0.37
+primvar1_f                9.89       9.86       9.93
+primbb_f                  3.51       3.39       3.64
+ggcm_mhd_step_run       310.27     309.26     311.27
+ggcm_mhd_step_run_predcorr     310.27     309.26     311.27
+newstep_f                15.89      15.71      16.08
+zmaskn_f                  2.09       1.93       2.24
+pred_fortran            122.76     122.21     123.31
+pushpred_f              122.76     122.21     123.31
+obndra2_f                 2.31       2.28       2.33
+obndrb2_f                 0.27       0.26       0.28
+primvar2_f                7.28       6.96       7.61
+pushcorr_f              140.09     139.21     140.98
+step=1 time=1 dt=1.000000e+00
+                           avg        min        max
+switched dt 0.179042 <- 1
+step=2 time=0.179327 dt=1.790419e-01
+[0] ==> Writing ggcm_mhd checkpoint (1)
+[2] ==> Writing ggcm_iono checkpoint (1)
+==================================================== class == mrc_io
+parameter           | value
+--------------------+----------------------------------------
+outdir              | .
+basename            | checkpoint_iono
+--------------------+-------------------------------- type -- hdf5_serial
+
+[1] ==> Writing ggcm_mhd checkpoint (1)
+==================================================== class == mrc_io
+parameter           | value
+--------------------+----------------------------------------
+outdir              | .
+basename            | checkpoint
+--------------------+-------------------------------- type -- hdf5_serial
+
+step=3 time=1.13123 dt=1.790419e-01
+==================================================== class == mrc_io
+parameter           | value
+--------------------+----------------------------------------
+outdir              | ./
+basename            | txsmall.iof
+--------------------+-------------------------------- type -- xdmf_serial
+
+ggcm_mhd_diag: writing 3d output (step 1)
+==================================================== class == mrc_io
+parameter           | value
+--------------------+----------------------------------------
+outdir              | ./
+basename            | txsmall.3d
+--------------------+-------------------------------- type -- combined
+rank_diagsrv        | 3
+
+==================================================== class == mrc_io
+parameter           | value
+--------------------+----------------------------------------
+outdir              | ./
+basename            | txsmall.3d
+--------------------+-------------------------------- type -- xdmf_serial
+
+[0] HERE: in mrc_io_write_m1() at ../target-build/csrc/libmrc/src/mrc_io.c:203
+[1] HERE: in mrc_io_write_m1() at ../target-build/csrc/libmrc/src/mrc_io.c:203
+[0] HERE: in mrc_io_write_m1() at ../target-build/csrc/libmrc/src/mrc_io.c:203
+[0] HERE: in mrc_io_write_m1() at ../target-build/csrc/libmrc/src/mrc_io.c:203
+[1] HERE: in mrc_io_write_m1() at ../target-build/csrc/libmrc/src/mrc_io.c:203
+[1] HERE: in mrc_io_write_m1() at ../target-build/csrc/libmrc/src/mrc_io.c:203
+[2] diag: writing './/txsmall.iof.000001.xdmf'
+ggcm_mhd_diag: writing 2d output (step 1)
+==================================================== class == mrc_io
+parameter           | value
+--------------------+----------------------------------------
+outdir              | ./
+basename            | txsmall.py_0
+--------------------+-------------------------------- type -- combined
+rank_diagsrv        | 3
+
+[3] diag: writing './/txsmall.3d.000001.xdmf'
+==================================================== class == mrc_io
+parameter           | value
+--------------------+----------------------------------------
+outdir              | ./
+basename            | txsmall.py_0
+--------------------+-------------------------------- type -- xdmf_serial
+
+[3] diag: writing './/txsmall.py_0.000001.xdmf'
+step=4 time=1.30166 dt=1.790419e-01
+step=5 time=1.47209 dt=1.790419e-01
+step=6 time=1.64252 dt=1.790419e-01
+step=7 time=1.81295 dt=1.790419e-01
+step=8 time=1.98338 dt=1.790419e-01
+step=9 time=2.15381 dt=1.790419e-01
+[3] diagsrv shutting down
+[3] Class Info:: (mrc_ddc):  0 (0 change)  2+  2-
+[3] Class Info:: (mrc_crds_gen):  0 (0 change)  6+  6-
+[3] Class Info:: (mrc_crds):  0 (0 change)  2+  2-
+[3] Class Info:: (mrc_domain):  0 (0 change)  2+  2-
+[3] Class Info:: (mrc_obj):  0 (0 change)  48+  48-
+[3] Class Info:: (mrc_mod):  0 (0 change)  1+  1-
+[3] Class Info:: (ggcm):  0 (0 change)  1+  1-
+[3] Class Info:: (mrc_vec):  0 (0 change)  131+  131-
+[3] Class Info:: (mrc_fld):  0 (0 change)  131+  131-
+[3] Class Info:: (mrc_io):  0 (0 change)  3+  3-
+[2] Class Info:: (mrc_obj):  0 (0 change)  1+  1-
+[2] Class Info:: (ggcm_mhd_satout):  0 (0 change)  1+  1-
+[2] Class Info:: (ggcm_diag):  0 (0 change)  1+  1-
+[2] Class Info:: (ggcm_dipole):  0 (0 change)  1+  1-
+[2] Class Info:: (ggcm_iono):  0 (0 change)  1+  1-
+[2] Class Info:: (mrc_mod):  0 (0 change)  1+  1-
+[2] Class Info:: (ggcm):  0 (0 change)  1+  1-
+[2] Class Info:: (mrc_vec):  0 (0 change)  31+  31-
+[2] Class Info:: (mrc_fld):  0 (0 change)  31+  31-
+[2] Class Info:: (mrc_io):  0 (0 change)  3+  3-
+Did not use given parameter: mhdc
+Did not use given parameter: modiono
+Did not use given parameter: crcm_crcm_fac_smooth
+Did not use given parameter: stepsperfile
+Did not use given parameter: rcm_ivoptn
+Did not use given parameter: ctim_ampl25
+Did not use given parameter: ctim_i5
+Did not use given parameter: crcm_pp_out_smooth
+Did not use given parameter: ctim_switch_27
+Did not use given parameter: crcm_rmin_dip_mhd_blend
+Did not use given parameter: ctim_switch_12
+Did not use given parameter: ctim_switch_16
+Did not use given parameter: crcm_species
+Did not use given parameter: rcm_i_eta_bc
+Did not use given parameter: ctim_f_inshaun
+Did not use given parameter: ctim_tmpmin
+Did not use given parameter: crcm_mhd_dens_factor
+Did not use given parameter: rcm_idt1
+Did not use given parameter: ctim_switch_1
+Did not use given parameter: ctim_phase23
+Did not use given parameter: rcm_rhomax
+Did not use given parameter: ctim_potfak
+Did not use given parameter: ctim_f_gwatts
+Did not use given parameter: crcm_rmax_dip_mhd_blend
+Did not use given parameter: crcm_fb_kickin_time
+Did not use given parameter: rcm_tol_gmres
+Did not use given parameter: ctim_switch_13
+Did not use given parameter: ctim_switch_35
+Did not use given parameter: ctim_switch_8
+Did not use given parameter: ntheta
+Did not use given parameter: xpos_mir
+Did not use given parameter: crcm_start_time
+Did not use given parameter: crcm_iono
+Did not use given parameter: ctim_f_riceprof
+Did not use given parameter: ctim_switch_34
+Did not use given parameter: crcm_mhd_temp_factor
+Did not use given parameter: ctim_xx
+Did not use given parameter: rcm_fb_precon
+Did not use given parameter: crcm_new_fac_smooth
+Did not use given parameter: ctim_switch_30
+Did not use given parameter: ionodt
+Did not use given parameter: ctim_switch_33
+Did not use given parameter: ctim_in
+Did not use given parameter: bnd_io_rr
+Did not use given parameter: ctim_i8
+Did not use given parameter: ctim_phase22
+Did not use given parameter: rcm_ibnd
+Did not use given parameter: ctim_switch_28
+Did not use given parameter: ctim_switch_7
+Did not use given parameter: ctim_switch_17
+Did not use given parameter: ctim_f_bmagfld
+Did not use given parameter: swmon
+Did not use given parameter: crcm_to_mhd_pres_factor
+Did not use given parameter: rcm_cmax
+Did not use given parameter: crcm_write_n_timesteps
+Did not use given parameter: ctim_amp
+Did not use given parameter: orbit_dt
+Did not use given parameter: crcm_max_lat_grid_limit
+Did not use given parameter: rcm_ipot
+Did not use given parameter: rcm_i_birk
+Did not use given parameter: ctim_f_prsxxxx
+Did not use given parameter: crcm_mhd_pot_factor
+Did not use given parameter: crcm_write_time
+Did not use given parameter: nphi
+Did not use given parameter: rcm_dstmin
+Did not use given parameter: crcm_delta_t
+Did not use given parameter: starttime
+Did not use given parameter: ctim_f_substorm
+Did not use given parameter: rcm_irdr
+Did not use given parameter: ctim_f_levpi
+Did not use given parameter: crcm_rflmax
+Did not use given parameter: ctim_ampl11
+Did not use given parameter: idata
+Did not use given parameter: swfile
+Did not use given parameter: ctim_f_hough
+Did not use given parameter: ctim_switch_25
+Did not use given parameter: ctim_switch_22
+Did not use given parameter: rcm_idebug
+Did not use given parameter: ctim_f_hprof
+Did not use given parameter: ctim_f_cormag
+Did not use given parameter: rcm_imin
+Did not use given parameter: rcm_eeta_cutoff
+Did not use given parameter: ctim_kp
+Did not use given parameter: rcm_idt3
+Did not use given parameter: rcm_i_advect
+Did not use given parameter: rcm_dlim
+Did not use given parameter: ctim_phase11
+Did not use given parameter: ctim_switch_6
+Did not use given parameter: ctim_f_dmsp
+Did not use given parameter: setimfbx
+Did not use given parameter: crcm_rr_out_smooth
+Did not use given parameter: moy
+Did not use given parameter: rcm_itimef
+Did not use given parameter: ctim_switch_14
+Did not use given parameter: ctim_switch_18
+Did not use given parameter: crcm_intgrd_fac_smooth
+Did not use given parameter: ctim_switch_3
+Did not use given parameter: rcm_irdw
+Did not use given parameter: ctim_f_datam
+Did not use given parameter: ctim_switch_11
+Did not use given parameter: rcm_icond
+Did not use given parameter: ctim_switch_21
+Did not use given parameter: ctim_ampl23
+Did not use given parameter: rcm_vmfact
+Did not use given parameter: ctim_f_dmspmod
+Did not use given parameter: ctim_switch_32
+Did not use given parameter: ctim_switch_10
+Did not use given parameter: rcm_epslon
+Did not use given parameter: ctim_f_velxxxx
+Did not use given parameter: ctim_windmx
+Did not use given parameter: ctim_switch_5
+Did not use given parameter: ctim_phase25
+Did not use given parameter: ctim_switch_37
+Did not use given parameter: crcm_to_mhd_dens_factor
+Did not use given parameter: ctim_f_prof2
+Did not use given parameter: rcm_sunspot_number
+Did not use given parameter: ctim_switch_23
+Did not use given parameter: crcm_mixed_pot_factor
+Did not use given parameter: ctim_f_mmmxxxx
+Did not use given parameter: rcm_idt2
+Did not use given parameter: ctim_switch_24
+Did not use given parameter: crcm_fac_lowbnd_lat
+Did not use given parameter: crcm_time_init_cond
+Did not use given parameter: rcm_nsmthi
+Did not use given parameter: outputmode
+Did not use given parameter: bnd_io_tt
+Did not use given parameter: ctim_phase24
+Did not use given parameter: rcm_ipcp_type
+Did not use given parameter: rcm_idt
+Did not use given parameter: ctim_f_cpcpd
+Did not use given parameter: rcm_itype_bf
+Did not use given parameter: rcm_ifloor
+Did not use given parameter: crcm_pp_rr_scale_length
+Did not use given parameter: ctim_ampl22
+Did not use given parameter: ctim_switch_19
+Did not use given parameter: ctim_switch_26
+Did not use given parameter: mhd
+Did not use given parameter: ctim_switch_9
+Did not use given parameter: endtime
+Did not use given parameter: ctim_switch_2
+Did not use given parameter: rcm_iwind
+Did not use given parameter: targetdir
+Did not use given parameter: ctim_switch_15
+Did not use given parameter: rcm_itimei
+Did not use given parameter: rcm_dstmax
+Did not use given parameter: ctim_ampl24
+Did not use given parameter: diagsc_srv
+Did not use given parameter: ctim_switch_4
+Did not use given parameter: rcm_nsmthj
+Did not use given parameter: crcm_rmax
+Did not use given parameter: mape1
+Did not use given parameter: ctim_f_rice91
+Did not use given parameter: ctim_i10
+Did not use given parameter: moz
+Did not use given parameter: ctim_f_holt
+Did not use given parameter: monitor
+Did not use given parameter: mox
+Did not use given parameter: ctim_switch_20
+Did not use given parameter: rcm_dktime
+Did not use given parameter: rcm_icorrect
+Did not use given parameter: crcm_makefac_lowbnd_lat
+Did not use given parameter: ctim_switch_31
+Did not use given parameter: rcm_kill_fudge
+Did not use given parameter: ctim_f_ionprof
+Did not use given parameter: crds_gen_x_x0
+Did not use given parameter: crds_gen_x_xn
+Did not use given parameter: crds_gen_x_x1
+Did not use given parameter: crds_gen_x_x3
+Did not use given parameter: crds_gen_x_dmm
+[1] Class Info:: (mrc_obj):  0 (0 change)  2+  2-
+Did not use given parameter: crds_gen_x_x5
+[1] Class Info:: (ggcm_mhd_diag_item):  0 (0 change)  6+  6-
+[1] Class Info:: (ggcm_dipole):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_satout):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_rcm):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_iono):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_bndsw):  0 (0 change)  1+  1-
+[1] Class Info:: (mrc_ts):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_ic):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_bnd):  0 (0 change)  1+  1-
+Did not use given parameter: crds_gen_x_h0
+Did not use given parameter: crds_gen_x_hn
+[1] Class Info:: (ggcm_mhd_diag):  0 (0 change)  1+  1-
+Did not use given parameter: crds_gen_x_hm
+Did not use given parameter: crds_gen_x_hmm
+Did not use given parameter: crds_gen_x_b1
+Did not use given parameter: crds_gen_x_b2
+[1] Class Info:: (ggcm_mhd_step):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_crds_gen):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd_crds):  0 (0 change)  1+  1-
+Did not use given parameter: crds_gen_x_b3
+[1] Class Info:: (mrc_ddc):  0 (0 change)  1+  1-
+[1] Class Info:: (mrc_crds_gen):  0 (0 change)  3+  3-
+[0] Class Info:: (mrc_obj):  0 (0 change)  2+  2-
+[0] Class Info:: (ggcm_mhd_diag_item):  0 (0 change)  6+  6-
+[0] Class Info:: (ggcm_dipole):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_satout):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_rcm):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_iono):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_bndsw):  0 (0 change)  1+  1-
+[0] Class Info:: (mrc_ts):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_ic):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_bnd):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_diag):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_step):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_crds_gen):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd_crds):  0 (0 change)  1+  1-
+[0] Class Info:: (mrc_ddc):  0 (0 change)  1+  1-
+[0] Class Info:: (mrc_crds_gen):  0 (0 change)  3+  3-
+[0] Class Info:: (mrc_crds):  0 (0 change)  1+  1-
+[0] Class Info:: (mrc_domain):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm_mhd):  0 (0 change)  1+  1-
+[0] Class Info:: (mrc_mod):  0 (0 change)  1+  1-
+[0] Class Info:: (ggcm):  0 (0 change)  1+  1-
+[0] Class Info:: (mrc_vec):  0 (0 change)  112+  112-
+[0] Class Info:: (mrc_fld):  0 (0 change)  112+  112-
+[0] Class Info:: (mrc_io):  0 (0 change)  4+  4-
+[1] Class Info:: (mrc_crds):  0 (0 change)  1+  1-
+[1] Class Info:: (mrc_domain):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm_mhd):  0 (0 change)  1+  1-
+[1] Class Info:: (mrc_mod):  0 (0 change)  1+  1-
+[1] Class Info:: (ggcm):  0 (0 change)  1+  1-
+[1] Class Info:: (mrc_vec):  0 (0 change)  112+  112-
+[1] Class Info:: (mrc_fld):  0 (0 change)  112+  112-
+[1] Class Info:: (mrc_io):  0 (0 change)  4+  4-

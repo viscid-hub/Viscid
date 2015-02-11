@@ -5,14 +5,12 @@ a movie too """
 from __future__ import print_function
 import argparse
 import subprocess as sub
-import logging
 import copy as _copy
 import os
 
 from viscid import readers
 from viscid import vutil
 from viscid import vlab
-
 
 def _ensure_value(namespace, name, value):
     if getattr(namespace, name, None) is None:
@@ -25,7 +23,6 @@ class AddPlotOpts(argparse.Action):
         if dst is None:
             setattr(namespace, "global_popts", values)
             return None
-        logging.info("setting {0} plotopts to {1}".format(dst[-1][0], values))
         dst[-1][1]["plot_opts"] = values
 
 
@@ -46,8 +43,9 @@ def main():
     parser.add_argument("-t", default=":", help="times to plot in slice "
                         "notation: ex : for all 60.0: for 60 mins on, and "
                         ":120 for the first 120mins")
-    parser.add_argument("--fancytime", action="store_true",
-                        help="raw time (useful for harris)")
+    parser.add_argument("--timeformat", default=".02f",
+                        help="one of hms, dhms, ut, or some way to format a "
+                             "float like .02f")
     parser.add_argument("--slice", help="spatial slice applied to all fields")
     parser.add_argument("-p", "--var", dest="plot_vars", action=AddPlotVar,
                         help="plot variable")
@@ -62,7 +60,9 @@ def main():
     parser.add_argument("-n", "--np", type=int, default=1,
                         help="run n simultaneous processes (not yet working)")
     parser.add_argument("--tighten", action="store_true")
-    parser.add_argument('file', nargs=1, help='input file')
+    parser.add_argument("--reader_opts", default="",
+                        help="optional arguments passed to file constructor")
+    parser.add_argument('file', nargs='+', help='input file')
     args = vutil.common_argparse(parser)
 
     global_popts = getattr(args, "global_popts", None)
@@ -84,11 +84,19 @@ def main():
               "plot_size": args.plot_size,
               "dpi": args.dpi,
               "selection": args.slice,
-              "fancytime": args.fancytime,
+              "timeformat": args.timeformat,
               "tighten": args.tighten
              }
 
-    file_ = readers.load_file(args.file[0])
+    reader_opts = {}
+    for opt in args.reader_opts.split(','):
+        if opt:
+            if not "=" in opt:
+                raise ValueError("reader_opts syntax: opt1=value,opt2=value")
+            k, v = opt.split('=')
+            reader_opts[k] = v
+
+    file_ = readers.load_file(args.file, **reader_opts)
     vlab.multiplot(file_, args.plot_vars, nprocs=args.np, time_slice=args.t,
                    share_axes=(not args.own), global_popts=global_popts,
                    show=args.show, kwopts=kwopts)

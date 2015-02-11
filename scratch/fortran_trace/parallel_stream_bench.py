@@ -7,11 +7,9 @@ import cProfile
 import pstats
 from timeit import default_timer as time
 import argparse
-import logging
 
 import numpy as np
 from mayavi import mlab
-from matplotlib import pyplot as plt
 from matplotlib.colors import BoundaryNorm
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../../src/viscid/') #pylint: disable=C0301
@@ -23,6 +21,7 @@ from viscid import vutil
 from viscid import readers
 from viscid import field
 from viscid.plot import mpl
+from viscid.plot.mpl import plt
 from viscid.plot import mvi
 from viscid.calculator import streamline
 from viscid.calculator import seed

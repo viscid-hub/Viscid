@@ -8,12 +8,17 @@ from __future__ import print_function
 # import sys
 import os
 import re
+import types
 from time import time
 
-from viscid.dataset import Dataset
+from viscid.dataset import Dataset, DatasetTemporal
 from viscid import grid
+from viscid import field
+from viscid.compat import string_types
 
 class DataWrapper(object):
+    _hypersliceable = False  # can read slices from disk
+
     _shape = None
     _dtype = None
 
@@ -43,10 +48,19 @@ class DataWrapper(object):
 
 
 class VFile(Dataset):
+    """Generic File
+
+    Note:
+        Important when subclassing: Do not call the constructors for a
+        dataset / grid yourself, dispatch through _make_dataset and
+        _make_grid.
+    """
     # _detector is a regex string used for file type detection
     _detector = None
     # _gc_warn = True  # i dont think this is used... it should go away?
     _grid_type = grid.Grid
+    _dataset_type = Dataset
+    _temporal_dataset_type = DatasetTemporal
     _grid_opts = {}
 
     vfilebucket = None
@@ -102,7 +116,7 @@ class VFile(Dataset):
 
     @classmethod
     def save_grid(cls, fname, grd, **kwargs):
-        flds = list(grd.iter_fields)
+        flds = list(grd.iter_fields())
         cls.save_fields(fname, flds, **kwargs)
 
     @classmethod
@@ -114,21 +128,64 @@ class VFile(Dataset):
         """ save some fields using the format given by the class """
         raise NotImplementedError()
 
-    # already implemented in dataset
-    #def add_grid(self, grid):
-    #    self.grids[grid.name] = grid
+    def _make_dataset(self, parent_node, dset_type="dataset", name=None,
+                      **kwargs):
+        """Use this instead of calling Dataset(...) yourself
 
-    # if i need this, it should be implemented at the Dataset level
-    #def get_grid(self, grid_handle):
-    #    return self.grids[grid_handle]
+        Args:
+            parent_node (Dataset, Grid, or None): Hint at parent in
+                the tree, needed if info is used before this object
+                is added to its parent
+            grid_type (str, subclass of Dataset, optional): type of
+                dataset to create
+        """
+        dset_type = dset_type.lower()
+        if isinstance(dset_type, string_types):
+            if dset_type == "dataset":
+                dset_type = self._dataset_type
+            elif dset_type == "temporal":
+                dset_type = self._temporal_dataset_type
+            else:
+                raise ValueError("unknown dataset type: {0}".format(dset_type))
+        dset = dset_type(name, **kwargs)
+        if parent_node is not None:
+            parent_node.prepare_child(dset)
+        return dset
 
-    # this is get_field implemented in Dataset
-    # def get_data(self, item):
-    #     if self.active_grid and item in self.activate_grid:
-    #         # ask the active grid for the item
-    #         return self.active_grid[item]
-    #     else:
-    #         return self.grids[item]
+    def _make_grid(self, parent_node, grid_type=None, name=None, **kwargs):
+        """Use this instead of calling Grid(...) yourself
+
+        Args:
+            parent_node (Dataset, Grid, or None): Hint at parent in
+                the tree, needed if info is used before this object
+                is added to its parent
+            grid_type (subclass of Grid, optional): if not given, use
+                self._grid_type
+            name (str, optional): self explanatory
+        """
+        other = dict(self._grid_opts)
+        other.update(kwargs)
+
+        if grid_type is None:
+            grid_type = self._grid_type
+
+        g = grid_type(name=name, **other)
+        if parent_node is not None:
+            parent_node.prepare_child(g)
+        return g
+
+    def _make_field(self, parent_node, fld_typ, name, crds, data, **kwargs):
+        """Use this instead of calling Grid(...) yourself
+
+        Args:
+            parent_node (Dataset, Grid, or None): Hint at parent in
+                the tree, needed if info is used before this object
+                is added to its parent
+        """
+        fld = field.wrap_field(fld_typ, name, crds, data, **kwargs)
+        if parent_node is not None:
+            parent_node.prepare_child(fld)
+        return fld
 
     def _parse(self):
         # make _parse 'abstract'

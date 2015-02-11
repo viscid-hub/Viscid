@@ -5,10 +5,12 @@ from __future__ import print_function
 
 from viscid import field
 from viscid.bucket import Bucket
+from viscid import tree
 from viscid.vutil import tree_prefix
+from viscid.calculator.evaluator import evaluate
 
-class Grid(object):
-    """Comptational grid container
+class Grid(tree.Node):
+    """Computational grid container
 
     Grids contain fields and coordinates. Datasets recurse to grids
     using ``__getitem__`` and get_field in order to find fields. Grids
@@ -25,34 +27,50 @@ class Grid(object):
         force_vecter_layout (``field.LAYOUT_*``): force all vectors to
             be of a certain layout when they're created
             (default: LAYOUT_DEFAULT)
+        longterm_field_caches (bool): If True, then when a field is
+            cached, it must be explicitly removed from memory with
+            "unload" or using the 'with' statemnt. If False,
+            "shell copies" of fields are made so that memory is freed
+            when the returned instance is garbage collected.
+            Default: False
     """
     topology_info = None
     geometry_info = None
-    crds = None
+    _src_crds = None
+    _crds = None
     fields = None
     # so... not all grids have times? if we try to access time on a grid
     # that doesnt have one, there is probably a bug somewhere
     # time = None
 
-    name = None
-
     # these attributes are intended to control how fields are read
     # they can be customized by setting the class value, and inherited
     # by grids that get created in the future
     force_vector_layout = field.LAYOUT_DEFAULT
+    longterm_field_caches = False
 
-    def __init__(self, name=None, **kwargs):
-        """ all kwargs are added to the grid as attributes """
-        self.name = name
-        self.fields = Bucket()
-
-        self.crds = None  # Coordinates()
-        for opt, value in kwargs.items():
-            setattr(self, opt, value)
+    def __init__(self, *args, **kwargs):
+        super(Grid, self).__init__(*args, **kwargs)
+        self.fields = Bucket(ordered=True)
 
     @staticmethod
     def null_transform(something):
         return something
+
+    @property
+    def field_names(self):
+        return self.fields.get_primary_handles()
+
+    @property
+    def crds(self):
+        if self._crds is None:
+            self._crds = self._src_crds.apply_reflections()
+        return self._crds
+
+    @crds.setter
+    def crds(self, val):
+        self._crds = None
+        self._src_crds = val
 
     # def set_time(self, time):
     #     self.time = time
@@ -67,6 +85,7 @@ class Grid(object):
         for f in fields:
             if isinstance(f, field.VectorField):
                 f.layout = self.force_vector_layout
+            self.prepare_child(f)
             self.fields[f.name] = f
 
     def unload(self):
@@ -88,10 +107,17 @@ class Grid(object):
         with self as me:
             yield me
 
+    def get_times(self, *args, **kwargs):
+        return list(self.iter_times(*args, **kwargs))
+
+    def get_time(self, *args, **kwargs):
+        return self.get_times(*args, **kwargs)[0]
+
     def iter_fields(self, named=None, **kwargs): #pylint: disable=W0613
         """ iterate over fields in a grid, if named is given, it should be a
         list of field names to iterate over
         """
+        # Note: using 'with' here is better than making a shell copy
         if named is not None:
             for name in named:
                 with self.fields[name] as f:
@@ -106,70 +132,85 @@ class Grid(object):
 
     ##################################
     ## Utility methods to get at crds
-    # these are the same as something like self.crds['xnc']
-    # or self.crds.get_crd()
+    # these are the same as something like self._src_crds['xnc']
+    # or self._src_crds.get_crd()
     def get_crd_nc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_nc(axis, shaped=shaped)
+        return self._src_crds.get_nc(axis, shaped=shaped)
 
     def get_crd_cc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_cc(axis, shaped=shaped)
+        return self._src_crds.get_cc(axis, shaped=shaped)
 
     def get_crd_ec(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_ec(axis, shaped=shaped)
+        return self._src_crds.get_ec(axis, shaped=shaped)
 
     def get_crd_fc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
         axis can be crd name as string, or index, as in x==2, y==1, z==2
         """
-        return self.crds.get_fc(axis, shaped=shaped)
+        return self._src_crds.get_fc(axis, shaped=shaped)
 
     ## these return all crd dimensions
-    # these are the same as something like self.crds.get_crds()
+    # these are the same as something like self._src_crds.get_crds()
     def get_crds_nc(self, axes=None, shaped=False):
         """ returns all node centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_nc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_nc(axes=axes, shaped=shaped)
 
     def get_crds_cc(self, axes=None, shaped=False):
         """ returns all cell centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_cc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_cc(axes=axes, shaped=shaped)
 
     def get_crds_fc(self, axes=None, shaped=False):
         """ returns all face centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_fc(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_fc(axes=axes, shaped=shaped)
 
     def get_crds_ec(self, axes=None, shaped=False):
         """ returns all edge centered coords as a list of ndarrays, flat if
         shaped==False, or shaped if shaped==True
         """
-        return self.crds.get_crds_ec(axes=axes, shaped=shaped)
+        return self._src_crds.get_crds_ec(axes=axes, shaped=shaped)
 
     ##
-    def get_field(self, fldname, time=None): #pylint: disable=W0613
+    def get_field(self, fldname, time=None, force_longterm_caches=False,
+                  slc=None):  # pylint: disable=unused-argument
+        ret = None
+        try_final_slice = True
+
         try:
-            return self.fields[fldname]
+            if force_longterm_caches or self.longterm_field_caches:
+                ret = self.fields[fldname]
+            else:
+                ret = self.fields[fldname].shell_copy(force=False)
         except KeyError:
             func = "_get_" + fldname
             if hasattr(self, func):
-                return getattr(self, func)()
+                ret = getattr(self, func)()
+            elif len(fldname.split('=')) == 2:
+                result_name, eqn = (s.strip() for s in fldname.split('='))
+                ret = evaluate(self, result_name, eqn, slc=slc)
+                try_final_slice = False
             else:
                 raise KeyError("field not found")
 
-    def get_grid(self, time=None): #pylint: disable=W0613
+        if slc is not None and try_final_slice:
+            ret = ret.slice_and_keep(slc)
+        return ret
+
+    def get_grid(self, time=None):  # pylint: disable=unused-argument
         return self
 
     def __contains__(self, item):
@@ -185,8 +226,8 @@ class Grid(object):
         try:
             return self.get_field(item)
         except KeyError:
-            if self.crds is not None and item in self.crds:
-                return self.crds[item]
+            if self._src_crds is not None and item in self._src_crds:
+                return self._src_crds[item]
             else:
                 raise KeyError(item)
 

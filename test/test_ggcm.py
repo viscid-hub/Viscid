@@ -6,8 +6,6 @@ import sys
 import os
 import argparse
 
-from matplotlib import pyplot as plt
-
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
@@ -16,6 +14,7 @@ from viscid import vutil
 from viscid import readers
 from viscid.readers import openggcm
 from viscid.plot import mpl
+from viscid.plot.mpl import plt
 
 # These two class definitions are examples of how to override a
 # built-in reader and implement some convenience getters for

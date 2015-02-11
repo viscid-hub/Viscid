@@ -57,20 +57,27 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
             self._collection = fname
         else:
             self._collection = None
-        super(GGCMFileXDMF, self).load(fname[0])
 
-        basename = os.path.basename(self.fname)
-        self.info['run'] = re.match(self._detector, basename).group(1)
-
-        # look for a log file to auto-load some parameters about the run
+        # HACKY- setting dirname is done in super().load, but we
+        # need it to read the log file, which needs to happen before
+        # parsing since it sets flags for data transformation and
+        # all that stuff
+        _fname = os.path.expanduser(os.path.expandvars(fname[0]))
+        basename = os.path.basename(_fname)
+        self.set_info('run', re.match(self._detector, basename).group(1))
+        self.dirname = os.path.dirname(os.path.abspath(_fname))
         self.read_logfile()
+
+        super(GGCMFileXDMF, self).load(fname[0])
 
     def _parse(self):
         if self._collection is not None:
             # assume we have a collection of temporal files, because why not
-            data_temporal = dataset.DatasetTemporal("GGCMXDMFTemporalCollection")
+            data_temporal = self._make_dataset(self, dset_type="temporal",
+                                               name="GGCMXDMFTemporalCollection")
+
             for fname in self._collection:
-                grids = self._parse_file(fname)
+                grids = self._parse_file(fname, data_temporal)
                 for _grid in grids:
                     data_temporal.add(_grid)
             data_temporal.activate(0)
@@ -81,7 +88,14 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
 
 
 class GGCMIonoFileXDMF(GGCMFileXDMF):  # pylint: disable=abstract-method
-    """Jimmy's run length encoding files"""
+    """Ionosphere Files"""
     _detector = r"^\s*(.*)\.(iof)(?:\.([0-9]{6}))?\.(xmf|xdmf)\s*$"
     _iono = True
+    _grid_type = grid.Grid
+
+
+class GGCMAncFileXDMF(GGCMFileXDMF):  # pylint: disable=abstract-method
+    """Ancillary files; usually, these files have already been
+    converted to GSE"""
+    _detector = r"^\s*(.*)\.(mp_info|topo)(?:\.([0-9]{6}))?\.(xmf|xdmf)\s*$"
     _grid_type = grid.Grid

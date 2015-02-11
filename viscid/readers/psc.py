@@ -2,7 +2,11 @@
 
 from __future__ import print_function
 
-import h5py
+try:
+    import h5py
+    _HAVE_H5PY = True
+except ImportError:
+    _HAVE_H5PY = False
 
 from viscid import grid
 from viscid import field
@@ -34,11 +38,11 @@ class PscGrid(grid.Grid):
         opts = dict(forget_source=forget_source, **kwargs)
 
         if len(comp_names) == 3:
-            with self[base_name + comp_names[0]] as vx, \
-                 self[base_name + comp_names[1]] as vy, \
-                 self[base_name + comp_names[2]] as vz:
-                v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
-                                                  **opts)
+            vx = self[base_name + comp_names[0]]
+            vy = self[base_name + comp_names[1]]
+            vz = self[base_name + comp_names[2]]
+            v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
+                                              **opts)
         else:
             comps = [self[base_name + c] for c in comp_names]
             v = field.scalar_fields_to_vector(base_name, comps, **opts)
@@ -87,6 +91,8 @@ class PscParticles(object):
     def __init__(self, path, step):
         filename = "%s/prt.%06d_p%06d.h5" % (path, step, 0)
         print("Opening '%s'" % (filename))
+        if not _HAVE_H5PY:
+            raise RuntimeError("Can't load psc particles w/o h5py")
         self._h5file = h5py.File(filename, 'r')
 
         # path = _find_path(self._h5file, "psc")

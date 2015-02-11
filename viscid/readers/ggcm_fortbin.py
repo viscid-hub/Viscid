@@ -2,10 +2,6 @@ from __future__ import print_function
 import struct
 import os
 import re
-try:
-    from collections import OrderedDict
-except ImportError:
-    from viscid.compat import OrderedDict
 
 import numpy as np
 
@@ -13,6 +9,7 @@ from viscid import field
 from viscid import grid
 from viscid.readers import vfile
 from viscid.readers import openggcm
+from viscid.compat import OrderedDict
 
 
 # raise NotImplementedError("fortbin reader is not at all")
@@ -30,7 +27,7 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
     def __init__(self, filename, vfilebucket=None, **kwargs):
         super(GGCMFileFortbinMHD, self).__init__(filename, vfilebucket, **kwargs)
 
-    def _parse_file(self, filename):
+    def _parse_file(self, filename, parent_node):
         # we do minimal file parsing here for performance. we just
         # make data wrappers from the templates we got from the first
         # file in the group, and package them up into grids
@@ -41,7 +38,8 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         timestr = self._file_wrapper.file_meta['timestr']
         time = float(str(timestr)[6:].split()[0])
 
-        _grid = self._grid_type("<FortbinGrid>", **self._grid_opts)
+        _grid = self._make_grid(parent_node, name="<FortbinGrid>",
+                                **self._grid_opts)
         self.time = time
         _grid.time = time
         _grid.set_crds(self._crds)
@@ -61,8 +59,8 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         for item in templates:
             data = data_wrapper(self._file_wrapper, item['fld_name'],
                                 item['shape'], item['file_position'])
-            fld = field.wrap_field("Scalar", item['fld_name'], self._crds,
-                                   data, center=self._def_fld_center,
+            fld = self._make_field(_grid, "Scalar", item['fld_name'],
+                                   self._crds, data, center=self._def_fld_center,
                                    time=time)
             _grid.add_field(fld)
         return _grid
