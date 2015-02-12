@@ -13,6 +13,7 @@ from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid import tree
+from viscid import vutil
 from viscid.vutil import tree_prefix, convert_floating_slice
 
 class Dataset(tree.Node):
@@ -281,7 +282,7 @@ class DatasetTemporal(Dataset):
 
         all_times = r.findall(slc_str)
         if len(all_times) == 1 and all_times[0] != ":":
-            return all_times[0]
+            return vutil.str_to_value(all_times[0])
 
         # fill in implied slice colons, then replace them with something
         # unique... like !!
@@ -293,16 +294,7 @@ class DatasetTemporal(Dataset):
         ret = "".join(all_times).split("!!")
         # convert empty -> None, ints -> ints and floats->floats
         for i, val in enumerate(ret):
-            if val == "":
-                ret[i] = None
-            else:
-                try:
-                    ret[i] = int(val)
-                except ValueError:
-                    try:
-                        ret[i] = float(val)
-                    except ValueError:
-                        pass
+            ret[i] = vutil.str_to_value(val)
         if len(ret) > 3:
             raise ValueError("Could not decipher slice: {0}. Perhaps you're "
                              "missing some letters in front of a time "

@@ -129,6 +129,28 @@ def timeit(f, *args, **kwargs):
     print("Took {0:.03g} secs.".format(t1 - t0))
     return ret
 
+def str_to_value(s):
+    ret = s
+    s_clean = s.strip().lower()
+
+    if len(s_clean) == 0 or s_clean == "none":
+        ret = None
+    elif s_clean == "true":
+        ret = True
+    elif s_clean == "false":
+        ret = True
+    elif s_clean == "True":
+        ret = True
+    else:
+        try:
+            ret = int(s_clean)
+        except ValueError:
+            try:
+                ret = float(s_clean)
+            except ValueError:
+                pass
+    return ret
+
 def format_time(t, style='.02f'):
     """Format time as a string
 
