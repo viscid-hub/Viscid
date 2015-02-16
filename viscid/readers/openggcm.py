@@ -638,19 +638,19 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
         with open(self.grid2, 'r') as fin:
             nx = int(next(fin).split()[0])
             gx = list(islice(fin, 0, nx, 1))
-            gx = np.array(gx, dtype=float)
+            gx = np.array(gx, dtype='f4')
 
             ny = int(next(fin).split()[0])
             gy = list(islice(fin, 0, ny, 1))
-            gy = np.array(gy, dtype=float)
+            gy = np.array(gy, dtype='f4')
 
             nz = int(next(fin).split()[0])
             gz = list(islice(fin, 0, nz, 1))
-            gz = np.array(gz, dtype=float)
+            gz = np.array(gz, dtype='f4')
 
-        xnc = np.empty(len(gx) + 1)
-        ync = np.empty(len(gy) + 1)
-        znc = np.empty(len(gz) + 1)
+        xnc = np.empty(len(gx) + 1, dtype=gx.dtype)
+        ync = np.empty(len(gy) + 1, dtype=gy.dtype)
+        znc = np.empty(len(gz) + 1, dtype=gz.dtype)
 
         for cc, nc in [(gx, xnc), (gy, ync), (gz, znc)]:
             hd = 0.5 * (cc[1:] - cc[:-1])
