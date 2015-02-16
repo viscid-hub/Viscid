@@ -1376,7 +1376,6 @@ class VectorField(Field):
                     print("returning self")
                     ret = self
         else:
-            print("making interlaced")
             ctx = dict(force_layout=LAYOUT_INTERLACED)
             # the data load is going to wrap the array, i think it's
             # redundant to put an "ascontiguousarray" here
