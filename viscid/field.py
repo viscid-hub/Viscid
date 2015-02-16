@@ -576,6 +576,9 @@ class Field(tree.Leaf):
         except TypeError:
             nr_comp = None
             nr_comps = None
+
+        # FIXME, there should be a flag for whether or not this should
+        # make a copy of the array if it's not contiguous in memory
         arr = self._src_crds.reflect_fld_arr(arr, self.iscentered("Cell"),
                                         nr_comp, nr_comps)
 
@@ -1078,6 +1081,28 @@ class Field(tree.Leaf):
             raise NotImplementedError("can't yet move {0} to node "
                                       "centers".format(self.center))
 
+    def as_c_contiguous(self):
+        """Return a Field with c-contiguous data
+
+        Note:
+            If the data is not already in memory (cached), this
+            function will trigger a load.
+
+        Returns:
+            Field or self
+        """
+        was_loaded = self.is_loaded()
+        ret = None
+
+        if self.data.flags['C_CONTIGUOUS']:
+            ret = self
+        else:
+            ret = self.wrap(np.ascontiguousarray(self.data))
+
+        if not was_loaded and ret is not self:
+            self.unload()
+        return ret
+
     #######################
     ## emulate a container
 
@@ -1324,6 +1349,41 @@ class VectorField(Field):
             slc[self.nr_comp] = i
             lst[i] = self[slc]
         return lst
+
+    def as_interlaced(self, force_c_contiguous=True):
+        """Get an interlaced version of this field
+
+        Note:
+            This will trigger a data load if the data is not already
+            in memory
+
+        Args:
+            force_c_contiguous: if data is not c contiguous, then wrap
+                it in another np.array() call.
+
+        Returns:
+            self, or Field if
+        """
+        was_loaded = self.is_loaded
+
+        ret = None
+        if self.layout == LAYOUT_INTERLACED:
+            if force_c_contiguous:
+                if not self.data.flags['C_CONTIGUOUS']:
+                    print("calling np.ascontiguousarray")
+                    ret = self.wrap(np.ascontiguousarray(self.data))
+                else:
+                    print("returning self")
+                    ret = self
+        else:
+            ctx = dict(force_layout=LAYOUT_INTERLACED)
+            # the data load is going to wrap the array, i think it's
+            # redundant to put an "ascontiguousarray" here
+            ret = self.wrap(self.data, ctx)
+
+        if not was_loaded and ret is not self:
+            self.unload()
+        return ret
 
 class MatrixField(Field):
     _TYPE = "matrix"

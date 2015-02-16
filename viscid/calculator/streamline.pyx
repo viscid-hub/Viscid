@@ -141,12 +141,12 @@ def streamlines(fld, seed, nr_procs=1, force_parallel=False,
           bitmask with values depending on the topo_style
 
     """
-    if not fld.layout == field.LAYOUT_INTERLACED:
-        raise ValueError("Streamlines only written for interlaced data.")
+    # if not fld.layout == field.LAYOUT_INTERLACED:
+    #     raise ValueError("Streamlines only written for interlaced data.")
+    fld = fld.as_interlaced(force_c_contiguous=True)
+    fld = fld.as_cell_centered()
     if fld.nr_sdims != 3 or fld.nr_comps != 3:
         raise ValueError("Streamlines are only written in 3D.")
-    if not fld.iscentered("Cell"):
-        raise ValueError("Can only trace cell centered things...")
 
     dat = fld.data
     dtype = dat.dtype
@@ -336,11 +336,11 @@ def _py_streamline(dtype, real_t[:,:,:,::1] v_mv, crdz_in, crdy_in, crdx_in,
         c_ds0 = 1e30
 
     if obound0 is not None:
-        py_obound0 = obound0
+        py_obound0 = np.array(obound0, dtype=dtype)
         c_obound0[...] = py_obound0
 
     if obound1 is not None:
-        py_obound1 = obound1
+        py_obound1 = np.array(obound1, dtype=dtype)
         c_obound1[...] = py_obound1
 
     # these hoops are required for processing 2d fields

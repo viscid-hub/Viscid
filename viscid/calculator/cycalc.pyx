@@ -97,6 +97,7 @@ def interp_trilin(fld, seeds):
     vector. The data type of the output is the same as the original field.
     The output is always an array, even if only one point is given.
     """
+    fld = fld.as_c_contiguous()
     if fld.iscentered("Cell"):
         crdz, crdy, crdx = fld.get_crds_cc()
     elif fld.iscentered("Node"):
@@ -233,6 +234,7 @@ def interp_nearest(fld, seeds, fill=None):
     vector. The data type of the output is the same as the original field.
     The output is always an array, even if only one point is given.
     """
+    fld = fld.as_c_contiguous()
     if fld.iscentered("Cell"):
         crdz, crdy, crdx = fld.get_crds_cc()
     elif fld.iscentered("Node"):

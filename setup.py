@@ -35,6 +35,7 @@ else:
 # listing the sources
 cmdclass = {}
 pkgs = ['viscid',
+        'viscid.compat',
         'viscid.calculator',
         'viscid.plot',
         'viscid.readers',
@@ -223,7 +224,7 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
               "), but I'll continue anyway...")
 
 setup(name='viscid',
-      version=ver.release,
+      version=str(ver.release),
       description='Visualization in python',
       author='Kris Maynard',
       author_email='k.maynard@unh.edu',
