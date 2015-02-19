@@ -1370,10 +1370,10 @@ class VectorField(Field):
         if self.layout == LAYOUT_INTERLACED:
             if force_c_contiguous:
                 if not self.data.flags['C_CONTIGUOUS']:
-                    print("calling np.ascontiguousarray")
+                    # print("calling np.ascontiguousarray")
                     ret = self.wrap(np.ascontiguousarray(self.data))
                 else:
-                    print("returning self")
+                    # print("returning self")
                     ret = self
         else:
             ctx = dict(force_layout=LAYOUT_INTERLACED)
