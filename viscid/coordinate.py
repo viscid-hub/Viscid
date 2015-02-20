@@ -998,6 +998,11 @@ class UniformCrds(StructuredCrds):
 class NonuniformCrds(StructuredCrds):
     _TYPE = "nonuniform"
 
+    def __init__(self, init_clist, full_arrays=True, **kwargs):
+        if not full_arrays:
+            raise ValueError("did you want Uniform crds?")
+        super(NonuniformCrds, self).__init__(init_clist, **kwargs)
+
     def get_clist(self, axes=None, slc=None, full_arrays=True):
         """??
 
