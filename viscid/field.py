@@ -713,7 +713,8 @@ class Field(tree.Leaf):
             return self._src_data[comp_slc]
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(self._src_crds.type, crdlst)
+        crds = coordinate.wrap_crds(self._src_crds.type, crdlst,
+                                    full_arrays=True)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read

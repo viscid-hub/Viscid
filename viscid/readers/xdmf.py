@@ -330,7 +330,7 @@ class FileXDMF(vfile.VFile):
         elif topotype in ['3DRectMesh', '2DRectMesh']:
             crdtype = "nonuniform_cartesian"
         elif topotype in ['2DSMesh']:
-            crdtype = "nonuniform_spherical"
+            crdtype = "uniform_spherical"
             ######## this doesn't quite work, but it's too heavy to be useful
             ######## anyway... if we assume a 2d spherical grid spans the
             ######## whole sphere, and radius doesnt matter, all we need are
@@ -367,7 +367,6 @@ class FileXDMF(vfile.VFile):
             nlat, nlon = [int(s) for s in topoattrs["Dimensions"].split(' ')]
             crdlist = [['lat', [0.0, 180.0, nlat]],
                        ['lon', [0.0, 360.0, nlon]]]
-            crdkwargs['fill_by_linspace'] = True
 
         elif topotype in ['3DSMesh']:
             raise NotImplementedError("3D spherical grids not yet supported")

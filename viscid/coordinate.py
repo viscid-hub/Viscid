@@ -91,6 +91,32 @@ class StructuredCrds(Coordinates):
             self.set_crds(init_clist)
 
     @property
+    def xl_nc(self):
+        return self.get_xl()
+    @property
+    def xh_nc(self):
+        return self.get_xh()
+    @property
+    def L_nc(self):
+        return self.get_L()
+    @property
+    def min_dx_nc(self):
+        return self.get_min_dx()
+
+    @property
+    def xl_cc(self):
+        return self.get_xl(center='cell')
+    @property
+    def xh_cc(self):
+        return self.get_xh(center='cell')
+    @property
+    def L_cc(self):
+        return self.get_L(center='cell')
+    @property
+    def min_dx_cc(self):
+        return self.get_min_dx(center='cell')
+
+    @property
     def nr_dims(self):
         """ number of spatial dimensions """
         return len(self._axes)
@@ -409,7 +435,7 @@ class StructuredCrds(Coordinates):
             tuple (slices, slcrds, reduced)
             slices: list of slice objects, one for each axis in self
             slcrds: a clist for what the coords will be after the
-            slice
+                slice (always full_arrays)
             reduced: a list of (axis, location) pairs of which axes
             are sliced out
 
@@ -583,7 +609,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, full_arrays=True)
 
     def slice_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
@@ -595,7 +621,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, full_arrays=True)
 
     def slice_keep(self, selection, cc=False):
         slices, crdlst, reduced = self.make_slice_keep(selection,
@@ -603,7 +629,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, full_arrays=True)
 
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,
@@ -674,7 +700,7 @@ class StructuredCrds(Coordinates):
         """
         return [name for name in self.axes if len(self[name]) > ignore]
 
-    def get_clist(self, axes=None, slc=None):
+    def get_clist(self, axes=None, slc=None, full_arrays=True):
         """??
 
         Returns:
@@ -683,6 +709,8 @@ class StructuredCrds(Coordinates):
         Note:
             I recommend using ``numpy.s_`` for making the slice
         """
+        if not full_arrays:
+            raise NotImplementedError("you need uniform crds for this")
         if slc is None:
             slc = slice(None)
         if axes is None:
@@ -751,6 +779,26 @@ class StructuredCrds(Coordinates):
                                 np.prod(shape[i + 1:]))
         return arr
 
+    def get_dx(self, axes=None, center='node'):
+        """Get cell widths if center == 'node', or distances between cell
+        centers if center == 'cell' """
+        return [x[1:] - x[:-1] for x in self.get_crds(axes, center=center)]
+
+    def get_min_dx(self, axes=None, center='node'):
+        """Get a minimum cell width for each axis"""
+        return np.array([np.min(dx) for dx in self.get_dx(axes, center=center)])
+
+    def get_xl(self, axes=None, center='node'):
+        return np.array([x[0] for x in self.get_crds(axes, center=center)])
+
+    def get_xh(self, axes=None, center='node'):
+        return np.array([x[-1] for x in self.get_crds(axes, center=center)])
+
+    def get_L(self, axes=None, center='node'):
+        """Get lengths"""
+        return (self.get_xh(axes, center=center) -
+                self.get_xl(axes, center=center))
+
     def nr_points(self, center="none"):
         """returns the number of points in a grid defined by these crds"""
         return np.prod([len(crd) for crd in self.get_crds(center=center)])
@@ -792,107 +840,196 @@ class StructuredCrds(Coordinates):
         return item in self._crds
 
 
-#FIXME: really, __init__ should be rewritten for uniform crds, since you
-#       don't need a full clist, just an origin + d[xyz], but this hack
-#       will kinda work for now
 class UniformCrds(StructuredCrds):
     _TYPE = "uniform"
 
-    # def get_dcrd(self, axis, shaped=False, center="none"):
-    #     """ if axis is not specified, return all coords,
-    #     shaped makes axis capitalized and returns ogrid like crds
-    #     shaped is only used if axis == None
-    #     sfx can be none, node, cell, face, edge
-    #     raises KeyError if axis not found """
-    #     return self.get_dcrds([axis], shaped, center)[0]
+    _nc_linspace_args = None
+    _cc_linspace_args = None
 
-    # def get_dcrds(self, axes=None, shaped=False, center="none"):
-    #     """ axes: should be a list of names or integer indices, or None
-    #               to return all axes
-    #     shaped: boolean if you want a shaped or flat ndarray
-    #             (True is the same as capitalizing axis)
-    #     center: 'node' 'cell' 'edge' 'face', same as adding a suffix to axes
-    #     returns list of coords as ndarrays """
-    #     if axes == None:
-    #         axes = [a.upper() if shaped else a for a in self.axes]
-    #     if not isinstance(axes, (list, tuple)):
-    #         try:
-    #             axes = [a.upper() if shaped else a for a in axes]
-    #         except TypeError:
-    #             axes = [axes]
-    #     sfx = self._CENTER[center.lower()]
-    #     return [(self._crds[self.axis_name(a) + sfx][1] -
-    #              self._crds[self.axis_name(a) + sfx][0]) for a in axes]
+    dtype = None
+
+    xl_nc = None
+    xh_nc = None
+    L_nc = None
+    shape_nc = None
+    min_dx_nc = None
+
+    xl_cc = None
+    xh_cc = None
+    shape_cc = None
+    L_cc = None
+    min_dx_cc = None
+
+    def __init__(self, init_clist, full_arrays=False, dtype='f8',
+                 **kwargs):
+        """
+        Args:
+            init_clist: this should look something like
+                [('y', [yl, yh, ny]), ('x', [xl, xh, nx])] unless
+                full_arrays is True.
+            full_arrays (bool): indicates that clist is given as
+                full coordinate arrays, like for non-uniform crds
+
+        Raises:
+            ValueError if full_arrays and crds are not uniform
+        """
+        self.dtype = dtype
+
+        if full_arrays:
+            _nc_linspace_args = []
+            for _, arr in init_clist:
+                arr = np.asarray(arr)
+                diff = arr[1:] - arr[:-1]
+                if not np.allclose(diff[0], diff[1:]):
+                    raise ValueError("Crds are not uniform")
+                _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
+        else:
+            for d in init_clist:
+                if len(d[1]) != 3:
+                    raise ValueError("is this a full_array?")
+            _nc_linspace_args = [d[1] for d in init_clist]
+
+
+        self._nc_linspace_args = _nc_linspace_args
+        self._cc_linspace_args = []
+        # print("_nc_linspace_args::", _nc_linspace_args)
+        for args in _nc_linspace_args:
+            half_dx = 0.5 * (args[1] - args[0]) / args[2]
+            cc_args = [args[0] + half_dx, args[1] - half_dx, args[2] - 1]
+            self._cc_linspace_args.append(cc_args)
+
+        # node centered things
+        self.xl_nc = np.array([args[0] for args in self._nc_linspace_args],
+                              dtype=dtype)
+        self.xh_nc = np.array([args[1] for args in self._nc_linspace_args],
+                              dtype=dtype)
+        self.shape_nc = np.array([args[2] for args in self._nc_linspace_args],
+                                 dtype='int')
+        self.L_nc = self.xh_nc - self.xl_nc
+        self.min_dx_nc = self.L_nc / self.shape_nc
+
+        # cell centered things
+        self.xl_cc = np.array([args[0] for args in self._cc_linspace_args],
+                              dtype=dtype)
+        self.xh_cc = np.array([args[1] for args in self._cc_linspace_args],
+                              dtype=dtype)
+        self.shape_cc = np.array([args[2] for args in self._cc_linspace_args],
+                                 dtype='int')
+        self.L_cc = self.xh_cc - self.xl_cc
+        self.min_dx_cc = self.L_cc / self.shape_cc
+
+        init_clist = [(axis, None) for axis, _ in init_clist]
+        super(UniformCrds, self).__init__(init_clist, **kwargs)
+
+    def _pull_out_axes(self, arrs, axes, center='none'):
+        center = center.lower()
+        if axes is None:
+            axind_list = list(range(len(self._axes)))
+        else:
+            axind_list = [] #self._axes.index(ax.lower()) for ax in axes]
+            for ax in axes:
+                try:
+                    axind_list.append(self._axes.index(ax.lower()))
+                except AttributeError:
+                    axind_list.append(ax)
+                # except ValueError:
+                #     raise
+
+        if center == 'none' or center == 'node':
+            return arrs[0][axind_list]
+        elif center == 'cell':
+            return arrs[1][axind_list]
+        else:
+            raise ValueError()
+
+    def get_min_dx(self, axes=None, center='node'):
+        """Get a minimum cell width for each axis"""
+        return self._pull_out_axes([self._min_dx_nc, self._min_dx_cc], axes,
+                                   center=center)
+
+    def get_xl(self, axes=None, center='node'):
+        return self._pull_out_axes([self._xl_nc, self._xl_cc], axes,
+                                   center=center)
+
+    def get_xh(self, axes=None, center='node'):
+        return self._pull_out_axes([self._xh_nc, self._xh_cc], axes,
+                                   center=center)
+
+    def get_L(self, axes=None, center='node'):
+        """Get lengths"""
+        return self._pull_out_axes([self._L_nc, self._L_cc], axes,
+                                   center=center)
+
+    def nr_points(self, center="none"):
+        """returns the number of points in a grid defined by these crds"""
+        center = center.lower()
+        if center == 'none' or center == 'node':
+            return self.size_nc
+        else:
+            return self.size_cc
+
+    def get_clist(self, axes=None, slc=None, full_arrays=False):
+        if full_arrays:
+            return super(UniformCrds, self).get_clist(axes=axes, slc=slc)
+        if slc is not None:
+            raise NotImplementedError("use full_arrays=True with slice != None"
+                                      "for now")
+        if axes is None:
+            axes = self.axes
+        lst = []
+        for ax in axes:
+            ax = ax.lower()
+            nc_args = self._nc_linspace_args[self.axes.index(ax)]
+            if ax in self.reflect_axes:
+                lst.append([ax, [-nc_args[1], -nc_args[0], nc_args[2]]])
+            else:
+                lst.append([ax, nc_args])
+        return lst
+
+    def _fill_crds_dict(self):
+        assert len(self._nc_linspace_args) == len(self._axes)
+        self._src_crds_nc = {}
+        for ax, p in zip(self._axes, self._nc_linspace_args):
+            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2],
+                                                dtype=self.dtype)
+        return super(UniformCrds, self)._fill_crds_dict()
 
 
 class NonuniformCrds(StructuredCrds):
     _TYPE = "nonuniform"
+
+    def get_clist(self, axes=None, slc=None, full_arrays=True):
+        """??
+
+        Returns:
+            a clist of the coordinates sliced if you wish
+
+        Note:
+            I recommend using ``numpy.s_`` for making the slice
+        """
+        if not full_arrays:
+            raise ValueError("Unstructured crds only have full arrays")
+        return super(NonuniformCrds, self).get_clist(axes=axes, slc=slc)
 
 
 class UniformCartesianCrds(UniformCrds):
     _TYPE = "uniform_cartesian"
     _axes = ["z", "y", "x"]
 
-    def __init__(self, init_clist, **kwargs):
-        super(UniformCartesianCrds, self).__init__(init_clist, **kwargs)
-
 
 class NonuniformCartesianCrds(NonuniformCrds):
     _TYPE = "nonuniform_cartesian"
     _axes = ["z", "y", "x"]
 
-    def __init__(self, init_clist, **kwargs):
-        super(NonuniformCartesianCrds, self).__init__(init_clist, **kwargs)
 
-
-# class UniformSphericalCrds(UniformCrds):
-#     _TYPE = "uniform_spherical"
-#     _axes = ["phi", "theta", "r"]
-
-#     def __init__(self, init_clist=None, **kwargs):
-#         super(UniformSphericalCrds, self).__init__(init_clist, **kwargs)
-
-
-class NonuniformSphericalCrds(NonuniformCrds):
-    _TYPE = "nonuniform_spherical"
+class UniformSphericalCrds(UniformCrds):
+    _TYPE = "uniform_spherical"
     _axes = ["phi", "theta", "r"]
 
-    _target_nc_params = None
 
-    def __init__(self, init_clist, fill_by_linspace=False, **kwargs):
-        """This subclass is hackilly different from other crd types...
-        init_clist MUST be list of the form:
-        [
-            ['phi', [0.0, 360.0, 181]],
-            ['theta', [0.0, 180.0, 61]],
-            ['r', [0.95, 1.05, 2]],
-        ]
-        where the list is the first, last, num given to
-        numpy.linspace
-        """
-        self._axes = [d[0].lower() for d in init_clist]
-        if fill_by_linspace:
-            self._target_nc_params = [d[1] for d in init_clist]
-            init_clist = None
-        else:
-            self._target_nc_params = []
-
-        super(NonuniformSphericalCrds, self).__init__(init_clist, **kwargs)
-
-
-    def _fill_crds_dict(self):
-        """do the math to calc node, cell, face, edge crds from
-        the src crds
-        """
-        # SUPERHACKY! ok, so we're ignoring the cordinates in the file, and
-        # just assuming they span the sphere... that way all we actually need
-        # is nphi, ntheta, so when we need the crds, fill _src_crds_nc as
-        # though we had them
-        if len(self._target_nc_params) > 0:
-            self._src_crds_nc = {}
-            for ax, p in zip(self._axes, self._target_nc_params):
-                self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2])
-        return super(NonuniformSphericalCrds, self)._fill_crds_dict()
+class NonuniformSphericalCrds(UniformCrds):
+    _TYPE = "nonuniform_spherical"
+    _axes = ["phi", "theta", "r"]
 
 
 class UnstructuredCrds(Coordinates):

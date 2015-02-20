@@ -517,8 +517,9 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
         ax.set_theta_offset(-90 * np.pi / 180.0)
         # new_lon = (lon - 90.0) * np.pi / 180.0
         new_lon = lon * np.pi / 180.0
-        new_crds = coordinate.wrap_crds("nonuniform_spherical",
-                                        [('lat', new_lat), ('lon', new_lon)])
+        new_crds = coordinate.wrap_crds("uniform_spherical",
+                                        [('lat', new_lat), ('lon', new_lon)],
+                                        full_arrays=True)
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
 
         kwargs['ax'] = ax
