@@ -195,9 +195,8 @@ class Dataset(tree.Node):
         self.unload()
         return None
 
-    # def __iter__(self):
-    #     for child in self.children:
-    #         yield child
+    def __iter__(self):
+        return self.children.__iter__()
 
     # def __next__(self):
     #     raise NotImplementedError()
@@ -481,6 +480,10 @@ class DatasetTemporal(Dataset):
             return True
         except ValueError:
             return item in self.active_child
+
+    def __iter__(self):
+        for child in self.children:
+            yield child[1]
 
     # def __getitem__(self, item):
     #     """ Get a dataitem or list of dataitems based on time, grid, and
