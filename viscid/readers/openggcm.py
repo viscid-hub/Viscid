@@ -422,6 +422,8 @@ class GGCMFile(object):
                 log_fname = find_file_uptree(self.dirname, "log.txt")
             if log_fname is None:
                 log_fname = find_file_uptree(self.dirname, "log.log")
+            if log_fname is None:
+                log_fname = find_file_uptree(self.dirname, "log")
 
             if log_fname is not None:
                 self.set_info("_viscid_log_fname", log_fname)
