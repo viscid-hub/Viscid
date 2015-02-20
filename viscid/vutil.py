@@ -249,8 +249,7 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     """
     if reverse is None:
         reverse = []
-
-    if not isinstance(shape, (list, tuple)):
+    if not isinstance(shape, (list, tuple, np.ndarray)):
         shape = [shape]
     if not isinstance(slices, (list, tuple)):
         slices = [slices]
