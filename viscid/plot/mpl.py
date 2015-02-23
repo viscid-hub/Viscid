@@ -22,6 +22,7 @@ except ImportError:
 from viscid import logger
 from viscid.compat import string_types
 from viscid import field
+from viscid import amr_field
 from viscid import coordinate
 from viscid.calculator import calc
 from viscid.calculator.topology import color_from_topology
@@ -58,7 +59,6 @@ def plot(fld, selection=None, **kwargs):
         * :meth:`plot2d_mapfield`: target for 2d spherical fields
         * :meth:`plot2d_field`: target for 2d fields
 
-
     Note:
         Field slices are done using "slice_reduce", meaning extra
         dimensions are reduced out.
@@ -77,6 +77,10 @@ def plot(fld, selection=None, **kwargs):
             return plot2d_field(fld, **kwargs)
         else:
             raise ValueError("mpl can only do 1-D or 2-D fields")
+    elif isinstance(fld, amr_field.AMRField):
+        sliced_fld = fld[selection]
+        for f in sliced_fld:
+            plot(f, **kwargs)
     else:
         raise TypeError("I can only do scalar fields right now")
 
@@ -442,7 +446,7 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
             NOTE: coastlines do NOT reflect UT time; London is always
             at midnight.
         show_grid (bool): draw grid lines
-        lon_0 (float): center longitude (basemap projections only)
+        lon_0 (float): center longitude (basemap projecteveryions only)
         lat_0 (fload): center latitude (basemap projections only)
         bounding_lat (float): bounding latitude in degrees from the
             nearest pole (not for all projections)

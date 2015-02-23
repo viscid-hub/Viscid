@@ -13,6 +13,7 @@ from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.hdf5 import FileLazyHDF5
 from viscid import coordinate
+from viscid import amr_grid
 
 # class XDMFDataItem(data_item.DataItem):
 #     def set_precision():
@@ -82,6 +83,7 @@ class FileXDMF(vfile.VFile):
         }
 
     h5_root_dir = None
+    _last_amr_skeleton = None  # experimental, should be moved
     # tree = None
 
     def __init__(self, fname, vfilebucket=None, h5_root_dir=None, **kwargs):
@@ -188,10 +190,9 @@ class FileXDMF(vfile.VFile):
                 logger.warn("Unknown collection type %s, ignoring grid", ct)
 
             for i, subgrid in enumerate(el.findall("./Grid")):
-
                 t = times[i] if (times is not None and i < len(times)) else time
                 # print(subgrid, grd, t)
-                self._parse_grid(subgrid, parent_node=grd, time=t)
+                self._parse_grid(subgrid, parent_node=grd, time=time)
             if len(grd.children) > 0:
                 grd.activate(0)
 
@@ -233,6 +234,20 @@ class FileXDMF(vfile.VFile):
                 grd.geometry_info = geoattrs
             if crds is not None:
                 grd.set_crds(crds)
+
+            # EXPERIMENTAL AMR support, _last_amr_grid shouldn't be an attribute
+            # of self, since that will only remember the most recently generated
+            # amr grid, but that's ok for now
+            # if gt == "Uniform":
+            #     print(">!", crds._TYPE, crds.xl_nc, grd.time)
+            #     print(">!?", type(parent_node), parent_node.children._ordered,
+            #           len(parent_node.children))
+            if gt == "Collection" and ct == "Spatial":
+                grd, is_amr = amr_grid.dataset_to_amr_grid(grd,
+                                                           self._last_amr_skeleton)
+                if is_amr:
+                    self._last_amr_skeleton = grd.skeleton
+
             if parent_node is not None:
                 parent_node.add(grd)
 
@@ -321,7 +336,8 @@ class FileXDMF(vfile.VFile):
             n = [int(num) for num in nstr.split()]
             crdlist = [None] * 3
             for i, crd in enumerate(['z', 'y', 'x']):
-                crd_arr = [data_o[i], data_o[i] + (n[i] * data_dx[i]), n[i]]
+                n_nc, n_cc = n[i], n[i] - 1
+                crd_arr = [data_o[i], data_o[i] + (n_cc * data_dx[i]), n_nc]
                 crdlist[i] = (crd, crd_arr)
             crdkwargs["dtype"] = dtyp
             crdkwargs["full_arrays"] = False

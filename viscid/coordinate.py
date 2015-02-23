@@ -348,6 +348,36 @@ class StructuredCrds(Coordinates):
         else:
             return self.axes[axis]
 
+    def get_slice_extent(self, selection):
+        """ work in progress """
+        print("get slice extent::", selection)
+        selection = self._parse_slice(selection)
+        extent = np.nan * np.empty((2, self.nr_dims), dtype='f')
+
+        for dind, axis in enumerate(self.axes):
+            if axis in selection:
+                sel = selection[axis]
+
+                if isinstance(sel, slice):
+                    if isinstance(sel.start, (float, np.floating)) and \
+                       isinstance(sel.stop, (float, np.floating)):
+                        extent[dind, :] = (sel.start, sel.stop)
+                    else:
+                        raise TypeError("floats only")
+                else:
+                    if not isinstance(sel, (list, tuple)):
+                        sel = [sel]
+                    if not all([isinstance(s, (float, np.floating)) for s in sel]):
+                        raise ValueError("floats only")
+                    extent[:, dind] = sel
+
+        # enforce that the values are increasing
+        for d in range(extent.shape[0]):
+            if extent[1, d] < extent[0, d]:
+                extent[:, d] = extent[::-1, d]
+
+        return extent
+
     def _parse_slice(self, selection):
         """ parse a selection string or dict. integers are interpreted
         as indices, floats are interpreted as coordinates... ex:

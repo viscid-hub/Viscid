@@ -471,6 +471,14 @@ class Field(tree.Leaf):
         # self._translate_src_data()  # um, what's this for? looks dangerous
         # do some sort of lazy pre-setup _src_data inspection?
 
+    @property
+    def blocks(self):
+        return [self]
+
+    @property
+    def nr_blocks(self):  # pylint: disable=no-self-use
+        return 1
+
     def is_loaded(self):
         return self._cache is not None
 
