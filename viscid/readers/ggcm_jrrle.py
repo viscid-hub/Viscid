@@ -159,9 +159,12 @@ class JrrleFileWrapper(FortranFile):
             self.seek(meta['file_position'])
             return meta
         except KeyError:
-            last_added = next(reversed(self.fields_seen))
-            self.seek(self.fields_seen[last_added]['file_position'])
-            self.advance_one_line()
+            try:
+                last_added = next(reversed(self.fields_seen))
+                self.seek(self.fields_seen[last_added]['file_position'])
+                self.advance_one_line()
+            except StopIteration:
+                pass  # we haven't read any fields yet, that's ok
 
             while not self.seen_all_fields:
                 found_fld_name, meta = self.inquire_next()
