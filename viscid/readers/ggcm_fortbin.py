@@ -35,8 +35,8 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         # find the time from the first field's meta data
         self._file_wrapper = GGCMFortbinFileWrapper(filename)
 
-        timestr = self._file_wrapper.file_meta['timestr']
-        time = float(str(timestr)[6:].split()[0])
+        int_time = int(re.match(self._detector, filename).group(3))
+        time = float(int_time)
 
         _grid = self._make_grid(parent_node, name="<FortbinGrid>",
                                 **self._grid_opts)

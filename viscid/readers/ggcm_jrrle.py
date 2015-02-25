@@ -33,9 +33,8 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         # find the time from the first field's meta data
         self._file_wrapper = JrrleFileWrapper(filename)
 
-        with self._file_wrapper as f:
-            _, meta = f.inquire_next()
-            time = float(str(meta['timestr']).split('=')[1].split()[0])
+        int_time = int(re.match(self._detector, filename).group(3))
+        time = float(int_time)
 
         _grid = self._make_grid(parent_node, name="<JrrleGrid>",
                                 **self._grid_opts)
