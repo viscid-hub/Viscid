@@ -344,7 +344,7 @@ class SphericalCap(Sphere):
         p1 = np.array(p1)
         if r is None:
             r = np.sqrt(np.sum((p1 - p0)**2))
-            print("calculated r:", r)
+            # print("calculated r:", r)
             # d = np.sqrt(np.sum((p1 - p0)**2))
             # p1 = p0 + (r / d) * (p1 - p0)
         super(SphericalCap, self).__init__(p0, r, restheta, resphi, cache=cache)
