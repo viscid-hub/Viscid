@@ -253,11 +253,12 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
             arguments should be exactly: (i [int], grid, v [Vector
             Field], v_lines [result of streamline trace],
             root_seeds [SeedGen])
-        stream_opts: a dict of streamline options for flow lines
+        stream_opts: must have ds0 and max_length, maxit will be
+            automatically calculated
         add_seed_cadence: how often to add the add_seeds points
-        add_seeds: an n x 3 ndarray of n points to add every add_seed_cadence (zyx)
+        add_seed_pts: an n x 3 ndarray of n points to add every
+            add_seed_cadence (zyx)
         speed_scale: speed_scale * v should be in units of ds0 / dt
-        stream_opts must have ds0 and max_length, maxit will be automatically calculated
 
     Returns:
         root points after following the fluid
