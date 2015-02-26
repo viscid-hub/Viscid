@@ -377,13 +377,9 @@ class DatasetTemporal(Dataset):
         child_iter_lst = []
         for s in slc:
             if isinstance(s, slice):
-                start, stop, step = s.start, s.stop, s.step
-                if start is not None and start < 0:
-                    start += len(self.children)
-                if stop is not None and stop < 0:
-                    stop += len(self.children)
-                this_islice = islice(self.children, start, stop, step)
-                child_iter_lst.append(this_islice)
+                inds = range(len(self.children))[s]
+                it = (self.children[i] for i in inds)
+                child_iter_lst.append(it)
             else:
                 child_iter_lst.append([self.children[s]])
         return chain(*child_iter_lst)
