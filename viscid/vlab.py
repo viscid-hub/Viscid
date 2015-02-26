@@ -245,6 +245,9 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
                  speed_scale=1.0):
     """Trace fluid elements
 
+    Note:
+        you want speed_scale if say V is in km/s and x/y/z is in Re ;)
+
     Parameters:
         vfile: a vFile object that we can call iter_times on
         time_slice: string, slice notation, like 1200:2400:1
@@ -285,7 +288,9 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
                                       plot_function, stream_opts, speed_scale)
 
         # maybe add some new seed points to account for those that have left
-        if add_seed_pts and abs(grid.time - last_add_time) >= add_seed_cadence:
+        if (add_seed_pts is not None and
+            abs(grid.time - last_add_time) >= add_seed_cadence):
+            #
             root_pts = np.concatenate([root_pts, add_seed_pts.T], axis=1)
             last_add_time = grid.time
         root_seeds = seed.Point(root_pts)
@@ -294,13 +299,24 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
 
 def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
                        speed_scale):
+    direction = int(dt / np.abs(dt))
+    if direction >= 0:
+        sl_direction = streamline.DIR_FORWARD
+    else:
+        sl_direction = streamline.DIR_BACKWARD
+
     logger.info("working on timestep {0} {1}".format(i, grid.time))
     v = grid["v"]
+    # automatically zero symmetry dimension of a 2d field
+    for axis, s in zip('zyx', v.sshape):
+        if s == 1:
+            v[axis] = 0.0
     logger.debug("finished reading V field")
 
     logger.debug("calculating new streamline positions")
     flow_lines = streamlines(v, root_seeds,
                              output=streamline.OUTPUT_STREAMLINES,
+                             stream_dir=sl_direction,
                              **stream_opts)[0]
 
     logger.debug("done with that, now i'm plotting...")
@@ -315,31 +331,33 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
         valid_pt = True
 
         # get the index of the root point in teh 2d flow line array
-        dist = flow_lines[i] - root_pts[:, [i]]
-        root_ind = np.argmin(np.sum(dist**2, axis=0))
+        # dist = flow_lines[i] - root_pts[:, [i]]
+        # root_ind = np.argmin(np.sum(dist**2, axis=0))
         # print("!!!", root_pts[:, i], "==", flow_lines[i][:, root_ind])
         # interpolate velocity onto teh flow line, and get speed too
         v_interp = cycalc.interp_trilin(v, seed.Point(flow_lines[i]))
         speed = np.sqrt(np.sum(v_interp * v_interp, axis=1))
-        direction = int(dt / np.abs(dt))
 
         # this is a super slopy way to integrate velocity
         # keep marching along the flow line until we get to the next timestep
         t = 0.0
-        ind = root_ind
-        while np.abs(t) < np.abs(dt):
-            ind += direction
-            if ind < 0 or ind >= v_interp.shape[0]:
+        ind = 0
+        if direction < 0:
+            flow_lines[i] = flow_lines[i][:, ::-1]
+            speed = speed[::-1]
+
+        while t < np.abs(dt):
+            ind += 1
+            if ind >= len(speed):
                 # set valid_pt to True if you want to keep that point for
                 # future time steps, but most likely if we're here, the seed
                 # has gone out of our region of interest
-                ind = max(min(ind, v_interp.shape[0] - 1), 0)
+                ind = len(speed) - 1
                 valid_pt = False
-                logger.warning("OOPS: ran out of streamline, increase "
-                                "max_length when tracing flow lines if this "
-                                "is unexpected")
+                logger.info("OOPS: ran out of streamline, increase "
+                            "max_length when tracing flow lines if this "
+                            "is unexpected")
                 break
-
             t += stream_opts["ds0"] / (speed_scale * speed[ind])
 
         root_pts[:, i] = flow_lines[i][:, ind]
