@@ -1325,6 +1325,11 @@ class ScalarField(Field):
         new_data = self.data.swap_axes(a, b)
         return self.wrap(new_data, {"crds": new_crds})
 
+    def as_interlaced(self, force_c_contiguous=True):
+        if force_c_contiguous:
+            return self.as_c_contiguous()
+        else:
+            return self
 
 class VectorField(Field):
     _TYPE = "vector"
