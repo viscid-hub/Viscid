@@ -1,6 +1,16 @@
 # Changelog
 
-## 0.60.2 dev
+## 0.60.3
+
+Features:
+  - thousands of jrrle files load fast over sshfs
+  - when loading xdmf files, one can specify a root directory for hdf5 files
+    so one can copy xdmf files locally and read the hdf5 files over sshfs
+
+Changes:
+  - Lots of little bugfixes
+
+## 0.60.2
 
 Features:
   - The attribute `grid.Grid.longterm_field_caches` controls how long caches hang around
