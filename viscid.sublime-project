@@ -35,6 +35,10 @@
 					"shell_cmd": "make html"
 				},
 				{
+					"name": "apidoc",
+					"shell_cmd": "sphinx-apidoc -e -o . ../viscid"
+				},
+				{
 					"name": "clean",
 					"shell_cmd": "make clean"
 				}

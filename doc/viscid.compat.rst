@@ -4,14 +4,9 @@ viscid.compat package
 Submodules
 ----------
 
-viscid.compat.ordered_dict_backport module
-------------------------------------------
+.. toctree::
 
-.. automodule:: viscid.compat.ordered_dict_backport
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   viscid.compat.ordered_dict_backport
 
 Module contents
 ---------------
