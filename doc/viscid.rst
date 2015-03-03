@@ -14,86 +14,19 @@ Subpackages
 Submodules
 ----------
 
-viscid.bucket module
---------------------
+.. toctree::
 
-.. automodule:: viscid.bucket
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.coordinate module
-------------------------
-
-.. automodule:: viscid.coordinate
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.dataset module
----------------------
-
-.. automodule:: viscid.dataset
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.field module
--------------------
-
-.. automodule:: viscid.field
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.grid module
-------------------
-
-.. automodule:: viscid.grid
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.parallel module
-----------------------
-
-.. automodule:: viscid.parallel
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.rc module
-----------------
-
-.. automodule:: viscid.rc
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.verror module
---------------------
-
-.. automodule:: viscid.verror
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.vlab module
-------------------
-
-.. automodule:: viscid.vlab
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-viscid.vutil module
--------------------
-
-.. automodule:: viscid.vutil
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   viscid.bucket
+   viscid.coordinate
+   viscid.dataset
+   viscid.field
+   viscid.grid
+   viscid.parallel
+   viscid.rc
+   viscid.tree
+   viscid.verror
+   viscid.vlab
+   viscid.vutil
 
 Module contents
 ---------------

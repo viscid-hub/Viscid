@@ -1,5 +1,5 @@
-API Reference
-=============
+viscid
+======
 
 .. toctree::
    :maxdepth: 4
