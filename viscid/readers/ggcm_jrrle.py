@@ -1,6 +1,7 @@
 from __future__ import print_function
 import os
 import re
+from datetime import datetime, timedelta
 
 import numpy as np
 
@@ -33,9 +34,8 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         # find the time from the first field's meta data
         self._file_wrapper = JrrleFileWrapper(filename)
 
-        with self._file_wrapper as f:
-            _, meta = f.inquire_next()
-            time = float(str(meta['timestr']).split('=')[1].split()[0])
+        int_time = int(re.match(self._detector, filename).group(3))
+        time = float(int_time)
 
         _grid = self._make_grid(parent_node, name="<JrrleGrid>",
                                 **self._grid_opts)
@@ -64,8 +64,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
             _grid.add_field(fld)
         return _grid
 
-    @staticmethod
-    def _make_template(filename):
+    def _make_template(self, filename):
         """read meta data for all fields in a file to get
         a list of field names and shapes, all the required info
         to make a JrrleDataWrapper
@@ -73,10 +72,24 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         with JrrleFileWrapper(filename) as f:
             f.inquire_all_fields()
             template = []
+
+            meta = None
             for fld_name, meta in f.fields_seen.items():
                 d = dict(fld_name=fld_name,
                          shape=meta['dims'])
                 template.append(d)
+
+            if meta is not None:
+                timestr = str(meta['timestr'])
+                # WARNING: lstrip is 'character-wise', this works
+                # cause the first thing we care about is a number
+                timestr = timestr.lstrip("time=").split()
+                t = float(timestr[0])
+                ut = datetime.strptime(timestr[2], "%Y:%m:%d:%H:%M:%S.%f")
+                dipole_time = ut - timedelta(seconds=t)
+                dipole_time = dipole_time.strftime("%Y:%m:%d:%H:%M:%S.%f")
+                dipole_time = dipole_time.split(':')
+                self.set_info("ggcm_dipole_dipoltime", dipole_time)
         return template
 
     @classmethod
@@ -146,9 +159,12 @@ class JrrleFileWrapper(FortranFile):
             self.seek(meta['file_position'])
             return meta
         except KeyError:
-            last_added = next(reversed(self.fields_seen))
-            self.seek(self.fields_seen[last_added]['file_position'])
-            self.advance_one_line()
+            try:
+                last_added = next(reversed(self.fields_seen))
+                self.seek(self.fields_seen[last_added]['file_position'])
+                self.advance_one_line()
+            except StopIteration:
+                pass  # we haven't read any fields yet, that's ok
 
             while not self.seen_all_fields:
                 found_fld_name, meta = self.inquire_next()

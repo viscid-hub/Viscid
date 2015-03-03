@@ -81,9 +81,10 @@ class FileXDMF(vfile.VFile):
             }
         }
 
+    h5_root_dir = None
     # tree = None
 
-    def __init__(self, fname, vfilebucket=None, **kwargs):
+    def __init__(self, fname, vfilebucket=None, h5_root_dir=None, **kwargs):
         """ vfilebucket is a bucket for loading any hdf5 files. it can be
         None if you want the bucket to be local to this Dataset, but if you're
         loading a bunch of files, you should really be using a global bucket,
@@ -93,6 +94,9 @@ class FileXDMF(vfile.VFile):
             # gen an empty bucket on the fly if the calling script
             # doesnt want a global bucket for all files
             self.vfilebucket = VFileBucket()
+        if h5_root_dir is not None:
+            h5_root_dir = os.path.expandvars(h5_root_dir)
+            self.h5_root_dir = os.path.expanduser(h5_root_dir)
 
         super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
 
@@ -412,7 +416,11 @@ class FileXDMF(vfile.VFile):
 
         if fmt == "HDF":
             fname, loc = item.text.strip().split(':')
-            if not fname == os.path.abspath(fname):
+
+            # FIXME: startswith '/' is unix path name specific
+            if self.h5_root_dir is not None:
+                fname = os.path.join(self.h5_root_dir, fname)
+            elif not fname.startswith('/'):
                 fname = os.path.join(self.dirname, fname)
             h5file = self.vfilebucket.load_file(fname, index_handle=False,
                                                 file_type=FileLazyHDF5)

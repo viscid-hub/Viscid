@@ -195,9 +195,8 @@ class Dataset(tree.Node):
         self.unload()
         return None
 
-    # def __iter__(self):
-    #     for child in self.children:
-    #         yield child
+    def __iter__(self):
+        return self.children.__iter__()
 
     # def __next__(self):
     #     raise NotImplementedError()
@@ -378,13 +377,9 @@ class DatasetTemporal(Dataset):
         child_iter_lst = []
         for s in slc:
             if isinstance(s, slice):
-                start, stop, step = s.start, s.stop, s.step
-                if start is not None and start < 0:
-                    start += len(self.children)
-                if stop is not None and stop < 0:
-                    stop += len(self.children)
-                this_islice = islice(self.children, start, stop, step)
-                child_iter_lst.append(this_islice)
+                inds = range(len(self.children))[s]
+                it = (self.children[i] for i in inds)
+                child_iter_lst.append(it)
             else:
                 child_iter_lst.append([self.children[s]])
         return chain(*child_iter_lst)
@@ -481,6 +476,10 @@ class DatasetTemporal(Dataset):
             return True
         except ValueError:
             return item in self.active_child
+
+    def __iter__(self):
+        for child in self.children:
+            yield child[1]
 
     # def __getitem__(self, item):
     #     """ Get a dataitem or list of dataitems based on time, grid, and

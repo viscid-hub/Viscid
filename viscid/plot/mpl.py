@@ -499,9 +499,9 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
             ax = plt.gca()
         if not hasattr(ax, "set_thetagrids"):
             ax = plt.subplot(*ax.get_geometry(), projection='polar')
-            logger.warn("Clobbering axis for subplot {0}; please give a polar "
+            logger.warn("Clobbering axis for subplot %s; please give a polar "
                         "axis to plot2d_mapfield if you indend to use it "
-                        "later.".format(ax.get_geometry()))
+                        "later.", ax.get_geometry())
 
         if hemisphere == "north":
             sl_fld = fld["lat=:{0}".format(absboundinglat)]
@@ -520,8 +520,6 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
         new_crds = coordinate.wrap_crds("nonuniform_spherical",
                                         [('lat', new_lat), ('lon', new_lon)])
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
-
-        # print(fld.get_crds())
 
         kwargs['ax'] = ax
         kwargs['action_ax'] = ax

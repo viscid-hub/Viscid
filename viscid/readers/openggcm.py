@@ -19,12 +19,13 @@ except ImportError:
     _has_numexpr = False
 
 from viscid import logger
-from viscid.compat import string_types
+from viscid.compat import string_types, izip
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.ggcm_logfile import GGCMLogFile
 from viscid.readers import vfile
 # from viscid.dataset import Dataset, DatasetTemporal
 # from viscid.vutil import time_as_datetime, time_as_timedelta
+from viscid import vutil
 from viscid import grid
 from viscid import field
 from viscid.coordinate import wrap_crds
@@ -422,6 +423,8 @@ class GGCMFile(object):
                 log_fname = find_file_uptree(self.dirname, "log.txt")
             if log_fname is None:
                 log_fname = find_file_uptree(self.dirname, "log.log")
+            if log_fname is None:
+                log_fname = find_file_uptree(self.dirname, "log")
 
             if log_fname is not None:
                 self.set_info("_viscid_log_fname", log_fname)
@@ -489,33 +492,11 @@ class GGCMFile(object):
         Returns:
             string or NotImplemented if style is not understood
         """
-        style = style.lower()
-        if style.startswith("ut"):
-            precision = 1
-            fmt = "%Y-%m-%d %H:%M:%S.%f"
-            for opt in style.split('_')[1:]:
-                try:
-                    precision = int(opt)
-                except ValueError:
-                    fmt = opt
-
-            if fmt.endswith("%f"):
-                if precision <= 0:
-                    precision = None
-                    fmt = fmt[:-2]
-                    if fmt.endswith('.'):
-                        fmt = fmt[:-1]
-                elif precision >= 6:
-                    precision = None
-                else:
-                    precision = -(6 - precision)
-
-            else:
-                precision = None
-
+        if style.lower().startswith("ut"):
+            style = style[2:].strip()
             dipoletime = self._get_dipoletime_as_datetime()
             ut_time = dipoletime + self.time_as_timedelta(time)
-            return datetime.strftime(ut_time, fmt)[:precision]
+            return vutil.format_time(ut_time, style)
         else:
             return NotImplemented
 

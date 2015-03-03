@@ -224,7 +224,6 @@ class Node(object):
         Returns:
             string
         """
-        style = style.lower()
         if time is None:
             time = self.time
 

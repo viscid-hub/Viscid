@@ -1325,6 +1325,11 @@ class ScalarField(Field):
         new_data = self.data.swap_axes(a, b)
         return self.wrap(new_data, {"crds": new_crds})
 
+    def as_interlaced(self, force_c_contiguous=True):
+        if force_c_contiguous:
+            return self.as_c_contiguous()
+        else:
+            return self
 
 class VectorField(Field):
     _TYPE = "vector"
@@ -1370,10 +1375,10 @@ class VectorField(Field):
         if self.layout == LAYOUT_INTERLACED:
             if force_c_contiguous:
                 if not self.data.flags['C_CONTIGUOUS']:
-                    print("calling np.ascontiguousarray")
+                    # print("calling np.ascontiguousarray")
                     ret = self.wrap(np.ascontiguousarray(self.data))
                 else:
-                    print("returning self")
+                    # print("returning self")
                     ret = self
         else:
             ctx = dict(force_layout=LAYOUT_INTERLACED)
