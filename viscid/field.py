@@ -1186,11 +1186,11 @@ class Field(tree.Leaf):
     def __rshift__(self, other):
         return self.wrap(self.data.__rshift__(other))
     def __and__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__and__(other))
     def __xor__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__xor__(other))
     def __or__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__or__(other))
 
     def __radd__(self, other):
         return self.wrap(self.data.__radd__(other))
