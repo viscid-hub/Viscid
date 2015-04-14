@@ -250,7 +250,8 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     of large arrays on disk, which is most useful when the large array
     is coming through sshfs.
 
-    Note: The only restriction on slices is that neither start nor stop
+    Note:
+        The only restriction on slices is that neither start nor stop
         can be outide the range [-L, L].
 
     Args:
@@ -266,12 +267,12 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     Returns:
         (first_slice, second_slice)
 
-        first_slice: a forward-only slice that retrieves the
-            desired elements of an array
-        second_slice: a slice that does [::1] or [::-1] as needed
-            to make the result equivalent to slices. If keep_all,
-            then this may contain None indicating that this
-            dimension no longer exists after the first slice.
+        * first_slice: a forward-only slice that retrieves the
+          desired elements of an array
+        * second_slice: a slice that does [::1] or [::-1] as needed
+          to make the result equivalent to slices. If keep_all,
+          then this may contain None indicating that this
+          dimension no longer exists after the first slice.
 
     Examples:
         >> a = np.arange(8)
@@ -281,10 +282,10 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
 
         >> a = np.arange(4*5*6).reshape((4, 5, 6))
         >> first, second = make_fwd_slice(a.shape,
-                                          [slice(None, -1, 1),
-                                           slice(-1, None, 1),
-                                           slice(-4, -1, 2)],
-                                          [True, True, True])
+        >>                                [slice(None, -1, 1),
+        >>                                 slice(-1, None, 1),
+        >>                                 slice(-4, -1, 2)],
+        >>                                [True, True, True])
         >> a1 = a[::-1, ::-1, ::-1][:-1, -1:, -4:-1:2]
         >> a2 = a[first][second]
         >> a1 == a2

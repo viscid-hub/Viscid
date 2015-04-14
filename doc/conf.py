@@ -41,7 +41,7 @@ except ImportError:
         print("You should install napoleon for Google style docstring formatting")
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['_bstemplates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -83,7 +83,7 @@ exclude_patterns = ['_build']
 #default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
-#add_function_parentheses = True
+add_function_parentheses = True
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
@@ -125,10 +125,20 @@ html_theme_options = {
     'bootswatch_theme': "flatly",
     'navbar_sidebarrel': False,
     'bootstrap_version': "3",
-    # 'navbar_links': [("Tutorial", "tutorial"),
-    #                  ("Gallery", "examples/index")]
-    # 'navbar_links': [("Examples", "tutorial"),
-    #                  ("Gallery", "examples/index")]
+    # 'navbar_links': [],
+    'navbar_dropdown_links':
+        [("Tutorial", [("Installation", "installation"),
+                       ("RC file", "custom_behavior"),
+                       ("Command Line Tools", "command_line"),
+                      ]
+         ),
+         ("Examples", [("Plotting", "examples/plotting"),
+                       ("Slicing", "examples/slicing"),
+                       ("Calculator", "examples/calc"),
+                       ("OpenGGCM", "examples/openggcm"),
+                      ]
+         )
+        ]
     }
 
 # Add any paths that contain custom themes here, relative to this directory.

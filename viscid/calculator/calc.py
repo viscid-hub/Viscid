@@ -148,19 +148,27 @@ def magnitude_native(fld):
 magnitude.add_implementation("native", magnitude_native)
 
 def local_vector_points(B, z, y, x, dz=None, dy=None, dx=None):
-    """
-    Get B at 6 points surrounding X = [z, y, x] with
-    spacing [+/-dz, +/-dy, +/-dx]
+    """Get B at 6 points surrounding X
 
-    If dz|dy|ix == None, then their set to the grid spacing
-    at the point of interest
+    X = [z, y, x] with spacing [+/-dz, +/-dy, +/-dx]
+
+    Args:
+        B (VectorField): B field
+        z (float, ndarray, list): z (single value)
+        y (float, ndarray, list): y (single value)
+        x (float, ndarray, list): x (single value)
+        dz (float, optional): dz, one grid cell if None
+        dy (float, optional): dy, one grid cell if None
+        dx (float, optional): dx, one grid cell if None
 
     Returns:
-        bs: ndarray with shape (6, 3) where 0-3 -> Bx,By,Bz
-            and 0-6 -> X-dz, X+dz, X-dy, X+dy, X-dx, X+dx
-        pts: ndarray with shape 6, 3 of the location of the
-            points of the bs, but this time, 0-3 -> z,y,x
-        dcrd: list of dz, dy, dx
+        (bs, pts, dcrd)
+
+        * bs (ndarary): shape (6, 3) where 0-3 -> Bx,By,Bz
+          and 0-6 -> X-dz, X+dz, X-dy, X+dy, X-dx, X+dx
+        * pts (ndarray): shape (6, 3); the location of the
+          points of the bs, but this time, 0-3 -> z,y,x
+        * dcrd (list): [dz, dy, dx]
     """
     assert has_cython  # if a problem, you need to build Viscid
     assert B.iscentered("Cell")
@@ -189,11 +197,13 @@ def jacobian_at_point(B, z, y, x, dz=None, dy=None, dx=None):
     If dz|dy|ix == None, then their set to the grid spacing
     at the point of interest
 
-    Returns: The jacobian as a 3x3 ndarray
-        The result is in xyz order, in other words:
-        [ [d_x Bx, d_y Bx, d_z Bx],
-          [d_x By, d_y By, d_z By],
-          [d_x Bz, d_y Bz, d_z Bz] ]
+    Returns:
+        The jacobian as a 3x3 ndarray. The result is in xyz order,
+        in other words::
+
+          [ [d_x Bx, d_y Bx, d_z Bx],
+            [d_x By, d_y By, d_z By],
+            [d_x Bz, d_y Bz, d_z Bz] ]
     """
     bs, _, dcrd = local_vector_points(B, z, y, x, dz, dy, dx)
     gradb = np.empty((3, 3), dtype=B.dtype)
@@ -210,11 +220,13 @@ def jacobian_at_point(B, z, y, x, dz=None, dy=None, dx=None):
 def jacobian_at_ind(B, iz, iy, ix):
     """Get the Jacobian at index
 
-    Returns: The jacobian as a 3x3 ndarray
-        The result is in xyz order, in other words:
-        [ [d_x Bx, d_y Bx, d_z Bx],
-          [d_x By, d_y By, d_z By],
-          [d_x Bz, d_y Bz, d_z Bz] ]
+    Returns:
+        The jacobian as a 3x3 ndarray. The result is in xyz order,
+        in other words::
+
+          [ [d_x Bx, d_y Bx, d_z Bx],
+            [d_x By, d_y By, d_z By],
+            [d_x Bz, d_y Bz, d_z Bz] ]
     """
     bx, by, bz = B.component_views()
     z, y, x = B.get_crds("zyx")
