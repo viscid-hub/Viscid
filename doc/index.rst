@@ -16,6 +16,7 @@ Contents:
   installation
   philosophy
   custom_behavior
+  plot_options
   command_line
 
   examples/index

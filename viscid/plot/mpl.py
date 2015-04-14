@@ -19,12 +19,12 @@ try:
 except ImportError:
     _HAS_BASEMAP = False
 
+from viscid.parsers import pyeval
 from viscid import logger
 from viscid.compat import string_types
 from viscid import field
-from viscid import amr_field
+# from viscid import amr_field
 from viscid import coordinate
-from viscid.calculator import calc
 from viscid.calculator.topology import color_from_topology
 from viscid.plot import vseaborn
 
@@ -63,252 +63,165 @@ def plot(fld, selection=None, **kwargs):
         Field slices are done using "slice_reduce", meaning extra
         dimensions are reduced out.
     """
-    if isinstance(fld, field.ScalarField):
-        fld = fld.slice_reduce(selection)
+    fld = fld.slice_reduce(selection)
 
-        if not isinstance(fld, field.ScalarField):
-            raise ValueError("Selection '{0}' sliced away too many "
-                             "dimensions".format(selection))
-        if fld.nr_sdims == 1:
-            return plot1d_field(fld, **kwargs)
-        elif fld.nr_sdims == 2:
-            if fld.is_spherical():
-                return plot2d_mapfield(fld, **kwargs)
-            return plot2d_field(fld, **kwargs)
-        else:
-            raise ValueError("mpl can only do 1-D or 2-D fields")
-    elif isinstance(fld, amr_field.AMRField):
-        sliced_fld = fld[selection]
-        for f in sliced_fld:
-            plot(f, **kwargs)
+    if not hasattr(fld, "blocks"):
+        raise ValueError("Selection '{0}' sliced away too many "
+                         "dimensions".format(selection))
+    block0 = fld.blocks[0]
+    nr_sdims = block0.nr_sdims
+    if nr_sdims == 1:
+        return plot1d_field(fld, **kwargs)
+    elif nr_sdims == 2:
+        is_spherical = block0.is_spherical()
+        if is_spherical:
+            return plot2d_mapfield(fld, **kwargs)
+        return plot2d_field(fld, **kwargs)
     else:
-        raise TypeError("I can only do scalar fields right now")
+        raise ValueError("mpl can only do 1-D or 2-D fields")
 
-def _parse_str(plot_opts):
-    """ opts string looks like 'log,x=-20_10', output is
-    [['log'], ['x', '-20', '10']] """
+def _plot_opts_to_kwargs(plot_opts, plot_kwargs):
+    """Turn plot options from string to items in plot_kwargs
 
-    if isinstance(plot_opts, str):
-        plot_opts = plot_opts.split(",")
-    elif plot_opts is None:
-        plot_opts = []
+    The Reason for this to to be able to specify arbitrary plotting
+    kwargs from the command line
 
-    for i, opt in enumerate(plot_opts):
-        if isinstance(opt, str):
-            plot_opts[i] = opt.replace("=", "_").split("_")
-        elif not isinstance(plot_opts[i], (list, tuple)):
-            plot_opts[i] = [plot_opts[i]]
+    Args:
+        plot_opts (str): plot kwargs as string
+        plot_kwargs (dict): kwargs to be popped by hand or passed to
+            plotting function
 
-    plot_opts = [o for o in plot_opts if o[0] != ""]
-    return plot_opts
+    Returns:
+        None, the plot_opts are stuffed into plot_kwargs
+    """
+    if plot_opts is None:
+        plot_opts = ""
+    plot_opts = plot_opts.split(",")
 
-def _apply_parse_opts(plot_opts_str, fld, kwargs, axis=None):
-    """ modifies kwargs and returns a list of things to set after the fact
-    kwargs are things that get added as arguments to the plot command
-    plot_acts are set using plt.set(act[0], act[1], act[2]) """
+    for opt in plot_opts:
+        opt = opt.replace("=", "_").split("_")
+        opt[0] = opt[0].strip()
+        opt[1:] = [pyeval.parse(o) for o in opt[1:]]
+        if len(opt) == 0 or opt == ['']:
+            continue
+        elif len(opt) == 1:
+            plot_kwargs[opt[0]] = True
+        elif len(opt) == 2:
+            plot_kwargs[opt[0]] = opt[1]
+        else:
+            # if opt[1:] are all strings, re-combine them since some legit
+            # options have underscores in them, like reversed cmap names
+            try:
+                opt[1:] = "_".join(opt[1:])
+            except TypeError:
+                pass
+            plot_kwargs[opt[0]] = opt[1:]
 
-    plot_opts = _parse_str(plot_opts_str)
+
+def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
+    """
+    Some plot options will want to call a function after the plot is
+    made, like setting xlim and the like. Those are 'actions'.
+
+    Args:
+        axis: matplotlib axis for current plot
+        plot_kwargs (dict): kwargs dict containing all the options for
+            the current plot
+        defaults (dict): default values to merge plot_kwargs into
+
+    Returns:
+        (actions, norm_dict)
+
+        actions: list of tuples... the first erement of the tuple is
+            a function to call, while the 2nd is a list of arguments
+            to unpack when calling that function
+
+        norm_dict: will look like {'crdscale': 'lin'|'log',
+                                   'vscale': 'lin'|'log',
+                                   'clim': [None|number, None|number],
+                                   'symmetric': True|False}
+    """
+    for k, v in defaults.items():
+        if k not in plot_kwargs:
+            plot_kwargs[k] = v
+
     actions = []
-
     if not axis:
         axis = plt.gca()
 
-    for opt in plot_opts:
-        if opt[0] == "lin":
-            opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            actions.append([axis.set_xscale, ["linear"]])
-            actions.append([axis.set_yscale, ["linear"]])
+    if "x" in plot_kwargs:
+        actions.append((axis.set_xlim, plot_kwargs.pop('x')))
+    if "y" in plot_kwargs:
+        actions.append((axis.set_xlim, plot_kwargs.pop('y')))
+    if "own" in plot_kwargs:
+        opt = plot_kwargs.pop('own')
+        logger.warn("own axis doesn't seem to work yet...")
+    if "ownx" in plot_kwargs:
+        opt = plot_kwargs.pop('ownx')
+        logger.warn("own axis doesn't seem to work yet...")
+    if "owny" in plot_kwargs:
+        opt = plot_kwargs.pop('owny')
+        logger.warn("own axis doesn't seem to work yet...")
+    if "equalaxis" in plot_kwargs:
+        if plot_kwargs.pop('equalaxis'):
+            actions.append((axis.axis, 'equal'))
 
-            # scale will be centered around 0
-            if len(opt) == 2 and float(opt[1]) == 0.0:
-                absmax = calc.abs_max(fld)
-                opt = [opt[0], -1.0 * absmax, 1.0 * absmax]
+    norm_dict = {'crdscale': 'lin',
+                 'vscale': 'lin',
+                 'clim': [None, None],
+                 'symmetric': False
+                }
 
-            if fld.nr_sdims == 1:
-                actions.append([axis.set_ylim, opt[1:]])
-            elif fld.nr_sdims == 2:
-                # plt.normalize is deprecated
-                # kwargs["norm"] = plt.normalize(*opt[1:])
-                kwargs["norm"] = Normalize(*opt[1:])
+    if plot_kwargs.pop('logscale', False):
+        norm_dict['vscale'] = 'log'
 
-        elif opt[0] == "log":
-            opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            actions.append([axis.set_xscale, ["linear"]])
+    if "clim" in plot_kwargs:
+        clim = plot_kwargs.pop('clim')
+        norm_dict['clim'][:len(clim)] = clim
 
-            if fld.nr_sdims == 1:
-                actions.append([axis.set_yscale, ["log"]])
-                actions.append([axis.set_ylim, opt[1:]])
-            elif fld.nr_sdims == 2:
-                actions.append([axis.set_yscale, ["linear"]])
-                kwargs["norm"] = LogNorm(*opt[1:])
+    sym = plot_kwargs.pop('symetric', False)
+    sym = plot_kwargs.pop('sym', False) or sym
+    norm_dict['symetric'] = sym
 
-        elif opt[0] == "loglog":
-            opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            actions.append([axis.set_xscale, ["log"]])
-            actions.append([axis.set_yscale, ["log"]])
-            if fld.nr_sdims == 2:
-                kwargs["norm"] = LogNorm(*opt[1:])
+    # parse shorthands for specifying color scale
+    if "lin" in plot_kwargs:
+        opt = plot_kwargs.pop('lin')
+        norm_dict['vscale'] = 'lin'
+        if opt == 0:
+            norm_dict['symmetric'] = True
+        elif opt is not True:
+            norm_dict['clim'][:len(opt)] = opt
+    if "log" in plot_kwargs:
+        opt = plot_kwargs.pop('log')
+        norm_dict['vscale'] = 'log'
+        if opt is not True:
+            norm_dict['clim'][:len(opt)] = opt
+    if "loglog" in plot_kwargs:
+        opt = plot_kwargs.pop('loglog')
+        norm_dict['crdscale'] = 'log'
+        norm_dict['vscale'] = 'log'
+        if opt is not True:
+            norm_dict['clim'][:len(opt)] = opt
 
-        elif opt[0] == "x":
-            opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            # axis.set_xlim(*opt[1:])
-            actions.append([axis.set_xlim, opt[1:]])
-
-        elif opt[0] == "y":
-            opt = [float(o) if i > 0 else o for i, o in enumerate(opt)]
-            # axis.set_ylim(*opt[1:])
-            actions.append([axis.set_ylim, opt[1:]])
-
-        elif opt[0] == "own":
-            logger.warn("own axis doesn't seem to work yet...")
-
-        elif opt[0] == "ownx":
-            logger.warn("own axis doesn't seem to work yet...")
-
-        elif opt[0] == "owny":
-            logger.warn("own axis doesn't seem to work yet...")
-
-        else:
-            val = "_".join(opt[1:])
-            if val == "" or val.lower() == "true":
-                val = True
-            elif val.lower() == "false":
-                val = False
-            else:
-                try:
-                    val = int(val)
-                except ValueError:
-                    try:
-                        val = float(val)
-                    except ValueError:
-                        pass
-            kwargs[opt[0]] = val
-            # logger.warn("Unknown plot option ({0}) didn't parse "
-            #              "correctly".format(opt[0]))
-
-
-    # things that i just want to be automagic...
-    # use seismic cmap if the data looks centered around 0
-    if "norm" in kwargs and "cmap" not in kwargs:
-        norm = kwargs["norm"]
-        if norm.vmin and norm.vmax and np.abs(norm.vmax + 1.0*norm.vmin) < 1e-4:
-            kwargs["cmap"] = plt.get_cmap('seismic')
-
-    return axis, actions
+    return actions, norm_dict
 
 def _apply_actions(acts):
     for act in acts:
-        act[0](*act[1])
+        act_args = act[1]
+        if not isinstance(act_args, (list, tuple)):
+            act_args = [act_args]
+        act[0](*act_args)
 
-def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
-                 colorbar=True, do_labels=True, show=False,
-                 action_ax=None, scale=None, mod=None, extra_args=None,
-                 **kwargs):
-    """Plot a 2D Field using pcolormesh, contour, etc.
+def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
+                   masknan, latlon, flip_plot, patchec, patchlw, patchaa,
+                   all_masked, extra_args, **kwargs):
+    """Make a 2d plot of a single block
 
-    Parameters:
-        style (str, optional): One of pcolormesh, pcolor, contour, or
-            contourf
-        ax (matplotlib axis, optional): Plot in a specific axis object
-        plot_opts (str, optional): comma separated string of additional
-            options with underscore separated argument options. They are
-            summarized as follows...
-
-            ================  ======================================
-            Option            Description
-            ================  ======================================
-            lin               Use a linear scale for data with two
-                              optional sub-options giving a range.
-                              ``lin_0`` has the special meaning to
-                              make the range symmetric about 0
-            log               Use a log scale, with two sub-options
-                              for the range
-            loglog            same as log, but also make coordinates
-                              log scaled
-            x                 Set limits of x axis using 2 manditory
-                              sub-options
-            y                 Set limits of y axis using 2 manditory
-                              sub-options
-            grid [#f1]_       plot lines showing grid cells
-            earth [#f1]_      plot a black and white Earth
-            equalaxis [#f1]_  Use 1:1 aspect ratio for grid cells
-                              (True by default)
-            flip_plot [#f1]_  flip x and y axes (2d fields only)
-            masknan           if true, nan values are masked, so
-                              black if pcolor, or missing for
-                              countours
-            ================  ======================================
-
-            .. [#f1] These options can be given as kwargs
-
-            If a plot_opt is not understood, it is added to kwargs.
-            Some plot_opt examples are:
-            * ``lin_-300_300,earth``
-            * ``log,x_-3_30,y_-10_10,cmap_afmhot``
-            * ``lin_0,x_-10_20,grid,earth``
-        kwargs: Some other keyword arguments are understood and
-            described below, and all others are passed as keyword
-            arguments to the matplotlib plotting functions. This way,
-            one can pass arguments like cmap and the like.
-
-    Other Parameters:
-        colorbar (bool or dict): If dict, the items are passed to
-            plt.colorbar as keyword arguments
-        levels (int): Number of contours to follow (default: 10)
-        do_labels: automatically label x/y axes and color bar
-        show_grid (bool): Plot lines showing grid cells
-        earth (bool): Plot a black and white circle representing Earth
-            showing the sunlit half
-        show (bool, optional): Call pyplot.show before returning
-        action_ax: axis on which to call matplotlib functions... I
-            don't even remember why this was necessary
-        scale (float): multiply field by scalar before plotting, useful
-            for changing units
-        mod (list of floats): DEPRECATED, scale x and y axes by some
-            factor
-        extra_args (list): DEPRECATED, was used to pass args to
-            matplotlib functions, like contour levels, but there
-            is probably a better way to give these options
+    Returns:
+        result of the actual matplotlib plotting command
+        (pcolormesh, contourf, etc.)
     """
-    if fld.nr_sdims != 2:
-        raise RuntimeError("I will only contour a 2d field")
-
-    if extra_args is None:
-        extra_args = []
-
-    if not ax:
-        ax = plt.gca()
-    if action_ax is None:
-        action_ax = ax
-
-    # parse plot_opts and apply them
-    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
-
-    colorbar = kwargs.pop("colorbar", colorbar)
-    if colorbar:
-        if not isinstance(colorbar, dict):
-            colorbar = {}
-    else:
-        colorbar = None
-
-    # make customizing plot type from command line possible
-    style = kwargs.pop("style", style)
-    earth = kwargs.pop("earth", False)
-    equalaxis = kwargs.pop("equalaxis", True)
-    flip_plot = kwargs.pop("flip_plot", False)
-    masknan = kwargs.pop("masknan", False)
-
-    show_grid = kwargs.pop("show_grid", False)
-    show_grid = kwargs.pop("g", show_grid)
-    if show_grid:
-        kwargs["edgecolors"] = 'k'
-        kwargs["linewidths"] = 0.2
-        kwargs["antialiased"] = True
-
-    # THIS IS BACKWARD, on account of the convention for
-    # Coordinates where z, y, x is used since that is how
-    # xdmf data is
-    namey, namex = fld.crds.axes # fld.crds.get_culled_axes()
+    assert fld.nr_blocks == 1
 
     # pcolor mesh uses node coords, and cell data, if we have
     # node data, fake it by using cell centered coords and
@@ -323,48 +236,20 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
         elif fld.iscentered("Cell"):
             X, Y = fld.get_crds_cc((namex, namey))
 
-    if kwargs.get('latlon', False):
+    if latlon:
         # translate latitude from 0..180 to -90..90
         X, Y = np.meshgrid(X, 90 - Y)
-
-    dat = fld.data
-    if scale is not None:
-        dat *= scale
-
     if mod:
         X *= mod[0]
         Y *= mod[1]
 
+    dat = fld.data
+    if scale is not None:
+        dat *= scale
     # print(x.shape, y.shape, fld.data.shape)
     if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
-
-    if equalaxis:
-        ax.axis('equal')
-    _apply_actions(actions)
-
-    # ok, here's some raw hackery for contours
-    if style in ["contourf", "contour"]:
-        if len(extra_args) > 0:
-            n = extra_args[0]
-        else:
-            n = 10
-        n = int(kwargs.pop("levels", n))
-        extra_args = [n] + extra_args[1:]
-
-        if "norm" in kwargs:
-            norm = kwargs["norm"]
-            norm.autoscale_None(dat)
-
-            if isinstance(norm, LogNorm):
-                extra_args[0] = np.logspace(np.log10(norm.vmin),
-                                            np.log10(norm.vmax), n)
-                if colorbar is not None and not "ticks" in colorbar:
-                    colorbar["ticks"] = matplotlib.ticker.LogLocator()
-            elif isinstance(norm, Normalize):
-                extra_args[0] = np.linspace(norm.vmin, norm.vmax, n)
-            else:
-                raise ValueError("I should never be here")
+        all_masked = all_masked and dat.mask.all()
 
     if flip_plot:
         X, Y = Y.T, X.T
@@ -372,15 +257,13 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
         namex, namey = namey, namex
 
     if style == "pcolormesh":
-        p = action_ax.pcolormesh(X, Y, dat, *extra_args, **kwargs)
+        p = ax.pcolormesh(X, Y, dat, *extra_args, **kwargs)
     elif style == "contour":
-        p = action_ax.contour(X, Y, dat, *extra_args, **kwargs)
-        if "colors" in kwargs:
-            colorbar = None
+        p = ax.contour(X, Y, dat, *extra_args, **kwargs)
     elif style == "contourf":
-        p = action_ax.contourf(X, Y, dat, *extra_args, **kwargs)
+        p = ax.contourf(X, Y, dat, *extra_args, **kwargs)
     elif style == "pcolor":
-        p = action_ax.pcolor(X, Y, dat, *extra_args, **kwargs)
+        p = ax.pcolor(X, Y, dat, *extra_args, **kwargs)
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
@@ -392,30 +275,218 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
     except ValueError:
         p.get_cmap().set_bad('k')
 
+    # show patches?
+    if patchec and patchlw:
+        _xl = X[0]
+        _yl = Y[0]
+        _width = X[-1] - _xl
+        _height = Y[-1] - _yl
+        rect = plt.Rectangle((_xl, _yl), _width, _height,
+                             edgecolor=patchec, linewidth=patchlw,
+                             fill=False, antialiased=patchaa, zorder=5)
+        ax.add_artist(rect)
+
+    return p, all_masked
+
+def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
+    """Plot a 2D Field using pcolormesh, contour, etc.
+
+    Parameters:
+        ax (matplotlib axis, optional): Plot in a specific axis object
+        plot_opts (str, optional): plot options
+        **plot_kwargs (str, optional): plot options
+
+    Returns:
+        (plot_object, colorbar_object)
+
+    See Also:
+        * :meth:`plot2d_field`: Contains a full list of plot options
+    """
+    block0 = fld.blocks[0]
+    if block0.nr_sdims != 2:
+        raise RuntimeError("I will only contour a 2d field")
+
+    # raise some deprecation errors
+    if "extra_args" in plot_kwargs:
+        raise ValueError("extra_args is deprecated and for internal use only")
+
+    # init the plot by figuring out the options to use
+    extra_args = []
+
+    if not ax:
+        ax = plt.gca()
+
+    # parse plot_opts
+    _plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
+                                                   defaults={'equalaxis': True})
+
+    # everywhere options
+    scale = plot_kwargs.pop("scale", None)
+    masknan = plot_kwargs.pop("masknan", True)
+    flip_plot = plot_kwargs.pop("flip_plot", False)
+    flip_plot = plot_kwargs.pop("flipplot", flip_plot)
+    do_labels = plot_kwargs.pop("do_labels", True)
+    do_labels = plot_kwargs.pop("dolabels", do_labels)
+    xlabel = plot_kwargs.pop("xlabel", None)
+    ylabel = plot_kwargs.pop("ylabel", None)
+    show = plot_kwargs.pop("show", False)
+
+    # 2d plot options
+    style = plot_kwargs.pop("style", "pcolormesh")
+    levels = plot_kwargs.pop("levels", 10)
+    show_grid = plot_kwargs.pop("show_grid", False)
+    show_grid = plot_kwargs.pop("g", show_grid)
+    gridec = plot_kwargs.pop("gridec", None)
+    gridlw = plot_kwargs.pop("gridlw", 0.25)
+    gridaa = plot_kwargs.pop("gridaa", True)
+    show_patches = plot_kwargs.pop("show_patches", False)
+    show_patches = plot_kwargs.pop("p", show_patches)
+    patchec = plot_kwargs.pop("patchec", None)
+    patchlw = plot_kwargs.pop("patchlw", 0.25)
+    patchaa = plot_kwargs.pop("patchaa", False)
+    mod = plot_kwargs.pop("mod", None)
+    colorbar = plot_kwargs.pop("colorbar", True)
+    cbarlabel = plot_kwargs.pop("cbarlabel", None)
+    earth = plot_kwargs.pop("earth", False)
+
+    # undocumented options
+    latlon = plot_kwargs.pop("latlon", None)
+    norm = plot_kwargs.pop("norm", None)
+    action_ax = plot_kwargs.pop("action_ax", ax)  # for basemap projections
+
+    # some plot_kwargs need a little more info
+    if show_grid:
+        if not isinstance(show_grid, string_types):
+            show_grid = 'k'
+        if not gridec:
+            gridec = show_grid
+    if gridec and gridlw:
+        plot_kwargs["edgecolors"] = gridec
+        plot_kwargs["linewidths"] = gridlw
+        plot_kwargs["antialiased"] = gridaa
+
+    if show_patches:
+        if not isinstance(show_patches, string_types):
+            show_patches = 'k'
+        if not patchec:
+            patchec = show_patches
+
+    if colorbar:
+        if not isinstance(colorbar, dict):
+            colorbar = {}
+    else:
+        colorbar = None
+
+    #########################
+    # figure out the norm...
+    if norm is None:
+        vscale = norm_dict['vscale']
+        vmin, vmax = norm_dict['clim']
+
+        if vmin is None:
+            vmin = np.min([np.min(blk) for blk in fld.blocks])
+        if vmax is None:
+            vmax = np.max([np.max(blk) for blk in fld.blocks])
+
+        if vscale == "lin":
+            if norm_dict['symetric']:
+                maxval = max(abs(vmin), abs(vmax))
+                vmin = -1.0 * maxval
+                vmax = +1.0 * maxval
+            norm = Normalize(vmin, vmax)
+        elif vscale == "log":
+            if norm_dict['symetric']:
+                raise ValueError("Can't use symetric color bar with logscale")
+            if vmax < 0.0:
+                print("Warning: Using log scale on a field with no positive "
+                      "values")
+                vmin, vmax = 1e-20, 1e-20
+            elif vmin < 0.0:
+                print("Warning: Using log scale on a field with negative "
+                      "values. Only plotting 2 decades.")
+                vmin, vmax = vmax / 100, vmax
+            norm = LogNorm(vmin, vmax)
+        else:
+            raise ValueError("Unknown norm vscale: {0}".format(vscale))
+
+        if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin):
+            plot_kwargs['cmap'] = plt.get_cmap('seismic')
+        plot_kwargs['norm'] = norm
+    else:
+        if isinstance(norm, Normalize):
+            vscale = "lin"
+        elif isinstance(norm, LogNorm):
+            vscale = "log"
+        else:
+            raise TypeError("Unrecognized norm type: {0}".format(type(norm)))
+        vmin, vmax = norm.vmin, norm.vmax
+
+    # ok, here's some hackery for contours
+    if style in ["contourf", "contour"]:
+        if isinstance(levels, int):
+            if vscale == "log":
+                levels = np.logspace(np.log10(vmin), np.log10(vmax), levels)
+            else:
+                levels = np.linspace(vmin, vmax, levels)
+        extra_args = [levels]
+
+    ##############################
+    # now actually make the plots
+
+    # THIS IS BACKWARD, on account of the convention for
+    # Coordinates where z, y, x is used since that is how
+    # xdmf data is
+    namey, namex = block0.crds.axes # fld.crds.get_culled_axes()
+
+    all_masked = False
+    for block in fld.blocks:
+        p, all_masked = _plot2d_single(action_ax, block, style,
+                                       namex, namey, mod, scale, masknan,
+                                       latlon, flip_plot,
+                                       patchec, patchlw, patchaa,
+                                       all_masked, extra_args, **plot_kwargs)
+
+    # apply option actions... this is for setting xlim / xscale / etc.
+    _apply_actions(actions)
+
+    if norm_dict['crdscale'] == 'log':
+        ax.set_xscale('log')
+        ax.set_yscale('log')
+
     # figure out the colorbar...
+    if style == "contour":
+        if "colors" in plot_kwargs:
+            colorbar = None
     if colorbar is not None:
-        # unless otherwise specified, use_gridspec for
-        if not "use_gridspec" not in colorbar:
+        # unless otherwise specified, use_gridspec for colorbar
+        if "use_gridspec" not in colorbar:
             colorbar["use_gridspec"] = True
+        if vscale == "log" and colorbar is not None and "ticks" not in colorbar:
+            colorbar["ticks"] = matplotlib.ticker.LogLocator()
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
-        if masknan and dat.mask.all():
+        if masknan and all_masked:
             cbar = None
         else:
             cbar = plt.colorbar(p, **colorbar)
             if do_labels:
-                cbar.set_label(fld.pretty_name)
+                if not cbarlabel:
+                    cbarlabel = block0.pretty_name
+                cbar.set_label(cbarlabel)
     else:
         cbar = None
 
     if do_labels:
+        if not xlabel:
+            xlabel = namex
+        if not ylabel:
+            ylabel = namey
         plt.xlabel(namex)
         plt.ylabel(namey)
 
-    # _apply_acts(acts)
-
     if earth:
-        plot_earth(fld, axis=action_ax)
+        plot_earth(block0, axis=ax)
     if show:
         mplshow()
     return p, cbar
@@ -423,49 +494,51 @@ def plot2d_field(fld, style="pcolormesh", ax=None, plot_opts=None,
 def _mlt_labels(longitude):
     return "{0:g}".format(longitude * 24.0 / 360.0)
 
-def plot2d_mapfield(fld, projection="polar", hemisphere="north",
-                    drawcoastlines=False, show_grid=True,
-                    lon_0=0.0, lat_0=None, bounding_lat=40.0,
-                    title=True, label_lat=True, label_mlt=True, **kwargs):
+def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     """Plot data on a map projection of a sphere
 
     The default projection is polar, but any other basemap projection
     can be used.
+
+    Parameters:
+        ax (matplotlib axis, optional): Plot in a specific axis object
+        plot_opts (str, optional): plot options
+        **plot_kwargs (str, optional): plot options
+
+    Returns:
+        (plot_object, colorbar_object)
 
     Note:
         Parameters are in degrees, but if the projection is 'polar',
         then the plot is actually made in radians, which is important
         if you want to annotate a plot.
 
-    Parameters:
-        fld (Field): field whose crds are spherical
-        projection (string): 'polar' or Basemap projection to use
-        hemisphere (string): 'north' or 'south'
-        drawcoastlines (bool): If projection is a basemap projection,
-            then draw coastlines, pretty cool, but not actually useful.
-            NOTE: coastlines do NOT reflect UT time; London is always
-            at midnight.
-        show_grid (bool): draw grid lines
-        lon_0 (float): center longitude (basemap projecteveryions only)
-        lat_0 (fload): center latitude (basemap projections only)
-        bounding_lat (float): bounding latitude in degrees from the
-            nearest pole (not for all projections)
-        title (bool, str): put a specific title on the plot, or with
-            if a boolean, use the field's pretty_name.
-        label_lat (bool, str): label latitudes at 80, 70, 60 degrees
-            with sign indicating northern / southern hemisphere.
-            if label_lat is 'from_pole', then the labels are 10, 20,
-            30 for both hemispheres. Note that basemap projections
-            won't label latitudes unless they hit the edge of the plot.
-        label_mlt (bool): label magnetic local time
-        kwargs: either mapping keyword arguments, or those that
-            should be passed along to `plot2d_field`
-
     See Also:
-        * :meth:`plot2d_field`: `plot2d_mapfield` basically just wraps
-          this function setting up a Basemap first
+        * :meth:`plot2d_field`: Contains a full list of plot options
     """
-    hemisphere = hemisphere.lower().strip()
+    if fld.nr_blocks > 1:
+        raise TypeError("plot2d_mapfield doesn't do multi-block fields yet")
+
+    if not ax:
+        ax = plt.gca()
+
+    # parse plot_opts
+    _plot_opts_to_kwargs(plot_opts, plot_kwargs)
+
+    axgridec = plot_kwargs.pop("axgridec", 'grey')
+    axgridls = plot_kwargs.pop("axgridls", ':')
+    axgridlw = plot_kwargs.pop("axgridlw", 1.0)
+
+    projection = plot_kwargs.pop("projection", "polar")
+    hemisphere = plot_kwargs.pop("hemisphere", "north").lower().strip()
+    drawcoastlines = plot_kwargs.pop("drawcoastlines", False)
+    lon_0 = plot_kwargs.pop("lon_0", 0.0)
+    lat_0 = plot_kwargs.pop("lat_0", None)
+    bounding_lat = plot_kwargs.pop("bounding_lat", 40.0)
+    title = plot_kwargs.pop("title", True)
+    label_lat = plot_kwargs.pop("label_lat", True)
+    label_mlt = plot_kwargs.pop("label_mlt", True)
+
     if hemisphere == "north":
         # def_projection = "nplaea"
         # def_boundinglat = 40.0
@@ -484,7 +557,6 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
     # lon_0 = kwargs.pop("lon_0", 0.0)
     # lat_0 = kwargs.pop("lat_0", None)
     # drawcoastlines = kwargs.pop("drawcoastlines", False)
-    ax = kwargs.get("ax", None)
 
     if projection != "polar" and not _HAS_BASEMAP:
         print("NOTE: install the basemap for the desired spherical "
@@ -526,18 +598,18 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
                                         full_arrays=True)
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
 
-        kwargs['ax'] = ax
-        kwargs['action_ax'] = ax
-        kwargs['do_labels'] = False
-        kwargs['equalaxis'] = False
+        plot_kwargs['do_labels'] = plot_kwargs['dolabels'] = False
+        plot_kwargs['equalaxis'] = False
+        ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
 
-        ret = plot2d_field(new_fld, show_grid=False, **kwargs)
         if title:
             if not isinstance(title, string_types):
                 title = new_fld.pretty_name
             plt.title(title)
-        if show_grid:
-            ax.grid(True)
+        if axgridec:
+            ax.grid(True, color=axgridec, linestyle=axgridls,
+                    linewidth=axgridlw)
+            ax.set_axisbelow(False)
 
             mlt_grid_pos = (0, 45, 90, 135, 180, 225, 270, 315)
             mlt_labels = (24, 3, 6, 9, 12, 15, 18, 21)
@@ -569,18 +641,18 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
     else:
         m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
                     boundinglat=bounding_lat, ax=ax)
-        kwargs['latlon'] = True
-        kwargs['action_ax'] = m
-        kwargs['do_labels'] = False
-        kwargs['equalaxis'] = False
-        ret = plot2d_field(fld, **kwargs)
-        if show_grid:
+        plot_kwargs['latlon'] = True
+        plot_kwargs['do_labels'] = False
+        plot_kwargs['equalaxis'] = False
+        ret = plot2d_field(fld, ax=ax, action_ax=m, **plot_kwargs)
+        if axgridec:
             if label_lat:
                 lat_lables = [1, 1, 1, 1]
             else:
                 lat_lables = [0, 0, 0, 0]
             m.drawparallels(latlabel_arr, labels=lat_lables,
-                            linewidth=0.25)
+                            color=axgridec, linestyle=axgridls,
+                            linewidth=axgridlw)
 
             if label_mlt:
                 mlt_labels = [1, 1, 1, 1]
@@ -588,46 +660,96 @@ def plot2d_mapfield(fld, projection="polar", hemisphere="north",
                 mlt_labels = [0, 0, 0, 0]
             m.drawmeridians(np.linspace(360.0, 0.0, 8, endpoint=False),
                             labels=mlt_labels, fmt=_mlt_labels,
-                            linewidth=0.25)
+                            color=axgridec, linestyle=axgridls,
+                            linewidth=axgridlw)
         if drawcoastlines:
             m.drawcoastlines(linewidth=0.25)
         return ret
 
-
-def plot1d_field(fld, ax=None, plot_opts=None, show=False,
-                 do_labels=True, action_ax=None, **kwargs):
+def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     """Plot a 1D Field using lines
 
     Parameters:
-        fld: Field to plot
+        ax (matplotlib axis, optional): Plot in a specific axis object
+        plot_opts (str, optional): plot options
+        **plot_kwargs (str, optional): plot options
 
     See Also:
-        * :meth:`plot2d_field`: Describes plot_opts, and all other
-          keyword arguments
+        * :meth:`plot2d_field`: Contains a full list of plot options
     """
-    namex, = fld.crds.axes
-    if fld.iscentered("Node"):
-        x = fld.get_crd_nc(namex)
-    elif fld.iscentered("Cell"):
-        x = fld.get_crd_cc(namex)
+    block0 = fld.blocks[0]
+    if not ax:
+        ax = plt.gca()
 
-    ax, actions = _apply_parse_opts(plot_opts, fld, kwargs, ax)
-    if action_ax is None:
-        action_ax = ax
-    masknan = kwargs.pop('masknan', False)
+    # parse plot_opts
+    _plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
+                                                   defaults={'equalaxis': False})
 
-    dat = fld.data
+    # everywhere options
+    scale = plot_kwargs.pop("scale", None)
+    masknan = plot_kwargs.pop("masknan", True)
+    do_labels = plot_kwargs.pop("do_labels", True)
+    do_labels = plot_kwargs.pop("dolabels", do_labels)
+    xlabel = plot_kwargs.pop("xlabel", None)
+    ylabel = plot_kwargs.pop("ylabel", None)
+    show = plot_kwargs.pop("show", False)
+
+    # 1d plot options
+    legend = plot_kwargs.pop("legend", False)
+    label = plot_kwargs.pop("label", block0.pretty_name)
+    mod = plot_kwargs.pop("mod", None)
+
+    plot_kwargs["label"] = label
+    namex, = block0.crds.axes
+
+    if block0.iscentered("Node"):
+        x = np.concatenate([blk.get_crd_nc(namex) for blk in fld.blocks])
+    elif block0.iscentered("Cell"):
+        x = np.concatenate([blk.get_crd_cc(namex) for blk in fld.blocks])
+    else:
+        raise ValueError("1d plots can do node or cell centered data only")
+
+    dat = np.concatenate([blk.data for blk in fld.blocks])
+
+    if mod:
+        x *= mod
+    if scale:
+        dat *= scale
     if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
+    p = ax.plot(x, dat, **plot_kwargs)
 
-    if "label" not in kwargs:
-        kwargs["label"] = fld.pretty_name
-
-    p = action_ax.plot(x, dat, **kwargs)
-    if do_labels:
-        plt.xlabel(namex)
-        plt.ylabel(fld.pretty_name)
     _apply_actions(actions)
+
+    ###############################
+    # set scale based on norm_dict
+    vmin, vmax = norm_dict['clim']
+    if norm_dict['crdscale'] == 'log':
+        plt.xscale('log')
+    if norm_dict['vscale'] == 'log':
+        plt.yscale('log')
+    if norm_dict['symetric']:
+        if norm_dict['vscale'] == 'log':
+            raise ValueError("log scale can't be symetric about 0")
+        maxval = max(abs(max(dat)), abs(min(dat)))
+        vmin, vmax = -maxval, maxval
+    plt.ylim((vmin, vmax))
+
+    ########################
+    # apply labels and such
+    if do_labels:
+        if xlabel is None:
+            xlabel = namex
+        if ylabel is None:
+            ylabel = label
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+
+    if legend:
+        if isinstance(legend, bool):
+            legend = 0
+        plt.legend(loc=0)
 
     if show:
         mplshow()
@@ -747,6 +869,9 @@ def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
     """
     # FIXME: with dowscale != 1, this reveals a problem when slice and
     # downscaling a field; i think this is a prickley one
+    if fld.nr_blocks > 1:
+        raise TypeError("plot2d_quiver doesn't do multi-block fields yet")
+
     vx, vy, vz = fld.component_views()
     x, y = fld.get_crds_cc(shaped=True)
     if symdir.lower() == "x":
@@ -838,7 +963,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
             plane, value = plane_spec.deep_meta["reduced"][0]
         except KeyError:
             logger.error("No reduced dims in the field, i don't know what 2d \n "
-                          "plane, we're in and can't figure out the size of earth.")
+                         "plane, we're in and can't figure out the size of earth.")
             return None
     else:
         plane, value = [s.strip() for s in plane_spec.split("=")]

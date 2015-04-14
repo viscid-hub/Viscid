@@ -129,6 +129,7 @@ html_theme_options = {
     'navbar_dropdown_links':
         [("Tutorial", [("Installation", "installation"),
                        ("RC file", "custom_behavior"),
+                       ("Plot Options", "plot_options"),
                        ("Command Line Tools", "command_line"),
                       ]
          ),
