@@ -104,14 +104,36 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    sys.path.append("_themes")
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-    print("RTD theme:", sphinx_rtd_theme.get_html_theme_path())
+## for RTD theme
+# on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+# if not on_rtd:  # only import and set the theme if we're building docs locally
+#     sys.path.append("_themes")
+#     import sphinx_rtd_theme
+#     html_theme = 'sphinx_rtd_theme'
+#     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+#     print("RTD theme:", sphinx_rtd_theme.get_html_theme_path())
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+
+sys.path.append("_themes")
+import sphinx_bootstrap_theme
+html_theme = 'bootstrap'
+html_theme_options = {
+    'source_link_position': "footer",
+    'bootswatch_theme': "flatly",
+    'navbar_sidebarrel': False,
+    'bootstrap_version': "3",
+    # 'navbar_links': [("Tutorial", "tutorial"),
+    #                  ("Gallery", "examples/index")]
+    # 'navbar_links': [("Examples", "tutorial"),
+    #                  ("Gallery", "examples/index")]
+    }
+
+# Add any paths that contain custom themes here, relative to this directory.
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
