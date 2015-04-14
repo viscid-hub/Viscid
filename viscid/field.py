@@ -1033,7 +1033,7 @@ class Field(tree.Leaf):
                                              x,
                                              [x[-1] + dxh]])
             new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
-            new_crds = type(self._src_crds)(new_clist)
+            new_crds = type(self._src_crds)(new_clist, full_arrays=True)
 
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
