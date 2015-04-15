@@ -10,6 +10,7 @@ import importlib
 import ast
 
 import viscid
+from viscid import vjson
 
 class RCPathError(Exception):
     message = ""
@@ -72,14 +73,14 @@ def _get_obj(rt, path):
                           "".format(rt.__name__, path[0]))
 
 def set_attribute(path, value):
-    p = path.split('.')
-    try:
-        value = _parse_rc_value(value)
-    except RCValueError as e:
-        print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(value))
-        print("                                          {0}".format(e.message))
-        return None
+    # try:
+    #     value = _parse_rc_value(value)
+    # except RCValueError as e:
+    #     print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(value))
+    #     print("                                          {0}".format(e.message))
+    #     return None
 
+    p = path.split('.')
     obj = _get_obj(viscid, p[:-1])
 
     if not hasattr(obj, p[-1]):
@@ -91,20 +92,15 @@ def set_attribute(path, value):
 def load_rc_file(fname):
     try:
         with open(os.path.expanduser(os.path.expandvars(fname)), 'r') as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
+            json_obj = vjson.load(f)
 
-                lst = line.split(":")
-                path, val = lst[0].strip(), ":".join(lst[1:]).strip()
-                try:
-                    set_attribute(path, val)
-                except RCPathError as e:
-                    print("WARNING: from rc file, {0}\n"
-                          "         If this isn't a typeo then the "
-                          "functionality may have moved.".format(e.message))
-
+        for path, val in json_obj.items():
+            try:
+                set_attribute(path, val)
+            except RCPathError as e:
+                print("WARNING: from rc file, {0}\n"
+                      "         If this isn't a typeo then the "
+                      "functionality may have moved.".format(e.message))
     except IOError:
         pass
 
