@@ -11,17 +11,16 @@ Below are some simple examples to get you started with Viscid. There are some fa
 Contents:
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 3
 
   installation
   philosophy
   custom_behavior
-  ex_reader
-  ex_slicing
-  ex_openggcm
-  ex_calc
   command_line
-  modules
+
+  examples/index
+
+  api/index
 
 Indices and tables
 ==================
@@ -29,4 +28,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

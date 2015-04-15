@@ -36,7 +36,7 @@
 				},
 				{
 					"name": "apidoc",
-					"shell_cmd": "sphinx-apidoc -e -o . ../viscid"
+					"shell_cmd": "sphinx-apidoc -e -o api/ ../viscid"
 				},
 				{
 					"name": "clean",
