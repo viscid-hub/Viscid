@@ -300,7 +300,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         (plot_object, colorbar_object)
 
     See Also:
-        * :meth:`plot2d_field`: Contains a full list of plot options
+        * :doc:`/plot_options`: Contains a full list of plot options
     """
     block0 = fld.blocks[0]
     if block0.nr_sdims != 2:
@@ -514,7 +514,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         if you want to annotate a plot.
 
     See Also:
-        * :meth:`plot2d_field`: Contains a full list of plot options
+        * :doc:`/plot_options`: Contains a full list of plot options
     """
     if fld.nr_blocks > 1:
         raise TypeError("plot2d_mapfield doesn't do multi-block fields yet")
@@ -675,7 +675,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         **plot_kwargs (str, optional): plot options
 
     See Also:
-        * :meth:`plot2d_field`: Contains a full list of plot options
+        * :doc:`/plot_options`: Contains a full list of plot options
     """
     block0 = fld.blocks[0]
     if not ax:
