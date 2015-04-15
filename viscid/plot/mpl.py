@@ -235,6 +235,11 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
             X, Y = fld.get_crds_nc((namex, namey))
         elif fld.iscentered("Cell"):
             X, Y = fld.get_crds_cc((namex, namey))
+            # this is a hack to get rid or the white space
+            # between patches when contouring
+            Xnc, Ync = fld.get_crds_nc((namex, namey))
+            X[0], X[-1] = Xnc[0], Xnc[-1]
+            Y[0], Y[-1] = Ync[0], Ync[-1]
 
     if latlon:
         # translate latitude from 0..180 to -90..90
