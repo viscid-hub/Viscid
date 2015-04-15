@@ -1,0 +1,19 @@
+{% if theme_navbar_dropdown_links %}
+  {%- for link in theme_navbar_dropdown_links %}
+    <li class="dropdown">
+      <a role="button"
+         id="dLabelNavLinxToc"
+         data-toggle="dropdown"
+         data-target="#"
+         href="#">{{ link[0] }} <b class="caret"></b></a>
+      <ul class="dropdown-menu navlinktoc"
+          role="menu">
+        {%- for sublink in link[1] %}
+          <li class="toctree-l1">
+            <a class="reference internal", href="{{ pathto(*sublink[1:]) }}">{{ sublink[0] }}</a>
+          </li>
+        {%- endfor %}
+      </ul>
+    </li>
+  {%- endfor %}
+{% endif %}
