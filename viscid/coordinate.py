@@ -350,7 +350,7 @@ class StructuredCrds(Coordinates):
 
     def get_slice_extent(self, selection):
         """ work in progress """
-        print("get slice extent::", selection)
+        # print("get slice extent::", selection)
         selection = self._parse_slice(selection)
         extent = np.nan * np.empty((2, self.nr_dims), dtype='f')
 
