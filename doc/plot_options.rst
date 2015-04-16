@@ -11,19 +11,25 @@ Plot options are given to :py:func:`viscid.plot.mpl.plot` as either keyword argu
 
   Any options that Viscid does not understand are passed to the matplotlib function that actually plots the data (`pyplot.plot`, `pyplot.pcolormesh`, `pyplot.contourf`, etc).
 
-Multiple arguments are given to keywords as a tuple, such as:
+Multiple arguments are given to keywords as a tuple:
 
 .. code-block:: python
 
   kwargs = {'lin': (-1.0, 1.0), 'gridec': 'k'}
 
-or to the plot_opts string using underscores for separation:
+All options can be passed as strings with one of two formats. First, the string can be a list of comma separated options with underscore separatod arguments:
 
 .. code-block:: python
 
   plot_opts = "lin_-1.0_1.0, gridec_k"
   # also, any '=' will be substituted with a '_' to aid readability
   plot_opts = "lin=-1.0_1.0, gridec=k"
+
+**If** PyYaml is available, plot options can be given between curly brackets using Yaml syntax. Note that the colon must be followed by a space in Yaml syntax.
+
+.. code-block:: python
+
+  plot_opts = "{lin: [1.0, 1.0], gridec: k}"
 
 Here are some options that should work for all functions:
 
