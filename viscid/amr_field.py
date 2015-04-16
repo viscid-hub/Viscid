@@ -60,7 +60,7 @@ class AMRField(object):
 
     def __init__(self, fields, skeleton):
         if not is_list_of_fields(fields):
-            raise TypeError("AMRField can only contain Fields")
+            raise TypeError("AMRField can only contain Fields:", fields)
         self.skeleton = skeleton
         self.blocks = fields
         self.nr_blocks = len(fields)
@@ -133,6 +133,15 @@ class AMRField(object):
 
     def __delitem__(self, item):
         raise NotImplementedError()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, typ, value, traceback):
+        """ unload the data """
+        for blk in self.blocks:
+            blk.unload()
+        return None
 
     def wrap_special_method(self, attrname, *args, **kwargs):
         # print(">>> wrap_special_method:", attrname)
