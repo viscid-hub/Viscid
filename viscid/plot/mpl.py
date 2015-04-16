@@ -94,28 +94,45 @@ def _plot_opts_to_kwargs(plot_opts, plot_kwargs):
     Returns:
         None, the plot_opts are stuffed into plot_kwargs
     """
-    if plot_opts is None:
-        plot_opts = ""
-    plot_opts = plot_opts.split(",")
+    if not plot_opts:
+        return
 
-    for opt in plot_opts:
-        opt = opt.replace("=", "_").split("_")
-        opt[0] = opt[0].strip()
-        opt[1:] = [pyeval.parse(o) for o in opt[1:]]
-        if len(opt) == 0 or opt == ['']:
-            continue
-        elif len(opt) == 1:
-            plot_kwargs[opt[0]] = True
-        elif len(opt) == 2:
-            plot_kwargs[opt[0]] = opt[1]
-        else:
-            # if opt[1:] are all strings, re-combine them since some legit
-            # options have underscores in them, like reversed cmap names
-            try:
-                opt[1:] = "_".join(opt[1:])
-            except TypeError:
-                pass
-            plot_kwargs[opt[0]] = opt[1:]
+    plot_opts = plot_opts.strip()
+    if plot_opts[0] == '{' and plot_opts[-1] == '}':
+        try:
+            import yaml
+            d = yaml.load(plot_opts)
+            # if an option is given without a value, Yaml defaults to
+            # None, but it was probably a flag, so turn None -> True
+            for k in list(d.keys()):
+                if d[k] is None:
+                    d[k] = True
+            plot_kwargs.update(d)
+        except ImportError:
+            raise ImportError("You gave plot options in YAML syntax, but "
+                              "PyYaml is not installed. Either install PyYaml "
+                              "or use the old comma/underscore syntax.")
+    else:
+        plot_opts = plot_opts.split(",")
+
+        for opt in plot_opts:
+            opt = opt.replace("=", "_").split("_")
+            opt[0] = opt[0].strip()
+            opt[1:] = [pyeval.parse(o) for o in opt[1:]]
+            if len(opt) == 0 or opt == ['']:
+                continue
+            elif len(opt) == 1:
+                plot_kwargs[opt[0]] = True
+            elif len(opt) == 2:
+                plot_kwargs[opt[0]] = opt[1]
+            else:
+                # if opt[1:] are all strings, re-combine them since some legit
+                # options have underscores in them, like reversed cmap names
+                try:
+                    opt[1:] = "_".join(opt[1:])
+                except TypeError:
+                    pass
+                plot_kwargs[opt[0]] = opt[1:]
 
 
 def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):

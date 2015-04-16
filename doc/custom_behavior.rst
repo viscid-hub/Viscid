@@ -5,11 +5,11 @@ Some classes have attributes that customize how specific files, datasets and gri
 
 .. note::
 
-  The rc file is in a modified JSON format. Unlike standard JSON, you can include comments using '#' or '//' as well as trailing commas as in Python.
+  By default, Viscid tries to parse the rc file with PyYaml. If PyYaml is not installed, it parses using a modified JSON format. Unlike standard JSON, you can include comments using '#' or '//' as well as trailing commas.
 
 Here is an example rc file,
 
-.. code-block:: json
+.. code-block:: yaml
 
   # ~/.viscidrc
   {

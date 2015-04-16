@@ -7,6 +7,7 @@ readers.openggcm.GGCMFile.read_log_file: true
 from __future__ import print_function
 import os
 import importlib
+import traceback
 
 import viscid
 from viscid.parsers import vjson
@@ -60,9 +61,22 @@ def set_attribute(path, value):
 def load_rc_file(fname):
     try:
         with open(os.path.expanduser(os.path.expandvars(fname)), 'r') as f:
-            json_obj = vjson.load(f)
+            try:
+                import yaml
+                rc_obj = yaml.load(f)
+            except ImportError:
+                try:
+                    rc_obj = vjson.load(f)
+                except ValueError as e:
+                    tb = traceback.format_exc()
+                    tb = '\n'.join(' ' * 4 + line_ for line_ in tb.split('\n'))
+                    m = ("{0}\n{1}\n"
+                         "JSON parsing of {2} failed. If the file is using "
+                         "Yaml syntax, please install PyYaml."
+                         "".format(tb, str(e), f.name))
+                    raise ValueError(m)
 
-        for path, val in json_obj.items():
+        for path, val in rc_obj.items():
             try:
                 set_attribute(path, val)
             except RCPathError as e:
