@@ -23,7 +23,6 @@ from viscid.parsers import pyeval
 from viscid import logger
 from viscid.compat import string_types
 from viscid import field
-# from viscid import amr_field
 from viscid import coordinate
 from viscid.calculator.topology import color_from_topology
 from viscid.plot import vseaborn
@@ -519,7 +518,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         plt.ylabel(namey)
 
     if earth:
-        plot_earth(block0, axis=ax)
+        plot_earth(fld, axis=ax)
     if show:
         mplshow()
     return p, cbar
@@ -988,16 +987,21 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
     import matplotlib.patches as mpatches
 
     # this is kind of a hacky way to
-    if isinstance(plane_spec, field.Field):
-        crd_system = plane_spec.meta.get("crd_system", crd_system)
-
-        # take only the 1st reduced.nr_sdims... this should just work
-        try:
-            plane, value = plane_spec.deep_meta["reduced"][0]
-        except KeyError:
-            logger.error("No reduced dims in the field, i don't know what 2d \n "
-                         "plane, we're in and can't figure out the size of earth.")
-            return None
+    if hasattr(plane_spec, "blocks"):
+        # this is for both Fields and AMRFields
+        crd_system = plane_spec.blocks[0].meta.get("crd_system", crd_system)
+        values = []
+        for blk in plane_spec.blocks:
+            # take only the 1st reduced.nr_sdims... this should just work
+            try:
+                plane, _value = blk.deep_meta["reduced"][0]
+                values.append(_value)
+            except KeyError:
+                logger.error("No reduced dims in the field, i don't know what "
+                             "2d \nplane, we're in and can't figure out the "
+                             "size of earth.")
+                return None
+        value = np.min(np.abs(values))
     else:
         plane, value = [s.strip() for s in plane_spec.split("=")]
         value = float(value)
