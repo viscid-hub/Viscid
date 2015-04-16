@@ -7,7 +7,6 @@ readers.openggcm.GGCMFile.read_log_file: true
 from __future__ import print_function
 import os
 import importlib
-import ast
 
 import viscid
 from viscid import vjson
@@ -18,37 +17,6 @@ class RCPathError(Exception):
         self.message = message
         super(RCPathError, self).__init__(message)
 
-
-class RCValueError(Exception):
-    message = ""
-    def __init__(self, message=""):
-        self.message = message
-        super(RCValueError, self).__init__(message)
-
-
-class _Transformer(ast.NodeTransformer):
-    """Turn a string into python objects (strings, numbers, as basic types)"""
-    def visit_Name(self, node):
-        if node.id.lower() in ["true", "false"]:
-            # turn 'true' / 'True' / 'TRUE' / etc. into True
-            val = True if node.id.lower() == "true" else False
-            try:
-                node = ast.copy_location(ast.NameConstant(val), node)
-            except AttributeError:
-                node = ast.copy_location(ast.Name(str(val), node.ctx), node)
-        else:
-            # turn other bare names into strings
-            node = ast.copy_location(ast.Str(s=node.id), node)
-        return self.generic_visit(node)
-
-
-def _parse_rc_value(s):
-    try:
-        tree = ast.parse(s.strip(), mode='eval')
-        _Transformer().visit(tree)
-        return ast.literal_eval(tree)
-    except ValueError as e:
-        raise RCValueError("ast parser vomited")
 
 def _get_obj(rt, path):
     if len(path) == 0:

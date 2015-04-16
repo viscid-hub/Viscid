@@ -28,8 +28,8 @@ def main():
     fac_tot = 1e9 * iono_file["fac_tot"]
 
     ax1 = plt.subplot(121)
-    mpl.plot(fac_tot, ax=ax1, hemisphere="north", style="contourf",
-             plot_opts="lin_-300_300", extend="both",
+    mpl.plot(fac_tot, ax=ax1, hemisphere="north", style="pcolormesh",
+             plot_opts="lin_-300_300", g=0, #extend="both",
              levels=50, drawcoastlines=True)
     ax2 = plt.subplot(122)
     mpl.plot(fac_tot, ax=ax2, hemisphere="south", style="contourf",
