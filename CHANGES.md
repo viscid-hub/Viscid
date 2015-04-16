@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.80.2 dev
+## 0.80.2
 
 Features:
   - RC file and plot_opts can be given in Yaml syntax if user has PyYaml, otherwise the rc file has to be JSON and the plot_opts have to use the weird comma/space syntax
