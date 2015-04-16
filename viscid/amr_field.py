@@ -24,7 +24,7 @@ class _FieldListCallableAttrWrapper(object):
     post_func = None
 
     def __init__(self, objs, attrname, post_func=None):
-        print(">>> runtime wrapping:", attrname)
+        # print(">>> runtime wrapping:", attrname)
         for o in objs:
             if not hasattr(o, attrname):
                 raise AttributeError("{0} has no attribute {1}"
@@ -93,6 +93,12 @@ class AMRField(object):
 
     def _finalize_amr_slice(self, fld_lst):  # pylint: disable=no-self-use
         skeleton = None  # FIXME
+        for fld in fld_lst:
+            if isinstance(fld, (int, float, np.number)):
+                m = ("Trying to make an AMRField where 1+ blocks "
+                     "is just a number... You probably slice_reduced "
+                     "a field down to a scalar value")
+                print("Warning:", m)
         return AMRField(fld_lst, skeleton)
 
     def slice(self, selection):
@@ -123,7 +129,7 @@ class AMRField(object):
         raise NotImplementedError()
 
     def wrap_special_method(self, attrname, *args, **kwargs):
-        print(">>> wrap_special_method:", attrname)
+        # print(">>> wrap_special_method:", attrname)
         lst = []
         for fld in self.blocks:
             lst.append(getattr(fld, attrname)(*args, **kwargs))

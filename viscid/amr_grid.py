@@ -30,7 +30,7 @@ def dataset_to_amr_grid(dset, template_skeleton=None):
     if not all(isinstance(grd, Grid) for grd in dset):
         return dset, False
 
-    print(">> time:", dset.time)
+    # print(">> time:", dset.time)
 
     # t0 = time()
     grid = AMRGrid(dset, skeleton=template_skeleton)
@@ -77,7 +77,7 @@ class AMRSkeleton(object):
 
     def compatable_with(self, dset):
         # TODO: i should make /store a hash for this
-        t0 = time()
+        # t0 = time()
         if len(dset) != len(self.patches):
             return False
 
@@ -89,8 +89,8 @@ class AMRSkeleton(object):
             # if n and xl match... do i need to check xh?
             # if not np.allclose(my_patch.xh, grid.crds.xh_nc):
             #     return False
-        t1 = time()
-        print(">> compatable   {0:g} secs".format(t1 - t0))
+        # t1 = time()
+        # print(">> compatable   {0:g} secs".format(t1 - t0))
         return True
 
     def discover_neighbors(self):
