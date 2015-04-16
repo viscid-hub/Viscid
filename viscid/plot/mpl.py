@@ -23,7 +23,6 @@ from viscid.parsers import pyeval
 from viscid import logger
 from viscid.compat import string_types
 from viscid import field
-# from viscid import amr_field
 from viscid import coordinate
 from viscid.calculator.topology import color_from_topology
 from viscid.plot import vseaborn
@@ -156,7 +155,7 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         norm_dict: will look like {'crdscale': 'lin'|'log',
                                    'vscale': 'lin'|'log',
                                    'clim': [None|number, None|number],
-                                   'symmetric': True|False}
+                                   'symetric': True|False}
     """
     for k, v in defaults.items():
         if k not in plot_kwargs:
@@ -186,7 +185,7 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     norm_dict = {'crdscale': 'lin',
                  'vscale': 'lin',
                  'clim': [None, None],
-                 'symmetric': False
+                 'symetric': False
                 }
 
     if plot_kwargs.pop('logscale', False):
@@ -205,20 +204,31 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         opt = plot_kwargs.pop('lin')
         norm_dict['vscale'] = 'lin'
         if opt == 0:
-            norm_dict['symmetric'] = True
+            norm_dict['symetric'] = True
         elif opt is not True:
+            if not isinstance(opt, (list, tuple)):
+                opt = [opt]
             norm_dict['clim'][:len(opt)] = opt
     if "log" in plot_kwargs:
         opt = plot_kwargs.pop('log')
         norm_dict['vscale'] = 'log'
         if opt is not True:
+            if not isinstance(opt, (list, tuple)):
+                opt = [opt]
             norm_dict['clim'][:len(opt)] = opt
     if "loglog" in plot_kwargs:
         opt = plot_kwargs.pop('loglog')
         norm_dict['crdscale'] = 'log'
         norm_dict['vscale'] = 'log'
         if opt is not True:
+            if not isinstance(opt, (list, tuple)):
+                opt = [opt]
             norm_dict['clim'][:len(opt)] = opt
+
+    # replace 'None' or 'none' with None in clim, this is kinda hacky, non?
+    for i in range(len(norm_dict['clim'])):
+        if norm_dict['clim'][i] in ["None", "none"]:
+            norm_dict['clim'][i] = None
 
     return actions, norm_dict
 
@@ -508,7 +518,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         plt.ylabel(namey)
 
     if earth:
-        plot_earth(block0, axis=ax)
+        plot_earth(fld, axis=ax)
     if show:
         mplshow()
     return p, cbar
@@ -977,16 +987,21 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
     import matplotlib.patches as mpatches
 
     # this is kind of a hacky way to
-    if isinstance(plane_spec, field.Field):
-        crd_system = plane_spec.meta.get("crd_system", crd_system)
-
-        # take only the 1st reduced.nr_sdims... this should just work
-        try:
-            plane, value = plane_spec.deep_meta["reduced"][0]
-        except KeyError:
-            logger.error("No reduced dims in the field, i don't know what 2d \n "
-                         "plane, we're in and can't figure out the size of earth.")
-            return None
+    if hasattr(plane_spec, "blocks"):
+        # this is for both Fields and AMRFields
+        crd_system = plane_spec.blocks[0].meta.get("crd_system", crd_system)
+        values = []
+        for blk in plane_spec.blocks:
+            # take only the 1st reduced.nr_sdims... this should just work
+            try:
+                plane, _value = blk.deep_meta["reduced"][0]
+                values.append(_value)
+            except KeyError:
+                logger.error("No reduced dims in the field, i don't know what "
+                             "2d \nplane, we're in and can't figure out the "
+                             "size of earth.")
+                return None
+        value = np.min(np.abs(values))
     else:
         plane, value = [s.strip() for s in plane_spec.split("=")]
         value = float(value)
