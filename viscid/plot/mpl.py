@@ -165,10 +165,13 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     if not axis:
         axis = plt.gca()
 
+    if "equalaxis" in plot_kwargs:
+        if plot_kwargs.pop('equalaxis'):
+            actions.append((axis.axis, 'equal'))
     if "x" in plot_kwargs:
         actions.append((axis.set_xlim, plot_kwargs.pop('x')))
     if "y" in plot_kwargs:
-        actions.append((axis.set_xlim, plot_kwargs.pop('y')))
+        actions.append((axis.set_ylim, plot_kwargs.pop('y')))
     if "own" in plot_kwargs:
         opt = plot_kwargs.pop('own')
         logger.warn("own axis doesn't seem to work yet...")
@@ -178,9 +181,6 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     if "owny" in plot_kwargs:
         opt = plot_kwargs.pop('owny')
         logger.warn("own axis doesn't seem to work yet...")
-    if "equalaxis" in plot_kwargs:
-        if plot_kwargs.pop('equalaxis'):
-            actions.append((axis.axis, 'equal'))
 
     norm_dict = {'crdscale': 'lin',
                  'vscale': 'lin',
