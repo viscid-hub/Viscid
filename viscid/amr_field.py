@@ -5,6 +5,7 @@ Note:
     around a lot of Field functionality.
 """
 
+from __future__ import print_function
 import numpy as np
 
 from viscid.compat import string_types
@@ -87,8 +88,15 @@ class AMRField(object):
                 # print("appending")
                 ret.append(fld)
 
-        if len(ret) == 1:
-            return ret[0]
+        if len(ret) == 0:
+            print("Warning: selection", selection, "not in any patch")
+            print("         @ time", self.blocks[0].time)
+            if self.skeleton:
+                print("         skeleton: xl=", self.skeleton.global_xl,
+                      "xh=", self.skeleton.global_xh)
+            ret = None
+        elif len(ret) == 1:
+            ret = ret[0]
         return ret
 
     def _finalize_amr_slice(self, fld_lst):  # pylint: disable=no-self-use
