@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.80.3 dev
+## 0.80.3
 
-
+Bugfixes:
+  - Fix size of earth in AMR files
+  - Fix matplotlib colorscale options
 
 ## 0.80.2
 
