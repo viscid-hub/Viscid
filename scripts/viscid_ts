@@ -10,7 +10,9 @@ import matplotlib
 import viscid
 from viscid import logger
 from viscid import vutil
-from viscid.plot.mpl import plt
+from viscid import coordinate
+from viscid import field
+from viscid.plot import mpl
 
 # plt.rc('axes', color_cycle=list("brcykmg"))
 
@@ -69,7 +71,7 @@ def main():
     parser.add_argument('file', nargs='+', help='input file')
     args = vutil.common_argparse(parser)
 
-    # global_popts = getattr(args, "global_popts", None)
+    global_popts = getattr(args, "global_popts", "")
 
     if getattr(args, "plot_vars", None) is None:
         args.plot_vars = [["pp", {"plot_opts":"x_-10_0,y_-5_5,log_5e-2_5e3"}],
@@ -91,7 +93,7 @@ def main():
                 # get the name of the resulting field, but the
                 # call to get_field will return a scalar, so...
                 try:
-                    plot_names[j] = grid[pvar[0]].pretty_name
+                    plot_names[j] = grid[pvar[0]].blocks[0].pretty_name
                 except AttributeError:
                     plot_names[j] = pvar[0]
             val = grid.get_field(pvar[0], slc=args.slice)
@@ -104,44 +106,57 @@ def main():
             plot_arrs[j][i] = val
 
     n_pvars = len(args.plot_vars)
-    for j, _ in enumerate(args.plot_vars):
-        if not args.one:
-            plt.subplot2grid((n_pvars, 1), (j, 0))
-            plt.ylabel(plot_names[j])
 
-        plt.plot(t, plot_arrs[j], label=plot_names[j])
+    # wrap fields?
+    all_plot_kwargs = dict(do_labels=False)
+    mpl.plot_opts_to_kwargs(global_popts, all_plot_kwargs)
+
+    t_as_crds = coordinate.wrap_crds("nonuniform_cartesian", [('t', t)])
+
+    for j, plot_var in enumerate(args.plot_vars):
+        ts_as_fld = field.wrap_field("Scalar", plot_names[j], t_as_crds,
+                                     plot_arrs[j])
+        plot_kwargs = all_plot_kwargs.copy()
+        plot_kwargs['label'] = plot_names[j]
+        mpl.plot_opts_to_kwargs(plot_var[1]['plot_opts'], plot_kwargs)
+
+        if not args.one:
+            mpl.plt.subplot2grid((n_pvars, 1), (j, 0))
+            mpl.plt.ylabel(plot_names[j])
+
+        mpl.plot(ts_as_fld, **plot_kwargs)
 
         # format the time axis on the last plot
         if j == n_pvars - 1:
             def timeTicks(t, pos):  # pylint: disable=unused-argument
                 return file_.format_time(style=args.timeformat, time=t)
             formatter = matplotlib.ticker.FuncFormatter(timeTicks)
-            plt.gca().xaxis.set_major_formatter(formatter)
+            mpl.plt.gca().xaxis.set_major_formatter(formatter)
             if args.rotateticklabels:
-                plt.gcf().autofmt_xdate()
+                mpl.plt.gcf().autofmt_xdate()
 
     if args.one:
-        plt.legend(loc=0)
+        mpl.plt.legend(loc=0)
 
     if not args.nofname:
         if args.one:
-            plt.title(file_.fname)
+            mpl.plt.title(file_.fname)
         else:
-            plt.suptitle(file_.fname)
+            mpl.plt.suptitle(file_.fname)
 
     if not args.rotateticklabels:
-        plt.xlabel("time")
+        mpl.plt.xlabel("time")
     if args.x is not None:
-        plt.xlim(*[float(x) for x in args.x.split('_')])
+        mpl.plt.xlim(*[float(x) for x in args.x.split('_')])
     if args.y is not None:
-        plt.ylim(*[float(y) for y in args.y.split('_')])
+        mpl.plt.ylim(*[float(y) for y in args.y.split('_')])
 
-    plt.tight_layout()
+    # plt.tight_layout()
 
     if args.show:
-        plt.show()
+        mpl.plt.show()
     else:
-        plt.savefig("{0}.{1}".format(args.prefix, args.format))
+        mpl.plt.savefig("{0}.{1}".format(args.prefix, args.format))
 
 if __name__ == "__main__":
     main()
