@@ -40,7 +40,7 @@
 				},
 				{
 					"name": "clean",
-					"shell_cmd": "find _build/html ! -name '.git' ! -name '.gitignore' ! -name '.nojekyll' -delete"
+					"shell_cmd": "make clean"
 				}
 			],
 			"working_dir": "${folder}/doc"
