@@ -103,16 +103,22 @@ class AMRField(object):
 
     def slice(self, selection):
         fld_lst = self._prepare_amr_slice(selection)
+        if not isinstance(fld_lst, list):
+            return fld_lst.slice(selection)
         fld_lst = [fld.slice(selection) for fld in fld_lst]
         return self._finalize_amr_slice(fld_lst)
 
     def slice_reduce(self, selection):
         fld_lst = self._prepare_amr_slice(selection)
+        if not isinstance(fld_lst, list):
+            return fld_lst.slice_reduce(selection)
         fld_lst = [fld.slice_reduce(selection) for fld in fld_lst]
         return self._finalize_amr_slice(fld_lst)
 
     def slice_and_keep(self, selection):
         fld_lst = self._prepare_amr_slice(selection)
+        if not isinstance(fld_lst, list):
+            return fld_lst.slice_and_keep(selection)
         fld_lst = [fld.slice_and_keep(selection) for fld in fld_lst]
         return self._finalize_amr_slice(fld_lst)
 
