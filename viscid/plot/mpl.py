@@ -156,7 +156,7 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         norm_dict: will look like {'crdscale': 'lin'|'log',
                                    'vscale': 'lin'|'log',
                                    'clim': [None|number, None|number],
-                                   'symmetric': True|False}
+                                   'symetric': True|False}
     """
     for k, v in defaults.items():
         if k not in plot_kwargs:
@@ -186,7 +186,7 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     norm_dict = {'crdscale': 'lin',
                  'vscale': 'lin',
                  'clim': [None, None],
-                 'symmetric': False
+                 'symetric': False
                 }
 
     if plot_kwargs.pop('logscale', False):
@@ -205,20 +205,31 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         opt = plot_kwargs.pop('lin')
         norm_dict['vscale'] = 'lin'
         if opt == 0:
-            norm_dict['symmetric'] = True
+            norm_dict['symetric'] = True
         elif opt is not True:
+            if not isinstance(opt, (list, tuple)):
+                opt = [opt]
             norm_dict['clim'][:len(opt)] = opt
     if "log" in plot_kwargs:
         opt = plot_kwargs.pop('log')
         norm_dict['vscale'] = 'log'
         if opt is not True:
+            if not isinstance(opt, (list, tuple)):
+                opt = [opt]
             norm_dict['clim'][:len(opt)] = opt
     if "loglog" in plot_kwargs:
         opt = plot_kwargs.pop('loglog')
         norm_dict['crdscale'] = 'log'
         norm_dict['vscale'] = 'log'
         if opt is not True:
+            if not isinstance(opt, (list, tuple)):
+                opt = [opt]
             norm_dict['clim'][:len(opt)] = opt
+
+    # replace 'None' or 'none' with None in clim, this is kinda hacky, non?
+    for i in range(len(norm_dict['clim'])):
+        if norm_dict['clim'][i] in ["None", "none"]:
+            norm_dict['clim'][i] = None
 
     return actions, norm_dict
 

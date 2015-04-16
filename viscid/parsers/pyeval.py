@@ -25,6 +25,12 @@ class _Transformer(ast.NodeTransformer):
                 node = ast.copy_location(ast.NameConstant(val), node)
             except AttributeError:
                 node = ast.copy_location(ast.Name(str(val), node.ctx), node)
+        elif node.id.lower() == "none":
+            val = None
+            try:
+                node = ast.copy_location(ast.NameConstant(val), node)
+            except AttributeError:
+                node = ast.copy_location(ast.Name(str(val), node.ctx), node)
         else:
             # turn other bare names into strings
             node = ast.copy_location(ast.Str(s=node.id), node)
