@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.80.1
+
+Bugfix:
+  - vjson not found
+
 ## 0.80.0
 
 Features:
