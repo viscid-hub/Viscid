@@ -40,7 +40,8 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	-rm -rf $(BUILDDIR)/*
+	find $(BUILDDIR)/* -maxdepth 0 ! -name 'html' -exec rm -rf {} \;
+	find $(BUILDDIR)/html/* ! -name '.git' ! -name '.gitignore' ! -name '.nojekyll' -exec rm -rf {} \;
 
 #apidoc:
 #	$(SPHINXAPIDOC) -o $(SOURCEDIR)  ../viscid
