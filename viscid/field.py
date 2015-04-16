@@ -471,6 +471,14 @@ class Field(tree.Leaf):
         # self._translate_src_data()  # um, what's this for? looks dangerous
         # do some sort of lazy pre-setup _src_data inspection?
 
+    @property
+    def blocks(self):
+        return [self]
+
+    @property
+    def nr_blocks(self):  # pylint: disable=no-self-use
+        return 1
+
     def is_loaded(self):
         return self._cache is not None
 
@@ -713,7 +721,8 @@ class Field(tree.Leaf):
             return self._src_data[comp_slc]
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(self._src_crds.type, crdlst)
+        crds = coordinate.wrap_crds(self._src_crds.type, crdlst,
+                                    full_arrays=True)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -1024,7 +1033,7 @@ class Field(tree.Leaf):
                                              x,
                                              [x[-1] + dxh]])
             new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
-            new_crds = type(self._src_crds)(new_clist)
+            new_crds = type(self._src_crds)(new_clist, full_arrays=True)
 
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
@@ -1186,11 +1195,11 @@ class Field(tree.Leaf):
     def __rshift__(self, other):
         return self.wrap(self.data.__rshift__(other))
     def __and__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__and__(other))
     def __xor__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__xor__(other))
     def __or__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__or__(other))
 
     def __radd__(self, other):
         return self.wrap(self.data.__radd__(other))

@@ -41,7 +41,7 @@ except ImportError:
         print("You should install napoleon for Google style docstring formatting")
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ['_bstemplates']
 
 # The suffix of source filenames.
 source_suffix = '.rst'
@@ -83,7 +83,7 @@ exclude_patterns = ['_build']
 #default_role = None
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
-#add_function_parentheses = True
+add_function_parentheses = True
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
@@ -104,14 +104,47 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    sys.path.append("_themes")
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
-    print("RTD theme:", sphinx_rtd_theme.get_html_theme_path())
+## for RTD theme
+# on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+# if not on_rtd:  # only import and set the theme if we're building docs locally
+#     sys.path.append("_themes")
+#     import sphinx_rtd_theme
+#     html_theme = 'sphinx_rtd_theme'
+#     html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+#     print("RTD theme:", sphinx_rtd_theme.get_html_theme_path())
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+
+sys.path.append("_themes")
+import sphinx_bootstrap_theme
+html_theme = 'bootstrap'
+html_theme_options = {
+    'source_link_position': "footer",
+    'bootswatch_theme': "flatly",
+    'navbar_sidebarrel': False,
+    'bootstrap_version': "3",
+    # 'navbar_links': [],
+    'navbar_dropdown_links':
+        [("Tutorial", [("Installation", "installation"),
+                       ("RC file", "custom_behavior"),
+                       ("Plot Options", "plot_options"),
+                       ("Command Line Tools", "command_line"),
+                      ]
+         ),
+         ("Examples", [("Plotting", "examples/plotting"),
+                       ("Slicing", "examples/slicing"),
+                       ("Calculator", "examples/calc"),
+                       ("OpenGGCM", "examples/openggcm"),
+                      ]
+         )
+        ]
+    }
+
+# Add any paths that contain custom themes here, relative to this directory.
+html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
+
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

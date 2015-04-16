@@ -13,6 +13,7 @@ from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.hdf5 import FileLazyHDF5
 from viscid import coordinate
+from viscid import amr_grid
 
 # class XDMFDataItem(data_item.DataItem):
 #     def set_precision():
@@ -82,6 +83,7 @@ class FileXDMF(vfile.VFile):
         }
 
     h5_root_dir = None
+    _last_amr_skeleton = None  # experimental, should be moved
     # tree = None
 
     def __init__(self, fname, vfilebucket=None, h5_root_dir=None, **kwargs):
@@ -188,10 +190,9 @@ class FileXDMF(vfile.VFile):
                 logger.warn("Unknown collection type %s, ignoring grid", ct)
 
             for i, subgrid in enumerate(el.findall("./Grid")):
-
                 t = times[i] if (times is not None and i < len(times)) else time
                 # print(subgrid, grd, t)
-                self._parse_grid(subgrid, parent_node=grd, time=t)
+                self._parse_grid(subgrid, parent_node=grd, time=time)
             if len(grd.children) > 0:
                 grd.activate(0)
 
@@ -233,6 +234,20 @@ class FileXDMF(vfile.VFile):
                 grd.geometry_info = geoattrs
             if crds is not None:
                 grd.set_crds(crds)
+
+            # EXPERIMENTAL AMR support, _last_amr_grid shouldn't be an attribute
+            # of self, since that will only remember the most recently generated
+            # amr grid, but that's ok for now
+            # if gt == "Uniform":
+            #     print(">!", crds._TYPE, crds.xl_nc, grd.time)
+            #     print(">!?", type(parent_node), parent_node.children._ordered,
+            #           len(parent_node.children))
+            if gt == "Collection" and ct == "Spatial":
+                grd, is_amr = amr_grid.dataset_to_amr_grid(grd,
+                                                           self._last_amr_skeleton)
+                if is_amr:
+                    self._last_amr_skeleton = grd.skeleton
+
             if parent_node is not None:
                 parent_node.add(grd)
 
@@ -288,6 +303,7 @@ class FileXDMF(vfile.VFile):
                 raise RuntimeError("XDMF format error: Coords not specified "
                                    "for {0} dimesions"
                                    "".format(list(crdlookup.keys())))
+            crdkwargs["full_arrays"] = True
 
         elif geotype.upper() == "VXVYVZ":
             crdlookup = {'z': 0, 'y': 1, 'x': 2}
@@ -302,12 +318,13 @@ class FileXDMF(vfile.VFile):
                 raise RuntimeError("XDMF format error: Coords not specified "
                                    "for {0} dimesions"
                                    "".format(list(crdlookup.keys())))
+            crdkwargs["full_arrays"] = True
 
         elif geotype.upper() == "ORIGIN_DXDYDZ":
             # this is for grids with uniform spacing
             dataitems = geo.findall("./DataItem")
-            data_o, attrs_o = self._parse_dataitem(dataitems[0])
-            data_dx, attrs_dx = self._parse_dataitem(dataitems[1])
+            data_o, _ = self._parse_dataitem(dataitems[0])
+            data_dx, _ = self._parse_dataitem(dataitems[1])
             dtyp = data_o.dtype
             nstr = None
             if topoattrs["Dimensions"]:
@@ -319,18 +336,23 @@ class FileXDMF(vfile.VFile):
             n = [int(num) for num in nstr.split()]
             crdlist = [None] * 3
             for i, crd in enumerate(['z', 'y', 'x']):
-                crd_arr = data_dx[i] * np.arange(n[i], dtype=dtyp) + data_o[i]
+                n_nc, n_cc = n[i], n[i] - 1
+                crd_arr = [data_o[i], data_o[i] + (n_cc * data_dx[i]), n_nc]
                 crdlist[i] = (crd, crd_arr)
-
+            crdkwargs["dtype"] = dtyp
+            crdkwargs["full_arrays"] = False
         else:
             logger.warn("Invalid GeometryType: %s", geotype)
 
         if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
             crdtype = "uniform_cartesian"
         elif topotype in ['3DRectMesh', '2DRectMesh']:
-            crdtype = "nonuniform_cartesian"
+            if crdkwargs.get("full_arrays", True):
+                crdtype = "nonuniform_cartesian"
+            else:  # HACK, hopefully not used ever
+                crdtype = "uniform_cartesian"
         elif topotype in ['2DSMesh']:
-            crdtype = "nonuniform_spherical"
+            crdtype = "uniform_spherical"  # HACK!
             ######## this doesn't quite work, but it's too heavy to be useful
             ######## anyway... if we assume a 2d spherical grid spans the
             ######## whole sphere, and radius doesnt matter, all we need are
@@ -367,7 +389,7 @@ class FileXDMF(vfile.VFile):
             nlat, nlon = [int(s) for s in topoattrs["Dimensions"].split(' ')]
             crdlist = [['lat', [0.0, 180.0, nlat]],
                        ['lon', [0.0, 360.0, nlon]]]
-            crdkwargs['fill_by_linspace'] = True
+            crdkwargs["full_arrays"] = False
 
         elif topotype in ['3DSMesh']:
             raise NotImplementedError("3D spherical grids not yet supported")
@@ -403,8 +425,8 @@ class FileXDMF(vfile.VFile):
 
         numbertype = attrs["NumberType"]
         precision = attrs["Precision"]
-        nptype = np.dtype({'Float': 'float', 'Int': 'int', 'UInt': 'unit',
-            'Char': 'int', 'UChar': 'int'}[numbertype] + str(8 * precision))
+        nptype = np.dtype({'Float': 'f', 'Int': 'i', 'UInt': 'u',
+            'Char': 'i', 'UChar': 'u'}[numbertype] + str(precision))
 
         fmt = attrs["Format"]
 

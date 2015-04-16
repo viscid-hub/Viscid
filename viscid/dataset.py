@@ -41,7 +41,7 @@ class Dataset(tree.Node):
         tree, from vfile all the way down to fields
         """
         super(Dataset, self).__init__(*args, **kwargs)
-        self.children = Bucket()
+        self.children = Bucket(ordered=True)
         self.active_child = None
 
     def add(self, child, set_active=True):

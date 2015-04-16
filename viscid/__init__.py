@@ -14,7 +14,8 @@ __all__ = ['calculator',
            'parallel',
            'verror',
            'vlab',
-           'vutil'
+           'vutil',
+           'vjson'
           ]
 
 import logging

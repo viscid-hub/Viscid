@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.80.0
+
+Features:
+  - preliminary amr support (1D and 2D matplotlib plots)
+
+Backward Incompatible Changes:
+  - rc file is now in JSON format (in the future, this should change to YAML, but JSON is a subset of YAML, so it shouldn't break in the future)
+
+Changes:
+  - 1:1 match between plot_opts and plot keyword arguments
+
+Bugfixes:
+  - Ionosphere files wouldn't plot with pcolormesh
+
 ## 0.60.3
 
 Features:

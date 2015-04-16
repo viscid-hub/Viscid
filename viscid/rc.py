@@ -7,9 +7,9 @@ readers.openggcm.GGCMFile.read_log_file: true
 from __future__ import print_function
 import os
 import importlib
-import ast
 
 import viscid
+from viscid import vjson
 
 class RCPathError(Exception):
     message = ""
@@ -17,37 +17,6 @@ class RCPathError(Exception):
         self.message = message
         super(RCPathError, self).__init__(message)
 
-
-class RCValueError(Exception):
-    message = ""
-    def __init__(self, message=""):
-        self.message = message
-        super(RCValueError, self).__init__(message)
-
-
-class _Transformer(ast.NodeTransformer):
-    """Turn a string into python objects (strings, numbers, as basic types)"""
-    def visit_Name(self, node):
-        if node.id.lower() in ["true", "false"]:
-            # turn 'true' / 'True' / 'TRUE' / etc. into True
-            val = True if node.id.lower() == "true" else False
-            try:
-                node = ast.copy_location(ast.NameConstant(val), node)
-            except AttributeError:
-                node = ast.copy_location(ast.Name(str(val), node.ctx), node)
-        else:
-            # turn other bare names into strings
-            node = ast.copy_location(ast.Str(s=node.id), node)
-        return self.generic_visit(node)
-
-
-def _parse_rc_value(s):
-    try:
-        tree = ast.parse(s.strip(), mode='eval')
-        _Transformer().visit(tree)
-        return ast.literal_eval(tree)
-    except ValueError as e:
-        raise RCValueError("ast parser vomited")
 
 def _get_obj(rt, path):
     if len(path) == 0:
@@ -72,14 +41,14 @@ def _get_obj(rt, path):
                           "".format(rt.__name__, path[0]))
 
 def set_attribute(path, value):
-    p = path.split('.')
-    try:
-        value = _parse_rc_value(value)
-    except RCValueError as e:
-        print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(value))
-        print("                                          {0}".format(e.message))
-        return None
+    # try:
+    #     value = _parse_rc_value(value)
+    # except RCValueError as e:
+    #     print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(value))
+    #     print("                                          {0}".format(e.message))
+    #     return None
 
+    p = path.split('.')
     obj = _get_obj(viscid, p[:-1])
 
     if not hasattr(obj, p[-1]):
@@ -91,20 +60,15 @@ def set_attribute(path, value):
 def load_rc_file(fname):
     try:
         with open(os.path.expanduser(os.path.expandvars(fname)), 'r') as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
+            json_obj = vjson.load(f)
 
-                lst = line.split(":")
-                path, val = lst[0].strip(), ":".join(lst[1:]).strip()
-                try:
-                    set_attribute(path, val)
-                except RCPathError as e:
-                    print("WARNING: from rc file, {0}\n"
-                          "         If this isn't a typeo then the "
-                          "functionality may have moved.".format(e.message))
-
+        for path, val in json_obj.items():
+            try:
+                set_attribute(path, val)
+            except RCPathError as e:
+                print("WARNING: from rc file, {0}\n"
+                      "         If this isn't a typeo then the "
+                      "functionality may have moved.".format(e.message))
     except IOError:
         pass
 

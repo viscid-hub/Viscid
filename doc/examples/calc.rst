@@ -4,7 +4,7 @@ Calculator Examples
 Streamlines
 -----------
 
-For more info on streamlines, check out :meth:`viscid.calculator.streamline.streamlines` and :py:mod:`viscid.calculator.seed`
+For more info on streamlines, check out :py:func:`viscid.calculator.streamline.streamlines` and :py:mod:`viscid.calculator.seed`
 
 .. plot::
     :include-source:

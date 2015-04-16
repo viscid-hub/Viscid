@@ -36,11 +36,11 @@
 				},
 				{
 					"name": "apidoc",
-					"shell_cmd": "sphinx-apidoc -e -o . ../viscid"
+					"shell_cmd": "sphinx-apidoc -e -o api/ ../viscid"
 				},
 				{
 					"name": "clean",
-					"shell_cmd": "make clean"
+					"shell_cmd": "find _build/html ! -name '.git' ! -name '.gitignore' ! -name '.nojekyll' -delete"
 				}
 			],
 			"working_dir": "${folder}/doc"

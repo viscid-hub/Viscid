@@ -49,7 +49,7 @@ def find_file_uptree(directory, basename, max_depth=8, _depth=0):
     max_depth = 5
 
     if not os.path.isdir(directory):
-        raise RuntimeError("this is non-sensicle")
+        raise RuntimeError("this is non-sensicle: {0}".format(directory))
 
     fname = os.path.join(directory, basename)
     # log_fname = "{0}/{1}.log".format(d, self.find_info("run"))
@@ -599,8 +599,7 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
             nlat, nlon = 181, 61
             crdlst = [['lat', [0.0, 180.0, nlat]],
                       ['lon', [0.0, 360.0, nlon]]]
-            return wrap_crds("nonuniform_spherical", crdlst,
-                             fill_by_linspace=True)
+            return wrap_crds("uniform_spherical", crdlst)
 
         else:
             return self.read_grid2()

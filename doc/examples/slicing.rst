@@ -13,7 +13,7 @@ Fields can be sliced just like Numpy ndarrays, but you can also use an extended 
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
 
     # notice how slices by index appear as integers, and slices by location
     # are done with floats... this means "y=0" is not the same as "y=0.0"
@@ -28,7 +28,7 @@ Temporal Datasets can be sliced a number of ways too, here are some examples
 .. doctest::
 
     >>>> import viscid
-    >>>> f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
+    >>>> f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
     >>>>
     >>>> grids = f3d.get_times(slice("UT1967:01:01:00:10:00.0",
     >>>>                             "UT1967:01:01:00:20:00.0"))
