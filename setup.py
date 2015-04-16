@@ -35,8 +35,9 @@ else:
 # listing the sources
 cmdclass = {}
 pkgs = ['viscid',
-        'viscid.compat',
         'viscid.calculator',
+        'viscid.compat',
+        'viscid.parsers',
         'viscid.plot',
         'viscid.readers',
        ]
