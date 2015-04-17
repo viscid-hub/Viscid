@@ -417,9 +417,9 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         vmin, vmax = norm_dict['clim']
 
         if vmin is None:
-            vmin = np.min([np.min(blk) for blk in fld.blocks])
+            vmin = np.nanmin([np.nanmin(blk) for blk in fld.blocks])
         if vmax is None:
-            vmax = np.max([np.max(blk) for blk in fld.blocks])
+            vmax = np.nanmax([np.nanmax(blk) for blk in fld.blocks])
 
         if vscale == "lin":
             if norm_dict['symetric']:
