@@ -34,7 +34,7 @@ class AddPlotOpts(argparse.Action):
 class AddPlotVar(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         items = _copy.copy(_ensure_value(namespace, self.dest, []))
-        items.append([values, {}])
+        items.append([values, {'plot_opts': ''}])
         setattr(namespace, self.dest, items)
 
 def split_floats(arg_str):
@@ -87,29 +87,33 @@ def main():
 
     for i, grid in enumerate(file_.iter_times(args.t)):
         for j, pvar in enumerate(args.plot_vars):
-            pvname = pvar[0]
+            pvname, slc, eqn = pvar[0], '', ''
             if ',' in pvname:
                 split_pvname = pvname.split(',')
                 pvname, slc = split_pvname[0], ','.join(split_pvname[1:])
             if '=' in pvname:
                 split_pvname = pvname.split('=')
                 pvname, eqn = split_pvname[0], '=' + '='.join(split_pvname[1:])
-            else:
-                eqn = ''
+
             if i == 0:
                 # FIXME: if pvar[0] is an equation, it does
                 # the calculation on the whole grid just to
                 # get the name of the resulting field, but the
                 # call to get_field will return a scalar, so...
                 try:
-                    plot_names[j] = grid[pvname].blocks[0].pretty_name
+                    if eqn:
+                        plot_names[j] = pvname
+                    else:
+                        plot_names[j] = grid[pvname].blocks[0].pretty_name
                 except AttributeError:
                     plot_names[j] = pvname
 
-            if args.slice:
+            if args.slice and slc:
                 _slc = args.slice + "," + slc
-            else:
+            elif slc:
                 _slc = slc
+            else:
+                _slc = args.slice
             val = grid.get_field(pvname + eqn, slc=_slc)
 
             if val.size > 1:

@@ -29,8 +29,9 @@ class AddPlotOpts(argparse.Action):
 class AddPlotVar(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         items = _copy.copy(_ensure_value(namespace, self.dest, []))
-        items.append([values, {}])
+        items.append([values, {'plot_opts': ''}])
         setattr(namespace, self.dest, items)
+
 
 def split_floats(arg_str):
     return [float(s) for s in arg_str.split(',')]

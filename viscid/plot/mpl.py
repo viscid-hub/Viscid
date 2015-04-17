@@ -430,14 +430,14 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         elif vscale == "log":
             if norm_dict['symetric']:
                 raise ValueError("Can't use symetric color bar with logscale")
-            if vmax < 0.0:
+            if vmax <= 0.0:
                 print("Warning: Using log scale on a field with no positive "
                       "values")
                 vmin, vmax = 1e-20, 1e-20
-            elif vmin < 0.0:
+            elif vmin <= 0.0:
                 print("Warning: Using log scale on a field with negative "
-                      "values. Only plotting 2 decades.")
-                vmin, vmax = vmax / 100, vmax
+                      "values. Only plotting 4 decades.")
+                vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
         else:
             raise ValueError("Unknown norm vscale: {0}".format(vscale))
