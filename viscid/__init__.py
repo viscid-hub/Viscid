@@ -12,10 +12,10 @@ __all__ = ['calculator',
            'field',
            'grid',
            'parallel',
+           'parsers',
            'verror',
            'vlab',
-           'vutil',
-           'vjson'
+           'vutil'
           ]
 
 import logging

@@ -79,7 +79,7 @@ def plot(fld, selection=None, **kwargs):
     else:
         raise ValueError("mpl can only do 1-D or 2-D fields")
 
-def _plot_opts_to_kwargs(plot_opts, plot_kwargs):
+def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     """Turn plot options from string to items in plot_kwargs
 
     The Reason for this to to be able to specify arbitrary plotting
@@ -165,10 +165,13 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     if not axis:
         axis = plt.gca()
 
+    if "equalaxis" in plot_kwargs:
+        if plot_kwargs.pop('equalaxis'):
+            actions.append((axis.axis, 'equal'))
     if "x" in plot_kwargs:
         actions.append((axis.set_xlim, plot_kwargs.pop('x')))
     if "y" in plot_kwargs:
-        actions.append((axis.set_xlim, plot_kwargs.pop('y')))
+        actions.append((axis.set_ylim, plot_kwargs.pop('y')))
     if "own" in plot_kwargs:
         opt = plot_kwargs.pop('own')
         logger.warn("own axis doesn't seem to work yet...")
@@ -178,9 +181,6 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     if "owny" in plot_kwargs:
         opt = plot_kwargs.pop('owny')
         logger.warn("own axis doesn't seem to work yet...")
-    if "equalaxis" in plot_kwargs:
-        if plot_kwargs.pop('equalaxis'):
-            actions.append((axis.axis, 'equal'))
 
     norm_dict = {'crdscale': 'lin',
                  'vscale': 'lin',
@@ -349,7 +349,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax = plt.gca()
 
     # parse plot_opts
-    _plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    plot_opts_to_kwargs(plot_opts, plot_kwargs)
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'equalaxis': True})
 
@@ -430,14 +430,14 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         elif vscale == "log":
             if norm_dict['symetric']:
                 raise ValueError("Can't use symetric color bar with logscale")
-            if vmax < 0.0:
+            if vmax <= 0.0:
                 print("Warning: Using log scale on a field with no positive "
                       "values")
                 vmin, vmax = 1e-20, 1e-20
-            elif vmin < 0.0:
+            elif vmin <= 0.0:
                 print("Warning: Using log scale on a field with negative "
-                      "values. Only plotting 2 decades.")
-                vmin, vmax = vmax / 100, vmax
+                      "values. Only plotting 4 decades.")
+                vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
         else:
             raise ValueError("Unknown norm vscale: {0}".format(vscale))
@@ -555,7 +555,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax = plt.gca()
 
     # parse plot_opts
-    _plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
     axgridec = plot_kwargs.pop("axgridec", 'grey')
     axgridls = plot_kwargs.pop("axgridls", ':')
@@ -714,7 +714,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax = plt.gca()
 
     # parse plot_opts
-    _plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    plot_opts_to_kwargs(plot_opts, plot_kwargs)
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'equalaxis': False})
 
