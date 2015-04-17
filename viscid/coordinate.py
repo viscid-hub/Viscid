@@ -909,9 +909,9 @@ class UniformCrds(StructuredCrds):
             _nc_linspace_args = []
             for _, arr in init_clist:
                 arr = np.asarray(arr)
-                diff = arr[1:] - arr[:-1]
-                if not np.allclose(diff[0], diff[1:]):
-                    raise ValueError("Crds are not uniform")
+                # diff = arr[1:] - arr[:-1]
+                # if not np.allclose(diff[0], diff[1:]):
+                #     raise ValueError("Crds are not uniform")
                 _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
         else:
             for d in init_clist:
