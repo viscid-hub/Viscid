@@ -1,8 +1,10 @@
 # Changelog
 
-## 0.80.4 dev
+## 0.80.4
 
-
+Bugfixes:
+  - ./setup.py install wasn't installing parsers
+  - command line utilities had bugs
 
 ## 0.80.3
 
