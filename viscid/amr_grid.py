@@ -1,7 +1,7 @@
 """AMR tools"""
 
 from __future__ import print_function, division
-from timeit import default_timer as time
+# from timeit import default_timer
 
 import numpy as np
 
@@ -32,9 +32,9 @@ def dataset_to_amr_grid(dset, template_skeleton=None):
 
     # print(">> time:", dset.time)
 
-    # t0 = time()
+    # t0 = default_timer()
     grid = AMRGrid(dset, skeleton=template_skeleton)
-    # t1 = time()
+    # t1 = default_timertime()
     # print("Making AMR grid took {0:g} secs".format(t1 - t0))
     return grid, True
 
@@ -65,19 +65,29 @@ class AMRSkeleton(object):
             raise ValueError()
 
         self.patches = [AMRPatch(g.crds) for g in dset]
-        self.xl = np.vstack([patch.xl for patch in self.patches])
-        self.xm = np.vstack([patch.xm for patch in self.patches])
-        self.xh = np.vstack([patch.xh for patch in self.patches])
-        self.L = np.vstack([patch.L for patch in self.patches])
+        npatches = len(self.patches)
+        if npatches == 0:
+            raise ValueError("AMR Skeleton with 0 patches? no can do.")
+        p0_xl = self.patches[0].xl
+        self.xl = np.empty([npatches, len(p0_xl)], dtype=p0_xl.dtype)
+        self.xm = np.empty_like(self.xl)
+        self.xh = np.empty_like(self.xl)
+        self.L = np.empty_like(self.xl)
+
+        for i, patch in enumerate(self.patches):
+            self.xl[i, :] = patch.xl
+            self.xm[i, :] = patch.xm
+            self.xh[i, :] = patch.xh
+            self.L[i, :] = patch.L
 
         self.global_xl = np.min(self.xl, axis=0)
         self.global_xh = np.max(self.xh, axis=0)
 
-        self.discover_neighbors()
+        # self.discover_neighbors()
 
     def compatable_with(self, dset):
         # TODO: i should make /store a hash for this
-        # t0 = time()
+        # t0 = default_timer()
         if len(dset) != len(self.patches):
             return False
 
@@ -89,7 +99,7 @@ class AMRSkeleton(object):
             # if n and xl match... do i need to check xh?
             # if not np.allclose(my_patch.xh, grid.crds.xh_nc):
             #     return False
-        # t1 = time()
+        # t1 = default_timer()
         # print(">> compatable   {0:g} secs".format(t1 - t0))
         return True
 
