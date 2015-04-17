@@ -74,8 +74,8 @@ def main():
     global_popts = getattr(args, "global_popts", "")
 
     if getattr(args, "plot_vars", None) is None:
-        args.plot_vars = [["pp", {"plot_opts":"x_-10_0,y_-5_5,log_5e-2_5e3"}],
-                          ["by", {"plot_opts":"x_-10_0,y_-5_5,lin_-5_5"}]]
+        args.plot_vars = [["pp,x=8.0,y=0.0,z=0.0", {"plot_opts":""}],
+                          ["by,x=8.0,y=0.0,z=0.0", {"plot_opts":""}]]
 
     if args.prefix is None:
         args.show = True
@@ -87,16 +87,30 @@ def main():
 
     for i, grid in enumerate(file_.iter_times(args.t)):
         for j, pvar in enumerate(args.plot_vars):
+            pvname = pvar[0]
+            if ',' in pvname:
+                split_pvname = pvname.split(',')
+                pvname, slc = split_pvname[0], ','.join(split_pvname[1:])
+            if '=' in pvname:
+                split_pvname = pvname.split('=')
+                pvname, eqn = split_pvname[0], '=' + '='.join(split_pvname[1:])
+            else:
+                eqn = ''
             if i == 0:
                 # FIXME: if pvar[0] is an equation, it does
                 # the calculation on the whole grid just to
                 # get the name of the resulting field, but the
                 # call to get_field will return a scalar, so...
                 try:
-                    plot_names[j] = grid[pvar[0]].blocks[0].pretty_name
+                    plot_names[j] = grid[pvname].blocks[0].pretty_name
                 except AttributeError:
-                    plot_names[j] = pvar[0]
-            val = grid.get_field(pvar[0], slc=args.slice)
+                    plot_names[j] = pvname
+
+            if args.slice:
+                _slc = args.slice + "," + slc
+            else:
+                _slc = slc
+            val = grid.get_field(pvname + eqn, slc=_slc)
 
             if val.size > 1:
                 raise RuntimeError("you didn't slice away enough")
@@ -134,6 +148,8 @@ def main():
             mpl.plt.gca().xaxis.set_major_formatter(formatter)
             if args.rotateticklabels:
                 mpl.plt.gcf().autofmt_xdate()
+        else:
+            mpl.plt.gca().set_xticklabels([])
 
     if args.one:
         mpl.plt.legend(loc=0)
