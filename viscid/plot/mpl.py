@@ -376,7 +376,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     show_patches = plot_kwargs.pop("p", show_patches)
     patchec = plot_kwargs.pop("patchec", None)
     patchlw = plot_kwargs.pop("patchlw", 0.25)
-    patchaa = plot_kwargs.pop("patchaa", False)
+    patchaa = plot_kwargs.pop("patchaa", True)
     mod = plot_kwargs.pop("mod", None)
     colorbar = plot_kwargs.pop("colorbar", True)
     cbarlabel = plot_kwargs.pop("cbarlabel", None)

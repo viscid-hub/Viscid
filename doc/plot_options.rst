@@ -80,11 +80,11 @@ levels      number or list    Number of contours, or list of specific contour
 g           bool or color     Alias for gridec=k or gridec=color
 gridec      color             Color for grid lines (pcolormesh only)
 gridlw      number            Line width for grid lines (pcolormesh only)
-patchaa     bool              Antialias grid lines (default: True)
+gridaa      bool              Antialias grid lines (default: True)
 p           bool or color     Alias for patchec=k or patchec=color
 patchec     color             Color for patch boundaries
 patchlw     number            Line width for patch boundaries
-patchaa     bool              Antialias patch boundaries (default: False)
+patchaa     bool              Antialias patch boundaries (default: True)
 mod         modx, mody        Scale coordinates by some scalar value
 colorbar    bool, dict        dict of keyword arguments for
                               :py:func:`pyplot.colorbar`
