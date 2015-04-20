@@ -626,8 +626,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         # new_lon = (lon - 90.0) * np.pi / 180.0
         new_lon = lon * np.pi / 180.0
         new_crds = coordinate.wrap_crds("uniform_spherical",
-                                        [('lat', new_lat), ('lon', new_lon)],
-                                        full_arrays=True)
+                                        [('lat', [new_lat[0], new_lat[-1],
+                                                  len(new_lat)]),
+                                         ('lon', [new_lon[0], new_lon[-1],
+                                                  len(new_lon)])])
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
 
         plot_kwargs['do_labels'] = plot_kwargs['dolabels'] = False

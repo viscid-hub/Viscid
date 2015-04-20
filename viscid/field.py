@@ -588,7 +588,7 @@ class Field(tree.Leaf):
         # FIXME, there should be a flag for whether or not this should
         # make a copy of the array if it's not contiguous in memory
         arr = self._src_crds.reflect_fld_arr(arr, self.iscentered("Cell"),
-                                        nr_comp, nr_comps)
+                                             nr_comp, nr_comps)
 
         if self.post_reshape_transform_func is not None:
             arr = self.post_reshape_transform_func(self, self._src_crds, arr,
@@ -721,8 +721,7 @@ class Field(tree.Leaf):
             return self._src_data[comp_slc]
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(self._src_crds.type, crdlst,
-                                    full_arrays=True)
+        crds = coordinate.wrap_crds(self._src_crds.type, crdlst)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -853,7 +852,7 @@ class Field(tree.Leaf):
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
         slices, crdlst, reduced = self._src_crds.make_slice_reduce(selection,
-                                                              cc=cc)
+                                                                   cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def slice_and_keep(self, selection):
@@ -863,7 +862,8 @@ class Field(tree.Leaf):
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
         slices, crdlst, reduced = self._src_crds.make_slice_keep(selection,
-                                                            cc=cc)
+                                                                 cc=cc)
+        # print("??", type(self._src_crds), crdlst)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
     def set_slice(self, selection, value):
@@ -966,6 +966,11 @@ class Field(tree.Leaf):
         shaped==False, or shaped if shaped==True """
         return self._src_crds.get_crds_ec(axes=axes, shaped=shaped)
 
+    def get_clist(self, *args, **kwargs):
+        """I'm not sure anybody should use this since a clist is kind
+        of an internal thing used for creating new coordinate instances"""
+        return self._src_crds.get_clist(*args, **kwargs)
+
     def is_spherical(self):
         return self._src_crds.is_spherical()
 
@@ -1024,16 +1029,7 @@ class Field(tree.Leaf):
 
         elif self.iscentered('node'):
             # construct new crds
-            axes = self._src_crds.axes
-            crds_cc = self.get_crds_cc()
-            for i, x in enumerate(crds_cc):
-                dxl = x[1] - x[0]
-                dxh = x[-1] - x[-2]
-                crds_cc[i] = np.concatenate([[x[0] - dxl],
-                                             x,
-                                             [x[-1] + dxh]])
-            new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
-            new_crds = type(self._src_crds)(new_clist, full_arrays=True)
+            new_crds = self._src_crds.extend_by_half()
 
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
