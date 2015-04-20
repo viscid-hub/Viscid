@@ -29,7 +29,7 @@ All options can be passed as strings with one of two formats. First, the string 
 
 .. code-block:: python
 
-  plot_opts = "{lin: [1.0, 1.0], gridec: k}"
+  plot_opts = "{lin: [-1.0, 1.0], gridec: k}"
 
 Here are some options that should work for all functions:
 
