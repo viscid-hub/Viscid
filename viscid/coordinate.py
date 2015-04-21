@@ -957,15 +957,16 @@ class UniformCrds(StructuredCrds):
 
         if full_arrays:
             print(r"DEPRECATION WARNING: full arrays for uniform crds\n"
-                  r"                     shouldn't be used for uniformcrds\n"
-                  r"                     due to finite precision errors")
+                  r"                     shouldn't be used due to finite\n"
+                  r"                     precision errors")
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
                 arr = np.asarray(arr)
                 diff = arr[1:] - arr[:-1]
                 # This allclose is the problem... when slicing, it doesn't
                 # always pass
-                if not np.allclose(diff[0], diff[1:]):
+                atol = 100 * np.finfo(arr.dtype).eps
+                if not np.allclose(diff[0], diff[1:], atol=atol):
                     raise ValueError("Crds are not uniform")
                 _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
         else:

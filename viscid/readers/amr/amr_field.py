@@ -93,11 +93,7 @@ class AMRField(object):
             # logic goes this way cause extent has NaNs in
             # dimensions that aren't specified in selection... super-kludge
 
-            if fld.crds.xl_nc.dtype.itemsize == 4:
-                atol = 4e-15
-            else:
-                atol = 2e-6
-
+            atol = 100 * np.finfo(fld.crds.xl_nc.dtype).eps
             if (not np.any(np.logical_or(fld.crds.xl_nc - atol > extent[1],
                                          fld.crds.xh_nc <= extent[0]))):
                 if np.any(np.isclose(fld.crds.xh_nc, extent[0], atol=atol)):
