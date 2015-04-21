@@ -77,9 +77,10 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
                                                name="GGCMXDMFTemporalCollection")
 
             for fname in self._collection:
-                grids = self._parse_file(fname, data_temporal)
-                for _grid in grids:
-                    data_temporal.add(_grid)
+                self._parse_file(fname, data_temporal)
+                # grids = self._parse_file(fname, data_temporal)
+                # for _grid in grids:
+                #     data_temporal.add(_grid)
             data_temporal.activate(0)
             self.add(data_temporal)
             self.activate(0)
