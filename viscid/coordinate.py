@@ -64,6 +64,7 @@ class Coordinates(object):
 
 class StructuredCrds(Coordinates):
     _TYPE = "structured"
+    _INIT_FULL_ARRAYS = True
     _CENTER = {"none": "", "node": "nc", "cell": "cc",
                "face": "fc", "edge": "ec"}
     SUFFIXES = list(_CENTER.values())
@@ -361,7 +362,7 @@ class StructuredCrds(Coordinates):
                 if isinstance(sel, slice):
                     if isinstance(sel.start, (float, np.floating)) and \
                        isinstance(sel.stop, (float, np.floating)):
-                        extent[dind, :] = (sel.start, sel.stop)
+                        extent[:, dind] = (sel.start, sel.stop)
                     else:
                         raise TypeError("floats only")
                 else:
@@ -372,7 +373,7 @@ class StructuredCrds(Coordinates):
                     extent[:, dind] = sel
 
         # enforce that the values are increasing
-        for d in range(extent.shape[0]):
+        for d in range(extent.shape[1]):
             if extent[1, d] < extent[0, d]:
                 extent[:, d] = extent[::-1, d]
 
@@ -436,6 +437,43 @@ class StructuredCrds(Coordinates):
         else:
             raise TypeError()
 
+    def _native_slice(self, axis, slc):
+        """Get a sliced crd array to construct crds of same type
+
+        Args:
+            axis: something __getitem__ will understand to pull
+                out a single coordinate axis
+            slc (slice): Should be a valid slice of ints
+
+        Returns:
+            A sliced single coordinate array that __init__ understands
+            by default
+        """
+        if slc is None:
+            return self[axis].reshape(-1)
+        else:
+            return self[axis][slc].reshape(-1)
+
+    def extend_by_half(self):
+        """Extend coordinates half a grid cell in all directions
+
+        Used for turning node centered fields to cell centered without
+        changing the data, just the coordinates.
+
+        Returns:
+            New coordinates instance with same type as self
+        """
+        axes = self.axes
+        crds_cc = self.get_crds_cc()
+        for i, x in enumerate(crds_cc):
+            dxl = x[1] - x[0]
+            dxh = x[-1] - x[-2]
+            crds_cc[i] = np.concatenate([[x[0] - dxl],
+                                         x,
+                                         [x[-1] + dxh]])
+        new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
+        return type(self)(new_clist)
+
     def make_slice(self, selection, cc=False):
         """Turns a slice string into a slice (should be private?)
 
@@ -465,7 +503,7 @@ class StructuredCrds(Coordinates):
             tuple (slices, slcrds, reduced)
             slices: list of slice objects, one for each axis in self
             slcrds: a clist for what the coords will be after the
-                slice (always full_arrays)
+                slice
             reduced: a list of (axis, location) pairs of which axes
             are sliced out
 
@@ -485,7 +523,8 @@ class StructuredCrds(Coordinates):
         for dind, axis in enumerate(self.axes):
             if not axis in selection:
                 slices[dind] = slice(None)
-                slcrds[dind] = [axis, self.get_nc(axis)]
+                # slcrds[dind] = [axis, self.get_nc(axis)]
+                slcrds[dind] = [axis, self._native_slice(axis, None)]
                 continue
 
             sel = selection[axis]
@@ -554,7 +593,8 @@ class StructuredCrds(Coordinates):
             else:
                 crd_slc = slc
             slices[dind] = slc
-            slcrds[dind] = [axis, self[axis][crd_slc].reshape(-1)]
+            # slcrds[dind] = [axis, self[axis][crd_slc].reshape(-1)]
+            slcrds[dind] = [axis, self._native_slice(axis, crd_slc)]
 
         # remove dimensions that were sliced out
         slcrds = [crd for crd in slcrds if crd is not None]
@@ -613,6 +653,11 @@ class StructuredCrds(Coordinates):
                 else:
                     crd = crd_nc[loc_ind:loc_ind + 2]
                     slc = slice(loc_ind, loc_ind + 1)
+
+                # FIXME: this is a terrible way to hack a uniform
+                # xl, xh, nx type clist
+                if not self._INIT_FULL_ARRAYS:
+                    crd = [crd[0], crd[-1], 2]
             else:
                 if loc_ind == -1:
                     crd = crd_nc[-1:]
@@ -620,6 +665,10 @@ class StructuredCrds(Coordinates):
                 else:
                     crd = crd_nc[loc_ind:loc_ind + 1]
                     slc = slice(loc_ind, loc_ind + 1)
+                # FIXME: this is a terrible way to hack a uniform
+                # xl, xh, nx type clist
+                if not self._INIT_FULL_ARRAYS:
+                    crd = [crd[0], crd[0], 1]
 
             slices[axis_ind] = slc
             crdlst.insert(axis_ind, [axis, crd])
@@ -639,7 +688,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst, full_arrays=True)
+        return wrap_crds(self._TYPE, crdlst)
 
     def slice_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
@@ -651,7 +700,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst, full_arrays=True)
+        return wrap_crds(self._TYPE, crdlst)
 
     def slice_keep(self, selection, cc=False):
         slices, crdlst, reduced = self.make_slice_keep(selection,
@@ -659,7 +708,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst, full_arrays=True)
+        return wrap_crds(self._TYPE, crdlst)
 
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,
@@ -872,6 +921,7 @@ class StructuredCrds(Coordinates):
 
 class UniformCrds(StructuredCrds):
     _TYPE = "uniform"
+    _INIT_FULL_ARRAYS = False
 
     _nc_linspace_args = None
     _cc_linspace_args = None
@@ -906,11 +956,17 @@ class UniformCrds(StructuredCrds):
         self.dtype = dtype
 
         if full_arrays:
-            _nc_linspace_args = []
+            print(r"DEPRECATION WARNING: full arrays for uniform crds\n"
+                  r"                     shouldn't be used due to finite\n"
+                  r"                     precision errors")
+            _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
                 arr = np.asarray(arr)
                 diff = arr[1:] - arr[:-1]
-                if not np.allclose(diff[0], diff[1:]):
+                # This allclose is the problem... when slicing, it doesn't
+                # always pass
+                atol = 100 * np.finfo(arr.dtype).eps
+                if not np.allclose(diff[0], diff[1:], atol=atol):
                     raise ValueError("Crds are not uniform")
                 _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
         else:
@@ -974,20 +1030,20 @@ class UniformCrds(StructuredCrds):
 
     def get_min_dx(self, axes=None, center='node'):
         """Get a minimum cell width for each axis"""
-        return self._pull_out_axes([self._min_dx_nc, self._min_dx_cc], axes,
+        return self._pull_out_axes([self.min_dx_nc, self.min_dx_cc], axes,
                                    center=center)
 
     def get_xl(self, axes=None, center='node'):
-        return self._pull_out_axes([self._xl_nc, self._xl_cc], axes,
+        return self._pull_out_axes([self.xl_nc, self.xl_cc], axes,
                                    center=center)
 
     def get_xh(self, axes=None, center='node'):
-        return self._pull_out_axes([self._xh_nc, self._xh_cc], axes,
+        return self._pull_out_axes([self.xh_nc, self.xh_cc], axes,
                                    center=center)
 
     def get_L(self, axes=None, center='node'):
         """Get lengths"""
-        return self._pull_out_axes([self._L_nc, self._L_cc], axes,
+        return self._pull_out_axes([self.L_nc, self.L_cc], axes,
                                    center=center)
 
     def nr_points(self, center="none"):
@@ -997,6 +1053,46 @@ class UniformCrds(StructuredCrds):
             return self.size_nc
         else:
             return self.size_cc
+
+    def _native_slice(self, axis, slc):
+        """Get a sliced crd array to construct crds of same type
+
+        Args:
+            axis: something __getitem__ will understand to pull
+                out a single coordinate axis
+            slc (slice): Should be a valid slice of ints
+
+        Returns:
+            A sliced single coordinate array that __init__ understands
+            by default
+        """
+        # inds = list(range(self.shape))
+        if slc is None:
+            proxy_crd = self.get_crd(axis, center='node')
+        else:
+            proxy_crd = self.get_crd(axis, center='node')[slc]
+        nx = len(proxy_crd)
+        xl = proxy_crd[0]
+        xh = proxy_crd[-1]
+        return [xl, xh, nx]
+
+    def extend_by_half(self):
+        """Extend coordinates half a grid cell in all directions
+
+        Used for turning node centered fields to cell centered without
+        changing the data, just the coordinates.
+
+        Returns:
+            New coordinates instance with same type as self
+        """
+        axes = self.axes
+        xl, xh = self.get_xl(), self.get_xh()
+        dx = (xh - xl) / self.shape_nc
+        xl -= 0.5 * dx
+        xh += 0.5 * dx
+        nx = self.shape_nc + 1
+        new_clist = [(ax, [xl[i], xh[i], nx[i]]) for i, ax in enumerate(axes)]
+        return type(self)(new_clist)
 
     def get_clist(self, axes=None, slc=None, full_arrays=False):
         if full_arrays:

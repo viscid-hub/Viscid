@@ -376,7 +376,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     show_patches = plot_kwargs.pop("p", show_patches)
     patchec = plot_kwargs.pop("patchec", None)
     patchlw = plot_kwargs.pop("patchlw", 0.25)
-    patchaa = plot_kwargs.pop("patchaa", False)
+    patchaa = plot_kwargs.pop("patchaa", True)
     mod = plot_kwargs.pop("mod", None)
     colorbar = plot_kwargs.pop("colorbar", True)
     cbarlabel = plot_kwargs.pop("cbarlabel", None)
@@ -417,9 +417,9 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         vmin, vmax = norm_dict['clim']
 
         if vmin is None:
-            vmin = np.min([np.min(blk) for blk in fld.blocks])
+            vmin = np.nanmin([np.nanmin(blk) for blk in fld.blocks])
         if vmax is None:
-            vmax = np.max([np.max(blk) for blk in fld.blocks])
+            vmax = np.nanmax([np.nanmax(blk) for blk in fld.blocks])
 
         if vscale == "lin":
             if norm_dict['symetric']:
@@ -626,8 +626,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         # new_lon = (lon - 90.0) * np.pi / 180.0
         new_lon = lon * np.pi / 180.0
         new_crds = coordinate.wrap_crds("uniform_spherical",
-                                        [('lat', new_lat), ('lon', new_lon)],
-                                        full_arrays=True)
+                                        [('lat', [new_lat[0], new_lat[-1],
+                                                  len(new_lat)]),
+                                         ('lon', [new_lon[0], new_lon[-1],
+                                                  len(new_lon)])])
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
 
         plot_kwargs['do_labels'] = plot_kwargs['dolabels'] = False

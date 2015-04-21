@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.80.5
+
+Features:
+  - add amr_field.patch_indices to lookup patch index at a location
+
+Bugfixes:
+  - AMR slicing bugs
+
 ## 0.80.4
 
 Bugfixes:
