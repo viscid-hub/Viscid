@@ -78,26 +78,51 @@ class AMRField(object):
         selection, _ = self.blocks[0]._prepare_slice(selection)
         extent = self.blocks[0]._src_crds.get_slice_extent(selection)
 
-        ret = []
-        for fld in self.blocks:
+        inds = []
+        maybe = []  # these are patches that look like they contain selection
+                    # but might not due to finite precision errors when
+                    # calculating xh
+        for i, fld in enumerate(self.blocks):
+            # - if xl - atol > the extent of the slice in any direction, then
+            #   there's no overlap
+            # - if xh <= the lower corner of the slice in any direction, then
+            #   there's no overlap
+            # the atol and equals are done to match cases where extent overlaps
+            # the lower corner, but not the upper corner
+
             # logic goes this way cause extent has NaNs in
             # dimensions that aren't specified in selection... super-kludge
-            # print("comparing::", fld.crds.xl_nc, fld.crds.xh_nc, "extent", extent[0], extent[1])
-            if (not np.any(np.logical_or(fld.crds.xl_nc > extent[1],
-                                         fld.crds.xh_nc <= extent[0]))):
-                # print("appending")
-                ret.append(fld)
 
-        if len(ret) == 0:
+            if fld.crds.xl_nc.dtype.itemsize == 4:
+                atol = 4e-15
+            else:
+                atol = 2e-6
+
+            if (not np.any(np.logical_or(fld.crds.xl_nc - atol > extent[1],
+                                         fld.crds.xh_nc <= extent[0]))):
+                if np.any(np.isclose(fld.crds.xh_nc, extent[0], atol=atol)):
+                    maybe.append(i)
+                else:
+                    inds.append(i)
+        # if we found some maybes, but no real hits, then use the maybes
+        if maybe and not inds:
+            inds = maybe
+
+        if len(inds) == 0:
             print("Warning: selection", selection, "not in any patch")
             print("         @ time", self.blocks[0].time)
             if self.skeleton:
                 print("         skeleton: xl=", self.skeleton.global_xl,
                       "xh=", self.skeleton.global_xh)
-            ret = None
-        elif len(ret) == 1:
-            ret = ret[0]
-        return ret
+            inds = None
+            flds = None
+        elif len(inds) == 1:
+            inds = inds[0]
+            flds = self.blocks[inds]
+        else:
+            flds = [self.blocks[i] for i in inds]
+
+        return flds, inds
 
     def _finalize_amr_slice(self, fld_lst):  # pylint: disable=no-self-use
         skeleton = None  # FIXME
@@ -109,22 +134,36 @@ class AMRField(object):
                 print("Warning:", m)
         return AMRField(fld_lst, skeleton)
 
+    def patch_indices(self, selection):
+        return self.block_indices(selection)
+
+    def block_indices(self, selection):
+        """get the indices of the patches that overlap selection
+        Args:
+            selection (slice, str): anything that can slice a field
+
+        Returns:
+            list of indices
+        """
+        _, inds = self._prepare_amr_slice(selection)
+        return inds
+
     def slice(self, selection):
-        fld_lst = self._prepare_amr_slice(selection)
+        fld_lst, _ = self._prepare_amr_slice(selection)
         if not isinstance(fld_lst, list):
             return fld_lst.slice(selection)
         fld_lst = [fld.slice(selection) for fld in fld_lst]
         return self._finalize_amr_slice(fld_lst)
 
     def slice_reduce(self, selection):
-        fld_lst = self._prepare_amr_slice(selection)
+        fld_lst, _ = self._prepare_amr_slice(selection)
         if not isinstance(fld_lst, list):
             return fld_lst.slice_reduce(selection)
         fld_lst = [fld.slice_reduce(selection) for fld in fld_lst]
         return self._finalize_amr_slice(fld_lst)
 
     def slice_and_keep(self, selection):
-        fld_lst = self._prepare_amr_slice(selection)
+        fld_lst, _ = self._prepare_amr_slice(selection)
         if not isinstance(fld_lst, list):
             return fld_lst.slice_and_keep(selection)
         fld_lst = [fld.slice_and_keep(selection) for fld in fld_lst]
@@ -272,3 +311,4 @@ class AMRField(object):
 ##
 ## EOF
 ##
+
