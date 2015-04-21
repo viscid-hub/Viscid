@@ -4,13 +4,15 @@ Installation
 Dependencies
 ------------
 
-+ Python 2.6+
+Dependencies:
++ Python 2.6+ and 3.3+
 + numpy (required... for everything)
-+ h5py (required, for reading hdf5 files)
++ h5py (optional, if reading hdf5 files)
 + matplotlib (optional, if you import viscid.plot.mpl)
 + mayavi2 (optional, if you import viscid.plot.mvi)
 + numexpr (optional, for the calculator.necalc module)
 + cython > 0.17 (optional, only if you want to edit the cython code)
++ PyYaml (optional, rc file and plot options can parse using yaml)
 
 The optional calculator modules (necalc and cycalc) are all dispatched through
 calculator.calc, and it is intelligent enough not to use a library that is not
