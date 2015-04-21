@@ -362,7 +362,7 @@ class StructuredCrds(Coordinates):
                 if isinstance(sel, slice):
                     if isinstance(sel.start, (float, np.floating)) and \
                        isinstance(sel.stop, (float, np.floating)):
-                        extent[dind, :] = (sel.start, sel.stop)
+                        extent[:, dind] = (sel.start, sel.stop)
                     else:
                         raise TypeError("floats only")
                 else:
@@ -373,7 +373,7 @@ class StructuredCrds(Coordinates):
                     extent[:, dind] = sel
 
         # enforce that the values are increasing
-        for d in range(extent.shape[0]):
+        for d in range(extent.shape[1]):
             if extent[1, d] < extent[0, d]:
                 extent[:, d] = extent[::-1, d]
 
