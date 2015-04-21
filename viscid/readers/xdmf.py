@@ -12,15 +12,15 @@ from viscid.readers import _xdmf_include
 from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.hdf5 import FileLazyHDF5
+from viscid.readers.amr import amr_grid
 from viscid import coordinate
-from viscid import amr_grid
 
 # class XDMFDataItem(data_item.DataItem):
 #     def set_precision():
 #         nptype = np.dtype({'Float': 'float', 'Int': 'int', 'UInt': 'unit',
 #                'Char': 'int', 'UChar': 'int'}[numbertype] + str(8*precision))
 
-class FileXDMF(vfile.VFile):
+class FileXDMF(vfile.VFile):  # pylint: disable=abstract-method
     """ on init, parse an xdmf file into datasets, grids, and fields """
     _detector = r".*\.(xmf|xdmf)\s*$"
     _xdmf_defaults = {

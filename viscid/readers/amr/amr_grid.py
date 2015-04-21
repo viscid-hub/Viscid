@@ -6,8 +6,8 @@ from __future__ import print_function, division
 import numpy as np
 
 from viscid.grid import Grid
-from viscid.amr_field import AMRField
-
+from viscid.readers.amr.amr_field import AMRField
+from viscid.readers.amr import cyamr
 
 def dataset_to_amr_grid(dset, template_skeleton=None):
     """Try to divine AMR-ness from a Dataset
