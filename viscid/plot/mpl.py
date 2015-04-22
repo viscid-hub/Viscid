@@ -421,6 +421,12 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         if vmax is None:
             vmax = np.nanmax([np.nanmax(blk) for blk in fld.blocks])
 
+        # vmin / vmax will only be nan if all values are nan
+        if np.isnan(vmin) or np.isnan(vmax):
+            print("Warning: All-Nan encountered in Field,", block0.name)
+            vmin, vmax = 1e38, 1e38
+            norm_dict['symetric'] = False
+
         if vscale == "lin":
             if norm_dict['symetric']:
                 maxval = max(abs(vmin), abs(vmax))
