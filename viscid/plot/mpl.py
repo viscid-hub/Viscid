@@ -305,7 +305,7 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         else:
             raise ValueError()
     except ValueError:
-        p.get_cmap().set_bad('k')
+        p.get_cmap().set_bad('y')
 
     # show patches?
     if patchec and patchlw:
