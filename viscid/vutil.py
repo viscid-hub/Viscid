@@ -209,7 +209,9 @@ def format_time(t, style='.02f'):
         str
     """
     lstyle = style.lower()
-    if isinstance(t, datetime):
+    if t is None:
+        return ""
+    elif isinstance(t, datetime):
         return format_datetime(t, style)
     elif "hms" in lstyle:
         days = int(t // (24 * 3600))
