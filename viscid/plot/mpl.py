@@ -25,12 +25,15 @@ from viscid.compat import string_types
 from viscid import field
 from viscid import coordinate
 from viscid.calculator.topology import color_from_topology
+from viscid.plot.cmaps import extra_cmaps
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 vseaborn.activate_from_viscid()
 
+if extra_cmaps.default_cmap:
+    plt.rcParams['image.cmap'] = extra_cmaps.default_cmap
 
 def plot(fld, selection=None, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
