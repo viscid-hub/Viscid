@@ -58,7 +58,7 @@ flip_plot   bool              Flip the horizontal and vertical axes
 dolabels    bool              Alias for do_labels
 do_labels   bool              Apply labels to the axes / colorbars
 xlabel      str               Specific label for the x axis
-xlabel      str               Specific label for the y axis
+ylabel      str               Specific label for the y axis
 show        bool (optional)   Call :py:func:`pyplot.show` before returning
 ==========  ===============   ==================================================
 
