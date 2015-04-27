@@ -3,7 +3,8 @@
 Your best friend in this module is the :meth:`plot` function, but the
 best reference for all quirky options is :meth:`plot2d_field`.
 
-Note: you can't set rc parameters for this module
+Note:
+    You can't set rc parameters for this module!
 """
 from __future__ import print_function
 from distutils.version import LooseVersion

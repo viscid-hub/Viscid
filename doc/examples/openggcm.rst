@@ -84,6 +84,7 @@ Ionosphere Files
                  xytext=(-0.1, 1.0), fontsize=18)
 
     ax2 = plt.subplot(122, projection='polar')
+    plot_args['gridec'] = False
     mpl.plot(fac_tot, ax=ax2, hemisphere="south", style="contourf",
              levels=50, extend="both", **plot_args)
     ax2.annotate('(b)', xy=(0, 0), textcoords="axes fraction",
