@@ -14,6 +14,5 @@ Module contents
 ---------------
 
 .. automodule:: viscid.plot.cmaps
-    :members:
     :undoc-members:
     :show-inheritance:
