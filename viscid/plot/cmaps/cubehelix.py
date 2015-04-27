@@ -13,11 +13,7 @@ def clac_helix_rgba(hue0=420.0, hue1=150.0, sat=0.8, intensity0=0.15,
 
     This function make color maps with monotonicly increasing
     perceptual intensity. The coefficients for the basis of constant
-    intensity come from the paper:
-
-        Green, D. A., 2011, `A colour scheme for the display of
-        astronomical intensity images', Bulletin of the Astronomical
-        Society of India, 39, 289.
+    intensity come from the paper [Green2011]_:
 
     Note:
         If start OR rot are given, then the color hue is calculated
@@ -54,6 +50,10 @@ def clac_helix_rgba(hue0=420.0, hue1=150.0, sat=0.8, intensity0=0.15,
     TODO:
         An option for the ramp of intensity that doesn't rely on gamma.
         I'm thinking or something more like the Weber-Fechner law.
+
+    .. [Green2011] Green, D. A., 2011, `A colour scheme for the display
+       of astronomical intensity images', Bulletin of the Astronomical
+       Society of India, 39, 289. <http://arxiv.org/abs/1108.5083>
     """
     # set saturation of extrema using sat if necessary
     if sat0 is None:
