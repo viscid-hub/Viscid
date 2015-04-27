@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 """ super simple reader for gnuplot-like 1d ascii data
-WARNING: not lazy """
+WARNING: not lazy
+
+Fields are named "c%d" where %d is the column number. Numbers are 0
+based, but the first column is interpreted as coordinates, so the
+first field is column 1 in the file and the grid.
+"""
 
 # import string
 from __future__ import print_function
@@ -28,8 +33,9 @@ class FileASCII(vfile.VFile):  # pylint: disable=W0223
         g.set_crds(crds)
 
         if len(arr.shape) > 1:
-            for i in range(arr.shape[1] - 1):
-                fld = self._make_field(g, "Scalar", str(i), crds, arr[:, i + 1])
+            for i in range(1, arr.shape[1]):
+                fld = self._make_field(g, "Scalar", 'c' + str(i), crds,
+                                       arr[:, i])
                 g.add_field(fld)
 
         self.add(g)

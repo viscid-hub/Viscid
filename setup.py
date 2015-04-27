@@ -39,6 +39,7 @@ pkgs = ['viscid',
         'viscid.compat',
         'viscid.parsers',
         'viscid.plot',
+        'viscid.plot.cmaps',
         'viscid.readers',
         'viscid.readers.amr'
        ]

@@ -19,7 +19,7 @@ def main():
     args = vutil.common_argparse(parser)
 
     f = readers.load_file(_viscid_root + '/../sample/test.asc')
-    mpl.plot(f['0'], show=args.show)
+    mpl.plot(f['c1'], show=args.show)
 
 if __name__ == "__main__":
     main()

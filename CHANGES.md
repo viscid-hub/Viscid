@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.80.6
+
+Changes:
+  - Ascii dataset field names are now "c[0-9]+" where the number is the column number
+  - Add a way to generate your own cubehelix colormaps
+  - Sphinx has no more warnings
+
 ## 0.80.5
 
 Features:

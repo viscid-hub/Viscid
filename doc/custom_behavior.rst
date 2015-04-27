@@ -30,19 +30,26 @@ Here is an example rc file,
     # evaluator control for security
     "calculator.evaluator.enabled": false
 
+    # note, the redhelix colormap is defined in viscid.plot.cmaps.extra_cmaps
+    "plot.cmaps.extra_cmaps.default_cmap": "redhelix",
+
     # pretty plotting
     "plot.vseaborn.enabled": true
     "plot.vseaborn.context": "poster"
     "plot.vseaborn.style": "ticks"
     "plot.vseaborn.palette": ["husl", 8]
     # "plot.vseaborn.palette": [["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71"]]
-    # "plot.vseaborn.rc": {"lines.markeredgewidth": 0.01, "image.cmap": "cubehelix"}
-    # "plot.vseaborn.rc": {"lines.markeredgewidth": 0.01, "image.cmap": "jet"}
-    "plot.vseaborn.rc": {"image.cmap": "cubehelix"}
+    # "plot.vseaborn.rc": {"lines.markeredgewidth": 0.01, "image.cmap": "redhelix"}
   }
 
 Common Customizations
 ---------------------
+
+viscid.plot.cmaps.extra_cmaps.default_cmap
+------------------------------------------
+
+* **default_cmap**: Changes the default color maps for plots made using
+  :py:mod:`viscid.plot.mpl`
 
 viscid.grid.Grid
 ----------------

@@ -8,6 +8,7 @@ Subpackages
 
     viscid.calculator
     viscid.compat
+    viscid.parsers
     viscid.plot
     viscid.readers
 
@@ -32,6 +33,5 @@ Module contents
 ---------------
 
 .. automodule:: viscid
-    :members:
     :undoc-members:
     :show-inheritance:

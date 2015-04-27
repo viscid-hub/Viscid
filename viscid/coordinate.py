@@ -488,11 +488,11 @@ class StructuredCrds(Coordinates):
         be the usual tuple of slice objects / integers like one would
         give to numpy.
 
-        "y=3:6:2,z=0.0" will give (if z[32] is closest to z=0.0)
+        "y=3:6:2,z=0.0" will give (if z[32] is closest to z=0.0)::
 
             ([slice(None), slice(3, 6, 2), 32],
-            [['x', ndarray(all nc x crds)], ['y', array(y[3], y[5])]],
-            [['z', 0.0]],
+             [['x', ndarray(all nc x crds)], ['y', array(y[3], y[5])]],
+             [['z', 0.0]],
             )
 
         Parameters:
@@ -501,11 +501,13 @@ class StructuredCrds(Coordinates):
 
         Returns:
             tuple (slices, slcrds, reduced)
-            slices: list of slice objects, one for each axis in self
-            slcrds: a clist for what the coords will be after the
-                slice
-            reduced: a list of (axis, location) pairs of which axes
-            are sliced out
+
+            * **slices**: list of slice objects, one for each axis in
+              self
+            * **slcrds**: a clist for what the coords will be after the
+              slice
+            * **reduced**: a list of (axis, location) pairs of which
+              axes are sliced out
 
         Note: cc is necessary for finding the closest plane, otherwise it
             might be off by half a grid cell

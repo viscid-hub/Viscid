@@ -32,7 +32,7 @@ Contents:
 
   examples/index
 
-  api/index
+  api/viscid
 
 Indices and tables
 ==================

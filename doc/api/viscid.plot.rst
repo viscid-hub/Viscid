@@ -1,6 +1,13 @@
 viscid.plot package
 ===================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    viscid.plot.cmaps
+
 Submodules
 ----------
 
@@ -14,6 +21,5 @@ Module contents
 ---------------
 
 .. automodule:: viscid.plot
-    :members:
     :undoc-members:
     :show-inheritance:

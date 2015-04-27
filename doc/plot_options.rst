@@ -51,13 +51,14 @@ x           min, max          Set axis limits using :py:func:`pyplot.set_xlim`
 y           min, max          Set axis limits using :py:func:`pyplot.set_ylim`
 equalaxis   bool              Force 1:1 aspect ratio
 scale       bool              Scale data by some scalar value
-masknan     bool              Mask out NaN values in data
+masknan     bool, color       Mask out NaN values in data with a given color
+                              (default: 'y' for yellow)
 flipplot    bool              Alias for flip_plot
 flip_plot   bool              Flip the horizontal and vertical axes
 dolabels    bool              Alias for do_labels
 do_labels   bool              Apply labels to the axes / colorbars
 xlabel      str               Specific label for the x axis
-xlabel      str               Specific label for the y axis
+ylabel      str               Specific label for the y axis
 show        bool (optional)   Call :py:func:`pyplot.show` before returning
 ==========  ===============   ==================================================
 

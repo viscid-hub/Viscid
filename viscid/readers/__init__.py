@@ -1,4 +1,7 @@
 """ docstring for readers """
+
+__all__ = ["amr"]
+
 # To add a new file type, subclass VFile and import the module here.
 # This registers the file type class as a subclass of VFile, and
 # it automatically becomes part of the file detection cascade...

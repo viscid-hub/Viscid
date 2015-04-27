@@ -3,7 +3,8 @@
 Your best friend in this module is the :meth:`plot` function, but the
 best reference for all quirky options is :meth:`plot2d_field`.
 
-Note: you can't set rc parameters for this module
+Note:
+    You can't set rc parameters for this module!
 """
 from __future__ import print_function
 from distutils.version import LooseVersion
@@ -25,12 +26,15 @@ from viscid.compat import string_types
 from viscid import field
 from viscid import coordinate
 from viscid.calculator.topology import color_from_topology
+from viscid.plot.cmaps import extra_cmaps
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 vseaborn.activate_from_viscid()
 
+if extra_cmaps.default_cmap:
+    plt.rcParams['image.cmap'] = extra_cmaps.default_cmap
 
 def plot(fld, selection=None, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
@@ -305,7 +309,7 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         else:
             raise ValueError()
     except ValueError:
-        p.get_cmap().set_bad('k')
+        p.get_cmap().set_bad('y')
 
     # show patches?
     if patchec and patchlw:
@@ -420,6 +424,12 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             vmin = np.nanmin([np.nanmin(blk) for blk in fld.blocks])
         if vmax is None:
             vmax = np.nanmax([np.nanmax(blk) for blk in fld.blocks])
+
+        # vmin / vmax will only be nan if all values are nan
+        if np.isnan(vmin) or np.isnan(vmax):
+            print("Warning: All-Nan encountered in Field,", block0.name)
+            vmin, vmax = 1e38, 1e38
+            norm_dict['symetric'] = False
 
         if vscale == "lin":
             if norm_dict['symetric']:

@@ -1,6 +1,13 @@
 viscid.readers package
 ======================
 
+Subpackages
+-----------
+
+.. toctree::
+
+    viscid.readers.amr
+
 Submodules
 ----------
 
