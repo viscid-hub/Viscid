@@ -13,9 +13,8 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+import viscid
 from viscid import vutil
-from viscid import readers
-from viscid import field
 from viscid.plot import mvi
 
 def main():
@@ -23,7 +22,7 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = readers.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
 
     if "b" in f3d:
         b = f3d["b"]
@@ -32,7 +31,7 @@ def main():
         bx = f3d["bx"]
         by = f3d["by"]
         bz = f3d["bz"]
-        b = field.scalar_fields_to_vector("b", [bx, by, bz])
+        b = viscid.scalar_fields_to_vector([bx, by, bz], name='b')
     else:
         raise RuntimeError("Where have all the B fields gone...")
 

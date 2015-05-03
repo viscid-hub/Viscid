@@ -243,7 +243,7 @@ class Grid(tree.Node):
     def __enter__(self):
         return self
 
-    def __exit__(self, typ, value, traceback):
+    def __exit__(self, exc_type, value, traceback):
         self.unload()
         return None
 

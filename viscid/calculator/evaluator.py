@@ -123,7 +123,7 @@ def _evaluate_numexpr(grid, result_name, eqn, slc=None):
         return flds[0].wrap(arr, context=ctx)
     else:
         logger.warn("Strange input to numexpr evaluator: %s", eqn)
-        return field.wrap_field("Scalar", result_name, grid.crds, arr)
+        return field.wrap_field(arr, grid.crds, name=result_name)
 
 def _evaluate_numpy(grid, result_name, eqn, slc=None):
     """

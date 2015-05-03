@@ -11,7 +11,6 @@ from __future__ import print_function
 import warnings
 from itertools import count, islice
 from inspect import isclass
-import types
 
 import numpy as np
 
@@ -27,23 +26,122 @@ LAYOUT_FLAT = "flat"
 LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
-def empty(typ, name, crds, nr_comps=0, layout=LAYOUT_FLAT, center="Cell",
-          dtype="float64", **kwargs):
+
+def arrays2field(dat_arr, crd_arrs, name="NoName", center=None):
+    """Turn arrays into fields so they can be used in viscid.plot, etc.
+
+    This is a convenience function that takes care of making coordnates
+    and the like. If the default behavior doesn't work for you, you'll
+    need to make your own coordnates and call
+    :py:func:`viscid.field.wrap_field`.
+
+    Args:
+        dat_arr (ndarray): data with len(crd_arrs) or len(crd_arrs) + 1
+            dimensions
+        crd_arrs (list of ndarrays): zyx list of ndarrays that
+            describe the node centered coordnates of the field
+        name (str): some name
+        center (str, None): If not None, translate field to this
+            centering (node or cell)
+    """
+    crds = coordinate.arrays2crds(crd_arrs)
+
+    # discover what kind of data was given
+    if len(dat_arr.shape) == len(crds.shape_nc):
+        discovered_type = "scalar"
+        discovered_layout = LAYOUT_FLAT
+        if crds.shape_nc == dat_arr.shape:
+            discovered_center = "node"
+        elif crds.shape_cc == dat_arr.shape:
+            discovered_center = "cell"
+        else:
+            raise ValueError("Can't detect centering for scalar dat_arr")
+    elif len(dat_arr.shape) + 1 == len(crds.shape_nc):
+        discovered_type = "vector"
+        if crds.shape_nc == dat_arr.shape[:-1]:
+            discovered_layout = LAYOUT_INTERLACED
+            discovered_center = "node"
+        elif crds.shape_cc == dat_arr.shape[:-1]:
+            discovered_layout = LAYOUT_INTERLACED
+            discovered_center = "cell"
+        elif crds.shape_nc == dat_arr.shape[1:]:
+            discovered_layout = LAYOUT_FLAT
+            discovered_center = "node"
+        elif crds.shape_cc == dat_arr.shape[1:]:
+            discovered_layout = LAYOUT_FLAT
+            discovered_center = "cell"
+        else:
+            raise ValueError("Can't detect centering for vector dat_arr")
+    else:
+        raise ValueError("crds and data have incompatable dimensions: {0} {1}"
+                         "".format(dat_arr.shape, crds.shape_nc))
+
+    fld = wrap_field(dat_arr, crds, name=name, fldtype=discovered_type,
+                     center=discovered_center, layout=discovered_layout)
+    fld = fld.as_centered(center)
+    return fld
+
+def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
+              layout=LAYOUT_FLAT):
+    """Makes np.arange coordnate arrays and calls arrays2field
+
+    Args:
+        dat_arr (ndarray): data
+        name (str): name of field
+        fldtype (str, optional): 'scalar' / 'vector'
+        center (str, None): If not None, translate field to this
+            centering (node or cell)
+        layout (TYPE, optional): Description
+    """
+    sshape = []
+    if fldtype.lower() == "scalar":
+        sshape = dat_arr.shape
+    elif fldtype.lower() == "vector":
+        if layout == LAYOUT_FLAT:
+            sshape = dat_arr.shape[1:]
+        elif layout == LAYOUT_FLAT:
+            sshape = dat_arr.shape[1:]
+        else:
+            raise ValueError("Unknown layout: {0}".format(layout))
+    else:
+        raise ValueError("Unknown type: {0}".format(fldtype))
+
+    crd_arrs = [np.arange(s).astype(dat_arr.dtype) for s in sshape]
+    return arrays2field(name, crd_arrs, dat_arr, center=center)
+
+def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
+          nr_comps=0, _initial_vals="empty", **kwargs):
     """Analogous to `numpy.empty` (uninitialized array)
 
     Parameters:
-        typ (str): 'Scaler' / 'Vector'
+        crds (Coordinates, list, or tuple): Can be a coordinates
+            object. Can also be a list of ndarrays describing
+            coordinate arrays. Or, if it's just a list or tuple of
+            integers, those integers are taken to be the nz,ny,nx shape
+            and the coordinates will be fill with :py:func:`np.arange`.
+        dtype (optional): some way to describe numpy dtype of data
         name (str): a way to refer to the field programatically
-        crds (Coordinates): coordinates that describe the shape / grid
-            of the field
-        nr_comps (int, optional): for vector fields, nr of components
-        layout (str, optional): how data is stored, is in "flat" or
-            "interlaced" (interlaced == AOS)
         center (str, optional): cell or node, there really isn't
             support for edge / face yet
-        dtype (optional): some way to describe numpy dtype of data
-        kwargs: passed through to Field constructor
+        layout (str, optional): how data is stored, is in "flat" or
+            "interlaced" (interlaced == AOS)
+        nr_comps (int, optional): for vector fields, nr of components
+        **kwargs: passed through to Field constructor
     """
+    if not isinstance(crds, coordinate.Coordinates):
+        # if crds is a list/tuple of integers, then make coordinate
+        # arrays using arange
+        if not isinstance(crds, (list, tuple, np.ndarray)):
+            try:
+                crds = list(crds)
+            except TypeError:
+                crds = [crds]
+        if all([isinstance(c, int) for c in crds]):
+            crds = [np.arange(c).astype(dtype) for c in crds]
+        # now assume that crds is a list of coordinate arrays that arrays2crds
+        # can understand
+        crds = coordinate.arrays2crds(crds)
+
     if center.lower() == "cell":
         sshape = crds.shape_cc
     elif center.lower() == "node":
@@ -51,28 +149,62 @@ def empty(typ, name, crds, nr_comps=0, layout=LAYOUT_FLAT, center="Cell",
     else:
         sshape = crds.shape_nc
 
-    if ScalarField.istype(typ):
+    if nr_comps == 0:
+        fldtype = "scalar"
         shape = sshape
     else:
+        fldtype = "vector"
         if layout.lower() == LAYOUT_INTERLACED:
-            shape = sshape + [nr_comps]
+            shape = list(sshape) + [nr_comps]
         else:
-            shape = [nr_comps] + sshape
+            shape = [nr_comps] + list(sshape)
 
-    dat = np.empty(shape, dtype=dtype)
+    if _initial_vals == "empty":
+        dat = np.empty(shape, dtype=dtype)
+    elif _initial_vals == "zeros":
+        dat = np.zeros(shape, dtype=dtype)
+    elif _initial_vals == "ones":
+        dat = np.ones(shape, dtype=dtype)
+    else:
+        raise ValueError("_initial_vals only accepts empty, zeros, ones; not {0}"
+                         "".format(_initial_vals))
+    return wrap_field(dat, crds, name=name, fldtype=fldtype, center=center,
+                      **kwargs)
 
-    return wrap_field(typ, name, crds, dat, center=center, **kwargs)
+def zeros(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
+          nr_comps=0, **kwargs):
+    """Analogous to `numpy.zeros`
 
-def empty_like(name, fld, **kwargs):
+    Returns:
+        new :class:`Field` initialized to 0
+
+    See Also: :meth:`empty`
+    """
+    return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
+                 nr_comps=nr_comps, _inital="zeros", **kwargs)
+
+def ones(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
+         nr_comps=0, **kwargs):
+    """Analogous to `numpy.ones`
+
+    Returns:
+        new :class:`Field` initialized to 1
+
+    See Also: :meth:`empty`
+    """
+    return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
+                 nr_comps=nr_comps, _inital="ones", **kwargs)
+
+def empty_like(fld, name="NoName", **kwargs):
     """Analogous to `numpy.empty_like`
 
     Makes a new, unitilialized :class:`Field`. Copies as much meta data
     as it can from `fld`.
 
     Parameters:
-        name: name for this field
         fld: field to get coordinates / metadata from
-        kwargs: passed through to :class:`Field` constructor
+        name: name for this field
+        **kwargs: passed through to :class:`Field` constructor
 
     Returns:
         new uninitialized :class:`Field`
@@ -80,10 +212,10 @@ def empty_like(name, fld, **kwargs):
     dat = np.empty(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
-    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t,
-                      parents=[fld], **kwargs)
+    return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
+                      time=t, parents=[fld], **kwargs)
 
-def zeros_like(name, fld, **kwargs):
+def zeros_like(fld, name="NoName", **kwargs):
     """Analogous to `numpy.zeros_like`
 
     Returns:
@@ -94,10 +226,10 @@ def zeros_like(name, fld, **kwargs):
     dat = np.zeros(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
-    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t,
-                      parents=[fld], **kwargs)
+    return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
+                      time=t, parents=[fld], **kwargs)
 
-def ones_like(name, fld, **kwargs):
+def ones_like(fld, name="NoName", **kwargs):
     """Analogous to `numpy.ones_like`
 
     Returns:
@@ -108,16 +240,16 @@ def ones_like(name, fld, **kwargs):
     dat = np.ones(fld.shape, dtype=fld.dtype)
     c = fld.center
     t = fld.time
-    return wrap_field(fld.type, name, fld.crds, dat, center=c, time=t,
-                      parents=[fld], **kwargs)
+    return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
+                      time=t, parents=[fld], **kwargs)
 
-def scalar_fields_to_vector(name, fldlist, **kwargs):
-    """Convert scaler fields to a vector field
+def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
+    """Convert scalar fields to a vector field
 
     Parameters:
         name (str): name for the vector field
         fldlist: list of :class:`ScalarField`
-        kwargs: passed to :class:`VectorField` constructor
+        **kwargs: passed to :class:`VectorField` constructor
 
     Returns:
         A new :class:`VectorField`.
@@ -136,45 +268,45 @@ def scalar_fields_to_vector(name, fldlist, **kwargs):
                          **kwargs)
     return vfield
 
-def field_type(typ):
+def field_type(fldtype):
     """Lookup a Field type
 
-    The magic lookup happens when typ is a string, if typ is a class
+    The magic lookup happens when fldtype is a string, if fldtype is a class
     then just return the class for convenience.
 
     Parameters:
-        typ: python class object or string describing a field type in
+        fldtype: python class object or string describing a field type in
             some way
 
     Returns:
         a :class:`Field` subclass
     """
-    if isclass(typ) and issubclass(typ, Field):
-        return typ
+    if isclass(fldtype) and issubclass(fldtype, Field):
+        return fldtype
     else:
         for cls in vutil.subclass_spider(Field):
-            if cls.istype(typ):
+            if cls.istype(fldtype):
                 return cls
-    logger.warn("Field type {0} not understood".format(typ))
+    logger.warn("Field type {0} not understood".format(fldtype))
     return None
 
-def wrap_field(typ, name, crds, data, **kwargs):
+def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
     """Convenience script for wrapping ndarrays
 
     Parameters:
-        typ (str): 'Scaler' / 'Vector'
-        name (str): a way to refer to the field programatically
+        data: Some data container, most likely a ``numpy.ndarray``
         crds (Coordinates): coordinates that describe the shape / grid
             of the field
-        data: Some data container, most likely a ``numpy.ndarray``
-        kwargs: passed through to :class:`Field` constructor
+        fldtype (str): 'scalar' / 'Vector'
+        name (str): a way to refer to the field programatically
+        **kwargs: passed through to :class:`Field` constructor
 
     Returns:
         A :class:`Field` instance.
     """
     #
     #len(clist), clist[0][0], len(clist[0][1]), type)
-    cls = field_type(typ)
+    cls = field_type(fldtype)
     if cls is not None:
         return cls(name, crds, data, **kwargs)
     else:
@@ -296,7 +428,7 @@ class Field(tree.Leaf):
             self.forget_source()
 
     @property
-    def type(self):
+    def fldtype(self):
         return self._TYPE
 
     @property
@@ -721,7 +853,7 @@ class Field(tree.Leaf):
             return self._src_data[comp_slc]
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(self._src_crds.type, crdlst)
+        crds = coordinate.wrap_crds(self._src_crds.crdtype, crdlst)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -811,7 +943,7 @@ class Field(tree.Leaf):
             ret = slced_dat
         else:
             ctx = dict(crds=crds)
-            typ = None
+            fldtype = None
             # if we sliced a vector down to one component
             if self.nr_comps is not None:
                 if single_comp_slc:
@@ -819,8 +951,8 @@ class Field(tree.Leaf):
                     ctx['name'] = self.name + comp_name
                     ctx['pretty_name'] = (self.pretty_name +
                                           "$_{0}$".format(comp_name))
-                    typ = "Scalar"
-            ret = self.wrap(slced_dat, ctx, typ=typ)
+                    fldtype = "Scalar"
+            ret = self.wrap(slced_dat, ctx, fldtype=fldtype)
 
             # if there are reduced dims, put them into the deep_meta dict
             if len(reduced) > 0:
@@ -901,7 +1033,7 @@ class Field(tree.Leaf):
     def __enter__(self):
         return self
 
-    def __exit__(self, typ, value, traceback):
+    def __exit__(self, exc_type, value, traceback):
         """ unload the data """
         self.unload()
         return None
@@ -1020,6 +1152,17 @@ class Field(tree.Leaf):
     ## convert centering
     # Note: these are kind of specific to cartesian connected grids
 
+    def as_centered(self, center):
+        if not center:
+            fld = self
+        elif center.lower() == "cell":
+            fld = self.as_cell_centered()
+        elif center.lower() == "node":
+            fld = self.as_node_centered()
+        else:
+            raise NotImplementedError("can only give field as cell or node")
+        return fld
+
     def as_cell_centered(self):
         """Convert field to cell centered field without discarding
         any data; this goes through hacky pains to make sure the data
@@ -1061,9 +1204,9 @@ class Field(tree.Leaf):
 
         elif self.iscentered('cell'):
             # construct new crds
-            axes = self._src_crds.axes
-            crds_cc = self.get_crds_cc()
-            new_clist = [(ax, cc) for ax, cc in zip(axes, crds_cc)]
+            # axes = self._src_crds.axes
+            # crds_cc = self.get_crds_cc()
+            new_clist = self._src_crds.get_clist(center="cell")
             new_crds = type(self._src_crds)(new_clist)
 
             # this is similar to a shell copy, but it's intimately
@@ -1133,7 +1276,7 @@ class Field(tree.Leaf):
         # dtype = None is ok, datatype won't change
         return np.array(self.data, dtype=dtype, copy=False)
 
-    def wrap(self, arr, context=None, typ=None):
+    def wrap(self, arr, context=None, fldtype=None):
         """ arr is the data to wrap... context is exta deep_meta to pass
         to the constructor. The return is just a number if arr is a
         1 element ndarray, this is for ufuncs that reduce to a scalar """
@@ -1151,13 +1294,13 @@ class Field(tree.Leaf):
         center = context.pop("center", self.center)
         time = context.pop("time", self.time)
         # should it always return the same type as self?
-        if typ is None:
-            typ = type(self)
+        if fldtype is None:
+            fldtype = type(self)
         else:
-            typ = field_type(typ)
+            fldtype = field_type(fldtype)
         # Transform functions are intentionally omitted. The idea being that
         # the transform was already applied when creating arr
-        return typ(name, crds, arr, time=time, center=center,
+        return fldtype(name, crds, arr, time=time, center=center,
                    meta=self.meta, deep_meta=context, parents=[self],
                    pretty_name=pretty_name)
 
@@ -1319,14 +1462,14 @@ class ScalarField(Field):
             raise ValueError("transpose can not change number of axes")
         clist = self._src_crds.get_clist()
         new_clist = [clist[ax] for ax in axes]
-        t_crds = coordinate.wrap_crds(self._src_crds.type, new_clist)
+        t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist)
         t_data = self.data.transpose(axes)
         return self.wrap(t_data, {"crds": t_crds})
 
     def swap_axes(self, a, b):
         new_clist = self._src_crds.get_clist()
         new_clist[a], new_clist[b] = new_clist[b], new_clist[a]
-        new_crds = coordinate.wrap_crds(self._src_crds.type, new_clist)
+        new_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist)
         new_data = self.data.swap_axes(a, b)
         return self.wrap(new_data, {"crds": new_crds})
 
@@ -1335,6 +1478,7 @@ class ScalarField(Field):
             return self.as_c_contiguous()
         else:
             return self
+
 
 class VectorField(Field):
     _TYPE = "vector"

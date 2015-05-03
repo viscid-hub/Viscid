@@ -33,13 +33,11 @@ def main():
     jz = f["jz"]
     # recreate hx as a field of 0 to keep streamlines from moving in
     # that direction
-    # hx = field.wrap_field("Scalar", "hx", jz.crds, np.zeros_like(jz.data),
-    #                       center="Cell")
-    hx = field.zeros_like("hx", jz)
-    h1 = field.scalar_fields_to_vector("H", [hx, f["hy"], f["hz"]],
+    hx = field.zeros_like(jz, name="hx")
+    h1 = field.scalar_fields_to_vector([hx, f["hy"], f["hz"]], name="H",
                                        _force_layout="Interlaced",
                                        forget_source=True)
-    e = field.scalar_fields_to_vector("E", [f["ex"], f["ey"], f["ez"]],
+    e = field.scalar_fields_to_vector([f["ex"], f["ey"], f["ez"]], name="E",
                                       _force_layout="Interlaced",
                                       forget_source=True)
 

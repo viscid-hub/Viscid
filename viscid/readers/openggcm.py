@@ -316,7 +316,7 @@ class GGCMGrid(grid.Grid):
         opts = dict(forget_source=forget_source, **kwargs)
         # caching behavior depends on self.longterm_field_caches
         comps = [self[base_name + c + suffix] for c in comp_names]
-        return field.scalar_fields_to_vector(base_name, comps, **opts)
+        return field.scalar_fields_to_vector(comps, name=base_name, **opts)
 
     def _get_b(self):
         return self._assemble_vector("b", _force_layout=self.force_vector_layout,
@@ -343,7 +343,7 @@ class GGCMGrid(grid.Grid):
     def _calc_mag(vx, vy, vz):
         if _has_numexpr:
             vmag = numexpr.evaluate("sqrt(vx**2 + vy**2 + vz**2)")
-            return vx.wrap(vmag, typ="Scalar")
+            return vx.wrap(vmag, fldtype="Scalar")
         else:
             vmag = np.sqrt(vx**2 + vy**2 + vz**2)
             return vmag

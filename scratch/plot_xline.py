@@ -55,8 +55,8 @@ def resample_field(sample_fld, src_fld, name):
                 data[k, j, i] = nval
     print("data fill done")
 
-    return field.wrap_field(name, sample_fld.center, sample_fld.crds,
-                            data, sample_fld.time, "Scalar")
+    return field.wrap_field(data, sample_fld.crds, name=name,
+                            center=sample_fld.center
 
 def plot_line_file(fname):
     with open(fname, 'r') as f:

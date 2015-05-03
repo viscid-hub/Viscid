@@ -161,10 +161,13 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
         """ save some fields using the format given by the class """
         # FIXME: this is only good for writing cartesian rectilnear flds
         # FIXME: axes are renamed if flds[0] is 1D or 2D
-        assert(len(flds) > 0)
+        assert len(flds) > 0
         fname = os.path.expanduser(os.path.expandvars(fname))
 
-        clist = flds[0].crds.get_clist()
+        # FIXME: all coordinates are saved as non-uniform, the proper
+        #        way to do this is to have let coordinate format its own
+        #        hdf5 / xdmf / numpy binary output
+        clist = flds[0].crds.get_clist(full_arrays=True)
         crd_arrs = [np.array([0.0])] * 3
         crd_names = ["z", "y", "x"]
         for i, c in enumerate(clist):
@@ -191,20 +194,23 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
             zloc = cls._CRDS_GROUP + '/' + crd_names[0]
             dim_str = " ".join([str(l) for l in crd_shape])
             f.write(cls._XDMF_TEMPLATE_BEGIN.format(time=time))
-            f.write(cls._XDMF_TEMPLATE_RECTILINEAR_GRID_BEGIN.format(
-                    grid_name="vgrid", crd_dims=dim_str, h5fname=relh5fname,
-                    xdim=crd_shape[2], ydim=crd_shape[1], zdim=crd_shape[0],
-                    xloc=xloc, yloc=yloc, zloc=zloc))
+            s = cls._XDMF_TEMPLATE_RECTILINEAR_GRID_BEGIN.format(
+                grid_name="vgrid", crd_dims=dim_str, h5fname=relh5fname,
+                xdim=crd_shape[2], ydim=crd_shape[1], zdim=crd_shape[0],
+                xloc=xloc, yloc=yloc, zloc=zloc)
+            f.write(s)
 
             for fld in flds:
                 dt = fld.dtype.name.rstrip("0123456789").title()
                 precision = fld.dtype.itemsize
                 fld_dim_str = " ".join([str(l) for l in fld.shape])
                 loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + fld.name
-                f.write(cls._XDMF_TEMPLATE_ATTRIBUTE.format(fld_name=fld.name,
-                        fld_type=fld.type, center=fld.center.title(),
-                        dtype=dt, precision=precision, fld_dims=fld_dim_str,
-                        h5fname=relh5fname, fld_loc=loc))
+                s = cls._XDMF_TEMPLATE_ATTRIBUTE.format(
+                    fld_name=fld.name,
+                    fld_type=fld.fldtype, center=fld.center.title(),
+                    dtype=dt, precision=precision, fld_dims=fld_dim_str,
+                    h5fname=relh5fname, fld_loc=loc)
+                f.write(s)
 
             f.write(cls._XDMF_TEMPLATE_GRID_END)
             f.write(cls._XDMF_TEMPLATE_END)

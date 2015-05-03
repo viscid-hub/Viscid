@@ -79,6 +79,6 @@ class FortranFile(object):
             self.open()
         return self
 
-    def __exit__(self, typ, value, traceback):
+    def __exit__(self, exc_type, value, traceback):
         if self.isopen:
             self.close()

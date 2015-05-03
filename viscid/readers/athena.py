@@ -166,12 +166,12 @@ class AthenaGrid(grid.Grid):
     def _get_b(self):
         bx, by, bz = self['bx'], self['by'], self['bz']
         opts = dict(_force_layout=self.force_vector_layout)
-        return field.scalar_fields_to_vector("B", [bx, by, bz], **opts)
+        return field.scalar_fields_to_vector([bx, by, bz], name="B", **opts)
 
     def _get_v(self):
         vx, vy, vz = self['vx'], self['vy'], self['vz']
         opts = dict(_force_layout=self.force_vector_layout)
-        return field.scalar_fields_to_vector("V", [vx, vy, vz], **opts)
+        return field.scalar_fields_to_vector([vx, vy, vz], name="V", **opts)
 
     def _get_j(self):
         # b = self['b']
@@ -186,7 +186,7 @@ class AthenaGrid(grid.Grid):
     def _calc_mag(vx, vy, vz):
         if _has_numexpr:
             vmag = numexpr.evaluate("sqrt(vx**2 + vy**2 + vz**2)")
-            return vx.wrap(vmag, typ="Scalar")
+            return vx.wrap(vmag, fldtype="Scalar")
         else:
             vmag = np.sqrt(vx**2 + vy**2 + vz**2)
             return vmag

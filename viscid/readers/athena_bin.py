@@ -267,7 +267,7 @@ class AthenaBinFileWrapper(object):
         self.open()
         return self
 
-    def __exit__(self, typ, value, traceback):
+    def __exit__(self, exc_type, value, traceback):
         self.close()
 
     def _read_file_header(self):

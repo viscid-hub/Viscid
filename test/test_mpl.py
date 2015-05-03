@@ -14,10 +14,9 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+import viscid
 from viscid import logger
 from viscid import vutil
-from viscid import field
-from viscid import coordinate
 from viscid.plot import mpl
 
 dtype = 'float64'
@@ -28,13 +27,10 @@ def run_mpl_testA(show=False):
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-1, 1, 2), dtype=dtype)
-    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
-    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True)
 
-    s = ne.evaluate("(sin(Xcc) + cos(Ycc))")
-    fld_s = field.ScalarField("s", crds, s, center="Cell", forget_source=True)
-
-    # print("shape: ", fld_s.data.shape)
+    fld_s = viscid.empty([z, y, x], center='cell')
+    Zcc, Ycc, Xcc = fld_s.get_crds_cc(shaped=True)  # pylint: disable=unused-variable
+    fld_s[:, :, :] = ne.evaluate("(sin(Xcc) + cos(Ycc))")
 
     nrows = 4
     ncols = 1
@@ -59,12 +55,10 @@ def run_mpl_testB(show=False):
     x = np.array(np.linspace(-10, 10, 100), dtype=dtype)
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-10, 10, 140), dtype=dtype)
-    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
-    Z, Y, X = crds.get_crds_nc(shaped=True) #pylint: disable=W0612
 
-    s = ne.evaluate("(sin(X) + cos(Y) - cos(Z))")
-    fld_s = field.ScalarField("s", crds, s, center="Node", forget_source=True)
-
+    fld_s = viscid.empty([z, y, x], center='node')
+    Z, Y, X = fld_s.get_crds_nc(shaped=True) #pylint: disable=W0612
+    fld_s[:, :, :] = ne.evaluate("sin(X) + cos(Y) - cos(Z)")
     # print("shape: ", fld_s.data.shape)
 
     nrows = 4

@@ -53,9 +53,9 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                         # "-------+------ type -- ???"
                         # as well as blank lines that mark the end of a
                         # section
-                        typ = re.match(r"-+\+-+ type -- (\w+)", line)
-                        if typ:
-                            _info["{0}_type".format(armed)] = typ.group(1)
+                        clstype = re.match(r"-+\+-+ type -- (\w+)", line)
+                        if clstype:
+                            _info["{0}_type".format(armed)] = clstype.group(1)
                             # yes, keep armed, for super's parameters
                         elif line == "":
                             armed = False

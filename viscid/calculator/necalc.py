@@ -41,7 +41,8 @@ class VneCalc(object):
 
         # print(ldict)
         result = ne.evaluate(self.expr, local_dict=ldict)
-        return args[0].wrap(result, context=self.ret_context, typ=self.ret_type)
+        return args[0].wrap(result, context=self.ret_context,
+                            fldtype=self.ret_type)
 
 add = VneCalc("a + b", {'a': 0, 'b': 1})
 diff = VneCalc("a - b", {'a': 0, 'b': 1})
@@ -67,14 +68,14 @@ def abs_min(fld):
 def magnitude(fld):
     vx, vy, vz = fld.component_views() #pylint: disable=W0612
     mag = ne.evaluate("sqrt((vx**2) + (vy**2) + (vz**2))")
-    return fld.wrap(mag, typ="Scalar")
+    return fld.wrap(mag, fldtype="Scalar")
 
 def dot(fld_a, fld_b):
     """ 3d dot product of two vector fields """
     ax, ay, az = fld_a.component_views() #pylint: disable=W0612
     bx, by, bz = fld_b.component_views() #pylint: disable=W0612
     prod = ne.evaluate("(ax * bx) + (ay * by) + (az * bz)")
-    return fld_a.wrap(prod, typ="Scalar")
+    return fld_a.wrap(prod, fldtype="Scalar")
 
 def cross(fld_a, fld_b):
     """ cross product of two vector fields """
@@ -117,7 +118,7 @@ def div(fld):
 
     div_arr = ne.evaluate("(vxp-vxm)/(xp-xm) + (vyp-vym)/(yp-ym) + "
                           "(vzp-vzm)/(zp-zm)")
-    return field.wrap_field("Scalar", "div " + fld.name, divcrds, div_arr,
+    return field.wrap_field(div_arr, divcrds, name="div " + fld.name,
                             center=divcenter, time=fld.time, parents=[fld])
 
 def curl(fld):
@@ -155,8 +156,8 @@ def curl(fld):
     curl_y = ne.evaluate("-(vzpx-vzmx)/(xp-xm) + (vxpz-vxmz)/(zp-zm)")
     curl_z = ne.evaluate("(vypx-vymx)/(xp-xm) - (vxpy-vxmy)/(yp-ym)")
 
-    return field.wrap_field("Vector", "curl " + fld.name, curlcrds,
-                            [curl_x, curl_y, curl_z],
+    return field.wrap_field([curl_x, curl_y, curl_z], curlcrds,
+                            name="curl " + fld.name, fldtype="Vector",
                             center=curlcenter, time=fld.time,
                             parents=[fld])
 

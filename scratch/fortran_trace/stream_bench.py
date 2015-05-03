@@ -63,12 +63,12 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
     print("total segments calculated: {0:.05e}".format(float(nsegs)))
     print("time: {0:.4}s ... {1:.4}s/segment".format(t, t / float(nsegs)))
 
-    topo_fld = vol.wrap_field("Scalar", "FortTopo", topo)
+    topo_fld = vol.wrap_field(topo, name="FortTopo")
     return None, topo_fld
 
 def trace_cython(fld_bx, fld_by, fld_bz):
     # print("Cython...")
-    B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
+    B = field.scalar_fields_to_vector([fld_bx, fld_by, fld_bz], name="B_cc",
                                       _force_layout=field.LAYOUT_INTERLACED)
     t0 = time()
     lines, topo = None, None
@@ -78,7 +78,7 @@ def trace_cython(fld_bx, fld_by, fld_bz):
                             tol_lo=0.005, tol_hi=0.1,
                             fac_refine=0.75, fac_coarsen=1.5)
     t1 = time()
-    topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
+    topo_fld = vol.wrap_field(topo, name="CyTopo")
 
     cmap = plt.get_cmap('spectral')
     levels = [4, 5, 6, 7, 8, 13, 14, 16, 17]
@@ -109,14 +109,14 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     return lines, topo_fld
 
 def trace_numba(fld_bx, fld_by, fld_bz):
-    B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
+    B = field.scalar_fields_to_vector([fld_bx, fld_by, fld_bz], name="B_cc",
                                       _force_layout=field.LAYOUT_INTERLACED)
     topo_arr = np.empty(gsize, order='C', dtype='int')
     lines, topo = None, None
     t0 = time()
     nsegs = topo_numba.get_topo(B, topo_arr, x1, x2, y1, y2, z1, z2)
     t1 = time()
-    topo_fld = vol.wrap_field("Scalar", "CyTopo", topo)
+    topo_fld = vol.wrap_field(topo, name="CyTopo")
     return t1 - t0, nsegs, lines, topo_fld
 
 def main():

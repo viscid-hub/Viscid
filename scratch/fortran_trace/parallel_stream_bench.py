@@ -60,13 +60,13 @@ def main():
     bx = f3d["bx"]
     by = f3d["by"]
     bz = f3d["bz"]
-    B = field.scalar_fields_to_vector("B_cc", [bx, by, bz],
-                                _force_layout=field.LAYOUT_INTERLACED)
+    B = field.scalar_fields_to_vector([bx, by, bz], name="B_cc",
+                                      _force_layout=field.LAYOUT_INTERLACED)
 
     t0 = time()
     lines_single, topo = trace_cython(B, nr_procs=1)
     t1 = time()
-    topo_single = vol.wrap_field("Scalar", "CyTopo1", topo)
+    topo_single = vol.wrap_field(topo, name="CyTopo1")
     print("single proc:", t1 - t0, "s")
 
     nr_procs_list = np.array([1, 2, 3])
@@ -78,7 +78,7 @@ def main():
         t0 = time()
         lines, topo = trace_cython(B, nr_procs=nr_procs, force_parallel=True)
         t1 = time()
-        fld = vol.wrap_field("Scalar", "CyTopo", topo)
+        fld = vol.wrap_field(topo, name="CyTopo")
         same_topo = (fld.data == topo_single.data).all()
         same_lines = True
         for j, line in enumerate(lines):

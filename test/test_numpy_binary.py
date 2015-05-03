@@ -12,10 +12,8 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+import viscid
 from viscid import vutil
-from viscid import readers
-from viscid import coordinate
-from viscid import field
 from viscid.plot import mpl
 from viscid.plot.mpl import plt
 
@@ -29,23 +27,21 @@ def main():
     x = np.linspace(-2, 2, 20)
     y = np.linspace(-2.5, 2.5, 25)
     z = np.linspace(-3, 3, 30)
-    crds = coordinate.wrap_crds("nonuniform_cartesian", [('z', z), ('y', y), ('x', x)])
+    psi = viscid.empty([z, y, x], name='psi', center='node')
+    b = viscid.empty([z, y, x], nr_comps=3, name='b', center='cell',
+                     layout='interlaced')
 
-    psi = field.empty("Scalar", "psi", crds, center="Node")
-    b = field.empty("Vector", "b", crds, nr_comps=3,
-                    layout=field.LAYOUT_INTERLACED, center="Cell")
-
-    Z, Y, X = crds.get_crds_nc("zyx", shaped=True)
-    Zcc, Ycc, Xcc = crds.get_crds_cc("zyx", shaped=True)
+    Z, Y, X = psi.get_crds_nc("zyx", shaped=True)
+    Zcc, Ycc, Xcc = psi.get_crds_cc("zyx", shaped=True)
     psi[:, :, :] = 0.5 * (X**2 + Y**2 - Z**2)
-    b[:, :, :, 0] = Xcc
-    b[:, :, :, 1] = Ycc
-    b[:, :, :, 2] = -Zcc
+    b['x'] = Xcc
+    b['y'] = Ycc
+    b['z'] = -Zcc
 
     fname = _viscid_root + '/../sample/test.npz'
-    readers.save_fields(fname, [psi, b])
+    viscid.save_fields(fname, [psi, b])
 
-    f = readers.load_file(fname)
+    f = viscid.load_file(fname)
     plt.subplot(131)
     mpl.plot(f['psi'], "y=0")
     plt.subplot(132)
