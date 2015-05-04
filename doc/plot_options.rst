@@ -47,6 +47,7 @@ loglog      [vmin, [vmax]]    Same as log, but also use a logscale for the
                               coordinates
 logscale    bool              Use a logarithmic scale for the data
 symetric    bool              Make the data scale symetric around 0
+norescale   bool              Do not set limit of the data axis explicitly
 x           min, max          Set axis limits using :py:func:`pyplot.set_xlim`
 y           min, max          Set axis limits using :py:func:`pyplot.set_ylim`
 equalaxis   bool              Force 1:1 aspect ratio

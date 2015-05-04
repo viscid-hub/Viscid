@@ -157,7 +157,7 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
             to unpack when calling that function
 
         norm_dict: will look like {'crdscale': 'lin'|'log',
-                                   'vscale': 'lin'|'log',
+                                   'vscale': 'lin'|'log|none',
                                    'clim': [None|number, None|number],
                                    'symetric': True|False}
     """
@@ -233,6 +233,10 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     for i in range(len(norm_dict['clim'])):
         if norm_dict['clim'][i] in ["None", "none"]:
             norm_dict['clim'][i] = None
+
+    # hack so that the value axis is not rescaled
+    if plot_kwargs.pop('norescale', False):
+        norm_dict['vscale'] = None
 
     return actions, norm_dict
 
@@ -449,12 +453,15 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
                       "values. Only plotting 4 decades.")
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
+        elif vscale is None:
+            norm = None
         else:
             raise ValueError("Unknown norm vscale: {0}".format(vscale))
 
         if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin):
             plot_kwargs['cmap'] = plt.get_cmap('seismic')
-        plot_kwargs['norm'] = norm
+        if norm is not None:
+            plot_kwargs['norm'] = norm
     else:
         if isinstance(norm, Normalize):
             vscale = "lin"
@@ -778,7 +785,8 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             raise ValueError("log scale can't be symetric about 0")
         maxval = max(abs(max(dat)), abs(min(dat)))
         vmin, vmax = -maxval, maxval
-    plt.ylim((vmin, vmax))
+    if norm_dict['vscale'] is not None:
+        plt.ylim((vmin, vmax))
 
     ########################
     # apply labels and such
