@@ -47,27 +47,31 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None):
     crds = coordinate.arrays2crds(crd_arrs)
 
     # discover what kind of data was given
+    crds_shape_nc = list(crds.shape_nc)
+    crds_shape_cc = list(crds.shape_cc)
+    dat_arr_shape = list(dat_arr.shape)
+
     if len(dat_arr.shape) == len(crds.shape_nc):
         discovered_type = "scalar"
         discovered_layout = LAYOUT_FLAT
-        if crds.shape_nc == dat_arr.shape:
+        if crds_shape_nc == dat_arr_shape:
             discovered_center = "node"
-        elif crds.shape_cc == dat_arr.shape:
+        elif crds_shape_cc == dat_arr_shape:
             discovered_center = "cell"
         else:
             raise ValueError("Can't detect centering for scalar dat_arr")
     elif len(dat_arr.shape) + 1 == len(crds.shape_nc):
         discovered_type = "vector"
-        if crds.shape_nc == dat_arr.shape[:-1]:
+        if crds_shape_nc == dat_arr_shape[:-1]:
             discovered_layout = LAYOUT_INTERLACED
             discovered_center = "node"
-        elif crds.shape_cc == dat_arr.shape[:-1]:
+        elif crds_shape_cc == dat_arr_shape[:-1]:
             discovered_layout = LAYOUT_INTERLACED
             discovered_center = "cell"
-        elif crds.shape_nc == dat_arr.shape[1:]:
+        elif crds_shape_nc == dat_arr_shape[1:]:
             discovered_layout = LAYOUT_FLAT
             discovered_center = "node"
-        elif crds.shape_cc == dat_arr.shape[1:]:
+        elif crds_shape_cc == dat_arr_shape[1:]:
             discovered_layout = LAYOUT_FLAT
             discovered_center = "cell"
         else:
