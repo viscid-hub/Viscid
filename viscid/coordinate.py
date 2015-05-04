@@ -1,3 +1,4 @@
+# pylint: disable=too-many-lines
 """ Container for grid coordinates
 
 Coordinates primarily go into Field objects. The order of coords in
