@@ -42,6 +42,11 @@ def arrays2crds(crd_arrs, crd_names="zyxwvu"):
     clist = []
     uniform_clist = []
     is_uniform = True
+    try:
+        _ = len(crd_arrs[0])
+    except TypeError:
+        crd_arrs = [crd_arrs]
+
     for crd_name, arr in zip(crd_names, crd_arrs):
         arr = np.array(arr)
         clist.append((crd_name, arr))
