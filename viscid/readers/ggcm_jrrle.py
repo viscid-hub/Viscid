@@ -26,6 +26,11 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
     def __init__(self, filename, vfilebucket=None, **kwargs):
         super(GGCMFileJrrleMHD, self).__init__(filename, vfilebucket, **kwargs)
 
+    def _shape_discovery_hack(self, filename):
+        with JrrleFileWrapper(filename) as f:
+            _, meta = f.inquire_next()
+        return meta['dims']
+
     def _parse_file(self, filename, parent_node):
         # we do minimal file parsing here for performance. we just
         # make data wrappers from the templates we got from the first
@@ -108,6 +113,7 @@ class GGCMFileJrrleIono(GGCMFileJrrleMHD):  # pylint: disable=abstract-method
     _iono = True
     _grid_type = grid.Grid
     _def_fld_center = "Node"
+
 
 class JrrleFileWrapper(FortranFile):
     """Interface for actually opening / reading a jrrle file"""
@@ -216,7 +222,7 @@ class JrrleFileWrapper(FortranFile):
 
 
 class JrrleDataWrapper(vfile.DataWrapper):
-    """  """
+    """Interface for lazily pointing to a jrrle field"""
     file_wrapper = None
     filename = None
     fld_name = None

@@ -17,7 +17,7 @@ from viscid.compat import OrderedDict
 
 
 class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method
-    """Jimmy's run length encoding files"""
+    """Binary files"""
     _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3df)" \
                 r"\.([0-9]{6}).b\s*$"
 
@@ -27,6 +27,11 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
 
     def __init__(self, filename, vfilebucket=None, **kwargs):
         super(GGCMFileFortbinMHD, self).__init__(filename, vfilebucket, **kwargs)
+
+    def _shape_discovery_hack(self, filename):
+        with GGCMFortbinFileWrapper(filename) as f:
+            _, meta = f.inquire_next()
+        return meta['dims']
 
     def _parse_file(self, filename, parent_node):
         # we do minimal file parsing here for performance. we just
@@ -107,7 +112,7 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
 
 
 class GGCMFileFortbinIono(GGCMFileFortbinMHD):  # pylint: disable=abstract-method
-    """Jimmy's run length encoding files"""
+    """Binary files"""
     _detector = r"^\s*(.*)\.(iof)\.([0-9]{6}).b\s*$"
     _iono = True
     _grid_type = grid.Grid
@@ -157,7 +162,7 @@ class GGCMFortbinFileWrapper(object):
             if found_fld != fld_name:
                 raise ValueError("The file {0} didn't contain field {1} at "
                                  "position {2}".format(self.filename,
-                                 fld_name, pos))
+                                                       fld_name, pos))
         else:
             meta = self.inquire(fld_name)
 
@@ -199,8 +204,8 @@ class GGCMFortbinFileWrapper(object):
                     return meta
                 self._file.seek(self.file_meta['nbytes'], 1)
 
-            raise KeyError("file '{0}' has no field '{1}'".format(
-                           self.filename, fld_name))
+            raise KeyError("file '{0}' has no field '{1}'"
+                           "".format(self.filename, fld_name))
 
     def inquire_next(self):
         """Collect the meta-data from the next field in the file
@@ -316,7 +321,7 @@ class GGCMFortbinFileWrapper(object):
             return None, None
 
 class FortbinDataWrapper(vfile.DataWrapper):
-    """  """
+    """Interface for lazily pointing to a field in a binary file"""
     file_wrapper = None
     filename = None
     fld_name = None
@@ -359,9 +364,10 @@ class FortbinDataWrapper(vfile.DataWrapper):
         # meta's dims are xyz (from file), but ex
         if meta['dims'] != self.expected_shape:
             raise RuntimeError("Field '{0}' from file '{1}' has shape {2} "
-                               "instead of {3}".format(self.fld_name,
-                               self.filename, meta['dims'],
-                               self.expected_shape))
+                               "instead of {3}".format(
+                                   self.fld_name,
+                                   self.filename, meta['dims'],
+                                   self.expected_shape))
         return arr.astype(self.dtype)
 
     def read_direct(self, *args, **kwargs):

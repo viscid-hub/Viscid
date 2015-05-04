@@ -402,6 +402,8 @@ class GGCMFile(object):
     _grid_type = GGCMGrid
     _iono = False
 
+    _already_warned_about_logfile = False
+
     # this can be set to true if these parameters are needed
     # i thought that reading a log file over sshfs would be a big
     # bottle neck, but it seems opening files over sshfs is appropriately
@@ -440,9 +442,11 @@ class GGCMFile(object):
             else:
                 # print("**", log_f)
                 self.set_info("_viscid_log_fname", None)
-                logger.warn("You wanted to read parameters from the "
-                            "logfile, but I couldn't find one. Maybe "
-                            "you need to copy it from somewhere?")
+                if not GGCMFile._already_warned_about_logfile:
+                    logger.warn("You wanted to read parameters from the "
+                                "logfile, but I couldn't find one. Maybe "
+                                "you need to copy it from somewhere?")
+                    GGCMFile._already_warned_about_logfile = True
         else:
             self.set_info("_viscid_log_fname", False)
 
@@ -511,6 +515,11 @@ class GGCMFile(object):
 
 
 class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
+    """An abstract class from which jrrle and fortbin files are derived
+
+    Note:
+        All subclasses should implement a _shape_discovery_hack
+    """
     _detector = None
 
     _crds = None
@@ -596,13 +605,26 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
 
     def make_crds(self):
         if self.get_info('fieldtype') == 'iof':
-            nlat, nlon = 181, 61
+            # 181, 61
+            nlon, nlat = self._shape_discovery_hack(self._collection[0])
             crdlst = [['lat', [0.0, 180.0, nlat]],
                       ['lon', [0.0, 360.0, nlon]]]
             return wrap_crds("uniform_spherical", crdlst)
 
         else:
             return self.read_grid2()
+
+    def _shape_discovery_hack(self, filename):
+        """Used if we can't get data's shape from grid2 file
+
+        In short, for subclasses, they should read the metadata for
+        the first field and return the data shape. This is not elegant,
+        and it should be implemented by all subclasses.
+
+        Returns:
+            tuple of ints, shape of a field in the file
+        """
+        raise NotImplementedError()
 
     def read_grid2(self):
         # TODO: iof files can be hacked in here
