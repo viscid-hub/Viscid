@@ -1406,6 +1406,23 @@ class Field(tree.Leaf):
     def __ge__(self, other):
         return self.wrap(self.data.__ge__(other))
 
+    @property
+    def real(self):
+        ret = self
+        if self.dtype.kind == "c":
+            ret = self.wrap(self.data.real)
+        return ret
+
+    @property
+    def imag(self):
+        return self.wrap(self.data.imag)
+
+    def astype(self, dtype):
+        ret = self
+        if np.dtype(dtype) != self.dtype:
+            ret = self.wrap(self.data.astype(dtype))
+        return ret
+
 
 class ScalarField(Field):
     _TYPE = "scalar"

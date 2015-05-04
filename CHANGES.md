@@ -5,6 +5,7 @@
 Backward Incompatible Changes:
   - Arguments to viscid.field.wrap_field have changed
   - typ arguments have been refactored to fldtype and crdtype
+  - add Field methods real, imag, astype
 
 Changes:
   - add viscid.field.arrays2field and viscid.coordinates.arrays2crds
