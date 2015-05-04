@@ -215,6 +215,22 @@ class AMRGrid(Grid):
         #     for fld in g.fields.values():
         #         self.fields
 
+    @property
+    def xl_nc(self):
+        return self.skeleton.global_xl
+
+    @property
+    def xh_nc(self):
+        return self.skeleton.global_xh
+
+    @property
+    def xl_cc(self):
+        raise NotImplementedError("You probably want xl_nc for an amr grid")
+
+    @property
+    def xh_cc(self):
+        raise NotImplementedError("You probably want xh_nc for an amr grid")
+
     # def _make_amr_field(self):
     #     fld = AMRField()
 

@@ -72,6 +72,22 @@ class Grid(tree.Node):
         self._crds = None
         self._src_crds = val
 
+    @property
+    def xl_nc(self):
+        return self.crds.xl_nc
+
+    @property
+    def xh_nc(self):
+        return self.crds.xh_nc
+
+    @property
+    def xl_cc(self):
+        return self.crds.xl_cc
+
+    @property
+    def xh_cc(self):
+        return self.crds.xh_cc
+
     # def set_time(self, time):
     #     self.time = time
 
