@@ -31,6 +31,7 @@ from viscid import vutil
 
 def arrays2crds(crd_arrs, crd_names="zyxwvu"):
     """make either uniform or nonuniform coordnates given full arrays
+
     Args:
         crd_arrs (array-like): for n-dimensional crds, supply a list
             of n ndarrays
