@@ -27,7 +27,8 @@ LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
 
-def arrays2field(dat_arr, crd_arrs, name="NoName", center=None):
+def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
+                 crd_names="zyxwvu"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.
 
     This is a convenience function that takes care of making coordnates
@@ -44,7 +45,7 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None):
         center (str, None): If not None, translate field to this
             centering (node or cell)
     """
-    crds = coordinate.arrays2crds(crd_arrs)
+    crds = coordinate.arrays2crds(crd_arrs, crd_names=crd_names)
 
     # discover what kind of data was given
     crds_shape_nc = list(crds.shape_nc)
