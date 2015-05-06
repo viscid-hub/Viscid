@@ -186,7 +186,7 @@ def zeros(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
     See Also: :meth:`empty`
     """
     return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
-                 nr_comps=nr_comps, _inital="zeros", **kwargs)
+                 nr_comps=nr_comps, _initial_vals="zeros", **kwargs)
 
 def ones(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
          nr_comps=0, **kwargs):
@@ -198,7 +198,7 @@ def ones(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
     See Also: :meth:`empty`
     """
     return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
-                 nr_comps=nr_comps, _inital="ones", **kwargs)
+                 nr_comps=nr_comps, _initial_vals="ones", **kwargs)
 
 def empty_like(fld, name="NoName", **kwargs):
     """Analogous to `numpy.empty_like`
