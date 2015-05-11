@@ -243,11 +243,10 @@ class GGCMGrid(grid.Grid):
                         if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
                             ret = True
                     except KeyError as e:
-                        raise RuntimeError("Could not determine coordiname system; "
-                                           "either the logfile is mangled, or "
-                                           "the libmrc options I'm using in infer "
-                                           "crd system have changed ({0})"
-                                           "".format(e.args[0]))
+                        logger.warn("Could not determine coordiname system; "
+                                    "either the logfile is mangled, or "
+                                    "the libmrc options I'm using in infer "
+                                    "crd system have changed (%s)", e.args[0])
                 self.set_info("_viscid_do_mhd_to_gse_on_read", ret)
                 return ret
             else:
