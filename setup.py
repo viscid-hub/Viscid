@@ -27,7 +27,7 @@ try:
 except ImportError:
     has_cython = False
 
-if sys.version_info >= (3,0):
+if sys.version_info >= (3, 0):
     PY3K = True
 else:
     PY3K = False
