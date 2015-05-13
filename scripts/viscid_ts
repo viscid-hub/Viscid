@@ -126,7 +126,7 @@ def main():
     n_pvars = len(args.plot_vars)
 
     # wrap fields?
-    all_plot_kwargs = dict(do_labels=False)
+    all_plot_kwargs = dict(nolabels=True)
     mpl.plot_opts_to_kwargs(global_popts, all_plot_kwargs)
 
     for j, plot_var in enumerate(args.plot_vars):

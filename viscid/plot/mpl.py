@@ -366,8 +366,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     masknan = plot_kwargs.pop("masknan", True)
     flip_plot = plot_kwargs.pop("flip_plot", False)
     flip_plot = plot_kwargs.pop("flipplot", flip_plot)
-    do_labels = plot_kwargs.pop("do_labels", True)
-    do_labels = plot_kwargs.pop("dolabels", do_labels)
+    nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
     show = plot_kwargs.pop("show", False)
@@ -519,14 +518,14 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             cbar = None
         else:
             cbar = plt.colorbar(p, **colorbar)
-            if do_labels:
+            if not nolabels:
                 if not cbarlabel:
                     cbarlabel = block0.pretty_name
                 cbar.set_label(cbarlabel)
     else:
         cbar = None
 
-    if do_labels:
+    if not nolabels:
         if not xlabel:
             xlabel = namex
         if not ylabel:
@@ -649,7 +648,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                                   len(new_lon)])])
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
 
-        plot_kwargs['do_labels'] = plot_kwargs['dolabels'] = False
+        plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
 
@@ -693,7 +692,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
                     boundinglat=bounding_lat, ax=ax)
         plot_kwargs['latlon'] = True
-        plot_kwargs['do_labels'] = False
+        plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(fld, ax=ax, action_ax=m, **plot_kwargs)
         if axgridec:
@@ -740,8 +739,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     # everywhere options
     scale = plot_kwargs.pop("scale", None)
     masknan = plot_kwargs.pop("masknan", True)
-    do_labels = plot_kwargs.pop("do_labels", True)
-    do_labels = plot_kwargs.pop("dolabels", do_labels)
+    nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
     show = plot_kwargs.pop("show", False)
@@ -790,7 +788,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     ########################
     # apply labels and such
-    if do_labels:
+    if not nolabels:
         if xlabel is None:
             xlabel = namex
         if ylabel is None:

@@ -56,8 +56,7 @@ masknan     bool, color       Mask out NaN values in data with a given color
                               (default: 'y' for yellow)
 flipplot    bool              Alias for flip_plot
 flip_plot   bool              Flip the horizontal and vertical axes
-dolabels    bool              Alias for do_labels
-do_labels   bool              Apply labels to the axes / colorbars
+nolabels    [bool]            Skip applying labels to x/y/cbar axes
 xlabel      str               Specific label for the x axis
 ylabel      str               Specific label for the y axis
 show        bool (optional)   Call :py:func:`pyplot.show` before returning
