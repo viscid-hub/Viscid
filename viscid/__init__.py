@@ -3,7 +3,9 @@ Plotting depends on matplotlib and/or mayavi and file reading uses h5py and
 to read hdf5 / xdmf files.
 """
 
-__all__ = ['calculator',
+__all__ = ['amr_field',
+           'amr_grid',
+           'calculator',
            'plot',
            'readers',
            'bucket',

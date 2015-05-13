@@ -17,6 +17,8 @@ Submodules
 
 .. toctree::
 
+   viscid.amr_field
+   viscid.amr_grid
    viscid.bucket
    viscid.coordinate
    viscid.dataset
@@ -33,5 +35,6 @@ Module contents
 ---------------
 
 .. automodule:: viscid
+    :members:
     :undoc-members:
     :show-inheritance:

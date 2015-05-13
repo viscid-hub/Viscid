@@ -40,8 +40,7 @@ pkgs = ['viscid',
         'viscid.parsers',
         'viscid.plot',
         'viscid.plot.cmaps',
-        'viscid.readers',
-        'viscid.readers.amr'
+        'viscid.readers'
        ]
 
 scripts = glob.glob(os.path.join('scripts', '*'))
@@ -69,8 +68,8 @@ cy_defs.append(["viscid.calculator.streamline",
                 ["viscid/calculator/streamline"],
                 dict()
                ])
-cy_defs.append(["viscid.readers.amr.cyamr",
-                ["viscid/readers/amr/cyamr"],
+cy_defs.append(["viscid.cyamr",
+                ["viscid/cyamr"],
                 dict()
                ])
 

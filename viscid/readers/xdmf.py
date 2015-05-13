@@ -12,7 +12,7 @@ from viscid.readers import _xdmf_include
 from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.hdf5 import FileLazyHDF5
-from viscid.readers.amr import amr_grid
+from viscid import amr_grid
 from viscid import coordinate
 
 # class XDMFDataItem(data_item.DataItem):
