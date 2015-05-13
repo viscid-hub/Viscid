@@ -25,7 +25,6 @@ Submodules
    viscid.grid
    viscid.parallel
    viscid.pyeval
-   viscid.rc
    viscid.tree
    viscid.verror
    viscid.vjson

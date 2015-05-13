@@ -55,5 +55,5 @@ from viscid import coordinate
 arrays2crds = coordinate.arrays2crds
 
 # apply settings in the rc file
-from viscid import rc
-rc.load_rc_file("~/.viscidrc")
+from viscid import _rc
+_rc.load_rc_file("~/.viscidrc")
