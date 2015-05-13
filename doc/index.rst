@@ -29,6 +29,7 @@ Contents:
   custom_behavior
   plot_options
   command_line
+  extending_readers
 
   examples/index
 
