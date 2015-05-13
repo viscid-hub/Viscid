@@ -24,7 +24,7 @@ Note:
 
 from __future__ import print_function
 
-from viscid.plot.cmaps.cubehelix import clac_helix_rgba
+from viscid.plot.cubehelix import clac_helix_rgba
 
 
 # NOTE: this changes the default colormap as soon as viscid.plot.mpl is
@@ -42,7 +42,7 @@ bloodhelix_rgba = clac_helix_rgba(hue0=60, hue1=-150, sat0=1.8, sat1=1.0,
                                   gamma=1.0, intensity0=0.0, intensity1=1.0)
 
 try:
-    from viscid.plot.cmaps.cmap_tools import register_cmap
+    from viscid.plot.cmap_tools import register_cmap
 
     register_cmap('cubeYF', cubeYF_rgba, reverse=False)
     register_cmap('cubeYF_r', cubeYF_rgba, reverse=True)
@@ -71,8 +71,8 @@ def _main():
         import seaborn  # pylint: disable=unused-variable
     except ImportError:
         pass
-    from viscid.plot.cmaps.cmap_tools import plot_ab, plot_lstar, plot_rgb
-    # from viscid.plot.cmaps.cmap_tools import to_linear_cmap, to_rgba
+    from viscid.plot.cmap_tools import plot_ab, plot_lstar, plot_rgb
+    # from viscid.plot.cmap_tools import to_linear_cmap, to_rgba
 
     names = ['cubehelix', 'cubeYF', 'coolhelix', 'redhelix', 'bloodhelix']
     gs = gridspec.GridSpec(4, len(names), height_ratios=[1, 3, 3, 3])

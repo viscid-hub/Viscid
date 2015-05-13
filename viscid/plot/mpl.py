@@ -26,7 +26,7 @@ from viscid.compat import string_types
 from viscid import field
 from viscid import coordinate
 from viscid.calculator.topology import color_from_topology
-from viscid.plot.cmaps import extra_cmaps
+from viscid.plot import extra_cmaps
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__

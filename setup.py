@@ -38,7 +38,6 @@ pkgs = ['viscid',
         'viscid.calculator',
         'viscid.compat',
         'viscid.plot',
-        'viscid.plot.cmaps',
         'viscid.readers'
        ]
 

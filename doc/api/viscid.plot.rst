@@ -4,15 +4,14 @@ viscid.plot package
 Subpackages
 -----------
 
-.. toctree::
-
-    viscid.plot.cmaps
-
 Submodules
 ----------
 
 .. toctree::
 
+   viscid.plot.cmap_tools
+   viscid.plot.cubehelix
+   viscid.plot.extra_cmaps
    viscid.plot.mpl
    viscid.plot.mvi
    viscid.plot.vseaborn

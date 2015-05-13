@@ -30,8 +30,8 @@ Here is an example rc file,
     # evaluator control for security
     "calculator.evaluator.enabled": false
 
-    # note, the redhelix colormap is defined in viscid.plot.cmaps.extra_cmaps
-    "plot.cmaps.extra_cmaps.default_cmap": "redhelix",
+    # note, the redhelix colormap is defined in viscid.plot.extra_cmaps
+    "plot.extra_cmaps.default_cmap": "redhelix",
 
     # pretty plotting
     "plot.vseaborn.enabled": true
@@ -45,8 +45,8 @@ Here is an example rc file,
 Common Customizations
 ---------------------
 
-viscid.plot.cmaps.extra_cmaps.default_cmap
-------------------------------------------
+viscid.plot.extra_cmaps.default_cmap
+-------------------------------------
 
 * **default_cmap**: Changes the default color maps for plots made using
   :py:mod:`viscid.plot.mpl`
