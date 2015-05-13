@@ -8,7 +8,6 @@ Subpackages
 
     viscid.calculator
     viscid.compat
-    viscid.parsers
     viscid.plot
     viscid.readers
 
@@ -25,9 +24,11 @@ Submodules
    viscid.field
    viscid.grid
    viscid.parallel
+   viscid.pyeval
    viscid.rc
    viscid.tree
    viscid.verror
+   viscid.vjson
    viscid.vlab
    viscid.vutil
 

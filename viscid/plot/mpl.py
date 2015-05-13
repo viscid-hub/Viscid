@@ -20,7 +20,7 @@ try:
 except ImportError:
     _HAS_BASEMAP = False
 
-from viscid.parsers import pyeval
+from viscid import pyeval
 from viscid import logger
 from viscid.compat import string_types
 from viscid import field

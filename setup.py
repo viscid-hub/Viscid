@@ -37,7 +37,6 @@ cmdclass = {}
 pkgs = ['viscid',
         'viscid.calculator',
         'viscid.compat',
-        'viscid.parsers',
         'viscid.plot',
         'viscid.plot.cmaps',
         'viscid.readers'

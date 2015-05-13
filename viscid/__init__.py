@@ -14,8 +14,9 @@ __all__ = ['amr_field',
            'field',
            'grid',
            'parallel',
-           'parsers',
+           'pyeval',
            'verror',
+           'vjson',
            'vlab',
            'vutil'
           ]
