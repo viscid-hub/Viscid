@@ -38,11 +38,13 @@ Here are some options that should work for all functions:
 ==========  ===============   ==================================================
 Option      Arguments         Description
 ==========  ===============   ==================================================
-lin         [vmin, [vmax]]    Use a linear scale that goes from vmin to vmax.
-                              This sets the color map in 2D, or the axis scaling
-                              in 1D. If vmin or vmax are None, they are set using
-                              the data.
-log         [vmin, [vmax]]    Similar to lin, but with a logarithmic scale
+clim        vmin, [vmax]      Set min and max values for the data scale
+vmin        int               Minimum value for the data range
+vmax        int               Maximum value for the data range
+lin         [vmin, [vmax]]    Shorthand for clim and logscale=0. Min/Max values
+                              that aren't given are found from the data.
+log         [vmin, [vmax]]    Shorthand for clim and logscale=1. Min/Max values
+                              that aren't given are found from the data.
 loglog      [vmin, [vmax]]    Same as log, but also use a logscale for the
                               coordinates
 logscale    [bool]            Use a logarithmic scale for the data

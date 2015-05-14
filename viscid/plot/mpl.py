@@ -202,6 +202,12 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         clim = plot_kwargs.pop('clim')
         norm_dict['clim'][:len(clim)] = clim
 
+    if "vmin" in plot_kwargs:
+        norm_dict['clim'][0] = plot_kwargs.pop('vmin')
+
+    if "vmax" in plot_kwargs:
+        norm_dict['clim'][1] = plot_kwargs.pop('vmax')
+
     sym = plot_kwargs.pop('symmetric', False)
     sym = plot_kwargs.pop('sym', False) or sym
     norm_dict['symmetric'] = sym
