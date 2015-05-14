@@ -4,7 +4,6 @@ Installation
 Dependencies
 ------------
 
-Dependencies:
 + Python 2.6+ and 3.3+
 + numpy (required... for everything)
 + h5py (optional, if reading hdf5 files)
