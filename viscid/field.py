@@ -701,7 +701,10 @@ class Field(tree.Leaf):
         """
         # dtype.name is for pruning endianness out of dtype
         if isinstance(dat, np.ndarray):
-            arr = np.array(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
+            arrfunc = np.array
+            if isinstance(dat, np.ma.core.MaskedArray):
+                arrfunc = np.ma.array
+            arr = arrfunc(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
         elif isinstance(dat, (list, tuple)):
             dt = dat[0].dtype.name
             tmp = [np.array(d, dtype=dt, copy=self.deep_meta["copy"]) for d in dat]
