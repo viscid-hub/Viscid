@@ -82,7 +82,9 @@ def plot(fld, selection=None, **kwargs):
             return plot2d_mapfield(fld, **kwargs)
         return plot2d_field(fld, **kwargs)
     else:
-        raise ValueError("mpl can only do 1-D or 2-D fields")
+        raise ValueError("mpl can only do 1-D or 2-D fields. Either slice the"
+                         "field yourself, or use the selection keyword "
+                         "argument")
 
 def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     """Turn plot options from string to items in plot_kwargs
