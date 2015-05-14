@@ -30,8 +30,10 @@ Here is an example rc file,
     # evaluator control for security
     "calculator.evaluator.enabled": false
 
-    # note, the redhelix colormap is defined in viscid.plot.extra_cmaps
-    "plot.extra_cmaps.default_cmap": "redhelix",
+    # note, the redhelix colormap is defined in viscid.plot.mpl_extra
+    "plot.mpl_extra.default_cmap": "redhelix",
+    "plot.mpl_extra.default_cbarfmt": "steve",
+    "plot.mpl_extra.default_majorfmt": "steve",
 
     # pretty plotting
     "plot.vseaborn.enabled": true

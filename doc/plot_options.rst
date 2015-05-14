@@ -46,7 +46,7 @@ log         [vmin, [vmax]]    Similar to lin, but with a logarithmic scale
 loglog      [vmin, [vmax]]    Same as log, but also use a logscale for the
                               coordinates
 logscale    [bool]            Use a logarithmic scale for the data
-symetric    [bool]            Make the data scale symetric around 0
+symmetric   [bool]            Make the data scale symmetric around 0
 norescale   [bool]            Do not set limit of the data axis explicitly
 x           min, max          Set axis limits using :py:func:`pyplot.set_xlim`
 y           min, max          Set axis limits using :py:func:`pyplot.set_ylim`
@@ -59,12 +59,16 @@ flip_plot   [bool]            Flip the horizontal and vertical axes
 nolabels    [bool]            Skip applying labels to x/y/cbar axes
 xlabel      str               Specific label for the x axis
 ylabel      str               Specific label for the y axis
+majorfmt    ticker.Formatter  Formatter for major axes (x and y)
+minorfmt    ticker.Formatter  Formatter for minor axes (x and y)
+majorloc    ticker.Locator    Locator for major axes (x and y)
+minorloc    ticker.Locator    Locator for minor axes (x and y)
 show        [bool]            Call :py:func:`pyplot.show` before returning
 ==========  ===============   ==================================================
 
 .. note::
-  When using lin, if vmin == 0 and vmax is not given, the scale will be symetric
-  about 0. This is a shorthand for the symetric keyword argument.
+  When using lin, if vmin == 0 and vmax is not given, the scale will be symmetric
+  about 0. This is a shorthand for the symmetric keyword argument.
 
 
 2-D Plots
