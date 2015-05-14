@@ -115,7 +115,7 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
     return arrays2field(name, crd_arrs, dat_arr, center=center)
 
 def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
-          nr_comps=0, _initial_vals="empty", **kwargs):
+          nr_comps=0, crd_names="zyxwvu", _initial_vals="empty", **kwargs):
     """Analogous to `numpy.empty` (uninitialized array)
 
     Parameters:
@@ -145,7 +145,7 @@ def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
             crds = [np.arange(c).astype(dtype) for c in crds]
         # now assume that crds is a list of coordinate arrays that arrays2crds
         # can understand
-        crds = coordinate.arrays2crds(crds)
+        crds = coordinate.arrays2crds(crds, crd_names=crd_names)
 
     if center.lower() == "cell":
         sshape = crds.shape_cc
