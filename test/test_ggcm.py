@@ -10,8 +10,8 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+import viscid
 from viscid import vutil
-from viscid import readers
 from viscid.readers import openggcm
 from viscid.plot import mpl
 from viscid.plot.mpl import plt
@@ -54,8 +54,8 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = readers.load_file(_viscid_root + '/../sample/sample.3df.xdmf',
-                            grid_type=MyGGCMGrid)
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf',
+                           grid_type=MyGGCMGrid)
 
     pp = f3d['pp']
     rr = f3d['rr']

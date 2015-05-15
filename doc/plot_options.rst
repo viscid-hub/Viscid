@@ -35,36 +35,42 @@ Here are some options that should work for all functions:
 
 .. cssclass:: table-striped
 
-==========  ===============   ==================================================
+==========  ================  ==================================================
 Option      Arguments         Description
-==========  ===============   ==================================================
-lin         [vmin, [vmax]]    Use a linear scale that goes from vmin to vmax.
-                              This sets the color map in 2D, or the axis scaling
-                              in 1D. If vmin or vmax are None, they are set using
-                              the data.
-log         [vmin, [vmax]]    Similar to lin, but with a logarithmic scale
+==========  ================  ==================================================
+clim        vmin, [vmax]      Set min and max values for the data scale
+vmin        int               Minimum value for the data range
+vmax        int               Maximum value for the data range
+lin         [vmin, [vmax]]    Shorthand for clim and logscale=0. Min/Max values
+                              that aren't given are found from the data.
+log         [vmin, [vmax]]    Shorthand for clim and logscale=1. Min/Max values
+                              that aren't given are found from the data.
 loglog      [vmin, [vmax]]    Same as log, but also use a logscale for the
                               coordinates
-logscale    bool              Use a logarithmic scale for the data
-symetric    bool              Make the data scale symetric around 0
+logscale    [bool]            Use a logarithmic scale for the data
+symmetric   [bool]            Make the data scale symmetric around 0
+norescale   [bool]            Do not set limit of the data axis explicitly
 x           min, max          Set axis limits using :py:func:`pyplot.set_xlim`
 y           min, max          Set axis limits using :py:func:`pyplot.set_ylim`
-equalaxis   bool              Force 1:1 aspect ratio
-scale       bool              Scale data by some scalar value
-masknan     bool, color       Mask out NaN values in data with a given color
+equalaxis   [bool]            Force 1:1 aspect ratio
+scale       float             Scale data by some scalar value
+masknan     [bool or color]   Mask out NaN values in data with a given color
                               (default: 'y' for yellow)
-flipplot    bool              Alias for flip_plot
-flip_plot   bool              Flip the horizontal and vertical axes
-dolabels    bool              Alias for do_labels
-do_labels   bool              Apply labels to the axes / colorbars
+flipplot    [bool]            Alias for flip_plot
+flip_plot   [bool]            Flip the horizontal and vertical axes
+nolabels    [bool]            Skip applying labels to x/y/cbar axes
 xlabel      str               Specific label for the x axis
 ylabel      str               Specific label for the y axis
-show        bool (optional)   Call :py:func:`pyplot.show` before returning
-==========  ===============   ==================================================
+majorfmt    ticker.Formatter  Formatter for major axes (x and y)
+minorfmt    ticker.Formatter  Formatter for minor axes (x and y)
+majorloc    ticker.Locator    Locator for major axes (x and y)
+minorloc    ticker.Locator    Locator for minor axes (x and y)
+show        [bool]            Call :py:func:`pyplot.show` before returning
+==========  ================  ==================================================
 
 .. note::
-  When using lin, if vmin == 0 and vmax is not given, the scale will be symetric
-  about 0. This is a shorthand for the symetric keyword argument.
+  When using lin, if vmin == 0 and vmax is not given, the scale will be symmetric
+  about 0. This is a shorthand for the symmetric keyword argument.
 
 
 2-D Plots
@@ -76,21 +82,21 @@ show        bool (optional)   Call :py:func:`pyplot.show` before returning
 Option      Arguments         Description
 ==========  ===============   ==================================================
 style       str               One of (pcolormesh, pcolor, contour, contourf)
-levels      number or list    Number of contours, or list of specific contour
+levels      [int or list]     Number of contours, or list of specific contour
                               values (contours only)
-g           bool or color     Alias for gridec=k or gridec=color
+g           [bool or color]   Alias for gridec=k or gridec=color
 gridec      color             Color for grid lines (pcolormesh only)
 gridlw      number            Line width for grid lines (pcolormesh only)
-gridaa      bool              Antialias grid lines (default: True)
-p           bool or color     Alias for patchec=k or patchec=color
+gridaa      [bool]            Antialias grid lines (default: True)
+p           [bool or color]   Alias for patchec=k or patchec=color
 patchec     color             Color for patch boundaries
 patchlw     number            Line width for patch boundaries
-patchaa     bool              Antialias patch boundaries (default: True)
+patchaa     [bool]            Antialias patch boundaries (default: True)
 mod         modx, mody        Scale coordinates by some scalar value
-colorbar    bool, dict        dict of keyword arguments for
+colorbar    [bool or dict]    dict of keyword arguments for
                               :py:func:`pyplot.colorbar`
 cbarlabel   str               Specific label for the color bar
-earth       None              Plot a black and white circle for Earth
+earth       [bool]            Plot a black and white circle for Earth
 ==========  ===============   ==================================================
 
 
@@ -106,7 +112,7 @@ Option          Arguments         Description
 ==============  ===============   ==================================================
 projection      str               'polar' or Basemap projection to use
 hemisphere      str               'north' or 'south'
-drawcoastlines  bool              If projection is a basemap projection, then draw
+drawcoastlines  [bool]            If projection is a basemap projection, then draw
                                   coastlines. Pretty cool, but not actually useful.
                                   Coastlines do NOT reflect UT time; London is
                                   always at midnight.
@@ -119,14 +125,14 @@ axgridec        color             Color for patch boundaries (use empty string o
                                   False to turn off axes)
 axgridlw        number            Line width for patch boundaries
 axgridls        str               Line style for patch boundaries
-labellat        bool or str       Alias for label_lat
-label_lat       bool or str       Label latitudes at 80, 70, 60 degrees
+labellat        [bool or str]     Alias for label_lat
+label_lat       [bool or str]     Label latitudes at 80, 70, 60 degrees
                                   with sign indicating northern / southern hemisphere.
                                   If label_lat is 'from_pole', then the labels are 10,
                                   20, 30 for both hemispheres. Note that basemap
                                   projections won't label latitudes unless they hit the
                                   edge of the plot.
-label_mlt       bool              label magnetic local time
+label_mlt       [bool]            label magnetic local time
 ==============  ===============   ==================================================
 
 
@@ -138,7 +144,7 @@ label_mlt       bool              label magnetic local time
 ==========  ===============   ==================================================
 Option      Arguments         Description
 ==========  ===============   ==================================================
-legend      loc               call :py:func:`pyplot.legend`
+legend      [loc]             call :py:func:`pyplot.legend`
 label       str               Label for the data series
 mod         modx              Scale coordinates by some scalar value
 ==========  ===============   ==================================================

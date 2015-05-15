@@ -213,8 +213,8 @@ def main():
     fld_by = f3d["by"]
     fld_bz = f3d["bz"]
 
-    B = field.scalar_fields_to_vector("B_cc", [fld_bx, fld_by, fld_bz],
-                            _force_layout=field.LAYOUT_INTERLACED)
+    B = field.scalar_fields_to_vector([fld_bx, fld_by, fld_bz], name="B_cc",
+                                      _force_layout=field.LAYOUT_INTERLACED)
     topo_arr = np.empty(gsize, order='C', dtype='int')
     lines, topo = None, None
     t0 = time()

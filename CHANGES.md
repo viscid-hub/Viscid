@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.80.7
+
+Backward Incompatible Changes:
+  - Arguments to viscid.field.wrap_field have changed
+  - typ arguments have been refactored to fldtype and crdtype
+  - add Field methods real, imag, astype
+
+Changes:
+  - add support for calling `python -im viscid pylab`
+  - add viscid.field.arrays2field and viscid.coordinates.arrays2crds
+  - viscid.field now has empty, ones, zeros, empty_like, ones_like, zeros_like that act roughly the same as the numpy functions, except that these create fields
+
 ## 0.80.6
 
 Changes:

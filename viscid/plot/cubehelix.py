@@ -1,5 +1,20 @@
 # -*- coding: utf-8 -*-
-"""Cubehelix color map implementation"""
+"""Cubehelix color map implementation
+
+The cubehelix colormaps are good for the colorblind because lightness
+monotonically increases throughout the scale. These maps also guard
+against levels appearing in the data due to a local maxima in the
+lightness of that color in the color map.
+
+Attributes:
+    cubeYF: My attempt to replicate the cubeYF map described at
+        `mycarta <https://mycarta.wordpress.com/2013/02/21/perceptual-
+        rainbow-palette-the-method/>`_.
+    coolhelix: From bordeax to cool white, counter-clockwise in hue
+    redhelix: From red to cyan, counter-clockwise in hue
+    bloodhelix: Same as redhelix, but with gamma == 1, so the
+        intensity ramp is more linear instead of power law
+"""
 
 from __future__ import print_function
 
@@ -115,6 +130,15 @@ def make_cubehelix_cmap(name='cubehelix1', reverse=False, **kwargs):
     except ImportError:
         raise RuntimeError("Matplotlib is not installed, ergo can not create "
                            "a matplotlib Colormap")
+
+cubeYF_rgba = clac_helix_rgba(hue0=340, hue1=60, sat0=1.0, sat1=2.0,
+                              intensity0=0.3, intensity1=0.9, gamma=0.9)
+coolhelix_rgba = clac_helix_rgba(hue0=350, hue1=150, sat0=2.0, sat1=1.6,
+                                 gamma=0.8, intensity0=0.0, intensity1=1.0)
+redhelix_rgba = clac_helix_rgba(hue0=60, hue1=-150, sat0=1.8, sat1=1.0,
+                                gamma=0.8, intensity0=0.0, intensity1=1.0)
+bloodhelix_rgba = clac_helix_rgba(hue0=60, hue1=-150, sat0=1.8, sat1=1.0,
+                                  gamma=1.0, intensity0=0.0, intensity1=1.0)
 
 ##
 ## EOF

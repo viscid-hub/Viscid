@@ -16,9 +16,8 @@ _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+import viscid
 from viscid import vutil
-from viscid import field
-from viscid import coordinate
 from viscid.calculator import calc
 from viscid.plot import mpl
 
@@ -31,29 +30,23 @@ def main():
     x = np.array(np.linspace(-1, 1, 2), dtype=dtype)
     y = np.array(np.linspace(-2, 2, 30), dtype=dtype)
     z = np.array(np.linspace(-5, 5, 90), dtype=dtype)
+    v = viscid.empty([z, y, x], nr_comps=3, name='V', center='cell',
+                     layout='interlaced')
+    Z, Y, X = v.get_crds_cc(shaped=True)
 
-    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y),
-                                                ('x', x)))
-    Z, Y, X = crds.get_crds_cc(shaped=True)
+    v['x'] = 0.5 * X**2 +       Y    + 0.0 * Z
+    v['y'] = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z
+    v['z'] = 0.0 * X    + 0.0 * Y    + 0.5 * Z**2
 
-    vx = 0.5 * X**2 +       Y    + 0.0 * Z
-    vy = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z
-    vz = 0.0 * X    + 0.0 * Y    + 0.5 * Z**2
-
-    v = field.VectorField("v", crds, [vx, vy, vz],
-                              center="Cell", forget_source=True,
-                              _force_layout=field.LAYOUT_INTERLACED,
-                             )
-    vx, vy, vz = v.component_fields()
     mag = calc.magnitude(v)
     another = np.transpose(mag)
 
     plt.subplot(151)
-    mpl.plot(vx)
+    mpl.plot(v['x'])
     plt.subplot(152)
-    mpl.plot(vy)
+    mpl.plot(v['y'])
     plt.subplot(153)
-    mpl.plot(vz)
+    mpl.plot(v['z'])
     plt.subplot(154)
     mpl.plot(mag)
     plt.subplot(155)

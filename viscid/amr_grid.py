@@ -6,8 +6,8 @@ from __future__ import print_function, division
 import numpy as np
 
 from viscid.grid import Grid
-from viscid.readers.amr.amr_field import AMRField
-from viscid.readers.amr import cyamr
+from viscid.amr_field import AMRField
+# from viscid import cyamr
 
 def dataset_to_amr_grid(dset, template_skeleton=None):
     """Try to divine AMR-ness from a Dataset
@@ -214,6 +214,22 @@ class AMRGrid(Grid):
         # for g in dset:
         #     for fld in g.fields.values():
         #         self.fields
+
+    @property
+    def xl_nc(self):
+        return self.skeleton.global_xl
+
+    @property
+    def xh_nc(self):
+        return self.skeleton.global_xh
+
+    @property
+    def xl_cc(self):
+        raise NotImplementedError("You probably want xl_nc for an amr grid")
+
+    @property
+    def xh_cc(self):
+        raise NotImplementedError("You probably want xh_nc for an amr grid")
 
     # def _make_amr_field(self):
     #     fld = AMRField()

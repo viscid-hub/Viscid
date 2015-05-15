@@ -64,10 +64,11 @@ class SeedGen(object):
         """this should return an iterable of (z, y, x) points"""
         raise NotImplementedError()
 
-    def wrap_field(self, fld_typ, name, data, **kwargs):
+    def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
         """fld_type is 'Scalar' or 'Vector' or something like that"""
         crds = self.as_coordinates()
-        return field.wrap_field(fld_typ, name, crds, data, **kwargs)
+        return field.wrap_field(data, crds, name=name, fldtype=fldtype,
+                                **kwargs)
 
 
 class Point(SeedGen):

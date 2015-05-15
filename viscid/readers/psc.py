@@ -41,11 +41,11 @@ class PscGrid(grid.Grid):
             vx = self[base_name + comp_names[0]]
             vy = self[base_name + comp_names[1]]
             vz = self[base_name + comp_names[2]]
-            v = field.scalar_fields_to_vector(base_name, [vx, vy, vz],
+            v = field.scalar_fields_to_vector([vx, vy, vz], name=base_name,
                                               **opts)
         else:
             comps = [self[base_name + c] for c in comp_names]
-            v = field.scalar_fields_to_vector(base_name, comps, **opts)
+            v = field.scalar_fields_to_vector(comps, name=base_name, **opts)
             for comp in comps:
                 comp.unload()
         return v

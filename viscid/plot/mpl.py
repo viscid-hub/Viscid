@@ -20,21 +20,22 @@ try:
 except ImportError:
     _HAS_BASEMAP = False
 
-from viscid.parsers import pyeval
+from viscid import pyeval
 from viscid import logger
 from viscid.compat import string_types
 from viscid import field
 from viscid import coordinate
 from viscid.calculator.topology import color_from_topology
-from viscid.plot.cmaps import extra_cmaps
+from viscid.plot import mpl_extra
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 vseaborn.activate_from_viscid()
 
-if extra_cmaps.default_cmap:
-    plt.rcParams['image.cmap'] = extra_cmaps.default_cmap
+if mpl_extra.default_cmap:
+    plt.rcParams['image.cmap'] = mpl_extra.default_cmap
+
 
 def plot(fld, selection=None, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
@@ -81,7 +82,9 @@ def plot(fld, selection=None, **kwargs):
             return plot2d_mapfield(fld, **kwargs)
         return plot2d_field(fld, **kwargs)
     else:
-        raise ValueError("mpl can only do 1-D or 2-D fields")
+        raise ValueError("mpl can only do 1-D or 2-D fields. Either slice the"
+                         "field yourself, or use the selection keyword "
+                         "argument")
 
 def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     """Turn plot options from string to items in plot_kwargs
@@ -157,9 +160,9 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
             to unpack when calling that function
 
         norm_dict: will look like {'crdscale': 'lin'|'log',
-                                   'vscale': 'lin'|'log',
+                                   'vscale': 'lin'|'log|none',
                                    'clim': [None|number, None|number],
-                                   'symetric': True|False}
+                                   'symmetric': True|False}
     """
     for k, v in defaults.items():
         if k not in plot_kwargs:
@@ -189,7 +192,7 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     norm_dict = {'crdscale': 'lin',
                  'vscale': 'lin',
                  'clim': [None, None],
-                 'symetric': False
+                 'symmetric': False
                 }
 
     if plot_kwargs.pop('logscale', False):
@@ -199,16 +202,22 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         clim = plot_kwargs.pop('clim')
         norm_dict['clim'][:len(clim)] = clim
 
-    sym = plot_kwargs.pop('symetric', False)
+    if "vmin" in plot_kwargs:
+        norm_dict['clim'][0] = plot_kwargs.pop('vmin')
+
+    if "vmax" in plot_kwargs:
+        norm_dict['clim'][1] = plot_kwargs.pop('vmax')
+
+    sym = plot_kwargs.pop('symmetric', False)
     sym = plot_kwargs.pop('sym', False) or sym
-    norm_dict['symetric'] = sym
+    norm_dict['symmetric'] = sym
 
     # parse shorthands for specifying color scale
     if "lin" in plot_kwargs:
         opt = plot_kwargs.pop('lin')
         norm_dict['vscale'] = 'lin'
         if opt == 0:
-            norm_dict['symetric'] = True
+            norm_dict['symmetric'] = True
         elif opt is not True:
             if not isinstance(opt, (list, tuple)):
                 opt = [opt]
@@ -234,6 +243,10 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         if norm_dict['clim'][i] in ["None", "none"]:
             norm_dict['clim'][i] = None
 
+    # hack so that the value axis is not rescaled
+    if plot_kwargs.pop('norescale', False):
+        norm_dict['vscale'] = None
+
     return actions, norm_dict
 
 def _apply_actions(acts):
@@ -242,6 +255,28 @@ def _apply_actions(acts):
         if not isinstance(act_args, (list, tuple)):
             act_args = [act_args]
         act[0](*act_args)
+
+def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
+                 which_axes="xy"):
+    ax_axes = {'x': ax.xaxis, 'y': ax.yaxis}
+
+    if majorfmt == "steve":
+        majorfmt = mpl_extra.steve_axfmt
+    if minorfmt == "steve":
+        minorfmt = mpl_extra.steve_axfmt
+
+    for axis_name in which_axes:
+        _axis = ax_axes[axis_name]
+
+        if majorfmt:
+            _axis.set_major_formatter(majorfmt)
+        if minorfmt:
+            _axis.set_minor_formatter(minorfmt)
+
+        if majorloc:
+            _axis.set_major_locator(majorloc)
+        if minorloc:
+            _axis.set_minor_locator(minorloc)
 
 def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
                    masknan, latlon, flip_plot, patchec, patchlw, patchaa,
@@ -362,10 +397,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     masknan = plot_kwargs.pop("masknan", True)
     flip_plot = plot_kwargs.pop("flip_plot", False)
     flip_plot = plot_kwargs.pop("flipplot", flip_plot)
-    do_labels = plot_kwargs.pop("do_labels", True)
-    do_labels = plot_kwargs.pop("dolabels", do_labels)
+    nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
+    majorfmt = plot_kwargs.pop("majorfmt", mpl_extra.default_majorfmt)
+    minorfmt = plot_kwargs.pop("minorfmt", mpl_extra.default_minorfmt)
+    majorloc = plot_kwargs.pop("majorloc", mpl_extra.default_majorloc)
+    minorloc = plot_kwargs.pop("minorloc", mpl_extra.default_minorloc)
     show = plot_kwargs.pop("show", False)
 
     # 2d plot options
@@ -429,17 +467,17 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         if np.isnan(vmin) or np.isnan(vmax):
             print("Warning: All-Nan encountered in Field,", block0.name)
             vmin, vmax = 1e38, 1e38
-            norm_dict['symetric'] = False
+            norm_dict['symmetric'] = False
 
         if vscale == "lin":
-            if norm_dict['symetric']:
+            if norm_dict['symmetric']:
                 maxval = max(abs(vmin), abs(vmax))
                 vmin = -1.0 * maxval
                 vmax = +1.0 * maxval
             norm = Normalize(vmin, vmax)
         elif vscale == "log":
-            if norm_dict['symetric']:
-                raise ValueError("Can't use symetric color bar with logscale")
+            if norm_dict['symmetric']:
+                raise ValueError("Can't use symmetric color bar with logscale")
             if vmax <= 0.0:
                 print("Warning: Using log scale on a field with no positive "
                       "values")
@@ -449,12 +487,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
                       "values. Only plotting 4 decades.")
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
+        elif vscale is None:
+            norm = None
         else:
             raise ValueError("Unknown norm vscale: {0}".format(vscale))
 
-        if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin):
-            plot_kwargs['cmap'] = plt.get_cmap('seismic')
-        plot_kwargs['norm'] = norm
+        if norm is not None:
+            plot_kwargs['norm'] = norm
     else:
         if isinstance(norm, Normalize):
             vscale = "lin"
@@ -463,6 +502,14 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         else:
             raise TypeError("Unrecognized norm type: {0}".format(type(norm)))
         vmin, vmax = norm.vmin, norm.vmax
+
+    if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin):
+        # by default, the symmetric_cmap is seismic (blue->white->red)
+        if mpl_extra.symmetric_cmap:
+            plot_kwargs['cmap'] = plt.get_cmap(mpl_extra.symmetric_cmap)
+        symmetric_vlims = True
+    else:
+        symmetric_vlims = False
 
     # ok, here's some hackery for contours
     if style in ["contourf", "contour"]:
@@ -504,28 +551,41 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         # unless otherwise specified, use_gridspec for colorbar
         if "use_gridspec" not in colorbar:
             colorbar["use_gridspec"] = True
+
         if vscale == "log" and colorbar is not None and "ticks" not in colorbar:
             colorbar["ticks"] = matplotlib.ticker.LogLocator()
+        elif symmetric_vlims and "ticks" not in colorbar:
+            colorbar["ticks"] = matplotlib.ticker.MaxNLocator()
+
+        cbarfmt = colorbar.pop("format", mpl_extra.default_cbarfmt)
+        if cbarfmt == "steve":
+            cbarfmt = mpl_extra.steve_cbarfmt
+        if cbarfmt:
+            colorbar["format"] = cbarfmt
+
         # ok, this way to pass options to colorbar is bad!!!
         # but it's kind of the cleanest way to affect the colorbar?
         if masknan and all_masked:
             cbar = None
         else:
             cbar = plt.colorbar(p, **colorbar)
-            if do_labels:
+            if not nolabels:
                 if not cbarlabel:
                     cbarlabel = block0.pretty_name
                 cbar.set_label(cbarlabel)
     else:
         cbar = None
 
-    if do_labels:
+    if not nolabels:
         if not xlabel:
             xlabel = namex
         if not ylabel:
             ylabel = namey
         plt.xlabel(namex)
         plt.ylabel(namey)
+
+    _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
+                 majorloc=majorloc, minorloc=minorloc)
 
     if earth:
         plot_earth(fld, axis=ax)
@@ -642,7 +702,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                                   len(new_lon)])])
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
 
-        plot_kwargs['do_labels'] = plot_kwargs['dolabels'] = False
+        plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
 
@@ -686,7 +746,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
                     boundinglat=bounding_lat, ax=ax)
         plot_kwargs['latlon'] = True
-        plot_kwargs['do_labels'] = False
+        plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(fld, ax=ax, action_ax=m, **plot_kwargs)
         if axgridec:
@@ -733,10 +793,13 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     # everywhere options
     scale = plot_kwargs.pop("scale", None)
     masknan = plot_kwargs.pop("masknan", True)
-    do_labels = plot_kwargs.pop("do_labels", True)
-    do_labels = plot_kwargs.pop("dolabels", do_labels)
+    nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
+    majorfmt = plot_kwargs.pop("majorfmt", mpl_extra.default_majorfmt)
+    minorfmt = plot_kwargs.pop("minorfmt", mpl_extra.default_minorfmt)
+    majorloc = plot_kwargs.pop("majorloc", mpl_extra.default_majorloc)
+    minorloc = plot_kwargs.pop("minorloc", mpl_extra.default_minorloc)
     show = plot_kwargs.pop("show", False)
 
     # 1d plot options
@@ -773,22 +836,26 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         plt.xscale('log')
     if norm_dict['vscale'] == 'log':
         plt.yscale('log')
-    if norm_dict['symetric']:
+    if norm_dict['symmetric']:
         if norm_dict['vscale'] == 'log':
-            raise ValueError("log scale can't be symetric about 0")
+            raise ValueError("log scale can't be symmetric about 0")
         maxval = max(abs(max(dat)), abs(min(dat)))
         vmin, vmax = -maxval, maxval
-    plt.ylim((vmin, vmax))
+    if norm_dict['vscale'] is not None:
+        plt.ylim((vmin, vmax))
 
     ########################
     # apply labels and such
-    if do_labels:
+    if not nolabels:
         if xlabel is None:
             xlabel = namex
         if ylabel is None:
             ylabel = label
         plt.xlabel(xlabel)
         plt.ylabel(ylabel)
+
+    _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
+                 majorloc=majorloc, minorloc=minorloc)
 
     if legend:
         if isinstance(legend, bool):

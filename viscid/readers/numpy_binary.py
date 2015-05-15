@@ -91,12 +91,12 @@ class FileNumpyNPZ(vfile.VFile):
     def _wrap_lazy_field(self, parent_node, file_name, fld_name, crds, center):
         lazy_arr = NPZDataWrapper(file_name, fld_name)
         if len(lazy_arr.shape) == crds.nr_dims:
-            typ = "Scalar"
+            fldtype = "Scalar"
         elif len(lazy_arr.shape) == crds.nr_dims + 1:
-            typ = "Vector"
+            fldtype = "Vector"
         else:
             raise IOError("can't infer field type")
-        return self._make_field(parent_node, typ, fld_name, crds, lazy_arr,
+        return self._make_field(parent_node, fldtype, fld_name, crds, lazy_arr,
                                 center=center)
 
     def _parse(self):
@@ -159,7 +159,10 @@ class FileNumpyNPZ(vfile.VFile):
         fld_dict = {}
 
         # setup crds
-        clist = flds[0].crds.get_clist()
+        # FIXME: all coordinates are saved as non-uniform, the proper
+        #        way to do this is to have let coordinate format its own
+        #        hdf5 / xdmf / numpy binary output
+        clist = flds[0].crds.get_clist(full_arrays=True)
         axis_names = []
         for axis_name, crdarr in clist:
             fld_dict[axis_name] = crdarr

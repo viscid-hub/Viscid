@@ -35,7 +35,10 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False):
     z = np.array(np.linspace(l[2], h[2], n[2]), dtype=dtype)
     if twod:
         y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
-    crds = coordinate.wrap_crds("nonuniform_cartesian", (('z', z), ('y', y), ('x', x)))
+
+    B = field.empty([z, y, x], nr_comps=3, name="B", center='cell',
+                    layout='interlaced', dtype=dtype)
+    Zcc, Ycc, Xcc = B.get_crds_cc(shaped=True) #pylint: disable=W0612
 
     one = np.array([1.0], dtype=dtype) #pylint: disable=W0612
     three = np.array([3.0], dtype=dtype) #pylint: disable=W0612
@@ -44,21 +47,13 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False):
     m = np.array(m, dtype=dtype)
     mx, my, mz = m #pylint: disable=W0612
 
-    Zcc, Ycc, Xcc = crds.get_crds_cc(shaped=True) #pylint: disable=W0612
-
     rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
     mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
-    Bx = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
-    By = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
-    Bz = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+    B['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
+    B['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
+    B['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
 
-    fld = field.VectorField("B_cc", crds, [Bx, By, Bz],
-                            center="Cell", forget_source=True,
-                            _force_layout=field.LAYOUT_INTERLACED,
-                           )
-    # fld_rsq = field.ScalarField("r", crds, hmm,
-    #                             center="Cell", forget_source=True)
-    return fld  # , fld_rsq
+    return B
 
 def get_trilinear_field():
     xl, xh, nx = -1.0, 1.0, 41
@@ -69,8 +64,8 @@ def get_trilinear_field():
     z = np.linspace(zl, zh, nz)
     crds = coordinate.wrap_crds("nonuniform_cartesian",
                                 [('z', z), ('y', y), ('x', x)])
-    b = field.empty("Vector", "f", crds, 3, center="Cell",
-                      layout="interlaced")
+    b = field.empty(crds, name="f", nr_comps=3, center="Cell",
+                    layout="interlaced")
     Z, Y, X = b.get_crds(shaped=True)
 
     x01, y01, z01 = 0.5, 0.5, 0.5

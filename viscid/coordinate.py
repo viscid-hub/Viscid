@@ -1,3 +1,4 @@
+# pylint: disable=too-many-lines
 """ Container for grid coordinates
 
 Coordinates primarily go into Field objects. The order of coords in
@@ -29,11 +30,47 @@ from viscid.compat import string_types
 from viscid import vutil
 
 
-def wrap_crds(typ, clist, **kwargs):
+def arrays2crds(crd_arrs, crd_names="zyxwvu"):
+    """make either uniform or nonuniform coordnates given full arrays
+
+    Args:
+        crd_arrs (array-like): for n-dimensional crds, supply a list
+            of n ndarrays
+        crd_names (iterable): names of coordinates in the same order
+            as crd_arrs. Should always be in zyx order.
+    """
+    clist = []
+    uniform_clist = []
+    is_uniform = True
+    try:
+        _ = len(crd_arrs[0])
+    except TypeError:
+        crd_arrs = [crd_arrs]
+
+    for crd_name, arr in zip(crd_names, crd_arrs):
+        arr = np.array(arr)
+        clist.append((crd_name, arr))
+        try:
+            atol = 100 * np.finfo(arr.dtype).eps
+        except ValueError:
+            atol = 0
+        diff = arr[1:] - arr[:-1]
+        if np.allclose(diff[0], diff[1:], atol=atol):
+            uniform_clist.append((crd_name, [arr[0], arr[-1], len(arr)]))
+        else:
+            is_uniform = False
+
+    if is_uniform:
+        crds = wrap_crds("uniform", uniform_clist)
+    else:
+        crds = wrap_crds("nonuniform", clist)
+    return crds
+
+def wrap_crds(crdtype, clist, **kwargs):
     """  """
-    # print(len(clist), clist[0][0], len(clist[0][1]), typ)
+    # print(len(clist), clist[0][0], len(clist[0][1]), crytype)
     for cls in vutil.subclass_spider(Coordinates):
-        if cls.istype(typ):
+        if cls.istype(crdtype):
             # return an instance
             return cls(clist, **kwargs)
     raise NotImplementedError("can not decipher crds")
@@ -45,7 +82,7 @@ class Coordinates(object):
     __crds = None
 
     @property
-    def type(self):
+    def crdtype(self):
         return self._TYPE
 
     @classmethod
@@ -222,6 +259,7 @@ class StructuredCrds(Coordinates):
             shape = self.shape_nc
 
         if nr_comp is not None:
+            shape = list(shape)
             shape.insert(nr_comp, nr_comps)
             rev.insert(nr_comp, False)
         first, second = vutil.make_fwd_slice(shape, [], rev)
@@ -781,7 +819,7 @@ class StructuredCrds(Coordinates):
         """
         return [name for name in self.axes if len(self[name]) > ignore]
 
-    def get_clist(self, axes=None, slc=None, full_arrays=True):
+    def get_clist(self, axes=None, slc=None, full_arrays=True, center='node'):
         """??
 
         Returns:
@@ -796,7 +834,7 @@ class StructuredCrds(Coordinates):
             slc = slice(None)
         if axes is None:
             axes = self.axes
-        return [[axis, self.get_crd(axis)[slc]] for axis in axes]
+        return [[axis, self.get_crd(axis, center=center)[slc]] for axis in axes]
 
     ## These methods just return one crd axis
     def get_nc(self, axis, shaped=False):
@@ -1096,9 +1134,10 @@ class UniformCrds(StructuredCrds):
         new_clist = [(ax, [xl[i], xh[i], nx[i]]) for i, ax in enumerate(axes)]
         return type(self)(new_clist)
 
-    def get_clist(self, axes=None, slc=None, full_arrays=False):
+    def get_clist(self, axes=None, slc=None, full_arrays=False, center="node"):
         if full_arrays:
-            return super(UniformCrds, self).get_clist(axes=axes, slc=slc)
+            return super(UniformCrds, self).get_clist(axes=axes, slc=slc,
+                                                      center=center)
         if slc is not None:
             raise NotImplementedError("use full_arrays=True with slice != None"
                                       "for now")
@@ -1107,11 +1146,17 @@ class UniformCrds(StructuredCrds):
         lst = []
         for ax in axes:
             ax = ax.lower()
-            nc_args = self._nc_linspace_args[self.axes.index(ax)]
-            if ax in self.reflect_axes:
-                lst.append([ax, [-nc_args[1], -nc_args[0], nc_args[2]]])
+            if center == "node":
+                ls_args = self._nc_linspace_args[self.axes.index(ax)]
+            elif center == "cell":
+                ls_args = self._cc_linspace_args[self.axes.index(ax)]
             else:
-                lst.append([ax, nc_args])
+                raise ValueError("node/cell centering only in here")
+
+            if ax in self.reflect_axes:
+                lst.append([ax, [-ls_args[1], -ls_args[0], ls_args[2]]])
+            else:
+                lst.append([ax, ls_args])
         return lst
 
     def _fill_crds_dict(self):
@@ -1131,7 +1176,7 @@ class NonuniformCrds(StructuredCrds):
             raise ValueError("did you want Uniform crds?")
         super(NonuniformCrds, self).__init__(init_clist, **kwargs)
 
-    def get_clist(self, axes=None, slc=None, full_arrays=True):
+    def get_clist(self, axes=None, slc=None, full_arrays=True, center="node"):
         """??
 
         Returns:
@@ -1142,7 +1187,8 @@ class NonuniformCrds(StructuredCrds):
         """
         if not full_arrays:
             raise ValueError("Unstructured crds only have full arrays")
-        return super(NonuniformCrds, self).get_clist(axes=axes, slc=slc)
+        return super(NonuniformCrds, self).get_clist(axes=axes, slc=slc,
+                                                     center=center)
 
 
 class UniformCartesianCrds(UniformCrds):

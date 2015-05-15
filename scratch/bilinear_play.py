@@ -79,10 +79,10 @@ def main():
     z = np.linspace(zl, zh, nz)
     crds = coordinate.wrap_crds("nonuniform_cartesian",
                                 [('z', z), ('y', y), ('x', x)])
-    bx = field.empty("Scalar", "$B_x$", crds, center="Node")
-    by = field.empty("Scalar", "$B_y$", crds, center="Node")
-    bz = field.empty("Scalar", "$B_z$", crds, center="Node")
-    fld = field.empty("Vector", "B", crds, 3, center="Node",
+    bx = field.empty(crds, name="$B_x$", center="Node")
+    by = field.empty(crds, name="$B_y$", center="Node")
+    bz = field.empty(crds, name="$B_z$", center="Node")
+    fld = field.empty(crds, name="B", nr_comps=3, center="Node",
                       layout="interlaced")
     Z, Y, X = crds.get_crds(shaped=True)
 

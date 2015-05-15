@@ -131,6 +131,7 @@ html_theme_options = {
                        ("RC file", "custom_behavior"),
                        ("Plot Options", "plot_options"),
                        ("Command Line Tools", "command_line"),
+                       ("Extending Readers", "extending_readers"),
                       ]
          ),
          ("Examples", [("Plotting", "examples/plotting"),

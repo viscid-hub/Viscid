@@ -27,7 +27,7 @@ try:
 except ImportError:
     has_cython = False
 
-if sys.version_info >= (3,0):
+if sys.version_info >= (3, 0):
     PY3K = True
 else:
     PY3K = False
@@ -37,11 +37,8 @@ cmdclass = {}
 pkgs = ['viscid',
         'viscid.calculator',
         'viscid.compat',
-        'viscid.parsers',
         'viscid.plot',
-        'viscid.plot.cmaps',
-        'viscid.readers',
-        'viscid.readers.amr'
+        'viscid.readers'
        ]
 
 scripts = glob.glob(os.path.join('scripts', '*'))
@@ -69,8 +66,8 @@ cy_defs.append(["viscid.calculator.streamline",
                 ["viscid/calculator/streamline"],
                 dict()
                ])
-cy_defs.append(["viscid.readers.amr.cyamr",
-                ["viscid/readers/amr/cyamr"],
+cy_defs.append(["viscid.cyamr",
+                ["viscid/cyamr"],
                 dict()
                ])
 

@@ -12,7 +12,7 @@ from viscid.readers import _xdmf_include
 from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.hdf5 import FileLazyHDF5
-from viscid.readers.amr import amr_grid
+from viscid import amr_grid
 from viscid import coordinate
 
 # class XDMFDataItem(data_item.DataItem):
@@ -410,8 +410,8 @@ class FileXDMF(vfile.VFile):  # pylint: disable=abstract-method
         data, dataattrs = self._parse_dataitem(item.find("./DataItem"))
         name = attrs["Name"]
         center = attrs["Center"]
-        typ = attrs["AttributeType"]
-        fld = self._make_field(parent_node, typ, name, crds, data,
+        fldtype = attrs["AttributeType"]
+        fld = self._make_field(parent_node, fldtype, name, crds, data,
                                center=center, time=time)
         return fld
 

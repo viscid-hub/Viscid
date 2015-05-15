@@ -31,8 +31,8 @@ def magnitude(fld):
     mag = np.empty_like(vect)
     _py_magnitude3d(vect, mag)
     mag = mag.reshape(fld.shape)
-    return field.wrap_field("Vector", fld.name + " magnitude", fld.crds, mag,
-                            center=fld.center, time=fld.time,
+    return field.wrap_field(mag, fld.crds, name=fld.name + " magnitude",
+                            fldtype="Vector", center=fld.center, time=fld.time,
                             forget_source=True)
 
 def _py_magnitude3d(real_t[:,:,:,:] vect, real_t[:,:,:,:] mag):

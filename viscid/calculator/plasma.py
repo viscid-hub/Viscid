@@ -75,9 +75,8 @@ def calc_psi(B, reversed=False):
         for j in range(1, ny):
             A[:, j] = A[:, j - 1] - dy[j - 1] * 0.5 * (hz[:, j - 1] + hz[:, j])
 
-    return field.wrap_field("Scalar", "psi", B.crds, A,
-                            center=B.center, pretty_name=r"$\psi$",
-                            parents=[B])
+    return field.wrap_field(A, B.crds, name="psi", center=B.center,
+                            pretty_name=r"$\psi$", parents=[B])
 
 def calc_beta(pp, B, scale=1.0):
     """Calc plasma beta (2*p/B^2)

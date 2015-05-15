@@ -10,7 +10,7 @@ import importlib
 import traceback
 
 import viscid
-from viscid.parsers import vjson
+from viscid import vjson
 
 class RCPathError(Exception):
     message = ""

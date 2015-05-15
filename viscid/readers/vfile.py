@@ -174,7 +174,7 @@ class VFile(Dataset):
             parent_node.prepare_child(g)
         return g
 
-    def _make_field(self, parent_node, fld_typ, name, crds, data, **kwargs):
+    def _make_field(self, parent_node, fldtype, name, crds, data, **kwargs):
         """Use this instead of calling Grid(...) yourself
 
         Args:
@@ -182,7 +182,7 @@ class VFile(Dataset):
                 the tree, needed if info is used before this object
                 is added to its parent
         """
-        fld = field.wrap_field(fld_typ, name, crds, data, **kwargs)
+        fld = field.wrap_field(data, crds, name=name, fldtype=fldtype, **kwargs)
         if parent_node is not None:
             parent_node.prepare_child(fld)
         return fld

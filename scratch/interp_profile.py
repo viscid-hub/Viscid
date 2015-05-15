@@ -70,8 +70,9 @@ if __name__ == "__main__":
     # print([line.shape for line in lines])
     # mpl.scatter_3d(vol.points(), interp_vals[:, 2], show=True)
 
-    interp_field = field.wrap_field("Vector", "interp", vol.as_coordinates(),
-                                    interp_vals, center="Cell")
+    interp_field = field.wrap_field(interp_vals, vol.as_coordinates(),  # pylint: disable=undefined-variable
+                                    name="interp", fldtype="vector",
+                                    center="cell")
     interp_y1 = interp_field["y=1"]
     exact_y1 = B["y=1"]
     bxi, byi, bzi = interp_y1.component_fields()

@@ -180,7 +180,7 @@ class AMRField(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, typ, value, traceback):
+    def __exit__(self, exc_type, value, traceback):
         """ unload the data """
         for blk in self.blocks:
             blk.unload()
