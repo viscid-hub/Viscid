@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.80.7 dev
+## 0.80.7
 
 Backward Incompatible Changes:
   - Arguments to viscid.field.wrap_field have changed
