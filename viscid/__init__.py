@@ -50,7 +50,6 @@ Attributes:
 __all__ = ['amr_field',  # Modules
            'amr_grid',
            'calculator',
-           'plot',
            'readers',
            'bucket',
            'coordinate',
