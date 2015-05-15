@@ -8,6 +8,7 @@ Backward Incompatible Changes:
   - add Field methods real, imag, astype
 
 Changes:
+  - add support for calling `python -im viscid pylab`
   - add viscid.field.arrays2field and viscid.coordinates.arrays2crds
   - viscid.field now has empty, ones, zeros, empty_like, ones_like, zeros_like that act roughly the same as the numpy functions, except that these create fields
 

@@ -47,7 +47,7 @@ Attributes:
         :py:func:`viscid.coordinate.arrays2crds`
 """
 
-__all__ = ['amr_field',
+__all__ = ['amr_field',  # Modules
            'amr_grid',
            'calculator',
            'plot',
@@ -62,7 +62,25 @@ __all__ = ['amr_field',
            'verror',
            'vjson',
            'vlab',
-           'vutil'
+           'vutil',
+           'logger',  # logger
+           'load_file',  # reader helpers
+           'load_files',
+           'get_file',
+           'save_grid',
+           'save_field',
+           'save_fields',
+           'arrays2field',  # Field helpers
+           'dat2field',
+           'empty',
+           'zeros',
+           'ones',
+           'empty_like',
+           'zeros_like',
+           'ones_like',
+           'scalar_fields_to_vector',
+           'wrap_field',
+           'arrays2crds',  # Crd helpers
           ]
 
 # setup logger for use throughout viscid
