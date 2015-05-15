@@ -35,9 +35,9 @@ Here are some options that should work for all functions:
 
 .. cssclass:: table-striped
 
-==========  ===============   ==================================================
+==========  ================  ==================================================
 Option      Arguments         Description
-==========  ===============   ==================================================
+==========  ================  ==================================================
 clim        vmin, [vmax]      Set min and max values for the data scale
 vmin        int               Minimum value for the data range
 vmax        int               Maximum value for the data range
@@ -66,7 +66,7 @@ minorfmt    ticker.Formatter  Formatter for minor axes (x and y)
 majorloc    ticker.Locator    Locator for major axes (x and y)
 minorloc    ticker.Locator    Locator for minor axes (x and y)
 show        [bool]            Call :py:func:`pyplot.show` before returning
-==========  ===============   ==================================================
+==========  ================  ==================================================
 
 .. note::
   When using lin, if vmin == 0 and vmax is not given, the scale will be symmetric
