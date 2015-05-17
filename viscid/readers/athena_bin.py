@@ -87,11 +87,11 @@ class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
                                                name="AthenaTemporalCollection")
 
             for fname in self._collection:
-                f = self.vfilebucket.load_file(fname, index_handle=False,
-                                               file_type=type(self),
-                                               crds=self._crds,
-                                               float_type_name=self.float_type_name,
-                                               var_type=self.var_type)
+                f = self._load_child_file(fname, index_handle=False,
+                                          file_type=type(self),
+                                          crds=self._crds,
+                                          float_type_name=self.float_type_name,
+                                          var_type=self.var_type)
                 data_temporal.add(f)
             data_temporal.activate(0)
             self.add(data_temporal)

@@ -71,6 +71,7 @@ class VFile(Dataset):
 
     file = None  # this is for files that stay open after being parsed,
                  # for instance hdf5 File object
+    _child_files = None
     # grids = None  # already part of Dataset
 
     def __init__(self, fname, vfilebucket=None, grid_type=None, grid_opts=None,
@@ -86,7 +87,15 @@ class VFile(Dataset):
         assert isinstance(self._grid_opts, dict)
 
         self.vfilebucket = vfilebucket
+        self._child_files = []
+
         self.load(fname)
+
+    def _load_child_file(self, fname, **kwargs):
+        """Add file to self.vfilebucket and remember it for when I unload"""
+        f = self.vfilebucket.load_file(fname, **kwargs)
+        self._child_files.append(f)
+        return f
 
     def load(self, fname):
         #self.unload()

@@ -444,8 +444,8 @@ class FileXDMF(vfile.VFile):  # pylint: disable=abstract-method
                 fname = os.path.join(self.h5_root_dir, fname)
             elif not fname.startswith('/'):
                 fname = os.path.join(self.dirname, fname)
-            h5file = self.vfilebucket.load_file(fname, index_handle=False,
-                                                file_type=FileLazyHDF5)
+            h5file = self._load_child_file(fname, index_handle=False,
+                                           file_type=FileLazyHDF5)
             arr = h5file.get_data(loc)
             return arr, attrs
 

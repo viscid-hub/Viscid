@@ -75,10 +75,10 @@ class AthenaTabFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
                                                name="AthenaTemporalCollection")
 
             for fname in self._collection:
-                f = self.vfilebucket.load_file(fname, index_handle=False,
-                                               file_type=type(self),
-                                               crds=self._crds,
-                                               fld_list=self._fld_list)
+                f = self._load_child_file(fname, index_handle=False,
+                                          file_type=type(self),
+                                          crds=self._crds,
+                                          fld_list=self._fld_list)
                 data_temporal.add(f)
             data_temporal.activate(0)
             self.add(data_temporal)

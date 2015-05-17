@@ -431,9 +431,9 @@ class GGCMFile(object):
                 self.set_info("_viscid_log_fname", log_fname)
                 if self.vfilebucket is None:
                     self.vfilebucket = VFileBucket()
-                log_f = self.vfilebucket.load_file(log_fname,
-                                                   file_type=GGCMLogFile,
-                                                   index_handle=False)
+                log_f = self._load_child_file(log_fname,
+                                              file_type=GGCMLogFile,
+                                              index_handle=False)
                 # print("!!", log_f)
 
                 # self.parents.append(log_f)  # this way makes me uncomfortable
@@ -593,10 +593,10 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
             self._fld_templates = self._make_template(self._collection[0])
 
             for fname in self._collection:
-                f = self.vfilebucket.load_file(fname, index_handle=False,
-                                               file_type=type(self),
-                                               crds=self._crds,
-                                               fld_templates=self._fld_templates)
+                f = self._load_child_file(fname, index_handle=False,
+                                          file_type=type(self),
+                                          crds=self._crds,
+                                          fld_templates=self._fld_templates)
                 data_temporal.add(f)
             data_temporal.activate(0)
             self.add(data_temporal)
