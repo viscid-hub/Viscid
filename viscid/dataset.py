@@ -50,14 +50,10 @@ class Dataset(tree.Node):
         if set_active:
             self.active_child = child
 
-    def unload(self):
-        """ unload is meant to give children a chance to free caches, the idea
-        being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload
-        """
+    def clear_cache(self):
+        """Clear all childrens' caches"""
         for child in self.children:
-            child.unload()
-        # TODO: does anything else need to be unloaded in here?
+            child.clear_cache()
 
     # def remove_all_items(self):
     #     raise NotImplementedError()
@@ -169,7 +165,7 @@ class Dataset(tree.Node):
 
     def __delitem__(self, item):
         child = self.get_child(item)
-        child.unload()
+        child.clear_cache()
         self.children.remove_item(child)
 
     def __len__(self):
@@ -192,7 +188,7 @@ class Dataset(tree.Node):
         return self
 
     def __exit__(self, exc_type, value, traceback):
-        self.unload()
+        self.clear_cache()
         return None
 
     def __iter__(self):
@@ -235,14 +231,10 @@ class DatasetTemporal(Dataset):
         if set_active:
             self.active_child = child
 
-    def unload(self):
-        """ unload is meant to give children a chance to free caches, the idea
-        being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload
-        """
+    def clear_cache(self):
+        """Clear all childrens' caches"""
         for child in self.children:
-            child[1].unload()
-        # TODO: does anything else need to be unloaded in here?
+            child[1].clear_cache()
 
     def activate(self, time):
         self.active_child = self.get_child(time)

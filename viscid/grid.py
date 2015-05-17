@@ -29,7 +29,7 @@ class Grid(tree.Node):
             (default: LAYOUT_DEFAULT)
         longterm_field_caches (bool): If True, then when a field is
             cached, it must be explicitly removed from memory with
-            "unload" or using the 'with' statemnt. If False,
+            "clear_cache" or using the 'with' statemnt. If False,
             "shell copies" of fields are made so that memory is freed
             when the returned instance is garbage collected.
             Default: False
@@ -104,14 +104,10 @@ class Grid(tree.Node):
             self.prepare_child(f)
             self.fields[f.name] = f
 
-    def unload(self):
-        """ unload is meant to give children a chance to free caches, the idea
-        being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload
-        """
+    def clear_cache(self):
+        """clear the cache on all child fields"""
         for fld in self.fields:
-            fld.unload()
-        # TODO: does anything else need to be unloaded in here?
+            fld.clear_cache()
 
     def nr_times(self, *args, **kwargs): #pylint: disable=W0613,R0201
         return 1
@@ -260,7 +256,7 @@ class Grid(tree.Node):
         return self
 
     def __exit__(self, exc_type, value, traceback):
-        self.unload()
+        self.clear_cache()
         return None
 
 ##

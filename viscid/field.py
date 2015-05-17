@@ -458,12 +458,12 @@ class Field(tree.Leaf):
 
     @layout.setter
     def layout(self, new_layout):
-        """ UNTESTED, unload data if layout changes """
+        """ UNTESTED, clear cache if layout changes """
         new_layout = new_layout.lower()
         if self.is_loaded():
             current_layout = self.layout
             if new_layout != current_layout:
-                self.unload()
+                self.clear_cache()
         self.deep_meta["force_layout"] = new_layout
         self._layout = None
 
@@ -592,14 +592,14 @@ class Field(tree.Leaf):
     @property
     def data(self):
         """ if you want to fill the cache, this will do it, note that
-        to empty the cache later you can always use unload """
+        to empty the cache later you can always use clear_cache """
         if self._cache is None:
             self._fill_cache()
         return self._cache
     @data.setter
     def data(self, dat):
         # clean up
-        self._purge_cache()
+        self.clear_cache()
         self._layout = None
         self._nr_comp = None
         self._nr_comps = None
@@ -619,7 +619,7 @@ class Field(tree.Leaf):
     def is_loaded(self):
         return self._cache is not None
 
-    def _purge_cache(self):
+    def clear_cache(self):
         """ does not guarentee that the memory will be freed """
         self._cache = None
         if self._parent_field is not None:
@@ -1022,10 +1022,6 @@ class Field(tree.Leaf):
         self.data[tuple(slices)] = value
         return None
 
-    def unload(self):
-        """ does not guarentee that the memory will be freed """
-        self._purge_cache()
-
     @classmethod
     def istype(cls, type_str):
         return cls._TYPE == type_str.lower()
@@ -1042,8 +1038,8 @@ class Field(tree.Leaf):
         return self
 
     def __exit__(self, exc_type, value, traceback):
-        """ unload the data """
-        self.unload()
+        """clear cached data"""
+        self.clear_cache()
         return None
 
     def __iter__(self):
@@ -1120,9 +1116,9 @@ class Field(tree.Leaf):
 
         So, fields that belong to files are kept around for the
         lifetime of the file bucket, which is probably the lifetime
-        of the main script. That means you have to explicitly unload
-        to clear the cache (important if reading a timeseries of fields
-        > 1GB). This function will return a new field instance with
+        of the main script. That means you have to explicitly clear the
+        cache (important if reading a timeseries of fields > 1GB).
+        This function will return a new field instance with
         references to all the same internals as self, except for the
         cache. Effectively, this turns the parent field into a
         lightweight "field shell", from which a memory intensive field
@@ -1256,7 +1252,7 @@ class Field(tree.Leaf):
             ret = self.wrap(np.ascontiguousarray(self.data))
 
         if not was_loaded and ret is not self:
-            self.unload()
+            self.clear_cache()
         return ret
 
     #######################
@@ -1368,7 +1364,7 @@ class Field(tree.Leaf):
         return self.wrap(self.data.__rpow__(other))
 
     # inplace operations are not implemented since the data
-    # can up and disappear (due to unload)... this could cause
+    # can up and disappear (due to clear_cache)... this could cause
     # confusion
     def __iadd__(self, other):
         return NotImplemented
@@ -1561,7 +1557,7 @@ class VectorField(Field):
             ret = self.wrap(self.data, ctx)
 
         if not was_loaded and ret is not self:
-            self.unload()
+            self.clear_cache()
         return ret
 
 class MatrixField(Field):

@@ -210,18 +210,14 @@ class StructuredCrds(Coordinates):
 
     def clear_crds(self):
         self._src_crds_nc = {}
-        self._purge_cache()
+        self.clear_cache()
         # for d in self.axes:
         #     for sfx in self.SUFFIXES:
         #         self.__crds[d + sfx] = None
         #         self.__crds[d.upper() + sfx] = None
 
-    def _purge_cache(self):
+    def clear_cache(self):
         self.__crds = None
-
-    def unload(self):
-        """ does not guarentee that the memory will be freed """
-        self._purge_cache()
 
     def set_crds(self, clist):
         """ called with a list of lists:

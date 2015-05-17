@@ -181,9 +181,9 @@ class AMRField(object):
         return self
 
     def __exit__(self, exc_type, value, traceback):
-        """ unload the data """
+        """clear all caches"""
         for blk in self.blocks:
-            blk.unload()
+            blk.clear_cache()
         return None
 
     def wrap_special_method(self, attrname, *args, **kwargs):
