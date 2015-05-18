@@ -2,7 +2,7 @@
 
 from viscid import logger
 
-force_native_xml = False
+force_native_xml = True
 
 try:
     if force_native_xml:
