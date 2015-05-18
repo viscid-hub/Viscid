@@ -3,12 +3,12 @@
 
 from __future__ import print_function
 import os
-from xml.etree import ElementTree
+# from xml.etree import ElementTree
 
 import numpy as np
 
+from viscid.compat import element_tree
 from viscid import logger
-from viscid.readers import _xdmf_include
 from viscid.readers import vfile
 from viscid.readers.vfile_bucket import VFileBucket
 from viscid.readers.hdf5 import FileLazyHDF5
@@ -120,9 +120,9 @@ class FileXDMF(vfile.VFile):  # pylint: disable=abstract-method
         #     tree.xinclude()  # TODO: gracefully ignore include problems
         #     root = tree.getroot()
         grids = []
-        tree = ElementTree.parse(fname)
+        tree = element_tree.parse(fname)
+        element_tree.xinclude(tree, base_url=fname)
         root = tree.getroot()
-        _xdmf_include.include(root, base_url=fname)
 
         # search for all root grids, and parse them
         domain_grids = root.findall("./Domain/Grid")
