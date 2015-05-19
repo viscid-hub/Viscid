@@ -421,25 +421,26 @@ def convert_floating_slice(arr, start, stop=None, step=None,
         start, stop, step after floating point vals have been
         converted to integers
     """
+    arr = np.asarray(arr)
     try:
         epsilon = tol * np.finfo(arr.dtype).eps
     except ValueError:
         # array is probably of type numpy.int*
-        epsilon = 0
+        epsilon = 0.01
 
     _step = 1 if step is None else step
     epsilon_step = epsilon if _step > 0 else -epsilon
 
     if isinstance(start, (float, np.floating)):
         diff = arr - start + epsilon_step
-        if epsilon_step > 0:
+        if _step > 0:
             diff = np.ma.masked_less_equal(diff, 0)
         else:
             diff = np.ma.masked_greater_equal(diff, 0)
 
         if np.ma.count(diff) == 0:
             # start value is past the wrong end of the array
-            if epsilon_step > 0:
+            if _step > 0:
                 start = len(arr)
             else:
                 # start = -len(arr) - 1
@@ -452,7 +453,7 @@ def convert_floating_slice(arr, start, stop=None, step=None,
 
     if isinstance(stop, (float, np.floating)):
         diff = arr - stop - epsilon_step
-        if epsilon_step > 0:
+        if _step > 0:
             diff = np.ma.masked_greater_equal(diff, 0)
             if np.ma.count(diff) == 0:
                 # stop value is past the wong end of the array
