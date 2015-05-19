@@ -479,6 +479,55 @@ def convert_floating_slice(arr, start, stop=None, step=None,
 
     return start, stop, step
 
+def str2slice(arr, s, style="mixed", endpoint=True, tol=100):
+    """Convert a string describing a slice to a slice object
+
+    Args:
+        arr (array): Array that you're going to slice if you specify any
+            parts of the slice by value. If all slices are by index,
+            arr can be None
+        s (str): slice as a string, like "1::2" or "10.0:20.0:2"
+        style (str): One of 'mixed', 'index', or 'value'. If mixed,
+            the style (index or value) for each individual element
+            is implied by whether it's a float or an int. For short,
+            you can also give 'm', 'i', or 'v'.
+        endpoint (bool): iff True then include stop in the slice.
+            Set to False to get python slicing symantics when it
+            comes to excluding stop, but fair warning, python
+            symantics feel awkward here. Consider the case
+            [0.1, 0.2, 0.3][:0.25]. If you think this should include
+            0.2, then leave keep endpoint=True.
+        tol (int): number of machine epsilons to consider
+            "close enough"
+
+    Returns:
+        slice
+    """
+    slclst = [v.strip() for v in s.split(":")]
+
+    if len(slclst) > 3:
+        raise ValueError("slices can have at most start, stop, step")
+
+    if style[0] == 'm':  # "mixed"
+        for i, val in enumerate(slclst):
+            if len(val) == 0:
+                slclst[i] = None
+            else:
+                try:
+                    slclst[i] = int(val)
+                except ValueError:
+                    slclst[i] = float(val)
+    elif style[0] == "i":  # "index"
+        slclst = [int(v) if v else None for v in slclst]
+    elif style[0] == "v":  # "value"
+        slclst[:2] = [float(v) if v else None for v in slclst[:2]]
+        slclst[2:] = [int(v) if v else None for v in slclst[2:]]
+    else:
+        raise ValueError("style should be 'mixed', 'index' or 'value'")
+
+    slclst = convert_floating_slice(arr, *slclst, endpoint=endpoint, tol=tol)
+    return slice(*slclst)
+
 def make_slice_inclusive(start, stop=None, step=None):
     """Extend the end of a slice by 1 element
 
