@@ -42,7 +42,7 @@ from viscid.plot import cubehelix # import clac_helix_rgba
 # NOTE: this changes the default colormap as soon as viscid.plot.mpl is
 #       imported... Use your rc file to set this to a specific map or None
 #       if you want to use matplotlib's default
-default_cmap = "redhelix"
+default_cmap = "afmhot"
 symmetric_cmap = "seismic"
 
 default_cbarfmt = None
