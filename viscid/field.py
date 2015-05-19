@@ -1304,9 +1304,14 @@ class Field(tree.Leaf):
             fldtype = field_type(fldtype)
         # Transform functions are intentionally omitted. The idea being that
         # the transform was already applied when creating arr
-        return fldtype(name, crds, arr, time=time, center=center,
-                   meta=self.meta, deep_meta=context, parents=[self],
-                   pretty_name=pretty_name)
+        fld = fldtype(name, crds, arr, time=time, center=center,
+                      meta=self.meta, deep_meta=context, parents=[self],
+                      pretty_name=pretty_name)
+        # if the operation reduced a vector to something with 1 component,
+        # then turn the result into a ScalarField
+        if fld.nr_comps == 1:
+            fld = fld.component_fields()[0]
+        return fld
 
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
         # print("wrapping")
