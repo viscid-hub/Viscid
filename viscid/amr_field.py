@@ -8,7 +8,7 @@ Note:
 from __future__ import print_function
 import numpy as np
 
-from viscid.compat import string_types
+# from viscid.compat import string_types
 from viscid.field import Field
 
 
@@ -186,89 +186,95 @@ class AMRField(object):
             blk.clear_cache()
         return None
 
-    def wrap_special_method(self, attrname, *args, **kwargs):
-        # print(">>> wrap_special_method:", attrname)
+    def wrap_field_method(self, attrname, *args, **kwargs):
+        """Wrap methods whose args are Fields and return a Field"""
+        # make sure all args have same number of blocks as self
+        if not all(amrfld.nr_blocks == self.nr_blocks for amrfld in args):
+            raise ValueError("AMR fields in math operations must have the "
+                             "same number of blocks")
+
         lst = []
-        for fld in self.blocks:
-            lst.append(getattr(fld, attrname)(*args, **kwargs))
+        for i, block in enumerate(self.blocks):
+            other = [arg.blocks[i] for arg in args]
+            lst.append(getattr(block, attrname)(*other, **kwargs))
         return AMRField(lst, self.skeleton)
 
     def __array__(self, *args, **kwargs):  # pylint: disable=unused-argument,no-self-use
         raise NotImplementedError("AMRFields can not make a single ndarray")
 
     def __add__(self, other):
-        return self.wrap_special_method("__add__", other)
+        return self.wrap_field_method("__add__", other)
     def __sub__(self, other):
-        return self.wrap_special_method("__sub__", other)
+        return self.wrap_field_method("__sub__", other)
     def __mul__(self, other):
-        return self.wrap_special_method("__mul__", other)
+        return self.wrap_field_method("__mul__", other)
     def __div__(self, other):
-        return self.wrap_special_method("__div__", other)
+        return self.wrap_field_method("__div__", other)
     def __truediv__(self, other):
-        return self.wrap_special_method("__truediv__", other)
+        return self.wrap_field_method("__truediv__", other)
     def __floordiv__(self, other):
-        return self.wrap_special_method("__floordiv__", other)
+        return self.wrap_field_method("__floordiv__", other)
     def __mod__(self, other):
-        return self.wrap_special_method("__mod__", other)
+        return self.wrap_field_method("__mod__", other)
     def __divmod__(self, other):
-        return self.wrap_special_method("__divmod__", other)
+        return self.wrap_field_method("__divmod__", other)
     def __pow__(self, other):
-        return self.wrap_special_method("__pow__", other)
+        return self.wrap_field_method("__pow__", other)
     def __lshift__(self, other):
-        return self.wrap_special_method("__lshift__", other)
+        return self.wrap_field_method("__lshift__", other)
     def __rshift__(self, other):
-        return self.wrap_special_method("__rshift__", other)
+        return self.wrap_field_method("__rshift__", other)
     def __and__(self, other):
-        return self.wrap_special_method("__and__", other)
+        return self.wrap_field_method("__and__", other)
     def __xor__(self, other):
-        return self.wrap_special_method("__xor__", other)
+        return self.wrap_field_method("__xor__", other)
     def __or__(self, other):
-        return self.wrap_special_method("__or__", other)
+        return self.wrap_field_method("__or__", other)
 
     def __radd__(self, other):
-        return self.wrap_special_method("__radd__", other)
+        return self.wrap_field_method("__radd__", other)
     def __rsub__(self, other):
-        return self.wrap_special_method("__rsub__", other)
+        return self.wrap_field_method("__rsub__", other)
     def __rmul__(self, other):
-        return self.wrap_special_method("__rmul__", other)
+        return self.wrap_field_method("__rmul__", other)
     def __rdiv__(self, other):
-        return self.wrap_special_method("__rdiv__", other)
+        return self.wrap_field_method("__rdiv__", other)
     def __rtruediv__(self, other):
-        return self.wrap_special_method("__rtruediv__", other)
+        return self.wrap_field_method("__rtruediv__", other)
     def __rfloordiv__(self, other):
-        return self.wrap_special_method("__rfloordiv__", other)
+        return self.wrap_field_method("__rfloordiv__", other)
     def __rmod__(self, other):
-        return self.wrap_special_method("__rmod__", other)
+        return self.wrap_field_method("__rmod__", other)
     def __rdivmod__(self, other):
-        return self.wrap_special_method("__rdivmod__", other)
+        return self.wrap_field_method("__rdivmod__", other)
     def __rpow__(self, other):
-        return self.wrap_special_method("__rpow__", other)
+        return self.wrap_field_method("__rpow__", other)
 
     def __iadd__(self, other):
-        return self.wrap_special_method("__iadd__", other)
+        return self.wrap_field_method("__iadd__", other)
     def __isub__(self, other):
-        return self.wrap_special_method("__isub__", other)
+        return self.wrap_field_method("__isub__", other)
     def __imul__(self, other):
-        return self.wrap_special_method("__imul__", other)
+        return self.wrap_field_method("__imul__", other)
     def __idiv__(self, other):
-        return self.wrap_special_method("__idiv__", other)
+        return self.wrap_field_method("__idiv__", other)
     def __itruediv__(self, other):
-        return self.wrap_special_method("__itruediv__", other)
+        return self.wrap_field_method("__itruediv__", other)
     def __ifloordiv__(self, other):
-        return self.wrap_special_method("__ifloordiv__", other)
+        return self.wrap_field_method("__ifloordiv__", other)
     def __imod__(self, other):
-        return self.wrap_special_method("__imod__", other)
+        return self.wrap_field_method("__imod__", other)
     def __ipow__(self, other):
-        return self.wrap_special_method("__ipow__", other)
+        return self.wrap_field_method("__ipow__", other)
 
     def __neg__(self):
-        return self.wrap_special_method("__neg__", )
+        return self.wrap_field_method("__neg__", )
     def __pos__(self):
-        return self.wrap_special_method("__pos__", )
+        return self.wrap_field_method("__pos__", )
     def __abs__(self):
-        return self.wrap_special_method("__abs__", )
+        return self.wrap_field_method("__abs__", )
     def __invert__(self):
-        return self.wrap_special_method("__invert__", )
+        return self.wrap_field_method("__invert__", )
 
     def any(self):
         it = (fld.any() for fld in self.blocks)
@@ -278,17 +284,17 @@ class AMRField(object):
         return all(it)
 
     def __lt__(self, other):
-        return self.wrap_special_method("__lt__", other)
+        return self.wrap_field_method("__lt__", other)
     def __le__(self, other):
-        return self.wrap_special_method("__le__", other)
+        return self.wrap_field_method("__le__", other)
     def __eq__(self, other):
-        return self.wrap_special_method("__eq__", other)
+        return self.wrap_field_method("__eq__", other)
     def __ne__(self, other):
-        return self.wrap_special_method("__ne__", other)
+        return self.wrap_field_method("__ne__", other)
     def __gt__(self, other):
-        return self.wrap_special_method("__gt__", other)
+        return self.wrap_field_method("__gt__", other)
     def __ge__(self, other):
-        return self.wrap_special_method("__ge__", other)
+        return self.wrap_field_method("__ge__", other)
 
     def __getattr__(self, name):
         # define a callback to finalize
