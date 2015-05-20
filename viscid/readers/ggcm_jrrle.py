@@ -13,6 +13,8 @@ from viscid.readers._fortfile_wrapper import FortranFile
 from viscid.readers import _jrrle
 from viscid.compat import OrderedDict
 
+read_ascii = False
+
 
 class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method
     """Jimmy's run length encoding files"""
@@ -140,7 +142,7 @@ class JrrleFileWrapper(FortranFile):
         """
         meta = self.inquire(fld_name)
         arr = np.empty(meta['dims'], dtype='float32', order='F')
-        self._read_func[ndim - 1](self.unit, arr, fld_name)
+        self._read_func[ndim - 1](self.unit, arr, fld_name, read_ascii)
         return meta, arr
 
     def inquire_all_fields(self, reinquire=False):

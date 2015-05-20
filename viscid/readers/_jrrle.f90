@@ -56,7 +56,7 @@ subroutine inquire_next(found_field,IU,ndim,nx,ny,nz,it,varname,tstring)
 end subroutine inquire_next
 
 !----------------------------------------------------------------
-subroutine read_jrrle1d(iu,a1,nx,l1,success)
+subroutine read_jrrle1d(iu,a1,nx,l1,read_ascii,success)
   !----------------------------------------------------------------
   IMPLICIT NONE
   integer iu
@@ -67,10 +67,13 @@ subroutine read_jrrle1d(iu,a1,nx,l1,success)
   !f2py intent(inplace) a1
   character(len=*) :: l1
   !f2py intent(inplace) l1
+  logical read_ascii
+  !f2py intent(in) read_ascii
   integer success
   !f2py intent(out) success
 
   !locals
+  integer i
   integer it
   integer m
   real rid
@@ -95,6 +98,18 @@ subroutine read_jrrle1d(iu,a1,nx,l1,success)
      read(iu,1000,end=190) rec
      read(iu,*,end=190)it,nn
      call rdn2(iu,a1,nn,rec,it,rid)
+
+     ! see if we have fullascii
+     if (read_ascii .or. nn.ne.nx) then
+       read(iu,'(a)')rec
+       if(rec(2:17).eq.'fullasciifollows') then
+         ! write(0,*)'reading:  ',rec(2:17)
+         do i=1,nx; read(iu,*)a1(i); enddo
+       else
+         backspace(iu)
+       endif
+     endif
+
      if(nn.eq.nx)then
         success = 1
      endif
@@ -109,7 +124,7 @@ subroutine read_jrrle1d(iu,a1,nx,l1,success)
 end subroutine read_jrrle1d
 
 !----------------------------------------------------------------
-subroutine read_jrrle2d(iu,a1,nx,l1,success) 
+subroutine read_jrrle2d(iu,a1,nx,l1,read_ascii,success)
   !----------------------------------------------------------------
   IMPLICIT NONE
   integer iu
@@ -120,10 +135,13 @@ subroutine read_jrrle2d(iu,a1,nx,l1,success)
   !f2py intent(inplace) a1
   character(len=*) :: l1
   !f2py intent(inplace) l1
+  logical read_ascii
+  !f2py intent(in) read_ascii
   integer success
   !f2py intent(out) success
 
   !locals
+  integer i
   integer it
   integer m
   real rid
@@ -149,12 +167,24 @@ subroutine read_jrrle2d(iu,a1,nx,l1,success)
      read(iu,*,end=190)it,nx1,ny1
      call rdn2(iu,a1,nn,rec,it,rid)
 
-     if(nx1*ny1.eq.nx)then
-        success = 1
-     endif
-     return
+    ! see if we have fullascii
+    if (read_ascii .or. nn.ne.nx) then
+      read(iu,'(a)')rec
+      if(rec(2:17).eq.'fullasciifollows') then
+        ! write(0,*)'reading:  ',rec(2:17)
+        do i=1,nx; read(iu,*)a1(i); enddo
+      else
+        backspace(iu)
+      endif
+    endif
+
+    if(nx1*ny1.eq.nx)then
+      success = 1
+    endif
+    return
   endif
   goto 100
+
 190 continue
   success=0
 
@@ -163,7 +193,7 @@ subroutine read_jrrle2d(iu,a1,nx,l1,success)
 end subroutine read_jrrle2d
 
 !----------------------------------------------------------------
-subroutine read_jrrle3d(iu,a1,nx,l1,success)
+subroutine read_jrrle3d(iu,a1,nx,l1,read_ascii,success)
   !----------------------------------------------------------------
   IMPLICIT NONE
   integer iu
@@ -174,10 +204,13 @@ subroutine read_jrrle3d(iu,a1,nx,l1,success)
   !f2py intent(inplace) a1
   character(len=*) :: l1
   !f2py intent(inplace) l1
+  logical read_ascii
+  !f2py intent(in) read_ascii
   integer success
   !f2py intent(out) success
 
   !locals
+  integer i
   integer it
   integer m
   real rid
@@ -202,6 +235,18 @@ subroutine read_jrrle3d(iu,a1,nx,l1,success)
      read(iu,1000,end=190) rec
      read(iu,*,end=190)it,nx1,ny1,nz1
      call rdn2(iu,a1,nn,rec,it,rid)
+
+     ! see if we have fullascii
+     if (read_ascii .or. nn.ne.nx) then
+       read(iu,'(a)')rec
+         if(rec(2:17).eq.'fullasciifollows') then
+         ! write(0,*)'reading:  ',rec(2:17)
+         do i=1,nx; read(iu,*)a1(i); enddo
+       else
+         backspace(iu)
+       endif
+     endif
+
      if((nx1*ny1*nz1.eq.nx))then
         success = 1
      endif
@@ -228,7 +273,7 @@ subroutine write_jrrle1d(iu,a1,nx,l1,l2,it)
   !f2py intent(in) a1
   integer nx,it             !nx: dimension of array, it: integer time
   !f2py intent(in) nx,it
-  
+
   write(iu,'(a)')'FIELD-1D-1'
   write(iu,'(a)') l1
   write(iu,'(a)') l2
@@ -249,7 +294,7 @@ subroutine write_jrrle2d(iu,a1,nx,ny,l1,l2,it)
   !f2py intent(in) a1
   integer nx,ny,it          !nx: dimension of array, it: integer time
   !f2py intent(in) nx,ny,it
-  
+
   write(iu,'(a)')'FIELD-2D-1'
   write(iu,'(a)') l1
   write(iu,'(a)') l2
@@ -270,7 +315,7 @@ subroutine write_jrrle3d(iu,a1,nx,ny,nz,l1,l2,it)
   !f2py intent(in) a1
   integer nx,ny,nz,it          !nx: dimension of array, it: integer time
   !f2py intent(in) nx,ny,nz,it
-  
+
   write(iu,'(a)')'FIELD-3D-1'
   write(iu,'(a)') l1
   write(iu,'(a)') l2
@@ -286,7 +331,7 @@ subroutine end0(r,m)
   !
   ! find the end of a string (ie first white space)
   !
-  ! assumes strings are space padded and that 80 is the 
+  ! assumes strings are space padded and that 80 is the
   ! maximum length.
   !
   !-----------------------------------------------------------
@@ -312,9 +357,9 @@ subroutine end0(r,m)
 end subroutine end0
 
 ! Change log---
-! 
+!
 ! Burlen Loring 2008-01-03
-! 
+!
 ! added comments, indetantion, and implicit none
 !.---------------------------------------
 subroutine rdn2( fileNo,a,n,cid,it,rid )
@@ -331,7 +376,6 @@ subroutine rdn2( fileNo,a,n,cid,it,rid )
   integer q
   integer fileNo
 
-100 continue
   read( UNIT=fileNo,FMT='(a,i8,3e14.7,i8,a)',ERR=100,END=900 ) &
        did,n,zmin,zmax,rid,it,cid
   ! The format of the header record is as follows:
@@ -414,6 +458,12 @@ subroutine rdn2( fileNo,a,n,cid,it,rid )
 
   return
 
+  ! there was no rle data (ascii only?)
+100 continue
+  n=-1
+  backspace(fileNo)
+  return
+
   ! io error occured
 900 continue
   n=-1
@@ -453,7 +503,7 @@ subroutine wrndec(fileNo,expandedDatOut,n)
 
 
   ! expand sequences in buffer. An ascii value with 7th bit set
-  ! is a count(2^7=128), this tells how many times following ascii 
+  ! is a count(2^7=128), this tells how many times following ascii
   ! char is repeated. If the 7th bit is not set then the ascii char
   ! appears once.
   ! this is an infinite loop which breaks once a space is encountered
@@ -463,7 +513,7 @@ subroutine wrndec(fileNo,expandedDatOut,n)
 100 continue
   j = j + 1
 
-  ! error records should not be this long, bail 
+  ! error records should not be this long, bail
   if(j.gt.67) then
      write(0,*)'wrndec: cannot find end of encoded record'
      n=-5
@@ -515,13 +565,13 @@ subroutine wrndec(fileNo,expandedDatOut,n)
      return
   endif
 
-  ! copy and compute check sum 
+  ! copy and compute check sum
   checkSum=0
   do i=0,n
      ! copy
      expandedDatOut(i) = expandedDat(i)
      ! compute check sum
-     checkSum = checkSum + expandedDatOut(i) 
+     checkSum = checkSum + expandedDatOut(i)
   enddo
 
   ! check sum error bail
@@ -535,7 +585,7 @@ subroutine wrndec(fileNo,expandedDatOut,n)
 
   return
 
-  ! file io error 
+  ! file io error
 900 continue
   write(0,*)' wrndec eof/err '
   n=-5
