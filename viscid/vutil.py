@@ -168,8 +168,8 @@ def format_datetime(dt, fmt):
         str
     """
     if len(fmt) == 0:
-        msec_fmt = []
-        fmt = "%Y-%m-%d %H:%M:%S"
+        msec_fmt = ['1']
+        fmt = "%Y-%m-%d %H:%M:%S.%f"
     else:
         msec_fmt = re.findall(r"%\.?([0-9]*)f", fmt)
         fmt = re.sub(r"%\.?([0-9]*)f", "%f", fmt)
