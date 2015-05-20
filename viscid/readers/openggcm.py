@@ -478,7 +478,9 @@ class GGCMFile(object):
                 # the super class
                 return NotImplemented
             dipoletime = self._get_dipoletime_as_datetime()
-            delta = dipoletime - datetime.strptime("00", "%S")
+            # Why was this relative to time 0?
+            # delta = dipoletime - datetime.strptime("00", "%S")
+            delta = time - dipoletime
             return delta.total_seconds()
 
         return NotImplemented
