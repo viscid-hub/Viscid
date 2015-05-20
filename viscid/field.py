@@ -1302,10 +1302,15 @@ class Field(tree.Leaf):
         # little hack for broadcasting vectors and scalars together
         crd_shape = crds.shape_nc if center == "node" else crds.shape_cc
         crd_shape = list(crd_shape)
-        if fldtype is None and list(arr.shape) == crd_shape:
+        try:
+            arr_shape = list(arr.shape)
+        except AttributeError:
+            arr_shape = [len(arr)] + list(arr[0].shape)
+
+        if fldtype is None and arr_shape == crd_shape:
             fldtype = "scalar"
-        if fldtype is None and (list(arr.shape[1:]) == crd_shape or
-                                list(arr.shape[:-1]) == crd_shape):
+        if fldtype is None and (arr_shape[1:] == crd_shape or
+                                arr_shape[:-1] == crd_shape):
             fldtype = "vector"
 
         if fldtype is None:

@@ -192,7 +192,7 @@ class AMRField(object):
         is_field = [None] * len(args)
         for i, arg in enumerate(args):
             try:
-                if arg.np_blocks != self.np_blocks and arg.np_blocks != 1:
+                if arg.nr_blocks != self.nr_blocks and arg.nr_blocks != 1:
                     raise ValueError("AMR fields in math operations must "
                                      "have the same number of blocks")
                 is_field[i] = True
