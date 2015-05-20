@@ -189,18 +189,66 @@ class AMRField(object):
     def wrap_field_method(self, attrname, *args, **kwargs):
         """Wrap methods whose args are Fields and return a Field"""
         # make sure all args have same number of blocks as self
-        if not all(amrfld.nr_blocks == self.nr_blocks for amrfld in args):
-            raise ValueError("AMR fields in math operations must have the "
-                             "same number of blocks")
+        is_field = [None] * len(args)
+        for i, arg in enumerate(args):
+            try:
+                if arg.np_blocks != self.np_blocks and arg.np_blocks != 1:
+                    raise ValueError("AMR fields in math operations must "
+                                     "have the same number of blocks")
+                is_field[i] = True
+            except AttributeError:
+                is_field[i] = False
 
-        lst = []
+        lst = [None] * self.nr_blocks
+        other = [None] * len(args)
+        # FIXME: There must be a better way
         for i, block in enumerate(self.blocks):
-            other = [arg.blocks[i] for arg in args]
-            lst.append(getattr(block, attrname)(*other, **kwargs))
+            for j, arg in enumerate(args):
+                if is_field[j]:
+                    try:
+                        other[j] = arg.blocks[i]
+                    except IndexError:
+                        other[j] = arg.blocks[0]
+                else:
+                    other[j] = arg
+            lst[i] = getattr(block, attrname)(*other, **kwargs)
         return AMRField(lst, self.skeleton)
 
-    def __array__(self, *args, **kwargs):  # pylint: disable=unused-argument,no-self-use
-        raise NotImplementedError("AMRFields can not make a single ndarray")
+    # TODO: as of numpy 1.10, this will be called on ufuncs... this
+    #       will help some of the FIXMEs in __array__
+    # def __numpy_ufunc__(self, ufunc, method, i, inputs, **kwargs):
+    #     pass
+
+    def __array__(self, *args, **kwargs):
+        # FIXME: This is heinously inefficient for large arrays because it
+        #        makes an  copy of all the arrays... but I don't see
+        #        a way around this because ufuncs expect a single array
+
+        # FIXME: adding a dimension to the arrays will break cases like
+        #        np.sum(fld, axis=-1), cause that -1 will now be the patch
+        #        dimension
+
+        blocks = [block.__array__(*args, **kwargs) for block in self.blocks]
+        for i, block in enumerate(blocks):
+            blocks[i] = np.expand_dims(block, 0)
+        # the vstack will copy all the arrays, this is what __numpy_ufunc__
+        # will be able to avoid
+        arr = np.vstack(blocks)
+        # roll the patch dimension to the last dimension... this is for ufuncs
+        # that take an axis argument... this way axis will only be confused
+        # if it's negative, this is the main reason to use __numpy_ufunc__
+        # in the future
+        arr = np.rollaxis(arr, 0, len(arr.shape))
+        return arr
+
+    def __array_wrap__(self, arr, context=None):  # pylint: disable=unused-argument
+        # print(">> __array_wrap__", arr.shape, context)
+        flds = []
+        for i in range(arr.shape[-1]):
+            block_arr = arr[..., i]
+            fld = self.blocks[i].__array_wrap__(block_arr, context=context)
+            flds.append(fld)
+        return AMRField(flds, self.skeleton)
 
     def __add__(self, other):
         return self.wrap_field_method("__add__", other)
