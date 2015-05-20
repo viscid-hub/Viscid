@@ -307,8 +307,15 @@ class AMRField(object):
                     return lst
             return _FieldListCallableAttrWrapper(self.blocks, name, _wrap)
         else:
-            return [getattr(fld, name) for fld in self.blocks]
-
+            # return [getattr(fld, name) for fld in self.blocks]
+            ret0 = getattr(self.blocks[0], name)
+            # Check that all blocks have the same value. Maybe this should
+            # have a debugging flag attached to it since it will take time.
+            if any(getattr(blk, name) != ret0 for blk in self.blocks[1:]):
+                raise ValueError("different blocks of the AMRField have "
+                                 "different values for attribute: {0}"
+                                 "".format(name))
+            return ret0
 
 ##
 ## EOF
