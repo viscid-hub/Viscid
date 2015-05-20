@@ -1295,13 +1295,24 @@ class Field(tree.Leaf):
         name = context.pop("name", self.name)
         pretty_name = context.pop("pretty_name", self.pretty_name)
         crds = context.pop("crds", self.crds)
-        center = context.pop("center", self.center)
+        center = context.pop("center", self.center).lower()
         time = context.pop("time", self.time)
         # should it always return the same type as self?
+
+        # little hack for broadcasting vectors and scalars together
+        crd_shape = crds.shape_nc if center == "node" else crds.shape_cc
+        crd_shape = list(crd_shape)
+        if fldtype is None and list(arr.shape) == crd_shape:
+            fldtype = "scalar"
+        if fldtype is None and (list(arr.shape[1:]) == crd_shape or
+                                list(arr.shape[:-1]) == crd_shape):
+            fldtype = "vector"
+
         if fldtype is None:
             fldtype = type(self)
         else:
             fldtype = field_type(fldtype)
+
         # Transform functions are intentionally omitted. The idea being that
         # the transform was already applied when creating arr
         fld = fldtype(name, crds, arr, time=time, center=center,
