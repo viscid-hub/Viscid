@@ -9,8 +9,7 @@ import numpy as np
 
 from viscid.compat import element_tree
 from viscid import logger
-from viscid.readers import vfile
-from viscid.readers.vfile_bucket import VFileBucket
+from viscid.readers.vfile_bucket import ContainerFile
 from viscid.readers.hdf5 import FileLazyHDF5
 from viscid import amr_grid
 from viscid import coordinate
@@ -20,7 +19,7 @@ from viscid import coordinate
 #         nptype = np.dtype({'Float': 'float', 'Int': 'int', 'UInt': 'unit',
 #                'Char': 'int', 'UChar': 'int'}[numbertype] + str(8*precision))
 
-class FileXDMF(vfile.VFile):  # pylint: disable=abstract-method
+class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
     """ on init, parse an xdmf file into datasets, grids, and fields """
     _detector = r".*\.(xmf|xdmf)\s*$"
     _xdmf_defaults = {
@@ -86,21 +85,13 @@ class FileXDMF(vfile.VFile):  # pylint: disable=abstract-method
     _last_amr_skeleton = None  # experimental, should be moved
     # tree = None
 
-    def __init__(self, fname, vfilebucket=None, h5_root_dir=None, **kwargs):
-        """ vfilebucket is a bucket for loading any hdf5 files. it can be
-        None if you want the bucket to be local to this Dataset, but if you're
-        loading a bunch of files, you should really be using a global bucket,
-        as something like in readers.load_file(file) """
-
-        if vfilebucket is None:
-            # gen an empty bucket on the fly if the calling script
-            # doesnt want a global bucket for all files
-            self.vfilebucket = VFileBucket()
+    def __init__(self, fname, h5_root_dir=None, **kwargs):
+        """XDMF File"""
         if h5_root_dir is not None:
             h5_root_dir = os.path.expandvars(h5_root_dir)
             self.h5_root_dir = os.path.expanduser(h5_root_dir)
 
-        super(FileXDMF, self).__init__(fname, vfilebucket, **kwargs)
+        super(FileXDMF, self).__init__(fname, **kwargs)
 
     def _parse(self):
         grids = self._parse_file(self.fname, self)

@@ -19,10 +19,9 @@ except ImportError:
     _has_numexpr = False
 
 from viscid import logger
-from viscid.compat import string_types, izip
-from viscid.readers.vfile_bucket import VFileBucket
+from viscid.compat import string_types
+from viscid.readers.vfile_bucket import ContainerFile
 from viscid.readers.ggcm_logfile import GGCMLogFile
-from viscid.readers import vfile
 # from viscid.dataset import Dataset, DatasetTemporal
 # from viscid.vutil import time_as_datetime, time_as_timedelta
 from viscid import vutil
@@ -388,8 +387,8 @@ class GGCMGrid(grid.Grid):
         return psi
 
 
-class GGCMFile(object):
-    """Mixin some GGCM convenience stuff
+class GGCMFile(ContainerFile):  # pylint: disable=abstract-method
+    """Mixin some GGCM convenience stuff and make sure it's a container
 
     Attributes:
         read_log_file (bool): search for a log file to load some of the
@@ -411,7 +410,6 @@ class GGCMFile(object):
     read_log_file = False
 
     _collection = None
-    vfilebucket = None
 
     def read_logfile(self):
         if self.read_log_file:
@@ -429,8 +427,7 @@ class GGCMFile(object):
 
             if log_fname is not None:
                 self.set_info("_viscid_log_fname", log_fname)
-                if self.vfilebucket is None:
-                    self.vfilebucket = VFileBucket()
+
                 log_f = self._load_child_file(log_fname,
                                               file_type=GGCMLogFile,
                                               index_handle=False)
@@ -515,7 +512,7 @@ class GGCMFile(object):
         return NotImplemented
 
 
-class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
+class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-method
     """An abstract class from which jrrle and fortbin files are derived
 
     Note:
@@ -527,15 +524,10 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
     _fld_templates = None
     grid2 = None
 
-    def __init__(self, fname, vfilebucket=None, crds=None, fld_templates=None,
-                 **kwargs):
-        if vfilebucket is None:
-            vfilebucket = VFileBucket()
-
+    def __init__(self, fname, crds=None, fld_templates=None, **kwargs):
         self._crds = crds
         self._fld_templates = fld_templates
-
-        super(GGCMFileFortran, self).__init__(fname, vfilebucket, **kwargs)
+        super(GGCMFileFortran, self).__init__(fname, **kwargs)
 
     @classmethod
     def group_fnames(cls, fnames):

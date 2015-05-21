@@ -11,7 +11,7 @@ from viscid import coordinate
 
 
 class AthenaHstFile(vfile.VFile):  # pylint: disable=abstract-method
-    """An Athena binary file reader"""
+    """An Athena time history file"""
     _detector = r"^\s*(.*)\.(hst)\s*$"
 
     def __init__(self, fname, **kwargs):

@@ -8,7 +8,6 @@ from __future__ import print_function
 # import sys
 import os
 import re
-import types
 from time import time
 
 from viscid.dataset import Dataset, DatasetTemporal
@@ -51,6 +50,11 @@ class VFile(Dataset):
     """Generic File
 
     Note:
+        If you want a file that can load other files (like how XDMF
+        files need to be able to load HDF5 files) then subclass off of
+        :py:class:`viscid.readers.vfile_bucket.ContainerFile` instead.
+
+    Note:
         Important when subclassing: Do not call the constructors for a
         dataset / grid yourself, dispatch through _make_dataset and
         _make_grid.
@@ -63,7 +67,7 @@ class VFile(Dataset):
     _temporal_dataset_type = DatasetTemporal
     _grid_opts = {}
 
-    vfilebucket = None
+    parent_bucket = None
     load_time = None
 
     fname = None
@@ -71,10 +75,9 @@ class VFile(Dataset):
 
     file = None  # this is for files that stay open after being parsed,
                  # for instance hdf5 File object
-    _child_files = None
     # grids = None  # already part of Dataset
 
-    def __init__(self, fname, vfilebucket=None, grid_type=None, grid_opts=None,
+    def __init__(self, fname, parent_bucket=None, grid_type=None, grid_opts=None,
                  **kwargs):
         """  """
         super(VFile, self).__init__(fname, **kwargs)
@@ -83,19 +86,11 @@ class VFile(Dataset):
             self._grid_type = grid_type
         if grid_opts is not None:
             self.grid_opts = grid_opts
-        assert self._grid_type is not None
         assert isinstance(self._grid_opts, dict)
 
-        self.vfilebucket = vfilebucket
-        self._child_files = []
+        self.parent_bucket = parent_bucket
 
         self.load(fname)
-
-    def _load_child_file(self, fname, **kwargs):
-        """Add file to self.vfilebucket and remember it for when I unload"""
-        f = self.vfilebucket.load_file(fname, **kwargs)
-        self._child_files.append(f)
-        return f
 
     def load(self, fname):
         #self.unload()
@@ -177,6 +172,8 @@ class VFile(Dataset):
 
         if grid_type is None:
             grid_type = self._grid_type
+        if grid_type is None:
+            raise TypeError("{0} can't create grids".format(type(self)))
 
         g = grid_type(name=name, **other)
         if parent_node is not None:

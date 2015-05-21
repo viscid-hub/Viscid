@@ -7,15 +7,13 @@ from itertools import takewhile, count
 
 import numpy as np
 
-from viscid.readers.vfile_bucket import VFileBucket
+from viscid.readers.vfile_bucket import ContainerFile
 from viscid.readers import athena
 from viscid.readers import vfile
-from viscid import dataset
-from viscid import field
 from viscid import coordinate
 
 
-class AthenaTabFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract-method
+class AthenaTabFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstract-method
     """An Athena ascii file reader"""
     _detector = r"^\s*(.*)\.([0-9]{4})\.(tab)\s*$"
 
@@ -26,14 +24,12 @@ class AthenaTabFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
     _fld_list = None
     _crds = None
 
-    def __init__(self, fname, vfilebucket=None, crds=None, fld_list=None,
-                 **kwargs):
-        if vfilebucket is None:
-            vfilebucket = VFileBucket()
+    def __init__(self, fname, crds=None, fld_list=None, **kwargs):
+        # if there is no parent bucket we need to new one up for children
         self._fld_list = fld_list
         self._crds = crds
 
-        super(AthenaTabFile, self).__init__(fname, vfilebucket, **kwargs)
+        super(AthenaTabFile, self).__init__(fname, **kwargs)
 
     @classmethod
     def group_fnames(cls, fnames):

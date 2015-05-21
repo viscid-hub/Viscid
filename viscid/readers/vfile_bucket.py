@@ -100,26 +100,19 @@ class VFileBucket(Bucket):
         for ftype, vals in types_detected.items():
             names = [v[0] for v in vals]
             # group all file names of a given type
-            try:
-                groups = ftype.group_fnames(names)
-            except AttributeError:
-                # can't group fnames for this type, that's ok
-                groups = names
+            groups = ftype.group_fnames(names)
 
             # iterate all the groups and add them
             for group in groups:
                 f = None
 
-                try:
-                    handle_name = ftype.collective_name(group)
-                except AttributeError:
-                    handle_name = VFile.collective_name(group)
+                handle_name = ftype.collective_name(group)
 
                 try:
                     f = self[handle_name]
                 except KeyError:
                     try:
-                        f = ftype(group, vfilebucket=self, **kwargs)
+                        f = ftype(group, parent_bucket=self, **kwargs)
                     except IOError as e:
                         s = " IOError on file: {0}\n".format(handle_name)
                         s += "              File Type: {0}\n".format(handle_name)
@@ -162,3 +155,45 @@ class VFileBucket(Bucket):
         if isinstance(handle, string_types):
             handle = os.path.expanduser(os.path.expandvars(handle))
         return super(VFileBucket, self).__contains__(handle)
+
+
+class ContainerFile(VFile):  # pylint: disable=abstract-method
+    """A container file is a VFile that can load other files
+
+    The use case is always something like the relationship between XDMF
+    files and HDF5 files. It's nice for an XDMF file to keep track of
+    all the HDF5 Files that it refers to.
+    """
+    child_bucket = None
+    _child_files = None
+    _child_file_handles = None
+
+    def __init__(self, fname, parent_bucket=None, **kwargs):
+        if parent_bucket is None:
+            self.child_bucket = VFileBucket()
+        else:
+            self.child_bucket = parent_bucket
+        self._child_files = []
+        self._child_file_handles = []
+        super(ContainerFile, self).__init__(fname, **kwargs)
+
+    def _load_child_file(self, fname, **kwargs):
+        """Add file to self.child_bucket and remember it for when I unload"""
+        f = self.child_bucket.load_file(fname, **kwargs)
+        self._child_files.append(f)
+        # self._child_file_handles.append(???)
+        return f
+
+    def unload(self):
+        # for child in self._child_file_handles:
+        #     pass
+        super(ContainerFile, self).unload()
+
+    def clear_cache(self):
+        # for child in self._child_file_handles:
+        #     pass
+        super(ContainerFile, self).clear_cache()
+
+##
+## EOF
+##

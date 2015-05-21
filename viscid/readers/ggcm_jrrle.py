@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 
 import numpy as np
 
-from viscid import field
 from viscid import grid
 from viscid.readers import vfile
 from viscid.readers import openggcm
@@ -25,8 +24,8 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
     _data_item_templates = None
     _def_fld_center = "Cell"
 
-    def __init__(self, filename, vfilebucket=None, **kwargs):
-        super(GGCMFileJrrleMHD, self).__init__(filename, vfilebucket, **kwargs)
+    def __init__(self, filename, **kwargs):
+        super(GGCMFileJrrleMHD, self).__init__(filename, **kwargs)
 
     def _shape_discovery_hack(self, filename):
         with JrrleFileWrapper(filename) as f:
