@@ -70,7 +70,7 @@ def group_ggcm_files_common(detector, fnames):
                  fname=m.string)
         try:
             d["time"] = int(grps[2])
-        except TypeError:
+        except (TypeError, ValueError):
             # grps[2] is none for "RUN.3d.xdmf" files
             d["time"] = -1
         infolst.append(d)
