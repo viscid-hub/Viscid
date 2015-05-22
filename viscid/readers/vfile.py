@@ -10,6 +10,7 @@ import os
 import re
 from time import time
 
+from viscid import logger
 from viscid.dataset import Dataset, DatasetTemporal
 from viscid import grid
 from viscid import field
@@ -69,6 +70,7 @@ class VFile(Dataset):
 
     parent_bucket = None
     load_time = None
+    handle_name = None  # set in VFileBucket.load_files
 
     fname = None
     dirname = None
@@ -100,16 +102,21 @@ class VFile(Dataset):
         self.load_time = time()
         self._parse()
 
-    def refresh(self):
-        #self.unload()
+    def reload(self):
+        self._clear_cache()
+        self.remove_all_items()
         self.load(self.fname)
 
-    def unload(self):
-        """ unload is meant to give children a chance to free caches, the idea
-        being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload
-        """
-        super(VFile, self).unload()
+    def unload(self, **kwargs):
+        """Really unload a file, don't just clear the cache"""
+        self._clear_cache()
+        self.remove_all_items()
+        if self.parent_bucket:
+            self.parent_bucket.remove_reference(self, **kwargs)
+
+    def __exit__(self, exc_type, value, traceback):
+        self.unload()
+        return None
 
     # some classy saving utility methods, should be sufficient to override
     # save and save_fields

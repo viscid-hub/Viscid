@@ -38,7 +38,8 @@ class VFileBucket(Bucket):
                             "load_files()?".format(fname))
             return fls[0]
 
-    def load_files(self, fnames, index_handle=True, file_type=None, **kwargs):
+    def load_files(self, fnames, index_handle=True, file_type=None,
+                   _add_ref=False, **kwargs):
         """Load files, and add them to the bucket
 
         Initialize obj before it's put into the list, whatever is returned
@@ -113,6 +114,7 @@ class VFileBucket(Bucket):
                 except KeyError:
                     try:
                         f = ftype(group, parent_bucket=self, **kwargs)
+                        f.handle_name = handle_name
                     except IOError as e:
                         s = " IOError on file: {0}\n".format(handle_name)
                         s += "              File Type: {0}\n".format(handle_name)
@@ -129,7 +131,8 @@ class VFileBucket(Bucket):
                         # re-raise the last expection
                         raise
 
-                self.set_item([handle_name], f, index_handle=index_handle)
+                self.set_item([handle_name], f, index_handle=index_handle,
+                              _add_ref=_add_ref)
                 file_lst.append(f)
 
         if len(file_lst) == 0:
@@ -137,13 +140,18 @@ class VFileBucket(Bucket):
                         "correct?".format(orig_fnames))
         return file_lst
 
-    def remove_item(self, item):
-        item.unload()
+    def remove_item(self, item, do_unload=True):
+        if do_unload:
+            item.unload()
         super(VFileBucket, self).remove_item(item)
 
-    def remove_all_items(self):
-        for val in self.values():
-            val.unload()
+    def remove_item_by_handle(self, handle, do_unload=True):
+        self.remove_item(self[handle], do_unload=do_unload)
+
+    def remove_all_items(self, do_unload=True):
+        if do_unload:
+            for val in self.values():
+                val.unload()
         super(VFileBucket, self).remove_all_items()
 
     def __getitem__(self, handle):
@@ -166,7 +174,7 @@ class ContainerFile(VFile):  # pylint: disable=abstract-method
     """
     child_bucket = None
     _child_files = None
-    _child_file_handles = None
+    _child_ref_count = None
 
     def __init__(self, fname, parent_bucket=None, **kwargs):
         if parent_bucket is None:
@@ -174,24 +182,39 @@ class ContainerFile(VFile):  # pylint: disable=abstract-method
         else:
             self.child_bucket = parent_bucket
         self._child_files = []
-        self._child_file_handles = []
-        super(ContainerFile, self).__init__(fname, **kwargs)
+        self._child_ref_count = {}
+        super(ContainerFile, self).__init__(fname, parent_bucket=parent_bucket,
+                                            **kwargs)
 
     def _load_child_file(self, fname, **kwargs):
         """Add file to self.child_bucket and remember it for when I unload"""
-        f = self.child_bucket.load_file(fname, **kwargs)
-        self._child_files.append(f)
-        # self._child_file_handles.append(???)
+        f = self.child_bucket.load_file(fname, _add_ref=True, **kwargs)
+        try:
+            self._child_ref_count[f.handle_name] += 1
+        except KeyError:
+            self._child_files.append(f)
+            self._child_ref_count[f.handle_name] = 1
+
         return f
 
-    def unload(self):
-        # for child in self._child_file_handles:
-        #     pass
+    def reload(self):
+        for child_handle in self._child_ref_count.keys():
+            self.child_bucket[child_handle].reload()
+        super(ContainerFile, self).reload()
+
+    def unload(self, **kwargs):
+        for child_handle in self._child_ref_count.keys():
+            ref_count = self._child_ref_count[child_handle]
+            if "count" in kwargs:
+                raise RuntimeError()
+            if "_ref_count" in kwargs:
+                raise RuntimeError()
+            self.child_bucket[child_handle].unload(_ref_count=ref_count)
         super(ContainerFile, self).unload()
 
     def clear_cache(self):
-        # for child in self._child_file_handles:
-        #     pass
+        for child_handle in self._child_ref_count.keys():
+            self.child_bucket[child_handle].clear_cache()
         super(ContainerFile, self).clear_cache()
 
 ##

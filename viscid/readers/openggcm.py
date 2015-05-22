@@ -387,8 +387,8 @@ class GGCMGrid(grid.Grid):
         return psi
 
 
-class GGCMFile(ContainerFile):  # pylint: disable=abstract-method
-    """Mixin some GGCM convenience stuff and make sure it's a container
+class GGCMFile(object):  # pylint: disable=abstract-method
+    """Mixin some GGCM convenience stuff
 
     Attributes:
         read_log_file (bool): search for a log file to load some of the
@@ -428,13 +428,10 @@ class GGCMFile(ContainerFile):  # pylint: disable=abstract-method
             if log_fname is not None:
                 self.set_info("_viscid_log_fname", log_fname)
 
-                log_f = self._load_child_file(log_fname,
-                                              file_type=GGCMLogFile,
-                                              index_handle=False)
-                # print("!!", log_f)
-
-                # self.parents.append(log_f)  # this way makes me uncomfortable
-                self._info.update(log_f.info)
+                with GGCMLogFile(log_fname) as log_f:
+                    # self._info.update(log_f.info)
+                    for key, val in log_f.info.items():
+                        self.update_info(key, val)
             else:
                 # print("**", log_f)
                 self.set_info("_viscid_log_fname", None)

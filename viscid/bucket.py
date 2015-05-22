@@ -21,6 +21,7 @@ class Bucket(object):
     """
     _ordered = False
 
+    _ref_count = None  # keys are hashable items, values are # of times item was added
     _hash_lookup = None  # keys are hashable items, values are actual items
     _handles = None  # keys are hashable items, values are list of handles
     _items = None  # keys are handles, values are actual items
@@ -30,6 +31,24 @@ class Bucket(object):
     # an xdmf file loading an h5 file under the covers
     _int_counter = None
 
+    def __init__(self, ordered=False):
+        self._ordered = ordered
+
+        self._set_empty_dicts()
+        self._int_counter = 0
+
+    def _set_empty_dicts(self):
+        if self._ordered:
+            self._ref_count = OrderedDict()
+            self._hash_lookup = OrderedDict()
+            self._handles = OrderedDict()
+            self._items = OrderedDict()
+        else:
+            self._ref_count = {}
+            self._hash_lookup = {}
+            self._handles = {}
+            self._items = {}
+
     @staticmethod
     def _make_hashable(item):
         try:
@@ -37,19 +56,6 @@ class Bucket(object):
             return item
         except TypeError:
             return "<{0} @ {1}>".format(type(item), hex(id(item)))
-
-    def __init__(self, ordered=False):
-        self._ordered = ordered
-
-        if self._ordered:
-            self._hash_lookup = OrderedDict()
-            self._handles = OrderedDict()
-            self._items = OrderedDict()
-        else:
-            self._hash_lookup = {}
-            self._handles = {}
-            self._items = {}
-        self._int_counter = 0
 
     def items(self):
         for hashable_item, item in self._hash_lookup.items():
@@ -61,7 +67,7 @@ class Bucket(object):
     def values(self):
         return self._hash_lookup.values()
 
-    def set_item(self, handles, item, index_handle=True):
+    def set_item(self, handles, item, index_handle=True, _add_ref=False):
         """ if index_handle is true then the index of item will be included as
             a handle making the bucket indexable like a list """
         # found = False
@@ -106,40 +112,59 @@ class Bucket(object):
 
         try:
             self._handles[hashable_item] += handles_added
+            if _add_ref:
+                self._ref_count[hashable_item] += 1
         except KeyError:
             if len(handles_added) == 0:
                 logger.warn("No valid handles given, item '{0}' not added to "
                             "bucket".format(hashable_item))
+
             else:
                 self._handles[hashable_item] = handles_added
                 self._hash_lookup[hashable_item] = item
+                self._ref_count[hashable_item] = 1
 
         return None
 
-    def remove_item(self, item):
-        """ remove item, raises ValueError if item is not found """
+    def _remove_item(self, item):
+        """remove item no matter what
+
+        You may want to use remove_
+        , raises ValueError if item is not found """
         hashable_item = self._make_hashable(item)
         handles = self._handles[hashable_item]
         for h in handles:
             del self._items[h]
         del self._hash_lookup[hashable_item]
         del self._handles[hashable_item]
+        del self._ref_count[hashable_item]
+
+    def _remove_item_by_handle(self, handle):
+        self._remove_item(self._items[handle])
+
+    def remove_item(self, item):
+        self._remove_item(item)
 
     def remove_item_by_handle(self, handle):
         """ remove item by handle, raises KeyError if handle is not found """
         self.remove_item(self._items[handle])
 
+    def remove_reference(self, item, _ref_count=1):
+        hashable_item = self._make_hashable(item)
+        try:
+            self._ref_count[hashable_item] -= _ref_count
+        except KeyError:
+            item = self[item]
+            hashable_item = self._make_hashable(item)
+            self._ref_count[hashable_item] -= _ref_count
+
+        assert self._ref_count[hashable_item] >= 0, "problem with bucket ref counting {0}".format(hashable_item)
+        if self._ref_count[hashable_item] <= 0:
+            self._remove_item(item)
+
     def remove_all_items(self):
         """ unload all items """
-        # TODO: maybe unload things explicitly?
-        if self._ordered:
-            self._hash_lookup = OrderedDict()
-            self._handles = OrderedDict()
-            self._items = OrderedDict()
-        else:
-            self._hash_lookup = {}
-            self._handles = {}
-            self._items = {}
+        self._set_empty_dicts()
 
     def items_as_list(self):
         return list(self._hash_lookup.values())

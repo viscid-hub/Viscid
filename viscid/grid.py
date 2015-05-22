@@ -104,6 +104,11 @@ class Grid(tree.Node):
             self.prepare_child(f)
             self.fields[f.name] = f
 
+    def remove_all_items(self):
+        for fld in self.fields:
+            self.tear_down_child(fld)
+        self.fields = Bucket(ordered=True)
+
     def clear_cache(self):
         """clear the cache on all child fields"""
         for fld in self.fields:

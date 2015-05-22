@@ -50,13 +50,19 @@ class Dataset(tree.Node):
         if set_active:
             self.active_child = child
 
-    def clear_cache(self):
-        """Clear all childrens' caches"""
+    def _clear_cache(self):
         for child in self.children:
             child.clear_cache()
 
-    # def remove_all_items(self):
-    #     raise NotImplementedError()
+    def clear_cache(self):
+        """Clear all childrens' caches"""
+        self._clear_cache()
+
+    def remove_all_items(self):
+        for child in self.children:
+            self.tear_down_child(child)
+            child.remove_all_items()
+        self.children = Bucket(ordered=True)
 
     def activate(self, child_handle):
         """ it may not look like it, but this will recursively look
@@ -230,6 +236,12 @@ class DatasetTemporal(Dataset):
         #bisect.insort(self.children, (child.time, child))
         if set_active:
             self.active_child = child
+
+    def remove_all_items(self):
+        for child in self.children:
+            self.tear_down_child(child[1])
+            child[1].remove_all_items()
+        self.children = []
 
     def clear_cache(self):
         """Clear all childrens' caches"""

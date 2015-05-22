@@ -65,6 +65,8 @@ __all__ = ['amr_field',  # Modules
            'logger',  # logger
            'load_file',  # reader helpers
            'load_files',
+           'unload_file',
+           'reload_file',
            'get_file',
            'save_grid',
            'save_field',
@@ -94,6 +96,8 @@ del _handler
 from viscid import readers
 load_file = readers.load_file
 load_files = readers.load_files
+unload_file = readers.unload_file
+reload_file = readers.reload_file
 get_file = readers.get_file
 save_grid = readers.save_grid
 save_field = readers.save_field

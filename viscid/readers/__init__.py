@@ -85,6 +85,12 @@ def load_files(fnames, **kwargs):
     """
     return __filebucket__.load_files(fnames, **kwargs)
 
+def unload_file(handle):
+    __filebucket__[handle].unload()
+
+def reload_file(handle):
+    __filebucket__[handle].reload()
+
 def get_file(handle):
     """ return a file that's already been loaded by either
     number (as in nth file loaded), of file name
