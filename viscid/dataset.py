@@ -398,7 +398,11 @@ class DatasetTemporal(Dataset):
         child_iterator = self._time_slice_to_iterator(slc)
 
         for child in child_iterator:
-            with child[1] as target:
+            # FIXME: this isn't general, but so far the only files we're
+            # read have only contained one Grid / AMRGrid. Without get_grid()
+            # here, the context manager will unload the file when done, but
+            # that's not what we wanted here, we wanted to just clear caches
+            with child[1].get_grid() as target:
                 yield target
 
     def get_times(self, slice_str=":"):
