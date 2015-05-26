@@ -97,6 +97,8 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
     should derrive """
     _detector = r".*\.h5\s*$"
 
+    SAVE_ONLY = True
+
     _CRDS_GROUP = "/crds"
     _FLD_GROUPS = {"node": "/flds_nc",
                    "cell": "/flds_cc",

@@ -68,6 +68,8 @@ class VFile(Dataset):
     _temporal_dataset_type = DatasetTemporal
     _grid_opts = {}
 
+    SAVE_ONLY = False
+
     parent_bucket = None
     load_time = None
     handle_name = None  # set in VFileBucket.load_files
@@ -205,7 +207,7 @@ class VFile(Dataset):
         raise NotImplementedError("override _parse to read a file")
 
     @classmethod
-    def detect_type(cls, fname):
+    def detect_type(cls, fname, mode='r'):
         """ recursively detect a filetype using _detector regex string.
         this is called recursively for all subclasses and results
         further down the tree are given precedence.
@@ -217,10 +219,12 @@ class VFile(Dataset):
         """
         # reversed gives precedence to the more recently declared classes
         for filetype in reversed(cls.__subclasses__()): #pylint: disable=E1101
-            td = filetype.detect_type(fname)
+            td = filetype.detect_type(fname, mode=mode)
             if td:
                 return td
         if cls._detector and re.match(cls._detector, fname):
+            if 'r' in mode and cls.SAVE_ONLY:
+                return None
             return cls
         return None
 
