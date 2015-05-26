@@ -30,9 +30,7 @@ Note:
 
 from __future__ import print_function
 import locale
-import math
 
-import numpy as np
 import matplotlib.ticker as ticker
 
 from viscid.plot.cmap_tools import register_cmap
@@ -43,7 +41,7 @@ from viscid.plot import cubehelix # import clac_helix_rgba
 #       imported... Use your rc file to set this to a specific map or None
 #       if you want to use matplotlib's default
 default_cmap = "afmhot"
-symmetric_cmap = "seismic"
+symmetric_cmap = "afmhot"  # was "seismic"
 
 default_cbarfmt = None
 default_majorfmt = None
