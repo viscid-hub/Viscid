@@ -19,23 +19,28 @@ class H5pyDataWrapper(vfile.DataWrapper):
 
     fname = None
     loc = None
+    comp_dim = None
+    comp_idx = None
 
     _shape = None
     _dtype = None
 
-    def __init__(self, fname, loc):
+    def __init__(self, fname, loc, comp_dim=None, comp_idx=None):
+        assert HAS_H5PY
         super(H5pyDataWrapper, self).__init__()
         self.fname = fname
         self.loc = loc
+        self.comp_dim = comp_dim
+        self.comp_idx = comp_idx
 
     def _read_info(self):
-        # this takes super long when reading 3 hrs worth of ggcm data
-        # over sshfs
-        # import pdb; pdb.set_trace()
         try:
             with h5py.File(self.fname, 'r') as f:
                 dset = f[self.loc]
-                self._shape = dset.shape
+                self._shape = list(dset.shape)
+                if self.comp_dim is not None:
+                    self._shape.pop(self.comp_dim)
+                self._shape = tuple(self._shape)
                 self._dtype = dset.dtype
         except IOError:
             logger.error("Problem opening hdf5 file, '%s'", self.fname)
@@ -57,21 +62,46 @@ class H5pyDataWrapper(vfile.DataWrapper):
             self._read_info()
         return self._dtype
 
-    def wrap_func(self, func_name, *args, **kwargs):
-        with h5py.File(self.fname, 'r') as f:
-            return getattr(f[self.loc], func_name)(*args, **kwargs)
+    def len(self):
+        return self.shape[0]
 
     def __array__(self, *args, **kwargs):
-        return self.wrap_func("__array__", *args, **kwargs)
+        arr = np.empty(self.shape, dtype=self.dtype)
+        self.read_direct(arr)
+        return arr
 
-    def read_direct(self, *args, **kwargs):
-        return self.wrap_func("read_direct", *args, **kwargs)
+    def _inject_comp_slice(self, slc):
+        if self.comp_dim is not None:
+            new_slc = []
+            if slc is not None:
+                try:
+                    new_slc = list(slc)
+                except TypeError:
+                    new_slc = [slc]
+                new_slc += [slice(None)] * (len(self.shape) - len(new_slc))
+            else:
+                new_slc = [slice(None)] * len(self.shape)
 
-    def len(self):
-        return self.wrap_func("len")
+            if self.comp_dim < 0:
+                self.comp_dim += len(self.shape) + 1
+            if self.comp_dim < 0:
+                raise ValueError("comp_dim can't be < -len(self.shape)")
+
+            new_slc.insert(self.comp_dim, self.comp_idx)
+            slc = tuple(new_slc)
+        return slc
+
+    def read_direct(self, arr, **kwargs):
+        source_sel = kwargs.pop("source_sel", None)
+        source_sel = self._inject_comp_slice(source_sel)
+        with h5py.File(self.fname, 'r') as f:
+            return f[self.loc].read_direct(arr, source_sel=source_sel,
+                                           **kwargs)
 
     def __getitem__(self, item):
-        return self.wrap_func("__getitem__", item)
+        item = self._inject_comp_slice(item)
+        with h5py.File(self.fname, 'r') as f:
+            return f[self.loc][item]
 
 
 class FileLazyHDF5(vfile.VFile):
