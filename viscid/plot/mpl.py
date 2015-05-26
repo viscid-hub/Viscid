@@ -577,6 +577,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         cbar = None
 
     if not nolabels:
+        if flip_plot:
+            namex, namey = namey, namex
         if not xlabel:
             xlabel = namex
         if not ylabel:
