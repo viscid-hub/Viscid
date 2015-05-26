@@ -221,7 +221,7 @@ class Grid(tree.Node):
                 ret = evaluate(self, result_name, eqn, slc=slc)
                 try_final_slice = False
             else:
-                raise KeyError("field not found")
+                raise KeyError("field not found: {0}".format(fldname))
 
         if slc is not None and try_final_slice:
             ret = ret.slice_and_keep(slc)
