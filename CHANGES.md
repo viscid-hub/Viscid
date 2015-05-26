@@ -2,7 +2,16 @@
 
 ## 0.80.8 dev
 
+Changes:
+  - Files can now be unloaded (treating a file like a context manager will unload it on __exit__)
+  - jrrle readers can handle files with ascii in them
+  - hdf5 datawrappers can specify a component dimension / index
+  - preliminary gkeyll reader
 
+Bugfixes:
+  - calling ufuncs with AMR fields
+  - numpy broadcasting with Fields of different type / shape
+  - slicing by UT time was relative to 0 instead of the start of the simulation
 
 ## 0.80.7
 
