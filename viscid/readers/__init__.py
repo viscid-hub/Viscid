@@ -112,7 +112,7 @@ def save_field(fname, fld, **kwargs):
 def save_fields(fname, flds, **kwargs):
     """ save a list of fields, filetype is inferred from fname
     """
-    ftype = VFile.detect_type(fname)
+    ftype = VFile.detect_type(fname, mode='w')
     ftype.save_fields(fname, flds, **kwargs)
 
 def unload_all_files():

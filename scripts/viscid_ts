@@ -74,8 +74,8 @@ def main():
     global_popts = getattr(args, "global_popts", "")
 
     if getattr(args, "plot_vars", None) is None:
-        args.plot_vars = [["pp,x=8.0,y=0.0,z=0.0", {"plot_opts":""}],
-                          ["by,x=8.0,y=0.0,z=0.0", {"plot_opts":""}]]
+        args.plot_vars = [["pp,x=8.0f,y=0.0f,z=0.0f", {"plot_opts":""}],
+                          ["by,x=8.0f,y=0.0f,z=0.0f", {"plot_opts":""}]]
 
     if args.prefix is None:
         args.show = True

@@ -10,6 +10,7 @@ import re
 
 from viscid import logger
 from viscid.compat import izip
+from viscid.compat import string_types
 
 import numpy as np
 
@@ -381,19 +382,42 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
         second_slc = [s for s in second_slc if s is not None]
     return first_slc, second_slc
 
-def convert_floating_slice(arr, start, stop=None, step=None,
-                           endpoint=True, tol=100):
-    """Be able to slice using floats relative to an array
+def _closest_index(arr, value):
+    float_err_msg = ("Slicing by floats is no longer supported. If you "
+                     "want to slice by location, suffix the value with "
+                     "'f', as in 'x = 0f'.")
+    value = convert_deprecated_floats(value, "value")
 
-    The idea is that [0.1, 0.2, 0.3, 0.4, 0.5, 0.6][0.2:0.6:2] should
-    be able to give you [0.2, 0.4, 0.6]. This function will handle all
-    the paticulars, like when to include what and what if step < 1 etc.
+    try:
+        value = value.rstrip()
+        if len(value) == 0:
+            raise ValueError("Can't slice with nothing")
+        elif value[-1] == 'f':
+            index = int(np.argmin(np.abs(arr - float(value[:-1]))))
+        else:
+            index = int(value)
 
-    The rules for when something is included are:
-        - The slice will never include elements whose value in arr
-          are < start (or > if the slice is backward)
-        - The slice will never include elements whose value in arr
-          are > stop (or < if the slice is backward)
+    except AttributeError:
+        index = value.__index__()
+
+    return index
+
+def extract_index(arr, start=None, stop=None, step=None, endpoint=True,
+                  tol=100):
+    """Get integer indices for slice parts
+
+    If start, stop, or step are strings, they are either cast to
+    integers or used for a float lookup if they have a trailing 'f'.
+
+    An example float lookup is::
+        >>> [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]['0.2f:0.6f:2']
+        [0.2, 0.4, 0.6]
+
+    The rules for float lookup endpoints are:
+        - The slice will never include an element whose value in arr
+          is < start (or > if the slice is backward)
+        - The slice will never include an element whose value in arr
+          is > stop (or < if the slice is backward)
         - !! The slice WILL INCLUDE stop if you don't change endpoint.
           This is different from normal slicing, but
           it's more natural when specifying a slice as a float.
@@ -405,9 +429,9 @@ def convert_floating_slice(arr, start, stop=None, step=None,
 
     Args:
         arr (ndarray): filled with floats to do the lookup
-        start (None, int, float): like slice().start
-        stop (None, int, float): like slice().start
-        step (None, int, float): like slice().start
+        start (None, int, str): like slice().start
+        stop (None, int, str): like slice().stop
+        step (None, int): like slice().step
         endpoint (bool): iff True then include stop in the slice.
             Set to False to get python slicing symantics when it
             comes to excluding stop, but fair warning, python
@@ -421,6 +445,9 @@ def convert_floating_slice(arr, start, stop=None, step=None,
         start, stop, step after floating point vals have been
         converted to integers
     """
+    float_err_msg = ("Slicing by floats is no longer supported. If you "
+                     "want to slice by location, suffix the value with "
+                     "'f', as in 'x = 0f'.")
     arr = np.asarray(arr)
     try:
         epsilon = tol * np.finfo(arr.dtype).eps
@@ -431,102 +458,176 @@ def convert_floating_slice(arr, start, stop=None, step=None,
     _step = 1 if step is None else step
     epsilon_step = epsilon if _step > 0 else -epsilon
 
-    if isinstance(start, (float, np.floating)):
-        diff = arr - start + epsilon_step
-        if _step > 0:
-            diff = np.ma.masked_less_equal(diff, 0)
-        else:
-            diff = np.ma.masked_greater_equal(diff, 0)
+    start = convert_deprecated_floats(start, "start")
+    stop = convert_deprecated_floats(stop, "stop")
 
-        if np.ma.count(diff) == 0:
-            # start value is past the wrong end of the array
+    # print("?!? |{0}|  |{1}|".format(start, stop))
+
+    try:
+        start = start.rstrip()
+        if len(start) == 0:
+            start = None
+        elif start[-1] == 'f':
+            start = float(start[:-1])
+            diff = arr - start + epsilon_step
             if _step > 0:
-                start = len(arr)
+                diff = np.ma.masked_less_equal(diff, 0)
             else:
-                # start = -len(arr) - 1
-                # having a value < -len(arr) won't play
-                # nice with make_fwd_slice, but in this
-                # case, the slice will have no data, so...
-                return 0, 0, step
-        else:
-            start = int(np.argmin(np.abs(diff)))
+                diff = np.ma.masked_greater_equal(diff, 0)
 
-    if isinstance(stop, (float, np.floating)):
-        diff = arr - stop - epsilon_step
-        if _step > 0:
-            diff = np.ma.masked_greater_equal(diff, 0)
             if np.ma.count(diff) == 0:
-                # stop value is past the wong end of the array
-                stop = 0
+                # start value is past the wrong end of the array
+                if _step > 0:
+                    start = len(arr)
+                else:
+                    # start = -len(arr) - 1
+                    # having a value < -len(arr) won't play
+                    # nice with make_fwd_slice, but in this
+                    # case, the slice will have no data, so...
+                    return 0, 0, step
             else:
-                stop = int(np.argmin(np.abs(diff)))
-                if endpoint:
-                    stop += 1
+                start = int(np.argmin(np.abs(diff)))
+    except AttributeError:
+        pass
+
+    try:
+        stop = stop.rstrip()
+        if len(stop) == 0:
+            stop = None
+        elif stop[-1] == 'f':
+            stop = float(stop.rstrip()[:-1])
+            diff = arr - stop - epsilon_step
+            if _step > 0:
+                diff = np.ma.masked_greater_equal(diff, 0)
+                if np.ma.count(diff) == 0:
+                    # stop value is past the wong end of the array
+                    stop = 0
+                else:
+                    stop = int(np.argmin(np.abs(diff)))
+                    if endpoint:
+                        stop += 1
+            else:
+                diff = np.ma.masked_less_equal(diff, 0)
+                if np.ma.count(diff) == 0:
+                    # stop value is past the wrong end of the array
+                    stop = len(arr)
+                else:
+                    stop = int(np.argmin(np.abs(diff)))
+                    if endpoint:
+                        if stop > 0:
+                            stop -= 1
+                        else:
+                            # 0 - 1 == -1 which would wrap to the end of
+                            # of the array... instead, just make it None
+                            stop = None
+    except AttributeError:
+        pass
+
+    # turn start, stop, step into indices
+    sss = [start, stop, step]
+    for i, s in enumerate(sss):
+        if s is None:
+            pass
+        elif isinstance(s, string_types):
+            sss[i] = int(s)
         else:
-            diff = np.ma.masked_less_equal(diff, 0)
-            if np.ma.count(diff) == 0:
-                # stop value is past the wrong end of the array
-                stop = len(arr)
-            else:
-                stop = int(np.argmin(np.abs(diff)))
-                if endpoint:
-                    if stop > 0:
-                        stop -= 1
-                    else:
-                        # 0 - 1 == -1 which would wrap to the end of
-                        # of the array... instead, just make it None
-                        stop = None
+            sss[i] = s.__index__()
+    return sss
 
-    return start, stop, step
+def to_slices(arrs, slices, endpoint=True, tol=100):
+    """Wraps :py:func:`to_slice` for multiple arrays / slices
 
-def str2slice(arr, s, style="mixed", endpoint=True, tol=100):
-    """Convert a string describing a slice to a slice object
+    Args:
+        arrs (list, None): list of arrays for float lookups, must be
+            the same length as s.split(','). If all slices are by
+            index, then `arrs` can be `None`.
+        slices (list, str): list of things that
+            :py:func:`viscid.vutil.str2slice` understands, or a comma
+            separated string of slices
+        endpoint (bool): passed to :py:func:`extract_index` if needed
+        tol (int): passed to :py:func:`extract_index` if needed
+
+    Returns:
+        tuple of slice objects
+
+    See Also:
+        * :py:func:`to_slice`
+        * :py:func:`extract_index`
+    """
+    try:
+        slices = "".join(slices.split())
+        slices = slices.split(",")
+    except AttributeError:
+        pass
+
+    if not isinstance(slices, (list, tuple)):
+        raise TypeError("To wrap a single slice use vutil.to_slice(...)")
+
+    if arrs is None:
+        arrs = [None] * len()
+    if len(arrs) != len(slices):
+        raise ValueError("len(arrs) must == len(slices):: {0} {1}"
+                         "".format(len(arrs), len(slices)))
+
+    ret = []
+    for arr, slcstr in izip(arrs, slices):
+        ret.append(to_slice(arr, slcstr, endpoint=endpoint, tol=tol))
+    return tuple(ret)
+
+def to_slice(arr, s, endpoint=True, tol=100):
+    """Convert anything describing a slice to a slice object
 
     Args:
         arr (array): Array that you're going to slice if you specify any
             parts of the slice by value. If all slices are by index,
-            arr can be None
-        s (str): slice as a string, like "1::2" or "10.0:20.0:2"
-        style (str): One of 'mixed', 'index', or 'value'. If mixed,
-            the style (index or value) for each individual element
-            is implied by whether it's a float or an int. For short,
-            you can also give 'm', 'i', or 'v'.
-        endpoint (bool): iff True then include stop in the slice.
-            Set to False to get python slicing symantics when it
-            comes to excluding stop, but fair warning, python
-            symantics feel awkward here. Consider the case
-            [0.1, 0.2, 0.3][:0.25]. If you think this should include
-            0.2, then leave keep endpoint=True.
-        tol (int): number of machine epsilons to consider
-            "close enough"
+            `arr` can be `None`.
+        s (int, str, slice): Something that can be turned into a slice.
+            Ints are returned as-is. Slices and strings are parsed to
+            see if they contain indices, or values. Values are strings
+            that contain a number followed by an 'f'. Refer to
+            :py:func:`extract_index` for the slice-by-value
+            semantics.
+        endpoint (bool): passed to :py:func:`extract_index` if
+            needed
+        tol (int): passed to :py:func:`extract_index` if
+            needed
 
     Returns:
-        slice
+        slice object or int
+
+    See Also:
+        * :py:func:`extract_index`
     """
-    slclst = [v.strip() for v in s.split(":")]
+    ret = None
 
-    if len(slclst) > 3:
-        raise ValueError("slices can have at most start, stop, step")
-
-    if style[0] == 'm':  # "mixed"
-        for i, val in enumerate(slclst):
-            if len(val) == 0:
-                slclst[i] = None
-            else:
-                try:
-                    slclst[i] = int(val)
-                except ValueError:
-                    slclst[i] = float(val)
-    elif style[0] == "i":  # "index"
-        slclst = [int(v) if v else None for v in slclst]
-    elif style[0] == "v":  # "value"
-        slclst[:2] = [float(v) if v else None for v in slclst[:2]]
-        slclst[2:] = [int(v) if v else None for v in slclst[2:]]
+    if hasattr(s, "__index__"):
+        ret = s
     else:
-        raise ValueError("style should be 'mixed', 'index' or 'value'")
+        if isinstance(s, slice):
+            slclst = [s.start, s.stop, s.step]
+        elif isinstance(s, string_types):
+            # kill whitespace
+            slclst = [v.strip() for v in s.split(":")]
+        else:
+            if not isinstance(s, list):
+                try:
+                    s = list(s)
+                except TypeError:
+                    s = [s]
+            slclst = s
 
-    slclst = convert_floating_slice(arr, *slclst, endpoint=endpoint, tol=tol)
-    return slice(*slclst)
+        if len(slclst) > 3:
+            raise ValueError("slices can have at most start, stop, step:"
+                             "{0}".format(s))
+        # sss -> start step step
+
+        if len(slclst) == 1:
+            ret = _closest_index(arr, slclst[0])
+        else:
+            sss = extract_index(arr, *slclst, endpoint=endpoint,
+                                tol=tol)
+            ret = slice(*sss)
+    return ret
 
 def make_slice_inclusive(start, stop=None, step=None):
     """Extend the end of a slice by 1 element

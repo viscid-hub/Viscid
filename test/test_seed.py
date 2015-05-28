@@ -23,7 +23,7 @@ def main():
     logger.info("Testing field lines on 3d field...")
     B = get_dipole(l=[-10] * 3, h=[10] * 3, n=[128] * 3, m=[0.0, 0.0, -1.0])
 
-    mygrid = B.crds.slice_keep("z=1.0:3.0,y=1:3,x=0.0", cc=True)
+    mygrid = B.crds.slice_keep("z=1.0f:3.0f,y=1:3,x=0.0f", cc=True)
 
     logger.info("testing streamlines")
     t0 = time()

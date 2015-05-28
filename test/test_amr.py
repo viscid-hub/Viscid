@@ -17,7 +17,7 @@ from viscid.plot import mpl
 def run_test(show=False):
     f = viscid.load_file(_viscid_root + "/../sample/amr.xdmf")
     plot_kwargs = dict(show=show)
-    mpl.plot(f['f'], "z=0.0", **plot_kwargs)
+    mpl.plot(f['f'], "z=0.0f", **plot_kwargs)
 
 def main():
     parser = argparse.ArgumentParser(description="Test calc")

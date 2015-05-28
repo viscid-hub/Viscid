@@ -17,7 +17,7 @@ import sys
 from viscid.vutil import str2slice
 
 
-def expand_glob_slice(glob_pattern, style='m'):
+def expand_glob_slice(glob_pattern):
     """Apply a slice to a glob pattern
 
     Args:
@@ -50,7 +50,7 @@ def expand_glob_slice(glob_pattern, style='m'):
 
     # construct a regex to match the results
     # verify glob pattern has only one
-    number_re = r"[-+]?[0-9]*\.?[0-9]+"
+    number_re = r"(?:[-+]?[0-9]*\.?[0-9]+f?|[-+]?[0-9+])"
     slc_re = r"\[({0})?(:({0})?){{0,2}}\]".format(number_re)
     n_slices = len(re.findall(slc_re, glob_pattern))
 
@@ -84,13 +84,10 @@ def expand_glob_slice(glob_pattern, style='m'):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("-s", "--style", default="m",
-                        choices=["i", "index", "v", "value", "m", "mixed"],
-                        help="Style")
     parser.add_argument("glob_pattern", nargs=1, help="glob pattern")
     args = parser.parse_args()
 
-    fnames = expand_glob_slice(args.glob_pattern[0], style=args.style)
+    fnames = expand_glob_slice(args.glob_pattern[0])
     print(" ".join(fnames), file=sys.stdout)
     return 0
 

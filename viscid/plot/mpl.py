@@ -684,10 +684,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                         "later.", ax.get_geometry())
 
         if hemisphere == "north":
-            sl_fld = fld["lat=:{0}".format(absboundinglat)]
+            sl_fld = fld["lat=:{0}f".format(absboundinglat)]
             maxlat = sl_fld.get_crd_nc('lat')[-1]
         elif hemisphere == "south":
-            sl_fld = fld["lat={0}:".format(180.0 - absboundinglat)]["lat=::-1"]
+            sl_fld = fld["lat={0}f:".format(180.0 - absboundinglat)]["lat=::-1"]
             maxlat = 180.0 - sl_fld.get_crd_nc('lat')[-1]
 
         lat, lon = sl_fld.get_crds_nc(['lat', 'lon'])

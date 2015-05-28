@@ -36,14 +36,14 @@ def run_mpl_testA(show=False):
     ncols = 1
 
     plt.subplot2grid((nrows, ncols), (0, 0))
-    mpl.plot(fld_s, "y=20.0", show=False, plot_opts="lin_0")
+    mpl.plot(fld_s, "y=20f", show=False, plot_opts="lin_0")
     plt.subplot2grid((nrows, ncols), (1, 0))
-    mpl.plot(fld_s, "x=0.0:20.0,y=0.0:5.0", earth=True, show=False,
+    mpl.plot(fld_s, "x=0f:20f,y=0f:5f", earth=True, show=False,
              plot_opts="x_-10_0,y_0_7")
     plt.subplot2grid((nrows, ncols), (2, 0))
-    mpl.plot(fld_s, "y=0.0", show=False, plot_opts="lin_-1_1")
+    mpl.plot(fld_s, "y=0f", show=False, plot_opts="lin_-1_1")
     plt.subplot2grid((nrows, ncols), (3, 0))
-    mpl.plot(fld_s, "z=0.0,x=-20.0:0.0", earth=True, show=False, plot_opts="lin_-5_5")
+    mpl.plot(fld_s, "z=0f,x=-20f:0f", earth=True, show=False, plot_opts="lin_-5_5")
 
     mpl.tighten()
     if show:
@@ -67,11 +67,11 @@ def run_mpl_testB(show=False):
     plt.subplot2grid((nrows, ncols), (0, 0))
     mpl.plot(fld_s, "z=0,x=:30", earth=True, plot_opts="lin_0")
     plt.subplot2grid((nrows, ncols), (1, 0))
-    mpl.plot(fld_s, "z=0.75,x=-4:-1,y=-3.0:3.0", earth=True)
+    mpl.plot(fld_s, "z=0.75f,x=-4:-1,y=-3f:3f", earth=True)
     plt.subplot2grid((nrows, ncols), (2, 0))
-    mpl.plot(fld_s, "x=-0.5:,y=-3.0:3.0,z=0.0", earth=True)
+    mpl.plot(fld_s, "x=-0.5f:,y=-3f:3f,z=0f", earth=True)
     plt.subplot2grid((nrows, ncols), (3, 0))
-    mpl.plot(fld_s, "x=0.0,y=-5.0:5.0", earth=True, plot_opts="log,g")
+    mpl.plot(fld_s, "x=0.0f,y=-5.0f:5.0f", earth=True, plot_opts="log,g")
 
     mpl.tighten()
     if show:

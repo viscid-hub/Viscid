@@ -38,7 +38,7 @@ def run_div_test(fld, exact, show=False, ignore_inexact=False):
     logger.info("min/max(abs(numexpr - exact)): %g / %g",
                 np.min(result_diff.data), np.max(result_diff.data))
 
-    planes = ["y=0.", "z=0."]
+    planes = ["y=0f", "z=0f"]
     nrows = 2
     ncols = len(planes)
     ax = plt.subplot2grid((nrows, ncols), (0, 0))
