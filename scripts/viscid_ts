@@ -82,6 +82,8 @@ def main():
 
     file_ = viscid.load_file(args.file)
     t = np.array([grid.time for grid in file_.iter_times(args.t)])
+    if len(t) == 0:
+        raise ValueError("Time slice didn't yield any times.")
     plot_names = [None for _ in range(len(args.plot_vars))]
     plot_arrs = [np.zeros_like(t) for _ in range(len(args.plot_vars))]
 
