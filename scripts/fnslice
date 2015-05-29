@@ -1,93 +1,23 @@
 #!/usr/bin/env python
 """Slice a glob of filenames.
 
-The glob pattern should have empty brackets "[]" where the slice should
-happen.
+The slice should be in square brackets and follow all the slicing
+semantics used throughout viscid
 """
 
-from __future__ import division, print_function
+from __future__ import print_function
 import argparse
-import fnmatch
-from glob import glob
-from os.path import expandvars, expanduser
-from operator import itemgetter
-import re
 import sys
 
-from viscid.vutil import str2slice
+from viscid.vutil import slice_globbed_filenames
 
-
-def expand_glob_slice(glob_pattern):
-    """Apply a slice to a glob pattern
-
-    Args:
-        glob_pattern (str): A string
-        style (str): One of 'mixed', 'index', or 'value'. If mixed,
-            the style (index or value) for each individual element
-            is implied by whether it's a float or an int. For short,
-            you can also give 'm', 'i', or 'v'.
-
-    Returns:
-        list of filenames
-
-    Example:
-        If a directory contains files,
-
-            file.010.txt  file.020.txt  file.030.txt  file.040.txt
-
-        then sliced globs can look like
-
-        >>> expand_glob_slice("f*.[:2].txt")
-        ["file.010.txt", "file.020.txt"]
-
-        >>> expand_glob_slice("f*.[10.0::2].txt")
-        ["file.010.txt", "file.030.txt"]
-
-        >>> expand_glob_slice("f*.[20:2].txt", 'v')
-        ["file.020.txt", "file.040.txt"]
-    """
-    glob_pattern = expanduser(expandvars(glob_pattern))
-
-    # construct a regex to match the results
-    # verify glob pattern has only one
-    number_re = r"(?:[-+]?[0-9]*\.?[0-9]+f?|[-+]?[0-9+])"
-    slc_re = r"\[({0})?(:({0})?){{0,2}}\]".format(number_re)
-    n_slices = len(re.findall(slc_re, glob_pattern))
-
-    if n_slices > 1:
-        print("Multiple filename slices found, only using the first.",
-              file=sys.stderr)
-
-    if n_slices:
-        m = re.search(slc_re, glob_pattern)
-        slcstr = glob_pattern[m.start() + 1:m.end() - 1]
-        edited_glob = glob_pattern[:m.start()] + "*" + glob_pattern[m.end():]
-        res_re = glob_pattern[:m.start()] + "TSLICE" + glob_pattern[m.end():]
-        res_re = fnmatch.translate(res_re)
-        res_re = res_re.replace("TSLICE", r"(?P<TSLICE>.*?)")
-    else:
-        edited_glob = glob_pattern
-        slcstr = ""
-
-    fnames = glob(edited_glob)
-
-    if n_slices:
-        times = [float(re.match(res_re, fn).group('TSLICE')) for fn in fnames]
-        fnames = [fn for fn, t in sorted(zip(fnames, times), key=itemgetter(1))]
-        times.sort()
-        slc = str2slice(times, slcstr, style=style)
-    else:
-        times = [None] * len(fnames)
-        slc = slice(None)
-
-    return fnames[slc]
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("glob_pattern", nargs=1, help="glob pattern")
     args = parser.parse_args()
 
-    fnames = expand_glob_slice(args.glob_pattern[0])
+    fnames = slice_globbed_filenames(args.glob_pattern[0])
     print(" ".join(fnames), file=sys.stdout)
     return 0
 

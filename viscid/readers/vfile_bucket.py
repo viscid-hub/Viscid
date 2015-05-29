@@ -2,14 +2,13 @@
 
 from __future__ import print_function
 import os
-from glob import glob
 
 from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid.readers.vfile import VFile
 from viscid.compat import OrderedDict
-
+from viscid.vutil import slice_globbed_filenames
 
 class VFileBucket(Bucket):
     """ manages open files, create / get with get_file_bucket() as you
@@ -34,8 +33,8 @@ class VFileBucket(Bucket):
             return None
         else:
             if len(fls) > 1:
-                logger.warn("Loaded > 1 file for '{0}', did you mean to call "
-                            "load_files()?".format(fname))
+                logger.warn("Loaded > 1 file for %s, did you mean to call "
+                            "load_files()?", fname)
             return fls[0]
 
     def load_files(self, fnames, index_handle=True, file_type=None,
@@ -67,12 +66,15 @@ class VFileBucket(Bucket):
         # glob and convert to absolute paths
         globbed_fnames = []
         for fname in fnames:
-            expanded_fname = os.path.expanduser(os.path.expandvars(fname))
-            absfname = os.path.abspath(expanded_fname)
-            if '*' in absfname or '?' in absfname:
-                globbed_fnames += glob(absfname)
-            else:
-                globbed_fnames += [absfname]
+            globbed_fnames += slice_globbed_filenames(fname)
+            # print(">>", fname)
+            # print("==", globbed_fnames)
+            # expanded_fname = os.path.expanduser(os.path.expandvars(fname))
+            # absfname = os.path.abspath(expanded_fname)
+            # if '*' in absfname or '?' in absfname:
+            #     globbed_fnames += glob(absfname)
+            # else:
+            #     globbed_fnames += [absfname]
             # Is it necessary to recall abspath here? We did it before
             # the glob to make sure it didn't start with a '.' since that
             # tells glob not to fill wildcards

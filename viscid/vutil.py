@@ -1,18 +1,24 @@
 #!/usr/bin/env python
 
 from __future__ import print_function, division
+
+from datetime import datetime
+import fnmatch
+from glob import glob
 from itertools import count
-from timeit import default_timer as time
-import subprocess as sub
 import logging
-from datetime import datetime, timedelta
+from operator import itemgetter
+import os.path
 import re
+import subprocess as sub
+import sys
+from timeit import default_timer as time
 
 from viscid import logger
-from viscid.compat import izip
-from viscid.compat import string_types
+from viscid.compat import izip, string_types
 
 import numpy as np
+
 
 tree_prefix = ".   "
 
@@ -656,6 +662,97 @@ def make_slice_inclusive(start, stop=None, step=None):
         else:
             stop -= 1
     return start, stop, step
+
+def slice_globbed_filenames(glob_pattern):
+    """Apply a slice to a glob pattern
+
+    Note:
+        Slice by value works by adding an 'f' to a value, as like the
+        rest of Viscid.
+
+    Args:
+        glob_pattern (str): A string
+
+    Returns:
+        list of filenames
+
+    Examples:
+        If a directory contains files,
+
+            file.010.txt  file.020.txt  file.030.txt  file.040.txt
+
+        then sliced globs can look like
+
+        >>> expand_glob_slice("f*.[:2].txt")
+        ["file.010.txt", "file.020.txt"]
+
+        >>> expand_glob_slice("f*.[10.0f::2].txt")
+        ["file.010.txt", "file.030.txt"]
+
+        >>> expand_glob_slice("f*.[20f:2].txt")
+        ["file.020.txt", "file.040.txt"]
+    """
+    glob_pattern = os.path.expanduser(os.path.expandvars(glob_pattern))
+    glob_pattern = os.path.abspath(glob_pattern)
+
+    # construct a regex to match the results
+    # verify glob pattern has only one
+    number_re = r"(?:[-+]?[0-9]*\.?[0-9]+f?|[-+]?[0-9+])"
+    slc_re = r"\[({0})?(:({0})?){{0,2}}\]".format(number_re)
+    n_slices = len(re.findall(slc_re, glob_pattern))
+
+    if n_slices > 1:
+        print("Multiple filename slices found, only using the first.",
+              file=sys.stderr)
+
+    if n_slices:
+        m = re.search(slc_re, glob_pattern)
+        slcstr = glob_pattern[m.start() + 1:m.end() - 1]
+        edited_glob = glob_pattern[:m.start()] + "*" + glob_pattern[m.end():]
+        res_re = glob_pattern[:m.start()] + "TSLICE" + glob_pattern[m.end():]
+        res_re = fnmatch.translate(res_re)
+        res_re = res_re.replace("TSLICE", r"(?P<TSLICE>.*?)")
+    else:
+        edited_glob = glob_pattern
+        slcstr = ""
+
+    fnames = glob(edited_glob)
+
+    if n_slices:
+        times = [float(re.match(res_re, fn).group('TSLICE')) for fn in fnames]
+        fnames = [fn for fn, t in sorted(zip(fnames, times), key=itemgetter(1))]
+        times.sort()
+        slc = to_slice(times, slcstr)
+    else:
+        times = [None] * len(fnames)
+        slc = slice(None)
+
+    return fnames[slc]
+
+def value_is_float_not_int(value):
+    """Return if value is a float and not an int"""
+    # this is klugy and only needed to display deprecation warnings
+    try:
+        int(value)
+        return False
+    except ValueError:
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False
+    except TypeError:
+        return False
+
+def convert_deprecated_floats(value, varname="value"):
+    if value_is_float_not_int(value):
+        # TODO: eventually, a ValueError should be raised here
+        print("Deprecation Warning!\n"
+              "  Slicing by float is deprecated. The slice by value syntax is \n"
+              "  now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
+              "".format(varname, value), file=sys.stderr)
+        value = "{0}f".format(value)
+    return value
 
 ##
 ## EOF
