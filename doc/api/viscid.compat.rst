@@ -6,6 +6,7 @@ Submodules
 
 .. toctree::
 
+   viscid.compat.element_tree
    viscid.compat.ordered_dict_backport
 
 Module contents

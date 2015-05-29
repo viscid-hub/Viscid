@@ -48,11 +48,18 @@ Here is an example rc file,
 Common Customizations
 ---------------------
 
-viscid.plot.extra_cmaps.default_cmap
--------------------------------------
+viscid.plot.mpl_extra
+---------------------
 
 * **default_cmap**: Changes the default color maps for plots made using
   :py:mod:`viscid.plot.mpl`
+* **symmetric_cmap**: Changes the default color maps for plots that are
+  symmetric about 0
+* **default_cbarfmt**: Change the default tick formatter for colbars
+* **default_majorfmt**: Change the default major tick formatter for axes
+* **default_minorfmt**: Change the default major tick formatter for axes
+* **default_majorloc**: Change the default major tick locator for axes
+* **default_minorloc**: Change the default major tick locator for axes
 
 viscid.grid.Grid
 ----------------

@@ -156,7 +156,10 @@ class Bucket(object):
         except KeyError:
             item = self[item]
             hashable_item = self._make_hashable(item)
-            self._ref_count[hashable_item] -= _ref_count
+            if _ref_count:
+                self._ref_count[hashable_item] -= _ref_count
+            else:
+                self._ref_count[hashable_item] = 0
 
         assert self._ref_count[hashable_item] >= 0, "problem with bucket ref counting {0}".format(hashable_item)
         if self._ref_count[hashable_item] <= 0:

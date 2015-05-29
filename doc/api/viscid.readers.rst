@@ -12,6 +12,7 @@ Submodules
    viscid.readers.athena_hst
    viscid.readers.athena_tab
    viscid.readers.athena_xdmf
+   viscid.readers.gkeyll
    viscid.readers.ggcm_fortbin
    viscid.readers.ggcm_jrrle
    viscid.readers.ggcm_logfile
