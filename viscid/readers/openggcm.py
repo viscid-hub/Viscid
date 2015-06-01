@@ -597,8 +597,8 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
         if self.get_info('fieldtype') == 'iof':
             # 181, 61
             nlon, nlat = self._shape_discovery_hack(self._collection[0])
-            crdlst = [['lat', [0.0, 180.0, nlat]],
-                      ['lon', [0.0, 360.0, nlon]]]
+            crdlst = [['lon', [0.0, 360.0, nlon]],
+                      ['lat', [0.0, 180.0, nlat]]]
             return wrap_crds("uniform_spherical", crdlst)
 
         else:
@@ -650,7 +650,7 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
 
         # for 2d files
         crdlst = []
-        for dim, nc, cc in zip("zyx", [znc, ync, xnc], [gz, gy, gx]):
+        for dim, nc, cc in zip("xyz", [xnc, ync, znc], [gx, gy, gz]):
             fieldtype = self.get_info('fieldtype')
             if fieldtype.startswith('p'):
                 self.set_info('plane', fieldtype[1])

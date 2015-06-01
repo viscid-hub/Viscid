@@ -30,9 +30,9 @@ def main():
     x = np.array(np.linspace(-1, 1, 2), dtype=dtype)
     y = np.array(np.linspace(-2, 2, 30), dtype=dtype)
     z = np.array(np.linspace(-5, 5, 90), dtype=dtype)
-    v = viscid.empty([z, y, x], nr_comps=3, name='V', center='cell',
+    v = viscid.empty([x, y, z], nr_comps=3, name='V', center='cell',
                      layout='interlaced')
-    Z, Y, X = v.get_crds_cc(shaped=True)
+    X, Y, Z = v.get_crds_cc(shaped=True)
 
     v['x'] = 0.5 * X**2 +       Y    + 0.0 * Z
     v['y'] = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z

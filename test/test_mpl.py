@@ -28,8 +28,8 @@ def run_mpl_testA(show=False):
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-1, 1, 2), dtype=dtype)
 
-    fld_s = viscid.empty([z, y, x], center='cell')
-    Zcc, Ycc, Xcc = fld_s.get_crds_cc(shaped=True)  # pylint: disable=unused-variable
+    fld_s = viscid.empty([x, y, z], center='cell')
+    Xcc, Ycc, Zcc = fld_s.get_crds_cc(shaped=True)  # pylint: disable=unused-variable
     fld_s[:, :, :] = ne.evaluate("(sin(Xcc) + cos(Ycc))")
 
     nrows = 4
@@ -56,8 +56,8 @@ def run_mpl_testB(show=False):
     y = np.array(np.linspace(-10, 10, 120), dtype=dtype)
     z = np.array(np.linspace(-10, 10, 140), dtype=dtype)
 
-    fld_s = viscid.empty([z, y, x], center='node')
-    Z, Y, X = fld_s.get_crds_nc(shaped=True) #pylint: disable=W0612
+    fld_s = viscid.empty([x, y, z], center='node')
+    X, Y, Z = fld_s.get_crds_nc(shaped=True) #pylint: disable=W0612
     fld_s[:, :, :] = ne.evaluate("sin(X) + cos(Y) - cos(Z)")
     # print("shape: ", fld_s.data.shape)
 

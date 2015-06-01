@@ -91,25 +91,25 @@ def div(fld):
     vx, vy, vz = fld.component_views()
 
     if fld.iscentered("Cell"):
-        crdz, crdy, crdx = fld.get_crds_cc(shaped=True)
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
         divcenter = "Cell"
         # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
         divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     elif fld.iscentered("Node"):
-        crdz, crdy, crdx = fld.get_crds_nc(shaped=True)
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
         divcenter = "Node"
         # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
         divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
 
-    xp = crdx[:,:,2:]; xm = crdx[:,:,:-2] #pylint: disable=W0612,C0321,C0324
+    xp = crdx[2:,:,:]; xm = crdx[:-2,:,:] #pylint: disable=W0612,C0321,C0324
     yp = crdy[:,2:,:]; ym = crdy[:,:-2,:] #pylint: disable=W0612,C0321,C0324
-    zp = crdz[2:,:,:]; zm = crdz[:-2,:,:] #pylint: disable=W0612,C0321,C0324
+    zp = crdz[:,:,2:]; zm = crdz[:,:,:-2] #pylint: disable=W0612,C0321,C0324
 
-    vxp = vx[1:-1,1:-1,2:]; vxm = vx[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
+    vxp = vx[2:,1:-1,1:-1]; vxm = vx[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
     vyp = vy[1:-1,2:,1:-1]; vym = vy[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
-    vzp = vz[2:,1:-1,1:-1]; vzm = vz[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+    vzp = vz[1:-1,1:-1,2:]; vzm = vz[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
 
     # print(vxp.shape, vyp.shape, vzp.shape)
     # print(vxm.shape, vym.shape, vzm.shape)
@@ -126,29 +126,29 @@ def curl(fld):
     vx, vy, vz = fld.component_views()
 
     if fld.iscentered("Cell"):
-        crdz, crdy, crdx = fld.get_crds_cc(shaped=True)
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
         curlcenter = "cell"
         curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
     elif fld.iscentered("Node"):
-        crdz, crdy, crdx = fld.get_crds_nc(shaped=True)
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
         curlcenter = "node"
         curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
 
-    xp = crdx[:,:,2:]; xm = crdx[:,:,:-2] #pylint: disable=W0612,C0321,C0324
+    xp = crdx[2:,:,:]; xm = crdx[:-2,:,:] #pylint: disable=W0612,C0321,C0324
     yp = crdy[:,2:,:]; ym = crdy[:,:-2,:] #pylint: disable=W0612,C0321,C0324
-    zp = crdz[2:,:,:]; zm = crdz[:-2,:,:] #pylint: disable=W0612,C0321,C0324
+    zp = crdz[:,:,2:]; zm = crdz[:,:,:-2] #pylint: disable=W0612,C0321,C0324
 
     # vxpx = vx[1:-1,1:-1,2:]; vxmx = vx[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
     vxpy = vx[1:-1,2:,1:-1]; vxmy = vx[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
-    vxpz = vx[2:,1:-1,1:-1]; vxmz = vx[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+    vxpz = vx[1:-1,1:-1,2:]; vxmz = vx[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
 
-    vypx = vy[1:-1,1:-1,2:]; vymx = vy[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
+    vypx = vy[2:,1:-1,1:-1]; vymx = vy[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
     # vypy = vy[1:-1,2:,1:-1]; vymy = vy[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
-    vypz = vy[2:,1:-1,1:-1]; vymz = vy[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
+    vypz = vy[1:-1,1:-1,2:]; vymz = vy[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
 
-    vzpx = vz[1:-1,1:-1,2:]; vzmx = vz[1:-1,1:-1,:-2] #pylint: disable=W0612,C0321,C0324,C0301
+    vzpx = vz[2:,1:-1,1:-1]; vzmx = vz[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
     vzpy = vz[1:-1,2:,1:-1]; vzmy = vz[1:-1,:-2,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
     # vzpz = vz[2:,1:-1,1:-1]; vzmz = vz[:-2,1:-1,1:-1] #pylint: disable=W0612,C0321,C0324,C0301
 

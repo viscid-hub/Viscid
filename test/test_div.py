@@ -65,12 +65,12 @@ def main():
     y = np.array(np.linspace(-0.5, 0.5, 256), dtype=dtype)
     z = np.array(np.linspace(-0.5, 0.5, 64), dtype=dtype)
 
-    v = viscid.empty([z, y, x], name="V", nr_comps=3, center="cell",
+    v = viscid.empty([x, y, z], name="V", nr_comps=3, center="cell",
                      layout="interlaced")
-    exact_cc = viscid.empty([z, y, x], name="exact_cc", center='cell')
+    exact_cc = viscid.empty([x, y, z], name="exact_cc", center='cell')
 
 
-    Zcc, Ycc, Xcc = exact_cc.get_crds_cc(shaped=True) #pylint: disable=W0612
+    Xcc, Ycc, Zcc = exact_cc.get_crds_cc(shaped=True) #pylint: disable=W0612
 
     v['x'] = ne.evaluate("(sin(Xcc))")  # + Zcc
     v['y'] = ne.evaluate("(cos(Ycc))")  # + Xcc# + Zcc
@@ -80,7 +80,7 @@ def main():
     logger.info("node centered tests")
     v_nc = v.as_centered('node')
     exact_nc = viscid.empty_like(v_nc['x'])
-    Z, Y, X = exact_nc.get_crds_nc(shaped=True) #pylint: disable=W0612
+    X, Y, Z = exact_nc.get_crds_nc(shaped=True) #pylint: disable=W0612
     exact_nc[:, :, :] = ne.evaluate("cos(X) - sin(Y) - cos(Z)")
     # FIXME: why is the error so much larger here?
     run_div_test(v_nc, exact_nc, show=args.show, ignore_inexact=True)

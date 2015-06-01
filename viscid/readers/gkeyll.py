@@ -246,7 +246,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
         for i, meta in enumerate(self._fld_templates):
             # FIXME: the transpose goes xyz -> zyx
             h5_data = H5pyDataWrapper(self.fname, "StructGridField",
-                                      comp_dim=-1, comp_idx=i, transpose=True)
+                                      comp_dim=-1, comp_idx=i)
             fld = field.wrap_field(h5_data, self._crds, meta['fld_name'],
                                    center="cell", pretty_name=meta['pretty_name'])
             _grid.add_field(fld)
@@ -315,9 +315,9 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
 
             if f['StructGrid'].attrs['vsKind'] in ['uniform']:
                 # FIXME: this goes xyz -> zyx
-                crds = wrap_crds("uniform_cartesian", clist[::-1])
+                crds = wrap_crds("uniform_cartesian", clist)
             else:
-                crds = wrap_crds("nonuniform_cartesian", clist[::-1])
+                crds = wrap_crds("nonuniform_cartesian", clist)
 
             return crds
 

@@ -19,7 +19,7 @@ def run_test(_fld, _seeds, plot_2d=True, plot_3d=True, selection=None,
     if plot_3d:
         try:
             from viscid.plot import mvi
-            mvi.mlab.points3d(pts[2], pts[1], pts[0], arr, scale_mode='none')
+            mvi.mlab.points3d(pts[0], pts[1], pts[2], arr, scale_mode='none')
             if show:
                 mvi.mlab.show()
         except ImportError:
@@ -37,26 +37,26 @@ def main():
     bmag = viscid.calculator.calc.magnitude(B)
 
     ### PLANE
-    p0 = [0.5, 0.6, 0.7][::-1]
-    N = [1., 2., 3.][::-1]
-    L = [-3., -2., -1.][::-1]
+    p0 = [0.5, 0.6, 0.7]
+    N = [1., 2., 3.]
+    L = [-3., -2., -1.]
     plane = viscid.seed.Plane(p0, N, L, 2., 2., 15, 20)
     run_test(bmag, plane, True, args.three, show=args.show)
 
     ### Sphere
-    p0 = [1.0, 1.0, 1.0][::-1]
+    p0 = [1.0, 1.0, 1.0]
     sphere = viscid.seed.Sphere(p0, 1.0, 15, 20)
     run_test(bmag, sphere, True, args.three, show=args.show)
 
     ### Sphere Cap
-    p0 = [0.5, 0.6, 0.7][::-1]
-    p1 = [1.7, 1.6, 1.5][::-1]
+    p0 = [0.5, 0.6, 0.7]
+    p1 = [1.7, 1.6, 1.5]
     sphere_cap = viscid.seed.SphericalCap(p0, p1, 120.0, 15, 20)
     run_test(bmag, sphere_cap, True, args.three, show=args.show)
 
     ### Circle
-    p0 = [0.5, 0.6, 0.7][::-1]
-    p1 = [0.7, 0.6, 0.5][::-1]
+    p0 = [0.5, 0.6, 0.7]
+    p1 = [0.7, 0.6, 0.5]
     sphere_cap = viscid.seed.Circle(p0, p1, 20, r=0.8)
     run_test(bmag, sphere_cap, True, args.three, show=args.show)
 
