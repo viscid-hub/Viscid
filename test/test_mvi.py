@@ -48,7 +48,7 @@ def main():
     bsl2.start()
     bsl2.seed.widget.enabled = True
 
-    mvi.mlab_earth(mlab.pipeline)
+    mvi.mlab_earth(mlab.pipeline, crd_system="gse")
 
     if args.show:
         mlab.show()
