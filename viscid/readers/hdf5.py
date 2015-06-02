@@ -68,7 +68,7 @@ class H5pyDataWrapper(vfile.DataWrapper):
             self._read_info()
         return self._dtype
 
-    def len(self):
+    def __len__(self):
         if self.transpose:
             return self.shape[-1]
         else:
