@@ -83,9 +83,17 @@ def get_trilinear_field():
                 1.0 * (X - x03) * (Y - y03) * (Z - z03)
     return b
 
-def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
-              share_axes=False, show=False, kwopts=None):
+def multiplot(file_, plot_func=None, nprocs=1, time_slice=":", **kwargs):
     """Make lots of plots
+
+    Calls plot_func (or vlab._do_multiplot if plot_func is None) with 2
+    positional arguments (int, Grid), and all the **kwargs given to multiplot.
+
+    Grid is determined by file_.iter_times(time_slice).
+
+    plot_func gets additional keyword arguments first_run (bool) and
+    first_run_result (whatever is returned from plot_func by the first
+    call).
 
     This is the function used by the ``p2d`` script. It may be useful
     to you.
@@ -96,37 +104,36 @@ def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
     except StopIteration:
         raise ValueError("Time slice '{0}' yields no data".format(time_slice))
 
-    grid_iter = izip(
-                     itertools.count(),
-                     file_.iter_times(time_slice),
-                     itertools.repeat(plot_vars),
-                     itertools.repeat(global_popts),
-                     itertools.repeat(share_axes),
-                     itertools.repeat(show),
-                     itertools.repeat(kwopts),
-                    )
+    if plot_func is None:
+        plot_func = _do_multiplot
 
-    # FIXME: this is a wicked hack, it does one plot before splitting off
-    # in order to make the subplot adjustments the same for all plots
-    # this matters when making movies since gridspec is very badly
-    # behaved and subplots will dance around during the movie; bad gridspec
-    hack_opts = {}
-    if "subplot_params" not in kwopts:
-        r = parallel.map(1, _do_multiplot, [next(grid_iter)],
-                         args_kw=dict(_return_subplot_params=True),
+    grid_iter = izip(itertools.count(), file_.iter_times(time_slice))
+
+    args_kw = kwargs.copy()
+    args_kw["first_run"] = True
+    args_kw["first_run_result"] = None
+
+    if "subplot_params" not in args_kw.get("kwopts", {}):
+        r = parallel.map(1, plot_func, [next(grid_iter)], args_kw=args_kw,
                          force_subprocess=(nprocs > 1))
-        hack_opts['_subplot_params'] = r[0]
 
     # now get back to your regularly scheduled programming
-    parallel.map(nprocs, _do_multiplot, grid_iter, args_kw=hack_opts)
+    args_kw["first_run"] = False
+    args_kw["first_run_result"] = r[0]
+    parallel.map(nprocs, plot_func, grid_iter, args_kw=args_kw)
 
-def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
-                  show=False, kwopts=None, _subplot_params=None,
-                  _return_subplot_params=True):
+def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
+                  share_axes=False, show=False, subplot_params=None,
+                  first_run_result=None, first_run=False, **kwargs):
     import matplotlib.pyplot as plt
     from viscid.plot import mpl
 
-    logger.info("Plotting timestep: {0}, {1}".format(tind, grid.time))
+    logger.info("Plotting timestep: %d, %g", tind, grid.time)
+
+    if plot_vars is None:
+        raise ValueError("No plot_vars given to vlab._do_multiplot :(")
+    if kwargs:
+        logger.info("Unused kwargs: {0}".format(kwargs))
 
     if kwopts is None:
         kwopts = {}
@@ -139,7 +146,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     timeformat = kwopts.get("timeformat", ".02f")
     tighten = kwopts.get("tighten", False)
     # wicked hacky
-    subplot_params = kwopts.get("subplot_params", _subplot_params)
+    # subplot_params = kwopts.get("subplot_params", _subplot_params)
 
     # nrows = len(plot_vars)
     nrows = len([pv[0] for pv in plot_vars if not pv[0].startswith('^')])
@@ -217,10 +224,12 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
         mpl.tighten(rect=[0, 0.03, 1, 0.90])
 
     # for movies where plots wiggle
+    if not subplot_params and first_run_result:
+        subplot_params = first_run_result
     if subplot_params:
         plt.gcf().subplots_adjust(**subplot_params)
 
-    if _return_subplot_params:
+    if first_run:
         p = plt.gcf().subplotpars
         ret = {'left': p.left, 'right': p.right, 'top': p.top,
                'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
