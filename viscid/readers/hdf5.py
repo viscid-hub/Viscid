@@ -21,17 +21,20 @@ class H5pyDataWrapper(vfile.DataWrapper):
     loc = None
     comp_dim = None
     comp_idx = None
+    transpose = None
 
     _shape = None
     _dtype = None
 
-    def __init__(self, fname, loc, comp_dim=None, comp_idx=None):
+    def __init__(self, fname, loc, comp_dim=None, comp_idx=None,
+                 transpose=False):
         assert HAS_H5PY
         super(H5pyDataWrapper, self).__init__()
         self.fname = fname
         self.loc = loc
         self.comp_dim = comp_dim
         self.comp_idx = comp_idx
+        self.transpose = transpose
 
     def _read_info(self):
         try:
@@ -52,7 +55,10 @@ class H5pyDataWrapper(vfile.DataWrapper):
         for large temporal datasets over sshfs """
         if self._shape is None:
             self._read_info()
-        return self._shape
+        if self.transpose:
+            return self._shape[::-1]
+        else:
+            return self._shape
 
     @property
     def dtype(self):
@@ -63,7 +69,10 @@ class H5pyDataWrapper(vfile.DataWrapper):
         return self._dtype
 
     def len(self):
-        return self.shape[0]
+        if self.transpose:
+            return self.shape[-1]
+        else:
+            return self.shape[0]
 
     def __array__(self, *args, **kwargs):
         arr = np.empty(self.shape, dtype=self.dtype)
@@ -95,13 +104,26 @@ class H5pyDataWrapper(vfile.DataWrapper):
         source_sel = kwargs.pop("source_sel", None)
         source_sel = self._inject_comp_slice(source_sel)
         with h5py.File(self.fname, 'r') as f:
-            return f[self.loc].read_direct(arr, source_sel=source_sel,
-                                           **kwargs)
+            fill_arr = arr
+            if self.transpose:
+                # FIXME: the temp array here isn't pretty, but transposing
+                # the array is kind of a hack anyway. it is fixed by the
+                # ability for fields to specify their xyz/zyx order in the
+                # xyz branch, but that branch isn't fully tested yet
+                fill_arr = np.empty(arr.shape[::-1], dtype=arr.dtype)
+            f[self.loc].read_direct(fill_arr, source_sel=source_sel,
+                                    **kwargs)
+            if self.transpose:
+                arr[...] = fill_arr.T
 
     def __getitem__(self, item):
         item = self._inject_comp_slice(item)
         with h5py.File(self.fname, 'r') as f:
-            return f[self.loc][item]
+            arr = f[self.loc][item]
+            if self.transpose:
+                return np.transpose(arr)
+            else:
+                return arr
 
 
 class FileLazyHDF5(vfile.VFile):
