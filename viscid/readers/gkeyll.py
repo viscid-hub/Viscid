@@ -9,6 +9,8 @@ import os
 import re
 from operator import itemgetter
 
+import numpy as np
+
 try:
     import h5py
     HAS_H5PY = True
@@ -22,10 +24,80 @@ from viscid import field
 from viscid.coordinate import wrap_crds
 
 
+base_hydro_names = ['rho', 'rhoux', 'rhouy', 'rhouz', 'e']
+base_hydro_pretty_names = [r'$\rho$', r'$\rhou_x$', r'$\rhou_y$', r'$\rhou_z$',
+                           r'$e$']
+
+base_5m_names = ['rho_e', 'rhoux_e', 'rhouy_e', 'rhouz_e', 'e_e',
+                 'rho_i', 'rhoux_i', 'rhouy_i', 'rhouz_i', 'e_i',
+                 'Ex', 'Ey', 'Ez', 'Bx', 'By', 'Bz']
+base_5m_pretty_names = [
+    r'$\rho_e$', r'$\rho u_{x,e}$', r'$\rho u_{y,e}$', r'$\rho u_{z,e}$', r'$e_e$',
+    r'$\rho_e$', r'$\rho u_{x,e}$', r'$\rho u_{y,e}$', r'$\rho u_{z,e}$', r'$e_i$',
+    r'$E_x$', r'$E_y$', r'$E_z$', r'$B_x$', r'$B_y$', r'$B_z$']
+
+base_10m_names = ['rho_e', 'rhoux_e', 'rhouy_e', 'rhouz_e',
+                  'pxx_e', 'pxy_e', 'pxz_e', 'pyy_e', 'pyz_e', 'pzz_e',
+                  'rho_i', 'rhoux_i', 'rhouy_i', 'rhouz_i',
+                  'pxx_i', 'pxy_i', 'pxz_i', 'pyy_i', 'pyz_i', 'pzz_i',
+                  'Ex', 'Ey', 'Ez', 'Bx', 'By', 'Bz']
+base_10m_pretty_names = [
+    r'$\rho_e$', r'$\rho u_{x,e}$', r'$\rho u_{y,e}$', r'$\rho u_{z,e}$',
+    r'$\mathcal{P}_{xx,e}$', r'$\mathcal{P}_{xy,e}$', r'$\mathcal{P}_{xz,e}$',
+    r'$\mathcal{P}_{yy,e}$', r'$\mathcal{P}_{yz,e}$', r'$\mathcal{P}_{zz,e}$',
+    r'$\rho_i$', r'$\rho u_{x,i}$', r'$\rho u_{y,i}$', r'$\rho u_{z,i}$',
+    r'$\mathcal{P}_{xx,i}$', r'$\mathcal{P}_{xy,i}$', r'$\mathcal{P}_{xz,i}$',
+    r'$\mathcal{P}_{yy,i}$', r'$\mathcal{P}_{yz,i}$', r'$\mathcal{P}_{zz,i}$',
+    r'$E_x$', r'$E_y$', r'$E_z$', r'$B_x$', r'$B_y$', r'$B_z$']
+
+_type_info = {len(base_hydro_names): {'field_type': 'hydro',
+                                      'names': base_hydro_names,
+                                      'pretty_names': base_hydro_pretty_names},
+              len(base_5m_names): {'field_type': 'five-moment',
+                                   'names': base_5m_names,
+                                   'pretty_names': base_5m_pretty_names},
+              len(base_10m_names): {'field_type': 'ten-moment',
+                                    'names': base_10m_names,
+                                    'pretty_names': base_10m_pretty_names}}
+
+
 class GkeyllGrid(grid.Grid):
     """"""
-    def _get_bmag(self):
-        return NotImplemented
+    def _get_ux_e(self):
+        ux_e = self['rhoux_e'] / self['rho_e']
+        ux_e.name = 'ux_e'
+        ux_e.pretty_name = r'$u_{x,e}$'
+        return ux_e
+
+    def _get_uy_e(self):
+        uy_e = self['rhouy_e'] / self['rho_e']
+        uy_e.name = 'uy_e'
+        uy_e.pretty_name = r'$u_{y,e}$'
+        return uy_e
+
+    def _get_uz_e(self):
+        uz_e = self['rhouz_e'] / self['rho_e']
+        uz_e.name = 'uz_e'
+        uz_e.pretty_name = r'$u_{z,e}$'
+        return uz_e
+
+    def _get_ux_i(self):
+        ux_i = self['rhoux_i'] / self['rho_i']
+        ux_i.name = 'ux_i'
+        ux_i.pretty_name = r'$u_{x,i}$'
+        return ux_i
+
+    def _get_uy_i(self):
+        uy_i = self['rhouy_i'] / self['rho_i']
+        uy_i.name = 'uy_i'
+        uy_i.pretty_name = r'$u_{y,i}$'
+        return uy_i
+
+    def _get_uz_i(self):
+        uz_i = self['rhouz_i'] / self['rho_i']
+        uz_i.name = 'uz_i'
+        uz_i.pretty_name = r'$u_{z,i}$'
+        return uz_i
 
 
 class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
@@ -124,13 +196,15 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
     def _parse(self):
         if len(self._collection) == 1:
             # load a single file
-            self._crds = self.make_crds(self.fname)
+            if self._crds is None:
+                self._crds = self.make_crds(self.fname)
             _grid = self._parse_file(self.fname, self)
             self.add(_grid)
             self.activate(0)
         else:
             # load each file, and add it to the bucket
-            self._crds = self.make_crds(self._collection[0])
+            if self._crds is None:
+                self._crds = self.make_crds(self._collection[0])
             data_temporal = self._make_dataset(self, dset_type="temporal",
                                                name="GkeyllTemporalCollection")
             self._fld_templates = self._make_template(self._collection[0])
@@ -173,7 +247,8 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             # FIXME: the transpose goes xyz -> zyx
             h5_data = H5pyDataWrapper(self.fname, "StructGridField",
                                       comp_dim=-1, comp_idx=i, transpose=True)
-            fld = field.wrap_field(h5_data, self._crds, meta['fld_name'])
+            fld = field.wrap_field(h5_data, self._crds, meta['fld_name'],
+                                   center="cell", pretty_name=meta['pretty_name'])
             _grid.add_field(fld)
         return _grid
 
@@ -182,19 +257,25 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
         with h5py.File(filename, 'r') as f:
             shape = f["StructGridField"].shape
             sshape = shape[:-1]
-            nr_fields = shape[-1]
+            nr_fields = shape[-1] - 2 # len(sshape)  # why - 2?
+
+            try:
+                type_info = _type_info[nr_fields]
+            except KeyError:
+                raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
 
             template = []
             # TODO: use nr_fields to figure out the names of the fields?
             for i in range(nr_fields):
-                d = dict(fld_name='f' + str(i), shape=sshape, fldnum=i)
+                d = dict(fldnum=i, shape=sshape,
+                         fld_name=type_info['names'][i],
+                         pretty_name=type_info['pretty_names'][i])
                 template.append(d)
-
-            # self.set_info("all sorts of meta data?", value)
+            self.set_info("field_type", type_info['field_type'])
         return template
 
-    def _get_single_crd(self, h5file, crd):
-        idx = "xyz".index(crd)
+    @staticmethod
+    def _get_single_crd(h5file, idx, nr_crds):
         gridType = h5file['StructGrid'].attrs['vsKind']
         if gridType in ['uniform']:
             if idx >= len(h5file['StructGrid'].attrs['vsNumCells']):
@@ -202,18 +283,33 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             lower = h5file['StructGrid'].attrs['vsLowerBounds'][idx]
             upper = h5file['StructGrid'].attrs['vsUpperBounds'][idx]
             num = h5file['StructGrid'].attrs['vsNumCells'][idx]
-            return [lower, upper, num]
+            return [lower, upper, num + 1]
         elif gridType in ['structured']:
             raise NotImplementedError()
+            # nr_flds = h5file['StructGrid'].shape[-1] - nr_crds
+            # slc = [0] * nr_crds + [nr_flds + idx]
+            # slc[idx] = slice(None)
+            # crd_arr = h5file['StructGrid'][tuple(slc)]
+            crd_arr = h5file['StructGrid'][idx]
+            # make crd_arr node centered
+            dxl = crd_arr[1] - crd_arr[0]
+            dxh = crd_arr[-1] - crd_arr[-2]
+            crd_arr = np.concatenate([[crd_arr[0] - dxl],
+                                      crd_arr,
+                                      [crd_arr[-1] + dxh]])
+            crd_arr = 0.5 * (crd_arr[1:] + crd_arr[:-1])
+            return crd_arr
 
     def make_crds(self, fname):
         with h5py.File(fname, 'r') as f:
             clist = []
 
             # FIXME: xyz
-            for crd in "xyz":
+            crds = "xyz"
+            nr_crds = len(f['StructGridField'].shape) - 1
+            for i in range(nr_crds):
                 try:
-                    clist.append((crd, self._get_single_crd(f, crd)))
+                    clist.append((crds[i], self._get_single_crd(f, i, nr_crds)))
                 except IndexError:
                     pass
 
@@ -221,7 +317,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
                 # FIXME: this goes xyz -> zyx
                 crds = wrap_crds("uniform_cartesian", clist[::-1])
             else:
-                raise NotImplementedError()
+                crds = wrap_crds("nonuniform_cartesian", clist[::-1])
 
             return crds
 
