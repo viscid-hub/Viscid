@@ -33,7 +33,7 @@ base_5m_names = ['rho_e', 'rhoux_e', 'rhouy_e', 'rhouz_e', 'e_e',
                  'Ex', 'Ey', 'Ez', 'Bx', 'By', 'Bz']
 base_5m_pretty_names = [
     r'$\rho_e$', r'$\rho u_{x,e}$', r'$\rho u_{y,e}$', r'$\rho u_{z,e}$', r'$e_e$',
-    r'$\rho_e$', r'$\rho u_{x,e}$', r'$\rho u_{y,e}$', r'$\rho u_{z,e}$', r'$e_i$',
+    r'$\rho_i$', r'$\rho u_{x,i}$', r'$\rho u_{y,i}$', r'$\rho u_{z,i}$', r'$e_i$',
     r'$E_x$', r'$E_y$', r'$E_z$', r'$B_x$', r'$B_y$', r'$B_z$']
 
 base_10m_names = ['rho_e', 'rhoux_e', 'rhouy_e', 'rhouz_e',
