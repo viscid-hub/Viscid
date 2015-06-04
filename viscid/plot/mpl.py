@@ -1046,6 +1046,46 @@ def tighten(**kwargs):
     except AttributeError:
         logger.warn("No matplotlib tight layout support")
 
+def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
+    """Wrapper to adjust subplots w/ tight_layout remembering axes lims
+
+    Args:
+        fig (Figure): a matplotlib figure
+        tight_layout (bool, dict): flag for whether or not to apply a
+            tight layout. If a dict, then it's unpacked into
+            `plt.tight_layout(...)`
+        subplot_params (dict): unpacked into `fig.subplots_adjust(...)`
+
+    Returns:
+        dict: keyword arguments for fig.subplots_adjust that describe
+            the current figure after all adjustments are made
+    """
+    if fig is None:
+        fig = plt.gcf()
+
+    # remember the axes' limits before the call to tight_layout
+    pre_tighten_xlim = [ax.get_xlim() for ax in fig.axes]
+    pre_tighten_ylim = [ax.get_ylim() for ax in fig.axes]
+
+    if tight_layout or isinstance(tight_layout, dict):
+        if not isinstance(tight_layout, dict):
+            tight_layout = {}
+        tighten(**tight_layout)
+
+    # apply specific subplot_params if given; hack for movies that wiggle
+    if subplot_params:
+        fig.subplots_adjust(**subplot_params)
+
+    # re-apply the old axis limits; hack for movies that wiggle
+    for ax, xlim, ylim in zip(fig.axes, pre_tighten_xlim, pre_tighten_ylim):
+        ax.set_xlim(*xlim)
+        ax.set_ylim(*ylim)
+
+    p = fig.subplotpars
+    ret = {'left': p.left, 'right': p.right, 'top': p.top,
+           'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
+    return ret
+
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="mhd",
                zorder=10):

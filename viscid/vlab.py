@@ -220,20 +220,15 @@ def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
     if timeformat and timeformat.lower() != "none":
         plt.suptitle(grid.format_time(timeformat))
 
-    if tighten:
-        mpl.tighten(rect=[0, 0.03, 1, 0.90])
-
-    # for movies where plots wiggle
+    # for adjusting subplots / tight_layout and applying the various
+    # hacks to keep plots from dancing around in movies
     if not subplot_params and first_run_result:
         subplot_params = first_run_result
-    if subplot_params:
-        plt.gcf().subplots_adjust(**subplot_params)
-
-    if first_run:
-        p = plt.gcf().subplotpars
-        ret = {'left': p.left, 'right': p.right, 'top': p.top,
-               'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
-    else:
+    if tighten:
+        tighten = dict(rect=[0, 0.03, 1, 0.90])
+    ret = mpl.auto_adjust_subplots(tight_layout=tighten,
+                                   subplot_params=subplot_params)
+    if not first_run:
         ret = None
 
     if out_prefix:
