@@ -483,8 +483,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
                       "values")
                 vmin, vmax = 1e-20, 1e-20
             elif vmin <= 0.0:
-                print("Warning: Using log scale on a field with negative "
-                      "values. Only plotting 4 decades.")
+                print("Warning: Using log scale on a field with values <= 0. "
+                      "Only plotting 4 decades.")
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
         elif vscale is None:
