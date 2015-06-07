@@ -92,7 +92,7 @@ class Coordinates(object):
     def is_spherical(self):
         return "spherical" in self._TYPE
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         pass
 
     def as_coordinates(self):
@@ -237,7 +237,8 @@ class StructuredCrds(Coordinates):
             Coordinates with reflections applied
         """
         if len(self.reflect_axes) > 0:
-            return type(self)(self.get_clist(), has_cc=self.has_cc)
+            return type(self)(self.get_clist(), has_cc=self.has_cc,
+                              dtype=self.dtype)
         else:
             return self
 
@@ -658,7 +659,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
 
     def slice_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
@@ -670,7 +671,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
 
     def slice_keep(self, selection, cc=False):
         slices, crdlst, reduced = self.make_slice_keep(selection,
@@ -678,7 +679,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
 
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,
