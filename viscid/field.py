@@ -20,6 +20,13 @@ from viscid import coordinate
 from viscid import vutil
 from viscid import tree
 
+try:
+    from viscid.calculator import cycalc
+    _HAS_CYCALC = True
+except ImportError:
+    # in case cycalc isn't built
+    _HAS_CYCALC = False
+
 LAYOUT_DEFAULT = "none"  # do not translate
 LAYOUT_INTERLACED = "interlaced"
 LAYOUT_FLAT = "flat"
@@ -1005,6 +1012,18 @@ class Field(tree.Leaf):
                                                                  cc=cc)
         # print("??", type(self._src_crds), crdlst)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+
+    def interpolated_slice(self, selection):
+        seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
+        if _HAS_CYCALC:
+            fld_dat = cycalc.interp_trilin(self, seeds)
+        else:
+            raise RuntimeError("Can't interpolate unless cython code is "
+                               "built. Run `./setup.py build_ext -i` or "
+                               "some equivalent.")
+        new_fld = self.wrap(fld_dat, context=dict(crds=seeds))
+        new_fld = new_fld.slice_reduce("")
+        return new_fld
 
     def set_slice(self, selection, value):
         """Used for fld.__setitem__

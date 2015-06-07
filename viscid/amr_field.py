@@ -11,6 +11,13 @@ import numpy as np
 # from viscid.compat import string_types
 from viscid.field import Field
 
+try:
+    from viscid.calculator import cycalc
+    _HAS_CYCALC = True
+except ImportError:
+    # in case cycalc isn't built
+    _HAS_CYCALC = False
+
 
 def is_list_of_fields(lst):
     for item in lst:
@@ -164,6 +171,14 @@ class AMRField(object):
             return fld_lst.slice_and_keep(selection)
         fld_lst = [fld.slice_and_keep(selection) for fld in fld_lst]
         return self._finalize_amr_slice(fld_lst)
+
+    def interpolated_slice(self, selection):
+        fld_lst, _ = self._prepare_amr_slice(selection)
+        if not isinstance(fld_lst, list):
+            raise RuntimeError("can't interpolate to that slice?")
+
+        ret_lst = [fld.interpolated_slice(selection) for fld in fld_lst]
+        return self._finalize_amr_slice(ret_lst)
 
     ###################
     ## special methods

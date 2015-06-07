@@ -681,6 +681,27 @@ class StructuredCrds(Coordinates):
             return self
         return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
 
+    def slice_interp(self, selection, cc=False):
+        _, crdlst, _ = self.make_slice_keep(selection, cc=cc)
+
+        selection = self._parse_slice(selection)
+
+        # for slices that were specified using a float, set that crd
+        # to the desired float instead of the nearest crd as does slice_keep
+        for i, slc in enumerate(selection):
+            slc = vutil.convert_deprecated_floats(slc, "slc")
+            if isinstance(slc, string_types):
+                assert slc[-1] == 'f'
+                val = np.array(float(slc[:-1]), dtype=self.dtype)
+                if cc:
+                    dxh = 0.5 * (crdlst[i][1][1] - crdlst[i][1][0])
+                    crdlst[i][1][0] = val - dxh
+                    crdlst[i][1][1] = val + dxh
+                else:
+                    # FIXME: I don't think this is right
+                    crdlst[i][1][0] = val
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
+
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,
         shaped makes axis capitalized and returns ogrid like crds
