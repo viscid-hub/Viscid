@@ -6,8 +6,7 @@ import itertools
 
 import numpy as np
 
-from viscid import field
-from viscid import coordinate
+import viscid
 from viscid.compat import izip
 
 class SeedGen(object):
@@ -67,8 +66,8 @@ class SeedGen(object):
     def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
         """fld_type is 'Scalar' or 'Vector' or something like that"""
         crds = self.as_coordinates()
-        return field.wrap_field(data, crds, name=name, fldtype=fldtype,
-                                **kwargs)
+        return viscid.wrap_field(data, crds, name=name, fldtype=fldtype,
+                                 **kwargs)
 
 
 class Point(SeedGen):
@@ -140,7 +139,7 @@ class Line(SeedGen):
         dp = p1 - p0
         dist = np.sqrt(np.dot(dp, dp))
         x = np.linspace(0.0, dist, res)
-        crd = coordinate.wrap_crds("nonuniform_cartesian", (('x', x),))
+        crd = viscid.wrap_crds("nonuniform_cartesian", (('x', x),))
         return crd
 
 
@@ -227,7 +226,7 @@ class Plane(SeedGen):
         l = np.linspace(len_l[0], len_l[1], res_l)
         m = np.linspace(len_m[0], len_m[1], res_m)
 
-        crds = coordinate.wrap_crds("nonuniform_cartesian", (('y', m), ('x', l)))
+        crds = viscid.wrap_crds("nonuniform_cartesian", (('y', m), ('x', l)))
         return crds
 
 
@@ -271,7 +270,7 @@ class Volume(SeedGen):
 
     def as_coordinates(self):
         z, y, x = self._make_arrays()
-        crd = coordinate.wrap_crds("nonuniform_cartesian",
+        crd = viscid.wrap_crds("nonuniform_cartesian",
                                    (('z', z), ('y', y), ('x', x)))
         return crd
 
@@ -301,7 +300,7 @@ class Sphere(SeedGen):
 
     def as_coordinates(self):
         theta, phi = self._get_all_theta_phi()
-        crds = coordinate.wrap_crds("nonuniform_cartesian",
+        crds = viscid.wrap_crds("nonuniform_cartesian",
                                     (('y', theta), ('x', phi)))
         return crds
 

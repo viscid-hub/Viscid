@@ -118,6 +118,7 @@ wrap_field = field.wrap_field
 
 from viscid import coordinate
 arrays2crds = coordinate.arrays2crds
+wrap_crds = coordinate.wrap_crds
 
 # pull other useful modules into the namespace
 # Note: plot and calculator are intentionally left

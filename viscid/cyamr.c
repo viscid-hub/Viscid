@@ -253,8 +253,8 @@ class __Pyx_FakeReference {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__viscid__readers__amr__cyamr
-#define __PYX_HAVE_API__viscid__readers__amr__cyamr
+#define __PYX_HAVE__viscid__cyamr
+#define __PYX_HAVE_API__viscid__cyamr
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -464,7 +464,7 @@ static const char *__pyx_filename;
 
 static const char *__pyx_f[] = {
   "__init__.pxd",
-  "viscid/readers/amr/cyamr.pyx",
+  "viscid/cyamr.pyx",
   "type.pxd",
 };
 
@@ -1005,11 +1005,11 @@ static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
 
-/* Module declarations from 'viscid.readers.amr.cyamr' */
-#define __Pyx_MODULE_NAME "viscid.readers.amr.cyamr"
-int __pyx_module_is_main_viscid__readers__amr__cyamr = 0;
+/* Module declarations from 'viscid.cyamr' */
+#define __Pyx_MODULE_NAME "viscid.cyamr"
+int __pyx_module_is_main_viscid__cyamr = 0;
 
-/* Implementation of 'viscid.readers.amr.cyamr' */
+/* Implementation of 'viscid.cyamr' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
@@ -3261,14 +3261,14 @@ PyMODINIT_FUNC PyInit_cyamr(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_viscid__readers__amr__cyamr) {
+  if (__pyx_module_is_main_viscid__cyamr) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "viscid.readers.amr.cyamr")) {
-      if (unlikely(PyDict_SetItemString(modules, "viscid.readers.amr.cyamr", __pyx_m) < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "viscid.cyamr")) {
+      if (unlikely(PyDict_SetItemString(modules, "viscid.cyamr", __pyx_m) < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -3297,7 +3297,7 @@ PyMODINIT_FUNC PyInit_cyamr(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "viscid/readers/amr/cyamr.pyx":9
+  /* "viscid/cyamr.pyx":9
  * from __future__ import print_function
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -3309,7 +3309,7 @@ PyMODINIT_FUNC PyInit_cyamr(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 9; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "viscid/readers/amr/cyamr.pyx":31
+  /* "viscid/cyamr.pyx":31
  * 
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -3321,7 +3321,7 @@ PyMODINIT_FUNC PyInit_cyamr(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "viscid/readers/amr/cyamr.pyx":1
+  /* "viscid/cyamr.pyx":1
  * # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False             # <<<<<<<<<<<<<<
  * #
  * # Note: a _c_FUNCTION can only be called from another cdef-ed function, or
@@ -3346,11 +3346,11 @@ PyMODINIT_FUNC PyInit_cyamr(void)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init viscid.readers.amr.cyamr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init viscid.cyamr", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init viscid.readers.amr.cyamr");
+    PyErr_SetString(PyExc_ImportError, "init viscid.cyamr");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

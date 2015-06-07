@@ -8,19 +8,17 @@ from __future__ import print_function
 
 import numpy as np
 
-from cython.operator cimport dereference as deref
-from cython.view cimport array as cvarray
 # from cython.parallel import prange
 
 # from viscid import logger
-from viscid import field
-from viscid import coordinate
-from viscid.calculator import seed
 
 ###########
 # cimports
 cimport cython
 cimport numpy as cnp
+
+from cython.operator cimport dereference as deref
+from cython.view cimport array as cvarray
 
 from libc.math cimport sqrt
 
@@ -90,7 +88,7 @@ def closest_ind(real_t[:] crd, point, int startind=0):
     return fallback
 
 def interp_trilin(fld, seeds):
-    """ Points can be list of 3-tuples or a SeedGen instance. If fld
+    """ Points should be a SeedGen instance. If fld
     is a scalar field, the output array has shape (nr_points,) where nr_points
     is the number of seed points. If it's a vector, the output has shape
     (nr_points, nr_comps), where nr_comps is the number of components of the
@@ -107,9 +105,6 @@ def interp_trilin(fld, seeds):
         raise RuntimeError("Dont touch me with that centering.")
 
     dtype = fld.dtype
-
-    if isinstance(seeds, list):
-        seeds = seed.Point(seeds)
 
     if fld.istype("Vector"):
         nr_comps = fld.nr_comps

@@ -21,8 +21,6 @@ from itertools import islice, repeat
 import numpy as np
 
 from viscid import parallel
-from viscid import field
-from viscid.calculator import seed
 from viscid.compat import izip
 
 ###########
