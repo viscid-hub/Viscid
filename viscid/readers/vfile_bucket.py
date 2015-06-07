@@ -7,7 +7,7 @@ from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid.readers.vfile import VFile
-from viscid.compat import OrderedDict
+from viscid.compat import OrderedDict, string_types
 from viscid.vutil import slice_globbed_filenames
 
 class VFileBucket(Bucket):
@@ -66,7 +66,10 @@ class VFileBucket(Bucket):
         # glob and convert to absolute paths
         globbed_fnames = []
         for fname in fnames:
-            globbed_fnames += slice_globbed_filenames(fname)
+            slglob = slice_globbed_filenames(fname)
+            if isinstance(slglob, string_types):
+                slglob = [slglob]
+            globbed_fnames += slglob
             # print(">>", fname)
             # print("==", globbed_fnames)
             # expanded_fname = os.path.expanduser(os.path.expandvars(fname))
