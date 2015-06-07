@@ -250,6 +250,10 @@ class AMRField(object):
             flds.append(fld)
         return AMRField(flds, self.skeleton)
 
+    @staticmethod
+    def __array_priority__():
+        return 3.0
+
     def __add__(self, other):
         return self.wrap_field_method("__add__", other)
     def __sub__(self, other):
