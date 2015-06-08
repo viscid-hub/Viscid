@@ -1348,10 +1348,6 @@ class Field(tree.Leaf):
             fld = fld.component_fields()[0]
         return fld
 
-    @staticmethod
-    def __array_priority__():
-        return 2.0
-
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
         # print("wrapping")
         return self.wrap(out_arr)
