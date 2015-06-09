@@ -227,7 +227,13 @@ class AMRField(object):
                 else:
                     other[j] = arg
             lst[i] = getattr(block, attrname)(*other, **kwargs)
-        return AMRField(lst, self.skeleton)
+
+        if np.asarray(lst[0]).size == 1:
+            # operation reduced to scalar
+            arr = np.array(lst)
+            return getattr(arr, attrname)(**kwargs)
+        else:
+            return AMRField(lst, self.skeleton)
 
     # TODO: as of numpy 1.10, this will be called on ufuncs... this
     #       will help some of the FIXMEs in __array__
@@ -331,20 +337,13 @@ class AMRField(object):
         return self.wrap_field_method("__ipow__", other)
 
     def __neg__(self):
-        return self.wrap_field_method("__neg__", )
+        return self.wrap_field_method("__neg__")
     def __pos__(self):
-        return self.wrap_field_method("__pos__", )
+        return self.wrap_field_method("__pos__")
     def __abs__(self):
-        return self.wrap_field_method("__abs__", )
+        return self.wrap_field_method("__abs__")
     def __invert__(self):
-        return self.wrap_field_method("__invert__", )
-
-    def any(self):
-        it = (fld.any() for fld in self.blocks)
-        return any(it)
-    def all(self):
-        it = (fld.all() for fld in self.blocks)
-        return all(it)
+        return self.wrap_field_method("__invert__")
 
     def __lt__(self, other):
         return self.wrap_field_method("__lt__", other)
@@ -358,6 +357,37 @@ class AMRField(object):
         return self.wrap_field_method("__gt__", other)
     def __ge__(self, other):
         return self.wrap_field_method("__ge__", other)
+
+    def any(self, **kwargs):
+        return self.wrap_field_method("any", **kwargs)
+    def all(self, **kwargs):
+        return self.wrap_field_method("all", **kwargs)
+    def argmax(self, **kwargs):
+        return self.wrap_field_method("argmax", **kwargs)
+    def argmin(self, **kwargs):
+        return self.wrap_field_method("argmin", **kwargs)
+    def argpartition(self, **kwargs):
+        return self.wrap_field_method("argpartition", **kwargs)
+    def argsort(self, **kwargs):
+        return self.wrap_field_method("argsort", **kwargs)
+    def cumprod(self, **kwargs):
+        return self.wrap_field_method("cumprod", **kwargs)
+    def cumsum(self, **kwargs):
+        return self.wrap_field_method("cumsum", **kwargs)
+    def max(self, **kwargs):
+        return self.wrap_field_method("max", **kwargs)
+    def mean(self, **kwargs):
+        return self.wrap_field_method("mean", **kwargs)
+    def min(self, **kwargs):
+        return self.wrap_field_method("min", **kwargs)
+    def partition(self, **kwargs):
+        return self.wrap_field_method("partition", **kwargs)
+    def prod(self, **kwargs):
+        return self.wrap_field_method("prod", **kwargs)
+    def std(self, **kwargs):
+        return self.wrap_field_method("std", **kwargs)
+    def sum(self, **kwargs):
+        return self.wrap_field_method("sum", **kwargs)
 
     def __getattr__(self, name):
         # define a callback to finalize
@@ -374,7 +404,13 @@ class AMRField(object):
             ret0 = getattr(self.blocks[0], name)
             # Check that all blocks have the same value. Maybe this should
             # have a debugging flag attached to it since it will take time.
-            if any(getattr(blk, name) != ret0 for blk in self.blocks[1:]):
+            try:
+                all_same = all(getattr(blk, name) == ret0
+                               for blk in self.blocks[1:])
+            except ValueError:
+                all_same = all(np.all(getattr(blk, name) == ret0)
+                               for blk in self.blocks[1:])
+            if not all_same:
                 raise ValueError("different blocks of the AMRField have "
                                  "different values for attribute: {0}"
                                  "".format(name))
@@ -383,4 +419,3 @@ class AMRField(object):
 ##
 ## EOF
 ##
-

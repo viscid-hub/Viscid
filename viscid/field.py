@@ -351,6 +351,7 @@ class Field(tree.Leaf):
 
     post_reshape_transform_func = None
     transform_func_kwargs = None
+    defer_wrapping = False
 
     # _parent_field is a hacky way to keep a 'parent' field in sync when data
     # is loaded... this is used for converting cell centered data ->
@@ -480,6 +481,10 @@ class Field(tree.Leaf):
         the underlying data, but is assumed a priori so no data load is
         done here """
         return self.nr_sdims + 1
+
+    @property
+    def ndim(self):
+        return self.nr_dims
 
     @property
     def nr_sdims(self):
@@ -1299,16 +1304,25 @@ class Field(tree.Leaf):
         # dtype = None is ok, datatype won't change
         return np.array(self.data, dtype=dtype, copy=False)
 
-    def wrap(self, arr, context=None, fldtype=None):
+    def wrap(self, arr, context=None, fldtype=None, npkwargs=None, other=None):
         """ arr is the data to wrap... context is exta deep_meta to pass
         to the constructor. The return is just a number if arr is a
         1 element ndarray, this is for ufuncs that reduce to a scalar """
+
+        if self.defer_wrapping and hasattr(other, "wrap"):
+            return other.wrap(arr, context=context, fldtype=fldtype,
+                              npkwargs=npkwargs)
+
         if arr is NotImplemented:
             return NotImplemented
         # if just 1 number wrappen in an array, unpack the value and
         # return it... this is more ufuncy behavior
-        if isinstance(arr, np.ndarray) and arr.size == 1:
-            return np.ravel(arr)[0]
+        try:
+            if arr.size == 1:
+                return np.ravel(arr)[0]
+        except AttributeError:
+            pass
+
         if context is None:
             context = {}
         name = context.pop("name", self.name)
@@ -1317,6 +1331,21 @@ class Field(tree.Leaf):
         center = context.pop("center", self.center).lower()
         time = context.pop("time", self.time)
         # should it always return the same type as self?
+
+        # hack for reduction operations (ops that have npkwargs['axis'])
+        defer_wrapping = self.defer_wrapping
+        if npkwargs:
+            axis = npkwargs.get('axis', None)
+            if axis is not None:
+                reduce_axis = crds.axes[axis]
+                crd_slc = "{0}=0".format(reduce_axis)
+                default_keepdims = len(self.shape) == len(crds.shape)
+                iscc = self.iscentered('cell')
+                if npkwargs.get("keepdims", default_keepdims):
+                    crds = self.crds.slice_keep(crd_slc, cc=iscc)
+                else:
+                    crds = self.crds.slice_reduce(crd_slc, cc=iscc)
+                defer_wrapping = True
 
         # little hack for broadcasting vectors and scalars together
         crd_shape = crds.shape_nc if center == "node" else crds.shape_cc
@@ -1349,59 +1378,62 @@ class Field(tree.Leaf):
         return fld
 
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
-        # print("wrapping")
         return self.wrap(out_arr)
 
-    # def __array_finalize__(self, *args, **kwargs):
-    #     print("attempted call to field.__array_finalize__")
+    def _ow(self, other):
+        # hack because Fields don't broadcast correctly after a ufunc?
+        try:
+            return other.__array__()
+        except AttributeError:
+            return other
 
     def __add__(self, other):
-        return self.wrap(self.data.__add__(other))
+        return self.wrap(self.data.__add__(self._ow(other)), other=other)
     def __sub__(self, other):
-        return self.wrap(self.data.__sub__(other))
+        return self.wrap(self.data.__sub__(self._ow(other)), other=other)
     def __mul__(self, other):
-        return self.wrap(self.data.__mul__(other))
+        return self.wrap(self.data.__mul__(self._ow(other)), other=other)
     def __div__(self, other):
-        return self.wrap(self.data.__div__(other))
+        return self.wrap(self.data.__div__(self._ow(other)), other=other)
     def __truediv__(self, other):
-        return self.wrap(self.data.__truediv__(other))
+        return self.wrap(self.data.__truediv__(self._ow(other)), other=other)
     def __floordiv__(self, other):
-        return self.wrap(self.data.__floordiv__(other))
+        return self.wrap(self.data.__floordiv__(self._ow(other)), other=other)
     def __mod__(self, other):
-        return self.wrap(self.data.__mod__(other))
+        return self.wrap(self.data.__mod__(self._ow(other)), other=other)
     def __divmod__(self, other):
-        return self.wrap(self.data.__divmod__(other))
+        return self.wrap(self.data.__divmod__(self._ow(other)), other=other)
     def __pow__(self, other):
-        return self.wrap(self.data.__pow__(other))
+        return self.wrap(self.data.__pow__(self._ow(other)), other=other)
     def __lshift__(self, other):
-        return self.wrap(self.data.__lshift__(other))
+        return self.wrap(self.data.__lshift__(self._ow(other)), other=other)
     def __rshift__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__rshift__(self._ow(other)), other=other)
     def __and__(self, other):
-        return self.wrap(self.data.__and__(other))
+        return self.wrap(self.data.__and__(self._ow(other)), other=other)
     def __xor__(self, other):
-        return self.wrap(self.data.__xor__(other))
+        return self.wrap(self.data.__xor__(self._ow(other)), other=other)
     def __or__(self, other):
-        return self.wrap(self.data.__or__(other))
+        return self.wrap(self.data.__or__(self._ow(other)), other=other)
 
     def __radd__(self, other):
-        return self.wrap(self.data.__radd__(other))
+        return self.wrap(self.data.__radd__(self._ow(other)), other=other)
     def __rsub__(self, other):
-        return self.wrap(self.data.__rsub__(other))
+        return self.wrap(self.data.__rsub__(self._ow(other)), other=other)
     def __rmul__(self, other):
-        return self.wrap(self.data.__rmul__(other))
+        return self.wrap(self.data.__rmul__(self._ow(other)), other=other)
     def __rdiv__(self, other):
-        return self.wrap(self.data.__rdiv__(other))
+        return self.wrap(self.data.__rdiv__(self._ow(other)), other=other)
     def __rtruediv__(self, other):
-        return self.wrap(self.data.__rtruediv__(other))
+        return self.wrap(self.data.__rtruediv__(self._ow(other)), other=other)
     def __rfloordiv__(self, other):
-        return self.wrap(self.data.__rfloordiv__(other))
+        return self.wrap(self.data.__rfloordiv__(self._ow(other)), other=other)
     def __rmod__(self, other):
-        return self.wrap(self.data.__rmod__(other))
+        return self.wrap(self.data.__rmod__(self._ow(other)), other=other)
     def __rdivmod__(self, other):
-        return self.wrap(self.data.__rdivmod__(other))
+        return self.wrap(self.data.__rdivmod__(self._ow(other)), other=other)
     def __rpow__(self, other):
-        return self.wrap(self.data.__rpow__(other))
+        return self.wrap(self.data.__rpow__(self._ow(other)), other=other)
 
     # inplace operations are not implemented since the data
     # can up and disappear (due to clear_cache)... this could cause
@@ -1432,23 +1464,56 @@ class Field(tree.Leaf):
     def __invert__(self):
         return self.wrap(self.data.__invert__())
 
-    def any(self):
-        return self.data.any()
-    def all(self):
-        return self.data.all()
-
     def __lt__(self, other):
-        return self.wrap(self.data.__lt__(other))
+        return self.wrap(self.data.__lt__(self._ow(other)), other=other)
     def __le__(self, other):
-        return self.wrap(self.data.__le__(other))
+        return self.wrap(self.data.__le__(self._ow(other)), other=other)
     def __eq__(self, other):
-        return self.wrap(self.data.__eq__(other))
+        return self.wrap(self.data.__eq__(self._ow(other)), other=other)
     def __ne__(self, other):
-        return self.wrap(self.data.__ne__(other))
+        return self.wrap(self.data.__ne__(self._ow(other)), other=other)
     def __gt__(self, other):
-        return self.wrap(self.data.__gt__(other))
+        # print("::__gt__::", self.data.shape, other.shape,
+        #       self.data.__gt__(other).shape, "ndim", other.ndim)
+        return self.wrap(self.data.__gt__(self._ow(other)), other=other)
     def __ge__(self, other):
-        return self.wrap(self.data.__ge__(other))
+        return self.wrap(self.data.__ge__(self._ow(other)), other=other)
+
+    def any(self, **kwargs):
+        return self.wrap(self.data.any(**kwargs), npkwargs=kwargs)
+    def all(self, **kwargs):
+        return self.wrap(self.data.all(**kwargs), npkwargs=kwargs)
+    def argmax(self, axis=None, **kwargs):
+        kwargs.update(axis=axis)
+        return self.wrap(self.data.argmax(**kwargs), npkwargs=kwargs)
+    def argmin(self, axis=None, **kwargs):
+        kwargs.update(axis=axis)
+        return self.wrap(self.data.argmin(**kwargs), npkwargs=kwargs)
+    def argpartition(self, **kwargs):
+        return self.wrap(self.data.argpartition(**kwargs), npkwargs=kwargs)
+    def argsort(self, axis=-1, kind='quicksort', order=None, **kwargs):
+        kwargs.update(axis=axis, kind=kind, order=order)
+        return self.wrap(self.data.argsort(**kwargs), npkwargs=kwargs)
+    def cumprod(self, axis=None, dtype=None, order=None, **kwargs):
+        kwargs.update(axis=axis, dtype=dtype, order=order)
+        return self.wrap(self.data.cumprod(**kwargs), npkwargs=kwargs)
+    def cumsum(self, axis=None, dtype=None, order=None, **kwargs):
+        kwargs.update(axis=axis, dtype=dtype, order=order)
+        return self.wrap(self.data.cumsum(**kwargs), npkwargs=kwargs)
+    def max(self, **kwargs):
+        return self.wrap(self.data.max(**kwargs), npkwargs=kwargs)
+    def mean(self, **kwargs):
+        return self.wrap(self.data.mean(**kwargs), npkwargs=kwargs)
+    def min(self, **kwargs):
+        return self.wrap(self.data.min(**kwargs), npkwargs=kwargs)
+    def partition(self, **kwargs):
+        return self.wrap(self.data.partition(**kwargs), npkwargs=kwargs)
+    def prod(self, **kwargs):
+        return self.wrap(self.data.prod(**kwargs), npkwargs=kwargs)
+    def std(self, **kwargs):
+        return self.wrap(self.data.std(**kwargs), npkwargs=kwargs)
+    def sum(self, **kwargs):
+        return self.wrap(self.data.sum(**kwargs), npkwargs=kwargs)
 
     @property
     def real(self):
