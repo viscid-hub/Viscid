@@ -83,13 +83,14 @@ def get_trilinear_field():
                 1.0 * (X - x03) * (Y - y03) * (Z - z03)
     return b
 
-def multiplot(file_, plot_func=None, nprocs=1, time_slice=":", **kwargs):
+def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
     """Make lots of plots
 
     Calls plot_func (or vlab._do_multiplot if plot_func is None) with 2
-    positional arguments (int, Grid), and all the **kwargs given to multiplot.
+    positional arguments (int, Grid), and all the kwargs given to
+    multiplot.
 
-    Grid is determined by file_.iter_times(time_slice).
+    Grid is determined by vfile.iter_times(time_slice).
 
     plot_func gets additional keyword arguments first_run (bool) and
     first_run_result (whatever is returned from plot_func by the first
@@ -97,17 +98,27 @@ def multiplot(file_, plot_func=None, nprocs=1, time_slice=":", **kwargs):
 
     This is the function used by the ``p2d`` script. It may be useful
     to you.
+
+    Args:
+        vfile (VFile, Grid): Something that has iter_times
+        plot_func (callable): Function that makes a single plot. It
+            must take an int (index of time slice), a Grid, and any
+            number of keyword argumets. If None, _do_multiplot is used
+        nprocs (int): number of parallel processes to farm out
+            plot_func to
+        time_slice (str): passed to vfile.iter_times()
+        **kwargs: passed as keword aguments to plot_func
     """
     # make sure time slice yields >= 1 actual time slice
     try:
-        next(file_.iter_times(time_slice))
+        next(vfile.iter_times(time_slice))
     except StopIteration:
         raise ValueError("Time slice '{0}' yields no data".format(time_slice))
 
     if plot_func is None:
         plot_func = _do_multiplot
 
-    grid_iter = izip(itertools.count(), file_.iter_times(time_slice))
+    grid_iter = izip(itertools.count(), vfile.iter_times(time_slice))
 
     args_kw = kwargs.copy()
     args_kw["first_run"] = True
