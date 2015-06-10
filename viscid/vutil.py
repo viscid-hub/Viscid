@@ -399,7 +399,7 @@ def _closest_index(arr, value):
         if len(value) == 0:
             raise ValueError("Can't slice with nothing")
         elif value[-1] == 'f':
-            index = int(np.argmin(np.abs(arr - float(value[:-1]))))
+            index = int(np.argmin(np.abs(np.asarray(arr) - float(value[:-1]))))
         else:
             index = int(value)
 
