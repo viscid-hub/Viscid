@@ -4,8 +4,9 @@ import itertools
 import numpy as np
 try:
     import numexpr as ne
+    _HAS_NUMEXPR = True
 except ImportError:
-    pass
+    _HAS_NUMEXPR = False
 
 from viscid import logger
 from viscid import parallel
@@ -47,11 +48,18 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False):
     m = np.array(m, dtype=dtype)
     mx, my, mz = m #pylint: disable=W0612
 
-    rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
-    mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
-    B['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
-    B['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
-    B['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+    if _HAS_NUMEXPR:
+        rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
+        mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
+        B['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
+        B['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
+        B['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+    else:
+        rsq = Xcc**2 + Ycc**2 + Zcc**2
+        mdotr = mx * Xcc + my * Ycc + mz * Zcc
+        B['x'] = ((three * Xcc * mdotr / rsq) - mx) / rsq**1.5
+        B['y'] = ((three * Ycc * mdotr / rsq) - my) / rsq**1.5
+        B['z'] = ((three * Zcc * mdotr / rsq) - mz) / rsq**1.5
 
     return B
 
