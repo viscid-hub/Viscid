@@ -466,10 +466,11 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "viscid/calculator/integrate.pyx",
   "__init__.pxd",
   "stringsource",
+  "viscid/calculator/integrate.pyx",
   "type.pxd",
+  "viscid/calculator/cyfield.pxd",
 };
 struct __pyx_memoryview_obj;
 typedef struct {
@@ -773,6 +774,11 @@ typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
 
 /*--- Type declarations ---*/
+struct __pyx_obj_6viscid_10calculator_7cyfield_CyField;
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8;
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8;
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4;
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
@@ -813,6 +819,162 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  * cdef inline object PyArray_MultiIterNew1(a):
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
+
+/* "cyfield.pxd":13
+ *     # cnp.int64_t
+ * 
+ * cdef class CyField:             # <<<<<<<<<<<<<<
+ *     # cdef bool uniform_crds
+ *     cdef vfield
+ */
+struct __pyx_obj_6viscid_10calculator_7cyfield_CyField {
+  PyObject_HEAD
+  PyObject *vfield;
+  PyObject *fld_dtype;
+  PyObject *crd_dtype;
+  PyObject *center;
+  int uniform_crds;
+  int is_cc;
+  int n[3];
+  int nm1[3];
+  int nm2[3];
+  int nr_nodes[3];
+  int nr_cells[3];
+  int cached_ind[3];
+};
+
+
+/* "cyfield.pxd":28
+ *     cdef int cached_ind[3]
+ * 
+ * cdef class Field_I4_Crd_F8(CyField):             # <<<<<<<<<<<<<<
+ *     cdef cnp.int32_t[:,:,:,::1] data
+ *     cdef cnp.float64_t[:] x, y, z
+ */
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 {
+  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+  __Pyx_memviewslice data;
+  __Pyx_memviewslice x;
+  __Pyx_memviewslice y;
+  __Pyx_memviewslice z;
+  __Pyx_memviewslice xnc;
+  __Pyx_memviewslice ync;
+  __Pyx_memviewslice znc;
+  __Pyx_memviewslice xcc;
+  __Pyx_memviewslice ycc;
+  __Pyx_memviewslice zcc;
+  __Pyx_memviewslice crds;
+  __Pyx_memviewslice crds_nc;
+  __Pyx_memviewslice crds_cc;
+  __pyx_t_5numpy_float64_t xl[3];
+  __pyx_t_5numpy_float64_t xlnc[3];
+  __pyx_t_5numpy_float64_t xlcc[3];
+  __pyx_t_5numpy_float64_t xh[3];
+  __pyx_t_5numpy_float64_t xhnc[3];
+  __pyx_t_5numpy_float64_t xhcc[3];
+  __pyx_t_5numpy_float64_t L[3];
+  __pyx_t_5numpy_float64_t dx[3];
+};
+
+
+/* "cyfield.pxd":41
+ *     cdef cnp.float64_t[3] dx  # cell width, = NaN if uniform_crds == False
+ * 
+ * cdef class Field_I8_Crd_F8(CyField):             # <<<<<<<<<<<<<<
+ *     cdef cnp.int64_t[:,:,:,::1] data
+ *     cdef cnp.float64_t[:] x, y, z
+ */
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 {
+  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+  __Pyx_memviewslice data;
+  __Pyx_memviewslice x;
+  __Pyx_memviewslice y;
+  __Pyx_memviewslice z;
+  __Pyx_memviewslice xnc;
+  __Pyx_memviewslice ync;
+  __Pyx_memviewslice znc;
+  __Pyx_memviewslice xcc;
+  __Pyx_memviewslice ycc;
+  __Pyx_memviewslice zcc;
+  __Pyx_memviewslice crds;
+  __Pyx_memviewslice crds_nc;
+  __Pyx_memviewslice crds_cc;
+  __pyx_t_5numpy_float64_t xl[3];
+  __pyx_t_5numpy_float64_t xlnc[3];
+  __pyx_t_5numpy_float64_t xlcc[3];
+  __pyx_t_5numpy_float64_t xh[3];
+  __pyx_t_5numpy_float64_t xhnc[3];
+  __pyx_t_5numpy_float64_t xhcc[3];
+  __pyx_t_5numpy_float64_t L[3];
+  __pyx_t_5numpy_float64_t dx[3];
+};
+
+
+/* "cyfield.pxd":54
+ *     cdef cnp.float64_t[3] dx  # cell width, = NaN if uniform_crds == False
+ * 
+ * cdef class Field_F4_Crd_F4(CyField):             # <<<<<<<<<<<<<<
+ *     cdef cnp.float32_t[:,:,:,::1] data
+ *     cdef cnp.float32_t[:] x, y, z
+ */
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 {
+  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+  __Pyx_memviewslice data;
+  __Pyx_memviewslice x;
+  __Pyx_memviewslice y;
+  __Pyx_memviewslice z;
+  __Pyx_memviewslice xnc;
+  __Pyx_memviewslice ync;
+  __Pyx_memviewslice znc;
+  __Pyx_memviewslice xcc;
+  __Pyx_memviewslice ycc;
+  __Pyx_memviewslice zcc;
+  __Pyx_memviewslice crds;
+  __Pyx_memviewslice crds_nc;
+  __Pyx_memviewslice crds_cc;
+  __pyx_t_5numpy_float32_t xl[3];
+  __pyx_t_5numpy_float32_t xlnc[3];
+  __pyx_t_5numpy_float32_t xlcc[3];
+  __pyx_t_5numpy_float32_t xh[3];
+  __pyx_t_5numpy_float32_t xhnc[3];
+  __pyx_t_5numpy_float32_t xhcc[3];
+  __pyx_t_5numpy_float32_t L[3];
+  __pyx_t_5numpy_float32_t dx[3];
+};
+
+
+/* "cyfield.pxd":67
+ *     cdef cnp.float32_t[3] dx  # cell width, = NaN if uniform_crds == False
+ * 
+ * cdef class Field_F8_Crd_F8(CyField):             # <<<<<<<<<<<<<<
+ *     cdef cnp.float64_t[:,:,:,::1] data
+ *     cdef cnp.float64_t[:] x, y, z
+ */
+struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 {
+  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+  __Pyx_memviewslice data;
+  __Pyx_memviewslice x;
+  __Pyx_memviewslice y;
+  __Pyx_memviewslice z;
+  __Pyx_memviewslice xnc;
+  __Pyx_memviewslice ync;
+  __Pyx_memviewslice znc;
+  __Pyx_memviewslice xcc;
+  __Pyx_memviewslice ycc;
+  __Pyx_memviewslice zcc;
+  __Pyx_memviewslice crds;
+  __Pyx_memviewslice crds_nc;
+  __Pyx_memviewslice crds_cc;
+  __pyx_t_5numpy_float64_t xl[3];
+  __pyx_t_5numpy_float64_t xlnc[3];
+  __pyx_t_5numpy_float64_t xlcc[3];
+  __pyx_t_5numpy_float64_t xh[3];
+  __pyx_t_5numpy_float64_t xhnc[3];
+  __pyx_t_5numpy_float64_t xhcc[3];
+  __pyx_t_5numpy_float64_t L[3];
+  __pyx_t_5numpy_float64_t dx[3];
+};
+
 
 /* "View.MemoryView":99
  * 
@@ -986,35 +1148,6 @@ static struct __pyx_vtabstruct__memoryviewslice *__pyx_vtabptr__memoryviewslice;
     } while (0)
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
-
-static CYTHON_INLINE int  __Pyx_GetBufferAndValidate(Py_buffer* buf, PyObject* obj,
-    __Pyx_TypeInfo* dtype, int flags, int nd, int cast, __Pyx_BufFmt_StackElem* stack);
-static CYTHON_INLINE void __Pyx_SafeReleaseBuffer(Py_buffer* info);
-
-#define __Pyx_BUF_MAX_NDIMS %(BUF_MAX_NDIMS)d
-#define __Pyx_MEMVIEW_DIRECT   1
-#define __Pyx_MEMVIEW_PTR      2
-#define __Pyx_MEMVIEW_FULL     4
-#define __Pyx_MEMVIEW_CONTIG   8
-#define __Pyx_MEMVIEW_STRIDED  16
-#define __Pyx_MEMVIEW_FOLLOW   32
-#define __Pyx_IS_C_CONTIG 1
-#define __Pyx_IS_F_CONTIG 2
-static int __Pyx_init_memviewslice(
-                struct __pyx_memoryview_obj *memview,
-                int ndim,
-                __Pyx_memviewslice *memviewslice,
-                int memview_is_new_reference);
-static CYTHON_INLINE int __pyx_add_acquisition_count_locked(
-    __pyx_atomic_int *acquisition_count, PyThread_type_lock lock);
-static CYTHON_INLINE int __pyx_sub_acquisition_count_locked(
-    __pyx_atomic_int *acquisition_count, PyThread_type_lock lock);
-#define __pyx_get_slice_count_pointer(memview) (memview->acquisition_count_aligned_p)
-#define __pyx_get_slice_count(memview) (*__pyx_get_slice_count_pointer(memview))
-#define __PYX_INC_MEMVIEW(slice, have_gil) __Pyx_INC_MEMVIEW(slice, have_gil, __LINE__)
-#define __PYX_XDEC_MEMVIEW(slice, have_gil) __Pyx_XDEC_MEMVIEW(slice, have_gil, __LINE__)
-static CYTHON_INLINE void __Pyx_INC_MEMVIEW(__Pyx_memviewslice *, int, int);
-static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
 
 #if CYTHON_COMPILING_IN_CPYTHON
 static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
@@ -1206,23 +1339,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject
 
 static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
 
-#if PY_MAJOR_VERSION < 3
-#define __Pyx_PyString_Join __Pyx_PyBytes_Join
-#define __Pyx_PyBaseString_Join(s, v) (PyUnicode_CheckExact(s) ? PyUnicode_Join(s, v) : __Pyx_PyBytes_Join(s, v))
-#else
-#define __Pyx_PyString_Join PyUnicode_Join
-#define __Pyx_PyBaseString_Join PyUnicode_Join
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-    #if PY_MAJOR_VERSION < 3
-    #define __Pyx_PyBytes_Join _PyString_Join
-    #else
-    #define __Pyx_PyBytes_Join _PyBytes_Join
-    #endif
-#else
-static CYTHON_INLINE PyObject* __Pyx_PyBytes_Join(PyObject* sep, PyObject* values);
-#endif
-
 static int __Pyx_SetVtable(PyObject *dict, void *vtable);
 
 typedef struct {
@@ -1241,31 +1357,6 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object);
 
 static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
-
-typedef struct {
-  Py_ssize_t shape, strides, suboffsets;
-} __Pyx_Buf_DimInfo;
-typedef struct {
-  size_t refcount;
-  Py_buffer pybuffer;
-} __Pyx_Buffer;
-typedef struct {
-  __Pyx_Buffer *rcbuffer;
-  char *data;
-  __Pyx_Buf_DimInfo diminfo[8];
-} __Pyx_LocalBuf_ND;
-
-#if PY_MAJOR_VERSION < 3
-    static int __Pyx_GetBuffer(PyObject *obj, Py_buffer *view, int flags);
-    static void __Pyx_ReleaseBuffer(Py_buffer *view);
-#else
-    #define __Pyx_GetBuffer PyObject_GetBuffer
-    #define __Pyx_ReleaseBuffer PyBuffer_Release
-#endif
-
-
-static Py_ssize_t __Pyx_zeros[] = {0, 0, 0, 0, 0, 0, 0, 0};
-static Py_ssize_t __Pyx_minusones[] = {-1, -1, -1, -1, -1, -1, -1, -1};
 
 #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
@@ -1369,6 +1460,60 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
+#if PY_MAJOR_VERSION < 3
+    static int __Pyx_GetBuffer(PyObject *obj, Py_buffer *view, int flags);
+    static void __Pyx_ReleaseBuffer(Py_buffer *view);
+#else
+    #define __Pyx_GetBuffer PyObject_GetBuffer
+    #define __Pyx_ReleaseBuffer PyBuffer_Release
+#endif
+
+
+typedef struct {
+  Py_ssize_t shape, strides, suboffsets;
+} __Pyx_Buf_DimInfo;
+typedef struct {
+  size_t refcount;
+  Py_buffer pybuffer;
+} __Pyx_Buffer;
+typedef struct {
+  __Pyx_Buffer *rcbuffer;
+  char *data;
+  __Pyx_Buf_DimInfo diminfo[8];
+} __Pyx_LocalBuf_ND;
+
+static Py_ssize_t __Pyx_zeros[] = {0, 0, 0, 0, 0, 0, 0, 0};
+static Py_ssize_t __Pyx_minusones[] = {-1, -1, -1, -1, -1, -1, -1, -1};
+
+static CYTHON_INLINE int  __Pyx_GetBufferAndValidate(Py_buffer* buf, PyObject* obj,
+    __Pyx_TypeInfo* dtype, int flags, int nd, int cast, __Pyx_BufFmt_StackElem* stack);
+static CYTHON_INLINE void __Pyx_SafeReleaseBuffer(Py_buffer* info);
+
+#define __Pyx_BUF_MAX_NDIMS %(BUF_MAX_NDIMS)d
+#define __Pyx_MEMVIEW_DIRECT   1
+#define __Pyx_MEMVIEW_PTR      2
+#define __Pyx_MEMVIEW_FULL     4
+#define __Pyx_MEMVIEW_CONTIG   8
+#define __Pyx_MEMVIEW_STRIDED  16
+#define __Pyx_MEMVIEW_FOLLOW   32
+#define __Pyx_IS_C_CONTIG 1
+#define __Pyx_IS_F_CONTIG 2
+static int __Pyx_init_memviewslice(
+                struct __pyx_memoryview_obj *memview,
+                int ndim,
+                __Pyx_memviewslice *memviewslice,
+                int memview_is_new_reference);
+static CYTHON_INLINE int __pyx_add_acquisition_count_locked(
+    __pyx_atomic_int *acquisition_count, PyThread_type_lock lock);
+static CYTHON_INLINE int __pyx_sub_acquisition_count_locked(
+    __pyx_atomic_int *acquisition_count, PyThread_type_lock lock);
+#define __pyx_get_slice_count_pointer(memview) (memview->acquisition_count_aligned_p)
+#define __pyx_get_slice_count(memview) (*__pyx_get_slice_count_pointer(memview))
+#define __PYX_INC_MEMVIEW(slice, have_gil) __Pyx_INC_MEMVIEW(slice, have_gil, __LINE__)
+#define __PYX_XDEC_MEMVIEW(slice, have_gil) __Pyx_XDEC_MEMVIEW(slice, have_gil, __LINE__)
+static CYTHON_INLINE void __Pyx_INC_MEMVIEW(__Pyx_memviewslice *, int, int);
+static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
+
 static int __pyx_memviewslice_is_contig(const __Pyx_memviewslice *mvs,
                                         char order, int ndim);
 
@@ -1390,28 +1535,7 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *);
 
-struct __pyx_typeinfo_string {
-    char string[3];
-};
-static struct __pyx_typeinfo_string __Pyx_TypeInfoToFormat(__Pyx_TypeInfo *type);
-
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
-
-static int __pyx_typeinfo_cmp(__Pyx_TypeInfo *a, __Pyx_TypeInfo *b);
-
-static int __Pyx_ValidateAndInit_memviewslice(
-                int *axes_specs,
-                int c_or_f_flag,
-                int buf_flags,
-                int ndim,
-                __Pyx_TypeInfo *dtype,
-                __Pyx_BufFmt_StackElem stack[],
-                __Pyx_memviewslice *memviewslice,
-                PyObject *original_obj);
-
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(PyObject *);
-
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(PyObject *);
 
 static int __Pyx_check_binary_version(void);
 
@@ -1470,13 +1594,29 @@ static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
 
-/* Module declarations from 'viscid.calculator.cycalc_util' */
+/* Module declarations from 'viscid.calculator.cyfield' */
+static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_CyField = 0;
+static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = 0;
+static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *(*__pyx_f_6viscid_10calculator_7cyfield_make_cyfield)(PyObject *); /*proto*/
 
 /* Module declarations from 'libc.math' */
 
 /* Module declarations from 'viscid.calculator.cycalc' */
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(__Pyx_memviewslice, int, __Pyx_memviewslice *, __Pyx_memviewslice, int *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(__Pyx_memviewslice, int, __Pyx_memviewslice *, __Pyx_memviewslice, int *); /*proto*/
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
 
 /* Module declarations from 'viscid.calculator.integrate' */
 static PyTypeObject *__pyx_array_type = 0;
@@ -1488,18 +1628,38 @@ static PyObject *strided = 0;
 static PyObject *indirect = 0;
 static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_max(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_max(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_min(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_min(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *); /*proto*/
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *); /*proto*/
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *); /*proto*/
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *); /*proto*/
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *); /*proto*/
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *); /*proto*/
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *); /*proto*/
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1532,9 +1692,6 @@ static void __pyx_memoryview_refcount_objects_in_slice_with_gil(char *, Py_ssize
 static void __pyx_memoryview_refcount_objects_in_slice(char *, Py_ssize_t *, Py_ssize_t *, int, int); /*proto*/
 static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size_t, void *, int); /*proto*/
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
-static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t = { "float32_t", NULL, sizeof(__pyx_t_5numpy_float32_t), { 0 }, 0, 'R', 0, 0 };
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t = { "float64_t", NULL, sizeof(__pyx_t_5numpy_float64_t), { 0 }, 0, 'R', 0, 0 };
 #define __Pyx_MODULE_NAME "viscid.calculator.integrate"
 int __pyx_module_is_main_viscid__calculator__integrate = 0;
 
@@ -1592,29 +1749,21 @@ static char __pyx_k_I[] = "I";
 static char __pyx_k_L[] = "L";
 static char __pyx_k_O[] = "O";
 static char __pyx_k_Q[] = "Q";
-static char __pyx_k_T[] = "T{";
-  static char __pyx_k_b[] = "b";
-  static char __pyx_k_c[] = "c";
-  static char __pyx_k_d[] = "d";
-  static char __pyx_k_f[] = "f";
-  static char __pyx_k_g[] = "g";
-  static char __pyx_k_h[] = "h";
-  static char __pyx_k_i[] = "i";
-  static char __pyx_k_l[] = "l";
-  static char __pyx_k_q[] = "q";
-  static char __pyx_k_s[] = "(%s)";
-  static char __pyx_k_Zd[] = "Zd";
-  static char __pyx_k_Zf[] = "Zf";
-  static char __pyx_k_Zg[] = "Zg";
-  static char __pyx_k_id[] = "id";
-  static char __pyx_k__19[] = "^";
-  static char __pyx_k__20[] = "";
-  static char __pyx_k__21[] = ":";
-static char __pyx_k__22[] = "}";
-static char __pyx_k__23[] = ",";
+static char __pyx_k_b[] = "b";
+static char __pyx_k_c[] = "c";
+static char __pyx_k_d[] = "d";
+static char __pyx_k_f[] = "f";
+static char __pyx_k_g[] = "g";
+static char __pyx_k_h[] = "h";
+static char __pyx_k_i[] = "i";
+static char __pyx_k_l[] = "l";
+static char __pyx_k_q[] = "q";
+static char __pyx_k_Zd[] = "Zd";
+static char __pyx_k_Zf[] = "Zf";
+static char __pyx_k_Zg[] = "Zg";
+static char __pyx_k_id[] = "id";
 static char __pyx_k_obj[] = "obj";
 static char __pyx_k_base[] = "base";
-static char __pyx_k_join[] = "join";
 static char __pyx_k_main[] = "__main__";
 static char __pyx_k_mode[] = "mode";
 static char __pyx_k_name[] = "name";
@@ -1665,6 +1814,7 @@ static char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.ar
 static char __pyx_k_ndarray_is_not_C_contiguous[] = "ndarray is not C contiguous";
 static char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
 static char __pyx_k_strided_and_direct_or_indirect[] = "<strided and direct or indirect>";
+static char __pyx_k_3D_Integrators_of_Vector_Fields[] = "3D Integrators of Vector Fields with 3 Components";
 static char __pyx_k_unknown_dtype_code_in_numpy_pxd[] = "unknown dtype code in numpy.pxd (%d)";
 static char __pyx_k_All_dimensions_preceding_dimensi[] = "All dimensions preceding dimension %d must be indexed and not sliced";
 static char __pyx_k_Buffer_view_does_not_expose_stri[] = "Buffer view does not expose strides";
@@ -1699,15 +1849,9 @@ static PyObject *__pyx_kp_u_Non_native_byte_order_not_suppor;
 static PyObject *__pyx_n_b_O;
 static PyObject *__pyx_kp_s_Out_of_bounds_on_buffer_access_a;
 static PyObject *__pyx_n_s_RuntimeError;
-static PyObject *__pyx_kp_b_T;
 static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
 static PyObject *__pyx_n_s_ValueError;
-static PyObject *__pyx_kp_b__19;
-static PyObject *__pyx_kp_b__20;
-static PyObject *__pyx_kp_b__21;
-static PyObject *__pyx_kp_b__22;
-static PyObject *__pyx_kp_u__23;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_base;
 static PyObject *__pyx_n_s_c;
@@ -1727,7 +1871,6 @@ static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
-static PyObject *__pyx_n_s_join;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_memview;
 static PyObject *__pyx_n_s_mode;
@@ -1741,7 +1884,6 @@ static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_pyx_getbuffer;
 static PyObject *__pyx_n_s_pyx_vtable;
 static PyObject *__pyx_n_s_range;
-static PyObject *__pyx_kp_u_s;
 static PyObject *__pyx_n_s_shape;
 static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_start;
@@ -1777,301 +1919,69 @@ static PyObject *__pyx_tuple__12;
 static PyObject *__pyx_tuple__13;
 static PyObject *__pyx_tuple__14;
 static PyObject *__pyx_tuple__18;
-static PyObject *__pyx_tuple__24;
-static PyObject *__pyx_tuple__25;
-static PyObject *__pyx_tuple__26;
-static PyObject *__pyx_tuple__27;
-static PyObject *__pyx_tuple__28;
+static PyObject *__pyx_tuple__19;
+static PyObject *__pyx_tuple__20;
+static PyObject *__pyx_tuple__21;
+static PyObject *__pyx_tuple__22;
+static PyObject *__pyx_tuple__23;
 
-/* "viscid/calculator/integrate.pyx":18
- *     bint isnan(double x)
+/* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
- * cdef inline real_t _c_real_max(real_t a, real_t b):             # <<<<<<<<<<<<<<
- *     if a >= b:
- *         return a
- */
-
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_max(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  __pyx_t_5numpy_float32_t __pyx_r;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_c_real_max", 0);
-
-  /* "viscid/calculator/integrate.pyx":19
- * 
- * cdef inline real_t _c_real_max(real_t a, real_t b):
- *     if a >= b:             # <<<<<<<<<<<<<<
- *         return a
- *     else:
- */
-  __pyx_t_1 = ((__pyx_v_a >= __pyx_v_b) != 0);
-  if (__pyx_t_1) {
-
-    /* "viscid/calculator/integrate.pyx":20
- * cdef inline real_t _c_real_max(real_t a, real_t b):
- *     if a >= b:
- *         return a             # <<<<<<<<<<<<<<
- *     else:
- *         return b
- */
-    __pyx_r = __pyx_v_a;
-    goto __pyx_L0;
-  }
-  /*else*/ {
-
-    /* "viscid/calculator/integrate.pyx":22
- *         return a
- *     else:
- *         return b             # <<<<<<<<<<<<<<
- * 
- * cdef inline real_t _c_real_min(real_t a, real_t b):
- */
-    __pyx_r = __pyx_v_b;
-    goto __pyx_L0;
-  }
-
-  /* "viscid/calculator/integrate.pyx":18
- *     bint isnan(double x)
- * 
- * cdef inline real_t _c_real_max(real_t a, real_t b):             # <<<<<<<<<<<<<<
- *     if a >= b:
- *         return a
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_max(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  __pyx_t_5numpy_float64_t __pyx_r;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_c_real_max", 0);
-
-  /* "viscid/calculator/integrate.pyx":19
- * 
- * cdef inline real_t _c_real_max(real_t a, real_t b):
- *     if a >= b:             # <<<<<<<<<<<<<<
- *         return a
- *     else:
- */
-  __pyx_t_1 = ((__pyx_v_a >= __pyx_v_b) != 0);
-  if (__pyx_t_1) {
-
-    /* "viscid/calculator/integrate.pyx":20
- * cdef inline real_t _c_real_max(real_t a, real_t b):
- *     if a >= b:
- *         return a             # <<<<<<<<<<<<<<
- *     else:
- *         return b
- */
-    __pyx_r = __pyx_v_a;
-    goto __pyx_L0;
-  }
-  /*else*/ {
-
-    /* "viscid/calculator/integrate.pyx":22
- *         return a
- *     else:
- *         return b             # <<<<<<<<<<<<<<
- * 
- * cdef inline real_t _c_real_min(real_t a, real_t b):
- */
-    __pyx_r = __pyx_v_b;
-    goto __pyx_L0;
-  }
-
-  /* "viscid/calculator/integrate.pyx":18
- *     bint isnan(double x)
- * 
- * cdef inline real_t _c_real_max(real_t a, real_t b):             # <<<<<<<<<<<<<<
- *     if a >= b:
- *         return a
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "viscid/calculator/integrate.pyx":24
- *         return b
- * 
- * cdef inline real_t _c_real_min(real_t a, real_t b):             # <<<<<<<<<<<<<<
- *     if a <= b:
- *         return a
- */
-
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_min(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  __pyx_t_5numpy_float32_t __pyx_r;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_c_real_min", 0);
-
-  /* "viscid/calculator/integrate.pyx":25
- * 
- * cdef inline real_t _c_real_min(real_t a, real_t b):
- *     if a <= b:             # <<<<<<<<<<<<<<
- *         return a
- *     else:
- */
-  __pyx_t_1 = ((__pyx_v_a <= __pyx_v_b) != 0);
-  if (__pyx_t_1) {
-
-    /* "viscid/calculator/integrate.pyx":26
- * cdef inline real_t _c_real_min(real_t a, real_t b):
- *     if a <= b:
- *         return a             # <<<<<<<<<<<<<<
- *     else:
- *         return b
- */
-    __pyx_r = __pyx_v_a;
-    goto __pyx_L0;
-  }
-  /*else*/ {
-
-    /* "viscid/calculator/integrate.pyx":28
- *         return a
- *     else:
- *         return b             # <<<<<<<<<<<<<<
- * 
- * #####################
- */
-    __pyx_r = __pyx_v_b;
-    goto __pyx_L0;
-  }
-
-  /* "viscid/calculator/integrate.pyx":24
- *         return b
- * 
- * cdef inline real_t _c_real_min(real_t a, real_t b):             # <<<<<<<<<<<<<<
- *     if a <= b:
- *         return a
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_min(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  __pyx_t_5numpy_float64_t __pyx_r;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_c_real_min", 0);
-
-  /* "viscid/calculator/integrate.pyx":25
- * 
- * cdef inline real_t _c_real_min(real_t a, real_t b):
- *     if a <= b:             # <<<<<<<<<<<<<<
- *         return a
- *     else:
- */
-  __pyx_t_1 = ((__pyx_v_a <= __pyx_v_b) != 0);
-  if (__pyx_t_1) {
-
-    /* "viscid/calculator/integrate.pyx":26
- * cdef inline real_t _c_real_min(real_t a, real_t b):
- *     if a <= b:
- *         return a             # <<<<<<<<<<<<<<
- *     else:
- *         return b
- */
-    __pyx_r = __pyx_v_a;
-    goto __pyx_L0;
-  }
-  /*else*/ {
-
-    /* "viscid/calculator/integrate.pyx":28
- *         return a
- *     else:
- *         return b             # <<<<<<<<<<<<<<
- * 
- * #####################
- */
-    __pyx_r = __pyx_v_b;
-    goto __pyx_L0;
-  }
-
-  /* "viscid/calculator/integrate.pyx":24
- *         return b
- * 
- * cdef inline real_t _c_real_min(real_t a, real_t b):             # <<<<<<<<<<<<<<
- *     if a <= b:
- *         return a
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "viscid/calculator/integrate.pyx":33
- * # now the good stuff
- * 
- * cdef int _c_euler1(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                    real_t *ds, real_t[:] x,
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float32_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
-  __pyx_t_5numpy_float32_t __pyx_v_vx;
-  __pyx_t_5numpy_float32_t __pyx_v_vy;
-  __pyx_t_5numpy_float32_t __pyx_v_vz;
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_c_euler1", 0);
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":40
- *                    int start_inds[3]) except -1:
- *     cdef real_t vx, vy, vz, vmag
- *     vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)             # <<<<<<<<<<<<<<
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  __pyx_v_vx = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x, __pyx_v_start_inds);
+  (__pyx_v_v[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":41
- *     cdef real_t vx, vy, vz, vmag
- *     vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)             # <<<<<<<<<<<<<<
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  __pyx_v_vy = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x, __pyx_v_start_inds);
+  (__pyx_v_v[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":42
- *     vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)             # <<<<<<<<<<<<<<
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  __pyx_v_vz = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x, __pyx_v_start_inds);
+  (__pyx_v_v[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  */
-  __pyx_v_vmag = sqrt(((powf(__pyx_v_vx, 2.0) + powf(__pyx_v_vy, 2.0)) + powf(__pyx_v_vz, 2.0)));
+  __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":44
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
@@ -2087,63 +1997,63 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_m
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":47
+    /* "viscid/calculator/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
- *     x[0] += deref(ds) * vz / vmag
- *     x[1] += deref(ds) * vy / vmag
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
  */
     __pyx_r = 1;
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":48
+  /* "viscid/calculator/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
- *     x[0] += deref(ds) * vz / vmag             # <<<<<<<<<<<<<<
- *     x[1] += deref(ds) * vy / vmag
- *     x[2] += deref(ds) * vx / vmag
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
  */
   __pyx_t_3 = 0;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_3 * __pyx_v_x.strides[0]) )) += (((*__pyx_v_ds) * __pyx_v_vz) / __pyx_v_vmag);
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":49
+  /* "viscid/calculator/integrate.pyx":28
  *         return 1
- *     x[0] += deref(ds) * vz / vmag
- *     x[1] += deref(ds) * vy / vmag             # <<<<<<<<<<<<<<
- *     x[2] += deref(ds) * vx / vmag
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
  *     return 0
  */
-  __pyx_t_4 = 1;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_4 * __pyx_v_x.strides[0]) )) += (((*__pyx_v_ds) * __pyx_v_vy) / __pyx_v_vmag);
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":50
- *     x[0] += deref(ds) * vz / vmag
- *     x[1] += deref(ds) * vy / vmag
- *     x[2] += deref(ds) * vx / vmag             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_5 = 2;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_5 * __pyx_v_x.strides[0]) )) += (((*__pyx_v_ds) * __pyx_v_vx) / __pyx_v_vmag);
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":51
- *     x[1] += deref(ds) * vy / vmag
- *     x[2] += deref(ds) * vx / vmag
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
  * 
- * cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
  */
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":33
- * # now the good stuff
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
- * cdef int _c_euler1(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                    real_t *ds, real_t[:] x,
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
@@ -2152,59 +2062,55 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_m
   return __pyx_r;
 }
 
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float64_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
-  __pyx_t_5numpy_float64_t __pyx_v_vx;
-  __pyx_t_5numpy_float64_t __pyx_v_vy;
-  __pyx_t_5numpy_float64_t __pyx_v_vz;
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_c_euler1", 0);
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":40
- *                    int start_inds[3]) except -1:
- *     cdef real_t vx, vy, vz, vmag
- *     vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)             # <<<<<<<<<<<<<<
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  __pyx_v_vx = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x, __pyx_v_start_inds);
+  (__pyx_v_v[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":41
- *     cdef real_t vx, vy, vz, vmag
- *     vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)             # <<<<<<<<<<<<<<
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  __pyx_v_vy = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x, __pyx_v_start_inds);
+  (__pyx_v_v[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":42
- *     vx = _c_interp_trilin[real_t](s, 0, crds, x, start_inds)
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)             # <<<<<<<<<<<<<<
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  __pyx_v_vz = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x, __pyx_v_start_inds);
+  (__pyx_v_v[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
- *     vy = _c_interp_trilin[real_t](s, 1, crds, x, start_inds)
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  */
-  __pyx_v_vmag = sqrt(((pow(__pyx_v_vx, 2.0) + pow(__pyx_v_vy, 2.0)) + pow(__pyx_v_vz, 2.0)));
+  __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":44
- *     vz = _c_interp_trilin[real_t](s, 2, crds, x, start_inds)
- *     vmag = sqrt(vx**2 + vy**2 + vz**2)
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
@@ -2220,63 +2126,63 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_m
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":47
+    /* "viscid/calculator/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
- *     x[0] += deref(ds) * vz / vmag
- *     x[1] += deref(ds) * vy / vmag
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
  */
     __pyx_r = 1;
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":48
+  /* "viscid/calculator/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
- *     x[0] += deref(ds) * vz / vmag             # <<<<<<<<<<<<<<
- *     x[1] += deref(ds) * vy / vmag
- *     x[2] += deref(ds) * vx / vmag
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
  */
   __pyx_t_3 = 0;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_3 * __pyx_v_x.strides[0]) )) += (((*__pyx_v_ds) * __pyx_v_vz) / __pyx_v_vmag);
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":49
+  /* "viscid/calculator/integrate.pyx":28
  *         return 1
- *     x[0] += deref(ds) * vz / vmag
- *     x[1] += deref(ds) * vy / vmag             # <<<<<<<<<<<<<<
- *     x[2] += deref(ds) * vx / vmag
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
  *     return 0
  */
-  __pyx_t_4 = 1;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_4 * __pyx_v_x.strides[0]) )) += (((*__pyx_v_ds) * __pyx_v_vy) / __pyx_v_vmag);
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":50
- *     x[0] += deref(ds) * vz / vmag
- *     x[1] += deref(ds) * vy / vmag
- *     x[2] += deref(ds) * vx / vmag             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_5 = 2;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_5 * __pyx_v_x.strides[0]) )) += (((*__pyx_v_ds) * __pyx_v_vx) / __pyx_v_vmag);
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":51
- *     x[1] += deref(ds) * vy / vmag
- *     x[2] += deref(ds) * vx / vmag
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
  * 
- * cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
  */
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":33
- * # now the good stuff
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
- * cdef int _c_euler1(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                    real_t *ds, real_t[:] x,
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
@@ -2285,15 +2191,789 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(__Pyx_m
   return __pyx_r;
 }
 
-/* "viscid/calculator/integrate.pyx":53
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_v[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_euler1", 0);
+
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ */
+  (__pyx_v_v[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):
+ */
+  (__pyx_v_v[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
+ *     if vmag == 0.0 or isnan(vmag):
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ */
+  __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ */
+  __pyx_t_2 = ((__pyx_v_vmag == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":26
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":27
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":28
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
  *     return 0
  * 
- * cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                 real_t *ds, real_t[:] x0,
- *                 real_t tol_lo, real_t tol_hi,
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
+ * 
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float32_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x0, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_v[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_euler1", 0);
+
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ */
+  (__pyx_v_v[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):
+ */
+  (__pyx_v_v[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
+ *     if vmag == 0.0 or isnan(vmag):
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ */
+  __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ */
+  __pyx_t_2 = ((__pyx_v_vmag == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":26
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":27
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":28
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
+ * 
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_v[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_euler1", 0);
+
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ */
+  (__pyx_v_v[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):
+ */
+  (__pyx_v_v[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
+ *     if vmag == 0.0 or isnan(vmag):
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ */
+  __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ */
+  __pyx_t_2 = ((__pyx_v_vmag == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":26
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":27
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":28
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
+ * 
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_v[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_euler1", 0);
+
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ */
+  (__pyx_v_v[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):
+ */
+  (__pyx_v_v[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
+ *     if vmag == 0.0 or isnan(vmag):
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ */
+  __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ */
+  __pyx_t_2 = ((__pyx_v_vmag == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":26
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":27
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":28
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
+ * 
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_v[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_euler1", 0);
+
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ */
+  (__pyx_v_v[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):
+ */
+  (__pyx_v_v[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
+ *     if vmag == 0.0 or isnan(vmag):
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ */
+  __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ */
+  __pyx_t_2 = ((__pyx_v_vmag == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":26
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":27
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":28
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
+ * 
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_v[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_euler1", 0);
+
+  /* "viscid/calculator/integrate.pyx":19
+ *     cdef real_t v[3]
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":20
+ *     cdef real_t vmag
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ */
+  (__pyx_v_v[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":21
+ *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):
+ */
+  (__pyx_v_v[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":22
+ *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
+ *     if vmag == 0.0 or isnan(vmag):
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ */
+  __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":23
+ *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
+ *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ */
+  __pyx_t_2 = ((__pyx_v_vmag == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":26
+ *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":27
+ *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":28
+ *         return 1
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":29
+ *     x[0] += deref(ds) * v[2] / vmag
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
+
+  /* "viscid/calculator/integrate.pyx":30
+ *     x[1] += deref(ds) * v[1] / vmag
+ *     x[2] += deref(ds) * v[0] / vmag
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":12
+ * from cycalc cimport _c_interp_trilin, real_min, real_max
+ * 
+ * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                    real_t tol_lo, real_t tol_hi,
+ *                    real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "viscid/calculator/integrate.pyx":32
+ *     return 0
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
+ */
+
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -2304,71 +2984,59 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memv
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  struct __pyx_array_obj *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_c_rk2", 0);
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":63
- *     cdef real_t[3] v1
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/calculator/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+  (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/calculator/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+  (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":66
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *     # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+  (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":67
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
- *     # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
  */
   __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":69
+  /* "viscid/calculator/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *     # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
- *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  */
   __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
@@ -2382,126 +3050,81 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memv
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":71
+    /* "viscid/calculator/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
- *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  */
     __pyx_r = 1;
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":72
- *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  */
-  __pyx_t_3 = 0;
-  (__pyx_v_x1[0]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_3 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":73
+  /* "viscid/calculator/integrate.pyx":51
  *         return 1
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  */
-  __pyx_t_4 = 1;
-  (__pyx_v_x1[1]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_4 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":74
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  */
-  __pyx_t_5 = 2;
-  (__pyx_v_x1[2]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_5 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":76
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-  __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-  if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-  if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_6));
-  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-  (__pyx_v_v1[2]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+  (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":77
+  /* "viscid/calculator/integrate.pyx":55
  * 
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  __pyx_t_7 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-  __pyx_t_8 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-  if (unlikely(!__pyx_t_7 || !__pyx_t_8 || !PyBytes_AsString(__pyx_t_7))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_6 = __pyx_array_new(__pyx_t_8, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_7), (char *) "fortran", (char *) __pyx_v_x1);
-  if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_6));
-  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-  (__pyx_v_v1[1]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+  (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":78
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-  __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-  if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-  if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_6));
-  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-  (__pyx_v_v1[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+  (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":79
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
  */
   __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":81
+  /* "viscid/calculator/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -2519,79 +3142,72 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memv
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":83
+    /* "viscid/calculator/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
- *     x0[0] += deref(ds) * v1[0] / vmag1
- *     x0[1] += deref(ds) * v1[1] / vmag1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
  */
     __pyx_r = 1;
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":84
+  /* "viscid/calculator/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
- *     x0[0] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
- *     x0[1] += deref(ds) * v1[1] / vmag1
- *     x0[2] += deref(ds) * v1[2] / vmag1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
  */
-  __pyx_t_10 = 0;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_10 * __pyx_v_x0.strides[0]) )) += (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1);
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":85
+  /* "viscid/calculator/integrate.pyx":63
  *         return 1
- *     x0[0] += deref(ds) * v1[0] / vmag1
- *     x0[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
- *     x0[2] += deref(ds) * v1[2] / vmag1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0
  */
-  __pyx_t_11 = 1;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_11 * __pyx_v_x0.strides[0]) )) += (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1);
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":86
- *     x0[0] += deref(ds) * v1[0] / vmag1
- *     x0[1] += deref(ds) * v1[1] / vmag1
- *     x0[2] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_12 = 2;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_12 * __pyx_v_x0.strides[0]) )) += (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1);
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":87
- *     x0[1] += deref(ds) * v1[1] / vmag1
- *     x0[2] += deref(ds) * v1[2] / vmag1
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
  * 
- * cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
  */
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":53
+  /* "viscid/calculator/integrate.pyx":32
  *     return 0
  * 
- * cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                 real_t *ds, real_t[:] x0,
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(((PyObject *)__pyx_t_6));
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __Pyx_AddTraceback("viscid.calculator.integrate._c_rk2", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float64_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x0, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -2602,71 +3218,59 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memv
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  struct __pyx_array_obj *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_c_rk2", 0);
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":63
- *     cdef real_t[3] v1
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/calculator/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+  (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/calculator/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+  (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":66
- *     v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *     # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+  (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":67
- *     v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *     v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
- *     # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
  */
   __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":69
+  /* "viscid/calculator/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *     # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
- *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  */
   __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
@@ -2680,126 +3284,81 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memv
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":71
+    /* "viscid/calculator/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
- *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  */
     __pyx_r = 1;
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":72
- *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  */
-  __pyx_t_3 = 0;
-  (__pyx_v_x1[0]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_3 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":73
+  /* "viscid/calculator/integrate.pyx":51
  *         return 1
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  */
-  __pyx_t_4 = 1;
-  (__pyx_v_x1[1]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_4 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":74
- *     x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *     x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  */
-  __pyx_t_5 = 2;
-  (__pyx_v_x1[2]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_5 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":76
- *     x1[2] = x0[2] + ds_half * v0[2] / vmag0
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-  __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-  if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-  if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_6));
-  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-  (__pyx_v_v1[2]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+  (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":77
+  /* "viscid/calculator/integrate.pyx":55
  * 
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  __pyx_t_7 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-  __pyx_t_8 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-  if (unlikely(!__pyx_t_7 || !__pyx_t_8 || !PyBytes_AsString(__pyx_t_7))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_6 = __pyx_array_new(__pyx_t_8, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_7), (char *) "fortran", (char *) __pyx_v_x1);
-  if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_6));
-  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-  (__pyx_v_v1[1]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+  (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":78
- *     v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-  __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-  if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-  if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_6));
-  if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-  (__pyx_v_v1[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+  (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":79
- *     v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *     v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
  */
   __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":81
+  /* "viscid/calculator/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -2817,87 +3376,1484 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(__Pyx_memv
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":83
+    /* "viscid/calculator/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
- *     x0[0] += deref(ds) * v1[0] / vmag1
- *     x0[1] += deref(ds) * v1[1] / vmag1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
  */
     __pyx_r = 1;
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":84
+  /* "viscid/calculator/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
- *     x0[0] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
- *     x0[1] += deref(ds) * v1[1] / vmag1
- *     x0[2] += deref(ds) * v1[2] / vmag1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
  */
-  __pyx_t_10 = 0;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_10 * __pyx_v_x0.strides[0]) )) += (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1);
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":85
+  /* "viscid/calculator/integrate.pyx":63
  *         return 1
- *     x0[0] += deref(ds) * v1[0] / vmag1
- *     x0[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
- *     x0[2] += deref(ds) * v1[2] / vmag1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0
  */
-  __pyx_t_11 = 1;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_11 * __pyx_v_x0.strides[0]) )) += (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1);
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":86
- *     x0[0] += deref(ds) * v1[0] / vmag1
- *     x0[1] += deref(ds) * v1[1] / vmag1
- *     x0[2] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_12 = 2;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_12 * __pyx_v_x0.strides[0]) )) += (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1);
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":87
- *     x0[1] += deref(ds) * v1[1] / vmag1
- *     x0[2] += deref(ds) * v1[2] / vmag1
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
  * 
- * cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
  */
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":53
+  /* "viscid/calculator/integrate.pyx":32
  *     return 0
  * 
- * cdef int _c_rk2(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                 real_t *ds, real_t[:] x0,
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(((PyObject *)__pyx_t_6));
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __Pyx_AddTraceback("viscid.calculator.integrate._c_rk2", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "viscid/calculator/integrate.pyx":89
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_rk2", 0);
+
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ */
+  __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+  /* "viscid/calculator/integrate.pyx":42
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":43
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+  (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+  (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ */
+  __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":47
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":49
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":51
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ */
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+  (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":55
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+  (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+  (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ */
+  __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":59
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":61
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":62
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":63
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
  *     return 0
  * 
- * cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                  real_t *ds, real_t[:] x0,
- *                  real_t tol_lo, real_t tol_hi,
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":32
+ *     return 0
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float32_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x0, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_rk2", 0);
+
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ */
+  __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+  /* "viscid/calculator/integrate.pyx":42
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":43
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+  (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+  (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ */
+  __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":47
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":49
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":51
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ */
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+  (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":55
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+  (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+  (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ */
+  __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":59
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":61
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":62
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":63
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":32
+ *     return 0
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_rk2", 0);
+
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ */
+  __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+  /* "viscid/calculator/integrate.pyx":42
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":43
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+  (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+  (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ */
+  __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":47
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":49
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":51
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ */
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+  (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":55
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+  (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+  (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ */
+  __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":59
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":61
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":62
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":63
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":32
+ *     return 0
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_rk2", 0);
+
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ */
+  __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+  /* "viscid/calculator/integrate.pyx":42
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":43
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+  (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+  (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ */
+  __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":47
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":49
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":51
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ */
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+  (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":55
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+  (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+  (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ */
+  __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":59
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":61
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":62
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":63
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":32
+ *     return 0
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_rk2", 0);
+
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ */
+  __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+  /* "viscid/calculator/integrate.pyx":42
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":43
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+  (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+  (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ */
+  __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":47
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":49
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":51
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ */
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+  (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":55
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+  (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+  (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ */
+  __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":59
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":61
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":62
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":63
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":32
+ *     return 0
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  long __pyx_t_3;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_rk2", 0);
+
+  /* "viscid/calculator/integrate.pyx":41
+ *     cdef real_t v1[3]
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ */
+  __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+  /* "viscid/calculator/integrate.pyx":42
+ *     cdef real_t vmag0, vmag1
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+  (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":43
+ *     cdef real_t ds_half = 0.5 * deref(ds)
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+  (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":44
+ *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+  (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+  /* "viscid/calculator/integrate.pyx":45
+ *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ */
+  __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":47
+ *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L4_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L4_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":49
+ *     if vmag0 == 0.0 or isnan(vmag0):
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":50
+ *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+  (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":51
+ *         return 1
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+  (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":52
+ *     x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *     x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ */
+  (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+  /* "viscid/calculator/integrate.pyx":54
+ *     x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+  (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":55
+ * 
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+  (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":56
+ *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+  (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+  /* "viscid/calculator/integrate.pyx":57
+ *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ */
+  __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+  /* "viscid/calculator/integrate.pyx":59
+ *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ */
+  __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L7_bool_binop_done;
+  }
+  __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L7_bool_binop_done:;
+  if (__pyx_t_1) {
+
+    /* "viscid/calculator/integrate.pyx":61
+ *     if vmag1 == 0.0 or isnan(vmag1):
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1             # <<<<<<<<<<<<<<
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ */
+    __pyx_r = 1;
+    goto __pyx_L0;
+  }
+
+  /* "viscid/calculator/integrate.pyx":62
+ *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ */
+  __pyx_t_3 = 0;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":63
+ *         return 1
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0
+ */
+  __pyx_t_3 = 1;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":64
+ *     x[0] += deref(ds) * v1[2] / vmag1
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  __pyx_t_3 = 2;
+  (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+  /* "viscid/calculator/integrate.pyx":65
+ *     x[1] += deref(ds) * v1[1] / vmag1
+ *     x[2] += deref(ds) * v1[0] / vmag1
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":32
+ *     return 0
+ * 
+ * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                 real_t tol_lo, real_t tol_hi,
+ *                 real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "viscid/calculator/integrate.pyx":67
+ *     return 0
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
+ */
+
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -2911,28 +4867,9 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  Py_ssize_t __pyx_t_6;
-  Py_ssize_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  struct __pyx_array_obj *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *__pyx_t_11 = NULL;
-  __Pyx_memviewslice __pyx_t_12 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
-  Py_ssize_t __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_c_rk12", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":104
+  /* "viscid/calculator/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -2941,7 +4878,7 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/calculator/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -2950,47 +4887,47 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/calculator/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":109
+    /* "viscid/calculator/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":110
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":111
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
- *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/calculator/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
- *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1
  */
     __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
@@ -3004,156 +4941,108 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":115
+      /* "viscid/calculator/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
- *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
  * 
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/calculator/integrate.pyx":96
  *             return 1
  * 
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *         x_first[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  */
-    __pyx_t_3 = 0;
-    (__pyx_v_x_first[0]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_3 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":118
+    /* "viscid/calculator/integrate.pyx":97
  * 
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x_first[1] = x0[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0
- * 
- */
-    __pyx_t_4 = 1;
-    (__pyx_v_x_first[1]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_4 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
-
-    /* "viscid/calculator/integrate.pyx":119
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x_first[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
- * 
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0
- */
-    __pyx_t_5 = 2;
-    (__pyx_v_x_first[2]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_5 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
-
-    /* "viscid/calculator/integrate.pyx":121
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0
- * 
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *         x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *         x1[2] = x0[2] + ds_half * v0[2] / vmag0
- */
-    __pyx_t_6 = 0;
-    (__pyx_v_x1[0]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_6 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
-
-    /* "viscid/calculator/integrate.pyx":122
- * 
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *         x1[1] = x0[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *         x1[2] = x0[2] + ds_half * v0[2] / vmag0
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  */
-    __pyx_t_7 = 1;
-    (__pyx_v_x1[1]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_7 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":123
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *         x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *         x1[2] = x0[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  */
-    __pyx_t_8 = 2;
-    (__pyx_v_x1[2]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_8 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":126
+    /* "viscid/calculator/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-    __pyx_t_10 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_11 || !__pyx_t_10 || !PyBytes_AsString(__pyx_t_11))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 126; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_9 = __pyx_array_new(__pyx_t_10, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_11), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 126; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_9));
-    if (unlikely(!__pyx_t_12.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 126; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_9)); __pyx_t_9 = 0;
-    (__pyx_v_v1[2]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_t_12, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":127
+    /* "viscid/calculator/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    __pyx_t_10 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-    __pyx_t_11 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_10 || !__pyx_t_11 || !PyBytes_AsString(__pyx_t_10))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_9 = __pyx_array_new(__pyx_t_11, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_10), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_9));
-    if (unlikely(!__pyx_t_12.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_9)); __pyx_t_9 = 0;
-    (__pyx_v_v1[1]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_t_12, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":128
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-    __pyx_t_10 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_11 || !__pyx_t_10 || !PyBytes_AsString(__pyx_t_11))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_9 = __pyx_array_new(__pyx_t_10, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_11), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_9));
-    if (unlikely(!__pyx_t_12.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_9)); __pyx_t_9 = 0;
-    (__pyx_v_v1[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_t_12, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":129
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":131
+    /* "viscid/calculator/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -3171,49 +5060,46 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/calculator/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":134
+    /* "viscid/calculator/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  */
-    __pyx_t_13 = 0;
-    (__pyx_v_x_second[0]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_13 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":135
+    /* "viscid/calculator/integrate.pyx":114
  *             return 1
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  */
-    __pyx_t_14 = 1;
-    (__pyx_v_x_second[1]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_14 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":136
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \
  */
-    __pyx_t_15 = 2;
-    (__pyx_v_x_second[2]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_15 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":138
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
  *                     (x_second[1] - x_first[1])**2 + \
@@ -3221,7 +5107,7 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":142
+    /* "viscid/calculator/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -3231,7 +5117,7 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":145
+      /* "viscid/calculator/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -3241,29 +5127,29 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":146
+        /* "viscid/calculator/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  */
         goto __pyx_L4_break;
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":148
+        /* "viscid/calculator/integrate.pyx":127
  *                 break
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":149
+        /* "viscid/calculator/integrate.pyx":128
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
  *         elif dist < tol_lo * fabs(deref(ds)):
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -3272,8 +5158,8 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":150
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -3282,18 +5168,18 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":153
+      /* "viscid/calculator/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":154
+      /* "viscid/calculator/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
  *         else:
  *             break
@@ -3302,12 +5188,12 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":156
+      /* "viscid/calculator/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
  * 
- *     x0[0] = x_second[0]
+ *     x[0] = x_second[0]
  */
       goto __pyx_L4_break;
     }
@@ -3315,68 +5201,58 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":158
+  /* "viscid/calculator/integrate.pyx":137
  *             break
  * 
- *     x0[0] = x_second[0]             # <<<<<<<<<<<<<<
- *     x0[1] = x_second[1]
- *     x0[2] = x_second[2]
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
  */
-  __pyx_t_16 = 0;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_16 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x_second[0]);
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":159
+  /* "viscid/calculator/integrate.pyx":138
  * 
- *     x0[0] = x_second[0]
- *     x0[1] = x_second[1]             # <<<<<<<<<<<<<<
- *     x0[2] = x_second[2]
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
  *     return 0
  */
-  __pyx_t_17 = 1;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_17 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x_second[1]);
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":160
- *     x0[0] = x_second[0]
- *     x0[1] = x_second[1]
- *     x0[2] = x_second[2]             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_18 = 2;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_18 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x_second[2]);
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":161
- *     x0[1] = x_second[1]
- *     x0[2] = x_second[2]
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
  * 
- * cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
+ * 
  */
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":89
+  /* "viscid/calculator/integrate.pyx":67
  *     return 0
  * 
- * cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                  real_t *ds, real_t[:] x0,
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(((PyObject *)__pyx_t_9));
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_11);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
-  __Pyx_AddTraceback("viscid.calculator.integrate._c_rk12", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float64_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x0, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -3390,28 +5266,9 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  Py_ssize_t __pyx_t_6;
-  Py_ssize_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  struct __pyx_array_obj *__pyx_t_9 = NULL;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *__pyx_t_11 = NULL;
-  __Pyx_memviewslice __pyx_t_12 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
-  Py_ssize_t __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_c_rk12", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":104
+  /* "viscid/calculator/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -3420,7 +5277,7 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/calculator/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -3429,47 +5286,47 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/calculator/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":109
+    /* "viscid/calculator/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":110
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":111
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
- *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/calculator/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
- *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
- *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1
  */
     __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
@@ -3483,156 +5340,108 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":115
+      /* "viscid/calculator/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
- *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
  * 
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/calculator/integrate.pyx":96
  *             return 1
  * 
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *         x_first[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  */
-    __pyx_t_3 = 0;
-    (__pyx_v_x_first[0]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_3 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":118
+    /* "viscid/calculator/integrate.pyx":97
  * 
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x_first[1] = x0[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0
- * 
- */
-    __pyx_t_4 = 1;
-    (__pyx_v_x_first[1]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_4 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
-
-    /* "viscid/calculator/integrate.pyx":119
- *         x_first[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x_first[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
- * 
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0
- */
-    __pyx_t_5 = 2;
-    (__pyx_v_x_first[2]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_5 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
-
-    /* "viscid/calculator/integrate.pyx":121
- *         x_first[2] = x0[2] + deref(ds) * v0[2] / vmag0
- * 
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *         x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *         x1[2] = x0[2] + ds_half * v0[2] / vmag0
- */
-    __pyx_t_6 = 0;
-    (__pyx_v_x1[0]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_6 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
-
-    /* "viscid/calculator/integrate.pyx":122
- * 
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *         x1[1] = x0[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *         x1[2] = x0[2] + ds_half * v0[2] / vmag0
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  */
-    __pyx_t_7 = 1;
-    (__pyx_v_x1[1]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_7 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":123
- *         x1[0] = x0[0] + ds_half * v0[0] / vmag0
- *         x1[1] = x0[1] + ds_half * v0[1] / vmag0
- *         x1[2] = x0[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  */
-    __pyx_t_8 = 2;
-    (__pyx_v_x1[2]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_8 * __pyx_v_x0.strides[0]) ))) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":126
+    /* "viscid/calculator/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-    __pyx_t_10 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_11 || !__pyx_t_10 || !PyBytes_AsString(__pyx_t_11))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 126; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_9 = __pyx_array_new(__pyx_t_10, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_11), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 126; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_9));
-    if (unlikely(!__pyx_t_12.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 126; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_9)); __pyx_t_9 = 0;
-    (__pyx_v_v1[2]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_t_12, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":127
+    /* "viscid/calculator/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    __pyx_t_10 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-    __pyx_t_11 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_10 || !__pyx_t_11 || !PyBytes_AsString(__pyx_t_10))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_9 = __pyx_array_new(__pyx_t_11, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_10), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_9));
-    if (unlikely(!__pyx_t_12.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_9)); __pyx_t_9 = 0;
-    (__pyx_v_v1[1]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_t_12, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":128
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-    __pyx_t_10 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_11 || !__pyx_t_10 || !PyBytes_AsString(__pyx_t_11))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_9 = __pyx_array_new(__pyx_t_10, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_11), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_12 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_9));
-    if (unlikely(!__pyx_t_12.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_9)); __pyx_t_9 = 0;
-    (__pyx_v_v1[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_t_12, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":129
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":131
+    /* "viscid/calculator/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -3650,49 +5459,46 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/calculator/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":134
+    /* "viscid/calculator/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  */
-    __pyx_t_13 = 0;
-    (__pyx_v_x_second[0]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_13 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":135
+    /* "viscid/calculator/integrate.pyx":114
  *             return 1
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  */
-    __pyx_t_14 = 1;
-    (__pyx_v_x_second[1]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_14 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":136
- *         x_second[0] = x0[0] + deref(ds) * v1[0] / vmag1
- *         x_second[1] = x0[1] + deref(ds) * v1[1] / vmag1
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \
  */
-    __pyx_t_15 = 2;
-    (__pyx_v_x_second[2]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_15 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":138
- *         x_second[2] = x0[2] + deref(ds) * v1[2] / vmag1
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
  *                     (x_second[1] - x_first[1])**2 + \
@@ -3700,7 +5506,7 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":142
+    /* "viscid/calculator/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -3710,7 +5516,7 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":145
+      /* "viscid/calculator/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -3720,29 +5526,29 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":146
+        /* "viscid/calculator/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  */
         goto __pyx_L4_break;
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":148
+        /* "viscid/calculator/integrate.pyx":127
  *                 break
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":149
+        /* "viscid/calculator/integrate.pyx":128
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
  *         elif dist < tol_lo * fabs(deref(ds)):
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -3751,8 +5557,8 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":150
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -3761,18 +5567,18 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":153
+      /* "viscid/calculator/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":154
+      /* "viscid/calculator/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
  *         else:
  *             break
@@ -3781,12 +5587,12 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":156
+      /* "viscid/calculator/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
  * 
- *     x0[0] = x_second[0]
+ *     x[0] = x_second[0]
  */
       goto __pyx_L4_break;
     }
@@ -3794,76 +5600,2460 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(__Pyx_mem
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":158
+  /* "viscid/calculator/integrate.pyx":137
  *             break
  * 
- *     x0[0] = x_second[0]             # <<<<<<<<<<<<<<
- *     x0[1] = x_second[1]
- *     x0[2] = x_second[2]
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
  */
-  __pyx_t_16 = 0;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_16 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x_second[0]);
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":159
+  /* "viscid/calculator/integrate.pyx":138
  * 
- *     x0[0] = x_second[0]
- *     x0[1] = x_second[1]             # <<<<<<<<<<<<<<
- *     x0[2] = x_second[2]
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
  *     return 0
  */
-  __pyx_t_17 = 1;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_17 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x_second[1]);
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":160
- *     x0[0] = x_second[0]
- *     x0[1] = x_second[1]
- *     x0[2] = x_second[2]             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_18 = 2;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_18 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x_second[2]);
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":161
- *     x0[1] = x_second[1]
- *     x0[2] = x_second[2]
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
  * 
- * cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,
+ * 
  */
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":89
+  /* "viscid/calculator/integrate.pyx":67
  *     return 0
  * 
- * cdef int _c_rk12(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                  real_t *ds, real_t[:] x0,
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(((PyObject *)__pyx_t_9));
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_11);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
-  __Pyx_AddTraceback("viscid.calculator.integrate._c_rk12", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "viscid/calculator/integrate.pyx":163
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x_first[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x_second[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_dist;
+  __pyx_t_5numpy_float32_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_rk12", 0);
+
+  /* "viscid/calculator/integrate.pyx":83
+ *     cdef real_t ds_half
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         ds_half = 0.5 * deref(ds)
+ * 
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":84
+ * 
+ *     while True:
+ *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ */
+    __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+    /* "viscid/calculator/integrate.pyx":87
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":88
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":92
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":94
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":96
+ *             return 1
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":97
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":105
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":106
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ */
+    __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":110
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":112
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":113
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":114
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \
+ */
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x_second[1] - x_first[1])**2 + \
+ *                     (x_second[2] - x_first[2])**2)
+ */
+    __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":121
+ *                     (x_second[2] - x_first[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":124
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":125
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":127
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":128
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":132
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":133
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":135
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x_second[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":137
+ *             break
+ * 
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
+
+  /* "viscid/calculator/integrate.pyx":138
+ * 
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
+
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
  *     return 0
  * 
- * cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                     real_t *ds, real_t[:] x0,
- *                     real_t tol_lo, real_t tol_hi,
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
+
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":67
+ *     return 0
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float32_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x0, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x_first[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x_second[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_dist;
+  __pyx_t_5numpy_float64_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_rk12", 0);
+
+  /* "viscid/calculator/integrate.pyx":83
+ *     cdef real_t ds_half
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         ds_half = 0.5 * deref(ds)
+ * 
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":84
+ * 
+ *     while True:
+ *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ */
+    __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+    /* "viscid/calculator/integrate.pyx":87
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":88
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":92
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":94
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":96
+ *             return 1
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":97
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":105
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":106
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ */
+    __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":110
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":112
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":113
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":114
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \
+ */
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x_second[1] - x_first[1])**2 + \
+ *                     (x_second[2] - x_first[2])**2)
+ */
+    __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":121
+ *                     (x_second[2] - x_first[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":124
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":125
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":127
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":128
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":132
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":133
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":135
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x_second[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":137
+ *             break
+ * 
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
+
+  /* "viscid/calculator/integrate.pyx":138
+ * 
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
+
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
+
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":67
+ *     return 0
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x_first[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x_second[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_dist;
+  __pyx_t_5numpy_float32_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_rk12", 0);
+
+  /* "viscid/calculator/integrate.pyx":83
+ *     cdef real_t ds_half
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         ds_half = 0.5 * deref(ds)
+ * 
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":84
+ * 
+ *     while True:
+ *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ */
+    __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+    /* "viscid/calculator/integrate.pyx":87
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":88
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":92
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":94
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":96
+ *             return 1
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":97
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":105
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":106
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ */
+    __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":110
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":112
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":113
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":114
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \
+ */
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x_second[1] - x_first[1])**2 + \
+ *                     (x_second[2] - x_first[2])**2)
+ */
+    __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":121
+ *                     (x_second[2] - x_first[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":124
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":125
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":127
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":128
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":132
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":133
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":135
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x_second[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":137
+ *             break
+ * 
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
+
+  /* "viscid/calculator/integrate.pyx":138
+ * 
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
+
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
+
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":67
+ *     return 0
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x_first[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x_second[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_dist;
+  __pyx_t_5numpy_float64_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_rk12", 0);
+
+  /* "viscid/calculator/integrate.pyx":83
+ *     cdef real_t ds_half
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         ds_half = 0.5 * deref(ds)
+ * 
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":84
+ * 
+ *     while True:
+ *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ */
+    __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+    /* "viscid/calculator/integrate.pyx":87
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":88
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":92
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":94
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":96
+ *             return 1
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":97
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":105
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":106
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ */
+    __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":110
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":112
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":113
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":114
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \
+ */
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x_second[1] - x_first[1])**2 + \
+ *                     (x_second[2] - x_first[2])**2)
+ */
+    __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":121
+ *                     (x_second[2] - x_first[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":124
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":125
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":127
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":128
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":132
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":133
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":135
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x_second[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":137
+ *             break
+ * 
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
+
+  /* "viscid/calculator/integrate.pyx":138
+ * 
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
+
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
+
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":67
+ *     return 0
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x_first[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x_second[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_dist;
+  __pyx_t_5numpy_float32_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_rk12", 0);
+
+  /* "viscid/calculator/integrate.pyx":83
+ *     cdef real_t ds_half
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         ds_half = 0.5 * deref(ds)
+ * 
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":84
+ * 
+ *     while True:
+ *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ */
+    __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+    /* "viscid/calculator/integrate.pyx":87
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":88
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":92
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":94
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":96
+ *             return 1
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":97
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":105
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":106
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ */
+    __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":110
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":112
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":113
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":114
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \
+ */
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x_second[1] - x_first[1])**2 + \
+ *                     (x_second[2] - x_first[2])**2)
+ */
+    __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":121
+ *                     (x_second[2] - x_first[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":124
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":125
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":127
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":128
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":132
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":133
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":135
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x_second[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":137
+ *             break
+ * 
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
+
+  /* "viscid/calculator/integrate.pyx":138
+ * 
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
+
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
+
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":67
+ *     return 0
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x_first[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x_second[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_dist;
+  __pyx_t_5numpy_float64_t __pyx_v_ds_half;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_rk12", 0);
+
+  /* "viscid/calculator/integrate.pyx":83
+ *     cdef real_t ds_half
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         ds_half = 0.5 * deref(ds)
+ * 
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":84
+ * 
+ *     while True:
+ *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ */
+    __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
+
+    /* "viscid/calculator/integrate.pyx":87
+ * 
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":88
+ *         # print("A", start_inds[0], start_inds[1], start_inds[2])
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":89
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":90
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":92
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":94
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":96
+ *             return 1
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":97
+ * 
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":98
+ *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ */
+    (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":100
+ *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":101
+ * 
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":102
+ *         x1[0] = x[0] + ds_half * v0[2] / vmag0
+ *         x1[1] = x[1] + ds_half * v0[1] / vmag0
+ *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":105
+ * 
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":106
+ *         # print("B", start_inds[0], start_inds[1], start_inds[2])
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":107
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":108
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ */
+    __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":110
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":112
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":113
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":114
+ *             return 1
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":115
+ *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+ *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \
+ */
+    (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":117
+ *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x_second[1] - x_first[1])**2 + \
+ *                     (x_second[2] - x_first[2])**2)
+ */
+    __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":121
+ *                     (x_second[2] - x_first[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":124
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":125
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":127
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":128
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":129
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":132
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":133
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":135
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x_second[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":137
+ *             break
+ * 
+ *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
+
+  /* "viscid/calculator/integrate.pyx":138
+ * 
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x_second[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
+
+  /* "viscid/calculator/integrate.pyx":139
+ *     x[0] = x_second[0]
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
+
+  /* "viscid/calculator/integrate.pyx":140
+ *     x[1] = x_second[1]
+ *     x[2] = x_second[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":67
+ *     return 0
+ * 
+ * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                  real_t tol_lo, real_t tol_hi,
+ *                  real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "viscid/calculator/integrate.pyx":143
+ * 
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
+ */
+
+static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -3875,70 +8065,54 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  struct __pyx_array_obj *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_c_euler1a", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":175
+  /* "viscid/calculator/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":177
+    /* "viscid/calculator/integrate.pyx":158
  *     while True:
  *         # go forward
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/calculator/integrate.pyx":159
  *         # go forward
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":179
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":180
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/calculator/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -3956,126 +8130,81 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":184
+      /* "viscid/calculator/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
  * 
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/calculator/integrate.pyx":167
  *             return 1
  * 
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *         x1[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x1[2] = x0[2] + deref(ds) * v0[2] / vmag0
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
  */
-    __pyx_t_3 = 0;
-    (__pyx_v_x1[0]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_3 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":187
+    /* "viscid/calculator/integrate.pyx":168
  * 
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x1[1] = x0[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *         x1[2] = x0[2] + deref(ds) * v0[2] / vmag0
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  */
-    __pyx_t_4 = 1;
-    (__pyx_v_x1[1]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_4 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":188
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x1[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x1[2] = x0[2] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
  * 
  *         # now go backward
  */
-    __pyx_t_5 = 2;
-    (__pyx_v_x1[2]) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_5 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":191
+    /* "viscid/calculator/integrate.pyx":172
  * 
  *         # now go backward
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-    __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_6));
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-    (__pyx_v_v1[2]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":192
+    /* "viscid/calculator/integrate.pyx":173
  *         # now go backward
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    __pyx_t_7 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-    __pyx_t_8 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_7 || !__pyx_t_8 || !PyBytes_AsString(__pyx_t_7))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_6 = __pyx_array_new(__pyx_t_8, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_7), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_6));
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-    (__pyx_v_v1[1]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":193
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t);
-    __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float32_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(((PyObject *)__pyx_t_6));
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-    (__pyx_v_v1[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":194
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":197
+    /* "viscid/calculator/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -4093,82 +8222,55 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":199
+      /* "viscid/calculator/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
  * 
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":201
+    /* "viscid/calculator/integrate.pyx":182
  *             return 1
  * 
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  */
-    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":202
+    /* "viscid/calculator/integrate.pyx":183
  * 
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":203
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
  * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \
+ *         dist = sqrt((x2[0] - x[0])**2 + \
  */
-    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":205
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \             # <<<<<<<<<<<<<<
- *                     (x2[1] - x0[1])**2 + \
- *                     (x2[2] - x0[2])**2)
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
  */
-    __pyx_t_10 = 0;
+    __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":206
- * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \
- *                     (x2[1] - x0[1])**2 + \             # <<<<<<<<<<<<<<
- *                     (x2[2] - x0[2])**2)
- * 
- */
-    __pyx_t_11 = 1;
-
-    /* "viscid/calculator/integrate.pyx":207
- *         dist = sqrt((x2[0] - x0[0])**2 + \
- *                     (x2[1] - x0[1])**2 + \
- *                     (x2[2] - x0[2])**2)             # <<<<<<<<<<<<<<
- * 
- *         if dist > tol_hi * fabs(deref(ds)):
- */
-    __pyx_t_12 = 2;
-
-    /* "viscid/calculator/integrate.pyx":205
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
- * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \             # <<<<<<<<<<<<<<
- *                     (x2[1] - x0[1])**2 + \
- *                     (x2[2] - x0[2])**2)
- */
-    __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_10 * __pyx_v_x0.strides[0]) )))), 2.0) + powf(((__pyx_v_x2[1]) - (*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_11 * __pyx_v_x0.strides[0]) )))), 2.0)) + powf(((__pyx_v_x2[2]) - (*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_12 * __pyx_v_x0.strides[0]) )))), 2.0)));
-
-    /* "viscid/calculator/integrate.pyx":209
- *                     (x2[2] - x0[2])**2)
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
  *             # logger.debug("Refining ds: {0} -> {1}".format(
@@ -4177,7 +8279,7 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":212
+      /* "viscid/calculator/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -4187,29 +8289,29 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":213
+        /* "viscid/calculator/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  */
         goto __pyx_L4_break;
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":215
+        /* "viscid/calculator/integrate.pyx":196
  *                 break
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":216
+        /* "viscid/calculator/integrate.pyx":197
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
  *         elif dist < tol_lo * fabs(deref(ds)):
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -4218,8 +8320,8 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":217
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -4228,18 +8330,18 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":220
+      /* "viscid/calculator/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":221
+      /* "viscid/calculator/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
  *         else:
  *             break
@@ -4248,12 +8350,12 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":223
+      /* "viscid/calculator/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
  * 
- *     x0[0] = x1[0]
+ *     x[0] = x1[0]
  */
       goto __pyx_L4_break;
     }
@@ -4261,39 +8363,36 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":225
+  /* "viscid/calculator/integrate.pyx":206
  *             break
  * 
- *     x0[0] = x1[0]             # <<<<<<<<<<<<<<
- *     x0[1] = x1[1]
- *     x0[2] = x1[2]
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
  */
-  __pyx_t_13 = 0;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_13 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x1[0]);
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":226
+  /* "viscid/calculator/integrate.pyx":207
  * 
- *     x0[0] = x1[0]
- *     x0[1] = x1[1]             # <<<<<<<<<<<<<<
- *     x0[2] = x1[2]
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
  *     return 0
  */
-  __pyx_t_14 = 1;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_14 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x1[1]);
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":227
- *     x0[0] = x1[0]
- *     x0[1] = x1[1]
- *     x0[2] = x1[2]             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_15 = 2;
-  *((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_15 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x1[2]);
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":228
- *     x0[1] = x1[1]
- *     x0[2] = x1[2]
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
  * 
  * ##
@@ -4301,28 +8400,21 @@ static int __pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":163
- *     return 0
+  /* "viscid/calculator/integrate.pyx":143
  * 
- * cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                     real_t *ds, real_t[:] x0,
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(((PyObject *)__pyx_t_6));
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __Pyx_AddTraceback("viscid.calculator.integrate._c_euler1a", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_memviewslice __pyx_v_s, __Pyx_memviewslice *__pyx_v_crds, __pyx_t_5numpy_float64_t *__pyx_v_ds, __Pyx_memviewslice __pyx_v_x0, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, int *__pyx_v_start_inds) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -4334,70 +8426,54 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  struct __pyx_array_obj *__pyx_t_6 = NULL;
-  PyObject *__pyx_t_7 = NULL;
-  PyObject *__pyx_t_8 = NULL;
-  __Pyx_memviewslice __pyx_t_9 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_c_euler1a", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":175
+  /* "viscid/calculator/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":177
+    /* "viscid/calculator/integrate.pyx":158
  *     while True:
  *         # go forward
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/calculator/integrate.pyx":159
  *         # go forward
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)             # <<<<<<<<<<<<<<
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":179
- *         v0[2] = _c_interp_trilin[real_t](s, 0, crds, x0, start_inds)
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_v_x0, __pyx_v_start_inds);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":180
- *         v0[1] = _c_interp_trilin[real_t](s, 1, crds, x0, start_inds)
- *         v0[0] = _c_interp_trilin[real_t](s, 2, crds, x0, start_inds)
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/calculator/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -4415,126 +8491,81 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":184
+      /* "viscid/calculator/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
  * 
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/calculator/integrate.pyx":167
  *             return 1
  * 
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
- *         x1[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x1[2] = x0[2] + deref(ds) * v0[2] / vmag0
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
  */
-    __pyx_t_3 = 0;
-    (__pyx_v_x1[0]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_3 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":187
+    /* "viscid/calculator/integrate.pyx":168
  * 
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x1[1] = x0[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
- *         x1[2] = x0[2] + deref(ds) * v0[2] / vmag0
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  */
-    __pyx_t_4 = 1;
-    (__pyx_v_x1[1]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_4 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":188
- *         x1[0] = x0[0] + deref(ds) * v0[0] / vmag0
- *         x1[1] = x0[1] + deref(ds) * v0[1] / vmag0
- *         x1[2] = x0[2] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
  * 
  *         # now go backward
  */
-    __pyx_t_5 = 2;
-    (__pyx_v_x1[2]) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_5 * __pyx_v_x0.strides[0]) ))) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":191
+    /* "viscid/calculator/integrate.pyx":172
  * 
  *         # now go backward
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-    __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_6));
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 191; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-    (__pyx_v_v1[2]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 0, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":192
+    /* "viscid/calculator/integrate.pyx":173
  *         # now go backward
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)             # <<<<<<<<<<<<<<
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    __pyx_t_7 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-    __pyx_t_8 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_7 || !__pyx_t_8 || !PyBytes_AsString(__pyx_t_7))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_6 = __pyx_array_new(__pyx_t_8, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_7), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_6));
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-    (__pyx_v_v1[1]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 1, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":193
- *         v1[2] = _c_interp_trilin[real_t](s, 0, crds, x1, start_inds)
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)             # <<<<<<<<<<<<<<
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    __pyx_t_8 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t);
-    __pyx_t_7 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)3));
-    if (unlikely(!__pyx_t_8 || !__pyx_t_7 || !PyBytes_AsString(__pyx_t_8))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_6 = __pyx_array_new(__pyx_t_7, sizeof(__pyx_t_5numpy_float64_t), PyBytes_AS_STRING(__pyx_t_8), (char *) "fortran", (char *) __pyx_v_x1);
-    if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(((PyObject *)__pyx_t_6));
-    if (unlikely(!__pyx_t_9.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 193; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_DECREF(((PyObject *)__pyx_t_6)); __pyx_t_6 = 0;
-    (__pyx_v_v1[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_s, 2, __pyx_v_crds, __pyx_t_9, __pyx_v_start_inds);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":194
- *         v1[1] = _c_interp_trilin[real_t](s, 1, crds, x1, start_inds)
- *         v1[0] = _c_interp_trilin[real_t](s, 2, crds, x1, start_inds)
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":197
+    /* "viscid/calculator/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -4552,82 +8583,55 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":199
+      /* "viscid/calculator/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
  * 
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  */
       __pyx_r = 1;
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":201
+    /* "viscid/calculator/integrate.pyx":182
  *             return 1
  * 
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  */
-    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":202
+    /* "viscid/calculator/integrate.pyx":183
  * 
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":203
- *         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
  * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \
+ *         dist = sqrt((x2[0] - x[0])**2 + \
  */
-    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":205
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \             # <<<<<<<<<<<<<<
- *                     (x2[1] - x0[1])**2 + \
- *                     (x2[2] - x0[2])**2)
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
  */
-    __pyx_t_10 = 0;
+    __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":206
- * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \
- *                     (x2[1] - x0[1])**2 + \             # <<<<<<<<<<<<<<
- *                     (x2[2] - x0[2])**2)
- * 
- */
-    __pyx_t_11 = 1;
-
-    /* "viscid/calculator/integrate.pyx":207
- *         dist = sqrt((x2[0] - x0[0])**2 + \
- *                     (x2[1] - x0[1])**2 + \
- *                     (x2[2] - x0[2])**2)             # <<<<<<<<<<<<<<
- * 
- *         if dist > tol_hi * fabs(deref(ds)):
- */
-    __pyx_t_12 = 2;
-
-    /* "viscid/calculator/integrate.pyx":205
- *         x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
- * 
- *         dist = sqrt((x2[0] - x0[0])**2 + \             # <<<<<<<<<<<<<<
- *                     (x2[1] - x0[1])**2 + \
- *                     (x2[2] - x0[2])**2)
- */
-    __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_10 * __pyx_v_x0.strides[0]) )))), 2.0) + pow(((__pyx_v_x2[1]) - (*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_11 * __pyx_v_x0.strides[0]) )))), 2.0)) + pow(((__pyx_v_x2[2]) - (*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_12 * __pyx_v_x0.strides[0]) )))), 2.0)));
-
-    /* "viscid/calculator/integrate.pyx":209
- *                     (x2[2] - x0[2])**2)
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
  *             # logger.debug("Refining ds: {0} -> {1}".format(
@@ -4636,7 +8640,7 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":212
+      /* "viscid/calculator/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -4646,29 +8650,29 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":213
+        /* "viscid/calculator/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  */
         goto __pyx_L4_break;
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":215
+        /* "viscid/calculator/integrate.pyx":196
  *                 break
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":216
+        /* "viscid/calculator/integrate.pyx":197
  *             else:
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
  *         elif dist < tol_lo * fabs(deref(ds)):
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -4677,8 +8681,8 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":217
- *                 ds[0] = _c_real_max(fac_refine * deref(ds), smallest_step)
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
@@ -4687,18 +8691,18 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":220
+      /* "viscid/calculator/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":221
+      /* "viscid/calculator/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
- *             ds[0] = _c_real_min(fac_coarsen * deref(ds), largest_step)
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
  *         else:
  *             break
@@ -4707,12 +8711,12 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":223
+      /* "viscid/calculator/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
  * 
- *     x0[0] = x1[0]
+ *     x[0] = x1[0]
  */
       goto __pyx_L4_break;
     }
@@ -4720,39 +8724,36 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":225
+  /* "viscid/calculator/integrate.pyx":206
  *             break
  * 
- *     x0[0] = x1[0]             # <<<<<<<<<<<<<<
- *     x0[1] = x1[1]
- *     x0[2] = x1[2]
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
  */
-  __pyx_t_13 = 0;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_13 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x1[0]);
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":226
+  /* "viscid/calculator/integrate.pyx":207
  * 
- *     x0[0] = x1[0]
- *     x0[1] = x1[1]             # <<<<<<<<<<<<<<
- *     x0[2] = x1[2]
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
  *     return 0
  */
-  __pyx_t_14 = 1;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_14 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x1[1]);
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":227
- *     x0[0] = x1[0]
- *     x0[1] = x1[1]
- *     x0[2] = x1[2]             # <<<<<<<<<<<<<<
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
  *     return 0
  * 
  */
-  __pyx_t_15 = 2;
-  *((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x0.data + __pyx_t_15 * __pyx_v_x0.strides[0]) )) = (__pyx_v_x1[2]);
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":228
- *     x0[1] = x1[1]
- *     x0[2] = x1[2]
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
  * 
  * ##
@@ -4760,22 +8761,2423 @@ static int __pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(__Pyx_
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":163
- *     return 0
+  /* "viscid/calculator/integrate.pyx":143
  * 
- * cdef int _c_euler1a(real_t[:,:,:,::1] s, real_t[:] *crds,             # <<<<<<<<<<<<<<
- *                     real_t *ds, real_t[:] x0,
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
  *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
  */
 
   /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(((PyObject *)__pyx_t_6));
-  __Pyx_XDECREF(__pyx_t_7);
-  __Pyx_XDECREF(__pyx_t_8);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_9, 1);
-  __Pyx_AddTraceback("viscid.calculator.integrate._c_euler1a", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = -1;
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x2[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_dist;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_euler1a", 0);
+
+  /* "viscid/calculator/integrate.pyx":156
+ *     cdef real_t vmag0, vmag1, dist
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":158
+ *     while True:
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":159
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":163
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":165
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":167
+ *             return 1
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":168
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # now go backward
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":172
+ * 
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":173
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ * 
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":178
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":180
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":182
+ *             return 1
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":183
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \
+ */
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
+ */
+    __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":193
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":194
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":196
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":197
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":201
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":202
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":204
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x1[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":206
+ *             break
+ * 
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
+
+  /* "viscid/calculator/integrate.pyx":207
+ * 
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
+
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
+
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * ##
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":143
+ * 
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x2[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_dist;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_euler1a", 0);
+
+  /* "viscid/calculator/integrate.pyx":156
+ *     cdef real_t vmag0, vmag1, dist
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":158
+ *     while True:
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":159
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":163
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":165
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":167
+ *             return 1
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":168
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # now go backward
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":172
+ * 
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":173
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ * 
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":178
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":180
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":182
+ *             return 1
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":183
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \
+ */
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
+ */
+    __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":193
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":194
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":196
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":197
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":201
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":202
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":204
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x1[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":206
+ *             break
+ * 
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
+
+  /* "viscid/calculator/integrate.pyx":207
+ * 
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
+
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
+
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * ##
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":143
+ * 
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x2[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_dist;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_euler1a", 0);
+
+  /* "viscid/calculator/integrate.pyx":156
+ *     cdef real_t vmag0, vmag1, dist
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":158
+ *     while True:
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":159
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":163
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":165
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":167
+ *             return 1
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":168
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # now go backward
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":172
+ * 
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":173
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ * 
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":178
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":180
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":182
+ *             return 1
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":183
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \
+ */
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
+ */
+    __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":193
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":194
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":196
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":197
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":201
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":202
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":204
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x1[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":206
+ *             break
+ * 
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
+
+  /* "viscid/calculator/integrate.pyx":207
+ * 
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
+
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
+
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * ##
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":143
+ * 
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x2[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_dist;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_euler1a", 0);
+
+  /* "viscid/calculator/integrate.pyx":156
+ *     cdef real_t vmag0, vmag1, dist
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":158
+ *     while True:
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":159
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":163
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":165
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":167
+ *             return 1
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":168
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # now go backward
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":172
+ * 
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":173
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ * 
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":178
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":180
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":182
+ *             return 1
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":183
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \
+ */
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
+ */
+    __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":193
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":194
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":196
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":197
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":201
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":202
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":204
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x1[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":206
+ *             break
+ * 
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
+
+  /* "viscid/calculator/integrate.pyx":207
+ * 
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
+
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
+
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * ##
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":143
+ * 
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float32_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_x2[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float32_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float32_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float32_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float32_t __pyx_v_dist;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_euler1a", 0);
+
+  /* "viscid/calculator/integrate.pyx":156
+ *     cdef real_t vmag0, vmag1, dist
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":158
+ *     while True:
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":159
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":163
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":165
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":167
+ *             return 1
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":168
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # now go backward
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":172
+ * 
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":173
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ * 
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":178
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":180
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":182
+ *             return 1
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":183
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \
+ */
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
+ */
+    __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":193
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":194
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":196
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":197
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":201
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":202
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":204
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x1[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":206
+ *             break
+ * 
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
+
+  /* "viscid/calculator/integrate.pyx":207
+ * 
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
+
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
+
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * ##
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":143
+ * 
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+  __pyx_t_5numpy_float64_t __pyx_v_x1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_x2[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v0[3];
+  __pyx_t_5numpy_float64_t __pyx_v_v1[3];
+  __pyx_t_5numpy_float64_t __pyx_v_vmag0;
+  __pyx_t_5numpy_float64_t __pyx_v_vmag1;
+  __pyx_t_5numpy_float64_t __pyx_v_dist;
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  int __pyx_t_2;
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_euler1a", 0);
+
+  /* "viscid/calculator/integrate.pyx":156
+ *     cdef real_t vmag0, vmag1, dist
+ * 
+ *     while True:             # <<<<<<<<<<<<<<
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ */
+  while (1) {
+
+    /* "viscid/calculator/integrate.pyx":158
+ *     while True:
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ */
+    (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":159
+ *         # go forward
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ */
+    (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":160
+ *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ */
+    (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+
+    /* "viscid/calculator/integrate.pyx":161
+ *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ */
+    __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":163
+ *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
+ *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
+ *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag0 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L6_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag0) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L6_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":165
+ *         if vmag0 == 0.0 or isnan(vmag0):
+ *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":167
+ *             return 1
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ */
+    (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":168
+ * 
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+ * 
+ */
+    (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":169
+ *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+ *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
+ *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
+ * 
+ *         # now go backward
+ */
+    (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
+
+    /* "viscid/calculator/integrate.pyx":172
+ * 
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ */
+    (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":173
+ *         # now go backward
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ */
+    (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":174
+ *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
+ * 
+ */
+    (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+
+    /* "viscid/calculator/integrate.pyx":175
+ *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
+ *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ */
+    __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":178
+ * 
+ *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
+ *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1
+ */
+    __pyx_t_2 = ((__pyx_v_vmag1 == 0.0) != 0);
+    if (!__pyx_t_2) {
+    } else {
+      __pyx_t_1 = __pyx_t_2;
+      goto __pyx_L9_bool_binop_done;
+    }
+    __pyx_t_2 = (isnan(__pyx_v_vmag1) != 0);
+    __pyx_t_1 = __pyx_t_2;
+    __pyx_L9_bool_binop_done:;
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":180
+ *         if vmag1 == 0.0 or isnan(vmag1):
+ *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+ *             return 1             # <<<<<<<<<<<<<<
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ */
+      __pyx_r = 1;
+      goto __pyx_L0;
+    }
+
+    /* "viscid/calculator/integrate.pyx":182
+ *             return 1
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ */
+    (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":183
+ * 
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ */
+    (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":184
+ *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+ *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \
+ */
+    (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
+
+    /* "viscid/calculator/integrate.pyx":186
+ *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+ * 
+ *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
+ *                     (x2[1] - x[1])**2 + \
+ *                     (x2[2] - x[2])**2)
+ */
+    __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
+
+    /* "viscid/calculator/integrate.pyx":190
+ *                     (x2[2] - x[2])**2)
+ * 
+ *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":193
+ *             # logger.debug("Refining ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
+ *                 break
+ *             else:
+ */
+      __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
+      if (__pyx_t_1) {
+
+        /* "viscid/calculator/integrate.pyx":194
+ *             #     deref(ds), fac_refine * deref(ds)))
+ *             if ds[0] <= smallest_step:
+ *                 break             # <<<<<<<<<<<<<<
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ */
+        goto __pyx_L4_break;
+      }
+      /*else*/ {
+
+        /* "viscid/calculator/integrate.pyx":196
+ *                 break
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ */
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+
+        /* "viscid/calculator/integrate.pyx":197
+ *             else:
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue             # <<<<<<<<<<<<<<
+ *         elif dist < tol_lo * fabs(deref(ds)):
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ */
+        goto __pyx_L3_continue;
+      }
+    }
+
+    /* "viscid/calculator/integrate.pyx":198
+ *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
+ *                 continue
+ *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ */
+    __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
+    if (__pyx_t_1) {
+
+      /* "viscid/calculator/integrate.pyx":201
+ *             # logger.debug("Coarsening ds: {0} -> {1}".format(
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
+ *             break
+ *         else:
+ */
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+
+      /* "viscid/calculator/integrate.pyx":202
+ *             #     deref(ds), fac_coarsen * deref(ds)))
+ *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
+ *             break             # <<<<<<<<<<<<<<
+ *         else:
+ *             break
+ */
+      goto __pyx_L4_break;
+    }
+    /*else*/ {
+
+      /* "viscid/calculator/integrate.pyx":204
+ *             break
+ *         else:
+ *             break             # <<<<<<<<<<<<<<
+ * 
+ *     x[0] = x1[0]
+ */
+      goto __pyx_L4_break;
+    }
+    __pyx_L3_continue:;
+  }
+  __pyx_L4_break:;
+
+  /* "viscid/calculator/integrate.pyx":206
+ *             break
+ * 
+ *     x[0] = x1[0]             # <<<<<<<<<<<<<<
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ */
+  (__pyx_v_x[0]) = (__pyx_v_x1[0]);
+
+  /* "viscid/calculator/integrate.pyx":207
+ * 
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]             # <<<<<<<<<<<<<<
+ *     x[2] = x1[2]
+ *     return 0
+ */
+  (__pyx_v_x[1]) = (__pyx_v_x1[1]);
+
+  /* "viscid/calculator/integrate.pyx":208
+ *     x[0] = x1[0]
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]             # <<<<<<<<<<<<<<
+ *     return 0
+ * 
+ */
+  (__pyx_v_x[2]) = (__pyx_v_x1[2]);
+
+  /* "viscid/calculator/integrate.pyx":209
+ *     x[1] = x1[1]
+ *     x[2] = x1[2]
+ *     return 0             # <<<<<<<<<<<<<<
+ * 
+ * ##
+ */
+  __pyx_r = 0;
+  goto __pyx_L0;
+
+  /* "viscid/calculator/integrate.pyx":143
+ * 
+ * 
+ * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
+ *                     real_t tol_lo, real_t tol_hi,
+ *                     real_t fac_refine, real_t fac_coarsen,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cycalc.pxd":4
+ * from cyfield cimport CyField, FusedField, make_cyfield
+ * 
+ * cdef inline int int_min(int a, int b):             # <<<<<<<<<<<<<<
+ *     return b if b < a else a
+ * 
+ */
+
+static CYTHON_INLINE int __pyx_f_6viscid_10calculator_6cycalc_int_min(int __pyx_v_a, int __pyx_v_b) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  __Pyx_RefNannySetupContext("int_min", 0);
+
+  /* "cycalc.pxd":5
+ * 
+ * cdef inline int int_min(int a, int b):
+ *     return b if b < a else a             # <<<<<<<<<<<<<<
+ * 
+ * cdef inline int int_max(int a, int b):
+ */
+  if (((__pyx_v_b < __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* "cycalc.pxd":4
+ * from cyfield cimport CyField, FusedField, make_cyfield
+ * 
+ * cdef inline int int_min(int a, int b):             # <<<<<<<<<<<<<<
+ *     return b if b < a else a
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cycalc.pxd":7
+ *     return b if b < a else a
+ * 
+ * cdef inline int int_max(int a, int b):             # <<<<<<<<<<<<<<
+ *     return b if b > a else a
+ * 
+ */
+
+static CYTHON_INLINE int __pyx_f_6viscid_10calculator_6cycalc_int_max(int __pyx_v_a, int __pyx_v_b) {
+  int __pyx_r;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  __Pyx_RefNannySetupContext("int_max", 0);
+
+  /* "cycalc.pxd":8
+ * 
+ * cdef inline int int_max(int a, int b):
+ *     return b if b > a else a             # <<<<<<<<<<<<<<
+ * 
+ * cdef inline real_t real_min(real_t a, real_t b):
+ */
+  if (((__pyx_v_b > __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* "cycalc.pxd":7
+ *     return b if b < a else a
+ * 
+ * cdef inline int int_max(int a, int b):             # <<<<<<<<<<<<<<
+ *     return b if b > a else a
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cycalc.pxd":10
+ *     return b if b > a else a
+ * 
+ * cdef inline real_t real_min(real_t a, real_t b):             # <<<<<<<<<<<<<<
+ *     return b if b < a else a
+ * 
+ */
+
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  __pyx_t_5numpy_float32_t __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __pyx_t_5numpy_float32_t __pyx_t_1;
+  __Pyx_RefNannySetupContext("__pyx_fuse_0real_min", 0);
+
+  /* "cycalc.pxd":11
+ * 
+ * cdef inline real_t real_min(real_t a, real_t b):
+ *     return b if b < a else a             # <<<<<<<<<<<<<<
+ * 
+ * cdef inline real_t real_max(real_t a, real_t b):
+ */
+  if (((__pyx_v_b < __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* "cycalc.pxd":10
+ *     return b if b > a else a
+ * 
+ * cdef inline real_t real_min(real_t a, real_t b):             # <<<<<<<<<<<<<<
+ *     return b if b < a else a
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  __pyx_t_5numpy_float64_t __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __pyx_t_5numpy_float64_t __pyx_t_1;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1real_min", 0);
+
+  /* "cycalc.pxd":11
+ * 
+ * cdef inline real_t real_min(real_t a, real_t b):
+ *     return b if b < a else a             # <<<<<<<<<<<<<<
+ * 
+ * cdef inline real_t real_max(real_t a, real_t b):
+ */
+  if (((__pyx_v_b < __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* "cycalc.pxd":10
+ *     return b if b > a else a
+ * 
+ * cdef inline real_t real_min(real_t a, real_t b):             # <<<<<<<<<<<<<<
+ *     return b if b < a else a
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cycalc.pxd":13
+ *     return b if b < a else a
+ * 
+ * cdef inline real_t real_max(real_t a, real_t b):             # <<<<<<<<<<<<<<
+ *     return b if b > a else a
+ * 
+ */
+
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  __pyx_t_5numpy_float32_t __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __pyx_t_5numpy_float32_t __pyx_t_1;
+  __Pyx_RefNannySetupContext("__pyx_fuse_0real_max", 0);
+
+  /* "cycalc.pxd":14
+ * 
+ * cdef inline real_t real_max(real_t a, real_t b):
+ *     return b if b > a else a             # <<<<<<<<<<<<<<
+ * 
+ * # heavy lifting interpolation functions
+ */
+  if (((__pyx_v_b > __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* "cycalc.pxd":13
+ *     return b if b < a else a
+ * 
+ * cdef inline real_t real_max(real_t a, real_t b):             # <<<<<<<<<<<<<<
+ *     return b if b > a else a
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  __pyx_t_5numpy_float64_t __pyx_r;
+  __Pyx_RefNannyDeclarations
+  __pyx_t_5numpy_float64_t __pyx_t_1;
+  __Pyx_RefNannySetupContext("__pyx_fuse_1real_max", 0);
+
+  /* "cycalc.pxd":14
+ * 
+ * cdef inline real_t real_max(real_t a, real_t b):
+ *     return b if b > a else a             # <<<<<<<<<<<<<<
+ * 
+ * # heavy lifting interpolation functions
+ */
+  if (((__pyx_v_b > __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* "cycalc.pxd":13
+ *     return b if b < a else a
+ * 
+ * cdef inline real_t real_max(real_t a, real_t b):             # <<<<<<<<<<<<<<
+ *     return b if b > a else a
+ * 
+ */
+
+  /* function exit code */
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -4937,11 +11339,11 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  * 
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "../../../Library/anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":220
@@ -4977,11 +11379,11 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  * 
  *             info.buf = PyArray_DATA(self)
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "../../../Library/anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":224
@@ -5254,11 +11656,11 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  *                 if   t == NPY_BYTE:        f = "b"
  *                 elif t == NPY_UBYTE:       f = "B"
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
 
     /* "../../../Library/anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":277
@@ -5465,22 +11867,22 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  *                 info.format = f
  *                 return
  */
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_t); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_t); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_6 = PyUnicode_Format(__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_t_3); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyUnicode_Format(__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_t_3); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_6);
       __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_Raise(__pyx_t_6, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       break;
     }
 
@@ -5539,7 +11941,7 @@ static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, P
  *                                       info.format + _buffer_format_string_len,
  *                                       &offset)
  */
-    __pyx_t_7 = __pyx_f_5numpy__util_dtypestring(__pyx_v_descr, (__pyx_v_info->format + 1), (__pyx_v_info->format + 255), (&__pyx_v_offset)); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = __pyx_f_5numpy__util_dtypestring(__pyx_v_descr, (__pyx_v_info->format + 1), (__pyx_v_info->format + 255), (&__pyx_v_offset)); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 286; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_f = __pyx_t_7;
 
     /* "../../../Library/anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":289
@@ -5689,7 +12091,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew1(PyObject *__
  * cdef inline object PyArray_MultiIterNew2(a, b):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyArray_MultiIterNew(1, ((void *)__pyx_v_a)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 772; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyArray_MultiIterNew(1, ((void *)__pyx_v_a)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 772; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5739,7 +12141,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew2(PyObject *__
  * cdef inline object PyArray_MultiIterNew3(a, b, c):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyArray_MultiIterNew(2, ((void *)__pyx_v_a), ((void *)__pyx_v_b)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 775; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyArray_MultiIterNew(2, ((void *)__pyx_v_a), ((void *)__pyx_v_b)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 775; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5789,7 +12191,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew3(PyObject *__
  * cdef inline object PyArray_MultiIterNew4(a, b, c, d):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyArray_MultiIterNew(3, ((void *)__pyx_v_a), ((void *)__pyx_v_b), ((void *)__pyx_v_c)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 778; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyArray_MultiIterNew(3, ((void *)__pyx_v_a), ((void *)__pyx_v_b), ((void *)__pyx_v_c)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 778; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5839,7 +12241,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew4(PyObject *__
  * cdef inline object PyArray_MultiIterNew5(a, b, c, d, e):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyArray_MultiIterNew(4, ((void *)__pyx_v_a), ((void *)__pyx_v_b), ((void *)__pyx_v_c), ((void *)__pyx_v_d)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 781; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyArray_MultiIterNew(4, ((void *)__pyx_v_a), ((void *)__pyx_v_b), ((void *)__pyx_v_c), ((void *)__pyx_v_d)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 781; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5889,7 +12291,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew5(PyObject *__
  * cdef inline char* _util_dtypestring(dtype descr, char* f, char* end, int* offset) except NULL:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyArray_MultiIterNew(5, ((void *)__pyx_v_a), ((void *)__pyx_v_b), ((void *)__pyx_v_c), ((void *)__pyx_v_d), ((void *)__pyx_v_e)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 784; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyArray_MultiIterNew(5, ((void *)__pyx_v_a), ((void *)__pyx_v_b), ((void *)__pyx_v_c), ((void *)__pyx_v_d), ((void *)__pyx_v_e)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 784; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -5973,15 +12375,15 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  */
   if (unlikely(__pyx_v_descr->names == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 797; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 797; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_t_1 = __pyx_v_descr->names; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
   for (;;) {
     if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
     #if CYTHON_COMPILING_IN_CPYTHON
-    __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_3); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 797; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_3); __pyx_t_2++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 797; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     #else
-    __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 797; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 797; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     #endif
     __Pyx_XDECREF_SET(__pyx_v_childname, __pyx_t_3);
     __pyx_t_3 = 0;
@@ -5995,11 +12397,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  */
     if (unlikely(__pyx_v_descr->fields == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 798; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 798; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_descr->fields, __pyx_v_childname); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 798; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_descr->fields, __pyx_v_childname); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 798; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_3);
-    if (!(likely(PyTuple_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_3)->tp_name), 0))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 798; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyTuple_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_3)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 798; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_XDECREF_SET(__pyx_v_fields, ((PyObject*)__pyx_t_3));
     __pyx_t_3 = 0;
 
@@ -6020,7 +12422,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        {__pyx_filename = __pyx_f[1]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       #if CYTHON_COMPILING_IN_CPYTHON
       __pyx_t_3 = PyTuple_GET_ITEM(sequence, 0); 
@@ -6028,15 +12430,15 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
       __Pyx_INCREF(__pyx_t_3);
       __Pyx_INCREF(__pyx_t_4);
       #else
-      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       #endif
     } else {
-      __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_dtype))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_ptype_5numpy_dtype))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_XDECREF_SET(__pyx_v_child, ((PyArray_Descr *)__pyx_t_3));
     __pyx_t_3 = 0;
     __Pyx_XDECREF_SET(__pyx_v_new_offset, __pyx_t_4);
@@ -6049,12 +12451,12 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             raise RuntimeError(u"Format string allocated too short, see comment in numpy.pxd")
  * 
  */
-    __pyx_t_4 = __Pyx_PyInt_From_int((__pyx_v_offset[0])); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 801; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyInt_From_int((__pyx_v_offset[0])); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 801; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyNumber_Subtract(__pyx_v_new_offset, __pyx_t_4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 801; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyNumber_Subtract(__pyx_v_new_offset, __pyx_t_4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 801; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 801; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 801; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_6 = ((((__pyx_v_end - __pyx_v_f) - ((int)__pyx_t_5)) < 15) != 0);
     if (__pyx_t_6) {
@@ -6066,11 +12468,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  * 
  *         if ((child.byteorder == c'>' and little_endian) or
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
 
     /* "../../../Library/anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":804
@@ -6118,11 +12520,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             # One could encode it in the format string and have Cython
  *             # complain instead, BUT: < and > in format strings also imply
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 806; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 806; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 806; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 806; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
 
     /* "../../../Library/anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":816
@@ -6133,11 +12535,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             f += 1
  */
     while (1) {
-      __pyx_t_3 = __Pyx_PyInt_From_int((__pyx_v_offset[0])); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 816; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_PyInt_From_int((__pyx_v_offset[0])); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 816; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_t_3, __pyx_v_new_offset, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 816; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_t_3, __pyx_v_new_offset, Py_LT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 816; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 816; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 816; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (!__pyx_t_6) break;
 
@@ -6197,7 +12599,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             if end - f < 5:
  *                 raise RuntimeError(u"Format string allocated too short.")
  */
-      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_child->type_num); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 824; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_child->type_num); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 824; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_XDECREF_SET(__pyx_v_t, __pyx_t_4);
       __pyx_t_4 = 0;
@@ -6219,11 +12621,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  * 
  *             # Until ticket #99 is fixed, use integers to avoid warnings
  */
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 826; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_RuntimeError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 826; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_Raise(__pyx_t_4, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        {__pyx_filename = __pyx_f[1]; __pyx_lineno = 826; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 826; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
 
       /* "../../../Library/anaconda/lib/python2.7/site-packages/Cython/Includes/numpy/__init__.pxd":829
@@ -6233,11 +12635,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_UBYTE:       f[0] =  66 #"B"
  *             elif t == NPY_SHORT:       f[0] = 104 #"h"
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_BYTE); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 829; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_BYTE); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 829; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 829; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 829; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 829; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 829; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 98;
@@ -6251,11 +12653,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_SHORT:       f[0] = 104 #"h"
  *             elif t == NPY_USHORT:      f[0] =  72 #"H"
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_UBYTE); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 830; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_UBYTE); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 830; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 830; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 830; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 830; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 830; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 66;
@@ -6269,11 +12671,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_USHORT:      f[0] =  72 #"H"
  *             elif t == NPY_INT:         f[0] = 105 #"i"
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_SHORT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 831; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_SHORT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 831; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 831; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 831; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 831; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 831; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 104;
@@ -6287,11 +12689,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_INT:         f[0] = 105 #"i"
  *             elif t == NPY_UINT:        f[0] =  73 #"I"
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_USHORT); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 832; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_USHORT); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 832; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 832; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 832; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 832; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 832; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 72;
@@ -6305,11 +12707,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_UINT:        f[0] =  73 #"I"
  *             elif t == NPY_LONG:        f[0] = 108 #"l"
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_INT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 833; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_INT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 833; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 833; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 833; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 833; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 833; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 105;
@@ -6323,11 +12725,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_LONG:        f[0] = 108 #"l"
  *             elif t == NPY_ULONG:       f[0] = 76  #"L"
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_UINT); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 834; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_UINT); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 834; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 834; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 834; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 834; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 834; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 73;
@@ -6341,11 +12743,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_ULONG:       f[0] = 76  #"L"
  *             elif t == NPY_LONGLONG:    f[0] = 113 #"q"
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_LONG); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 835; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_LONG); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 835; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 835; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 835; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 835; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 835; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 108;
@@ -6359,11 +12761,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_LONGLONG:    f[0] = 113 #"q"
  *             elif t == NPY_ULONGLONG:   f[0] = 81  #"Q"
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_ULONG); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 836; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_ULONG); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 836; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 836; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 836; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 836; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 836; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 76;
@@ -6377,11 +12779,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_ULONGLONG:   f[0] = 81  #"Q"
  *             elif t == NPY_FLOAT:       f[0] = 102 #"f"
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_LONGLONG); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 837; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_LONGLONG); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 837; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 837; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 837; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 837; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 837; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 113;
@@ -6395,11 +12797,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_FLOAT:       f[0] = 102 #"f"
  *             elif t == NPY_DOUBLE:      f[0] = 100 #"d"
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_ULONGLONG); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 838; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_ULONGLONG); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 838; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 838; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 838; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 838; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 838; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 81;
@@ -6413,11 +12815,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_DOUBLE:      f[0] = 100 #"d"
  *             elif t == NPY_LONGDOUBLE:  f[0] = 103 #"g"
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_FLOAT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 839; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_FLOAT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 839; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 839; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 839; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 839; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 839; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 102;
@@ -6431,11 +12833,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_LONGDOUBLE:  f[0] = 103 #"g"
  *             elif t == NPY_CFLOAT:      f[0] = 90; f[1] = 102; f += 1 # Zf
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_DOUBLE); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 840; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_DOUBLE); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 840; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 840; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 840; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 840; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 840; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 100;
@@ -6449,11 +12851,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_CFLOAT:      f[0] = 90; f[1] = 102; f += 1 # Zf
  *             elif t == NPY_CDOUBLE:     f[0] = 90; f[1] = 100; f += 1 # Zd
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_LONGDOUBLE); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 841; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_LONGDOUBLE); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 841; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 841; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 841; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 841; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 841; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 103;
@@ -6467,11 +12869,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_CDOUBLE:     f[0] = 90; f[1] = 100; f += 1 # Zd
  *             elif t == NPY_CLONGDOUBLE: f[0] = 90; f[1] = 103; f += 1 # Zg
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_CFLOAT); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 842; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_CFLOAT); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 842; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 842; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 842; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 842; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 842; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 90;
@@ -6487,11 +12889,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_CLONGDOUBLE: f[0] = 90; f[1] = 103; f += 1 # Zg
  *             elif t == NPY_OBJECT:      f[0] = 79 #"O"
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_CDOUBLE); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 843; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_CDOUBLE); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 843; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 843; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 843; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 843; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 843; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 90;
@@ -6507,11 +12909,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             elif t == NPY_OBJECT:      f[0] = 79 #"O"
  *             else:
  */
-      __pyx_t_3 = PyInt_FromLong(NPY_CLONGDOUBLE); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 844; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromLong(NPY_CLONGDOUBLE); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 844; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 844; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyObject_RichCompare(__pyx_v_t, __pyx_t_3, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 844; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 844; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 844; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 90;
@@ -6527,11 +12929,11 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             else:
  *                 raise ValueError(u"unknown dtype code in numpy.pxd (%d)" % t)
  */
-      __pyx_t_4 = PyInt_FromLong(NPY_OBJECT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 845; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyInt_FromLong(NPY_OBJECT); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 845; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 845; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyObject_RichCompare(__pyx_v_t, __pyx_t_4, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 845; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 845; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_6 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 845; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       if (__pyx_t_6) {
         (__pyx_v_f[0]) = 79;
@@ -6546,19 +12948,19 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *             f += 1
  *         else:
  */
-        __pyx_t_3 = PyUnicode_Format(__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_v_t); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyUnicode_Format(__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_v_t); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_3);
         __pyx_t_3 = 0;
-        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_Raise(__pyx_t_3, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        {__pyx_filename = __pyx_f[1]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 847; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       __pyx_L15:;
 
@@ -6581,7 +12983,7 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *__pyx
  *     return f
  * 
  */
-      __pyx_t_9 = __pyx_f_5numpy__util_dtypestring(__pyx_v_child, __pyx_v_f, __pyx_v_end, __pyx_v_offset); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 852; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __pyx_f_5numpy__util_dtypestring(__pyx_v_child, __pyx_v_f, __pyx_v_end, __pyx_v_offset); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 852; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __pyx_v_f = __pyx_t_9;
     }
     __pyx_L13:;
@@ -6829,12 +13231,12 @@ static int __pyx_array___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, P
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_itemsize)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 1); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 1); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_format)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 2); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, 2); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (kw_args > 0) {
@@ -6848,7 +13250,7 @@ static int __pyx_array___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, P
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -6862,11 +13264,11 @@ static int __pyx_array___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, P
       }
     }
     __pyx_v_shape = ((PyObject*)values[0]);
-    __pyx_v_itemsize = __Pyx_PyIndex_AsSsize_t(values[1]); if (unlikely((__pyx_v_itemsize == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_itemsize = __Pyx_PyIndex_AsSsize_t(values[1]); if (unlikely((__pyx_v_itemsize == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     __pyx_v_format = values[2];
     __pyx_v_mode = values[3];
     if (values[4]) {
-      __pyx_v_allocate_buffer = __Pyx_PyObject_IsTrue(values[4]); if (unlikely((__pyx_v_allocate_buffer == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_v_allocate_buffer = __Pyx_PyObject_IsTrue(values[4]); if (unlikely((__pyx_v_allocate_buffer == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     } else {
 
       /* "View.MemoryView":117
@@ -6881,15 +13283,15 @@ static int __pyx_array___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_args, P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 3, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("View.MemoryView.array.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_shape), (&PyTuple_Type), 1, "shape", 1))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_shape), (&PyTuple_Type), 1, "shape", 1))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (unlikely(((PyObject *)__pyx_v_format) == Py_None)) {
-    PyErr_Format(PyExc_TypeError, "Argument '%.200s' must not be None", "format"); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    PyErr_Format(PyExc_TypeError, "Argument '%.200s' must not be None", "format"); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_r = __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(((struct __pyx_array_obj *)__pyx_v_self), __pyx_v_shape, __pyx_v_itemsize, __pyx_v_format, __pyx_v_mode, __pyx_v_allocate_buffer);
 
@@ -6943,9 +13345,9 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  */
   if (unlikely(__pyx_v_shape == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_1 = PyTuple_GET_SIZE(__pyx_v_shape); if (unlikely(__pyx_t_1 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_GET_SIZE(__pyx_v_shape); if (unlikely(__pyx_t_1 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_self->ndim = ((int)__pyx_t_1);
 
   /* "View.MemoryView":124
@@ -6974,11 +13376,11 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if itemsize <= 0:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":129
@@ -6998,11 +13400,11 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if isinstance(format, unicode):
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":132
@@ -7025,9 +13427,9 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  */
     if (unlikely(__pyx_v_format == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "encode");
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_3 = PyUnicode_AsASCIIString(((PyObject*)__pyx_v_format)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyUnicode_AsASCIIString(((PyObject*)__pyx_v_format)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF_SET(__pyx_v_format, __pyx_t_3);
     __pyx_t_3 = 0;
@@ -7042,7 +13444,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  *         self.format = self._format
  * 
  */
-  if (!(likely(PyBytes_CheckExact(__pyx_v_format))||((__pyx_v_format) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_format)->tp_name), 0))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 134; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (!(likely(PyBytes_CheckExact(__pyx_v_format))||((__pyx_v_format) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_v_format)->tp_name), 0))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 134; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_3 = __pyx_v_format;
   __Pyx_INCREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_3);
@@ -7058,7 +13460,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  * 
  */
-  __pyx_t_5 = __Pyx_PyObject_AsString(__pyx_v_self->_format); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 135; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_PyObject_AsString(__pyx_v_self->_format); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 135; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_self->format = __pyx_t_5;
 
   /* "View.MemoryView":138
@@ -7096,11 +13498,11 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  * 
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":145
@@ -7115,11 +13517,11 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
   for (;;) {
     if (__pyx_t_1 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
     #if CYTHON_COMPILING_IN_CPYTHON
-    __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_7); __pyx_t_1++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_1); __Pyx_INCREF(__pyx_t_7); __pyx_t_1++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     #else
-    __pyx_t_7 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = PySequence_ITEM(__pyx_t_3, __pyx_t_1); __pyx_t_1++; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     #endif
-    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_8 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_v_dim = __pyx_t_8;
     __pyx_v_idx = __pyx_t_6;
@@ -7142,11 +13544,11 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  *             self._shape[idx] = dim
  * 
  */
-      __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_idx); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_idx); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_dim); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_dim); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_10);
       PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_7);
       __Pyx_GIVEREF(__pyx_t_7);
@@ -7154,20 +13556,20 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
       __Pyx_GIVEREF(__pyx_t_9);
       __pyx_t_7 = 0;
       __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_shape_in_axis_d_d, __pyx_t_10); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_shape_in_axis_d_d, __pyx_t_10); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_10 = PyTuple_New(1); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_10 = PyTuple_New(1); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_10);
       PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_9);
       __Pyx_GIVEREF(__pyx_t_9);
       __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_10, NULL); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_10, NULL); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __Pyx_Raise(__pyx_t_9, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 147; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
 
     /* "View.MemoryView":148
@@ -7196,7 +13598,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  *             order = b'F'
  *             self.mode = u'fortran'
  */
-  __pyx_t_4 = (__Pyx_PyString_Equals(__pyx_v_mode, __pyx_n_s_fortran, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = (__Pyx_PyString_Equals(__pyx_v_mode, __pyx_n_s_fortran, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 151; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (__pyx_t_4) {
 
     /* "View.MemoryView":152
@@ -7230,7 +13632,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  *             order = b'C'
  *             self.mode = u'c'
  */
-  __pyx_t_4 = (__Pyx_PyString_Equals(__pyx_v_mode, __pyx_n_s_c, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = (__Pyx_PyString_Equals(__pyx_v_mode, __pyx_n_s_c, Py_EQ)); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 154; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (__pyx_t_4) {
 
     /* "View.MemoryView":155
@@ -7265,19 +13667,19 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         self.len = fill_contig_strides_array(self._shape, self._strides,
  */
-    __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_mode_expected_c_or_fortr, __pyx_v_mode); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Invalid_mode_expected_c_or_fortr, __pyx_v_mode); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_9, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_9, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 158; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_L10:;
 
@@ -7306,8 +13708,8 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  *         if allocate_buffer:
  * 
  */
-  __pyx_t_3 = PyObject_RichCompare(__pyx_v_format, __pyx_n_b_O, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyObject_RichCompare(__pyx_v_format, __pyx_n_b_O, Py_EQ); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 164; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_self->dtype_is_object = __pyx_t_4;
 
@@ -7347,11 +13749,11 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *             if self.dtype_is_object:
  */
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_Raise(__pyx_t_3, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
 
     /* "View.MemoryView":172
@@ -7388,7 +13790,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
         #ifdef WITH_THREAD
         PyGILState_Release(__pyx_gilstate_save);
         #endif
-        {__pyx_filename = __pyx_f[2]; __pyx_lineno = 174; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[1]; __pyx_lineno = 174; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       else if (sizeof(Py_ssize_t) == sizeof(long) && unlikely(__pyx_v_itemsize == -1)  && unlikely(UNARY_NEG_WOULD_OVERFLOW(__pyx_v_self->len))) {
         #ifdef WITH_THREAD
@@ -7398,7 +13800,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
         #ifdef WITH_THREAD
         PyGILState_Release(__pyx_gilstate_save);
         #endif
-        {__pyx_filename = __pyx_f[2]; __pyx_lineno = 174; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[1]; __pyx_lineno = 174; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       __pyx_t_1 = (__pyx_v_self->len / __pyx_v_itemsize);
       for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_1; __pyx_t_8+=1) {
@@ -7510,7 +13912,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(stru
  *             bufmode = PyBUF_C_CONTIGUOUS | PyBUF_ANY_CONTIGUOUS
  *         elif self.mode == u"fortran":
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_self->mode, __pyx_n_u_c, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_self->mode, __pyx_n_u_c, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
@@ -7532,7 +13934,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(stru
  *             bufmode = PyBUF_F_CONTIGUOUS | PyBUF_ANY_CONTIGUOUS
  *         if not (flags & bufmode):
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_self->mode, __pyx_n_u_fortran, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 183; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_self->mode, __pyx_n_u_fortran, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 183; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (__pyx_t_1) {
 
@@ -7565,11 +13967,11 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(stru
  *         info.buf = self.data
  *         info.len = self.len
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":187
@@ -7887,11 +14289,11 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_5array_7memview___get__(struct _
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_flags); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_flags); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_v_self->dtype_is_object); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_v_self->dtype_is_object); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(((PyObject *)__pyx_v_self));
   PyTuple_SET_ITEM(__pyx_t_3, 0, ((PyObject *)__pyx_v_self));
@@ -7902,7 +14304,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_5array_7memview___get__(struct _
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryview_type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryview_type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_2;
@@ -7969,9 +14371,9 @@ static PyObject *__pyx_array___pyx_pf_15View_dot_MemoryView_5array_6__getattr__(
  *     def __getitem__(self, item):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_memview); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 224; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_memview); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 224; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetAttr(__pyx_t_1, __pyx_v_attr); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 224; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetAttr(__pyx_t_1, __pyx_v_attr); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 224; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
@@ -8037,9 +14439,9 @@ static PyObject *__pyx_array___pyx_pf_15View_dot_MemoryView_5array_8__getitem__(
  *     def __setitem__(self, item, value):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_memview); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 227; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_memview); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 227; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyObject_GetItem(__pyx_t_1, __pyx_v_item); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 227; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = PyObject_GetItem(__pyx_t_1, __pyx_v_item); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 227; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_2;
@@ -8103,9 +14505,9 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_10__setitem__(struc
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_memview); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 230; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_memview); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 230; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (unlikely(PyObject_SetItem(__pyx_t_1, __pyx_v_item, __pyx_v_value) < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 230; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(PyObject_SetItem(__pyx_t_1, __pyx_v_item, __pyx_v_value) < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 230; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "View.MemoryView":229
@@ -8167,13 +14569,13 @@ static struct __pyx_array_obj *__pyx_array_new(PyObject *__pyx_v_shape, Py_ssize
  *     else:
  *         result = array(shape, itemsize, format, mode.decode('ASCII'),
  */
-    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_itemsize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_itemsize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = __Pyx_PyBytes_FromString(__pyx_v_format); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyBytes_FromString(__pyx_v_format); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_decode_c_string(__pyx_v_mode, 0, strlen(__pyx_v_mode), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_decode_c_string(__pyx_v_mode, 0, strlen(__pyx_v_mode), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyTuple_New(4); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyTuple_New(4); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_INCREF(__pyx_v_shape);
     PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_shape);
@@ -8187,7 +14589,7 @@ static struct __pyx_array_obj *__pyx_array_new(PyObject *__pyx_v_shape, Py_ssize
     __pyx_t_2 = 0;
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_array_type)), __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_array_type)), __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 239; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_v_result = ((struct __pyx_array_obj *)__pyx_t_4);
@@ -8203,13 +14605,13 @@ static struct __pyx_array_obj *__pyx_array_new(PyObject *__pyx_v_shape, Py_ssize
  *                        allocate_buffer=False)
  *         result.data = buf
  */
-    __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_itemsize); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_itemsize); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = __Pyx_PyBytes_FromString(__pyx_v_format); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_PyBytes_FromString(__pyx_v_format); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_3 = __Pyx_decode_c_string(__pyx_v_mode, 0, strlen(__pyx_v_mode), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_decode_c_string(__pyx_v_mode, 0, strlen(__pyx_v_mode), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_v_shape);
     PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_shape);
@@ -8223,7 +14625,7 @@ static struct __pyx_array_obj *__pyx_array_new(PyObject *__pyx_v_shape, Py_ssize
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
 
     /* "View.MemoryView":242
@@ -8233,7 +14635,7 @@ static struct __pyx_array_obj *__pyx_array_new(PyObject *__pyx_v_shape, Py_ssize
  *         result.data = buf
  * 
  */
-    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_allocate_buffer, Py_False) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_allocate_buffer, Py_False) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
     /* "View.MemoryView":241
  *         result = array(shape, itemsize, format, mode.decode('ASCII'))
@@ -8242,7 +14644,7 @@ static struct __pyx_array_obj *__pyx_array_new(PyObject *__pyx_v_shape, Py_ssize
  *                        allocate_buffer=False)
  *         result.data = buf
  */
-    __pyx_t_5 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_array_type)), __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_array_type)), __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 241; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8331,7 +14733,7 @@ static int __pyx_MemviewEnum___init__(PyObject *__pyx_v_self, PyObject *__pyx_ar
         else goto __pyx_L5_argtuple_error;
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 271; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__init__") < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 271; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 1) {
       goto __pyx_L5_argtuple_error;
@@ -8342,7 +14744,7 @@ static int __pyx_MemviewEnum___init__(PyObject *__pyx_v_self, PyObject *__pyx_ar
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 271; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("__init__", 1, 1, 1, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 271; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("View.MemoryView.Enum.__init__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -8558,7 +14960,7 @@ static int __pyx_memoryview___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_ar
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_flags)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 2, 3, 1); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 2, 3, 1); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (kw_args > 0) {
@@ -8567,7 +14969,7 @@ static int __pyx_memoryview___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_ar
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__cinit__") < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -8579,16 +14981,16 @@ static int __pyx_memoryview___cinit__(PyObject *__pyx_v_self, PyObject *__pyx_ar
       }
     }
     __pyx_v_obj = values[0];
-    __pyx_v_flags = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_flags == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_flags = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_flags == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     if (values[2]) {
-      __pyx_v_dtype_is_object = __Pyx_PyObject_IsTrue(values[2]); if (unlikely((__pyx_v_dtype_is_object == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_v_dtype_is_object = __Pyx_PyObject_IsTrue(values[2]); if (unlikely((__pyx_v_dtype_is_object == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     } else {
       __pyx_v_dtype_is_object = ((int)0);
     }
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("View.MemoryView.memoryview.__cinit__", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -8664,7 +15066,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview___cinit_
  *             if <PyObject *> self.view.obj == NULL:
  *                 (<__pyx_buffer *> &self.view).obj = Py_None
  */
-    __pyx_t_4 = __Pyx_GetBuffer(__pyx_v_obj, (&__pyx_v_self->view), __pyx_v_flags); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_GetBuffer(__pyx_v_obj, (&__pyx_v_self->view), __pyx_v_flags); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
     /* "View.MemoryView":322
  *         if type(self) is memoryview or obj is not None:
@@ -8726,7 +15128,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview___cinit_
  * 
  *         if flags & PyBUF_FORMAT:
  */
-    PyErr_NoMemory(); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    PyErr_NoMemory(); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":330
@@ -8746,11 +15148,11 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview___cinit_
  *         else:
  *             self.dtype_is_object = dtype_is_object
  */
-    __pyx_t_5 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyObject_RichCompare(__pyx_t_5, __pyx_n_b_O, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = PyObject_RichCompare(__pyx_t_5, __pyx_n_b_O, Py_EQ); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_self->dtype_is_object = __pyx_t_1;
     goto __pyx_L8;
@@ -8936,25 +15338,25 @@ static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__py
     __pyx_t_2 = __pyx_v_index; __Pyx_INCREF(__pyx_t_2); __pyx_t_3 = 0;
     __pyx_t_4 = NULL;
   } else {
-    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_index); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_index); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   for (;;) {
     if (likely(!__pyx_t_4)) {
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_3 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #endif
       } else {
         if (__pyx_t_3 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_3); __Pyx_INCREF(__pyx_t_5); __pyx_t_3++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_2, __pyx_t_3); __pyx_t_3++; if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #endif
       }
     } else {
@@ -8963,7 +15365,7 @@ static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__py
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else {__pyx_filename = __pyx_f[2]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          else {__pyx_filename = __pyx_f[1]; __pyx_lineno = 350; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         break;
       }
@@ -8981,8 +15383,8 @@ static char *__pyx_memoryview_get_item_pointer(struct __pyx_memoryview_obj *__py
  * 
  *         return itemp
  */
-    __pyx_t_6 = __Pyx_PyIndex_AsSsize_t(__pyx_v_idx); if (unlikely((__pyx_t_6 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 351; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_t_7 = __pyx_pybuffer_index((&__pyx_v_self->view), __pyx_v_itemp, __pyx_t_6, __pyx_v_dim); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 351; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = __Pyx_PyIndex_AsSsize_t(__pyx_v_idx); if (unlikely((__pyx_t_6 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 351; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = __pyx_pybuffer_index((&__pyx_v_self->view), __pyx_v_itemp, __pyx_t_6, __pyx_v_dim); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 351; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_itemp = __pyx_t_7;
 
     /* "View.MemoryView":350
@@ -9094,7 +15496,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_4_
  * 
  *         cdef char *itemp
  */
-  __pyx_t_3 = _unellipsify(__pyx_v_index, __pyx_v_self->view.ndim); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = _unellipsify(__pyx_v_index, __pyx_v_self->view.ndim); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   if (likely(__pyx_t_3 != Py_None)) {
     PyObject* sequence = __pyx_t_3;
@@ -9106,7 +15508,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_4_
     if (unlikely(size != 2)) {
       if (size > 2) __Pyx_RaiseTooManyValuesError(2);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     __pyx_t_4 = PyTuple_GET_ITEM(sequence, 0); 
@@ -9114,14 +15516,14 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_4_
     __Pyx_INCREF(__pyx_t_4);
     __Pyx_INCREF(__pyx_t_5);
     #else
-    __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     #endif
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 360; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_v_have_slices = __pyx_t_4;
   __pyx_t_4 = 0;
@@ -9135,7 +15537,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_4_
  *             return memview_slice(self, indices)
  *         else:
  */
-  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_have_slices); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 363; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_have_slices); if (unlikely(__pyx_t_2 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 363; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (__pyx_t_2) {
 
     /* "View.MemoryView":364
@@ -9146,7 +15548,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_4_
  *             itemp = self.get_item_pointer(indices)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = ((PyObject *)__pyx_memview_slice(__pyx_v_self, __pyx_v_indices)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 364; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = ((PyObject *)__pyx_memview_slice(__pyx_v_self, __pyx_v_indices)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 364; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_r = __pyx_t_3;
     __pyx_t_3 = 0;
@@ -9161,7 +15563,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_4_
  *             return self.convert_item_to_object(itemp)
  * 
  */
-    __pyx_t_6 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->get_item_pointer(__pyx_v_self, __pyx_v_indices); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 366; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->get_item_pointer(__pyx_v_self, __pyx_v_indices); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 366; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_itemp = __pyx_t_6;
 
     /* "View.MemoryView":367
@@ -9172,7 +15574,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_4_
  *     def __setitem__(memoryview self, object index, object value):
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_3 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->convert_item_to_object(__pyx_v_self, __pyx_v_itemp); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 367; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->convert_item_to_object(__pyx_v_self, __pyx_v_itemp); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 367; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_r = __pyx_t_3;
     __pyx_t_3 = 0;
@@ -9245,7 +15647,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  * 
  *         if have_slices:
  */
-  __pyx_t_1 = _unellipsify(__pyx_v_index, __pyx_v_self->view.ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = _unellipsify(__pyx_v_index, __pyx_v_self->view.ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (likely(__pyx_t_1 != Py_None)) {
     PyObject* sequence = __pyx_t_1;
@@ -9257,7 +15659,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
     if (unlikely(size != 2)) {
       if (size > 2) __Pyx_RaiseTooManyValuesError(2);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     __pyx_t_2 = PyTuple_GET_ITEM(sequence, 0); 
@@ -9265,14 +15667,14 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
     __Pyx_INCREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_t_3);
     #else
-    __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     #endif
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   } else {
-    __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __Pyx_RaiseNoneNotIterableError(); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 370; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_v_have_slices = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -9286,7 +15688,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  *             obj = self.is_slice(value)
  *             if obj:
  */
-  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_have_slices); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 372; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_have_slices); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 372; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (__pyx_t_4) {
 
     /* "View.MemoryView":373
@@ -9296,7 +15698,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  *             if obj:
  *                 self.setitem_slice_assignment(self[index], obj)
  */
-    __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->is_slice(__pyx_v_self, __pyx_v_value); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 373; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->is_slice(__pyx_v_self, __pyx_v_value); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 373; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_v_obj = __pyx_t_1;
     __pyx_t_1 = 0;
@@ -9308,7 +15710,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  *                 self.setitem_slice_assignment(self[index], obj)
  *             else:
  */
-    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_obj); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 374; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyObject_IsTrue(__pyx_v_obj); if (unlikely(__pyx_t_4 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 374; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     if (__pyx_t_4) {
 
       /* "View.MemoryView":375
@@ -9318,9 +15720,9 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  *             else:
  *                 self.setitem_slice_assign_scalar(self[index], value)
  */
-      __pyx_t_1 = PyObject_GetItem(((PyObject *)__pyx_v_self), __pyx_v_index); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 375; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+      __pyx_t_1 = PyObject_GetItem(((PyObject *)__pyx_v_self), __pyx_v_index); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 375; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_3 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->setitem_slice_assignment(__pyx_v_self, __pyx_t_1, __pyx_v_obj); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 375; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->setitem_slice_assignment(__pyx_v_self, __pyx_t_1, __pyx_v_obj); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 375; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -9335,10 +15737,10 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  *         else:
  *             self.setitem_indexed(index, value)
  */
-      __pyx_t_3 = PyObject_GetItem(((PyObject *)__pyx_v_self), __pyx_v_index); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 377; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+      __pyx_t_3 = PyObject_GetItem(((PyObject *)__pyx_v_self), __pyx_v_index); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 377; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_3);
-      if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 377; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->setitem_slice_assign_scalar(__pyx_v_self, ((struct __pyx_memoryview_obj *)__pyx_t_3), __pyx_v_value); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 377; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 377; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->setitem_slice_assign_scalar(__pyx_v_self, ((struct __pyx_memoryview_obj *)__pyx_t_3), __pyx_v_value); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 377; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9355,7 +15757,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  * 
  *     cdef is_slice(self, obj):
  */
-    __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->setitem_indexed(__pyx_v_self, __pyx_v_index, __pyx_v_value); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 379; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->setitem_indexed(__pyx_v_self, __pyx_v_index, __pyx_v_value); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 379; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
@@ -9444,7 +15846,7 @@ static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_
  *                                  self.dtype_is_object)
  *             except TypeError:
  */
-        __pyx_t_6 = __Pyx_PyInt_From_int((__pyx_v_self->flags | PyBUF_ANY_CONTIGUOUS)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 384; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+        __pyx_t_6 = __Pyx_PyInt_From_int((__pyx_v_self->flags | PyBUF_ANY_CONTIGUOUS)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 384; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
         __Pyx_GOTREF(__pyx_t_6);
 
         /* "View.MemoryView":385
@@ -9454,7 +15856,7 @@ static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_
  *             except TypeError:
  *                 return None
  */
-        __pyx_t_7 = __Pyx_PyBool_FromLong(__pyx_v_self->dtype_is_object); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 385; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+        __pyx_t_7 = __Pyx_PyBool_FromLong(__pyx_v_self->dtype_is_object); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 385; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
         __Pyx_GOTREF(__pyx_t_7);
 
         /* "View.MemoryView":384
@@ -9464,7 +15866,7 @@ static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_
  *                                  self.dtype_is_object)
  *             except TypeError:
  */
-        __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 384; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+        __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 384; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
         __Pyx_GOTREF(__pyx_t_8);
         __Pyx_INCREF(__pyx_v_obj);
         PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_obj);
@@ -9475,7 +15877,7 @@ static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_
         __Pyx_GIVEREF(__pyx_t_7);
         __pyx_t_6 = 0;
         __pyx_t_7 = 0;
-        __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryview_type)), __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 384; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+        __pyx_t_7 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryview_type)), __pyx_t_8, NULL); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 384; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __Pyx_DECREF_SET(__pyx_v_obj, __pyx_t_7);
@@ -9500,7 +15902,7 @@ static PyObject *__pyx_memoryview_is_slice(struct __pyx_memoryview_obj *__pyx_v_
       __pyx_t_9 = PyErr_ExceptionMatches(__pyx_builtin_TypeError);
       if (__pyx_t_9) {
         __Pyx_AddTraceback("View.MemoryView.memoryview.is_slice", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_8, &__pyx_t_6) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 386; __pyx_clineno = __LINE__; goto __pyx_L6_except_error;}
+        if (__Pyx_GetException(&__pyx_t_7, &__pyx_t_8, &__pyx_t_6) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 386; __pyx_clineno = __LINE__; goto __pyx_L6_except_error;}
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GOTREF(__pyx_t_8);
         __Pyx_GOTREF(__pyx_t_6);
@@ -9602,7 +16004,7 @@ static PyObject *__pyx_memoryview_setitem_slice_assignment(struct __pyx_memoryvi
  *                                  get_slice_from_memview(dst, &dst_slice)[0],
  *                                  src.ndim, dst.ndim, self.dtype_is_object)
  */
-  if (!(likely(((__pyx_v_src) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_src, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 395; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (!(likely(((__pyx_v_src) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_src, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 395; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":396
  * 
@@ -9611,7 +16013,7 @@ static PyObject *__pyx_memoryview_setitem_slice_assignment(struct __pyx_memoryvi
  *                                  src.ndim, dst.ndim, self.dtype_is_object)
  * 
  */
-  if (!(likely(((__pyx_v_dst) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_dst, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 396; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (!(likely(((__pyx_v_dst) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_dst, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 396; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":397
  *         memoryview_copy_contents(get_slice_from_memview(src, &src_slice)[0],
@@ -9620,13 +16022,13 @@ static PyObject *__pyx_memoryview_setitem_slice_assignment(struct __pyx_memoryvi
  * 
  *     cdef setitem_slice_assign_scalar(self, memoryview dst, value):
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_src, __pyx_n_s_ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_src, __pyx_n_s_ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dst, __pyx_n_s_ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dst, __pyx_n_s_ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 397; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "View.MemoryView":395
@@ -9636,7 +16038,7 @@ static PyObject *__pyx_memoryview_setitem_slice_assignment(struct __pyx_memoryvi
  *                                  get_slice_from_memview(dst, &dst_slice)[0],
  *                                  src.ndim, dst.ndim, self.dtype_is_object)
  */
-  __pyx_t_4 = __pyx_memoryview_copy_contents((__pyx_memoryview_get_slice_from_memoryview(((struct __pyx_memoryview_obj *)__pyx_v_src), (&__pyx_v_src_slice))[0]), (__pyx_memoryview_get_slice_from_memoryview(((struct __pyx_memoryview_obj *)__pyx_v_dst), (&__pyx_v_dst_slice))[0]), __pyx_t_2, __pyx_t_3, __pyx_v_self->dtype_is_object); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 395; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __pyx_memoryview_copy_contents((__pyx_memoryview_get_slice_from_memoryview(((struct __pyx_memoryview_obj *)__pyx_v_src), (&__pyx_v_src_slice))[0]), (__pyx_memoryview_get_slice_from_memoryview(((struct __pyx_memoryview_obj *)__pyx_v_dst), (&__pyx_v_dst_slice))[0]), __pyx_t_2, __pyx_t_3, __pyx_v_self->dtype_is_object); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 395; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":391
  *         return obj
@@ -9745,7 +16147,7 @@ static PyObject *__pyx_memoryview_setitem_slice_assign_scalar(struct __pyx_memor
  *             item = tmp
  *         else:
  */
-      PyErr_NoMemory(); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 411; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      PyErr_NoMemory(); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 411; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
 
     /* "View.MemoryView":412
@@ -9809,7 +16211,7 @@ static PyObject *__pyx_memoryview_setitem_slice_assign_scalar(struct __pyx_memor
  * 
  * 
  */
-      __pyx_t_2 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->assign_item_from_object(__pyx_v_self, ((char *)__pyx_v_item), __pyx_v_value); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 420; __pyx_clineno = __LINE__; goto __pyx_L6_error;}
+      __pyx_t_2 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->assign_item_from_object(__pyx_v_self, ((char *)__pyx_v_item), __pyx_v_value); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 420; __pyx_clineno = __LINE__; goto __pyx_L6_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
@@ -9832,7 +16234,7 @@ static PyObject *__pyx_memoryview_setitem_slice_assign_scalar(struct __pyx_memor
  *             slice_assign_scalar(dst_slice, dst.view.ndim, self.view.itemsize,
  *                                 item, self.dtype_is_object)
  */
-      __pyx_t_2 = assert_direct_dimensions(__pyx_v_self->view.suboffsets, __pyx_v_self->view.ndim); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 425; __pyx_clineno = __LINE__; goto __pyx_L6_error;}
+      __pyx_t_2 = assert_direct_dimensions(__pyx_v_self->view.suboffsets, __pyx_v_self->view.ndim); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 425; __pyx_clineno = __LINE__; goto __pyx_L6_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       goto __pyx_L9;
@@ -9941,7 +16343,7 @@ static PyObject *__pyx_memoryview_setitem_indexed(struct __pyx_memoryview_obj *_
  *         self.assign_item_from_object(itemp, value)
  * 
  */
-  __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->get_item_pointer(__pyx_v_self, __pyx_v_index); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 432; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->get_item_pointer(__pyx_v_self, __pyx_v_index); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 432; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_itemp = __pyx_t_1;
 
   /* "View.MemoryView":433
@@ -9951,7 +16353,7 @@ static PyObject *__pyx_memoryview_setitem_indexed(struct __pyx_memoryview_obj *_
  * 
  *     cdef convert_item_to_object(self, char *itemp):
  */
-  __pyx_t_2 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->assign_item_from_object(__pyx_v_self, __pyx_v_itemp, __pyx_v_value); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 433; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = ((struct __pyx_vtabstruct_memoryview *)__pyx_v_self->__pyx_vtab)->assign_item_from_object(__pyx_v_self, __pyx_v_itemp, __pyx_v_value); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 433; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
@@ -10014,7 +16416,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *         cdef bytes bytesitem
  * 
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_struct, 0, -1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 438; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_struct, 0, -1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 438; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_struct = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -10026,7 +16428,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *         try:
  *             result = struct.unpack(self.view.format, bytesitem)
  */
-  __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(__pyx_v_itemp + 0, __pyx_v_self->view.itemsize - 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 441; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyBytes_FromStringAndSize(__pyx_v_itemp + 0, __pyx_v_self->view.itemsize - 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 441; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_bytesitem = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
@@ -10052,9 +16454,9 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *         except struct.error:
  *             raise ValueError("Unable to convert item to object")
  */
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_unpack); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_unpack); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_t_6 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = NULL;
       __pyx_t_8 = 0;
@@ -10068,7 +16470,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
           __pyx_t_8 = 1;
         }
       }
-      __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_t_9 = PyTuple_New(2+__pyx_t_8); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       __Pyx_GOTREF(__pyx_t_9);
       if (__pyx_t_7) {
         PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_7); __Pyx_GIVEREF(__pyx_t_7); __pyx_t_7 = NULL;
@@ -10079,7 +16481,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
       PyTuple_SET_ITEM(__pyx_t_9, 1+__pyx_t_8, __pyx_v_bytesitem);
       __Pyx_GIVEREF(__pyx_v_bytesitem);
       __pyx_t_6 = 0;
-      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+      __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 443; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -10107,7 +16509,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  * 
  */
         __Pyx_XDECREF(__pyx_r);
-        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_result, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 448; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;};
+        __pyx_t_1 = __Pyx_GetItemInt(__pyx_v_result, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 448; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;};
         __Pyx_GOTREF(__pyx_t_1);
         __pyx_r = __pyx_t_1;
         __pyx_t_1 = 0;
@@ -10140,13 +16542,13 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *             raise ValueError("Unable to convert item to object")
  *         else:
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_error); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 444; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_error); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 444; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_12 = PyErr_ExceptionMatches(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (__pyx_t_12) {
       __Pyx_AddTraceback("View.MemoryView.memoryview.convert_item_to_object", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_5, &__pyx_t_9) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 444; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_5, &__pyx_t_9) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 444; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_9);
@@ -10158,11 +16560,11 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *         else:
  *             if len(self.view.format) == 1:
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 445; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 445; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_Raise(__pyx_t_6, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 445; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 445; __pyx_clineno = __LINE__; goto __pyx_L5_except_error;}
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
@@ -10245,7 +16647,7 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
  *         cdef char c
  *         cdef bytes bytesvalue
  */
-  __pyx_t_1 = __Pyx_Import(__pyx_n_s_struct, 0, -1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 454; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_struct, 0, -1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 454; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_struct = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -10268,26 +16670,26 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
  *         else:
  *             bytesvalue = struct.pack(self.view.format, value)
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_pack); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_pack); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_4);
     __pyx_t_4 = 0;
-    __pyx_t_4 = PySequence_Tuple(__pyx_v_value); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PySequence_Tuple(__pyx_v_value); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_6, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_6, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (!(likely(PyBytes_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyBytes_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 460; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_bytesvalue = ((PyObject*)__pyx_t_4);
     __pyx_t_4 = 0;
     goto __pyx_L3;
@@ -10301,9 +16703,9 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
  * 
  *         for i, c in enumerate(bytesvalue):
  */
-    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_pack); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_struct, __pyx_n_s_pack); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_1 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyBytes_FromString(__pyx_v_self->view.format); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_5 = NULL;
     __pyx_t_7 = 0;
@@ -10317,7 +16719,7 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
         __pyx_t_7 = 1;
       }
     }
-    __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     if (__pyx_t_5) {
       PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_5); __Pyx_GIVEREF(__pyx_t_5); __pyx_t_5 = NULL;
@@ -10328,11 +16730,11 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
     PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_7, __pyx_v_value);
     __Pyx_GIVEREF(__pyx_v_value);
     __pyx_t_1 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_8, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (!(likely(PyBytes_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(PyBytes_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_4)->tp_name), 0))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 462; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_bytesvalue = ((PyObject*)__pyx_t_4);
     __pyx_t_4 = 0;
   }
@@ -10348,7 +16750,7 @@ static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryvie
   __pyx_t_7 = 0;
   if (unlikely(__pyx_v_bytesvalue == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' is not iterable");
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 464; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 464; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_INCREF(__pyx_v_bytesvalue);
   __pyx_t_9 = __pyx_v_bytesvalue;
@@ -10706,9 +17108,9 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_1T___get__(struct _
  *             transpose_memslice(&result.from_slice)
  *             return result
  */
-  __pyx_t_1 = __pyx_memoryview_copy_object(__pyx_v_self); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 502; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_memoryview_copy_object(__pyx_v_self); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 502; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_memoryviewslice_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 502; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_memoryviewslice_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 502; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_result = ((struct __pyx_memoryviewslice_obj *)__pyx_t_1);
   __pyx_t_1 = 0;
 
@@ -10719,7 +17121,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_1T___get__(struct _
  *             return result
  * 
  */
-  __pyx_t_2 = __pyx_memslice_transpose((&__pyx_v_result->from_slice)); if (unlikely(__pyx_t_2 == 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 503; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __pyx_memslice_transpose((&__pyx_v_result->from_slice)); if (unlikely(__pyx_t_2 == 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 503; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":504
  *             cdef _memoryviewslice result = memoryview_copy(self)
@@ -10849,18 +17251,18 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_5shape___get__(stru
  *     property strides:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_3 = (__pyx_v_self->view.shape + __pyx_v_self->view.ndim);
   for (__pyx_t_4 = __pyx_v_self->view.shape; __pyx_t_4 < __pyx_t_3; __pyx_t_4++) {
     __pyx_t_2 = __pyx_t_4;
     __pyx_v_length = (__pyx_t_2[0]);
-    __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_length); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_length); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
-  __pyx_t_5 = PyList_AsTuple(((PyObject*)__pyx_t_1)); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyList_AsTuple(((PyObject*)__pyx_t_1)); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 514; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_5;
@@ -10940,11 +17342,11 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_7strides___get__(st
  * 
  *             return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 521; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 521; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 521; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 521; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":523
@@ -10955,18 +17357,18 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_7strides___get__(st
  *     property suboffsets:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = (__pyx_v_self->view.strides + __pyx_v_self->view.ndim);
   for (__pyx_t_5 = __pyx_v_self->view.strides; __pyx_t_5 < __pyx_t_4; __pyx_t_5++) {
     __pyx_t_3 = __pyx_t_5;
     __pyx_v_stride = (__pyx_t_3[0]);
-    __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_stride); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_stride); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_6);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_6))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_6))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   }
-  __pyx_t_6 = PyList_AsTuple(((PyObject*)__pyx_t_2)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_6 = PyList_AsTuple(((PyObject*)__pyx_t_2)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 523; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_6;
@@ -11047,9 +17449,9 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_10suboffsets___get_
  *             return tuple([suboffset for suboffset in self.view.suboffsets[:self.view.ndim]])
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->view.ndim); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 529; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->view.ndim); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 529; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__14, __pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 529; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__14, __pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 529; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_r = __pyx_t_3;
@@ -11065,18 +17467,18 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_10suboffsets___get_
  *     property ndim:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_5 = (__pyx_v_self->view.suboffsets + __pyx_v_self->view.ndim);
   for (__pyx_t_6 = __pyx_v_self->view.suboffsets; __pyx_t_6 < __pyx_t_5; __pyx_t_6++) {
     __pyx_t_4 = __pyx_t_6;
     __pyx_v_suboffset = (__pyx_t_4[0]);
-    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_suboffset); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_suboffset); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_2))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_ListComp_Append(__pyx_t_3, (PyObject*)__pyx_t_2))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   }
-  __pyx_t_2 = PyList_AsTuple(((PyObject*)__pyx_t_3)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyList_AsTuple(((PyObject*)__pyx_t_3)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 531; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_r = __pyx_t_2;
@@ -11141,7 +17543,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_4ndim___get__(struc
  *     property itemsize:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->view.ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 536; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->view.ndim); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 536; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -11204,7 +17606,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_8itemsize___get__(s
  *     property nbytes:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_self->view.itemsize); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 541; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_self->view.itemsize); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 541; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -11269,11 +17671,11 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_6nbytes___get__(str
  *     property size:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_size); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 546; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_size); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 546; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_self->view.itemsize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 546; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_self->view.itemsize); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 546; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 546; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyNumber_Multiply(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 546; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -11370,7 +17772,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_4size___get__(struc
     __pyx_t_4 = (__pyx_v_self->view.shape + __pyx_v_self->view.ndim);
     for (__pyx_t_5 = __pyx_v_self->view.shape; __pyx_t_5 < __pyx_t_4; __pyx_t_5++) {
       __pyx_t_3 = __pyx_t_5;
-      __pyx_t_6 = PyInt_FromSsize_t((__pyx_t_3[0])); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 554; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyInt_FromSsize_t((__pyx_t_3[0])); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 554; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_XDECREF_SET(__pyx_v_length, __pyx_t_6);
       __pyx_t_6 = 0;
@@ -11382,7 +17784,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_4size___get__(struc
  * 
  *                 self._size = result
  */
-      __pyx_t_6 = PyNumber_InPlaceMultiply(__pyx_v_result, __pyx_v_length); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 555; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyNumber_InPlaceMultiply(__pyx_v_result, __pyx_v_length); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 555; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF_SET(__pyx_v_result, __pyx_t_6);
       __pyx_t_6 = 0;
@@ -11549,12 +17951,12 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_12
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_base); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_base); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_class); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_class); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_name_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_name_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
@@ -11565,12 +17967,12 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_12
  * 
  *     def __str__(self):
  */
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 569; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 569; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(((PyObject *)__pyx_v_self));
   PyTuple_SET_ITEM(__pyx_t_2, 0, ((PyObject *)__pyx_v_self));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_self));
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_id, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 569; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_id, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 569; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
@@ -11581,7 +17983,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_12
  *                                                id(self))
  * 
  */
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
@@ -11589,7 +17991,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_12
   __Pyx_GIVEREF(__pyx_t_3);
   __pyx_t_1 = 0;
   __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_MemoryView_of_r_at_0x_x, __pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_MemoryView_of_r_at_0x_x, __pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 568; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_3;
@@ -11656,20 +18058,20 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_14
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_base); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_base); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_class); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_class); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_name_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_name_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_MemoryView_of_r_object, __pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyString_Format(__pyx_kp_s_MemoryView_of_r_object, __pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 572; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_1;
@@ -11745,7 +18147,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_16
  *     def is_f_contig(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_memviewslice_is_contig(__pyx_v_mslice, 'C', __pyx_v_self->view.ndim)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 579; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_memviewslice_is_contig(__pyx_v_mslice, 'C', __pyx_v_self->view.ndim)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 579; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -11819,7 +18221,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_18
  *     def copy(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_memviewslice_is_contig(__pyx_v_mslice, 'F', __pyx_v_self->view.ndim)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 585; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyBool_FromLong(__pyx_memviewslice_is_contig(__pyx_v_mslice, 'F', __pyx_v_self->view.ndim)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 585; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -11902,7 +18304,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_20
  *                                    self.view.itemsize,
  *                                    flags|PyBUF_C_CONTIGUOUS,
  */
-  __pyx_t_1 = __pyx_memoryview_copy_new_contig((&__pyx_v_mslice), __pyx_k_c, __pyx_v_self->view.ndim, __pyx_v_self->view.itemsize, (__pyx_v_flags | PyBUF_C_CONTIGUOUS), __pyx_v_self->dtype_is_object); if (unlikely(PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 592; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_memoryview_copy_new_contig((&__pyx_v_mslice), __pyx_k_c, __pyx_v_self->view.ndim, __pyx_v_self->view.itemsize, (__pyx_v_flags | PyBUF_C_CONTIGUOUS), __pyx_v_self->dtype_is_object); if (unlikely(PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 592; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_mslice = __pyx_t_1;
 
   /* "View.MemoryView":597
@@ -11913,7 +18315,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_20
  *     def copy_fortran(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __pyx_memoryview_copy_object_from_slice(__pyx_v_self, (&__pyx_v_mslice)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 597; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __pyx_memoryview_copy_object_from_slice(__pyx_v_self, (&__pyx_v_mslice)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 597; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -11997,7 +18399,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_22
  *                                 self.view.itemsize,
  *                                 flags|PyBUF_F_CONTIGUOUS,
  */
-  __pyx_t_1 = __pyx_memoryview_copy_new_contig((&__pyx_v_src), __pyx_k_fortran, __pyx_v_self->view.ndim, __pyx_v_self->view.itemsize, (__pyx_v_flags | PyBUF_F_CONTIGUOUS), __pyx_v_self->dtype_is_object); if (unlikely(PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 604; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_memoryview_copy_new_contig((&__pyx_v_src), __pyx_k_fortran, __pyx_v_self->view.ndim, __pyx_v_self->view.itemsize, (__pyx_v_flags | PyBUF_F_CONTIGUOUS), __pyx_v_self->dtype_is_object); if (unlikely(PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 604; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_dst = __pyx_t_1;
 
   /* "View.MemoryView":609
@@ -12008,7 +18410,7 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_22
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __pyx_memoryview_copy_object_from_slice(__pyx_v_self, (&__pyx_v_dst)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 609; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __pyx_memoryview_copy_object_from_slice(__pyx_v_self, (&__pyx_v_dst)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 609; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
@@ -12060,11 +18462,11 @@ static PyObject *__pyx_memoryview_new(PyObject *__pyx_v_o, int __pyx_v_flags, in
  *     result.typeinfo = typeinfo
  *     return result
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_flags); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_flags); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_v_dtype_is_object); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_v_dtype_is_object); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_v_o);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_o);
@@ -12075,7 +18477,7 @@ static PyObject *__pyx_memoryview_new(PyObject *__pyx_v_o, int __pyx_v_flags, in
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_1 = 0;
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryview_type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryview_type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 614; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_result = ((struct __pyx_memoryview_obj *)__pyx_t_2);
@@ -12215,7 +18617,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *     else:
  *         tup = index
  */
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 628; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 628; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_v_index);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_index);
@@ -12245,7 +18647,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *     have_slices = False
  *     seen_ellipsis = False
  */
-  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 632; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 632; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_v_result = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
@@ -12281,25 +18683,25 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
     __pyx_t_4 = __pyx_v_tup; __Pyx_INCREF(__pyx_t_4); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_tup); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_tup); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   for (;;) {
     if (likely(!__pyx_t_6)) {
       if (likely(PyList_CheckExact(__pyx_t_4))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_7); __pyx_t_5++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #endif
       }
     } else {
@@ -12308,7 +18710,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          else {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         break;
       }
@@ -12318,7 +18720,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
     __pyx_t_7 = 0;
     __Pyx_INCREF(__pyx_t_3);
     __Pyx_XDECREF_SET(__pyx_v_idx, __pyx_t_3);
-    __pyx_t_7 = PyNumber_Add(__pyx_t_3, __pyx_int_1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = PyNumber_Add(__pyx_t_3, __pyx_int_1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 635; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_3);
     __pyx_t_3 = __pyx_t_7;
@@ -12352,8 +18754,8 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *                 seen_ellipsis = True
  *             else:
  */
-        __pyx_t_8 = PyObject_Length(__pyx_v_tup); if (unlikely(__pyx_t_8 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __pyx_t_7 = PyList_New(1 * ((((__pyx_v_ndim - __pyx_t_8) + 1)<0) ? 0:((__pyx_v_ndim - __pyx_t_8) + 1))); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = PyObject_Length(__pyx_v_tup); if (unlikely(__pyx_t_8 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = PyList_New(1 * ((((__pyx_v_ndim - __pyx_t_8) + 1)<0) ? 0:((__pyx_v_ndim - __pyx_t_8) + 1))); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_7);
         { Py_ssize_t __pyx_temp;
           for (__pyx_temp=0; __pyx_temp < ((__pyx_v_ndim - __pyx_t_8) + 1); __pyx_temp++) {
@@ -12362,7 +18764,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
             __Pyx_GIVEREF(__pyx_slice__15);
           }
         }
-        __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_7); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_7); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
         /* "View.MemoryView":639
@@ -12384,7 +18786,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *             have_slices = True
  *         else:
  */
-        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__16); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 641; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__16); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 641; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       __pyx_L7:;
 
@@ -12426,19 +18828,19 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  * 
  *             have_slices = have_slices or isinstance(item, slice)
  */
-        __pyx_t_7 = __Pyx_PyString_Format(__pyx_kp_s_Cannot_index_with_type_s, ((PyObject *)Py_TYPE(__pyx_v_item))); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = __Pyx_PyString_Format(__pyx_kp_s_Cannot_index_with_type_s, ((PyObject *)Py_TYPE(__pyx_v_item))); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_11);
         PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_7);
         __pyx_t_7 = 0;
-        __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_t_11, NULL); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_t_11, NULL); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_Raise(__pyx_t_7, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        {__pyx_filename = __pyx_f[2]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[1]; __pyx_lineno = 645; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
 
       /* "View.MemoryView":647
@@ -12467,7 +18869,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  * 
  *     nslices = ndim - len(result)
  */
-      __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_v_item); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 648; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_v_item); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 648; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __pyx_L6:;
 
@@ -12489,7 +18891,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *     if nslices:
  *         result.extend([slice(None)] * nslices)
  */
-  __pyx_t_5 = PyList_GET_SIZE(__pyx_v_result); if (unlikely(__pyx_t_5 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 650; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyList_GET_SIZE(__pyx_v_result); if (unlikely(__pyx_t_5 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 650; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_v_nslices = (__pyx_v_ndim - __pyx_t_5);
 
   /* "View.MemoryView":651
@@ -12509,7 +18911,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  * 
  *     return have_slices or nslices, tuple(result)
  */
-    __pyx_t_3 = PyList_New(1 * ((__pyx_v_nslices<0) ? 0:__pyx_v_nslices)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 652; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyList_New(1 * ((__pyx_v_nslices<0) ? 0:__pyx_v_nslices)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 652; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     { Py_ssize_t __pyx_temp;
       for (__pyx_temp=0; __pyx_temp < __pyx_v_nslices; __pyx_temp++) {
@@ -12518,7 +18920,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
         __Pyx_GIVEREF(__pyx_slice__17);
       }
     }
-    __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_3); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 652; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_3); if (unlikely(__pyx_t_9 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 652; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     goto __pyx_L13;
   }
@@ -12534,20 +18936,20 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
   __Pyx_XDECREF(__pyx_r);
   if (!__pyx_v_have_slices) {
   } else {
-    __pyx_t_4 = __Pyx_PyBool_FromLong(__pyx_v_have_slices); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = __Pyx_PyBool_FromLong(__pyx_v_have_slices); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_3 = __pyx_t_4;
     __pyx_t_4 = 0;
     goto __pyx_L14_bool_binop_done;
   }
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_nslices); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_nslices); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_3 = __pyx_t_4;
   __pyx_t_4 = 0;
   __pyx_L14_bool_binop_done:;
-  __pyx_t_4 = PyList_AsTuple(__pyx_v_result); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyList_AsTuple(__pyx_v_result); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 654; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_3);
@@ -12636,11 +19038,11 @@ static PyObject *assert_direct_dimensions(Py_ssize_t *__pyx_v_suboffsets, int __
  * 
  * 
  */
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__18, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 659; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__18, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 659; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_Raise(__pyx_t_5, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 659; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 659; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
 
@@ -12739,7 +19141,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
   if (unlikely(!Py_OptimizeFlag)) {
     if (unlikely(!((__pyx_v_memview->view.ndim > 0) != 0))) {
       PyErr_SetNone(PyExc_AssertionError);
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 678; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 678; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -12762,7 +19164,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *         p_src = &memviewsliceobj.from_slice
  *     else:
  */
-    if (!(likely(((((PyObject *)__pyx_v_memview)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_memview), __pyx_memoryviewslice_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 681; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(((((PyObject *)__pyx_v_memview)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_memview), __pyx_memoryviewslice_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 681; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_3 = ((PyObject *)__pyx_v_memview);
     __Pyx_INCREF(__pyx_t_3);
     __pyx_v_memviewsliceobj = ((struct __pyx_memoryviewslice_obj *)__pyx_t_3);
@@ -12850,25 +19252,25 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
     __pyx_t_3 = __pyx_v_indices; __Pyx_INCREF(__pyx_t_3); __pyx_t_7 = 0;
     __pyx_t_8 = NULL;
   } else {
-    __pyx_t_7 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_indices); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_v_indices); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_8 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   for (;;) {
     if (likely(!__pyx_t_8)) {
       if (likely(PyList_CheckExact(__pyx_t_3))) {
         if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_9); __pyx_t_7++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_9); __pyx_t_7++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_9 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #endif
       } else {
         if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_9); __pyx_t_7++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_9); __pyx_t_7++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_9 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #endif
       }
     } else {
@@ -12877,7 +19279,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else {__pyx_filename = __pyx_f[2]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          else {__pyx_filename = __pyx_f[1]; __pyx_lineno = 702; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         break;
       }
@@ -12905,7 +19307,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *                 0, 0, 0, # have_{start,stop,step}
  *                 False)
  */
-      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_v_index); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 707; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_v_index); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 707; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
       /* "View.MemoryView":704
  *     for dim, index in enumerate(indices):
@@ -12914,7 +19316,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *                 p_dst, p_src.shape[dim], p_src.strides[dim], p_src.suboffsets[dim],
  *                 dim, new_ndim, p_suboffset_dim,
  */
-      __pyx_t_11 = __pyx_memoryview_slice_memviewslice(__pyx_v_p_dst, (__pyx_v_p_src->shape[__pyx_v_dim]), (__pyx_v_p_src->strides[__pyx_v_dim]), (__pyx_v_p_src->suboffsets[__pyx_v_dim]), __pyx_v_dim, __pyx_v_new_ndim, __pyx_v_p_suboffset_dim, __pyx_t_10, 0, 0, 0, 0, 0, 0); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 704; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_11 = __pyx_memoryview_slice_memviewslice(__pyx_v_p_dst, (__pyx_v_p_src->shape[__pyx_v_dim]), (__pyx_v_p_src->strides[__pyx_v_dim]), (__pyx_v_p_src->suboffsets[__pyx_v_dim]), __pyx_v_dim, __pyx_v_new_ndim, __pyx_v_p_suboffset_dim, __pyx_t_10, 0, 0, 0, 0, 0, 0); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 704; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L6;
     }
 
@@ -12975,13 +19377,13 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *             stop = index.stop or 0
  *             step = index.step or 0
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_start); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 716; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_start); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 716; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 716; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 716; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       if (!__pyx_t_1) {
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       } else {
-        __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_9); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 716; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_9); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 716; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __pyx_t_10 = __pyx_t_12;
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         goto __pyx_L7_bool_binop_done;
@@ -12997,13 +19399,13 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *             step = index.step or 0
  * 
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_stop); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 717; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_stop); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 717; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 717; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 717; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       if (!__pyx_t_1) {
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       } else {
-        __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_9); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 717; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_9); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 717; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __pyx_t_10 = __pyx_t_12;
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         goto __pyx_L9_bool_binop_done;
@@ -13019,13 +19421,13 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  * 
  *             have_start = index.start is not None
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_step); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 718; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_step); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 718; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 718; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 718; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       if (!__pyx_t_1) {
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       } else {
-        __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_9); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 718; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_12 = __Pyx_PyIndex_AsSsize_t(__pyx_t_9); if (unlikely((__pyx_t_12 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 718; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __pyx_t_10 = __pyx_t_12;
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         goto __pyx_L11_bool_binop_done;
@@ -13041,7 +19443,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *             have_stop = index.stop is not None
  *             have_step = index.step is not None
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_start); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 720; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_start); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 720; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_1 = (__pyx_t_9 != Py_None);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -13054,7 +19456,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *             have_step = index.step is not None
  * 
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_stop); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 721; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_stop); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 721; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_1 = (__pyx_t_9 != Py_None);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -13067,7 +19469,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  * 
  *             slice_memviewslice(
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_step); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 722; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_index, __pyx_n_s_step); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 722; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_1 = (__pyx_t_9 != Py_None);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -13080,7 +19482,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *                 p_dst, p_src.shape[dim], p_src.strides[dim], p_src.suboffsets[dim],
  *                 dim, new_ndim, p_suboffset_dim,
  */
-      __pyx_t_11 = __pyx_memoryview_slice_memviewslice(__pyx_v_p_dst, (__pyx_v_p_src->shape[__pyx_v_dim]), (__pyx_v_p_src->strides[__pyx_v_dim]), (__pyx_v_p_src->suboffsets[__pyx_v_dim]), __pyx_v_dim, __pyx_v_new_ndim, __pyx_v_p_suboffset_dim, __pyx_v_start, __pyx_v_stop, __pyx_v_step, __pyx_v_have_start, __pyx_v_have_stop, __pyx_v_have_step, 1); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 724; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_11 = __pyx_memoryview_slice_memviewslice(__pyx_v_p_dst, (__pyx_v_p_src->shape[__pyx_v_dim]), (__pyx_v_p_src->strides[__pyx_v_dim]), (__pyx_v_p_src->suboffsets[__pyx_v_dim]), __pyx_v_dim, __pyx_v_new_ndim, __pyx_v_p_suboffset_dim, __pyx_v_start, __pyx_v_stop, __pyx_v_step, __pyx_v_have_start, __pyx_v_have_stop, __pyx_v_have_step, 1); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 724; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
       /* "View.MemoryView":730
  *                 have_start, have_stop, have_step,
@@ -13130,7 +19532,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *                                     memviewsliceobj.to_dtype_func,
  *                                     memview.dtype_is_object)
  */
-    if (unlikely(!__pyx_v_memviewsliceobj)) { __Pyx_RaiseUnboundLocalError("memviewsliceobj"); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 734; __pyx_clineno = __LINE__; goto __pyx_L1_error;} }
+    if (unlikely(!__pyx_v_memviewsliceobj)) { __Pyx_RaiseUnboundLocalError("memviewsliceobj"); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 734; __pyx_clineno = __LINE__; goto __pyx_L1_error;} }
 
     /* "View.MemoryView":735
  *         return memoryview_fromslice(dst, new_ndim,
@@ -13139,7 +19541,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *                                     memview.dtype_is_object)
  *     else:
  */
-    if (unlikely(!__pyx_v_memviewsliceobj)) { __Pyx_RaiseUnboundLocalError("memviewsliceobj"); {__pyx_filename = __pyx_f[2]; __pyx_lineno = 735; __pyx_clineno = __LINE__; goto __pyx_L1_error;} }
+    if (unlikely(!__pyx_v_memviewsliceobj)) { __Pyx_RaiseUnboundLocalError("memviewsliceobj"); {__pyx_filename = __pyx_f[1]; __pyx_lineno = 735; __pyx_clineno = __LINE__; goto __pyx_L1_error;} }
 
     /* "View.MemoryView":733
  * 
@@ -13148,9 +19550,9 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *                                     memviewsliceobj.to_object_func,
  *                                     memviewsliceobj.to_dtype_func,
  */
-    __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_dst, __pyx_v_new_ndim, __pyx_v_memviewsliceobj->to_object_func, __pyx_v_memviewsliceobj->to_dtype_func, __pyx_v_memview->dtype_is_object); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 733; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_dst, __pyx_v_new_ndim, __pyx_v_memviewsliceobj->to_object_func, __pyx_v_memviewsliceobj->to_dtype_func, __pyx_v_memview->dtype_is_object); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 733; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 733; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 733; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_r = ((struct __pyx_memoryview_obj *)__pyx_t_3);
     __pyx_t_3 = 0;
     goto __pyx_L0;
@@ -13173,7 +19575,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  * 
  * 
  */
-    __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_dst, __pyx_v_new_ndim, NULL, NULL, __pyx_v_memview->dtype_is_object); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 738; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_dst, __pyx_v_new_ndim, NULL, NULL, __pyx_v_memview->dtype_is_object); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 738; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
 
     /* "View.MemoryView":738
@@ -13183,7 +19585,7 @@ static struct __pyx_memoryview_obj *__pyx_memview_slice(struct __pyx_memoryview_
  *                                     memview.dtype_is_object)
  * 
  */
-    if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 738; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(((__pyx_t_3) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_3, __pyx_memoryview_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 738; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_r = ((struct __pyx_memoryview_obj *)__pyx_t_3);
     __pyx_t_3 = 0;
     goto __pyx_L0;
@@ -13283,7 +19685,7 @@ static int __pyx_memoryview_slice_memviewslice(__Pyx_memviewslice *__pyx_v_dst, 
  *     else:
  * 
  */
-      __pyx_t_3 = __pyx_memoryview_err_dim(__pyx_builtin_IndexError, __pyx_k_Index_out_of_bounds_axis_d, __pyx_v_dim); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 788; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __pyx_memoryview_err_dim(__pyx_builtin_IndexError, __pyx_k_Index_out_of_bounds_axis_d, __pyx_v_dim); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 788; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L5;
     }
     __pyx_L5:;
@@ -13334,7 +19736,7 @@ static int __pyx_memoryview_slice_memviewslice(__Pyx_memviewslice *__pyx_v_dst, 
  * 
  * 
  */
-      __pyx_t_3 = __pyx_memoryview_err_dim(__pyx_builtin_ValueError, __pyx_k_Step_may_not_be_zero_axis_d, __pyx_v_dim); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 794; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __pyx_memoryview_err_dim(__pyx_builtin_ValueError, __pyx_k_Step_may_not_be_zero_axis_d, __pyx_v_dim); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 794; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L8;
     }
     __pyx_L8:;
@@ -13776,7 +20178,7 @@ static int __pyx_memoryview_slice_memviewslice(__Pyx_memviewslice *__pyx_v_dst, 
  *                                      "must be indexed and not sliced", dim)
  *         else:
  */
-        __pyx_t_3 = __pyx_memoryview_err_dim(__pyx_builtin_IndexError, __pyx_k_All_dimensions_preceding_dimensi, __pyx_v_dim); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 855; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = __pyx_memoryview_err_dim(__pyx_builtin_IndexError, __pyx_k_All_dimensions_preceding_dimensi, __pyx_v_dim); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 855; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       __pyx_L26:;
       goto __pyx_L25;
@@ -13900,7 +20302,7 @@ static char *__pyx_pybuffer_index(Py_buffer *__pyx_v_view, char *__pyx_v_bufp, P
       #ifdef WITH_THREAD
       PyGILState_Release(__pyx_gilstate_save);
       #endif
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 873; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 873; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     else if (sizeof(Py_ssize_t) == sizeof(long) && unlikely(__pyx_v_itemsize == -1)  && unlikely(UNARY_NEG_WOULD_OVERFLOW(__pyx_v_view->len))) {
       #ifdef WITH_THREAD
@@ -13910,7 +20312,7 @@ static char *__pyx_pybuffer_index(Py_buffer *__pyx_v_view, char *__pyx_v_bufp, P
       #ifdef WITH_THREAD
       PyGILState_Release(__pyx_gilstate_save);
       #endif
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 873; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 873; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __pyx_v_shape = (__pyx_v_view->len / __pyx_v_itemsize);
 
@@ -14004,22 +20406,22 @@ static char *__pyx_pybuffer_index(Py_buffer *__pyx_v_view, char *__pyx_v_bufp, P
  * 
  *     if index >= shape:
  */
-      __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_dim); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_dim); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyString_Format(__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_t_3, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_Raise(__pyx_t_4, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      {__pyx_filename = __pyx_f[2]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[1]; __pyx_lineno = 884; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     goto __pyx_L5;
   }
@@ -14042,22 +20444,22 @@ static char *__pyx_pybuffer_index(Py_buffer *__pyx_v_view, char *__pyx_v_bufp, P
  * 
  *     resultp = bufp + index * stride
  */
-    __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_dim); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_dim); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_t_4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_t_4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_IndexError, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 887; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":889
@@ -14246,7 +20648,7 @@ static int __pyx_memslice_transpose(__Pyx_memviewslice *__pyx_v_memslice) {
  * 
  *     return 1
  */
-      __pyx_t_8 = __pyx_memoryview_err(__pyx_builtin_ValueError, __pyx_k_Cannot_transpose_memoryview_with); if (unlikely(__pyx_t_8 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 913; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_8 = __pyx_memoryview_err(__pyx_builtin_ValueError, __pyx_k_Cannot_transpose_memoryview_with); if (unlikely(__pyx_t_8 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 913; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L5;
     }
     __pyx_L5:;
@@ -14366,7 +20768,7 @@ static PyObject *__pyx_memoryviewslice_convert_item_to_object(struct __pyx_memor
  *             return memoryview.convert_item_to_object(self, itemp)
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __pyx_v_self->to_object_func(__pyx_v_itemp); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 937; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __pyx_v_self->to_object_func(__pyx_v_itemp); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 937; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
@@ -14382,7 +20784,7 @@ static PyObject *__pyx_memoryviewslice_convert_item_to_object(struct __pyx_memor
  *     cdef assign_item_from_object(self, char *itemp, object value):
  */
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_2 = __pyx_memoryview_convert_item_to_object(((struct __pyx_memoryview_obj *)__pyx_v_self), __pyx_v_itemp); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 939; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __pyx_memoryview_convert_item_to_object(((struct __pyx_memoryview_obj *)__pyx_v_self), __pyx_v_itemp); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 939; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_r = __pyx_t_2;
     __pyx_t_2 = 0;
@@ -14444,7 +20846,7 @@ static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memo
  *         else:
  *             memoryview.assign_item_from_object(self, itemp, value)
  */
-    __pyx_t_2 = __pyx_v_self->to_dtype_func(__pyx_v_itemp, __pyx_v_value); if (unlikely(__pyx_t_2 == 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 943; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __pyx_v_self->to_dtype_func(__pyx_v_itemp, __pyx_v_value); if (unlikely(__pyx_t_2 == 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 943; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     goto __pyx_L3;
   }
   /*else*/ {
@@ -14456,7 +20858,7 @@ static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memo
  * 
  *     property base:
  */
-    __pyx_t_3 = __pyx_memoryview_assign_item_from_object(((struct __pyx_memoryview_obj *)__pyx_v_self), __pyx_v_itemp, __pyx_v_value); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 945; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __pyx_memoryview_assign_item_from_object(((struct __pyx_memoryview_obj *)__pyx_v_self), __pyx_v_itemp, __pyx_v_value); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 945; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
@@ -14594,9 +20996,9 @@ static PyObject *__pyx_memoryview_fromslice(__Pyx_memviewslice __pyx_v_memviewsl
  * 
  *     result.from_slice = memviewslice
  */
-  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_v_dtype_is_object); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 970; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyBool_FromLong(__pyx_v_dtype_is_object); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 970; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 970; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 970; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(Py_None);
   PyTuple_SET_ITEM(__pyx_t_3, 0, Py_None);
@@ -14607,7 +21009,7 @@ static PyObject *__pyx_memoryview_fromslice(__Pyx_memviewslice __pyx_v_memviewsl
   PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryviewslice_type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 970; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_memoryviewslice_type)), __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 970; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_result = ((struct __pyx_memoryviewslice_obj *)__pyx_t_2);
@@ -14638,7 +21040,7 @@ static PyObject *__pyx_memoryview_fromslice(__Pyx_memviewslice __pyx_v_memviewsl
  *     result.typeinfo = memviewslice.memview.typeinfo
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_memviewslice.memview), __pyx_n_s_base); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 975; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_memviewslice.memview), __pyx_n_s_base); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 975; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_2);
   __Pyx_GOTREF(__pyx_v_result->from_object);
@@ -14801,7 +21203,7 @@ static PyObject *__pyx_memoryview_fromslice(__Pyx_memviewslice __pyx_v_memviewsl
   __pyx_t_7 = (__pyx_v_result->__pyx_base.view.shape + __pyx_v_ndim);
   for (__pyx_t_8 = __pyx_v_result->__pyx_base.view.shape; __pyx_t_8 < __pyx_t_7; __pyx_t_8++) {
     __pyx_t_6 = __pyx_t_8;
-    __pyx_t_2 = PyInt_FromSsize_t((__pyx_t_6[0])); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 997; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyInt_FromSsize_t((__pyx_t_6[0])); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 997; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_XDECREF_SET(__pyx_v_length, __pyx_t_2);
     __pyx_t_2 = 0;
@@ -14813,12 +21215,12 @@ static PyObject *__pyx_memoryview_fromslice(__Pyx_memviewslice __pyx_v_memviewsl
  * 
  *     result.to_object_func = to_object_func
  */
-    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_result->__pyx_base.view.len); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 998; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_result->__pyx_base.view.len); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 998; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_InPlaceMultiply(__pyx_t_2, __pyx_v_length); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 998; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyNumber_InPlaceMultiply(__pyx_t_2, __pyx_v_length); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 998; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 998; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 998; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_result->__pyx_base.view.len = __pyx_t_9;
   }
@@ -14913,7 +21315,7 @@ static __Pyx_memviewslice *__pyx_memoryview_get_slice_from_memoryview(struct __p
  *         return &obj.from_slice
  *     else:
  */
-    if (!(likely(((((PyObject *)__pyx_v_memview)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_memview), __pyx_memoryviewslice_type))))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1010; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!(likely(((((PyObject *)__pyx_v_memview)) == Py_None) || likely(__Pyx_TypeTest(((PyObject *)__pyx_v_memview), __pyx_memoryviewslice_type))))) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1010; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_3 = ((PyObject *)__pyx_v_memview);
     __Pyx_INCREF(__pyx_t_3);
     __pyx_v_obj = ((struct __pyx_memoryviewslice_obj *)__pyx_t_3);
@@ -15129,7 +21531,7 @@ static PyObject *__pyx_memoryview_copy_object(struct __pyx_memoryview_obj *__pyx
  * @cname('__pyx_memoryview_copy_object_from_slice')
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_memoryview_copy_object_from_slice(__pyx_v_memview, (&__pyx_v_memviewslice)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1038; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_memoryview_copy_object_from_slice(__pyx_v_memview, (&__pyx_v_memviewslice)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1038; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -15247,7 +21649,7 @@ static PyObject *__pyx_memoryview_copy_object_from_slice(struct __pyx_memoryview
  * 
  * 
  */
-  __pyx_t_5 = __pyx_memoryview_fromslice((__pyx_v_memviewslice[0]), __pyx_v_memview->view.ndim, __pyx_v_to_object_func, __pyx_v_to_dtype_func, __pyx_v_memview->dtype_is_object); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1055; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __pyx_memoryview_fromslice((__pyx_v_memviewslice[0]), __pyx_v_memview->view.ndim, __pyx_v_to_object_func, __pyx_v_to_dtype_func, __pyx_v_memview->dtype_is_object); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1055; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_r = __pyx_t_5;
   __pyx_t_5 = 0;
@@ -15984,7 +22386,7 @@ static void *__pyx_memoryview_copy_data_to_temp(__Pyx_memviewslice *__pyx_v_src,
  * 
  * 
  */
-    __pyx_t_3 = __pyx_memoryview_err(__pyx_builtin_MemoryError, NULL); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1179; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __pyx_memoryview_err(__pyx_builtin_MemoryError, NULL); if (unlikely(__pyx_t_3 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1179; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     goto __pyx_L3;
   }
   __pyx_L3:;
@@ -16178,13 +22580,13 @@ static int __pyx_memoryview_err_extents(int __pyx_v_i, Py_ssize_t __pyx_v_extent
  * 
  * @cname('__pyx_memoryview_err_dim')
  */
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_extent1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_extent1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_extent2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_extent2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1209; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
@@ -16203,20 +22605,20 @@ static int __pyx_memoryview_err_extents(int __pyx_v_i, Py_ssize_t __pyx_v_extent
  *                                                         (i, extent1, extent2))
  * 
  */
-  __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_t_4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyString_Format(__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_t_4); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_3);
   __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_Raise(__pyx_t_3, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1208; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":1206
  * 
@@ -16273,11 +22675,11 @@ static int __pyx_memoryview_err_dim(PyObject *__pyx_v_error, char *__pyx_v_msg, 
  * 
  * @cname('__pyx_memoryview_err')
  */
-  __pyx_t_2 = __Pyx_decode_c_string(__pyx_v_msg, 0, strlen(__pyx_v_msg), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_decode_c_string(__pyx_v_msg, 0, strlen(__pyx_v_msg), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_dim); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_dim); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = PyUnicode_Format(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyUnicode_Format(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -16293,24 +22695,24 @@ static int __pyx_memoryview_err_dim(PyObject *__pyx_v_error, char *__pyx_v_msg, 
     }
   }
   if (!__pyx_t_2) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_1);
   } else {
-    __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2); __Pyx_GIVEREF(__pyx_t_2); __pyx_t_2 = NULL;
     PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_4);
     __pyx_t_4 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":1212
  * 
@@ -16380,7 +22782,7 @@ static int __pyx_memoryview_err(PyObject *__pyx_v_error, char *__pyx_v_msg) {
  *     else:
  *         raise error
  */
-    __pyx_t_3 = __Pyx_decode_c_string(__pyx_v_msg, 0, strlen(__pyx_v_msg), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_decode_c_string(__pyx_v_msg, 0, strlen(__pyx_v_msg), NULL, NULL, PyUnicode_DecodeASCII); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_v_error);
     __pyx_t_4 = __pyx_v_error; __pyx_t_5 = NULL;
@@ -16394,24 +22796,24 @@ static int __pyx_memoryview_err(PyObject *__pyx_v_error, char *__pyx_v_msg) {
       }
     }
     if (!__pyx_t_5) {
-      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_GOTREF(__pyx_t_2);
     } else {
-      __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5); __Pyx_GIVEREF(__pyx_t_5); __pyx_t_5 = NULL;
       PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_3);
       __pyx_t_3 = 0;
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   /*else*/ {
 
@@ -16423,7 +22825,7 @@ static int __pyx_memoryview_err(PyObject *__pyx_v_error, char *__pyx_v_msg) {
  * @cname('__pyx_memoryview_copy_contents')
  */
     __Pyx_Raise(__pyx_v_error, 0, 0, 0);
-    {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "View.MemoryView":1216
@@ -16644,7 +23046,7 @@ static int __pyx_memoryview_copy_contents(__Pyx_memviewslice __pyx_v_src, __Pyx_
  * 
  *         if src.suboffsets[i] >= 0:
  */
-        __pyx_t_4 = __pyx_memoryview_err_extents(__pyx_v_i, (__pyx_v_dst.shape[__pyx_v_i]), (__pyx_v_src.shape[__pyx_v_i])); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = __pyx_memoryview_err_extents(__pyx_v_i, (__pyx_v_dst.shape[__pyx_v_i]), (__pyx_v_src.shape[__pyx_v_i])); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       __pyx_L7:;
       goto __pyx_L6;
@@ -16668,7 +23070,7 @@ static int __pyx_memoryview_copy_contents(__Pyx_memviewslice __pyx_v_src, __Pyx_
  * 
  *     if slices_overlap(&src, &dst, ndim, itemsize):
  */
-      __pyx_t_4 = __pyx_memoryview_err_dim(__pyx_builtin_ValueError, __pyx_k_Dimension_d_is_not_direct, __pyx_v_i); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __pyx_memoryview_err_dim(__pyx_builtin_ValueError, __pyx_k_Dimension_d_is_not_direct, __pyx_v_i); if (unlikely(__pyx_t_4 == -1)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       goto __pyx_L8;
     }
     __pyx_L8:;
@@ -16713,7 +23115,7 @@ static int __pyx_memoryview_copy_contents(__Pyx_memviewslice __pyx_v_src, __Pyx_
  *         src = tmp
  * 
  */
-    __pyx_t_6 = __pyx_memoryview_copy_data_to_temp((&__pyx_v_src), (&__pyx_v_tmp), __pyx_v_order, __pyx_v_ndim); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1262; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = __pyx_memoryview_copy_data_to_temp((&__pyx_v_src), (&__pyx_v_tmp), __pyx_v_order, __pyx_v_ndim); if (unlikely(__pyx_t_6 == NULL)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1262; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_v_tmpdata = __pyx_t_6;
 
     /* "View.MemoryView":1263
@@ -16862,7 +23264,7 @@ static int __pyx_memoryview_copy_contents(__Pyx_memviewslice __pyx_v_src, __Pyx_
  *         transpose_memslice(&dst)
  * 
  */
-    __pyx_t_5 = __pyx_memslice_transpose((&__pyx_v_src)); if (unlikely(__pyx_t_5 == 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1284; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __pyx_memslice_transpose((&__pyx_v_src)); if (unlikely(__pyx_t_5 == 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1284; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
     /* "View.MemoryView":1285
  * 
@@ -16871,7 +23273,7 @@ static int __pyx_memoryview_copy_contents(__Pyx_memviewslice __pyx_v_src, __Pyx_
  * 
  *     refcount_copying(&dst, dtype_is_object, ndim, False)
  */
-    __pyx_t_5 = __pyx_memslice_transpose((&__pyx_v_dst)); if (unlikely(__pyx_t_5 == 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1285; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = __pyx_memslice_transpose((&__pyx_v_dst)); if (unlikely(__pyx_t_5 == 0)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 1285; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     goto __pyx_L14;
   }
   __pyx_L14:;
@@ -17412,334 +23814,6 @@ static void __pyx_memoryview__slice_assign_scalar(char *__pyx_v_data, Py_ssize_t
  */
 
   /* function exit code */
-}
-
-/* "BufferFormatFromTypeInfo":1418
- * 
- * @cname('__pyx_format_from_typeinfo')
- * cdef bytes format_from_typeinfo(__Pyx_TypeInfo *type):             # <<<<<<<<<<<<<<
- *     cdef __Pyx_StructField *field
- *     cdef __pyx_typeinfo_string fmt
- */
-
-static PyObject *__pyx_format_from_typeinfo(__Pyx_TypeInfo *__pyx_v_type) {
-  __Pyx_StructField *__pyx_v_field;
-  struct __pyx_typeinfo_string __pyx_v_fmt;
-  PyObject *__pyx_v_part = 0;
-  PyObject *__pyx_v_result = 0;
-  PyObject *__pyx_v_alignment = NULL;
-  PyObject *__pyx_v_parts = NULL;
-  PyObject *__pyx_v_extents = NULL;
-  int __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  int __pyx_t_2;
-  PyObject *__pyx_t_3 = NULL;
-  __Pyx_StructField *__pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  int __pyx_t_7;
-  int __pyx_t_8;
-  int __pyx_t_9;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("format_from_typeinfo", 0);
-
-  /* "BufferFormatFromTypeInfo":1423
- *     cdef bytes part, result
- * 
- *     if type.typegroup == 'S':             # <<<<<<<<<<<<<<
- *         assert type.fields != NULL and type.fields.type != NULL
- * 
- */
-  __pyx_t_1 = ((__pyx_v_type->typegroup == 'S') != 0);
-  if (__pyx_t_1) {
-
-    /* "BufferFormatFromTypeInfo":1424
- * 
- *     if type.typegroup == 'S':
- *         assert type.fields != NULL and type.fields.type != NULL             # <<<<<<<<<<<<<<
- * 
- *         if type.flags & __PYX_BUF_FLAGS_PACKED_STRUCT:
- */
-    #ifndef CYTHON_WITHOUT_ASSERTIONS
-    if (unlikely(!Py_OptimizeFlag)) {
-      __pyx_t_2 = ((__pyx_v_type->fields != NULL) != 0);
-      if (__pyx_t_2) {
-      } else {
-        __pyx_t_1 = __pyx_t_2;
-        goto __pyx_L4_bool_binop_done;
-      }
-      __pyx_t_2 = ((__pyx_v_type->fields->type != NULL) != 0);
-      __pyx_t_1 = __pyx_t_2;
-      __pyx_L4_bool_binop_done:;
-      if (unlikely(!__pyx_t_1)) {
-        PyErr_SetNone(PyExc_AssertionError);
-        {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1424; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      }
-    }
-    #endif
-
-    /* "BufferFormatFromTypeInfo":1426
- *         assert type.fields != NULL and type.fields.type != NULL
- * 
- *         if type.flags & __PYX_BUF_FLAGS_PACKED_STRUCT:             # <<<<<<<<<<<<<<
- *             alignment = b'^'
- *         else:
- */
-    __pyx_t_1 = ((__pyx_v_type->flags & __PYX_BUF_FLAGS_PACKED_STRUCT) != 0);
-    if (__pyx_t_1) {
-
-      /* "BufferFormatFromTypeInfo":1427
- * 
- *         if type.flags & __PYX_BUF_FLAGS_PACKED_STRUCT:
- *             alignment = b'^'             # <<<<<<<<<<<<<<
- *         else:
- *             alignment = b''
- */
-      __Pyx_INCREF(__pyx_kp_b__19);
-      __pyx_v_alignment = __pyx_kp_b__19;
-      goto __pyx_L6;
-    }
-    /*else*/ {
-
-      /* "BufferFormatFromTypeInfo":1429
- *             alignment = b'^'
- *         else:
- *             alignment = b''             # <<<<<<<<<<<<<<
- * 
- *         parts = [b"T{"]
- */
-      __Pyx_INCREF(__pyx_kp_b__20);
-      __pyx_v_alignment = __pyx_kp_b__20;
-    }
-    __pyx_L6:;
-
-    /* "BufferFormatFromTypeInfo":1431
- *             alignment = b''
- * 
- *         parts = [b"T{"]             # <<<<<<<<<<<<<<
- *         field = type.fields
- * 
- */
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1431; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_kp_b_T);
-    PyList_SET_ITEM(__pyx_t_3, 0, __pyx_kp_b_T);
-    __Pyx_GIVEREF(__pyx_kp_b_T);
-    __pyx_v_parts = ((PyObject*)__pyx_t_3);
-    __pyx_t_3 = 0;
-
-    /* "BufferFormatFromTypeInfo":1432
- * 
- *         parts = [b"T{"]
- *         field = type.fields             # <<<<<<<<<<<<<<
- * 
- *         while field.type:
- */
-    __pyx_t_4 = __pyx_v_type->fields;
-    __pyx_v_field = __pyx_t_4;
-
-    /* "BufferFormatFromTypeInfo":1434
- *         field = type.fields
- * 
- *         while field.type:             # <<<<<<<<<<<<<<
- *             part = format_from_typeinfo(field.type)
- *             parts.append(part + b':' + field.name + b':')
- */
-    while (1) {
-      __pyx_t_1 = (__pyx_v_field->type != 0);
-      if (!__pyx_t_1) break;
-
-      /* "BufferFormatFromTypeInfo":1435
- * 
- *         while field.type:
- *             part = format_from_typeinfo(field.type)             # <<<<<<<<<<<<<<
- *             parts.append(part + b':' + field.name + b':')
- *             field += 1
- */
-      __pyx_t_3 = __pyx_format_from_typeinfo(__pyx_v_field->type); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1435; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_XDECREF_SET(__pyx_v_part, ((PyObject*)__pyx_t_3));
-      __pyx_t_3 = 0;
-
-      /* "BufferFormatFromTypeInfo":1436
- *         while field.type:
- *             part = format_from_typeinfo(field.type)
- *             parts.append(part + b':' + field.name + b':')             # <<<<<<<<<<<<<<
- *             field += 1
- * 
- */
-      __pyx_t_3 = PyNumber_Add(__pyx_v_part, __pyx_kp_b__21); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1436; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = __Pyx_PyBytes_FromString(__pyx_v_field->name); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1436; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = PyNumber_Add(__pyx_t_3, __pyx_t_5); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1436; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_kp_b__21); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1436; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_7 = __Pyx_PyList_Append(__pyx_v_parts, __pyx_t_5); if (unlikely(__pyx_t_7 == -1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1436; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-
-      /* "BufferFormatFromTypeInfo":1437
- *             part = format_from_typeinfo(field.type)
- *             parts.append(part + b':' + field.name + b':')
- *             field += 1             # <<<<<<<<<<<<<<
- * 
- *         result = alignment.join(parts) + b'}'
- */
-      __pyx_v_field = (__pyx_v_field + 1);
-    }
-
-    /* "BufferFormatFromTypeInfo":1439
- *             field += 1
- * 
- *         result = alignment.join(parts) + b'}'             # <<<<<<<<<<<<<<
- *     else:
- *         fmt = __Pyx_TypeInfoToFormat(type)
- */
-    __pyx_t_5 = __Pyx_PyBytes_Join(__pyx_v_alignment, __pyx_v_parts); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1439; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_kp_b__22); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1439; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (!(likely(PyBytes_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_6)->tp_name), 0))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1439; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_v_result = ((PyObject*)__pyx_t_6);
-    __pyx_t_6 = 0;
-    goto __pyx_L3;
-  }
-  /*else*/ {
-
-    /* "BufferFormatFromTypeInfo":1441
- *         result = alignment.join(parts) + b'}'
- *     else:
- *         fmt = __Pyx_TypeInfoToFormat(type)             # <<<<<<<<<<<<<<
- *         if type.arraysize[0]:
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]
- */
-    __pyx_v_fmt = __Pyx_TypeInfoToFormat(__pyx_v_type);
-
-    /* "BufferFormatFromTypeInfo":1442
- *     else:
- *         fmt = __Pyx_TypeInfoToFormat(type)
- *         if type.arraysize[0]:             # <<<<<<<<<<<<<<
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string
- */
-    __pyx_t_1 = ((__pyx_v_type->arraysize[0]) != 0);
-    if (__pyx_t_1) {
-
-      /* "BufferFormatFromTypeInfo":1443
- *         fmt = __Pyx_TypeInfoToFormat(type)
- *         if type.arraysize[0]:
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]             # <<<<<<<<<<<<<<
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string
- *         else:
- */
-      __pyx_t_6 = PyList_New(0); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1443; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_8 = __pyx_v_type->ndim;
-      for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
-        __pyx_v_i = __pyx_t_9;
-        __pyx_t_5 = __Pyx_PyInt_FromSize_t((__pyx_v_type->arraysize[__pyx_v_i])); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1443; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_5);
-        __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1443; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_3);
-        PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5);
-        __Pyx_GIVEREF(__pyx_t_5);
-        __pyx_t_5 = 0;
-        __pyx_t_5 = __Pyx_PyObject_Call(((PyObject *)((PyObject*)(&PyUnicode_Type))), __pyx_t_3, NULL); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1443; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_5);
-        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(__Pyx_ListComp_Append(__pyx_t_6, (PyObject*)__pyx_t_5))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1443; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      }
-      __pyx_v_extents = ((PyObject*)__pyx_t_6);
-      __pyx_t_6 = 0;
-
-      /* "BufferFormatFromTypeInfo":1444
- *         if type.arraysize[0]:
- *             extents = [unicode(type.arraysize[i]) for i in range(type.ndim)]
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string             # <<<<<<<<<<<<<<
- *         else:
- *             result = fmt.string
- */
-      __pyx_t_6 = PyUnicode_Join(__pyx_kp_u__23, __pyx_v_extents); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1444; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_5 = PyUnicode_Format(__pyx_kp_u_s, __pyx_t_6); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1444; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_5);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyUnicode_AsASCIIString(((PyObject*)__pyx_t_5)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1444; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyObject_FromString(__pyx_v_fmt.string); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1444; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_3 = PyNumber_Add(__pyx_t_6, __pyx_t_5); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1444; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_3);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (!(likely(PyBytes_CheckExact(__pyx_t_3))||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_3)->tp_name), 0))) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1444; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __pyx_v_result = ((PyObject*)__pyx_t_3);
-      __pyx_t_3 = 0;
-      goto __pyx_L9;
-    }
-    /*else*/ {
-
-      /* "BufferFormatFromTypeInfo":1446
- *             result = (u"(%s)" % u','.join(extents)).encode('ascii') + fmt.string
- *         else:
- *             result = fmt.string             # <<<<<<<<<<<<<<
- * 
- *     return result
- */
-      __pyx_t_3 = __Pyx_PyObject_FromString(__pyx_v_fmt.string); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1446; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_v_result = ((PyObject*)__pyx_t_3);
-      __pyx_t_3 = 0;
-    }
-    __pyx_L9:;
-  }
-  __pyx_L3:;
-
-  /* "BufferFormatFromTypeInfo":1448
- *             result = fmt.string
- * 
- *     return result             # <<<<<<<<<<<<<<
- */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_result);
-  __pyx_r = __pyx_v_result;
-  goto __pyx_L0;
-
-  /* "BufferFormatFromTypeInfo":1418
- * 
- * @cname('__pyx_format_from_typeinfo')
- * cdef bytes format_from_typeinfo(__Pyx_TypeInfo *type):             # <<<<<<<<<<<<<<
- *     cdef __Pyx_StructField *field
- *     cdef __pyx_typeinfo_string fmt
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("BufferFormatFromTypeInfo.format_from_typeinfo", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_part);
-  __Pyx_XDECREF(__pyx_v_result);
-  __Pyx_XDECREF(__pyx_v_alignment);
-  __Pyx_XDECREF(__pyx_v_parts);
-  __Pyx_XDECREF(__pyx_v_extents);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
 }
 
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k) {
@@ -18409,7 +24483,7 @@ static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
   #endif
     "integrate",
-    0, /* m_doc */
+    __pyx_k_3D_Integrators_of_Vector_Fields, /* m_doc */
     -1, /* m_size */
     __pyx_methods /* m_methods */,
     NULL, /* m_reload */
@@ -18438,15 +24512,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_b_O, __pyx_k_O, sizeof(__pyx_k_O), 0, 0, 0, 1},
   {&__pyx_kp_s_Out_of_bounds_on_buffer_access_a, __pyx_k_Out_of_bounds_on_buffer_access_a, sizeof(__pyx_k_Out_of_bounds_on_buffer_access_a), 0, 0, 1, 0},
   {&__pyx_n_s_RuntimeError, __pyx_k_RuntimeError, sizeof(__pyx_k_RuntimeError), 0, 0, 1, 1},
-  {&__pyx_kp_b_T, __pyx_k_T, sizeof(__pyx_k_T), 0, 0, 0, 0},
   {&__pyx_n_s_TypeError, __pyx_k_TypeError, sizeof(__pyx_k_TypeError), 0, 0, 1, 1},
   {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
-  {&__pyx_kp_b__19, __pyx_k__19, sizeof(__pyx_k__19), 0, 0, 0, 0},
-  {&__pyx_kp_b__20, __pyx_k__20, sizeof(__pyx_k__20), 0, 0, 0, 0},
-  {&__pyx_kp_b__21, __pyx_k__21, sizeof(__pyx_k__21), 0, 0, 0, 0},
-  {&__pyx_kp_b__22, __pyx_k__22, sizeof(__pyx_k__22), 0, 0, 0, 0},
-  {&__pyx_kp_u__23, __pyx_k__23, sizeof(__pyx_k__23), 0, 1, 0, 0},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
@@ -18466,7 +24534,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
-  {&__pyx_n_s_join, __pyx_k_join, sizeof(__pyx_k_join), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
   {&__pyx_n_s_mode, __pyx_k_mode, sizeof(__pyx_k_mode), 0, 0, 1, 1},
@@ -18480,7 +24547,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pyx_getbuffer, __pyx_k_pyx_getbuffer, sizeof(__pyx_k_pyx_getbuffer), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
-  {&__pyx_kp_u_s, __pyx_k_s, sizeof(__pyx_k_s), 0, 1, 0, 0},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
@@ -18498,15 +24564,15 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 231; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 357; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 386; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 569; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 788; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 231; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_Ellipsis = __Pyx_GetBuiltinName(__pyx_n_s_Ellipsis); if (!__pyx_builtin_Ellipsis) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 357; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 386; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_id = __Pyx_GetBuiltinName(__pyx_n_s_id); if (!__pyx_builtin_id) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 569; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 788; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -18523,7 +24589,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             if ((flags & pybuf.PyBUF_F_CONTIGUOUS == pybuf.PyBUF_F_CONTIGUOUS)
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_C_contiguous); if (unlikely(!__pyx_tuple_)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_C_contiguous); if (unlikely(!__pyx_tuple_)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
@@ -18534,7 +24600,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             info.buf = PyArray_DATA(self)
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_Fortran_contiguou); if (unlikely(!__pyx_tuple__2)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_ndarray_is_not_Fortran_contiguou); if (unlikely(!__pyx_tuple__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 222; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
@@ -18545,7 +24611,7 @@ static int __Pyx_InitCachedConstants(void) {
  *                 if   t == NPY_BYTE:        f = "b"
  *                 elif t == NPY_UBYTE:       f = "B"
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 260; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
@@ -18556,7 +24622,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *         if ((child.byteorder == c'>' and little_endian) or
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor); if (unlikely(!__pyx_tuple__4)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor); if (unlikely(!__pyx_tuple__4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 802; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
@@ -18567,7 +24633,7 @@ static int __Pyx_InitCachedConstants(void) {
  *             # One could encode it in the format string and have Cython
  *             # complain instead, BUT: < and > in format strings also imply
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__5)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 806; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_Non_native_byte_order_not_suppor); if (unlikely(!__pyx_tuple__5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 806; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
@@ -18578,7 +24644,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             # Until ticket #99 is fixed, use integers to avoid warnings
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor_2); if (unlikely(!__pyx_tuple__6)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 826; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u_Format_string_allocated_too_shor_2); if (unlikely(!__pyx_tuple__6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 826; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
@@ -18589,7 +24655,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *         if itemsize <= 0:
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__7)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__7)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
@@ -18600,7 +24666,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *         if isinstance(format, unicode):
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__8)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__8)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
 
@@ -18611,7 +24677,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__9)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__9)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
 
@@ -18622,7 +24688,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             if self.dtype_is_object:
  */
-  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__10)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__10)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 170; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
 
@@ -18633,7 +24699,7 @@ static int __Pyx_InitCachedConstants(void) {
  *         info.buf = self.data
  *         info.len = self.len
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__11)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__11)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
 
@@ -18644,7 +24710,7 @@ static int __Pyx_InitCachedConstants(void) {
  *         else:
  *             if len(self.view.format) == 1:
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__12)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 445; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__12)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 445; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
 
@@ -18655,7 +24721,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__13)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 521; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__13)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 521; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__13);
   __Pyx_GIVEREF(__pyx_tuple__13);
 
@@ -18666,7 +24732,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *             return tuple([suboffset for suboffset in self.view.suboffsets[:self.view.ndim]])
  */
-  __pyx_tuple__14 = PyTuple_New(1); if (unlikely(!__pyx_tuple__14)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 529; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__14 = PyTuple_New(1); if (unlikely(!__pyx_tuple__14)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 529; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_INCREF(__pyx_int_neg_1);
   PyTuple_SET_ITEM(__pyx_tuple__14, 0, __pyx_int_neg_1);
@@ -18680,7 +24746,7 @@ static int __Pyx_InitCachedConstants(void) {
  *                 seen_ellipsis = True
  *             else:
  */
-  __pyx_slice__15 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__15)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__15 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__15)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 638; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__15);
   __Pyx_GIVEREF(__pyx_slice__15);
 
@@ -18691,7 +24757,7 @@ static int __Pyx_InitCachedConstants(void) {
  *             have_slices = True
  *         else:
  */
-  __pyx_slice__16 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__16)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 641; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__16 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__16)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 641; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__16);
   __Pyx_GIVEREF(__pyx_slice__16);
 
@@ -18702,7 +24768,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  *     return have_slices or nslices, tuple(result)
  */
-  __pyx_slice__17 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__17)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 652; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__17 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__17)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 652; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__17);
   __Pyx_GIVEREF(__pyx_slice__17);
 
@@ -18713,7 +24779,7 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__18 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__18)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 659; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__18 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__18)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 659; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
 
@@ -18724,9 +24790,9 @@ static int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__24)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 276; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_tuple__24);
-  __Pyx_GIVEREF(__pyx_tuple__24);
+  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__19)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 276; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__19);
+  __Pyx_GIVEREF(__pyx_tuple__19);
 
   /* "View.MemoryView":277
  * 
@@ -18735,9 +24801,9 @@ static int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__25)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_tuple__25);
-  __Pyx_GIVEREF(__pyx_tuple__25);
+  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__20)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__20);
+  __Pyx_GIVEREF(__pyx_tuple__20);
 
   /* "View.MemoryView":278
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -18746,9 +24812,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__26)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__21)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__21);
+  __Pyx_GIVEREF(__pyx_tuple__21);
 
   /* "View.MemoryView":281
  * 
@@ -18757,9 +24823,9 @@ static int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__27)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 281; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
+  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__22)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 281; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__22);
+  __Pyx_GIVEREF(__pyx_tuple__22);
 
   /* "View.MemoryView":282
  * 
@@ -18768,9 +24834,9 @@ static int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__28)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 282; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_tuple__28);
-  __Pyx_GIVEREF(__pyx_tuple__28);
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__23)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 282; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_tuple__23);
+  __Pyx_GIVEREF(__pyx_tuple__23);
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -18779,10 +24845,10 @@ static int __Pyx_InitCachedConstants(void) {
 }
 
 static int __Pyx_InitGlobals(void) {
-  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-  __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_InitStrings(__pyx_string_tab) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_int_neg_1 = PyInt_FromLong(-1); if (unlikely(!__pyx_int_neg_1)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -18798,6 +24864,7 @@ PyMODINIT_FUNC PyInit_integrate(void)
 {
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -18812,17 +24879,17 @@ PyMODINIT_FUNC PyInit_integrate(void)
   }
   #endif
   __Pyx_RefNannySetupContext("PyMODINIT_FUNC PyInit_integrate(void)", 0);
-  if ( __Pyx_check_binary_version() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if ( __Pyx_check_binary_version() < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_empty_tuple = PyTuple_New(0); if (unlikely(!__pyx_empty_tuple)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_empty_bytes = PyBytes_FromStringAndSize("", 0); if (unlikely(!__pyx_empty_bytes)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #ifdef __Pyx_CyFunction_USED
-  if (__Pyx_CyFunction_init() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_CyFunction_init() < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
   #ifdef __Pyx_FusedFunction_USED
-  if (__pyx_FusedFunction_init() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__pyx_FusedFunction_init() < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
   #ifdef __Pyx_Generator_USED
-  if (__pyx_Generator_init() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__pyx_Generator_init() < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
   /*--- Library function declarations ---*/
   /*--- Threads initialization code ---*/
@@ -18833,38 +24900,38 @@ PyMODINIT_FUNC PyInit_integrate(void)
   #endif
   /*--- Module creation code ---*/
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("integrate", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("integrate", __pyx_methods, __pyx_k_3D_Integrators_of_Vector_Fields, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
-  if (unlikely(!__pyx_m)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_d = PyModule_GetDict(__pyx_m); if (unlikely(!__pyx_d)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_m)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_d = PyModule_GetDict(__pyx_m); if (unlikely(!__pyx_d)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   Py_INCREF(__pyx_d);
-  __pyx_b = PyImport_AddModule(__Pyx_BUILTIN_MODULE_NAME); if (unlikely(!__pyx_b)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_b = PyImport_AddModule(__Pyx_BUILTIN_MODULE_NAME); if (unlikely(!__pyx_b)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #if CYTHON_COMPILING_IN_PYPY
   Py_INCREF(__pyx_b);
   #endif
-  if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  if (PyObject_SetAttrString(__pyx_m, "__builtins__", __pyx_b) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   /*--- Initialize various global constants etc. ---*/
-  if (unlikely(__Pyx_InitGlobals() < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(__Pyx_InitGlobals() < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
-  if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
   if (__pyx_module_is_main_viscid__calculator__integrate) {
-    if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
-    PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     if (!PyDict_GetItemString(modules, "viscid.calculator.integrate")) {
-      if (unlikely(PyDict_SetItemString(modules, "viscid.calculator.integrate", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (unlikely(PyDict_SetItemString(modules, "viscid.calculator.integrate", __pyx_m) < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
   /*--- Builtin init code ---*/
-  if (unlikely(__Pyx_InitCachedBuiltins() < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(__Pyx_InitCachedBuiltins() < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Constants init code ---*/
-  if (unlikely(__Pyx_InitCachedConstants() < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(__Pyx_InitCachedConstants() < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Global init code ---*/
   generic = Py_None; Py_INCREF(Py_None);
   strided = Py_None; Py_INCREF(Py_None);
@@ -18873,19 +24940,43 @@ PyMODINIT_FUNC PyInit_integrate(void)
   indirect_contiguous = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("__pyx_fuse_0_c_euler1", (void (*)(void))__pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_c_euler1", (void (*)(void))__pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_c_rk2", (void (*)(void))__pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_c_rk2", (void (*)(void))__pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_c_rk12", (void (*)(void))__pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_c_rk12", (void (*)(void))__pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_c_euler1a", (void (*)(void))__pyx_fuse_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float32_t *, __Pyx_memviewslice, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_c_euler1a", (void (*)(void))__pyx_fuse_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (__Pyx_memviewslice, __Pyx_memviewslice *, __pyx_t_5numpy_float64_t *, __Pyx_memviewslice, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk2", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk2", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk2", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk2", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk2", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk2", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk2", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk2", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk12", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk12", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk12", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk12", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk12", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk12", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk12", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk12", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1a", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1a", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1a", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1a", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1a", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1a", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1a", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1a", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type___pyx_array) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyType_Ready(&__pyx_type___pyx_array) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type___pyx_array.tp_print = 0;
   __pyx_array_type = &__pyx_type___pyx_array;
-  if (PyType_Ready(&__pyx_type___pyx_MemviewEnum) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 269; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyType_Ready(&__pyx_type___pyx_MemviewEnum) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 269; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type___pyx_MemviewEnum.tp_print = 0;
   __pyx_MemviewEnum_type = &__pyx_type___pyx_MemviewEnum;
   __pyx_vtabptr_memoryview = &__pyx_vtable_memoryview;
@@ -18896,18 +24987,18 @@ PyMODINIT_FUNC PyInit_integrate(void)
   __pyx_vtable_memoryview.setitem_indexed = (PyObject *(*)(struct __pyx_memoryview_obj *, PyObject *, PyObject *))__pyx_memoryview_setitem_indexed;
   __pyx_vtable_memoryview.convert_item_to_object = (PyObject *(*)(struct __pyx_memoryview_obj *, char *))__pyx_memoryview_convert_item_to_object;
   __pyx_vtable_memoryview.assign_item_from_object = (PyObject *(*)(struct __pyx_memoryview_obj *, char *, PyObject *))__pyx_memoryview_assign_item_from_object;
-  if (PyType_Ready(&__pyx_type___pyx_memoryview) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 302; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyType_Ready(&__pyx_type___pyx_memoryview) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 302; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type___pyx_memoryview.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type___pyx_memoryview.tp_dict, __pyx_vtabptr_memoryview) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 302; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_SetVtable(__pyx_type___pyx_memoryview.tp_dict, __pyx_vtabptr_memoryview) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 302; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_memoryview_type = &__pyx_type___pyx_memoryview;
   __pyx_vtabptr__memoryviewslice = &__pyx_vtable__memoryviewslice;
   __pyx_vtable__memoryviewslice.__pyx_base = *__pyx_vtabptr_memoryview;
   __pyx_vtable__memoryviewslice.__pyx_base.convert_item_to_object = (PyObject *(*)(struct __pyx_memoryview_obj *, char *))__pyx_memoryviewslice_convert_item_to_object;
   __pyx_vtable__memoryviewslice.__pyx_base.assign_item_from_object = (PyObject *(*)(struct __pyx_memoryview_obj *, char *, PyObject *))__pyx_memoryviewslice_assign_item_from_object;
   __pyx_type___pyx_memoryviewslice.tp_base = __pyx_memoryview_type;
-  if (PyType_Ready(&__pyx_type___pyx_memoryviewslice) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 921; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyType_Ready(&__pyx_type___pyx_memoryviewslice) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 921; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type___pyx_memoryviewslice.tp_print = 0;
-  if (__Pyx_SetVtable(__pyx_type___pyx_memoryviewslice.tp_dict, __pyx_vtabptr__memoryviewslice) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 921; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_SetVtable(__pyx_type___pyx_memoryviewslice.tp_dict, __pyx_vtabptr__memoryviewslice) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 921; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_memoryviewslice_type = &__pyx_type___pyx_memoryviewslice;
   /*--- Type import code ---*/
   __pyx_ptype_7cpython_4type_type = __Pyx_ImportType(__Pyx_BUILTIN_MODULE_NAME, "type", 
@@ -18917,28 +25008,42 @@ PyMODINIT_FUNC PyInit_integrate(void)
   sizeof(PyHeapTypeObject),
   #endif
   0); if (unlikely(!__pyx_ptype_7cpython_4type_type)) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 9; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_5numpy_dtype = __Pyx_ImportType("numpy", "dtype", sizeof(PyArray_Descr), 0); if (unlikely(!__pyx_ptype_5numpy_dtype)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 155; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_5numpy_flatiter = __Pyx_ImportType("numpy", "flatiter", sizeof(PyArrayIterObject), 0); if (unlikely(!__pyx_ptype_5numpy_flatiter)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_5numpy_broadcast = __Pyx_ImportType("numpy", "broadcast", sizeof(PyArrayMultiIterObject), 0); if (unlikely(!__pyx_ptype_5numpy_broadcast)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_5numpy_ndarray = __Pyx_ImportType("numpy", "ndarray", sizeof(PyArrayObject), 0); if (unlikely(!__pyx_ptype_5numpy_ndarray)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_5numpy_ufunc = __Pyx_ImportType("numpy", "ufunc", sizeof(PyUFuncObject), 0); if (unlikely(!__pyx_ptype_5numpy_ufunc)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 864; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_5numpy_dtype = __Pyx_ImportType("numpy", "dtype", sizeof(PyArray_Descr), 0); if (unlikely(!__pyx_ptype_5numpy_dtype)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 155; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_5numpy_flatiter = __Pyx_ImportType("numpy", "flatiter", sizeof(PyArrayIterObject), 0); if (unlikely(!__pyx_ptype_5numpy_flatiter)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 168; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_5numpy_broadcast = __Pyx_ImportType("numpy", "broadcast", sizeof(PyArrayMultiIterObject), 0); if (unlikely(!__pyx_ptype_5numpy_broadcast)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_5numpy_ndarray = __Pyx_ImportType("numpy", "ndarray", sizeof(PyArrayObject), 0); if (unlikely(!__pyx_ptype_5numpy_ndarray)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_5numpy_ufunc = __Pyx_ImportType("numpy", "ufunc", sizeof(PyUFuncObject), 0); if (unlikely(!__pyx_ptype_5numpy_ufunc)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 864; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_10calculator_7cyfield_CyField = __Pyx_ImportType("viscid.calculator.cyfield", "CyField", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_CyField), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_CyField)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_I4_Crd_F8", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_I8_Crd_F8", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_F4_Crd_F4", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_F8_Crd_F8", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
-  __pyx_t_1 = __Pyx_ImportModule("viscid.calculator.cycalc"); if (!__pyx_t_1) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_1, "__pyx_fuse_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (__Pyx_memviewslice, int, __Pyx_memviewslice *, __Pyx_memviewslice, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_1, "__pyx_fuse_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (__Pyx_memviewslice, int, __Pyx_memviewslice *, __Pyx_memviewslice, int *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_ImportModule("viscid.calculator.cyfield"); if (!__pyx_t_1) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_1, "make_cyfield", (void (**)(void))&__pyx_f_6viscid_10calculator_7cyfield_make_cyfield, "struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *(PyObject *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   Py_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_ImportModule("viscid.calculator.cycalc"); if (!__pyx_t_2) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  Py_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   /*--- Execution code ---*/
 
   /* "viscid/calculator/integrate.pyx":1
  * # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False             # <<<<<<<<<<<<<<
- * #
- * # Cython module for euler1 integration, and in the future rk4 and rk45
+ * """3D Integrators of Vector Fields with 3 Components"""
+ * from __future__ import print_function
  */
-  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
   /* "View.MemoryView":203
  *         info.obj = self
@@ -18947,10 +25052,10 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * 
  *     def __dealloc__(array self):
  */
-  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_array_getbuffer)), __pyx_k_getbuffer_obj_view_flags); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_array_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = __pyx_capsule_create(((void *)(&__pyx_array_getbuffer)), __pyx_k_getbuffer_obj_view_flags); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_array_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   PyType_Modified(__pyx_array_type);
 
   /* "View.MemoryView":276
@@ -18960,12 +25065,12 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 276; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 276; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_XGOTREF(generic);
-  __Pyx_DECREF_SET(generic, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(generic, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_t_3 = 0;
 
   /* "View.MemoryView":277
  * 
@@ -18974,12 +25079,12 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__25, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__20, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_XGOTREF(strided);
-  __Pyx_DECREF_SET(strided, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(strided, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_t_3 = 0;
 
   /* "View.MemoryView":278
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -18988,12 +25093,12 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_XGOTREF(indirect);
-  __Pyx_DECREF_SET(indirect, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(indirect, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_t_3 = 0;
 
   /* "View.MemoryView":281
  * 
@@ -19002,12 +25107,12 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 281; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 281; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_XGOTREF(contiguous);
-  __Pyx_DECREF_SET(contiguous, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(contiguous, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_t_3 = 0;
 
   /* "View.MemoryView":282
  * 
@@ -19016,12 +25121,12 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 282; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_Call(((PyObject *)((PyObject *)__pyx_MemviewEnum_type)), __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 282; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_XGOTREF(indirect_contiguous);
-  __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
+  __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_3);
+  __pyx_t_3 = 0;
 
   /* "View.MemoryView":496
  *         info.obj = self
@@ -19030,10 +25135,10 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * 
  * 
  */
-  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), __pyx_k_getbuffer_obj_view_flags); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 496; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_memoryview_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 496; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), __pyx_k_getbuffer_obj_view_flags); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 496; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_memoryview_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 496; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   PyType_Modified(__pyx_memoryview_type);
 
   /* "View.MemoryView":952
@@ -19043,18 +25148,18 @@ PyMODINIT_FUNC PyInit_integrate(void)
  * 
  * 
  */
-  __pyx_t_2 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), __pyx_k_getbuffer_obj_view_flags); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 952; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_memoryviewslice_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 952; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_3 = __pyx_capsule_create(((void *)(&__pyx_memoryview_getbuffer)), __pyx_k_getbuffer_obj_view_flags); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 952; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  if (PyDict_SetItem(__pyx_memoryviewslice_type->tp_dict, __pyx_n_s_pyx_getbuffer, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 952; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   PyType_Modified(__pyx_memoryviewslice_type);
 
-  /* "BufferFormatFromTypeInfo":1418
+  /* "View.MemoryView":1362
  * 
- * @cname('__pyx_format_from_typeinfo')
- * cdef bytes format_from_typeinfo(__Pyx_TypeInfo *type):             # <<<<<<<<<<<<<<
- *     cdef __Pyx_StructField *field
- *     cdef __pyx_typeinfo_string fmt
+ * @cname('__pyx_memoryview__slice_assign_scalar')
+ * cdef void _slice_assign_scalar(char *data, Py_ssize_t *shape,             # <<<<<<<<<<<<<<
+ *                               Py_ssize_t *strides, int ndim,
+ *                               size_t itemsize, void *item) nogil:
  */
 
   /*--- Wrapped vars code ---*/
@@ -19063,6 +25168,7 @@ PyMODINIT_FUNC PyInit_integrate(void)
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
   if (__pyx_m) {
     if (__pyx_d) {
       __Pyx_AddTraceback("init viscid.calculator.integrate", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -19096,690 +25202,6 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
-
-static CYTHON_INLINE int __Pyx_IsLittleEndian(void) {
-  unsigned int n = 1;
-  return *(unsigned char*)(&n) != 0;
-}
-static void __Pyx_BufFmt_Init(__Pyx_BufFmt_Context* ctx,
-                              __Pyx_BufFmt_StackElem* stack,
-                              __Pyx_TypeInfo* type) {
-  stack[0].field = &ctx->root;
-  stack[0].parent_offset = 0;
-  ctx->root.type = type;
-  ctx->root.name = "buffer dtype";
-  ctx->root.offset = 0;
-  ctx->head = stack;
-  ctx->head->field = &ctx->root;
-  ctx->fmt_offset = 0;
-  ctx->head->parent_offset = 0;
-  ctx->new_packmode = '@';
-  ctx->enc_packmode = '@';
-  ctx->new_count = 1;
-  ctx->enc_count = 0;
-  ctx->enc_type = 0;
-  ctx->is_complex = 0;
-  ctx->is_valid_array = 0;
-  ctx->struct_alignment = 0;
-  while (type->typegroup == 'S') {
-    ++ctx->head;
-    ctx->head->field = type->fields;
-    ctx->head->parent_offset = 0;
-    type = type->fields->type;
-  }
-}
-static int __Pyx_BufFmt_ParseNumber(const char** ts) {
-    int count;
-    const char* t = *ts;
-    if (*t < '0' || *t > '9') {
-      return -1;
-    } else {
-        count = *t++ - '0';
-        while (*t >= '0' && *t < '9') {
-            count *= 10;
-            count += *t++ - '0';
-        }
-    }
-    *ts = t;
-    return count;
-}
-static int __Pyx_BufFmt_ExpectNumber(const char **ts) {
-    int number = __Pyx_BufFmt_ParseNumber(ts);
-    if (number == -1)
-        PyErr_Format(PyExc_ValueError,\
-                     "Does not understand character buffer dtype format string ('%c')", **ts);
-    return number;
-}
-static void __Pyx_BufFmt_RaiseUnexpectedChar(char ch) {
-  PyErr_Format(PyExc_ValueError,
-               "Unexpected format string character: '%c'", ch);
-}
-static const char* __Pyx_BufFmt_DescribeTypeChar(char ch, int is_complex) {
-  switch (ch) {
-    case 'c': return "'char'";
-    case 'b': return "'signed char'";
-    case 'B': return "'unsigned char'";
-    case 'h': return "'short'";
-    case 'H': return "'unsigned short'";
-    case 'i': return "'int'";
-    case 'I': return "'unsigned int'";
-    case 'l': return "'long'";
-    case 'L': return "'unsigned long'";
-    case 'q': return "'long long'";
-    case 'Q': return "'unsigned long long'";
-    case 'f': return (is_complex ? "'complex float'" : "'float'");
-    case 'd': return (is_complex ? "'complex double'" : "'double'");
-    case 'g': return (is_complex ? "'complex long double'" : "'long double'");
-    case 'T': return "a struct";
-    case 'O': return "Python object";
-    case 'P': return "a pointer";
-    case 's': case 'p': return "a string";
-    case 0: return "end";
-    default: return "unparseable format string";
-  }
-}
-static size_t __Pyx_BufFmt_TypeCharToStandardSize(char ch, int is_complex) {
-  switch (ch) {
-    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
-    case 'h': case 'H': return 2;
-    case 'i': case 'I': case 'l': case 'L': return 4;
-    case 'q': case 'Q': return 8;
-    case 'f': return (is_complex ? 8 : 4);
-    case 'd': return (is_complex ? 16 : 8);
-    case 'g': {
-      PyErr_SetString(PyExc_ValueError, "Python does not define a standard format string size for long double ('g')..");
-      return 0;
-    }
-    case 'O': case 'P': return sizeof(void*);
-    default:
-      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
-      return 0;
-    }
-}
-static size_t __Pyx_BufFmt_TypeCharToNativeSize(char ch, int is_complex) {
-  switch (ch) {
-    case 'c': case 'b': case 'B': case 's': case 'p': return 1;
-    case 'h': case 'H': return sizeof(short);
-    case 'i': case 'I': return sizeof(int);
-    case 'l': case 'L': return sizeof(long);
-    #ifdef HAVE_LONG_LONG
-    case 'q': case 'Q': return sizeof(PY_LONG_LONG);
-    #endif
-    case 'f': return sizeof(float) * (is_complex ? 2 : 1);
-    case 'd': return sizeof(double) * (is_complex ? 2 : 1);
-    case 'g': return sizeof(long double) * (is_complex ? 2 : 1);
-    case 'O': case 'P': return sizeof(void*);
-    default: {
-      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
-      return 0;
-    }
-  }
-}
-typedef struct { char c; short x; } __Pyx_st_short;
-typedef struct { char c; int x; } __Pyx_st_int;
-typedef struct { char c; long x; } __Pyx_st_long;
-typedef struct { char c; float x; } __Pyx_st_float;
-typedef struct { char c; double x; } __Pyx_st_double;
-typedef struct { char c; long double x; } __Pyx_st_longdouble;
-typedef struct { char c; void *x; } __Pyx_st_void_p;
-#ifdef HAVE_LONG_LONG
-typedef struct { char c; PY_LONG_LONG x; } __Pyx_st_longlong;
-#endif
-static size_t __Pyx_BufFmt_TypeCharToAlignment(char ch, CYTHON_UNUSED int is_complex) {
-  switch (ch) {
-    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
-    case 'h': case 'H': return sizeof(__Pyx_st_short) - sizeof(short);
-    case 'i': case 'I': return sizeof(__Pyx_st_int) - sizeof(int);
-    case 'l': case 'L': return sizeof(__Pyx_st_long) - sizeof(long);
-#ifdef HAVE_LONG_LONG
-    case 'q': case 'Q': return sizeof(__Pyx_st_longlong) - sizeof(PY_LONG_LONG);
-#endif
-    case 'f': return sizeof(__Pyx_st_float) - sizeof(float);
-    case 'd': return sizeof(__Pyx_st_double) - sizeof(double);
-    case 'g': return sizeof(__Pyx_st_longdouble) - sizeof(long double);
-    case 'P': case 'O': return sizeof(__Pyx_st_void_p) - sizeof(void*);
-    default:
-      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
-      return 0;
-    }
-}
-/* These are for computing the padding at the end of the struct to align
-   on the first member of the struct. This will probably the same as above,
-   but we don't have any guarantees.
- */
-typedef struct { short x; char c; } __Pyx_pad_short;
-typedef struct { int x; char c; } __Pyx_pad_int;
-typedef struct { long x; char c; } __Pyx_pad_long;
-typedef struct { float x; char c; } __Pyx_pad_float;
-typedef struct { double x; char c; } __Pyx_pad_double;
-typedef struct { long double x; char c; } __Pyx_pad_longdouble;
-typedef struct { void *x; char c; } __Pyx_pad_void_p;
-#ifdef HAVE_LONG_LONG
-typedef struct { PY_LONG_LONG x; char c; } __Pyx_pad_longlong;
-#endif
-static size_t __Pyx_BufFmt_TypeCharToPadding(char ch, CYTHON_UNUSED int is_complex) {
-  switch (ch) {
-    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
-    case 'h': case 'H': return sizeof(__Pyx_pad_short) - sizeof(short);
-    case 'i': case 'I': return sizeof(__Pyx_pad_int) - sizeof(int);
-    case 'l': case 'L': return sizeof(__Pyx_pad_long) - sizeof(long);
-#ifdef HAVE_LONG_LONG
-    case 'q': case 'Q': return sizeof(__Pyx_pad_longlong) - sizeof(PY_LONG_LONG);
-#endif
-    case 'f': return sizeof(__Pyx_pad_float) - sizeof(float);
-    case 'd': return sizeof(__Pyx_pad_double) - sizeof(double);
-    case 'g': return sizeof(__Pyx_pad_longdouble) - sizeof(long double);
-    case 'P': case 'O': return sizeof(__Pyx_pad_void_p) - sizeof(void*);
-    default:
-      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
-      return 0;
-    }
-}
-static char __Pyx_BufFmt_TypeCharToGroup(char ch, int is_complex) {
-  switch (ch) {
-    case 'c':
-        return 'H';
-    case 'b': case 'h': case 'i':
-    case 'l': case 'q': case 's': case 'p':
-        return 'I';
-    case 'B': case 'H': case 'I': case 'L': case 'Q':
-        return 'U';
-    case 'f': case 'd': case 'g':
-        return (is_complex ? 'C' : 'R');
-    case 'O':
-        return 'O';
-    case 'P':
-        return 'P';
-    default: {
-      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
-      return 0;
-    }
-  }
-}
-static void __Pyx_BufFmt_RaiseExpected(__Pyx_BufFmt_Context* ctx) {
-  if (ctx->head == NULL || ctx->head->field == &ctx->root) {
-    const char* expected;
-    const char* quote;
-    if (ctx->head == NULL) {
-      expected = "end";
-      quote = "";
-    } else {
-      expected = ctx->head->field->type->name;
-      quote = "'";
-    }
-    PyErr_Format(PyExc_ValueError,
-                 "Buffer dtype mismatch, expected %s%s%s but got %s",
-                 quote, expected, quote,
-                 __Pyx_BufFmt_DescribeTypeChar(ctx->enc_type, ctx->is_complex));
-  } else {
-    __Pyx_StructField* field = ctx->head->field;
-    __Pyx_StructField* parent = (ctx->head - 1)->field;
-    PyErr_Format(PyExc_ValueError,
-                 "Buffer dtype mismatch, expected '%s' but got %s in '%s.%s'",
-                 field->type->name, __Pyx_BufFmt_DescribeTypeChar(ctx->enc_type, ctx->is_complex),
-                 parent->type->name, field->name);
-  }
-}
-static int __Pyx_BufFmt_ProcessTypeChunk(__Pyx_BufFmt_Context* ctx) {
-  char group;
-  size_t size, offset, arraysize = 1;
-  if (ctx->enc_type == 0) return 0;
-  if (ctx->head->field->type->arraysize[0]) {
-    int i, ndim = 0;
-    if (ctx->enc_type == 's' || ctx->enc_type == 'p') {
-        ctx->is_valid_array = ctx->head->field->type->ndim == 1;
-        ndim = 1;
-        if (ctx->enc_count != ctx->head->field->type->arraysize[0]) {
-            PyErr_Format(PyExc_ValueError,
-                         "Expected a dimension of size %zu, got %zu",
-                         ctx->head->field->type->arraysize[0], ctx->enc_count);
-            return -1;
-        }
-    }
-    if (!ctx->is_valid_array) {
-      PyErr_Format(PyExc_ValueError, "Expected %d dimensions, got %d",
-                   ctx->head->field->type->ndim, ndim);
-      return -1;
-    }
-    for (i = 0; i < ctx->head->field->type->ndim; i++) {
-      arraysize *= ctx->head->field->type->arraysize[i];
-    }
-    ctx->is_valid_array = 0;
-    ctx->enc_count = 1;
-  }
-  group = __Pyx_BufFmt_TypeCharToGroup(ctx->enc_type, ctx->is_complex);
-  do {
-    __Pyx_StructField* field = ctx->head->field;
-    __Pyx_TypeInfo* type = field->type;
-    if (ctx->enc_packmode == '@' || ctx->enc_packmode == '^') {
-      size = __Pyx_BufFmt_TypeCharToNativeSize(ctx->enc_type, ctx->is_complex);
-    } else {
-      size = __Pyx_BufFmt_TypeCharToStandardSize(ctx->enc_type, ctx->is_complex);
-    }
-    if (ctx->enc_packmode == '@') {
-      size_t align_at = __Pyx_BufFmt_TypeCharToAlignment(ctx->enc_type, ctx->is_complex);
-      size_t align_mod_offset;
-      if (align_at == 0) return -1;
-      align_mod_offset = ctx->fmt_offset % align_at;
-      if (align_mod_offset > 0) ctx->fmt_offset += align_at - align_mod_offset;
-      if (ctx->struct_alignment == 0)
-          ctx->struct_alignment = __Pyx_BufFmt_TypeCharToPadding(ctx->enc_type,
-                                                                 ctx->is_complex);
-    }
-    if (type->size != size || type->typegroup != group) {
-      if (type->typegroup == 'C' && type->fields != NULL) {
-        size_t parent_offset = ctx->head->parent_offset + field->offset;
-        ++ctx->head;
-        ctx->head->field = type->fields;
-        ctx->head->parent_offset = parent_offset;
-        continue;
-      }
-      if ((type->typegroup == 'H' || group == 'H') && type->size == size) {
-      } else {
-          __Pyx_BufFmt_RaiseExpected(ctx);
-          return -1;
-      }
-    }
-    offset = ctx->head->parent_offset + field->offset;
-    if (ctx->fmt_offset != offset) {
-      PyErr_Format(PyExc_ValueError,
-                   "Buffer dtype mismatch; next field is at offset %" CYTHON_FORMAT_SSIZE_T "d but %" CYTHON_FORMAT_SSIZE_T "d expected",
-                   (Py_ssize_t)ctx->fmt_offset, (Py_ssize_t)offset);
-      return -1;
-    }
-    ctx->fmt_offset += size;
-    if (arraysize)
-      ctx->fmt_offset += (arraysize - 1) * size;
-    --ctx->enc_count;
-    while (1) {
-      if (field == &ctx->root) {
-        ctx->head = NULL;
-        if (ctx->enc_count != 0) {
-          __Pyx_BufFmt_RaiseExpected(ctx);
-          return -1;
-        }
-        break;
-      }
-      ctx->head->field = ++field;
-      if (field->type == NULL) {
-        --ctx->head;
-        field = ctx->head->field;
-        continue;
-      } else if (field->type->typegroup == 'S') {
-        size_t parent_offset = ctx->head->parent_offset + field->offset;
-        if (field->type->fields->type == NULL) continue;
-        field = field->type->fields;
-        ++ctx->head;
-        ctx->head->field = field;
-        ctx->head->parent_offset = parent_offset;
-        break;
-      } else {
-        break;
-      }
-    }
-  } while (ctx->enc_count);
-  ctx->enc_type = 0;
-  ctx->is_complex = 0;
-  return 0;
-}
-static CYTHON_INLINE PyObject *
-__pyx_buffmt_parse_array(__Pyx_BufFmt_Context* ctx, const char** tsp)
-{
-    const char *ts = *tsp;
-    int i = 0, number;
-    int ndim = ctx->head->field->type->ndim;
-;
-    ++ts;
-    if (ctx->new_count != 1) {
-        PyErr_SetString(PyExc_ValueError,
-                        "Cannot handle repeated arrays in format string");
-        return NULL;
-    }
-    if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
-    while (*ts && *ts != ')') {
-        switch (*ts) {
-            case ' ': case '\f': case '\r': case '\n': case '\t': case '\v':  continue;
-            default:  break;
-        }
-        number = __Pyx_BufFmt_ExpectNumber(&ts);
-        if (number == -1) return NULL;
-        if (i < ndim && (size_t) number != ctx->head->field->type->arraysize[i])
-            return PyErr_Format(PyExc_ValueError,
-                        "Expected a dimension of size %zu, got %d",
-                        ctx->head->field->type->arraysize[i], number);
-        if (*ts != ',' && *ts != ')')
-            return PyErr_Format(PyExc_ValueError,
-                                "Expected a comma in format string, got '%c'", *ts);
-        if (*ts == ',') ts++;
-        i++;
-    }
-    if (i != ndim)
-        return PyErr_Format(PyExc_ValueError, "Expected %d dimension(s), got %d",
-                            ctx->head->field->type->ndim, i);
-    if (!*ts) {
-        PyErr_SetString(PyExc_ValueError,
-                        "Unexpected end of format string, expected ')'");
-        return NULL;
-    }
-    ctx->is_valid_array = 1;
-    ctx->new_count = 1;
-    *tsp = ++ts;
-    return Py_None;
-}
-static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const char* ts) {
-  int got_Z = 0;
-  while (1) {
-    switch(*ts) {
-      case 0:
-        if (ctx->enc_type != 0 && ctx->head == NULL) {
-          __Pyx_BufFmt_RaiseExpected(ctx);
-          return NULL;
-        }
-        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
-        if (ctx->head != NULL) {
-          __Pyx_BufFmt_RaiseExpected(ctx);
-          return NULL;
-        }
-        return ts;
-      case ' ':
-      case '\r':
-      case '\n':
-        ++ts;
-        break;
-      case '<':
-        if (!__Pyx_IsLittleEndian()) {
-          PyErr_SetString(PyExc_ValueError, "Little-endian buffer not supported on big-endian compiler");
-          return NULL;
-        }
-        ctx->new_packmode = '=';
-        ++ts;
-        break;
-      case '>':
-      case '!':
-        if (__Pyx_IsLittleEndian()) {
-          PyErr_SetString(PyExc_ValueError, "Big-endian buffer not supported on little-endian compiler");
-          return NULL;
-        }
-        ctx->new_packmode = '=';
-        ++ts;
-        break;
-      case '=':
-      case '@':
-      case '^':
-        ctx->new_packmode = *ts++;
-        break;
-      case 'T':
-        {
-          const char* ts_after_sub;
-          size_t i, struct_count = ctx->new_count;
-          size_t struct_alignment = ctx->struct_alignment;
-          ctx->new_count = 1;
-          ++ts;
-          if (*ts != '{') {
-            PyErr_SetString(PyExc_ValueError, "Buffer acquisition: Expected '{' after 'T'");
-            return NULL;
-          }
-          if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
-          ctx->enc_type = 0;
-          ctx->enc_count = 0;
-          ctx->struct_alignment = 0;
-          ++ts;
-          ts_after_sub = ts;
-          for (i = 0; i != struct_count; ++i) {
-            ts_after_sub = __Pyx_BufFmt_CheckString(ctx, ts);
-            if (!ts_after_sub) return NULL;
-          }
-          ts = ts_after_sub;
-          if (struct_alignment) ctx->struct_alignment = struct_alignment;
-        }
-        break;
-      case '}':
-        {
-          size_t alignment = ctx->struct_alignment;
-          ++ts;
-          if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
-          ctx->enc_type = 0;
-          if (alignment && ctx->fmt_offset % alignment) {
-            ctx->fmt_offset += alignment - (ctx->fmt_offset % alignment);
-          }
-        }
-        return ts;
-      case 'x':
-        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
-        ctx->fmt_offset += ctx->new_count;
-        ctx->new_count = 1;
-        ctx->enc_count = 0;
-        ctx->enc_type = 0;
-        ctx->enc_packmode = ctx->new_packmode;
-        ++ts;
-        break;
-      case 'Z':
-        got_Z = 1;
-        ++ts;
-        if (*ts != 'f' && *ts != 'd' && *ts != 'g') {
-          __Pyx_BufFmt_RaiseUnexpectedChar('Z');
-          return NULL;
-        }
-      case 'c': case 'b': case 'B': case 'h': case 'H': case 'i': case 'I':
-      case 'l': case 'L': case 'q': case 'Q':
-      case 'f': case 'd': case 'g':
-      case 'O': case 'p':
-        if (ctx->enc_type == *ts && got_Z == ctx->is_complex &&
-            ctx->enc_packmode == ctx->new_packmode) {
-          ctx->enc_count += ctx->new_count;
-          ctx->new_count = 1;
-          got_Z = 0;
-          ++ts;
-          break;
-        }
-      case 's':
-        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
-        ctx->enc_count = ctx->new_count;
-        ctx->enc_packmode = ctx->new_packmode;
-        ctx->enc_type = *ts;
-        ctx->is_complex = got_Z;
-        ++ts;
-        ctx->new_count = 1;
-        got_Z = 0;
-        break;
-      case ':':
-        ++ts;
-        while(*ts != ':') ++ts;
-        ++ts;
-        break;
-      case '(':
-        if (!__pyx_buffmt_parse_array(ctx, &ts)) return NULL;
-        break;
-      default:
-        {
-          int number = __Pyx_BufFmt_ExpectNumber(&ts);
-          if (number == -1) return NULL;
-          ctx->new_count = (size_t)number;
-        }
-    }
-  }
-}
-static CYTHON_INLINE void __Pyx_ZeroBuffer(Py_buffer* buf) {
-  buf->buf = NULL;
-  buf->obj = NULL;
-  buf->strides = __Pyx_zeros;
-  buf->shape = __Pyx_zeros;
-  buf->suboffsets = __Pyx_minusones;
-}
-static CYTHON_INLINE int __Pyx_GetBufferAndValidate(
-        Py_buffer* buf, PyObject* obj,  __Pyx_TypeInfo* dtype, int flags,
-        int nd, int cast, __Pyx_BufFmt_StackElem* stack)
-{
-  if (obj == Py_None || obj == NULL) {
-    __Pyx_ZeroBuffer(buf);
-    return 0;
-  }
-  buf->buf = NULL;
-  if (__Pyx_GetBuffer(obj, buf, flags) == -1) goto fail;
-  if (buf->ndim != nd) {
-    PyErr_Format(PyExc_ValueError,
-                 "Buffer has wrong number of dimensions (expected %d, got %d)",
-                 nd, buf->ndim);
-    goto fail;
-  }
-  if (!cast) {
-    __Pyx_BufFmt_Context ctx;
-    __Pyx_BufFmt_Init(&ctx, stack, dtype);
-    if (!__Pyx_BufFmt_CheckString(&ctx, buf->format)) goto fail;
-  }
-  if ((unsigned)buf->itemsize != dtype->size) {
-    PyErr_Format(PyExc_ValueError,
-      "Item size of buffer (%" CYTHON_FORMAT_SSIZE_T "d byte%s) does not match size of '%s' (%" CYTHON_FORMAT_SSIZE_T "d byte%s)",
-      buf->itemsize, (buf->itemsize > 1) ? "s" : "",
-      dtype->name, (Py_ssize_t)dtype->size, (dtype->size > 1) ? "s" : "");
-    goto fail;
-  }
-  if (buf->suboffsets == NULL) buf->suboffsets = __Pyx_minusones;
-  return 0;
-fail:;
-  __Pyx_ZeroBuffer(buf);
-  return -1;
-}
-static CYTHON_INLINE void __Pyx_SafeReleaseBuffer(Py_buffer* info) {
-  if (info->buf == NULL) return;
-  if (info->suboffsets == __Pyx_minusones) info->suboffsets = NULL;
-  __Pyx_ReleaseBuffer(info);
-}
-
-static int
-__Pyx_init_memviewslice(struct __pyx_memoryview_obj *memview,
-                        int ndim,
-                        __Pyx_memviewslice *memviewslice,
-                        int memview_is_new_reference)
-{
-    __Pyx_RefNannyDeclarations
-    int i, retval=-1;
-    Py_buffer *buf = &memview->view;
-    __Pyx_RefNannySetupContext("init_memviewslice", 0);
-    if (!buf) {
-        PyErr_SetString(PyExc_ValueError,
-            "buf is NULL.");
-        goto fail;
-    } else if (memviewslice->memview || memviewslice->data) {
-        PyErr_SetString(PyExc_ValueError,
-            "memviewslice is already initialized!");
-        goto fail;
-    }
-    if (buf->strides) {
-        for (i = 0; i < ndim; i++) {
-            memviewslice->strides[i] = buf->strides[i];
-        }
-    } else {
-        Py_ssize_t stride = buf->itemsize;
-        for (i = ndim - 1; i >= 0; i--) {
-            memviewslice->strides[i] = stride;
-            stride *= buf->shape[i];
-        }
-    }
-    for (i = 0; i < ndim; i++) {
-        memviewslice->shape[i]   = buf->shape[i];
-        if (buf->suboffsets) {
-            memviewslice->suboffsets[i] = buf->suboffsets[i];
-        } else {
-            memviewslice->suboffsets[i] = -1;
-        }
-    }
-    memviewslice->memview = memview;
-    memviewslice->data = (char *)buf->buf;
-    if (__pyx_add_acquisition_count(memview) == 0 && !memview_is_new_reference) {
-        Py_INCREF(memview);
-    }
-    retval = 0;
-    goto no_fail;
-fail:
-    memviewslice->memview = 0;
-    memviewslice->data = 0;
-    retval = -1;
-no_fail:
-    __Pyx_RefNannyFinishContext();
-    return retval;
-}
-static CYTHON_INLINE void __pyx_fatalerror(const char *fmt, ...) {
-    va_list vargs;
-    char msg[200];
-    va_start(vargs, fmt);
-#ifdef HAVE_STDARG_PROTOTYPES
-    va_start(vargs, fmt);
-#else
-    va_start(vargs);
-#endif
-    vsnprintf(msg, 200, fmt, vargs);
-    Py_FatalError(msg);
-    va_end(vargs);
-}
-static CYTHON_INLINE int
-__pyx_add_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
-                                   PyThread_type_lock lock)
-{
-    int result;
-    PyThread_acquire_lock(lock, 1);
-    result = (*acquisition_count)++;
-    PyThread_release_lock(lock);
-    return result;
-}
-static CYTHON_INLINE int
-__pyx_sub_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
-                                   PyThread_type_lock lock)
-{
-    int result;
-    PyThread_acquire_lock(lock, 1);
-    result = (*acquisition_count)--;
-    PyThread_release_lock(lock);
-    return result;
-}
-static CYTHON_INLINE void
-__Pyx_INC_MEMVIEW(__Pyx_memviewslice *memslice, int have_gil, int lineno)
-{
-    int first_time;
-    struct __pyx_memoryview_obj *memview = memslice->memview;
-    if (!memview || (PyObject *) memview == Py_None)
-        return;
-    if (__pyx_get_slice_count(memview) < 0)
-        __pyx_fatalerror("Acquisition count is %d (line %d)",
-                         __pyx_get_slice_count(memview), lineno);
-    first_time = __pyx_add_acquisition_count(memview) == 0;
-    if (first_time) {
-        if (have_gil) {
-            Py_INCREF((PyObject *) memview);
-        } else {
-            PyGILState_STATE _gilstate = PyGILState_Ensure();
-            Py_INCREF((PyObject *) memview);
-            PyGILState_Release(_gilstate);
-        }
-    }
-}
-static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *memslice,
-                                             int have_gil, int lineno) {
-    int last_time;
-    struct __pyx_memoryview_obj *memview = memslice->memview;
-    if (!memview ) {
-        return;
-    } else if ((PyObject *) memview == Py_None) {
-        memslice->memview = NULL;
-        return;
-    }
-    if (__pyx_get_slice_count(memview) <= 0)
-        __pyx_fatalerror("Acquisition count is %d (line %d)",
-                         __pyx_get_slice_count(memview), lineno);
-    last_time = __pyx_sub_acquisition_count(memview) == 1;
-    memslice->data = NULL;
-    if (last_time) {
-        if (have_gil) {
-            Py_CLEAR(memslice->memview);
-        } else {
-            PyGILState_STATE _gilstate = PyGILState_Ensure();
-            Py_CLEAR(memslice->memview);
-            PyGILState_Release(_gilstate);
-        }
-    } else {
-        memslice->memview = NULL;
-    }
-}
 
 static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
     PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
@@ -20616,12 +26038,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObjec
 }
 #endif
 
-#if !CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyBytes_Join(PyObject* sep, PyObject* values) {
-    return PyObject_CallMethodObjArgs(sep, __pyx_n_s_join, values, NULL);
-}
-#endif
-
 static int __Pyx_SetVtable(PyObject *dict, void *vtable) {
 #if PY_VERSION_HEX >= 0x02070000
     PyObject *ob = PyCapsule_New(vtable, 0, 0);
@@ -20798,30 +26214,7 @@ bad:
     Py_XDECREF(py_frame);
 }
 
-#if PY_MAJOR_VERSION < 3
-static int __Pyx_GetBuffer(PyObject *obj, Py_buffer *view, int flags) {
-    if (PyObject_CheckBuffer(obj)) return PyObject_GetBuffer(obj, view, flags);
-        if (PyObject_TypeCheck(obj, __pyx_ptype_5numpy_ndarray)) return __pyx_pw_5numpy_7ndarray_1__getbuffer__(obj, view, flags);
-        if (PyObject_TypeCheck(obj, __pyx_array_type)) return __pyx_array_getbuffer(obj, view, flags);
-        if (PyObject_TypeCheck(obj, __pyx_memoryview_type)) return __pyx_memoryview_getbuffer(obj, view, flags);
-    PyErr_Format(PyExc_TypeError, "'%.200s' does not have the buffer interface", Py_TYPE(obj)->tp_name);
-    return -1;
-}
-static void __Pyx_ReleaseBuffer(Py_buffer *view) {
-    PyObject *obj = view->obj;
-    if (!obj) return;
-    if (PyObject_CheckBuffer(obj)) {
-        PyBuffer_Release(view);
-        return;
-    }
-        if (PyObject_TypeCheck(obj, __pyx_ptype_5numpy_ndarray)) { __pyx_pw_5numpy_7ndarray_3__releasebuffer__(obj, view); return; }
-    Py_DECREF(obj);
-    view->obj = NULL;
-}
-#endif
-
-
-      #if CYTHON_CCOMPLEX
+#if CYTHON_CCOMPLEX
   #ifdef __cplusplus
     static CYTHON_INLINE __pyx_t_float_complex __pyx_t_float_complex_from_parts(float x, float y) {
       return ::std::complex< float >(x, y);
@@ -21203,6 +26596,713 @@ raise_neg_overflow:
     return (int) -1;
 }
 
+#if PY_MAJOR_VERSION < 3
+static int __Pyx_GetBuffer(PyObject *obj, Py_buffer *view, int flags) {
+    if (PyObject_CheckBuffer(obj)) return PyObject_GetBuffer(obj, view, flags);
+        if (PyObject_TypeCheck(obj, __pyx_ptype_5numpy_ndarray)) return __pyx_pw_5numpy_7ndarray_1__getbuffer__(obj, view, flags);
+        if (PyObject_TypeCheck(obj, __pyx_array_type)) return __pyx_array_getbuffer(obj, view, flags);
+        if (PyObject_TypeCheck(obj, __pyx_memoryview_type)) return __pyx_memoryview_getbuffer(obj, view, flags);
+    PyErr_Format(PyExc_TypeError, "'%.200s' does not have the buffer interface", Py_TYPE(obj)->tp_name);
+    return -1;
+}
+static void __Pyx_ReleaseBuffer(Py_buffer *view) {
+    PyObject *obj = view->obj;
+    if (!obj) return;
+    if (PyObject_CheckBuffer(obj)) {
+        PyBuffer_Release(view);
+        return;
+    }
+        if (PyObject_TypeCheck(obj, __pyx_ptype_5numpy_ndarray)) { __pyx_pw_5numpy_7ndarray_3__releasebuffer__(obj, view); return; }
+    Py_DECREF(obj);
+    view->obj = NULL;
+}
+#endif
+
+
+    static CYTHON_INLINE int __Pyx_IsLittleEndian(void) {
+  unsigned int n = 1;
+  return *(unsigned char*)(&n) != 0;
+}
+static void __Pyx_BufFmt_Init(__Pyx_BufFmt_Context* ctx,
+                              __Pyx_BufFmt_StackElem* stack,
+                              __Pyx_TypeInfo* type) {
+  stack[0].field = &ctx->root;
+  stack[0].parent_offset = 0;
+  ctx->root.type = type;
+  ctx->root.name = "buffer dtype";
+  ctx->root.offset = 0;
+  ctx->head = stack;
+  ctx->head->field = &ctx->root;
+  ctx->fmt_offset = 0;
+  ctx->head->parent_offset = 0;
+  ctx->new_packmode = '@';
+  ctx->enc_packmode = '@';
+  ctx->new_count = 1;
+  ctx->enc_count = 0;
+  ctx->enc_type = 0;
+  ctx->is_complex = 0;
+  ctx->is_valid_array = 0;
+  ctx->struct_alignment = 0;
+  while (type->typegroup == 'S') {
+    ++ctx->head;
+    ctx->head->field = type->fields;
+    ctx->head->parent_offset = 0;
+    type = type->fields->type;
+  }
+}
+static int __Pyx_BufFmt_ParseNumber(const char** ts) {
+    int count;
+    const char* t = *ts;
+    if (*t < '0' || *t > '9') {
+      return -1;
+    } else {
+        count = *t++ - '0';
+        while (*t >= '0' && *t < '9') {
+            count *= 10;
+            count += *t++ - '0';
+        }
+    }
+    *ts = t;
+    return count;
+}
+static int __Pyx_BufFmt_ExpectNumber(const char **ts) {
+    int number = __Pyx_BufFmt_ParseNumber(ts);
+    if (number == -1)
+        PyErr_Format(PyExc_ValueError,\
+                     "Does not understand character buffer dtype format string ('%c')", **ts);
+    return number;
+}
+static void __Pyx_BufFmt_RaiseUnexpectedChar(char ch) {
+  PyErr_Format(PyExc_ValueError,
+               "Unexpected format string character: '%c'", ch);
+}
+static const char* __Pyx_BufFmt_DescribeTypeChar(char ch, int is_complex) {
+  switch (ch) {
+    case 'c': return "'char'";
+    case 'b': return "'signed char'";
+    case 'B': return "'unsigned char'";
+    case 'h': return "'short'";
+    case 'H': return "'unsigned short'";
+    case 'i': return "'int'";
+    case 'I': return "'unsigned int'";
+    case 'l': return "'long'";
+    case 'L': return "'unsigned long'";
+    case 'q': return "'long long'";
+    case 'Q': return "'unsigned long long'";
+    case 'f': return (is_complex ? "'complex float'" : "'float'");
+    case 'd': return (is_complex ? "'complex double'" : "'double'");
+    case 'g': return (is_complex ? "'complex long double'" : "'long double'");
+    case 'T': return "a struct";
+    case 'O': return "Python object";
+    case 'P': return "a pointer";
+    case 's': case 'p': return "a string";
+    case 0: return "end";
+    default: return "unparseable format string";
+  }
+}
+static size_t __Pyx_BufFmt_TypeCharToStandardSize(char ch, int is_complex) {
+  switch (ch) {
+    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return 2;
+    case 'i': case 'I': case 'l': case 'L': return 4;
+    case 'q': case 'Q': return 8;
+    case 'f': return (is_complex ? 8 : 4);
+    case 'd': return (is_complex ? 16 : 8);
+    case 'g': {
+      PyErr_SetString(PyExc_ValueError, "Python does not define a standard format string size for long double ('g')..");
+      return 0;
+    }
+    case 'O': case 'P': return sizeof(void*);
+    default:
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+}
+static size_t __Pyx_BufFmt_TypeCharToNativeSize(char ch, int is_complex) {
+  switch (ch) {
+    case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return sizeof(short);
+    case 'i': case 'I': return sizeof(int);
+    case 'l': case 'L': return sizeof(long);
+    #ifdef HAVE_LONG_LONG
+    case 'q': case 'Q': return sizeof(PY_LONG_LONG);
+    #endif
+    case 'f': return sizeof(float) * (is_complex ? 2 : 1);
+    case 'd': return sizeof(double) * (is_complex ? 2 : 1);
+    case 'g': return sizeof(long double) * (is_complex ? 2 : 1);
+    case 'O': case 'P': return sizeof(void*);
+    default: {
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+  }
+}
+typedef struct { char c; short x; } __Pyx_st_short;
+typedef struct { char c; int x; } __Pyx_st_int;
+typedef struct { char c; long x; } __Pyx_st_long;
+typedef struct { char c; float x; } __Pyx_st_float;
+typedef struct { char c; double x; } __Pyx_st_double;
+typedef struct { char c; long double x; } __Pyx_st_longdouble;
+typedef struct { char c; void *x; } __Pyx_st_void_p;
+#ifdef HAVE_LONG_LONG
+typedef struct { char c; PY_LONG_LONG x; } __Pyx_st_longlong;
+#endif
+static size_t __Pyx_BufFmt_TypeCharToAlignment(char ch, CYTHON_UNUSED int is_complex) {
+  switch (ch) {
+    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return sizeof(__Pyx_st_short) - sizeof(short);
+    case 'i': case 'I': return sizeof(__Pyx_st_int) - sizeof(int);
+    case 'l': case 'L': return sizeof(__Pyx_st_long) - sizeof(long);
+#ifdef HAVE_LONG_LONG
+    case 'q': case 'Q': return sizeof(__Pyx_st_longlong) - sizeof(PY_LONG_LONG);
+#endif
+    case 'f': return sizeof(__Pyx_st_float) - sizeof(float);
+    case 'd': return sizeof(__Pyx_st_double) - sizeof(double);
+    case 'g': return sizeof(__Pyx_st_longdouble) - sizeof(long double);
+    case 'P': case 'O': return sizeof(__Pyx_st_void_p) - sizeof(void*);
+    default:
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+}
+/* These are for computing the padding at the end of the struct to align
+   on the first member of the struct. This will probably the same as above,
+   but we don't have any guarantees.
+ */
+typedef struct { short x; char c; } __Pyx_pad_short;
+typedef struct { int x; char c; } __Pyx_pad_int;
+typedef struct { long x; char c; } __Pyx_pad_long;
+typedef struct { float x; char c; } __Pyx_pad_float;
+typedef struct { double x; char c; } __Pyx_pad_double;
+typedef struct { long double x; char c; } __Pyx_pad_longdouble;
+typedef struct { void *x; char c; } __Pyx_pad_void_p;
+#ifdef HAVE_LONG_LONG
+typedef struct { PY_LONG_LONG x; char c; } __Pyx_pad_longlong;
+#endif
+static size_t __Pyx_BufFmt_TypeCharToPadding(char ch, CYTHON_UNUSED int is_complex) {
+  switch (ch) {
+    case '?': case 'c': case 'b': case 'B': case 's': case 'p': return 1;
+    case 'h': case 'H': return sizeof(__Pyx_pad_short) - sizeof(short);
+    case 'i': case 'I': return sizeof(__Pyx_pad_int) - sizeof(int);
+    case 'l': case 'L': return sizeof(__Pyx_pad_long) - sizeof(long);
+#ifdef HAVE_LONG_LONG
+    case 'q': case 'Q': return sizeof(__Pyx_pad_longlong) - sizeof(PY_LONG_LONG);
+#endif
+    case 'f': return sizeof(__Pyx_pad_float) - sizeof(float);
+    case 'd': return sizeof(__Pyx_pad_double) - sizeof(double);
+    case 'g': return sizeof(__Pyx_pad_longdouble) - sizeof(long double);
+    case 'P': case 'O': return sizeof(__Pyx_pad_void_p) - sizeof(void*);
+    default:
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+}
+static char __Pyx_BufFmt_TypeCharToGroup(char ch, int is_complex) {
+  switch (ch) {
+    case 'c':
+        return 'H';
+    case 'b': case 'h': case 'i':
+    case 'l': case 'q': case 's': case 'p':
+        return 'I';
+    case 'B': case 'H': case 'I': case 'L': case 'Q':
+        return 'U';
+    case 'f': case 'd': case 'g':
+        return (is_complex ? 'C' : 'R');
+    case 'O':
+        return 'O';
+    case 'P':
+        return 'P';
+    default: {
+      __Pyx_BufFmt_RaiseUnexpectedChar(ch);
+      return 0;
+    }
+  }
+}
+static void __Pyx_BufFmt_RaiseExpected(__Pyx_BufFmt_Context* ctx) {
+  if (ctx->head == NULL || ctx->head->field == &ctx->root) {
+    const char* expected;
+    const char* quote;
+    if (ctx->head == NULL) {
+      expected = "end";
+      quote = "";
+    } else {
+      expected = ctx->head->field->type->name;
+      quote = "'";
+    }
+    PyErr_Format(PyExc_ValueError,
+                 "Buffer dtype mismatch, expected %s%s%s but got %s",
+                 quote, expected, quote,
+                 __Pyx_BufFmt_DescribeTypeChar(ctx->enc_type, ctx->is_complex));
+  } else {
+    __Pyx_StructField* field = ctx->head->field;
+    __Pyx_StructField* parent = (ctx->head - 1)->field;
+    PyErr_Format(PyExc_ValueError,
+                 "Buffer dtype mismatch, expected '%s' but got %s in '%s.%s'",
+                 field->type->name, __Pyx_BufFmt_DescribeTypeChar(ctx->enc_type, ctx->is_complex),
+                 parent->type->name, field->name);
+  }
+}
+static int __Pyx_BufFmt_ProcessTypeChunk(__Pyx_BufFmt_Context* ctx) {
+  char group;
+  size_t size, offset, arraysize = 1;
+  if (ctx->enc_type == 0) return 0;
+  if (ctx->head->field->type->arraysize[0]) {
+    int i, ndim = 0;
+    if (ctx->enc_type == 's' || ctx->enc_type == 'p') {
+        ctx->is_valid_array = ctx->head->field->type->ndim == 1;
+        ndim = 1;
+        if (ctx->enc_count != ctx->head->field->type->arraysize[0]) {
+            PyErr_Format(PyExc_ValueError,
+                         "Expected a dimension of size %zu, got %zu",
+                         ctx->head->field->type->arraysize[0], ctx->enc_count);
+            return -1;
+        }
+    }
+    if (!ctx->is_valid_array) {
+      PyErr_Format(PyExc_ValueError, "Expected %d dimensions, got %d",
+                   ctx->head->field->type->ndim, ndim);
+      return -1;
+    }
+    for (i = 0; i < ctx->head->field->type->ndim; i++) {
+      arraysize *= ctx->head->field->type->arraysize[i];
+    }
+    ctx->is_valid_array = 0;
+    ctx->enc_count = 1;
+  }
+  group = __Pyx_BufFmt_TypeCharToGroup(ctx->enc_type, ctx->is_complex);
+  do {
+    __Pyx_StructField* field = ctx->head->field;
+    __Pyx_TypeInfo* type = field->type;
+    if (ctx->enc_packmode == '@' || ctx->enc_packmode == '^') {
+      size = __Pyx_BufFmt_TypeCharToNativeSize(ctx->enc_type, ctx->is_complex);
+    } else {
+      size = __Pyx_BufFmt_TypeCharToStandardSize(ctx->enc_type, ctx->is_complex);
+    }
+    if (ctx->enc_packmode == '@') {
+      size_t align_at = __Pyx_BufFmt_TypeCharToAlignment(ctx->enc_type, ctx->is_complex);
+      size_t align_mod_offset;
+      if (align_at == 0) return -1;
+      align_mod_offset = ctx->fmt_offset % align_at;
+      if (align_mod_offset > 0) ctx->fmt_offset += align_at - align_mod_offset;
+      if (ctx->struct_alignment == 0)
+          ctx->struct_alignment = __Pyx_BufFmt_TypeCharToPadding(ctx->enc_type,
+                                                                 ctx->is_complex);
+    }
+    if (type->size != size || type->typegroup != group) {
+      if (type->typegroup == 'C' && type->fields != NULL) {
+        size_t parent_offset = ctx->head->parent_offset + field->offset;
+        ++ctx->head;
+        ctx->head->field = type->fields;
+        ctx->head->parent_offset = parent_offset;
+        continue;
+      }
+      if ((type->typegroup == 'H' || group == 'H') && type->size == size) {
+      } else {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return -1;
+      }
+    }
+    offset = ctx->head->parent_offset + field->offset;
+    if (ctx->fmt_offset != offset) {
+      PyErr_Format(PyExc_ValueError,
+                   "Buffer dtype mismatch; next field is at offset %" CYTHON_FORMAT_SSIZE_T "d but %" CYTHON_FORMAT_SSIZE_T "d expected",
+                   (Py_ssize_t)ctx->fmt_offset, (Py_ssize_t)offset);
+      return -1;
+    }
+    ctx->fmt_offset += size;
+    if (arraysize)
+      ctx->fmt_offset += (arraysize - 1) * size;
+    --ctx->enc_count;
+    while (1) {
+      if (field == &ctx->root) {
+        ctx->head = NULL;
+        if (ctx->enc_count != 0) {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return -1;
+        }
+        break;
+      }
+      ctx->head->field = ++field;
+      if (field->type == NULL) {
+        --ctx->head;
+        field = ctx->head->field;
+        continue;
+      } else if (field->type->typegroup == 'S') {
+        size_t parent_offset = ctx->head->parent_offset + field->offset;
+        if (field->type->fields->type == NULL) continue;
+        field = field->type->fields;
+        ++ctx->head;
+        ctx->head->field = field;
+        ctx->head->parent_offset = parent_offset;
+        break;
+      } else {
+        break;
+      }
+    }
+  } while (ctx->enc_count);
+  ctx->enc_type = 0;
+  ctx->is_complex = 0;
+  return 0;
+}
+static CYTHON_INLINE PyObject *
+__pyx_buffmt_parse_array(__Pyx_BufFmt_Context* ctx, const char** tsp)
+{
+    const char *ts = *tsp;
+    int i = 0, number;
+    int ndim = ctx->head->field->type->ndim;
+;
+    ++ts;
+    if (ctx->new_count != 1) {
+        PyErr_SetString(PyExc_ValueError,
+                        "Cannot handle repeated arrays in format string");
+        return NULL;
+    }
+    if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+    while (*ts && *ts != ')') {
+        switch (*ts) {
+            case ' ': case '\f': case '\r': case '\n': case '\t': case '\v':  continue;
+            default:  break;
+        }
+        number = __Pyx_BufFmt_ExpectNumber(&ts);
+        if (number == -1) return NULL;
+        if (i < ndim && (size_t) number != ctx->head->field->type->arraysize[i])
+            return PyErr_Format(PyExc_ValueError,
+                        "Expected a dimension of size %zu, got %d",
+                        ctx->head->field->type->arraysize[i], number);
+        if (*ts != ',' && *ts != ')')
+            return PyErr_Format(PyExc_ValueError,
+                                "Expected a comma in format string, got '%c'", *ts);
+        if (*ts == ',') ts++;
+        i++;
+    }
+    if (i != ndim)
+        return PyErr_Format(PyExc_ValueError, "Expected %d dimension(s), got %d",
+                            ctx->head->field->type->ndim, i);
+    if (!*ts) {
+        PyErr_SetString(PyExc_ValueError,
+                        "Unexpected end of format string, expected ')'");
+        return NULL;
+    }
+    ctx->is_valid_array = 1;
+    ctx->new_count = 1;
+    *tsp = ++ts;
+    return Py_None;
+}
+static const char* __Pyx_BufFmt_CheckString(__Pyx_BufFmt_Context* ctx, const char* ts) {
+  int got_Z = 0;
+  while (1) {
+    switch(*ts) {
+      case 0:
+        if (ctx->enc_type != 0 && ctx->head == NULL) {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return NULL;
+        }
+        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+        if (ctx->head != NULL) {
+          __Pyx_BufFmt_RaiseExpected(ctx);
+          return NULL;
+        }
+        return ts;
+      case ' ':
+      case '\r':
+      case '\n':
+        ++ts;
+        break;
+      case '<':
+        if (!__Pyx_IsLittleEndian()) {
+          PyErr_SetString(PyExc_ValueError, "Little-endian buffer not supported on big-endian compiler");
+          return NULL;
+        }
+        ctx->new_packmode = '=';
+        ++ts;
+        break;
+      case '>':
+      case '!':
+        if (__Pyx_IsLittleEndian()) {
+          PyErr_SetString(PyExc_ValueError, "Big-endian buffer not supported on little-endian compiler");
+          return NULL;
+        }
+        ctx->new_packmode = '=';
+        ++ts;
+        break;
+      case '=':
+      case '@':
+      case '^':
+        ctx->new_packmode = *ts++;
+        break;
+      case 'T':
+        {
+          const char* ts_after_sub;
+          size_t i, struct_count = ctx->new_count;
+          size_t struct_alignment = ctx->struct_alignment;
+          ctx->new_count = 1;
+          ++ts;
+          if (*ts != '{') {
+            PyErr_SetString(PyExc_ValueError, "Buffer acquisition: Expected '{' after 'T'");
+            return NULL;
+          }
+          if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+          ctx->enc_type = 0;
+          ctx->enc_count = 0;
+          ctx->struct_alignment = 0;
+          ++ts;
+          ts_after_sub = ts;
+          for (i = 0; i != struct_count; ++i) {
+            ts_after_sub = __Pyx_BufFmt_CheckString(ctx, ts);
+            if (!ts_after_sub) return NULL;
+          }
+          ts = ts_after_sub;
+          if (struct_alignment) ctx->struct_alignment = struct_alignment;
+        }
+        break;
+      case '}':
+        {
+          size_t alignment = ctx->struct_alignment;
+          ++ts;
+          if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+          ctx->enc_type = 0;
+          if (alignment && ctx->fmt_offset % alignment) {
+            ctx->fmt_offset += alignment - (ctx->fmt_offset % alignment);
+          }
+        }
+        return ts;
+      case 'x':
+        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+        ctx->fmt_offset += ctx->new_count;
+        ctx->new_count = 1;
+        ctx->enc_count = 0;
+        ctx->enc_type = 0;
+        ctx->enc_packmode = ctx->new_packmode;
+        ++ts;
+        break;
+      case 'Z':
+        got_Z = 1;
+        ++ts;
+        if (*ts != 'f' && *ts != 'd' && *ts != 'g') {
+          __Pyx_BufFmt_RaiseUnexpectedChar('Z');
+          return NULL;
+        }
+      case 'c': case 'b': case 'B': case 'h': case 'H': case 'i': case 'I':
+      case 'l': case 'L': case 'q': case 'Q':
+      case 'f': case 'd': case 'g':
+      case 'O': case 'p':
+        if (ctx->enc_type == *ts && got_Z == ctx->is_complex &&
+            ctx->enc_packmode == ctx->new_packmode) {
+          ctx->enc_count += ctx->new_count;
+          ctx->new_count = 1;
+          got_Z = 0;
+          ++ts;
+          break;
+        }
+      case 's':
+        if (__Pyx_BufFmt_ProcessTypeChunk(ctx) == -1) return NULL;
+        ctx->enc_count = ctx->new_count;
+        ctx->enc_packmode = ctx->new_packmode;
+        ctx->enc_type = *ts;
+        ctx->is_complex = got_Z;
+        ++ts;
+        ctx->new_count = 1;
+        got_Z = 0;
+        break;
+      case ':':
+        ++ts;
+        while(*ts != ':') ++ts;
+        ++ts;
+        break;
+      case '(':
+        if (!__pyx_buffmt_parse_array(ctx, &ts)) return NULL;
+        break;
+      default:
+        {
+          int number = __Pyx_BufFmt_ExpectNumber(&ts);
+          if (number == -1) return NULL;
+          ctx->new_count = (size_t)number;
+        }
+    }
+  }
+}
+static CYTHON_INLINE void __Pyx_ZeroBuffer(Py_buffer* buf) {
+  buf->buf = NULL;
+  buf->obj = NULL;
+  buf->strides = __Pyx_zeros;
+  buf->shape = __Pyx_zeros;
+  buf->suboffsets = __Pyx_minusones;
+}
+static CYTHON_INLINE int __Pyx_GetBufferAndValidate(
+        Py_buffer* buf, PyObject* obj,  __Pyx_TypeInfo* dtype, int flags,
+        int nd, int cast, __Pyx_BufFmt_StackElem* stack)
+{
+  if (obj == Py_None || obj == NULL) {
+    __Pyx_ZeroBuffer(buf);
+    return 0;
+  }
+  buf->buf = NULL;
+  if (__Pyx_GetBuffer(obj, buf, flags) == -1) goto fail;
+  if (buf->ndim != nd) {
+    PyErr_Format(PyExc_ValueError,
+                 "Buffer has wrong number of dimensions (expected %d, got %d)",
+                 nd, buf->ndim);
+    goto fail;
+  }
+  if (!cast) {
+    __Pyx_BufFmt_Context ctx;
+    __Pyx_BufFmt_Init(&ctx, stack, dtype);
+    if (!__Pyx_BufFmt_CheckString(&ctx, buf->format)) goto fail;
+  }
+  if ((unsigned)buf->itemsize != dtype->size) {
+    PyErr_Format(PyExc_ValueError,
+      "Item size of buffer (%" CYTHON_FORMAT_SSIZE_T "d byte%s) does not match size of '%s' (%" CYTHON_FORMAT_SSIZE_T "d byte%s)",
+      buf->itemsize, (buf->itemsize > 1) ? "s" : "",
+      dtype->name, (Py_ssize_t)dtype->size, (dtype->size > 1) ? "s" : "");
+    goto fail;
+  }
+  if (buf->suboffsets == NULL) buf->suboffsets = __Pyx_minusones;
+  return 0;
+fail:;
+  __Pyx_ZeroBuffer(buf);
+  return -1;
+}
+static CYTHON_INLINE void __Pyx_SafeReleaseBuffer(Py_buffer* info) {
+  if (info->buf == NULL) return;
+  if (info->suboffsets == __Pyx_minusones) info->suboffsets = NULL;
+  __Pyx_ReleaseBuffer(info);
+}
+
+static int
+__Pyx_init_memviewslice(struct __pyx_memoryview_obj *memview,
+                        int ndim,
+                        __Pyx_memviewslice *memviewslice,
+                        int memview_is_new_reference)
+{
+    __Pyx_RefNannyDeclarations
+    int i, retval=-1;
+    Py_buffer *buf = &memview->view;
+    __Pyx_RefNannySetupContext("init_memviewslice", 0);
+    if (!buf) {
+        PyErr_SetString(PyExc_ValueError,
+            "buf is NULL.");
+        goto fail;
+    } else if (memviewslice->memview || memviewslice->data) {
+        PyErr_SetString(PyExc_ValueError,
+            "memviewslice is already initialized!");
+        goto fail;
+    }
+    if (buf->strides) {
+        for (i = 0; i < ndim; i++) {
+            memviewslice->strides[i] = buf->strides[i];
+        }
+    } else {
+        Py_ssize_t stride = buf->itemsize;
+        for (i = ndim - 1; i >= 0; i--) {
+            memviewslice->strides[i] = stride;
+            stride *= buf->shape[i];
+        }
+    }
+    for (i = 0; i < ndim; i++) {
+        memviewslice->shape[i]   = buf->shape[i];
+        if (buf->suboffsets) {
+            memviewslice->suboffsets[i] = buf->suboffsets[i];
+        } else {
+            memviewslice->suboffsets[i] = -1;
+        }
+    }
+    memviewslice->memview = memview;
+    memviewslice->data = (char *)buf->buf;
+    if (__pyx_add_acquisition_count(memview) == 0 && !memview_is_new_reference) {
+        Py_INCREF(memview);
+    }
+    retval = 0;
+    goto no_fail;
+fail:
+    memviewslice->memview = 0;
+    memviewslice->data = 0;
+    retval = -1;
+no_fail:
+    __Pyx_RefNannyFinishContext();
+    return retval;
+}
+static CYTHON_INLINE void __pyx_fatalerror(const char *fmt, ...) {
+    va_list vargs;
+    char msg[200];
+    va_start(vargs, fmt);
+#ifdef HAVE_STDARG_PROTOTYPES
+    va_start(vargs, fmt);
+#else
+    va_start(vargs);
+#endif
+    vsnprintf(msg, 200, fmt, vargs);
+    Py_FatalError(msg);
+    va_end(vargs);
+}
+static CYTHON_INLINE int
+__pyx_add_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
+                                   PyThread_type_lock lock)
+{
+    int result;
+    PyThread_acquire_lock(lock, 1);
+    result = (*acquisition_count)++;
+    PyThread_release_lock(lock);
+    return result;
+}
+static CYTHON_INLINE int
+__pyx_sub_acquisition_count_locked(__pyx_atomic_int *acquisition_count,
+                                   PyThread_type_lock lock)
+{
+    int result;
+    PyThread_acquire_lock(lock, 1);
+    result = (*acquisition_count)--;
+    PyThread_release_lock(lock);
+    return result;
+}
+static CYTHON_INLINE void
+__Pyx_INC_MEMVIEW(__Pyx_memviewslice *memslice, int have_gil, int lineno)
+{
+    int first_time;
+    struct __pyx_memoryview_obj *memview = memslice->memview;
+    if (!memview || (PyObject *) memview == Py_None)
+        return;
+    if (__pyx_get_slice_count(memview) < 0)
+        __pyx_fatalerror("Acquisition count is %d (line %d)",
+                         __pyx_get_slice_count(memview), lineno);
+    first_time = __pyx_add_acquisition_count(memview) == 0;
+    if (first_time) {
+        if (have_gil) {
+            Py_INCREF((PyObject *) memview);
+        } else {
+            PyGILState_STATE _gilstate = PyGILState_Ensure();
+            Py_INCREF((PyObject *) memview);
+            PyGILState_Release(_gilstate);
+        }
+    }
+}
+static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *memslice,
+                                             int have_gil, int lineno) {
+    int last_time;
+    struct __pyx_memoryview_obj *memview = memslice->memview;
+    if (!memview ) {
+        return;
+    } else if ((PyObject *) memview == Py_None) {
+        memslice->memview = NULL;
+        return;
+    }
+    if (__pyx_get_slice_count(memview) <= 0)
+        __pyx_fatalerror("Acquisition count is %d (line %d)",
+                         __pyx_get_slice_count(memview), lineno);
+    last_time = __pyx_sub_acquisition_count(memview) == 1;
+    memslice->data = NULL;
+    if (last_time) {
+        if (have_gil) {
+            Py_CLEAR(memslice->memview);
+        } else {
+            PyGILState_STATE _gilstate = PyGILState_Ensure();
+            Py_CLEAR(memslice->memview);
+            PyGILState_Release(_gilstate);
+        }
+    } else {
+        memslice->memview = NULL;
+    }
+}
+
 static int
 __pyx_memviewslice_is_contig(const __Pyx_memviewslice *mvs,
                              char order, int ndim)
@@ -21532,51 +27632,6 @@ raise_neg_overflow:
     return (char) -1;
 }
 
-static struct __pyx_typeinfo_string __Pyx_TypeInfoToFormat(__Pyx_TypeInfo *type) {
-    struct __pyx_typeinfo_string result = { {0} };
-    char *buf = (char *) result.string;
-    size_t size = type->size;
-    switch (type->typegroup) {
-        case 'H':
-            *buf = 'c';
-            break;
-        case 'I':
-        case 'U':
-            if (size == 1)
-                *buf = 'b';
-            else if (size == 2)
-                *buf = 'h';
-            else if (size == 4)
-                *buf = 'i';
-            else if (size == 8)
-                *buf = 'q';
-            if (type->is_unsigned)
-                *buf = toupper(*buf);
-            break;
-        case 'P':
-            *buf = 'P';
-            break;
-        case 'C':
-         {
-            __Pyx_TypeInfo complex_type = *type;
-            complex_type.typegroup = 'R';
-            complex_type.size /= 2;
-            *buf++ = 'Z';
-            *buf = __Pyx_TypeInfoToFormat(&complex_type).string[0];
-            break;
-         }
-        case 'R':
-            if (size == 4)
-                *buf = 'f';
-            else if (size == 8)
-                *buf = 'd';
-            else
-                *buf = 'g';
-            break;
-    }
-    return result;
-}
-
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
     const long neg_one = (long) -1, const_zero = 0;
     const int is_unsigned = neg_one > const_zero;
@@ -21670,271 +27725,6 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to long");
     return (long) -1;
-}
-
-static int
-__pyx_typeinfo_cmp(__Pyx_TypeInfo *a, __Pyx_TypeInfo *b)
-{
-    int i;
-    if (!a || !b)
-        return 0;
-    if (a == b)
-        return 1;
-    if (a->size != b->size || a->typegroup != b->typegroup ||
-            a->is_unsigned != b->is_unsigned || a->ndim != b->ndim) {
-        if (a->typegroup == 'H' || b->typegroup == 'H') {
-            return a->size == b->size;
-        } else {
-            return 0;
-        }
-    }
-    if (a->ndim) {
-        for (i = 0; i < a->ndim; i++)
-            if (a->arraysize[i] != b->arraysize[i])
-                return 0;
-    }
-    if (a->typegroup == 'S') {
-        if (a->flags != b->flags)
-            return 0;
-        if (a->fields || b->fields) {
-            if (!(a->fields && b->fields))
-                return 0;
-            for (i = 0; a->fields[i].type && b->fields[i].type; i++) {
-                __Pyx_StructField *field_a = a->fields + i;
-                __Pyx_StructField *field_b = b->fields + i;
-                if (field_a->offset != field_b->offset ||
-                    !__pyx_typeinfo_cmp(field_a->type, field_b->type))
-                    return 0;
-            }
-            return !a->fields[i].type && !b->fields[i].type;
-        }
-    }
-    return 1;
-}
-
-static int
-__pyx_check_strides(Py_buffer *buf, int dim, int ndim, int spec)
-{
-    if (buf->shape[dim] <= 1)
-        return 1;
-    if (buf->strides) {
-        if (spec & __Pyx_MEMVIEW_CONTIG) {
-            if (spec & (__Pyx_MEMVIEW_PTR|__Pyx_MEMVIEW_FULL)) {
-                if (buf->strides[dim] != sizeof(void *)) {
-                    PyErr_Format(PyExc_ValueError,
-                                 "Buffer is not indirectly contiguous "
-                                 "in dimension %d.", dim);
-                    goto fail;
-                }
-            } else if (buf->strides[dim] != buf->itemsize) {
-                PyErr_SetString(PyExc_ValueError,
-                                "Buffer and memoryview are not contiguous "
-                                "in the same dimension.");
-                goto fail;
-            }
-        }
-        if (spec & __Pyx_MEMVIEW_FOLLOW) {
-            Py_ssize_t stride = buf->strides[dim];
-            if (stride < 0)
-                stride = -stride;
-            if (stride < buf->itemsize) {
-                PyErr_SetString(PyExc_ValueError,
-                                "Buffer and memoryview are not contiguous "
-                                "in the same dimension.");
-                goto fail;
-            }
-        }
-    } else {
-        if (spec & __Pyx_MEMVIEW_CONTIG && dim != ndim - 1) {
-            PyErr_Format(PyExc_ValueError,
-                         "C-contiguous buffer is not contiguous in "
-                         "dimension %d", dim);
-            goto fail;
-        } else if (spec & (__Pyx_MEMVIEW_PTR)) {
-            PyErr_Format(PyExc_ValueError,
-                         "C-contiguous buffer is not indirect in "
-                         "dimension %d", dim);
-            goto fail;
-        } else if (buf->suboffsets) {
-            PyErr_SetString(PyExc_ValueError,
-                            "Buffer exposes suboffsets but no strides");
-            goto fail;
-        }
-    }
-    return 1;
-fail:
-    return 0;
-}
-static int
-__pyx_check_suboffsets(Py_buffer *buf, int dim, CYTHON_UNUSED int ndim, int spec)
-{
-    if (spec & __Pyx_MEMVIEW_DIRECT) {
-        if (buf->suboffsets && buf->suboffsets[dim] >= 0) {
-            PyErr_Format(PyExc_ValueError,
-                         "Buffer not compatible with direct access "
-                         "in dimension %d.", dim);
-            goto fail;
-        }
-    }
-    if (spec & __Pyx_MEMVIEW_PTR) {
-        if (!buf->suboffsets || (buf->suboffsets && buf->suboffsets[dim] < 0)) {
-            PyErr_Format(PyExc_ValueError,
-                         "Buffer is not indirectly accessible "
-                         "in dimension %d.", dim);
-            goto fail;
-        }
-    }
-    return 1;
-fail:
-    return 0;
-}
-static int
-__pyx_verify_contig(Py_buffer *buf, int ndim, int c_or_f_flag)
-{
-    int i;
-    if (c_or_f_flag & __Pyx_IS_F_CONTIG) {
-        Py_ssize_t stride = 1;
-        for (i = 0; i < ndim; i++) {
-            if (stride * buf->itemsize != buf->strides[i] &&
-                    buf->shape[i] > 1)
-            {
-                PyErr_SetString(PyExc_ValueError,
-                    "Buffer not fortran contiguous.");
-                goto fail;
-            }
-            stride = stride * buf->shape[i];
-        }
-    } else if (c_or_f_flag & __Pyx_IS_C_CONTIG) {
-        Py_ssize_t stride = 1;
-        for (i = ndim - 1; i >- 1; i--) {
-            if (stride * buf->itemsize != buf->strides[i] &&
-                    buf->shape[i] > 1) {
-                PyErr_SetString(PyExc_ValueError,
-                    "Buffer not C contiguous.");
-                goto fail;
-            }
-            stride = stride * buf->shape[i];
-        }
-    }
-    return 1;
-fail:
-    return 0;
-}
-static int __Pyx_ValidateAndInit_memviewslice(
-                int *axes_specs,
-                int c_or_f_flag,
-                int buf_flags,
-                int ndim,
-                __Pyx_TypeInfo *dtype,
-                __Pyx_BufFmt_StackElem stack[],
-                __Pyx_memviewslice *memviewslice,
-                PyObject *original_obj)
-{
-    struct __pyx_memoryview_obj *memview, *new_memview;
-    __Pyx_RefNannyDeclarations
-    Py_buffer *buf;
-    int i, spec = 0, retval = -1;
-    __Pyx_BufFmt_Context ctx;
-    int from_memoryview = __pyx_memoryview_check(original_obj);
-    __Pyx_RefNannySetupContext("ValidateAndInit_memviewslice", 0);
-    if (from_memoryview && __pyx_typeinfo_cmp(dtype, ((struct __pyx_memoryview_obj *)
-                                                            original_obj)->typeinfo)) {
-        memview = (struct __pyx_memoryview_obj *) original_obj;
-        new_memview = NULL;
-    } else {
-        memview = (struct __pyx_memoryview_obj *) __pyx_memoryview_new(
-                                            original_obj, buf_flags, 0, dtype);
-        new_memview = memview;
-        if (unlikely(!memview))
-            goto fail;
-    }
-    buf = &memview->view;
-    if (buf->ndim != ndim) {
-        PyErr_Format(PyExc_ValueError,
-                "Buffer has wrong number of dimensions (expected %d, got %d)",
-                ndim, buf->ndim);
-        goto fail;
-    }
-    if (new_memview) {
-        __Pyx_BufFmt_Init(&ctx, stack, dtype);
-        if (!__Pyx_BufFmt_CheckString(&ctx, buf->format)) goto fail;
-    }
-    if ((unsigned) buf->itemsize != dtype->size) {
-        PyErr_Format(PyExc_ValueError,
-                     "Item size of buffer (%" CYTHON_FORMAT_SSIZE_T "u byte%s) "
-                     "does not match size of '%s' (%" CYTHON_FORMAT_SSIZE_T "u byte%s)",
-                     buf->itemsize,
-                     (buf->itemsize > 1) ? "s" : "",
-                     dtype->name,
-                     dtype->size,
-                     (dtype->size > 1) ? "s" : "");
-        goto fail;
-    }
-    for (i = 0; i < ndim; i++) {
-        spec = axes_specs[i];
-        if (!__pyx_check_strides(buf, i, ndim, spec))
-            goto fail;
-        if (!__pyx_check_suboffsets(buf, i, ndim, spec))
-            goto fail;
-    }
-    if (buf->strides && !__pyx_verify_contig(buf, ndim, c_or_f_flag))
-        goto fail;
-    if (unlikely(__Pyx_init_memviewslice(memview, ndim, memviewslice,
-                                         new_memview != NULL) == -1)) {
-        goto fail;
-    }
-    retval = 0;
-    goto no_fail;
-fail:
-    Py_XDECREF(new_memview);
-    retval = -1;
-no_fail:
-    __Pyx_RefNannyFinishContext();
-    return retval;
-}
-
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(PyObject *obj) {
-    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
-    __Pyx_BufFmt_StackElem stack[1];
-    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
-    int retcode;
-    if (obj == Py_None) {
-        result.memview = (struct __pyx_memoryview_obj *) Py_None;
-        return result;
-    }
-    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
-                                                 PyBUF_RECORDS, 1,
-                                                 &__Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t, stack,
-                                                 &result, obj);
-    if (unlikely(retcode == -1))
-        goto __pyx_fail;
-    return result;
-__pyx_fail:
-    result.memview = NULL;
-    result.data = NULL;
-    return result;
-}
-
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(PyObject *obj) {
-    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
-    __Pyx_BufFmt_StackElem stack[1];
-    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_STRIDED) };
-    int retcode;
-    if (obj == Py_None) {
-        result.memview = (struct __pyx_memoryview_obj *) Py_None;
-        return result;
-    }
-    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, 0,
-                                                 PyBUF_RECORDS, 1,
-                                                 &__Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t, stack,
-                                                 &result, obj);
-    if (unlikely(retcode == -1))
-        goto __pyx_fail;
-    return result;
-__pyx_fail:
-    result.memview = NULL;
-    result.data = NULL;
-    return result;
 }
 
 static int __Pyx_check_binary_version(void) {

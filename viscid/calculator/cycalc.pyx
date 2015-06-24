@@ -1,204 +1,128 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
-#
-# Note: a _c_FUNCTION can only be called from another cdef-ed function, or
-# a def-ed _py_FUNCTION function because of the use of the fused real_t
-# to template both float32 and float64 versions
 
 from __future__ import print_function
 
 import numpy as np
 
-# from cython.parallel import prange
-
-# from viscid import logger
-
-###########
-# cimports
-cimport cython
-cimport numpy as cnp
-
 from cython.operator cimport dereference as deref
-from cython.view cimport array as cvarray
+from libc.math cimport floor, fabs
 
-from libc.math cimport sqrt
+from cyfield cimport real_t, fld_t
+from cyfield cimport CyField, FusedField, make_cyfield
+from cycalc cimport int_min, int_max
 
-from cycalc_util cimport *
-from cycalc cimport *
+def interp_trilin(vfield, seeds):
+    """Interpolate a field to points described by seeds
 
-# cdef extern from "math.h":
-#     bint isnan(double x)
+    Parameters:
+        vfield (viscid.field.Field): Some Vector or Scalar field
+        seeds (viscid.claculator.seed): locations for the interpolation
 
-#####################
-# now the good stuff
-
-cdef inline int _c_int_max(int a, int b):
-    if a >= b:
-        return a
-    else:
-        return b
-
-cdef inline int _c_int_min(int a, int b):
-    if a <= b:
-        return a
-    else:
-        return b
-
-def closest_ind(real_t[:] crd, point, int startind=0):
-    cdef int i
-    cdef int fallback
-    cdef int n = crd.shape[0]
-    cdef int forward = n > 1 and crd[1] > crd[0]
-    cdef real_t pt = point
-
-    if startind < 0:
-        # startind[0] = 0
-        startind = 0
-    elif startind > n - 1:
-        # startind[0] = n - 1
-        startind = n - 1
-
-    # search linearly... maybe branch prediction makes this better
-    # than bisection for smallish arrays...
-    # pt is 'upward' (index wise) of crd[startind]... only search up
-    if ((forward and crd[startind] <= pt) or \
-        (not forward and crd[startind] >= pt)):
-        for i from startind <= i < n - 1:
-            if forward and crd[i + 1] >= pt:
-                # startind[0] = i
-                return i
-            if not forward and crd[i + 1] <= pt:
-                # startind[0] = i
-                return i
-        # if we've gone too far, pick the last index
-        fallback = _c_int_max(n - 2, 0)
-        # startind[0] = fallback
-        return fallback
-
-    # startind was too large... go backwards
-    for i from startind - 1 >= i >= 0:
-        if forward and crd[i] <= pt:
-            # startind[0] = i
-            return i
-        if not forward and crd[i] >= pt:
-            # startind[0] = i
-            return i
-    # if we've gone too far, pick the first index
-    fallback = 0
-    # startind[0] = fallback
-    return fallback
-
-def interp_trilin(fld, seeds):
-    """ Points should be a SeedGen instance. If fld
-    is a scalar field, the output array has shape (nr_points,) where nr_points
-    is the number of seed points. If it's a vector, the output has shape
-    (nr_points, nr_comps), where nr_comps is the number of components of the
-    vector. The data type of the output is the same as the original field.
-    The output is always an array, even if only one point is given.
+    Returns:
+        numpy.ndarray of interpolated values. Shaped (seed.nr_points,)
+        or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
+        Vector field.
     """
-    fld = fld.as_interlaced(force_c_contiguous=True)
-
-    if fld.iscentered("Cell"):
-        crdz, crdy, crdx = fld.get_crds_cc()
-    elif fld.iscentered("Node"):
-        crdz, crdy, crdx = fld.get_crds_nc()
+    cdef int nr_points = seeds.nr_points(center=vfield.center)
+    cdef int nr_comps = vfield.nr_comps
+    if nr_comps == 0:
+        scalar = True
+        nr_comps = 1
     else:
-        raise RuntimeError("Dont touch me with that centering.")
+        scalar = False
 
-    dtype = fld.dtype
+    fld = make_cyfield(vfield)
+    result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
 
-    if fld.istype("Vector"):
-        nr_comps = fld.nr_comps
-        nr_points = seeds.nr_points(center=fld.center)
-        ret = np.empty((nr_points, nr_comps), dtype=dtype)
+    _py_interp_trilin(fld, seeds.iter_points(center=vfield.center), result)
 
-        for j from 0 <= j < nr_comps:
-            # print(ret.shape, nr_points, nr_comps)
-            ret[:,j] = _py_interp_trilin(dtype, fld.data, j, crdz, crdy, crdx,
-                                seeds.iter_points(center=fld.center),
-                                nr_points)
-        return ret
+    if scalar:
+        result = result[:, 0]
+    return result
 
-    elif fld.istype("Scalar"):
-        dat = fld.data.reshape(fld.shape + [1])
-        nr_points = seeds.nr_points(center=fld.center)
-        ret = np.empty((nr_points,), dtype=dtype)
-        ret[:] = _py_interp_trilin(dtype, dat, 0, crdz, crdy, crdx,
-                                   seeds.iter_points(center=fld.center),
-                                   nr_points)
-        return ret
+def interp_nearest(vfield, seeds):
+    """Interpolate a field to points described by seeds
 
+    Parameters:
+        vfield (viscid.field.Field): Some Vector or Scalar field
+        seeds (viscid.claculator.seed): locations for the interpolation
+
+    Returns:
+        numpy.ndarray of interpolated values. Shaped (seed.nr_points,)
+        or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
+        Vector field.
+    """
+    cdef int nr_points = seeds.nr_points(center=vfield.center)
+    cdef int nr_comps = vfield.nr_comps
+    if nr_comps == 0:
+        scalar = True
+        nr_comps = 1
     else:
-        raise RuntimeError("That centering is not supported for interp_trilin")
+        scalar = False
 
-def _py_interp_trilin(dtype, real_t[:,:,:,::1] s, cnp.intp_t m,
-                      crdz_in, crdy_in, crdx_in, points, int nr_points):
-    """ return the scalar value of 3d scalar array s trilinearly interpolated
-    to the point x (in z, y, x order) """
-    cdef unsigned int i
-    cdef real_t[:] crdz = crdz_in
-    cdef real_t[:] crdy = crdy_in
-    cdef real_t[:] crdx = crdx_in
-    cdef real_t[:] *crds = [crdz, crdy, crdx]
-    cdef int* start_inds = [0, 0, 0]
+    fld = make_cyfield(vfield)
+    result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
 
-    cdef real_t[:] x = np.empty((3,), dtype=dtype)
-    cdef real_t[:] ret = np.empty((nr_points,), dtype=dtype)
+    _py_interp_nearest(fld, seeds.iter_points(center=vfield.center), result)
 
-    # print("nr_points: ", nr_points)
-    for i , pt in enumerate(points):
-        x[0] = pt[0]
-        x[1] = pt[1]
-        x[2] = pt[2]
-        ret[i] = _c_interp_trilin(s, m, crds, x, start_inds)
-    return ret
+    if scalar:
+        result = result[:, 0]
+    return result
 
-cdef real_t _c_interp_trilin(real_t[:,:,:,::1] s, cnp.intp_t m, real_t[:] *crds,
-                             real_t[:] x, int start_inds[3]):
-    cdef int i, j, ind, ncells
+def _py_interp_trilin(FusedField fld, points, real_t[:, ::1] result):
+    cdef int i, m
+    cdef int nr_comps = result.shape[1]
+    cdef real_t x[3]
+
+    i = 0
+    for pt in points:
+        for m in range(nr_comps):
+            x[0] = pt[0]
+            x[1] = pt[1]
+            x[2] = pt[2]
+            result[i, m] = _c_interp_trilin(fld, m, x)
+        i += 1
+
+cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
+    cdef int d, ind
     cdef int[3] ix
     cdef int[3] p  # increment, used for 2d fields
     cdef real_t[3] xd
 
-    # cdef real_t[:] *crds = [crdz, crdy, crdx]
     cdef real_t c00, c10, c01, c11, c0, c1, c
 
     # find closest inds
-    for i from 0 <= i < 3:
-        # this 'if' is to support 2d fields... could probably be handled
-        # more efficiently
-        ncells = crds[i].shape[0]
-        if ncells > 1:
-            # find the closest ind
-            # ind = _c_closest_ind[real_t](crds[i], x[i], &start_inds[i])
-            # this implementation only works for monotonically increasing crds
-            ind = _c_int_max(_c_int_min(start_inds[i], ncells - 2), 0)
-
-            if crds[i][ind] <= x[i]:
-                for j from ind <= j < ncells - 1:
-                    if crds[i][j + 1] >= x[i]:
-                        break
-                ind = _c_int_min(j, ncells - 2)
-            else:
-                for j from ind - 1 >= j >= 0:
-                    if crds[i][j] <= x[i]:
-                        break
-                ind = _c_int_max(j, 0)
-            start_inds[i] = ind
-
-            ix[i] = ind
-            p[i] = 1
-            xd[i] = (x[i] - crds[i][ind]) / (crds[i][ind + 1] - crds[i][ind])
+    for d in range(3):
+        nr_cells = fld.nr_cells[d]
+        if nr_cells > 1:
+            ind = closest_preceeding_ind(fld, d, x[d])
+            ix[d] = ind
+            p[d] = 1
+            # if ind + 1 >= fld.nr_cells[d]:
+            #     raise ValueError("d: {0}, ind: {1}".format(d, ind))
+            xd[d] = ((x[d] - fld.crds[d, ind]) /
+                     (fld.crds[d, ind + 1] - fld.crds[d, ind]))
+            # xd[d] *= 0.9  # break the interpolation, for testing
         else:
             ind = 0
-            ix[i] = ind
-            p[i] = 0
-            xd[i] = 1.0
+            ix[d] = ind
+            p[d] = 0
+            xd[d] = 1.0
+            # xd[d] *= 0.9  # break the interpolation, for testing
 
     # INTERLACED ... z first
-    c00 = s[ix[0], ix[1]       , ix[2]       , m] + xd[0] * (s[ix[0] + p[0], ix[1]       , ix[2]       , m] - s[ix[0], ix[1]       , ix[2]       , m])
-    c10 = s[ix[0], ix[1] + p[1], ix[2]       , m] + xd[0] * (s[ix[0] + p[0], ix[1] + p[1], ix[2]       , m] - s[ix[0], ix[1] + p[1], ix[2]       , m])
-    c01 = s[ix[0], ix[1]       , ix[2] + p[2], m] + xd[0] * (s[ix[0] + p[0], ix[1]       , ix[2] + p[2], m] - s[ix[0], ix[1]       , ix[2] + p[2], m])
-    c11 = s[ix[0], ix[1] + p[1], ix[2] + p[2], m] + xd[0] * (s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2], m] - s[ix[0], ix[1] + p[1], ix[2] + p[2], m])
+    c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
+           xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
+                    fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
+    c10 = (fld.data[ix[0], ix[1] + p[1], ix[2]       , m] +
+           xd[0] * (fld.data[ix[0] + p[0], ix[1] + p[1], ix[2]       , m] -
+                    fld.data[ix[0]       , ix[1] + p[1], ix[2]       , m]))
+    c01 = (fld.data[ix[0], ix[1]       , ix[2] + p[2], m] +
+           xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2] + p[2], m] -
+                    fld.data[ix[0]       , ix[1]       , ix[2] + p[2], m]))
+    c11 = (fld.data[ix[0], ix[1] + p[1], ix[2] + p[2], m] +
+           xd[0] * (fld.data[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2], m] -
+                    fld.data[ix[0]       , ix[1] + p[1], ix[2] + p[2], m]))
     c0 = c00 + xd[1] * (c10 - c00)
     c1 = c01 + xd[1] * (c11 - c01)
     c = c0 + xd[2] * (c1 - c0)
@@ -217,131 +141,90 @@ cdef real_t _c_interp_trilin(real_t[:,:,:,::1] s, cnp.intp_t m, real_t[:] *crds,
     #                   s[ix[0] + p[0], ix[1]       , ix[2] + p[2], m])
     #     print("DD0:", s[ix[0]       , ix[1] + p[1], ix[2] + p[2], m],
     #                   s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2], m])
-
     return c
 
-def interp_nearest(fld, seeds, fill=None):
-    """ Points can be list of 3-tuples or a SeedGen instance. If fld
-    is a scalar field, the output array has shape (nr_points,) where nr_points
-    is the number of seed points. If it's a vector, the output has shape
-    (nr_points, nr_comps), where nr_comps is the number of components of the
-    vector. The data type of the output is the same as the original field.
-    The output is always an array, even if only one point is given.
+def _py_interp_nearest(FusedField fld, points, real_t[:, ::1] result):
+    cdef int i, m
+    cdef int nr_comps = result.shape[1]
+    cdef real_t[3] x
+
+    i = 0
+    for pt in points:
+        for m in range(nr_comps):
+            x[0] = pt[0]
+            x[1] = pt[1]
+            x[2] = pt[2]
+            result[i, m] = _c_interp_nearest(fld, m, x)
+        i += 1
+
+cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
+    cdef int ind[3]
+    cdef int d
+
+    for d in range(3):
+        ind[d] = closest_ind(fld, d, x[d])
+    return fld.data[ind[0], ind[1], ind[2], m]
+
+
+cdef int closest_preceeding_ind(FusedField fld, int d, real_t value):
+    """Index of the element closest (and to the left) of x = value
+
+    This function returns the closest index preceeding value such that
+    fld.data[..., i, ...] and fld.data[..., i + 1, ...] exist.
+
+    Parameters:
+        fld (FusedField): field
+        d (int): dimension [0..2]
+        value (real_t): get index closest to fld.data['d=value']
+
+    Returns:
+        int: closest indext preceeding value in the coordinate array d
     """
-    fld = fld.as_interlaced(force_c_contiguous=True)
+    cdef real_t frac
+    cdef int i, ind, done
+    cdef int n = fld.n[d]
+    cdef int startind = fld.cached_ind[d]
 
-    if fld.iscentered("Cell"):
-        crdz, crdy, crdx = fld.get_crds_cc()
-    elif fld.iscentered("Node"):
-        crdz, crdy, crdx = fld.get_crds_nc()
+    if n == 1:
+        ind = 0
+    elif fld.uniform_crds:
+        frac = (value - fld.xl[d]) / (fld.L[d])
+        i = <int> floor((fld.nm1[d]) * frac)
+        ind = int_min(int_max(i, 0), fld.nm2[d])
     else:
-        raise RuntimeError("Dont touch me with that centering.")
+        done = 0
 
-    fld_dtype = fld.dtype
-    crd_dtype = crdz.dtype
-    cdef bint use_fill
-    if fill is None:
-        fill = np.array([0], dtype=fld_dtype)
-        use_fill = False
-    else:
-        use_fill = True
-
-    if fld.istype("Vector"):
-        nr_comps = fld.nr_comps
-        nr_points = seeds.nr_points(center=fld.center)
-        ret = np.empty((nr_points, nr_comps), dtype=fld_dtype)
-
-        for j from 0 <= j < nr_comps:
-            # print(ret.shape, nr_points, nr_comps)
-            ret[:,j] = _py_interp_nearest(fld_dtype, crd_dtype, fld.data, j,
-                                          crdz, crdy, crdx,
-                                          seeds.iter_points(center=fld.center),
-                                          nr_points, fill, use_fill)
-        return ret
-
-    elif fld.istype("Scalar"):
-        dat = fld.data.reshape(fld.shape + [1])
-        nr_points = seeds.nr_points(center=fld.center)
-        ret = np.empty((nr_points,), dtype=fld_dtype)
-        ret[:] = _py_interp_nearest(fld_dtype, crd_dtype, dat, 0,
-                                    crdz, crdy, crdx,
-                                    seeds.iter_points(center=fld.center),
-                                    nr_points, fill, use_fill)
-        return ret
-
-    else:
-        raise RuntimeError("That centering is not supported for interp_trilin")
-
-def _py_interp_nearest(dtype_fld, dtype_crds, fld_t[:,:,:,::1] s, cnp.intp_t m,
-                       real_t[:] crdz, crdy_in, crdx_in, points,
-                       int nr_points, fld_t fill, bint use_fill):
-    """ return the scalar value of 3d scalar array s trilinearly interpolated
-    to the point x (in z, y, x order) """
-    cdef unsigned int i
-    # cdef real_t[:] crdz = crdz_in  # need 1 crd to establish fused type
-    cdef real_t[:] crdy = crdy_in
-    cdef real_t[:] crdx = crdx_in
-    cdef real_t[:] *crds = [crdz, crdy, crdx]
-    cdef int* start_inds = [0, 0, 0]
-
-    cdef real_t[:] x = np.empty((3,), dtype=dtype_crds)
-    cdef fld_t[:] ret = np.empty((nr_points,), dtype=dtype_fld)
-
-    # print("nr_points: ", nr_points)
-    for i, pt in enumerate(points):
-        x[0] = pt[0]
-        x[1] = pt[1]
-        x[2] = pt[2]
-        ret[i] = _c_interp_nearest(s, m, crds, x, start_inds, fill, use_fill)
-    return ret
-
-@cython.wraparound(True)
-cdef fld_t _c_interp_nearest(fld_t[:,:,:,::1] s, cnp.intp_t m, real_t[:] *crds,
-                             real_t[:] x, int start_inds[3],
-                             fld_t fill, bint use_fill):
-    cdef int i, j, ind, ncells
-    cdef int[3] ix
-    cdef int[3] p  # increment, used for 2d fields
-    cdef real_t[3] xd
-
-    if use_fill:
-        if x[0] < crds[0][0] or x[0] > crds[0][-1] or \
-           x[1] < crds[1][0] or x[1] > crds[1][-1] or \
-           x[2] < crds[2][0] or x[2] > crds[2][-1]:
-            return fill
-
-    # find closest inds
-    for i from 0 <= i < 3:
-        # this 'if' is to support 2d fields... could probably be handled
-        # more efficiently
-        ncells = crds[i].shape[0]
-        if ncells > 1:
-            # find the closest ind
-            # ind = _c_closest_ind[real_t](crds[i], x[i], &start_inds[i])
-            # this implementation only works for monotonically increasing crds
-            ind = _c_int_max(_c_int_min(start_inds[i], ncells - 2), 0)
-
-            if crds[i][ind] <= x[i]:
-                for j from ind <= j < ncells - 1:
-                    if crds[i][j + 1] >= x[i]:
-                        break
-                ind = _c_int_min(j, ncells - 2)
-            else:
-                for j from ind - 1 >= j >= 0:
-                    if crds[i][j] <= x[i]:
-                        break
-                ind = _c_int_max(j, 0)
-            start_inds[i] = ind
-
-            ix[i] = ind
-            xd[i] = (x[i] - crds[i][ind]) / (crds[i][ind + 1] - crds[i][ind])
-            p[i] = <int>(xd[i] + 0.5)
+        # if startind >= fld.nr_cells[d]:
+        #     raise ValueError("d: {0}, startind: {1}".format(d, startind))
+        if fld.crds[d, startind] <= value:
+            i = startind
+            for i in range(startind, n - 1):
+                # if i >= fld.nr_cells[d]:
+                #     raise ValueError("d: {0}, i: {1}".format(d, i))
+                if fld.crds[d, i + 1] > value:
+                    break
+            ind = int_min(i, n - 2)
         else:
-            ind = 0
-            ix[i] = ind
-            p[i] = 0
+            i = startind - 1
+            for i in range(startind - 1, -1, -1):
+                # if i >= fld.nr_cells[d]:
+                #     raise ValueError("d: {0}, i: {1}".format(d, i))
+                if fld.crds[d, i] <= value:
+                    break
+            ind = int_max(i, 0)
 
-    return s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2], m]
+    fld.cached_ind[d] = ind
+    return ind
+
+cdef int closest_ind(FusedField fld, int d, real_t value):
+    cdef double d1, d2
+    cdef int preceeding_ind = closest_preceeding_ind(fld, d, value)
+    d1 = fabs(fld.crds[d, preceeding_ind] - value)
+    d2 = fabs(fld.crds[d, preceeding_ind + 1] - value)
+    if d1 <= d2:
+        return preceeding_ind
+    else:
+        return preceeding_ind + 1
 
 ##
 ## EOF

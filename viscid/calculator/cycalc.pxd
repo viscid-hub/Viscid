@@ -1,16 +1,22 @@
-cimport numpy as cnp
+from cyfield cimport real_t, fld_t
+from cyfield cimport CyField, FusedField, make_cyfield
 
-from cycalc_util cimport *
+cdef inline int int_min(int a, int b):
+    return b if b < a else a
 
-# cdef inline int _c_closest_ind(real_t[:] crd, real_t point, int *startind) except -1
+cdef inline int int_max(int a, int b):
+    return b if b > a else a
 
-cdef real_t _c_interp_trilin(real_t[:,:,:,::1] s, cnp.intp_t m, real_t[:] *crds,
-                             real_t[:] x, int start_inds[3])
+cdef inline real_t real_min(real_t a, real_t b):
+    return b if b < a else a
 
-cdef fld_t _c_interp_nearest(fld_t[:,:,:,::1] s, cnp.intp_t m, real_t[:] *crds,
-                             real_t[:] x, int start_inds[3],
-                             fld_t fill, bint use_fill)
+cdef inline real_t real_max(real_t a, real_t b):
+    return b if b > a else a
 
-##
-## EOF
-##
+# heavy lifting interpolation functions
+cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3])
+cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3])
+
+# finding closest indices
+cdef int closest_preceeding_ind(FusedField fld, int d, real_t value)
+cdef int closest_ind(FusedField fld, int d, real_t value)

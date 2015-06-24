@@ -66,6 +66,10 @@ cy_defs.append(["viscid.calculator.streamline",
                 ["viscid/calculator/streamline"],
                 dict()
                ])
+cy_defs.append(["viscid.calculator.cyfield",
+                ["viscid/calculator/cyfield"],
+                dict()
+               ])
 cy_defs.append(["viscid.cyamr",
                 ["viscid/cyamr"],
                 dict()
