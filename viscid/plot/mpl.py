@@ -623,7 +623,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     if fld.nr_blocks > 1:
         raise TypeError("plot2d_mapfield doesn't do multi-block fields yet")
 
+    _new_axis = False
     if not ax:
+        if len(plt.gcf().axes) == 0:
+            _new_axis = True
         ax = plt.gca()
 
     # parse plot_opts
@@ -676,12 +679,14 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         absboundinglat = np.abs(bounding_lat)
 
         if ax is None:
-            ax = plt.gca()
+            # ax got set above, non?
+            raise RuntimeError("Shouldn't be here")
         if not hasattr(ax, "set_thetagrids"):
             ax = plt.subplot(*ax.get_geometry(), projection='polar')
-            logger.warn("Clobbering axis for subplot %s; please give a polar "
-                        "axis to plot2d_mapfield if you indend to use it "
-                        "later.", ax.get_geometry())
+            if not _new_axis:
+                logger.warn("Clobbering axis for subplot %s; please give a "
+                            "polar axis to plot2d_mapfield if you indend to "
+                            "use it later.", ax.get_geometry())
 
         if hemisphere == "north":
             sl_fld = fld["lat=:{0}f".format(absboundinglat)]
