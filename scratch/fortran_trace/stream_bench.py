@@ -28,7 +28,7 @@ from viscid.calculator import streamline
 from viscid.calculator import seed
 # import topo_numba
 
-gsize = (8, 8, 8)
+gsize = (32, 32, 16)
 x1 = -10.0; x2 = -5.0 #pylint: disable=C0321
 y1 = -5.0; y2 = 5.0 #pylint: disable=C0321
 z1 = -5.0; z2 = 5.0 #pylint: disable=C0321
@@ -38,23 +38,24 @@ def trace_fortran(fld_bx, fld_by, fld_bz):
     gx, gy, gz = fld_bx.get_crds_cc(('x', 'y', 'z'))
     nz, ny, nx = fld_bx.shape
 
+    t0 = time()
     bx_farr = np.array(np.ravel(fld_bx.data, order='K').reshape((nx, ny, nz), order="F")) #pylint: disable=C0301
     by_farr = np.array(np.ravel(fld_by.data, order='K').reshape((nx, ny, nz), order="F")) #pylint: disable=C0301
     bz_farr = np.array(np.ravel(fld_bz.data, order='K').reshape((nx, ny, nz), order="F")) #pylint: disable=C0301
+
     topo = np.zeros(gsize, order='F', dtype='int32')
     nsegs = np.zeros((1,), order='F', dtype='int32')
 
-    logger.info((np.ravel(bx_farr, order='K') == np.ravel(fld_bx.data, order='K')).all()) #pylint: disable=C0301
-    logger.info((np.ravel(by_farr, order='K') == np.ravel(fld_by.data, order='K')).all()) #pylint: disable=C0301
-    logger.info((np.ravel(bz_farr, order='K') == np.ravel(fld_bz.data, order='K')).all()) #pylint: disable=C0301
-    logger.info("bx_arr")
-    logger.info(bx_farr.strides)
-    logger.info(bx_farr.flags)
-    logger.info("topo")
-    logger.info(topo.strides)
-    logger.info(topo.shape)
+    # logger.info((np.ravel(bx_farr, order='K') == np.ravel(fld_bx.data, order='K')).all()) #pylint: disable=C0301
+    # logger.info((np.ravel(by_farr, order='K') == np.ravel(fld_by.data, order='K')).all()) #pylint: disable=C0301
+    # logger.info((np.ravel(bz_farr, order='K') == np.ravel(fld_bz.data, order='K')).all()) #pylint: disable=C0301
+    # logger.info("bx_arr")
+    # logger.info(bx_farr.strides)
+    # logger.info(bx_farr.flags)
+    # logger.info("topo")
+    # logger.info(topo.strides)
+    # logger.info(topo.shape)
 
-    t0 = time()
     tracer.get_topo(gx, gy, gz, bx_farr, by_farr, bz_farr, topo,
                     x1, x2, y1, y2, z1, z2, nsegs)
     t1 = time()
@@ -80,13 +81,13 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     t1 = time()
     topo_fld = vol.wrap_field(topo, name="CyTopo")
 
-    cmap = plt.get_cmap('spectral')
-    levels = [4, 5, 6, 7, 8, 13, 14, 16, 17]
-    norm = BoundaryNorm(levels, cmap.N)
-    mpl.plot(topo_fld, "y=0", cmap=cmap, norm=norm, show=False)
-    # mpl.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
-    # mpl.plot_streamlines(lines, topology=topo, show=False)
-    mpl.mplshow()
+    # cmap = plt.get_cmap('spectral')
+    # levels = [4, 5, 6, 7, 8, 13, 14, 16, 17]
+    # norm = BoundaryNorm(levels, cmap.N)
+    # mpl.plot(topo_fld, "y=0", cmap=cmap, norm=norm, show=False)
+    # # mpl.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
+    # # mpl.plot_streamlines(lines, topology=topo, show=False)
+    # mpl.mplshow()
 
     # topo_src = mvi.field_to_point_source(topo_fld)
     # e = mlab.get_engine()
@@ -131,7 +132,8 @@ def main():
 
     if args.file is None:
         # args.file = "/Users/kmaynard/dev/work/cen4000/cen4000.3d.xdmf"
-        args.file = "/Users/kmaynard/dev/work/tmp/cen2000.3d.004045.xdmf"
+        # args.file = "/Users/kmaynard/dev/work/tmp/cen2000.3d.004045.xdmf"
+        args.file = "~/dev/work/api_05_180_0.00_5e2.3d.007200.xdmf"
     f3d = readers.load_file(args.file)
 
     bx = f3d["bx"]
