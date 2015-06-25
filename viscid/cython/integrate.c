@@ -253,8 +253,8 @@ class __Pyx_FakeReference {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__viscid__calculator__integrate
-#define __PYX_HAVE_API__viscid__calculator__integrate
+#define __PYX_HAVE__viscid__cython__integrate
+#define __PYX_HAVE_API__viscid__cython__integrate
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -468,9 +468,9 @@ static const char *__pyx_filename;
 static const char *__pyx_f[] = {
   "__init__.pxd",
   "stringsource",
-  "viscid/calculator/integrate.pyx",
+  "viscid/cython/integrate.pyx",
   "type.pxd",
-  "viscid/calculator/cyfield.pxd",
+  "viscid/cython/cyfield.pxd",
 };
 struct __pyx_memoryview_obj;
 typedef struct {
@@ -774,11 +774,11 @@ typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_6viscid_10calculator_7cyfield_CyField;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8;
+struct __pyx_obj_6viscid_6cython_7cyfield_CyField;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
@@ -827,7 +827,7 @@ typedef npy_cdouble __pyx_t_5numpy_complex_t;
  *     # cdef bool uniform_crds
  *     cdef vfield
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_CyField {
+struct __pyx_obj_6viscid_6cython_7cyfield_CyField {
   PyObject_HEAD
   PyObject *vfield;
   PyObject *fld_dtype;
@@ -851,8 +851,8 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_CyField {
  *     cdef cnp.int32_t[:,:,:,::1] data
  *     cdef cnp.float64_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -884,8 +884,8 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 {
  *     cdef cnp.int64_t[:,:,:,::1] data
  *     cdef cnp.float64_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -917,8 +917,8 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 {
  *     cdef cnp.float32_t[:,:,:,::1] data
  *     cdef cnp.float32_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -950,8 +950,8 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 {
  *     cdef cnp.float64_t[:,:,:,::1] data
  *     cdef cnp.float64_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -1594,31 +1594,31 @@ static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
 
-/* Module declarations from 'viscid.calculator.cyfield' */
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_CyField = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = 0;
-static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *(*__pyx_f_6viscid_10calculator_7cyfield_make_cyfield)(PyObject *); /*proto*/
+/* Module declarations from 'viscid.cython.cyfield' */
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_CyField = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8 = 0;
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_f_6viscid_6cython_7cyfield_make_cyfield)(PyObject *); /*proto*/
 
 /* Module declarations from 'libc.math' */
 
-/* Module declarations from 'viscid.calculator.cycalc' */
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+/* Module declarations from 'viscid.cython.cycalc' */
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max(__pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
 
-/* Module declarations from 'viscid.calculator.integrate' */
+/* Module declarations from 'viscid.cython.integrate' */
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -1628,38 +1628,38 @@ static PyObject *strided = 0;
 static PyObject *indirect = 0;
 static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1692,10 +1692,10 @@ static void __pyx_memoryview_refcount_objects_in_slice_with_gil(char *, Py_ssize
 static void __pyx_memoryview_refcount_objects_in_slice(char *, Py_ssize_t *, Py_ssize_t *, int, int); /*proto*/
 static void __pyx_memoryview_slice_assign_scalar(__Pyx_memviewslice *, int, size_t, void *, int); /*proto*/
 static void __pyx_memoryview__slice_assign_scalar(char *, Py_ssize_t *, Py_ssize_t *, int, size_t, void *); /*proto*/
-#define __Pyx_MODULE_NAME "viscid.calculator.integrate"
-int __pyx_module_is_main_viscid__calculator__integrate = 0;
+#define __Pyx_MODULE_NAME "viscid.cython.integrate"
+int __pyx_module_is_main_viscid__cython__integrate = 0;
 
-/* Implementation of 'viscid.calculator.integrate' */
+/* Implementation of 'viscid.cython.integrate' */
 static PyObject *__pyx_builtin_ValueError;
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_RuntimeError;
@@ -1925,7 +1925,7 @@ static PyObject *__pyx_tuple__21;
 static PyObject *__pyx_tuple__22;
 static PyObject *__pyx_tuple__23;
 
-/* "viscid/calculator/integrate.pyx":12
+/* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -1933,7 +1933,7 @@ static PyObject *__pyx_tuple__23;
  *                    real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -1943,34 +1943,34 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -1979,7 +1979,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -1997,7 +1997,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2008,7 +2008,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2018,7 +2018,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2028,7 +2028,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2038,7 +2038,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2048,7 +2048,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2062,7 +2062,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2072,34 +2072,34 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -2108,7 +2108,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -2126,7 +2126,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2137,7 +2137,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2147,7 +2147,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2157,7 +2157,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2167,7 +2167,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2177,7 +2177,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2191,7 +2191,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -2201,34 +2201,34 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -2237,7 +2237,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -2255,7 +2255,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2266,7 +2266,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2276,7 +2276,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2286,7 +2286,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2296,7 +2296,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2306,7 +2306,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2320,7 +2320,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2330,34 +2330,34 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -2366,7 +2366,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -2384,7 +2384,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2395,7 +2395,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2405,7 +2405,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2415,7 +2415,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2425,7 +2425,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2435,7 +2435,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2449,7 +2449,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -2459,34 +2459,34 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -2495,7 +2495,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -2513,7 +2513,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2524,7 +2524,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2534,7 +2534,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2544,7 +2544,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2554,7 +2554,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2564,7 +2564,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2578,7 +2578,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2588,34 +2588,34 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -2624,7 +2624,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -2642,7 +2642,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2653,7 +2653,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2663,7 +2663,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2673,7 +2673,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2683,7 +2683,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2693,7 +2693,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2707,7 +2707,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -2717,34 +2717,34 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -2753,7 +2753,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -2771,7 +2771,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2782,7 +2782,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2792,7 +2792,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2802,7 +2802,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2812,7 +2812,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2822,7 +2822,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2836,7 +2836,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2846,34 +2846,34 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_euler1", 0);
 
-  /* "viscid/calculator/integrate.pyx":19
+  /* "viscid/cython/integrate.pyx":19
  *     cdef real_t v[3]
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v[0]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":20
+  /* "viscid/cython/integrate.pyx":20
  *     cdef real_t vmag
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v[1]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":21
+  /* "viscid/cython/integrate.pyx":21
  *     v[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v[2]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":22
+  /* "viscid/cython/integrate.pyx":22
  *     v[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
@@ -2882,7 +2882,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  */
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":23
+  /* "viscid/cython/integrate.pyx":23
  *     v[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
@@ -2900,7 +2900,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":26
+    /* "viscid/cython/integrate.pyx":26
  *         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1             # <<<<<<<<<<<<<<
@@ -2911,7 +2911,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":27
+  /* "viscid/cython/integrate.pyx":27
  *         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag             # <<<<<<<<<<<<<<
@@ -2921,7 +2921,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[2])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":28
+  /* "viscid/cython/integrate.pyx":28
  *         return 1
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag             # <<<<<<<<<<<<<<
@@ -2931,7 +2931,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[1])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":29
+  /* "viscid/cython/integrate.pyx":29
  *     x[0] += deref(ds) * v[2] / vmag
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag             # <<<<<<<<<<<<<<
@@ -2941,7 +2941,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v[0])) / __pyx_v_vmag));
 
-  /* "viscid/calculator/integrate.pyx":30
+  /* "viscid/cython/integrate.pyx":30
  *     x[1] += deref(ds) * v[1] / vmag
  *     x[2] += deref(ds) * v[0] / vmag
  *     return 0             # <<<<<<<<<<<<<<
@@ -2951,7 +2951,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":12
+  /* "viscid/cython/integrate.pyx":12
  * from cycalc cimport _c_interp_trilin, real_min, real_max
  * 
  * cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2965,7 +2965,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
   return __pyx_r;
 }
 
-/* "viscid/calculator/integrate.pyx":32
+/* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -2973,7 +2973,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1(struc
  *                 real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -2987,7 +2987,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -2996,34 +2996,34 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -3032,7 +3032,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -3050,7 +3050,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3061,7 +3061,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -3070,7 +3070,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -3079,7 +3079,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -3088,34 +3088,34 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -3124,7 +3124,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -3142,7 +3142,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3153,7 +3153,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -3163,7 +3163,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -3173,7 +3173,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -3183,7 +3183,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -3193,7 +3193,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -3207,7 +3207,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -3221,7 +3221,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -3230,34 +3230,34 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -3266,7 +3266,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -3284,7 +3284,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3295,7 +3295,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -3304,7 +3304,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -3313,7 +3313,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -3322,34 +3322,34 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -3358,7 +3358,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -3376,7 +3376,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3387,7 +3387,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -3397,7 +3397,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -3407,7 +3407,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -3417,7 +3417,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -3427,7 +3427,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -3441,7 +3441,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -3455,7 +3455,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -3464,34 +3464,34 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -3500,7 +3500,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -3518,7 +3518,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3529,7 +3529,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -3538,7 +3538,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -3547,7 +3547,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -3556,34 +3556,34 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -3592,7 +3592,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -3610,7 +3610,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3621,7 +3621,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -3631,7 +3631,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -3641,7 +3641,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -3651,7 +3651,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -3661,7 +3661,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -3675,7 +3675,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -3689,7 +3689,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -3698,34 +3698,34 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -3734,7 +3734,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -3752,7 +3752,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3763,7 +3763,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -3772,7 +3772,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -3781,7 +3781,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -3790,34 +3790,34 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -3826,7 +3826,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -3844,7 +3844,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3855,7 +3855,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -3865,7 +3865,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -3875,7 +3875,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -3885,7 +3885,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -3895,7 +3895,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -3909,7 +3909,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -3923,7 +3923,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -3932,34 +3932,34 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -3968,7 +3968,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -3986,7 +3986,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -3997,7 +3997,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -4006,7 +4006,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -4015,7 +4015,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -4024,34 +4024,34 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -4060,7 +4060,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -4078,7 +4078,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -4089,7 +4089,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -4099,7 +4099,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -4109,7 +4109,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -4119,7 +4119,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -4129,7 +4129,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -4143,7 +4143,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -4157,7 +4157,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -4166,34 +4166,34 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -4202,7 +4202,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -4220,7 +4220,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -4231,7 +4231,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -4240,7 +4240,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -4249,7 +4249,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -4258,34 +4258,34 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -4294,7 +4294,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -4312,7 +4312,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -4323,7 +4323,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -4333,7 +4333,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -4343,7 +4343,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -4353,7 +4353,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -4363,7 +4363,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -4377,7 +4377,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -4391,7 +4391,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -4400,34 +4400,34 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -4436,7 +4436,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -4454,7 +4454,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -4465,7 +4465,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -4474,7 +4474,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -4483,7 +4483,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -4492,34 +4492,34 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -4528,7 +4528,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -4546,7 +4546,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -4557,7 +4557,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -4567,7 +4567,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -4577,7 +4577,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -4587,7 +4587,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -4597,7 +4597,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -4611,7 +4611,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -4625,7 +4625,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   long __pyx_t_3;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_rk2", 0);
 
-  /* "viscid/calculator/integrate.pyx":41
+  /* "viscid/cython/integrate.pyx":41
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -4634,34 +4634,34 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-  /* "viscid/calculator/integrate.pyx":42
+  /* "viscid/cython/integrate.pyx":42
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-  (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+  (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":43
+  /* "viscid/cython/integrate.pyx":43
  *     cdef real_t ds_half = 0.5 * deref(ds)
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+  (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":44
+  /* "viscid/cython/integrate.pyx":44
  *     v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+  (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-  /* "viscid/calculator/integrate.pyx":45
+  /* "viscid/cython/integrate.pyx":45
  *     v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *     v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -4670,7 +4670,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":47
+  /* "viscid/cython/integrate.pyx":47
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -4688,7 +4688,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L4_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":49
+    /* "viscid/cython/integrate.pyx":49
  *     if vmag0 == 0.0 or isnan(vmag0):
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -4699,7 +4699,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":50
+  /* "viscid/cython/integrate.pyx":50
  *         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -4708,7 +4708,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":51
+  /* "viscid/cython/integrate.pyx":51
  *         return 1
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -4717,7 +4717,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":52
+  /* "viscid/cython/integrate.pyx":52
  *     x1[0] = x[0] + ds_half * v0[2] / vmag0
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -4726,34 +4726,34 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-  /* "viscid/calculator/integrate.pyx":54
+  /* "viscid/cython/integrate.pyx":54
  *     x1[2] = x[2] + ds_half * v0[0] / vmag0
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-  (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+  (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":55
+  /* "viscid/cython/integrate.pyx":55
  * 
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+  (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":56
+  /* "viscid/cython/integrate.pyx":56
  *     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+  (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-  /* "viscid/calculator/integrate.pyx":57
+  /* "viscid/cython/integrate.pyx":57
  *     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *     v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -4762,7 +4762,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  */
   __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-  /* "viscid/calculator/integrate.pyx":59
+  /* "viscid/cython/integrate.pyx":59
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -4780,7 +4780,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_L7_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/integrate.pyx":61
+    /* "viscid/cython/integrate.pyx":61
  *     if vmag1 == 0.0 or isnan(vmag1):
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1             # <<<<<<<<<<<<<<
@@ -4791,7 +4791,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/integrate.pyx":62
+  /* "viscid/cython/integrate.pyx":62
  *         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -4801,7 +4801,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 0;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":63
+  /* "viscid/cython/integrate.pyx":63
  *         return 1
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -4811,7 +4811,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 1;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":64
+  /* "viscid/cython/integrate.pyx":64
  *     x[0] += deref(ds) * v1[2] / vmag1
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -4821,7 +4821,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_t_3 = 2;
   (__pyx_v_x[__pyx_t_3]) = ((__pyx_v_x[__pyx_t_3]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-  /* "viscid/calculator/integrate.pyx":65
+  /* "viscid/cython/integrate.pyx":65
  *     x[1] += deref(ds) * v1[1] / vmag1
  *     x[2] += deref(ds) * v1[0] / vmag1
  *     return 0             # <<<<<<<<<<<<<<
@@ -4831,7 +4831,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":32
+  /* "viscid/cython/integrate.pyx":32
  *     return 0
  * 
  * cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -4845,7 +4845,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
   return __pyx_r;
 }
 
-/* "viscid/calculator/integrate.pyx":67
+/* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -4853,7 +4853,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2(struct _
  *                  real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -4869,7 +4869,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -4878,7 +4878,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -4887,34 +4887,34 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -4923,7 +4923,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -4941,7 +4941,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -4952,7 +4952,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -4961,7 +4961,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -4970,7 +4970,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -4979,7 +4979,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -4988,7 +4988,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -4997,7 +4997,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -5006,34 +5006,34 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -5042,7 +5042,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -5060,7 +5060,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -5071,7 +5071,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -5080,7 +5080,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -5089,7 +5089,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -5098,7 +5098,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -5107,7 +5107,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -5117,7 +5117,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -5127,7 +5127,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -5138,16 +5138,16 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -5158,7 +5158,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -5168,16 +5168,16 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -5188,7 +5188,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -5201,7 +5201,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -5210,7 +5210,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -5219,7 +5219,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -5228,7 +5228,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -5238,7 +5238,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -5252,7 +5252,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -5268,7 +5268,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -5277,7 +5277,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -5286,34 +5286,34 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -5322,7 +5322,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -5340,7 +5340,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -5351,7 +5351,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -5360,7 +5360,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -5369,7 +5369,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -5378,7 +5378,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -5387,7 +5387,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -5396,7 +5396,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -5405,34 +5405,34 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -5441,7 +5441,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -5459,7 +5459,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -5470,7 +5470,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -5479,7 +5479,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -5488,7 +5488,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -5497,7 +5497,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -5506,7 +5506,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -5516,7 +5516,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -5526,7 +5526,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -5537,16 +5537,16 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -5557,7 +5557,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -5567,16 +5567,16 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -5587,7 +5587,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -5600,7 +5600,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -5609,7 +5609,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -5618,7 +5618,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -5627,7 +5627,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -5637,7 +5637,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -5651,7 +5651,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -5667,7 +5667,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -5676,7 +5676,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -5685,34 +5685,34 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -5721,7 +5721,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -5739,7 +5739,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -5750,7 +5750,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -5759,7 +5759,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -5768,7 +5768,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -5777,7 +5777,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -5786,7 +5786,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -5795,7 +5795,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -5804,34 +5804,34 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -5840,7 +5840,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -5858,7 +5858,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -5869,7 +5869,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -5878,7 +5878,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -5887,7 +5887,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -5896,7 +5896,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -5905,7 +5905,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -5915,7 +5915,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -5925,7 +5925,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -5936,16 +5936,16 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -5956,7 +5956,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -5966,16 +5966,16 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -5986,7 +5986,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -5999,7 +5999,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -6008,7 +6008,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -6017,7 +6017,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -6026,7 +6026,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -6036,7 +6036,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -6050,7 +6050,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -6066,7 +6066,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -6075,7 +6075,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -6084,34 +6084,34 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -6120,7 +6120,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -6138,7 +6138,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -6149,7 +6149,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -6158,7 +6158,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -6167,7 +6167,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -6176,7 +6176,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -6185,7 +6185,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -6194,7 +6194,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -6203,34 +6203,34 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -6239,7 +6239,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -6257,7 +6257,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -6268,7 +6268,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -6277,7 +6277,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -6286,7 +6286,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -6295,7 +6295,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -6304,7 +6304,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -6314,7 +6314,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -6324,7 +6324,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -6335,16 +6335,16 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -6355,7 +6355,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -6365,16 +6365,16 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -6385,7 +6385,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -6398,7 +6398,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -6407,7 +6407,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -6416,7 +6416,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -6425,7 +6425,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -6435,7 +6435,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -6449,7 +6449,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -6465,7 +6465,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -6474,7 +6474,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -6483,34 +6483,34 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -6519,7 +6519,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -6537,7 +6537,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -6548,7 +6548,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -6557,7 +6557,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -6566,7 +6566,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -6575,7 +6575,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -6584,7 +6584,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -6593,7 +6593,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -6602,34 +6602,34 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -6638,7 +6638,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -6656,7 +6656,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -6667,7 +6667,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -6676,7 +6676,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -6685,7 +6685,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -6694,7 +6694,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -6703,7 +6703,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -6713,7 +6713,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -6723,7 +6723,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -6734,16 +6734,16 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -6754,7 +6754,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -6764,16 +6764,16 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -6784,7 +6784,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -6797,7 +6797,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -6806,7 +6806,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -6815,7 +6815,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -6824,7 +6824,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -6834,7 +6834,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -6848,7 +6848,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -6864,7 +6864,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -6873,7 +6873,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -6882,34 +6882,34 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -6918,7 +6918,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -6936,7 +6936,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -6947,7 +6947,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -6956,7 +6956,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -6965,7 +6965,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -6974,7 +6974,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -6983,7 +6983,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -6992,7 +6992,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -7001,34 +7001,34 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -7037,7 +7037,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -7055,7 +7055,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -7066,7 +7066,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -7075,7 +7075,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -7084,7 +7084,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -7093,7 +7093,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -7102,7 +7102,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -7112,7 +7112,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -7122,7 +7122,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -7133,16 +7133,16 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -7153,7 +7153,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -7163,16 +7163,16 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -7183,7 +7183,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -7196,7 +7196,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -7205,7 +7205,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -7214,7 +7214,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -7223,7 +7223,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -7233,7 +7233,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -7247,7 +7247,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -7263,7 +7263,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -7272,7 +7272,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -7281,34 +7281,34 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -7317,7 +7317,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -7335,7 +7335,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -7346,7 +7346,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -7355,7 +7355,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -7364,7 +7364,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -7373,7 +7373,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -7382,7 +7382,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -7391,7 +7391,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -7400,34 +7400,34 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -7436,7 +7436,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -7454,7 +7454,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -7465,7 +7465,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -7474,7 +7474,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -7483,7 +7483,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -7492,7 +7492,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -7501,7 +7501,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + powf(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + powf(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -7511,7 +7511,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -7521,7 +7521,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -7532,16 +7532,16 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -7552,7 +7552,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -7562,16 +7562,16 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -7582,7 +7582,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -7595,7 +7595,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -7604,7 +7604,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -7613,7 +7613,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -7622,7 +7622,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -7632,7 +7632,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -7646,7 +7646,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -7662,7 +7662,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_rk12", 0);
 
-  /* "viscid/calculator/integrate.pyx":83
+  /* "viscid/cython/integrate.pyx":83
  *     cdef real_t ds_half
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -7671,7 +7671,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":84
+    /* "viscid/cython/integrate.pyx":84
  * 
  *     while True:
  *         ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
@@ -7680,34 +7680,34 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
-    /* "viscid/calculator/integrate.pyx":87
+    /* "viscid/cython/integrate.pyx":87
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":88
+    /* "viscid/cython/integrate.pyx":88
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":89
+    /* "viscid/cython/integrate.pyx":89
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":90
+    /* "viscid/cython/integrate.pyx":90
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -7716,7 +7716,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":92
+    /* "viscid/cython/integrate.pyx":92
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -7734,7 +7734,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":94
+      /* "viscid/cython/integrate.pyx":94
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -7745,7 +7745,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":96
+    /* "viscid/cython/integrate.pyx":96
  *             return 1
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -7754,7 +7754,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":97
+    /* "viscid/cython/integrate.pyx":97
  * 
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -7763,7 +7763,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":98
+    /* "viscid/cython/integrate.pyx":98
  *         x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -7772,7 +7772,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_first[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":100
+    /* "viscid/cython/integrate.pyx":100
  *         x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -7781,7 +7781,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":101
+    /* "viscid/cython/integrate.pyx":101
  * 
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -7790,7 +7790,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + ((__pyx_v_ds_half * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":102
+    /* "viscid/cython/integrate.pyx":102
  *         x1[0] = x[0] + ds_half * v0[2] / vmag0
  *         x1[1] = x[1] + ds_half * v0[1] / vmag0
  *         x1[2] = x[2] + ds_half * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -7799,34 +7799,34 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":105
+    /* "viscid/cython/integrate.pyx":105
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":106
+    /* "viscid/cython/integrate.pyx":106
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":107
+    /* "viscid/cython/integrate.pyx":107
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":108
+    /* "viscid/cython/integrate.pyx":108
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -7835,7 +7835,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":110
+    /* "viscid/cython/integrate.pyx":110
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -7853,7 +7853,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":112
+      /* "viscid/cython/integrate.pyx":112
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -7864,7 +7864,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":113
+    /* "viscid/cython/integrate.pyx":113
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -7873,7 +7873,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":114
+    /* "viscid/cython/integrate.pyx":114
  *             return 1
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -7882,7 +7882,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":115
+    /* "viscid/cython/integrate.pyx":115
  *         x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
  *         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -7891,7 +7891,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     (__pyx_v_x_second[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":117
+    /* "viscid/cython/integrate.pyx":117
  *         x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x_second[0] - x_first[0])**2 + \             # <<<<<<<<<<<<<<
@@ -7900,7 +7900,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x_second[0]) - (__pyx_v_x_first[0])), 2.0) + pow(((__pyx_v_x_second[1]) - (__pyx_v_x_first[1])), 2.0)) + pow(((__pyx_v_x_second[2]) - (__pyx_v_x_first[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":121
+    /* "viscid/cython/integrate.pyx":121
  *                     (x_second[2] - x_first[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -7910,7 +7910,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":124
+      /* "viscid/cython/integrate.pyx":124
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -7920,7 +7920,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":125
+        /* "viscid/cython/integrate.pyx":125
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -7931,16 +7931,16 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":127
+        /* "viscid/cython/integrate.pyx":127
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":128
+        /* "viscid/cython/integrate.pyx":128
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -7951,7 +7951,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":129
+    /* "viscid/cython/integrate.pyx":129
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -7961,16 +7961,16 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":132
+      /* "viscid/cython/integrate.pyx":132
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":133
+      /* "viscid/cython/integrate.pyx":133
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -7981,7 +7981,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":135
+      /* "viscid/cython/integrate.pyx":135
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -7994,7 +7994,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":137
+  /* "viscid/cython/integrate.pyx":137
  *             break
  * 
  *     x[0] = x_second[0]             # <<<<<<<<<<<<<<
@@ -8003,7 +8003,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[0]) = (__pyx_v_x_second[0]);
 
-  /* "viscid/calculator/integrate.pyx":138
+  /* "viscid/cython/integrate.pyx":138
  * 
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]             # <<<<<<<<<<<<<<
@@ -8012,7 +8012,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[1]) = (__pyx_v_x_second[1]);
 
-  /* "viscid/calculator/integrate.pyx":139
+  /* "viscid/cython/integrate.pyx":139
  *     x[0] = x_second[0]
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]             # <<<<<<<<<<<<<<
@@ -8021,7 +8021,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  */
   (__pyx_v_x[2]) = (__pyx_v_x_second[2]);
 
-  /* "viscid/calculator/integrate.pyx":140
+  /* "viscid/cython/integrate.pyx":140
  *     x[1] = x_second[1]
  *     x[2] = x_second[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -8031,7 +8031,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":67
+  /* "viscid/cython/integrate.pyx":67
  *     return 0
  * 
  * cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -8045,7 +8045,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
   return __pyx_r;
 }
 
-/* "viscid/calculator/integrate.pyx":143
+/* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -8053,7 +8053,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12(struct 
  *                     real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -8067,7 +8067,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_0_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -8076,34 +8076,34 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -8112,7 +8112,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -8130,7 +8130,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -8141,7 +8141,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -8150,7 +8150,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -8159,7 +8159,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -8168,34 +8168,34 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -8204,7 +8204,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -8222,7 +8222,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -8233,7 +8233,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -8242,7 +8242,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -8251,7 +8251,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -8260,7 +8260,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -8269,7 +8269,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -8279,7 +8279,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -8289,7 +8289,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -8300,16 +8300,16 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -8320,7 +8320,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -8330,16 +8330,16 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -8350,7 +8350,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -8363,7 +8363,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -8372,7 +8372,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -8381,7 +8381,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -8390,7 +8390,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -8400,7 +8400,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -8414,7 +8414,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -8428,7 +8428,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_1_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -8437,34 +8437,34 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -8473,7 +8473,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -8491,7 +8491,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -8502,7 +8502,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -8511,7 +8511,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -8520,7 +8520,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -8529,34 +8529,34 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -8565,7 +8565,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -8583,7 +8583,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -8594,7 +8594,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -8603,7 +8603,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -8612,7 +8612,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -8621,7 +8621,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -8630,7 +8630,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -8640,7 +8640,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -8650,7 +8650,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -8661,16 +8661,16 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -8681,7 +8681,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -8691,16 +8691,16 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -8711,7 +8711,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -8724,7 +8724,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -8733,7 +8733,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -8742,7 +8742,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -8751,7 +8751,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -8761,7 +8761,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -8775,7 +8775,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -8789,7 +8789,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_0_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -8798,34 +8798,34 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -8834,7 +8834,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -8852,7 +8852,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -8863,7 +8863,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -8872,7 +8872,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -8881,7 +8881,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -8890,34 +8890,34 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -8926,7 +8926,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -8944,7 +8944,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -8955,7 +8955,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -8964,7 +8964,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -8973,7 +8973,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -8982,7 +8982,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -8991,7 +8991,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -9001,7 +9001,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -9011,7 +9011,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -9022,16 +9022,16 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -9042,7 +9042,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -9052,16 +9052,16 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -9072,7 +9072,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -9085,7 +9085,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -9094,7 +9094,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -9103,7 +9103,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -9112,7 +9112,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -9122,7 +9122,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -9136,7 +9136,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -9150,7 +9150,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_1_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -9159,34 +9159,34 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -9195,7 +9195,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -9213,7 +9213,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -9224,7 +9224,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -9233,7 +9233,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -9242,7 +9242,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -9251,34 +9251,34 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -9287,7 +9287,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -9305,7 +9305,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -9316,7 +9316,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -9325,7 +9325,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -9334,7 +9334,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -9343,7 +9343,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -9352,7 +9352,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -9362,7 +9362,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -9372,7 +9372,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -9383,16 +9383,16 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -9403,7 +9403,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -9413,16 +9413,16 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -9433,7 +9433,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -9446,7 +9446,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -9455,7 +9455,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -9464,7 +9464,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -9473,7 +9473,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -9483,7 +9483,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -9497,7 +9497,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -9511,7 +9511,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_0_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -9520,34 +9520,34 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -9556,7 +9556,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -9574,7 +9574,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -9585,7 +9585,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -9594,7 +9594,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -9603,7 +9603,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -9612,34 +9612,34 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -9648,7 +9648,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -9666,7 +9666,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -9677,7 +9677,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -9686,7 +9686,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -9695,7 +9695,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -9704,7 +9704,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -9713,7 +9713,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -9723,7 +9723,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -9733,7 +9733,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -9744,16 +9744,16 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -9764,7 +9764,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -9774,16 +9774,16 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -9794,7 +9794,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -9807,7 +9807,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -9816,7 +9816,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -9825,7 +9825,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -9834,7 +9834,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -9844,7 +9844,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -9858,7 +9858,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -9872,7 +9872,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_1_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -9881,34 +9881,34 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -9917,7 +9917,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -9935,7 +9935,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -9946,7 +9946,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -9955,7 +9955,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -9964,7 +9964,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -9973,34 +9973,34 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -10009,7 +10009,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -10027,7 +10027,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -10038,7 +10038,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -10047,7 +10047,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -10056,7 +10056,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -10065,7 +10065,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -10074,7 +10074,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -10084,7 +10084,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -10094,7 +10094,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -10105,16 +10105,16 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -10125,7 +10125,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -10135,16 +10135,16 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -10155,7 +10155,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -10168,7 +10168,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -10177,7 +10177,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -10186,7 +10186,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -10195,7 +10195,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -10205,7 +10205,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -10219,7 +10219,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -10233,7 +10233,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_0_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -10242,34 +10242,34 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -10278,7 +10278,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((powf((__pyx_v_v0[0]), 2.0) + powf((__pyx_v_v0[1]), 2.0)) + powf((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -10296,7 +10296,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -10307,7 +10307,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -10316,7 +10316,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -10325,7 +10325,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -10334,34 +10334,34 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -10370,7 +10370,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((powf((__pyx_v_v1[0]), 2.0) + powf((__pyx_v_v1[1]), 2.0)) + powf((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -10388,7 +10388,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -10399,7 +10399,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -10408,7 +10408,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -10417,7 +10417,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -10426,7 +10426,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -10435,7 +10435,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((powf(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + powf(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + powf(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -10445,7 +10445,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -10455,7 +10455,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -10466,16 +10466,16 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -10486,7 +10486,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -10496,16 +10496,16 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -10516,7 +10516,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -10529,7 +10529,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -10538,7 +10538,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -10547,7 +10547,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -10556,7 +10556,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -10566,7 +10566,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -10580,7 +10580,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -10594,7 +10594,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   int __pyx_t_2;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_1_c_euler1a", 0);
 
-  /* "viscid/calculator/integrate.pyx":156
+  /* "viscid/cython/integrate.pyx":156
  *     cdef real_t vmag0, vmag1, dist
  * 
  *     while True:             # <<<<<<<<<<<<<<
@@ -10603,34 +10603,34 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   while (1) {
 
-    /* "viscid/calculator/integrate.pyx":158
+    /* "viscid/cython/integrate.pyx":158
  *     while True:
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  */
-    (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
+    (__pyx_v_v0[0]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":159
+    /* "viscid/cython/integrate.pyx":159
  *         # go forward
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
+    (__pyx_v_v0[1]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":160
+    /* "viscid/cython/integrate.pyx":160
  *         v0[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x)
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
+    (__pyx_v_v0[2]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x);
 
-    /* "viscid/calculator/integrate.pyx":161
+    /* "viscid/cython/integrate.pyx":161
  *         v0[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x)
  *         v0[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
@@ -10639,7 +10639,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag0 = sqrt(((pow((__pyx_v_v0[0]), 2.0) + pow((__pyx_v_v0[1]), 2.0)) + pow((__pyx_v_v0[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":163
+    /* "viscid/cython/integrate.pyx":163
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):             # <<<<<<<<<<<<<<
@@ -10657,7 +10657,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":165
+      /* "viscid/cython/integrate.pyx":165
  *         if vmag0 == 0.0 or isnan(vmag0):
  *             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -10668,7 +10668,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":167
+    /* "viscid/cython/integrate.pyx":167
  *             return 1
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0             # <<<<<<<<<<<<<<
@@ -10677,7 +10677,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[0]) = ((__pyx_v_x[0]) + (((*__pyx_v_ds) * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":168
+    /* "viscid/cython/integrate.pyx":168
  * 
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0             # <<<<<<<<<<<<<<
@@ -10686,7 +10686,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[1]) = ((__pyx_v_x[1]) + (((*__pyx_v_ds) * (__pyx_v_v0[1])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":169
+    /* "viscid/cython/integrate.pyx":169
  *         x1[0] = x[0] + deref(ds) * v0[2] / vmag0
  *         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
  *         x1[2] = x[2] + deref(ds) * v0[0] / vmag0             # <<<<<<<<<<<<<<
@@ -10695,34 +10695,34 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + (((*__pyx_v_ds) * (__pyx_v_v0[0])) / __pyx_v_vmag0));
 
-    /* "viscid/calculator/integrate.pyx":172
+    /* "viscid/cython/integrate.pyx":172
  * 
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  */
-    (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
+    (__pyx_v_v1[0]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":173
+    /* "viscid/cython/integrate.pyx":173
  *         # now go backward
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
+    (__pyx_v_v1[1]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":174
+    /* "viscid/cython/integrate.pyx":174
  *         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
+    (__pyx_v_v1[2]) = __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1);
 
-    /* "viscid/calculator/integrate.pyx":175
+    /* "viscid/cython/integrate.pyx":175
  *         v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
  *         v1[2] = _c_interp_trilin[FusedField, real_t](fld, 2, x1)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
@@ -10731,7 +10731,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_vmag1 = sqrt(((pow((__pyx_v_v1[0]), 2.0) + pow((__pyx_v_v1[1]), 2.0)) + pow((__pyx_v_v1[2]), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":178
+    /* "viscid/cython/integrate.pyx":178
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):             # <<<<<<<<<<<<<<
@@ -10749,7 +10749,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_L9_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":180
+      /* "viscid/cython/integrate.pyx":180
  *         if vmag1 == 0.0 or isnan(vmag1):
  *             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
  *             return 1             # <<<<<<<<<<<<<<
@@ -10760,7 +10760,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       goto __pyx_L0;
     }
 
-    /* "viscid/calculator/integrate.pyx":182
+    /* "viscid/cython/integrate.pyx":182
  *             return 1
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1             # <<<<<<<<<<<<<<
@@ -10769,7 +10769,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[0]) = ((__pyx_v_x1[0]) - (((*__pyx_v_ds) * (__pyx_v_v1[2])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":183
+    /* "viscid/cython/integrate.pyx":183
  * 
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1             # <<<<<<<<<<<<<<
@@ -10778,7 +10778,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[1]) = ((__pyx_v_x1[1]) - (((*__pyx_v_ds) * (__pyx_v_v1[1])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":184
+    /* "viscid/cython/integrate.pyx":184
  *         x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
  *         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1             # <<<<<<<<<<<<<<
@@ -10787,7 +10787,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     (__pyx_v_x2[2]) = ((__pyx_v_x1[2]) - (((*__pyx_v_ds) * (__pyx_v_v1[0])) / __pyx_v_vmag1));
 
-    /* "viscid/calculator/integrate.pyx":186
+    /* "viscid/cython/integrate.pyx":186
  *         x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
  * 
  *         dist = sqrt((x2[0] - x[0])**2 + \             # <<<<<<<<<<<<<<
@@ -10796,7 +10796,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
     __pyx_v_dist = sqrt(((pow(((__pyx_v_x2[0]) - (__pyx_v_x[0])), 2.0) + pow(((__pyx_v_x2[1]) - (__pyx_v_x[1])), 2.0)) + pow(((__pyx_v_x2[2]) - (__pyx_v_x[2])), 2.0)));
 
-    /* "viscid/calculator/integrate.pyx":190
+    /* "viscid/cython/integrate.pyx":190
  *                     (x2[2] - x[2])**2)
  * 
  *         if dist > tol_hi * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -10806,7 +10806,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist > (__pyx_v_tol_hi * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":193
+      /* "viscid/cython/integrate.pyx":193
  *             # logger.debug("Refining ds: {0} -> {1}".format(
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:             # <<<<<<<<<<<<<<
@@ -10816,7 +10816,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       __pyx_t_1 = (((__pyx_v_ds[0]) <= __pyx_v_smallest_step) != 0);
       if (__pyx_t_1) {
 
-        /* "viscid/calculator/integrate.pyx":194
+        /* "viscid/cython/integrate.pyx":194
  *             #     deref(ds), fac_refine * deref(ds)))
  *             if ds[0] <= smallest_step:
  *                 break             # <<<<<<<<<<<<<<
@@ -10827,16 +10827,16 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
       /*else*/ {
 
-        /* "viscid/calculator/integrate.pyx":196
+        /* "viscid/cython/integrate.pyx":196
  *                 break
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)             # <<<<<<<<<<<<<<
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):
  */
-        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
+        (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max((__pyx_v_fac_refine * (*__pyx_v_ds)), __pyx_v_smallest_step);
 
-        /* "viscid/calculator/integrate.pyx":197
+        /* "viscid/cython/integrate.pyx":197
  *             else:
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue             # <<<<<<<<<<<<<<
@@ -10847,7 +10847,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
       }
     }
 
-    /* "viscid/calculator/integrate.pyx":198
+    /* "viscid/cython/integrate.pyx":198
  *                 ds[0] = real_max(fac_refine * deref(ds), smallest_step)
  *                 continue
  *         elif dist < tol_lo * fabs(deref(ds)):             # <<<<<<<<<<<<<<
@@ -10857,16 +10857,16 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     __pyx_t_1 = ((__pyx_v_dist < (__pyx_v_tol_lo * fabs((*__pyx_v_ds)))) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/calculator/integrate.pyx":201
+      /* "viscid/cython/integrate.pyx":201
  *             # logger.debug("Coarsening ds: {0} -> {1}".format(
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)             # <<<<<<<<<<<<<<
  *             break
  *         else:
  */
-      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
+      (__pyx_v_ds[0]) = __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min((__pyx_v_fac_coarsen * (*__pyx_v_ds)), __pyx_v_largest_step);
 
-      /* "viscid/calculator/integrate.pyx":202
+      /* "viscid/cython/integrate.pyx":202
  *             #     deref(ds), fac_coarsen * deref(ds)))
  *             ds[0] = real_min(fac_coarsen * deref(ds), largest_step)
  *             break             # <<<<<<<<<<<<<<
@@ -10877,7 +10877,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
     }
     /*else*/ {
 
-      /* "viscid/calculator/integrate.pyx":204
+      /* "viscid/cython/integrate.pyx":204
  *             break
  *         else:
  *             break             # <<<<<<<<<<<<<<
@@ -10890,7 +10890,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   }
   __pyx_L4_break:;
 
-  /* "viscid/calculator/integrate.pyx":206
+  /* "viscid/cython/integrate.pyx":206
  *             break
  * 
  *     x[0] = x1[0]             # <<<<<<<<<<<<<<
@@ -10899,7 +10899,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[0]) = (__pyx_v_x1[0]);
 
-  /* "viscid/calculator/integrate.pyx":207
+  /* "viscid/cython/integrate.pyx":207
  * 
  *     x[0] = x1[0]
  *     x[1] = x1[1]             # <<<<<<<<<<<<<<
@@ -10908,7 +10908,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[1]) = (__pyx_v_x1[1]);
 
-  /* "viscid/calculator/integrate.pyx":208
+  /* "viscid/cython/integrate.pyx":208
  *     x[0] = x1[0]
  *     x[1] = x1[1]
  *     x[2] = x1[2]             # <<<<<<<<<<<<<<
@@ -10917,7 +10917,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  */
   (__pyx_v_x[2]) = (__pyx_v_x1[2]);
 
-  /* "viscid/calculator/integrate.pyx":209
+  /* "viscid/cython/integrate.pyx":209
  *     x[1] = x1[1]
  *     x[2] = x1[2]
  *     return 0             # <<<<<<<<<<<<<<
@@ -10927,7 +10927,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "viscid/calculator/integrate.pyx":143
+  /* "viscid/cython/integrate.pyx":143
  * 
  * 
  * cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,             # <<<<<<<<<<<<<<
@@ -10949,7 +10949,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a(stru
  * 
  */
 
-static CYTHON_INLINE int __pyx_f_6viscid_10calculator_6cycalc_int_min(int __pyx_v_a, int __pyx_v_b) {
+static CYTHON_INLINE int __pyx_f_6viscid_6cython_6cycalc_int_min(int __pyx_v_a, int __pyx_v_b) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -10992,7 +10992,7 @@ static CYTHON_INLINE int __pyx_f_6viscid_10calculator_6cycalc_int_min(int __pyx_
  * 
  */
 
-static CYTHON_INLINE int __pyx_f_6viscid_10calculator_6cycalc_int_max(int __pyx_v_a, int __pyx_v_b) {
+static CYTHON_INLINE int __pyx_f_6viscid_6cython_6cycalc_int_max(int __pyx_v_a, int __pyx_v_b) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -11035,7 +11035,7 @@ static CYTHON_INLINE int __pyx_f_6viscid_10calculator_6cycalc_int_max(int __pyx_
  * 
  */
 
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_min(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
   __pyx_t_5numpy_float32_t __pyx_r;
   __Pyx_RefNannyDeclarations
   __pyx_t_5numpy_float32_t __pyx_t_1;
@@ -11070,7 +11070,7 @@ static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calc
   return __pyx_r;
 }
 
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_min(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_min(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
   __pyx_t_5numpy_float64_t __pyx_r;
   __Pyx_RefNannyDeclarations
   __pyx_t_5numpy_float64_t __pyx_t_1;
@@ -11113,7 +11113,7 @@ static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calc
  * 
  */
 
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_6cycalc_real_max(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
   __pyx_t_5numpy_float32_t __pyx_r;
   __Pyx_RefNannyDeclarations
   __pyx_t_5numpy_float32_t __pyx_t_1;
@@ -11148,7 +11148,7 @@ static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_10calc
   return __pyx_r;
 }
 
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_10calculator_6cycalc_real_max(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_6cycalc_real_max(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
   __pyx_t_5numpy_float64_t __pyx_r;
   __Pyx_RefNannyDeclarations
   __pyx_t_5numpy_float64_t __pyx_t_1;
@@ -23933,7 +23933,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.integrate.array", /*tp_name*/
+  "viscid.cython.integrate.array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -24038,7 +24038,7 @@ static PyMethodDef __pyx_methods_Enum[] = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.integrate.Enum", /*tp_name*/
+  "viscid.cython.integrate.Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -24284,7 +24284,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.integrate.memoryview", /*tp_name*/
+  "viscid.cython.integrate.memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -24408,7 +24408,7 @@ static struct PyGetSetDef __pyx_getsets__memoryviewslice[] = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.integrate._memoryviewslice", /*tp_name*/
+  "viscid.cython.integrate._memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -24917,14 +24917,14 @@ PyMODINIT_FUNC PyInit_integrate(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_viscid__calculator__integrate) {
+  if (__pyx_module_is_main_viscid__cython__integrate) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "viscid.calculator.integrate")) {
-      if (unlikely(PyDict_SetItemString(modules, "viscid.calculator.integrate", __pyx_m) < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "viscid.cython.integrate")) {
+      if (unlikely(PyDict_SetItemString(modules, "viscid.cython.integrate", __pyx_m) < 0)) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -24940,38 +24940,38 @@ PyMODINIT_FUNC PyInit_integrate(void)
   indirect_contiguous = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk2", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk2", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk2", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk2", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk2", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk2", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk2", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk2", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk12", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk12", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk12", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk12", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk12", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk12", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk12", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk12", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1a", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1a", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1a", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1a", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1a", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1a", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1a", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1a", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_10calculator_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk2", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk2", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk2", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk2", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk2", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk2", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk2", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk2", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk12", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk12", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk12", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk12", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk12", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk12", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk12", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk12", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1a", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1a", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1a", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1a", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1a", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1a", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1a", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1a", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Type init code ---*/
   if (PyType_Ready(&__pyx_type___pyx_array) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type___pyx_array.tp_print = 0;
@@ -25013,29 +25013,29 @@ PyMODINIT_FUNC PyInit_integrate(void)
   __pyx_ptype_5numpy_broadcast = __Pyx_ImportType("numpy", "broadcast", sizeof(PyArrayMultiIterObject), 0); if (unlikely(!__pyx_ptype_5numpy_broadcast)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_ptype_5numpy_ndarray = __Pyx_ImportType("numpy", "ndarray", sizeof(PyArrayObject), 0); if (unlikely(!__pyx_ptype_5numpy_ndarray)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_ptype_5numpy_ufunc = __Pyx_ImportType("numpy", "ufunc", sizeof(PyUFuncObject), 0); if (unlikely(!__pyx_ptype_5numpy_ufunc)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 864; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_CyField = __Pyx_ImportType("viscid.calculator.cyfield", "CyField", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_CyField), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_CyField)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_I4_Crd_F8", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_I8_Crd_F8", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_F4_Crd_F4", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = __Pyx_ImportType("viscid.calculator.cyfield", "Field_F8_Crd_F8", sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_CyField = __Pyx_ImportType("viscid.cython.cyfield", "CyField", sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_CyField), 1); if (unlikely(!__pyx_ptype_6viscid_6cython_7cyfield_CyField)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8 = __Pyx_ImportType("viscid.cython.cyfield", "Field_I4_Crd_F8", sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8 = __Pyx_ImportType("viscid.cython.cyfield", "Field_I8_Crd_F8", sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4 = __Pyx_ImportType("viscid.cython.cyfield", "Field_F4_Crd_F4", sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4), 1); if (unlikely(!__pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8 = __Pyx_ImportType("viscid.cython.cyfield", "Field_F8_Crd_F8", sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8), 1); if (unlikely(!__pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8)) {__pyx_filename = __pyx_f[4]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Variable import code ---*/
   /*--- Function import code ---*/
-  __pyx_t_1 = __Pyx_ImportModule("viscid.calculator.cyfield"); if (!__pyx_t_1) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_1, "make_cyfield", (void (**)(void))&__pyx_f_6viscid_10calculator_7cyfield_make_cyfield, "struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *(PyObject *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_ImportModule("viscid.cython.cyfield"); if (!__pyx_t_1) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_1, "make_cyfield", (void (**)(void))&__pyx_f_6viscid_6cython_7cyfield_make_cyfield, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(PyObject *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   Py_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_2 = __Pyx_ImportModule("viscid.calculator.cycalc"); if (!__pyx_t_2) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_0__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_1__pyx_f_6viscid_10calculator_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_ImportModule("viscid.cython.cycalc"); if (!__pyx_t_2) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   Py_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   /*--- Execution code ---*/
 
-  /* "viscid/calculator/integrate.pyx":1
+  /* "viscid/cython/integrate.pyx":1
  * # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False             # <<<<<<<<<<<<<<
  * """3D Integrators of Vector Fields with 3 Components"""
  * from __future__ import print_function
@@ -25171,11 +25171,11 @@ PyMODINIT_FUNC PyInit_integrate(void)
   __Pyx_XDECREF(__pyx_t_3);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init viscid.calculator.integrate", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init viscid.cython.integrate", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init viscid.calculator.integrate");
+    PyErr_SetString(PyExc_ImportError, "init viscid.cython.integrate");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

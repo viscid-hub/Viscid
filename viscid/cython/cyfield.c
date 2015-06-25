@@ -253,8 +253,8 @@ class __Pyx_FakeReference {
 #define _USE_MATH_DEFINES
 #endif
 #include <math.h>
-#define __PYX_HAVE__viscid__calculator__cyfield
-#define __PYX_HAVE_API__viscid__calculator__cyfield
+#define __PYX_HAVE__viscid__cython__cyfield
+#define __PYX_HAVE_API__viscid__cython__cyfield
 #include "string.h"
 #include "stdio.h"
 #include "stdlib.h"
@@ -465,10 +465,10 @@ static const char *__pyx_filename;
 
 
 static const char *__pyx_f[] = {
-  "viscid/calculator/cyfield.pyx",
+  "viscid/cython/cyfield.pyx",
   "__init__.pxd",
   "stringsource",
-  "viscid/calculator/cyfield.pxd",
+  "viscid/cython/cyfield.pxd",
   "type.pxd",
 };
 struct __pyx_memoryview_obj;
@@ -773,11 +773,11 @@ typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_6viscid_10calculator_7cyfield_CyField;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4;
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8;
+struct __pyx_obj_6viscid_6cython_7cyfield_CyField;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8;
 struct __pyx_array_obj;
 struct __pyx_MemviewEnum_obj;
 struct __pyx_memoryview_obj;
@@ -819,14 +819,14 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "viscid/calculator/cyfield.pxd":13
+/* "viscid/cython/cyfield.pxd":13
  *     # cnp.int64_t
  * 
  * cdef class CyField:             # <<<<<<<<<<<<<<
  *     # cdef bool uniform_crds
  *     cdef vfield
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_CyField {
+struct __pyx_obj_6viscid_6cython_7cyfield_CyField {
   PyObject_HEAD
   PyObject *vfield;
   PyObject *fld_dtype;
@@ -843,15 +843,15 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_CyField {
 };
 
 
-/* "viscid/calculator/cyfield.pxd":28
+/* "viscid/cython/cyfield.pxd":28
  *     cdef int cached_ind[3]
  * 
  * cdef class Field_I4_Crd_F8(CyField):             # <<<<<<<<<<<<<<
  *     cdef cnp.int32_t[:,:,:,::1] data
  *     cdef cnp.float64_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -876,15 +876,15 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 {
 };
 
 
-/* "viscid/calculator/cyfield.pxd":41
+/* "viscid/cython/cyfield.pxd":41
  *     cdef cnp.float64_t[3] dx  # cell width, = NaN if uniform_crds == False
  * 
  * cdef class Field_I8_Crd_F8(CyField):             # <<<<<<<<<<<<<<
  *     cdef cnp.int64_t[:,:,:,::1] data
  *     cdef cnp.float64_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -909,15 +909,15 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 {
 };
 
 
-/* "viscid/calculator/cyfield.pxd":54
+/* "viscid/cython/cyfield.pxd":54
  *     cdef cnp.float64_t[3] dx  # cell width, = NaN if uniform_crds == False
  * 
  * cdef class Field_F4_Crd_F4(CyField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float32_t[:,:,:,::1] data
  *     cdef cnp.float32_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -942,15 +942,15 @@ struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 {
 };
 
 
-/* "viscid/calculator/cyfield.pxd":67
+/* "viscid/cython/cyfield.pxd":67
  *     cdef cnp.float32_t[3] dx  # cell width, = NaN if uniform_crds == False
  * 
  * cdef class Field_F8_Crd_F8(CyField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float64_t[:,:,:,::1] data
  *     cdef cnp.float64_t[:] x, y, z
  */
-struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField __pyx_base;
+struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField __pyx_base;
   __Pyx_memviewslice data;
   __Pyx_memviewslice x;
   __Pyx_memviewslice y;
@@ -1623,12 +1623,12 @@ static PyTypeObject *__pyx_ptype_5numpy_ndarray = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, char *, char *, int *); /*proto*/
 
-/* Module declarations from 'viscid.calculator.cyfield' */
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_CyField = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = 0;
-static PyTypeObject *__pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = 0;
+/* Module declarations from 'viscid.cython.cyfield' */
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_CyField = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4 = 0;
+static PyTypeObject *__pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8 = 0;
 static PyTypeObject *__pyx_array_type = 0;
 static PyTypeObject *__pyx_MemviewEnum_type = 0;
 static PyTypeObject *__pyx_memoryview_type = 0;
@@ -1638,8 +1638,8 @@ static PyObject *strided = 0;
 static PyObject *indirect = 0;
 static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
-static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__pyx_f_6viscid_10calculator_7cyfield__init_cyfield(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *, PyObject *, PyObject *, PyObject *); /*proto*/
-static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__pyx_f_6viscid_10calculator_7cyfield__init_cyfield(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *, PyObject *, PyObject *, PyObject *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__pyx_f_6viscid_6cython_7cyfield__init_cyfield(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, PyObject *, PyObject *, PyObject *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__pyx_f_6viscid_6cython_7cyfield__init_cyfield(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, PyObject *, PyObject *, PyObject *); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1677,10 +1677,10 @@ static CYTHON_INLINE PyObject *__Pyx_carray_to_py_int(int *, Py_ssize_t); /*prot
 static CYTHON_INLINE PyObject *__Pyx_carray_to_tuple_int(int *, Py_ssize_t); /*proto*/
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float32_t = { "float32_t", NULL, sizeof(__pyx_t_5numpy_float32_t), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_5numpy_float64_t = { "float64_t", NULL, sizeof(__pyx_t_5numpy_float64_t), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "viscid.calculator.cyfield"
-int __pyx_module_is_main_viscid__calculator__cyfield = 0;
+#define __Pyx_MODULE_NAME "viscid.cython.cyfield"
+int __pyx_module_is_main_viscid__cython__cyfield = 0;
 
-/* Implementation of 'viscid.calculator.cyfield' */
+/* Implementation of 'viscid.cython.cyfield' */
 static PyObject *__pyx_builtin_RuntimeError;
 static PyObject *__pyx_builtin_max;
 static PyObject *__pyx_builtin_range;
@@ -1726,11 +1726,11 @@ static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_20
 static PyObject *__pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_22copy_fortran(struct __pyx_memoryview_obj *__pyx_v_self); /* proto */
 static void __pyx_memoryviewslice___pyx_pf_15View_dot_MemoryView_16_memoryviewslice___dealloc__(struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_15View_dot_MemoryView_16_memoryviewslice_4base___get__(struct __pyx_memoryviewslice_obj *__pyx_v_self); /* proto */
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_CyField(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_I4_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_I8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_F4_Crd_F4(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_F8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_CyField(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_I4_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_I8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_F4_Crd_F4(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_F8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_array(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -2000,7 +2000,7 @@ static PyObject *__pyx_tuple__33;
 static PyObject *__pyx_tuple__34;
 static PyObject *__pyx_tuple__35;
 
-/* "viscid/calculator/cyfield.pyx":6
+/* "viscid/cython/cyfield.pyx":6
  * import numpy as np
  * 
  * cdef inline int _c_int_max(int a, int b):             # <<<<<<<<<<<<<<
@@ -2008,13 +2008,13 @@ static PyObject *__pyx_tuple__35;
  *         return a
  */
 
-static CYTHON_INLINE int __pyx_f_6viscid_10calculator_7cyfield__c_int_max(int __pyx_v_a, int __pyx_v_b) {
+static CYTHON_INLINE int __pyx_f_6viscid_6cython_7cyfield__c_int_max(int __pyx_v_a, int __pyx_v_b) {
   int __pyx_r;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("_c_int_max", 0);
 
-  /* "viscid/calculator/cyfield.pyx":7
+  /* "viscid/cython/cyfield.pyx":7
  * 
  * cdef inline int _c_int_max(int a, int b):
  *     if a >= b:             # <<<<<<<<<<<<<<
@@ -2024,7 +2024,7 @@ static CYTHON_INLINE int __pyx_f_6viscid_10calculator_7cyfield__c_int_max(int __
   __pyx_t_1 = ((__pyx_v_a >= __pyx_v_b) != 0);
   if (__pyx_t_1) {
 
-    /* "viscid/calculator/cyfield.pyx":8
+    /* "viscid/cython/cyfield.pyx":8
  * cdef inline int _c_int_max(int a, int b):
  *     if a >= b:
  *         return a             # <<<<<<<<<<<<<<
@@ -2036,7 +2036,7 @@ static CYTHON_INLINE int __pyx_f_6viscid_10calculator_7cyfield__c_int_max(int __
   }
   /*else*/ {
 
-    /* "viscid/calculator/cyfield.pyx":10
+    /* "viscid/cython/cyfield.pyx":10
  *         return a
  *     else:
  *         return b             # <<<<<<<<<<<<<<
@@ -2047,7 +2047,7 @@ static CYTHON_INLINE int __pyx_f_6viscid_10calculator_7cyfield__c_int_max(int __
     goto __pyx_L0;
   }
 
-  /* "viscid/calculator/cyfield.pyx":6
+  /* "viscid/cython/cyfield.pyx":6
  * import numpy as np
  * 
  * cdef inline int _c_int_max(int a, int b):             # <<<<<<<<<<<<<<
@@ -2061,7 +2061,7 @@ static CYTHON_INLINE int __pyx_f_6viscid_10calculator_7cyfield__c_int_max(int __
   return __pyx_r;
 }
 
-/* "viscid/calculator/cyfield.pyx":12
+/* "viscid/cython/cyfield.pyx":12
  *         return b
  * 
  * cdef CyField make_cyfield(vfield):             # <<<<<<<<<<<<<<
@@ -2069,10 +2069,10 @@ static CYTHON_INLINE int __pyx_f_6viscid_10calculator_7cyfield__c_int_max(int __
  *     fld_dtype = np.dtype(vfield.dtype)
  */
 
-static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_10calculator_7cyfield_make_cyfield(PyObject *__pyx_v_vfield) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_f_6viscid_6cython_7cyfield_make_cyfield(PyObject *__pyx_v_vfield) {
   PyObject *__pyx_v_fld_dtype = NULL;
   PyObject *__pyx_v_fld = NULL;
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_r = NULL;
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
@@ -2086,7 +2086,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   __Pyx_RefNannySetupContext("make_cyfield", 0);
   __Pyx_INCREF(__pyx_v_vfield);
 
-  /* "viscid/calculator/cyfield.pyx":13
+  /* "viscid/cython/cyfield.pyx":13
  * 
  * cdef CyField make_cyfield(vfield):
  *     vfield = vfield.as_interlaced(force_c_contiguous=True)             # <<<<<<<<<<<<<<
@@ -2105,7 +2105,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   __Pyx_DECREF_SET(__pyx_v_vfield, __pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":14
+  /* "viscid/cython/cyfield.pyx":14
  * cdef CyField make_cyfield(vfield):
  *     vfield = vfield.as_interlaced(force_c_contiguous=True)
  *     fld_dtype = np.dtype(vfield.dtype)             # <<<<<<<<<<<<<<
@@ -2148,7 +2148,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   __pyx_v_fld_dtype = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":20
+  /* "viscid/cython/cyfield.pyx":20
  *     # elif fld_dtype == np.dtype('i8'):
  *     #     fld = _init_cyfield(Field_I8_Crd_F8(), vfield, 'i8', 'f8')
  *     if fld_dtype == np.dtype('f4'):             # <<<<<<<<<<<<<<
@@ -2169,16 +2169,16 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_6) {
 
-    /* "viscid/calculator/cyfield.pyx":21
+    /* "viscid/cython/cyfield.pyx":21
  *     #     fld = _init_cyfield(Field_I8_Crd_F8(), vfield, 'i8', 'f8')
  *     if fld_dtype == np.dtype('f4'):
  *         fld = _init_cyfield(Field_F4_Crd_F4(), vfield, 'f4', 'f4')             # <<<<<<<<<<<<<<
  *     elif fld_dtype == np.dtype('f8'):
  *         fld = _init_cyfield(Field_F8_Crd_F8(), vfield, 'f8', 'f8')
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)((PyObject*)__pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4)), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)((PyObject*)__pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4)), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = ((PyObject *)__pyx_fuse_2__pyx_f_6viscid_10calculator_7cyfield__init_cyfield(((struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *)__pyx_t_1), __pyx_v_vfield, __pyx_n_s_f4, __pyx_n_s_f4)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = ((PyObject *)__pyx_fuse_2__pyx_f_6viscid_6cython_7cyfield__init_cyfield(((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_1), __pyx_v_vfield, __pyx_n_s_f4, __pyx_n_s_f4)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 21; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_fld = __pyx_t_3;
@@ -2186,7 +2186,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
     goto __pyx_L3;
   }
 
-  /* "viscid/calculator/cyfield.pyx":22
+  /* "viscid/cython/cyfield.pyx":22
  *     if fld_dtype == np.dtype('f4'):
  *         fld = _init_cyfield(Field_F4_Crd_F4(), vfield, 'f4', 'f4')
  *     elif fld_dtype == np.dtype('f8'):             # <<<<<<<<<<<<<<
@@ -2207,16 +2207,16 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   if (__pyx_t_6) {
 
-    /* "viscid/calculator/cyfield.pyx":23
+    /* "viscid/cython/cyfield.pyx":23
  *         fld = _init_cyfield(Field_F4_Crd_F4(), vfield, 'f4', 'f4')
  *     elif fld_dtype == np.dtype('f8'):
  *         fld = _init_cyfield(Field_F8_Crd_F8(), vfield, 'f8', 'f8')             # <<<<<<<<<<<<<<
  *     else:
  *         raise RuntimeError("Bad field dtype for cython code {0}"
  */
-    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)((PyObject*)__pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8)), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)((PyObject*)__pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8)), __pyx_empty_tuple, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = ((PyObject *)__pyx_fuse_3__pyx_f_6viscid_10calculator_7cyfield__init_cyfield(((struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *)__pyx_t_1), __pyx_v_vfield, __pyx_n_s_f8, __pyx_n_s_f8)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = ((PyObject *)__pyx_fuse_3__pyx_f_6viscid_6cython_7cyfield__init_cyfield(((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_1), __pyx_v_vfield, __pyx_n_s_f8, __pyx_n_s_f8)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 23; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_fld = __pyx_t_3;
@@ -2225,7 +2225,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   }
   /*else*/ {
 
-    /* "viscid/calculator/cyfield.pyx":26
+    /* "viscid/cython/cyfield.pyx":26
  *     else:
  *         raise RuntimeError("Bad field dtype for cython code {0}"
  *                            "".format(fld_dtype))             # <<<<<<<<<<<<<<
@@ -2260,7 +2260,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-    /* "viscid/calculator/cyfield.pyx":25
+    /* "viscid/cython/cyfield.pyx":25
  *         fld = _init_cyfield(Field_F8_Crd_F8(), vfield, 'f8', 'f8')
  *     else:
  *         raise RuntimeError("Bad field dtype for cython code {0}"             # <<<<<<<<<<<<<<
@@ -2281,7 +2281,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   }
   __pyx_L3:;
 
-  /* "viscid/calculator/cyfield.pyx":28
+  /* "viscid/cython/cyfield.pyx":28
  *                            "".format(fld_dtype))
  * 
  *     return fld             # <<<<<<<<<<<<<<
@@ -2289,12 +2289,12 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
  */
   __Pyx_XDECREF(((PyObject *)__pyx_r));
-  if (!(likely(((__pyx_v_fld) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_fld, __pyx_ptype_6viscid_10calculator_7cyfield_CyField))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (!(likely(((__pyx_v_fld) == Py_None) || likely(__Pyx_TypeTest(__pyx_v_fld, __pyx_ptype_6viscid_6cython_7cyfield_CyField))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_INCREF(__pyx_v_fld);
-  __pyx_r = ((struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *)__pyx_v_fld);
+  __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_fld);
   goto __pyx_L0;
 
-  /* "viscid/calculator/cyfield.pyx":12
+  /* "viscid/cython/cyfield.pyx":12
  *         return b
  * 
  * cdef CyField make_cyfield(vfield):             # <<<<<<<<<<<<<<
@@ -2309,7 +2309,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   __Pyx_XDECREF(__pyx_t_3);
   __Pyx_XDECREF(__pyx_t_4);
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("viscid.calculator.cyfield.make_cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyfield.make_cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_fld_dtype);
@@ -2320,7 +2320,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
   return __pyx_r;
 }
 
-/* "viscid/calculator/cyfield.pyx":30
+/* "viscid/cython/cyfield.pyx":30
  *     return fld
  * 
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):             # <<<<<<<<<<<<<<
@@ -2328,7 +2328,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *__pyx_f_6viscid_1
  *     if len(dat.shape) < 4:
  */
 
-static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__pyx_f_6viscid_10calculator_7cyfield__init_cyfield(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_fld_dtype, PyObject *__pyx_v_crd_dtype) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__pyx_f_6viscid_6cython_7cyfield__init_cyfield(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_fld_dtype, PyObject *__pyx_v_crd_dtype) {
   PyObject *__pyx_v_dat = NULL;
   PyObject *__pyx_v_x = NULL;
   PyObject *__pyx_v_y = NULL;
@@ -2352,7 +2352,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   PyObject *__pyx_v_sshape_cc_max = NULL;
   long __pyx_v_i;
   int __pyx_v_j;
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_r = NULL;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   Py_ssize_t __pyx_t_2;
@@ -2381,7 +2381,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_2_init_cyfield", 0);
 
-  /* "viscid/calculator/cyfield.pyx":31
+  /* "viscid/cython/cyfield.pyx":31
  * 
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
  *     dat = vfield.data             # <<<<<<<<<<<<<<
@@ -2393,7 +2393,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_dat = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":32
+  /* "viscid/cython/cyfield.pyx":32
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
  *     dat = vfield.data
  *     if len(dat.shape) < 4:             # <<<<<<<<<<<<<<
@@ -2407,7 +2407,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_3 = ((__pyx_t_2 < 4) != 0);
   if (__pyx_t_3) {
 
-    /* "viscid/calculator/cyfield.pyx":33
+    /* "viscid/cython/cyfield.pyx":33
  *     dat = vfield.data
  *     if len(dat.shape) < 4:
  *         dat = np.expand_dims(dat, axis=4)             # <<<<<<<<<<<<<<
@@ -2438,7 +2438,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   }
   __pyx_L3:;
 
-  /* "viscid/calculator/cyfield.pyx":34
+  /* "viscid/cython/cyfield.pyx":34
  *     if len(dat.shape) < 4:
  *         dat = np.expand_dims(dat, axis=4)
  *     fld.data = dat             # <<<<<<<<<<<<<<
@@ -2452,7 +2452,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":36
+  /* "viscid/cython/cyfield.pyx":36
  *     fld.data = dat
  * 
  *     fld.center = vfield.center             # <<<<<<<<<<<<<<
@@ -2468,7 +2468,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_fld->__pyx_base.center = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":38
+  /* "viscid/cython/cyfield.pyx":38
  *     fld.center = vfield.center
  * 
  *     x, y, z = vfield.get_crds("xyz")             # <<<<<<<<<<<<<<
@@ -2544,7 +2544,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_z = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":39
+  /* "viscid/cython/cyfield.pyx":39
  * 
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")             # <<<<<<<<<<<<<<
@@ -2620,7 +2620,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_znc = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":40
+  /* "viscid/cython/cyfield.pyx":40
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")
  *     xcc, ycc, zcc = vfield.get_crds_cc("xyz")             # <<<<<<<<<<<<<<
@@ -2696,7 +2696,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_zcc = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":42
+  /* "viscid/cython/cyfield.pyx":42
  *     xcc, ycc, zcc = vfield.get_crds_cc("xyz")
  * 
  *     fld.x = x.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2726,7 +2726,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":43
+  /* "viscid/cython/cyfield.pyx":43
  * 
  *     fld.x = x.astype(crd_dtype, copy=False)
  *     fld.y = y.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2756,7 +2756,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":44
+  /* "viscid/cython/cyfield.pyx":44
  *     fld.x = x.astype(crd_dtype, copy=False)
  *     fld.y = y.astype(crd_dtype, copy=False)
  *     fld.z = z.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2786,7 +2786,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":45
+  /* "viscid/cython/cyfield.pyx":45
  *     fld.y = y.astype(crd_dtype, copy=False)
  *     fld.z = z.astype(crd_dtype, copy=False)
  *     fld.xnc = xnc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2816,7 +2816,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":46
+  /* "viscid/cython/cyfield.pyx":46
  *     fld.z = z.astype(crd_dtype, copy=False)
  *     fld.xnc = xnc.astype(crd_dtype, copy=False)
  *     fld.ync = ync.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2846,7 +2846,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":47
+  /* "viscid/cython/cyfield.pyx":47
  *     fld.xnc = xnc.astype(crd_dtype, copy=False)
  *     fld.ync = ync.astype(crd_dtype, copy=False)
  *     fld.znc = znc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2876,7 +2876,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":48
+  /* "viscid/cython/cyfield.pyx":48
  *     fld.ync = ync.astype(crd_dtype, copy=False)
  *     fld.znc = znc.astype(crd_dtype, copy=False)
  *     fld.xcc = xcc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2906,7 +2906,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":49
+  /* "viscid/cython/cyfield.pyx":49
  *     fld.znc = znc.astype(crd_dtype, copy=False)
  *     fld.xcc = xcc.astype(crd_dtype, copy=False)
  *     fld.ycc = ycc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2936,7 +2936,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":50
+  /* "viscid/cython/cyfield.pyx":50
  *     fld.xcc = xcc.astype(crd_dtype, copy=False)
  *     fld.ycc = ycc.astype(crd_dtype, copy=False)
  *     fld.zcc = zcc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -2966,7 +2966,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":52
+  /* "viscid/cython/cyfield.pyx":52
  *     fld.zcc = zcc.astype(crd_dtype, copy=False)
  * 
  *     xl_nc = vfield.crds.xl_nc             # <<<<<<<<<<<<<<
@@ -2981,7 +2981,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_xl_nc = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":53
+  /* "viscid/cython/cyfield.pyx":53
  * 
  *     xl_nc = vfield.crds.xl_nc
  *     xh_nc = vfield.crds.xh_nc             # <<<<<<<<<<<<<<
@@ -2996,7 +2996,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_xh_nc = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":55
+  /* "viscid/cython/cyfield.pyx":55
  *     xh_nc = vfield.crds.xh_nc
  * 
  *     cdef int[3] sshape = vfield.sshape             # <<<<<<<<<<<<<<
@@ -3009,7 +3009,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   memcpy(&(__pyx_v_sshape[0]), __pyx_t_11, sizeof(__pyx_v_sshape[0]) * (3));
 
-  /* "viscid/calculator/cyfield.pyx":56
+  /* "viscid/cython/cyfield.pyx":56
  * 
  *     cdef int[3] sshape = vfield.sshape
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc             # <<<<<<<<<<<<<<
@@ -3025,7 +3025,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   memcpy(&(__pyx_v_sshape_nc[0]), __pyx_t_11, sizeof(__pyx_v_sshape_nc[0]) * (3));
 
-  /* "viscid/calculator/cyfield.pyx":57
+  /* "viscid/cython/cyfield.pyx":57
  *     cdef int[3] sshape = vfield.sshape
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc             # <<<<<<<<<<<<<<
@@ -3041,7 +3041,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   memcpy(&(__pyx_v_sshape_cc[0]), __pyx_t_11, sizeof(__pyx_v_sshape_cc[0]) * (3));
 
-  /* "viscid/calculator/cyfield.pyx":59
+  /* "viscid/cython/cyfield.pyx":59
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc
  * 
  *     _crd_lst = [z, y, x]             # <<<<<<<<<<<<<<
@@ -3062,7 +3062,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v__crd_lst = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":60
+  /* "viscid/cython/cyfield.pyx":60
  * 
  *     _crd_lst = [z, y, x]
  *     _crd_lst_nc = [znc, ync, xnc]             # <<<<<<<<<<<<<<
@@ -3083,7 +3083,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v__crd_lst_nc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":61
+  /* "viscid/cython/cyfield.pyx":61
  *     _crd_lst = [z, y, x]
  *     _crd_lst_nc = [znc, ync, xnc]
  *     _crd_lst_cc = [zcc, ycc, xcc]             # <<<<<<<<<<<<<<
@@ -3104,7 +3104,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v__crd_lst_cc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":62
+  /* "viscid/cython/cyfield.pyx":62
  *     _crd_lst_nc = [znc, ync, xnc]
  *     _crd_lst_cc = [zcc, ycc, xcc]
  *     sshape_max = max(sshape)             # <<<<<<<<<<<<<<
@@ -3124,7 +3124,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_sshape_max = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":63
+  /* "viscid/cython/cyfield.pyx":63
  *     _crd_lst_cc = [zcc, ycc, xcc]
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
@@ -3174,7 +3174,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_12.memview = NULL;
   __pyx_t_12.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":64
+  /* "viscid/cython/cyfield.pyx":64
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)             # <<<<<<<<<<<<<<
@@ -3194,7 +3194,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_sshape_nc_max = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":65
+  /* "viscid/cython/cyfield.pyx":65
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)
  *     fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
@@ -3244,7 +3244,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_12.memview = NULL;
   __pyx_t_12.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":66
+  /* "viscid/cython/cyfield.pyx":66
  *     sshape_nc_max = max(sshape_nc)
  *     fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)
  *     sshape_cc_max = max(sshape_cc)             # <<<<<<<<<<<<<<
@@ -3264,7 +3264,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_sshape_cc_max = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":67
+  /* "viscid/cython/cyfield.pyx":67
  *     fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)
  *     sshape_cc_max = max(sshape_cc)
  *     fld.crds_cc = np.nan * np.empty((3, sshape_cc_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
@@ -3314,7 +3314,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_t_12.memview = NULL;
   __pyx_t_12.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":69
+  /* "viscid/cython/cyfield.pyx":69
  *     fld.crds_cc = np.nan * np.empty((3, sshape_cc_max), dtype=crd_dtype)
  * 
  *     for i in range(3):             # <<<<<<<<<<<<<<
@@ -3324,7 +3324,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   for (__pyx_t_13 = 0; __pyx_t_13 < 3; __pyx_t_13+=1) {
     __pyx_v_i = __pyx_t_13;
 
-    /* "viscid/calculator/cyfield.pyx":70
+    /* "viscid/cython/cyfield.pyx":70
  * 
  *     for i in range(3):
  *         fld.xlnc[i] = vfield.crds.xl_nc[i]             # <<<<<<<<<<<<<<
@@ -3343,7 +3343,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xlnc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":71
+    /* "viscid/cython/cyfield.pyx":71
  *     for i in range(3):
  *         fld.xlnc[i] = vfield.crds.xl_nc[i]
  *         fld.xhnc[i] = vfield.crds.xh_nc[i]             # <<<<<<<<<<<<<<
@@ -3362,7 +3362,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xhnc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":72
+    /* "viscid/cython/cyfield.pyx":72
  *         fld.xlnc[i] = vfield.crds.xl_nc[i]
  *         fld.xhnc[i] = vfield.crds.xh_nc[i]
  *         fld.xlcc[i] = vfield.crds.xl_cc[i]             # <<<<<<<<<<<<<<
@@ -3381,7 +3381,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xlcc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":73
+    /* "viscid/cython/cyfield.pyx":73
  *         fld.xhnc[i] = vfield.crds.xh_nc[i]
  *         fld.xlcc[i] = vfield.crds.xl_cc[i]
  *         fld.xhcc[i] = vfield.crds.xh_cc[i]             # <<<<<<<<<<<<<<
@@ -3400,7 +3400,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xhcc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":75
+    /* "viscid/cython/cyfield.pyx":75
  *         fld.xhcc[i] = vfield.crds.xh_cc[i]
  * 
  *         fld.nr_nodes[i] = sshape_nc[i]  # len(fld.crds_nc[i])             # <<<<<<<<<<<<<<
@@ -3409,7 +3409,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i]) = (__pyx_v_sshape_nc[__pyx_v_i]);
 
-    /* "viscid/calculator/cyfield.pyx":76
+    /* "viscid/cython/cyfield.pyx":76
  * 
  *         fld.nr_nodes[i] = sshape_nc[i]  # len(fld.crds_nc[i])
  *         fld.nr_cells[i] = sshape_cc[i]  # len(fld.crds_cc[i])             # <<<<<<<<<<<<<<
@@ -3418,7 +3418,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nr_cells[__pyx_v_i]) = (__pyx_v_sshape_cc[__pyx_v_i]);
 
-    /* "viscid/calculator/cyfield.pyx":78
+    /* "viscid/cython/cyfield.pyx":78
  *         fld.nr_cells[i] = sshape_cc[i]  # len(fld.crds_cc[i])
  * 
  *         if sshape[i] == fld.nr_nodes[i]:             # <<<<<<<<<<<<<<
@@ -3428,7 +3428,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __pyx_t_3 = (((__pyx_v_sshape[__pyx_v_i]) == (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i])) != 0);
     if (__pyx_t_3) {
 
-      /* "viscid/calculator/cyfield.pyx":79
+      /* "viscid/cython/cyfield.pyx":79
  * 
  *         if sshape[i] == fld.nr_nodes[i]:
  *             fld.is_cc = 0             # <<<<<<<<<<<<<<
@@ -3437,7 +3437,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
       __pyx_v_fld->__pyx_base.is_cc = 0;
 
-      /* "viscid/calculator/cyfield.pyx":80
+      /* "viscid/cython/cyfield.pyx":80
  *         if sshape[i] == fld.nr_nodes[i]:
  *             fld.is_cc = 0
  *             fld.xl[i] = fld.xlnc[i]             # <<<<<<<<<<<<<<
@@ -3446,7 +3446,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
       (__pyx_v_fld->xl[__pyx_v_i]) = (__pyx_v_fld->xlnc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":81
+      /* "viscid/cython/cyfield.pyx":81
  *             fld.is_cc = 0
  *             fld.xl[i] = fld.xlnc[i]
  *             fld.xh[i] = fld.xhnc[i]             # <<<<<<<<<<<<<<
@@ -3455,7 +3455,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
       (__pyx_v_fld->xh[__pyx_v_i]) = (__pyx_v_fld->xhnc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":82
+      /* "viscid/cython/cyfield.pyx":82
  *             fld.xl[i] = fld.xlnc[i]
  *             fld.xh[i] = fld.xhnc[i]
  *             fld.n[i] = fld.nr_nodes[i]  # len(fld.crds[i])             # <<<<<<<<<<<<<<
@@ -3467,7 +3467,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     }
     /*else*/ {
 
-      /* "viscid/calculator/cyfield.pyx":84
+      /* "viscid/cython/cyfield.pyx":84
  *             fld.n[i] = fld.nr_nodes[i]  # len(fld.crds[i])
  *         else:
  *             fld.is_cc = 1             # <<<<<<<<<<<<<<
@@ -3476,7 +3476,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
       __pyx_v_fld->__pyx_base.is_cc = 1;
 
-      /* "viscid/calculator/cyfield.pyx":85
+      /* "viscid/cython/cyfield.pyx":85
  *         else:
  *             fld.is_cc = 1
  *             fld.xl[i] = fld.xlcc[i]             # <<<<<<<<<<<<<<
@@ -3485,7 +3485,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
       (__pyx_v_fld->xl[__pyx_v_i]) = (__pyx_v_fld->xlcc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":86
+      /* "viscid/cython/cyfield.pyx":86
  *             fld.is_cc = 1
  *             fld.xl[i] = fld.xlcc[i]
  *             fld.xh[i] = fld.xhcc[i]             # <<<<<<<<<<<<<<
@@ -3494,7 +3494,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
       (__pyx_v_fld->xh[__pyx_v_i]) = (__pyx_v_fld->xhcc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":87
+      /* "viscid/cython/cyfield.pyx":87
  *             fld.xl[i] = fld.xlcc[i]
  *             fld.xh[i] = fld.xhcc[i]
  *             fld.n[i] = fld.nr_cells[i]  # len(fld.crds[i])             # <<<<<<<<<<<<<<
@@ -3505,7 +3505,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     }
     __pyx_L12:;
 
-    /* "viscid/calculator/cyfield.pyx":89
+    /* "viscid/cython/cyfield.pyx":89
  *             fld.n[i] = fld.nr_cells[i]  # len(fld.crds[i])
  * 
  *         fld.L[i] = fld.xh[i] - fld.xl[i]             # <<<<<<<<<<<<<<
@@ -3514,7 +3514,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
     (__pyx_v_fld->L[__pyx_v_i]) = ((__pyx_v_fld->xh[__pyx_v_i]) - (__pyx_v_fld->xl[__pyx_v_i]));
 
-    /* "viscid/calculator/cyfield.pyx":90
+    /* "viscid/cython/cyfield.pyx":90
  * 
  *         fld.L[i] = fld.xh[i] - fld.xl[i]
  *         fld.nm1[i] = fld.n[i] - 1             # <<<<<<<<<<<<<<
@@ -3523,7 +3523,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nm1[__pyx_v_i]) = ((__pyx_v_fld->__pyx_base.n[__pyx_v_i]) - 1);
 
-    /* "viscid/calculator/cyfield.pyx":91
+    /* "viscid/cython/cyfield.pyx":91
  *         fld.L[i] = fld.xh[i] - fld.xl[i]
  *         fld.nm1[i] = fld.n[i] - 1
  *         fld.nm2[i] = fld.n[i] - 2             # <<<<<<<<<<<<<<
@@ -3532,7 +3532,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nm2[__pyx_v_i]) = ((__pyx_v_fld->__pyx_base.n[__pyx_v_i]) - 2);
 
-    /* "viscid/calculator/cyfield.pyx":93
+    /* "viscid/cython/cyfield.pyx":93
  *         fld.nm2[i] = fld.n[i] - 2
  * 
  *         for j in range(sshape[i]):             # <<<<<<<<<<<<<<
@@ -3543,7 +3543,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
       __pyx_v_j = __pyx_t_16;
 
-      /* "viscid/calculator/cyfield.pyx":94
+      /* "viscid/cython/cyfield.pyx":94
  * 
  *         for j in range(sshape[i]):
  *             fld.crds[i, j] = _crd_lst[i][j]             # <<<<<<<<<<<<<<
@@ -3560,7 +3560,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
       *((__pyx_t_5numpy_float32_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_fld->crds.data + __pyx_t_17 * __pyx_v_fld->crds.strides[0]) )) + __pyx_t_18)) )) = __pyx_t_14;
     }
 
-    /* "viscid/calculator/cyfield.pyx":95
+    /* "viscid/cython/cyfield.pyx":95
  *         for j in range(sshape[i]):
  *             fld.crds[i, j] = _crd_lst[i][j]
  *         for j in range(sshape_nc[i]):             # <<<<<<<<<<<<<<
@@ -3571,7 +3571,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
       __pyx_v_j = __pyx_t_16;
 
-      /* "viscid/calculator/cyfield.pyx":96
+      /* "viscid/cython/cyfield.pyx":96
  *             fld.crds[i, j] = _crd_lst[i][j]
  *         for j in range(sshape_nc[i]):
  *             fld.crds_nc[i, j] = _crd_lst_nc[i][j]             # <<<<<<<<<<<<<<
@@ -3588,7 +3588,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
       *((__pyx_t_5numpy_float32_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_fld->crds_nc.data + __pyx_t_19 * __pyx_v_fld->crds_nc.strides[0]) )) + __pyx_t_20)) )) = __pyx_t_14;
     }
 
-    /* "viscid/calculator/cyfield.pyx":97
+    /* "viscid/cython/cyfield.pyx":97
  *         for j in range(sshape_nc[i]):
  *             fld.crds_nc[i, j] = _crd_lst_nc[i][j]
  *         for j in range(sshape_cc[i]):             # <<<<<<<<<<<<<<
@@ -3599,7 +3599,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
       __pyx_v_j = __pyx_t_16;
 
-      /* "viscid/calculator/cyfield.pyx":98
+      /* "viscid/cython/cyfield.pyx":98
  *             fld.crds_nc[i, j] = _crd_lst_nc[i][j]
  *         for j in range(sshape_cc[i]):
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]             # <<<<<<<<<<<<<<
@@ -3616,7 +3616,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
       *((__pyx_t_5numpy_float32_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_fld->crds_cc.data + __pyx_t_21 * __pyx_v_fld->crds_cc.strides[0]) )) + __pyx_t_22)) )) = __pyx_t_14;
     }
 
-    /* "viscid/calculator/cyfield.pyx":100
+    /* "viscid/cython/cyfield.pyx":100
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]
  * 
  *         fld.cached_ind[i] = 0             # <<<<<<<<<<<<<<
@@ -3625,7 +3625,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.cached_ind[__pyx_v_i]) = 0;
 
-    /* "viscid/calculator/cyfield.pyx":101
+    /* "viscid/cython/cyfield.pyx":101
  * 
  *         fld.cached_ind[i] = 0
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
@@ -3647,7 +3647,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_fld->__pyx_base.uniform_crds = __pyx_t_15;
 
-    /* "viscid/calculator/cyfield.pyx":102
+    /* "viscid/cython/cyfield.pyx":102
  *         fld.cached_ind[i] = 0
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
@@ -3657,7 +3657,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __pyx_t_3 = (__pyx_v_fld->__pyx_base.uniform_crds != 0);
     if (__pyx_t_3) {
 
-      /* "viscid/calculator/cyfield.pyx":103
+      /* "viscid/cython/cyfield.pyx":103
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]             # <<<<<<<<<<<<<<
@@ -3669,7 +3669,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     }
     /*else*/ {
 
-      /* "viscid/calculator/cyfield.pyx":105
+      /* "viscid/cython/cyfield.pyx":105
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
  *         else:
  *             fld.dx[i] = np.nan             # <<<<<<<<<<<<<<
@@ -3687,7 +3687,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     }
     __pyx_L19:;
 
-    /* "viscid/calculator/cyfield.pyx":107
+    /* "viscid/cython/cyfield.pyx":107
  *             fld.dx[i] = np.nan
  * 
  *         if fld.xh[i] < fld.xl[i]:             # <<<<<<<<<<<<<<
@@ -3697,7 +3697,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     __pyx_t_3 = (((__pyx_v_fld->xh[__pyx_v_i]) < (__pyx_v_fld->xl[__pyx_v_i])) != 0);
     if (__pyx_t_3) {
 
-      /* "viscid/calculator/cyfield.pyx":108
+      /* "viscid/cython/cyfield.pyx":108
  * 
  *         if fld.xh[i] < fld.xl[i]:
  *             raise RuntimeError("Forward crds only in cython code")             # <<<<<<<<<<<<<<
@@ -3712,7 +3712,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
     }
   }
 
-  /* "viscid/calculator/cyfield.pyx":116
+  /* "viscid/cython/cyfield.pyx":116
  *     #         print(">>", i, j, fld.crds[i, j])
  * 
  *     fld.fld_dtype = fld_dtype             # <<<<<<<<<<<<<<
@@ -3728,7 +3728,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_fld->__pyx_base.fld_dtype = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":117
+  /* "viscid/cython/cyfield.pyx":117
  * 
  *     fld.fld_dtype = fld_dtype
  *     fld.crd_dtype = crd_dtype             # <<<<<<<<<<<<<<
@@ -3744,7 +3744,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_v_fld->__pyx_base.crd_dtype = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":118
+  /* "viscid/cython/cyfield.pyx":118
  *     fld.fld_dtype = fld_dtype
  *     fld.crd_dtype = crd_dtype
  *     fld.vfield = vfield             # <<<<<<<<<<<<<<
@@ -3757,7 +3757,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __Pyx_DECREF(__pyx_v_fld->__pyx_base.vfield);
   __pyx_v_fld->__pyx_base.vfield = __pyx_v_vfield;
 
-  /* "viscid/calculator/cyfield.pyx":120
+  /* "viscid/cython/cyfield.pyx":120
  *     fld.vfield = vfield
  * 
  *     return fld             # <<<<<<<<<<<<<<
@@ -3769,7 +3769,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __pyx_r = __pyx_v_fld;
   goto __pyx_L0;
 
-  /* "viscid/calculator/cyfield.pyx":30
+  /* "viscid/cython/cyfield.pyx":30
  *     return fld
  * 
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):             # <<<<<<<<<<<<<<
@@ -3787,7 +3787,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   __Pyx_XDECREF(__pyx_t_8);
   __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
-  __Pyx_AddTraceback("viscid.calculator.cyfield._init_cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyfield._init_cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_dat);
@@ -3813,7 +3813,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *__pyx_fus
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__pyx_f_6viscid_10calculator_7cyfield__init_cyfield(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_fld_dtype, PyObject *__pyx_v_crd_dtype) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__pyx_f_6viscid_6cython_7cyfield__init_cyfield(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_fld_dtype, PyObject *__pyx_v_crd_dtype) {
   PyObject *__pyx_v_dat = NULL;
   PyObject *__pyx_v_x = NULL;
   PyObject *__pyx_v_y = NULL;
@@ -3837,7 +3837,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   PyObject *__pyx_v_sshape_cc_max = NULL;
   long __pyx_v_i;
   int __pyx_v_j;
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_r = NULL;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   Py_ssize_t __pyx_t_2;
@@ -3866,7 +3866,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_3_init_cyfield", 0);
 
-  /* "viscid/calculator/cyfield.pyx":31
+  /* "viscid/cython/cyfield.pyx":31
  * 
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
  *     dat = vfield.data             # <<<<<<<<<<<<<<
@@ -3878,7 +3878,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_dat = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":32
+  /* "viscid/cython/cyfield.pyx":32
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
  *     dat = vfield.data
  *     if len(dat.shape) < 4:             # <<<<<<<<<<<<<<
@@ -3892,7 +3892,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_3 = ((__pyx_t_2 < 4) != 0);
   if (__pyx_t_3) {
 
-    /* "viscid/calculator/cyfield.pyx":33
+    /* "viscid/cython/cyfield.pyx":33
  *     dat = vfield.data
  *     if len(dat.shape) < 4:
  *         dat = np.expand_dims(dat, axis=4)             # <<<<<<<<<<<<<<
@@ -3923,7 +3923,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   }
   __pyx_L3:;
 
-  /* "viscid/calculator/cyfield.pyx":34
+  /* "viscid/cython/cyfield.pyx":34
  *     if len(dat.shape) < 4:
  *         dat = np.expand_dims(dat, axis=4)
  *     fld.data = dat             # <<<<<<<<<<<<<<
@@ -3937,7 +3937,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":36
+  /* "viscid/cython/cyfield.pyx":36
  *     fld.data = dat
  * 
  *     fld.center = vfield.center             # <<<<<<<<<<<<<<
@@ -3953,7 +3953,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_fld->__pyx_base.center = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":38
+  /* "viscid/cython/cyfield.pyx":38
  *     fld.center = vfield.center
  * 
  *     x, y, z = vfield.get_crds("xyz")             # <<<<<<<<<<<<<<
@@ -4029,7 +4029,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_z = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":39
+  /* "viscid/cython/cyfield.pyx":39
  * 
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")             # <<<<<<<<<<<<<<
@@ -4105,7 +4105,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_znc = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":40
+  /* "viscid/cython/cyfield.pyx":40
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")
  *     xcc, ycc, zcc = vfield.get_crds_cc("xyz")             # <<<<<<<<<<<<<<
@@ -4181,7 +4181,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_zcc = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":42
+  /* "viscid/cython/cyfield.pyx":42
  *     xcc, ycc, zcc = vfield.get_crds_cc("xyz")
  * 
  *     fld.x = x.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4211,7 +4211,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":43
+  /* "viscid/cython/cyfield.pyx":43
  * 
  *     fld.x = x.astype(crd_dtype, copy=False)
  *     fld.y = y.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4241,7 +4241,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":44
+  /* "viscid/cython/cyfield.pyx":44
  *     fld.x = x.astype(crd_dtype, copy=False)
  *     fld.y = y.astype(crd_dtype, copy=False)
  *     fld.z = z.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4271,7 +4271,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":45
+  /* "viscid/cython/cyfield.pyx":45
  *     fld.y = y.astype(crd_dtype, copy=False)
  *     fld.z = z.astype(crd_dtype, copy=False)
  *     fld.xnc = xnc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4301,7 +4301,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":46
+  /* "viscid/cython/cyfield.pyx":46
  *     fld.z = z.astype(crd_dtype, copy=False)
  *     fld.xnc = xnc.astype(crd_dtype, copy=False)
  *     fld.ync = ync.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4331,7 +4331,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":47
+  /* "viscid/cython/cyfield.pyx":47
  *     fld.xnc = xnc.astype(crd_dtype, copy=False)
  *     fld.ync = ync.astype(crd_dtype, copy=False)
  *     fld.znc = znc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4361,7 +4361,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":48
+  /* "viscid/cython/cyfield.pyx":48
  *     fld.ync = ync.astype(crd_dtype, copy=False)
  *     fld.znc = znc.astype(crd_dtype, copy=False)
  *     fld.xcc = xcc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4391,7 +4391,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":49
+  /* "viscid/cython/cyfield.pyx":49
  *     fld.znc = znc.astype(crd_dtype, copy=False)
  *     fld.xcc = xcc.astype(crd_dtype, copy=False)
  *     fld.ycc = ycc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4421,7 +4421,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":50
+  /* "viscid/cython/cyfield.pyx":50
  *     fld.xcc = xcc.astype(crd_dtype, copy=False)
  *     fld.ycc = ycc.astype(crd_dtype, copy=False)
  *     fld.zcc = zcc.astype(crd_dtype, copy=False)             # <<<<<<<<<<<<<<
@@ -4451,7 +4451,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":52
+  /* "viscid/cython/cyfield.pyx":52
  *     fld.zcc = zcc.astype(crd_dtype, copy=False)
  * 
  *     xl_nc = vfield.crds.xl_nc             # <<<<<<<<<<<<<<
@@ -4466,7 +4466,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_xl_nc = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":53
+  /* "viscid/cython/cyfield.pyx":53
  * 
  *     xl_nc = vfield.crds.xl_nc
  *     xh_nc = vfield.crds.xh_nc             # <<<<<<<<<<<<<<
@@ -4481,7 +4481,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_xh_nc = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":55
+  /* "viscid/cython/cyfield.pyx":55
  *     xh_nc = vfield.crds.xh_nc
  * 
  *     cdef int[3] sshape = vfield.sshape             # <<<<<<<<<<<<<<
@@ -4494,7 +4494,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   memcpy(&(__pyx_v_sshape[0]), __pyx_t_11, sizeof(__pyx_v_sshape[0]) * (3));
 
-  /* "viscid/calculator/cyfield.pyx":56
+  /* "viscid/cython/cyfield.pyx":56
  * 
  *     cdef int[3] sshape = vfield.sshape
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc             # <<<<<<<<<<<<<<
@@ -4510,7 +4510,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   memcpy(&(__pyx_v_sshape_nc[0]), __pyx_t_11, sizeof(__pyx_v_sshape_nc[0]) * (3));
 
-  /* "viscid/calculator/cyfield.pyx":57
+  /* "viscid/cython/cyfield.pyx":57
  *     cdef int[3] sshape = vfield.sshape
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc             # <<<<<<<<<<<<<<
@@ -4526,7 +4526,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   memcpy(&(__pyx_v_sshape_cc[0]), __pyx_t_11, sizeof(__pyx_v_sshape_cc[0]) * (3));
 
-  /* "viscid/calculator/cyfield.pyx":59
+  /* "viscid/cython/cyfield.pyx":59
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc
  * 
  *     _crd_lst = [z, y, x]             # <<<<<<<<<<<<<<
@@ -4547,7 +4547,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v__crd_lst = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":60
+  /* "viscid/cython/cyfield.pyx":60
  * 
  *     _crd_lst = [z, y, x]
  *     _crd_lst_nc = [znc, ync, xnc]             # <<<<<<<<<<<<<<
@@ -4568,7 +4568,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v__crd_lst_nc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":61
+  /* "viscid/cython/cyfield.pyx":61
  *     _crd_lst = [z, y, x]
  *     _crd_lst_nc = [znc, ync, xnc]
  *     _crd_lst_cc = [zcc, ycc, xcc]             # <<<<<<<<<<<<<<
@@ -4589,7 +4589,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v__crd_lst_cc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":62
+  /* "viscid/cython/cyfield.pyx":62
  *     _crd_lst_nc = [znc, ync, xnc]
  *     _crd_lst_cc = [zcc, ycc, xcc]
  *     sshape_max = max(sshape)             # <<<<<<<<<<<<<<
@@ -4609,7 +4609,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_sshape_max = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":63
+  /* "viscid/cython/cyfield.pyx":63
  *     _crd_lst_cc = [zcc, ycc, xcc]
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
@@ -4659,7 +4659,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_12.memview = NULL;
   __pyx_t_12.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":64
+  /* "viscid/cython/cyfield.pyx":64
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)             # <<<<<<<<<<<<<<
@@ -4679,7 +4679,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_sshape_nc_max = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":65
+  /* "viscid/cython/cyfield.pyx":65
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)
  *     fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
@@ -4729,7 +4729,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_12.memview = NULL;
   __pyx_t_12.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":66
+  /* "viscid/cython/cyfield.pyx":66
  *     sshape_nc_max = max(sshape_nc)
  *     fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)
  *     sshape_cc_max = max(sshape_cc)             # <<<<<<<<<<<<<<
@@ -4749,7 +4749,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_sshape_cc_max = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":67
+  /* "viscid/cython/cyfield.pyx":67
  *     fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)
  *     sshape_cc_max = max(sshape_cc)
  *     fld.crds_cc = np.nan * np.empty((3, sshape_cc_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
@@ -4799,7 +4799,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_t_12.memview = NULL;
   __pyx_t_12.data = NULL;
 
-  /* "viscid/calculator/cyfield.pyx":69
+  /* "viscid/cython/cyfield.pyx":69
  *     fld.crds_cc = np.nan * np.empty((3, sshape_cc_max), dtype=crd_dtype)
  * 
  *     for i in range(3):             # <<<<<<<<<<<<<<
@@ -4809,7 +4809,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   for (__pyx_t_13 = 0; __pyx_t_13 < 3; __pyx_t_13+=1) {
     __pyx_v_i = __pyx_t_13;
 
-    /* "viscid/calculator/cyfield.pyx":70
+    /* "viscid/cython/cyfield.pyx":70
  * 
  *     for i in range(3):
  *         fld.xlnc[i] = vfield.crds.xl_nc[i]             # <<<<<<<<<<<<<<
@@ -4828,7 +4828,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xlnc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":71
+    /* "viscid/cython/cyfield.pyx":71
  *     for i in range(3):
  *         fld.xlnc[i] = vfield.crds.xl_nc[i]
  *         fld.xhnc[i] = vfield.crds.xh_nc[i]             # <<<<<<<<<<<<<<
@@ -4847,7 +4847,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xhnc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":72
+    /* "viscid/cython/cyfield.pyx":72
  *         fld.xlnc[i] = vfield.crds.xl_nc[i]
  *         fld.xhnc[i] = vfield.crds.xh_nc[i]
  *         fld.xlcc[i] = vfield.crds.xl_cc[i]             # <<<<<<<<<<<<<<
@@ -4866,7 +4866,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xlcc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":73
+    /* "viscid/cython/cyfield.pyx":73
  *         fld.xhnc[i] = vfield.crds.xh_nc[i]
  *         fld.xlcc[i] = vfield.crds.xl_cc[i]
  *         fld.xhcc[i] = vfield.crds.xh_cc[i]             # <<<<<<<<<<<<<<
@@ -4885,7 +4885,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     (__pyx_v_fld->xhcc[__pyx_v_i]) = __pyx_t_14;
 
-    /* "viscid/calculator/cyfield.pyx":75
+    /* "viscid/cython/cyfield.pyx":75
  *         fld.xhcc[i] = vfield.crds.xh_cc[i]
  * 
  *         fld.nr_nodes[i] = sshape_nc[i]  # len(fld.crds_nc[i])             # <<<<<<<<<<<<<<
@@ -4894,7 +4894,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i]) = (__pyx_v_sshape_nc[__pyx_v_i]);
 
-    /* "viscid/calculator/cyfield.pyx":76
+    /* "viscid/cython/cyfield.pyx":76
  * 
  *         fld.nr_nodes[i] = sshape_nc[i]  # len(fld.crds_nc[i])
  *         fld.nr_cells[i] = sshape_cc[i]  # len(fld.crds_cc[i])             # <<<<<<<<<<<<<<
@@ -4903,7 +4903,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nr_cells[__pyx_v_i]) = (__pyx_v_sshape_cc[__pyx_v_i]);
 
-    /* "viscid/calculator/cyfield.pyx":78
+    /* "viscid/cython/cyfield.pyx":78
  *         fld.nr_cells[i] = sshape_cc[i]  # len(fld.crds_cc[i])
  * 
  *         if sshape[i] == fld.nr_nodes[i]:             # <<<<<<<<<<<<<<
@@ -4913,7 +4913,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __pyx_t_3 = (((__pyx_v_sshape[__pyx_v_i]) == (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i])) != 0);
     if (__pyx_t_3) {
 
-      /* "viscid/calculator/cyfield.pyx":79
+      /* "viscid/cython/cyfield.pyx":79
  * 
  *         if sshape[i] == fld.nr_nodes[i]:
  *             fld.is_cc = 0             # <<<<<<<<<<<<<<
@@ -4922,7 +4922,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
       __pyx_v_fld->__pyx_base.is_cc = 0;
 
-      /* "viscid/calculator/cyfield.pyx":80
+      /* "viscid/cython/cyfield.pyx":80
  *         if sshape[i] == fld.nr_nodes[i]:
  *             fld.is_cc = 0
  *             fld.xl[i] = fld.xlnc[i]             # <<<<<<<<<<<<<<
@@ -4931,7 +4931,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
       (__pyx_v_fld->xl[__pyx_v_i]) = (__pyx_v_fld->xlnc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":81
+      /* "viscid/cython/cyfield.pyx":81
  *             fld.is_cc = 0
  *             fld.xl[i] = fld.xlnc[i]
  *             fld.xh[i] = fld.xhnc[i]             # <<<<<<<<<<<<<<
@@ -4940,7 +4940,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
       (__pyx_v_fld->xh[__pyx_v_i]) = (__pyx_v_fld->xhnc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":82
+      /* "viscid/cython/cyfield.pyx":82
  *             fld.xl[i] = fld.xlnc[i]
  *             fld.xh[i] = fld.xhnc[i]
  *             fld.n[i] = fld.nr_nodes[i]  # len(fld.crds[i])             # <<<<<<<<<<<<<<
@@ -4952,7 +4952,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     }
     /*else*/ {
 
-      /* "viscid/calculator/cyfield.pyx":84
+      /* "viscid/cython/cyfield.pyx":84
  *             fld.n[i] = fld.nr_nodes[i]  # len(fld.crds[i])
  *         else:
  *             fld.is_cc = 1             # <<<<<<<<<<<<<<
@@ -4961,7 +4961,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
       __pyx_v_fld->__pyx_base.is_cc = 1;
 
-      /* "viscid/calculator/cyfield.pyx":85
+      /* "viscid/cython/cyfield.pyx":85
  *         else:
  *             fld.is_cc = 1
  *             fld.xl[i] = fld.xlcc[i]             # <<<<<<<<<<<<<<
@@ -4970,7 +4970,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
       (__pyx_v_fld->xl[__pyx_v_i]) = (__pyx_v_fld->xlcc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":86
+      /* "viscid/cython/cyfield.pyx":86
  *             fld.is_cc = 1
  *             fld.xl[i] = fld.xlcc[i]
  *             fld.xh[i] = fld.xhcc[i]             # <<<<<<<<<<<<<<
@@ -4979,7 +4979,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
       (__pyx_v_fld->xh[__pyx_v_i]) = (__pyx_v_fld->xhcc[__pyx_v_i]);
 
-      /* "viscid/calculator/cyfield.pyx":87
+      /* "viscid/cython/cyfield.pyx":87
  *             fld.xl[i] = fld.xlcc[i]
  *             fld.xh[i] = fld.xhcc[i]
  *             fld.n[i] = fld.nr_cells[i]  # len(fld.crds[i])             # <<<<<<<<<<<<<<
@@ -4990,7 +4990,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     }
     __pyx_L12:;
 
-    /* "viscid/calculator/cyfield.pyx":89
+    /* "viscid/cython/cyfield.pyx":89
  *             fld.n[i] = fld.nr_cells[i]  # len(fld.crds[i])
  * 
  *         fld.L[i] = fld.xh[i] - fld.xl[i]             # <<<<<<<<<<<<<<
@@ -4999,7 +4999,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
     (__pyx_v_fld->L[__pyx_v_i]) = ((__pyx_v_fld->xh[__pyx_v_i]) - (__pyx_v_fld->xl[__pyx_v_i]));
 
-    /* "viscid/calculator/cyfield.pyx":90
+    /* "viscid/cython/cyfield.pyx":90
  * 
  *         fld.L[i] = fld.xh[i] - fld.xl[i]
  *         fld.nm1[i] = fld.n[i] - 1             # <<<<<<<<<<<<<<
@@ -5008,7 +5008,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nm1[__pyx_v_i]) = ((__pyx_v_fld->__pyx_base.n[__pyx_v_i]) - 1);
 
-    /* "viscid/calculator/cyfield.pyx":91
+    /* "viscid/cython/cyfield.pyx":91
  *         fld.L[i] = fld.xh[i] - fld.xl[i]
  *         fld.nm1[i] = fld.n[i] - 1
  *         fld.nm2[i] = fld.n[i] - 2             # <<<<<<<<<<<<<<
@@ -5017,7 +5017,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.nm2[__pyx_v_i]) = ((__pyx_v_fld->__pyx_base.n[__pyx_v_i]) - 2);
 
-    /* "viscid/calculator/cyfield.pyx":93
+    /* "viscid/cython/cyfield.pyx":93
  *         fld.nm2[i] = fld.n[i] - 2
  * 
  *         for j in range(sshape[i]):             # <<<<<<<<<<<<<<
@@ -5028,7 +5028,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
       __pyx_v_j = __pyx_t_16;
 
-      /* "viscid/calculator/cyfield.pyx":94
+      /* "viscid/cython/cyfield.pyx":94
  * 
  *         for j in range(sshape[i]):
  *             fld.crds[i, j] = _crd_lst[i][j]             # <<<<<<<<<<<<<<
@@ -5045,7 +5045,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
       *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_fld->crds.data + __pyx_t_17 * __pyx_v_fld->crds.strides[0]) )) + __pyx_t_18)) )) = __pyx_t_14;
     }
 
-    /* "viscid/calculator/cyfield.pyx":95
+    /* "viscid/cython/cyfield.pyx":95
  *         for j in range(sshape[i]):
  *             fld.crds[i, j] = _crd_lst[i][j]
  *         for j in range(sshape_nc[i]):             # <<<<<<<<<<<<<<
@@ -5056,7 +5056,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
       __pyx_v_j = __pyx_t_16;
 
-      /* "viscid/calculator/cyfield.pyx":96
+      /* "viscid/cython/cyfield.pyx":96
  *             fld.crds[i, j] = _crd_lst[i][j]
  *         for j in range(sshape_nc[i]):
  *             fld.crds_nc[i, j] = _crd_lst_nc[i][j]             # <<<<<<<<<<<<<<
@@ -5073,7 +5073,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
       *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_fld->crds_nc.data + __pyx_t_19 * __pyx_v_fld->crds_nc.strides[0]) )) + __pyx_t_20)) )) = __pyx_t_14;
     }
 
-    /* "viscid/calculator/cyfield.pyx":97
+    /* "viscid/cython/cyfield.pyx":97
  *         for j in range(sshape_nc[i]):
  *             fld.crds_nc[i, j] = _crd_lst_nc[i][j]
  *         for j in range(sshape_cc[i]):             # <<<<<<<<<<<<<<
@@ -5084,7 +5084,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
       __pyx_v_j = __pyx_t_16;
 
-      /* "viscid/calculator/cyfield.pyx":98
+      /* "viscid/cython/cyfield.pyx":98
  *             fld.crds_nc[i, j] = _crd_lst_nc[i][j]
  *         for j in range(sshape_cc[i]):
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]             # <<<<<<<<<<<<<<
@@ -5101,7 +5101,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
       *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_fld->crds_cc.data + __pyx_t_21 * __pyx_v_fld->crds_cc.strides[0]) )) + __pyx_t_22)) )) = __pyx_t_14;
     }
 
-    /* "viscid/calculator/cyfield.pyx":100
+    /* "viscid/cython/cyfield.pyx":100
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]
  * 
  *         fld.cached_ind[i] = 0             # <<<<<<<<<<<<<<
@@ -5110,7 +5110,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
  */
     (__pyx_v_fld->__pyx_base.cached_ind[__pyx_v_i]) = 0;
 
-    /* "viscid/calculator/cyfield.pyx":101
+    /* "viscid/cython/cyfield.pyx":101
  * 
  *         fld.cached_ind[i] = 0
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
@@ -5132,7 +5132,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_v_fld->__pyx_base.uniform_crds = __pyx_t_15;
 
-    /* "viscid/calculator/cyfield.pyx":102
+    /* "viscid/cython/cyfield.pyx":102
  *         fld.cached_ind[i] = 0
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
@@ -5142,7 +5142,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __pyx_t_3 = (__pyx_v_fld->__pyx_base.uniform_crds != 0);
     if (__pyx_t_3) {
 
-      /* "viscid/calculator/cyfield.pyx":103
+      /* "viscid/cython/cyfield.pyx":103
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]             # <<<<<<<<<<<<<<
@@ -5154,7 +5154,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     }
     /*else*/ {
 
-      /* "viscid/calculator/cyfield.pyx":105
+      /* "viscid/cython/cyfield.pyx":105
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
  *         else:
  *             fld.dx[i] = np.nan             # <<<<<<<<<<<<<<
@@ -5172,7 +5172,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     }
     __pyx_L19:;
 
-    /* "viscid/calculator/cyfield.pyx":107
+    /* "viscid/cython/cyfield.pyx":107
  *             fld.dx[i] = np.nan
  * 
  *         if fld.xh[i] < fld.xl[i]:             # <<<<<<<<<<<<<<
@@ -5182,7 +5182,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     __pyx_t_3 = (((__pyx_v_fld->xh[__pyx_v_i]) < (__pyx_v_fld->xl[__pyx_v_i])) != 0);
     if (__pyx_t_3) {
 
-      /* "viscid/calculator/cyfield.pyx":108
+      /* "viscid/cython/cyfield.pyx":108
  * 
  *         if fld.xh[i] < fld.xl[i]:
  *             raise RuntimeError("Forward crds only in cython code")             # <<<<<<<<<<<<<<
@@ -5197,7 +5197,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
     }
   }
 
-  /* "viscid/calculator/cyfield.pyx":116
+  /* "viscid/cython/cyfield.pyx":116
  *     #         print(">>", i, j, fld.crds[i, j])
  * 
  *     fld.fld_dtype = fld_dtype             # <<<<<<<<<<<<<<
@@ -5213,7 +5213,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_fld->__pyx_base.fld_dtype = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":117
+  /* "viscid/cython/cyfield.pyx":117
  * 
  *     fld.fld_dtype = fld_dtype
  *     fld.crd_dtype = crd_dtype             # <<<<<<<<<<<<<<
@@ -5229,7 +5229,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_v_fld->__pyx_base.crd_dtype = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":118
+  /* "viscid/cython/cyfield.pyx":118
  *     fld.fld_dtype = fld_dtype
  *     fld.crd_dtype = crd_dtype
  *     fld.vfield = vfield             # <<<<<<<<<<<<<<
@@ -5242,7 +5242,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __Pyx_DECREF(__pyx_v_fld->__pyx_base.vfield);
   __pyx_v_fld->__pyx_base.vfield = __pyx_v_vfield;
 
-  /* "viscid/calculator/cyfield.pyx":120
+  /* "viscid/cython/cyfield.pyx":120
  *     fld.vfield = vfield
  * 
  *     return fld             # <<<<<<<<<<<<<<
@@ -5254,7 +5254,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __pyx_r = __pyx_v_fld;
   goto __pyx_L0;
 
-  /* "viscid/calculator/cyfield.pyx":30
+  /* "viscid/cython/cyfield.pyx":30
  *     return fld
  * 
  * cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):             # <<<<<<<<<<<<<<
@@ -5272,7 +5272,7 @@ static struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *__pyx_fus
   __Pyx_XDECREF(__pyx_t_8);
   __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_12, 1);
-  __Pyx_AddTraceback("viscid.calculator.cyfield._init_cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyfield._init_cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_dat);
@@ -18432,8 +18432,8 @@ static CYTHON_INLINE PyObject *__Pyx_carray_to_tuple_int(int *__pyx_v_v, Py_ssiz
   return __pyx_r;
 }
 
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_CyField(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *p;
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_CyField(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *p;
   PyObject *o;
   if (likely((t->tp_flags & Py_TPFLAGS_IS_ABSTRACT) == 0)) {
     o = (*t->tp_alloc)(t, 0);
@@ -18441,7 +18441,7 @@ static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_CyField(PyTypeObject
     o = (PyObject *) PyBaseObject_Type.tp_new(t, __pyx_empty_tuple, 0);
   }
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *)o);
+  p = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)o);
   p->vfield = Py_None; Py_INCREF(Py_None);
   p->fld_dtype = ((PyObject*)Py_None); Py_INCREF(Py_None);
   p->crd_dtype = ((PyObject*)Py_None); Py_INCREF(Py_None);
@@ -18449,8 +18449,8 @@ static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_CyField(PyTypeObject
   return o;
 }
 
-static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_CyField(PyObject *o) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *p = (struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *)o;
+static void __pyx_tp_dealloc_6viscid_6cython_7cyfield_CyField(PyObject *o) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *p = (struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)o;
   #if PY_VERSION_HEX >= 0x030400a1
   if (unlikely(Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -18464,30 +18464,30 @@ static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_CyField(PyObject *o) 
   (*Py_TYPE(o)->tp_free)(o);
 }
 
-static int __pyx_tp_traverse_6viscid_10calculator_7cyfield_CyField(PyObject *o, visitproc v, void *a) {
+static int __pyx_tp_traverse_6viscid_6cython_7cyfield_CyField(PyObject *o, visitproc v, void *a) {
   int e;
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *p = (struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *)o;
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *p = (struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)o;
   if (p->vfield) {
     e = (*v)(p->vfield, a); if (e) return e;
   }
   return 0;
 }
 
-static int __pyx_tp_clear_6viscid_10calculator_7cyfield_CyField(PyObject *o) {
+static int __pyx_tp_clear_6viscid_6cython_7cyfield_CyField(PyObject *o) {
   PyObject* tmp;
-  struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *p = (struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *)o;
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *p = (struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)o;
   tmp = ((PyObject*)p->vfield);
   p->vfield = Py_None; Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
 
-static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_CyField = {
+static PyTypeObject __pyx_type_6viscid_6cython_7cyfield_CyField = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.CyField", /*tp_name*/
-  sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_CyField), /*tp_basicsize*/
+  "viscid.cython.cyfield.CyField", /*tp_name*/
+  sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_CyField), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_CyField, /*tp_dealloc*/
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_CyField, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -18508,8 +18508,8 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_CyField = {
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6viscid_10calculator_7cyfield_CyField, /*tp_traverse*/
-  __pyx_tp_clear_6viscid_10calculator_7cyfield_CyField, /*tp_clear*/
+  __pyx_tp_traverse_6viscid_6cython_7cyfield_CyField, /*tp_traverse*/
+  __pyx_tp_clear_6viscid_6cython_7cyfield_CyField, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -18524,7 +18524,7 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_CyField = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_6viscid_10calculator_7cyfield_CyField, /*tp_new*/
+  __pyx_tp_new_6viscid_6cython_7cyfield_CyField, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -18539,11 +18539,11 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_CyField = {
   #endif
 };
 
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_I4_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *p;
-  PyObject *o = __pyx_tp_new_6viscid_10calculator_7cyfield_CyField(t, a, k);
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_I4_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *p;
+  PyObject *o = __pyx_tp_new_6viscid_6cython_7cyfield_CyField(t, a, k);
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *)o);
+  p = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)o);
   p->data.data = NULL;
   p->data.memview = NULL;
   p->x.data = NULL;
@@ -18573,8 +18573,8 @@ static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_I4_Crd_F8(PyTy
   return o;
 }
 
-static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_I4_Crd_F8(PyObject *o) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *p = (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 *)o;
+static void __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_I4_Crd_F8(PyObject *o) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)o;
   #if PY_VERSION_HEX >= 0x030400a1
   if (unlikely(Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -18595,15 +18595,15 @@ static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_I4_Crd_F8(PyObj
   __PYX_XDEC_MEMVIEW(&p->crds_nc, 1);
   __PYX_XDEC_MEMVIEW(&p->crds_cc, 1);
   PyObject_GC_Track(o);
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_CyField(o);
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_CyField(o);
 }
 
-static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = {
+static PyTypeObject __pyx_type_6viscid_6cython_7cyfield_Field_I4_Crd_F8 = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.Field_I4_Crd_F8", /*tp_name*/
-  sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I4_Crd_F8), /*tp_basicsize*/
+  "viscid.cython.cyfield.Field_I4_Crd_F8", /*tp_name*/
+  sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_I4_Crd_F8, /*tp_dealloc*/
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_I4_Crd_F8, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -18624,8 +18624,8 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = {
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6viscid_10calculator_7cyfield_CyField, /*tp_traverse*/
-  __pyx_tp_clear_6viscid_10calculator_7cyfield_CyField, /*tp_clear*/
+  __pyx_tp_traverse_6viscid_6cython_7cyfield_CyField, /*tp_traverse*/
+  __pyx_tp_clear_6viscid_6cython_7cyfield_CyField, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -18640,7 +18640,7 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_6viscid_10calculator_7cyfield_Field_I4_Crd_F8, /*tp_new*/
+  __pyx_tp_new_6viscid_6cython_7cyfield_Field_I4_Crd_F8, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -18655,11 +18655,11 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = {
   #endif
 };
 
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_I8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *p;
-  PyObject *o = __pyx_tp_new_6viscid_10calculator_7cyfield_CyField(t, a, k);
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_I8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *p;
+  PyObject *o = __pyx_tp_new_6viscid_6cython_7cyfield_CyField(t, a, k);
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *)o);
+  p = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)o);
   p->data.data = NULL;
   p->data.memview = NULL;
   p->x.data = NULL;
@@ -18689,8 +18689,8 @@ static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_I8_Crd_F8(PyTy
   return o;
 }
 
-static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_I8_Crd_F8(PyObject *o) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *p = (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 *)o;
+static void __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_I8_Crd_F8(PyObject *o) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)o;
   #if PY_VERSION_HEX >= 0x030400a1
   if (unlikely(Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -18711,15 +18711,15 @@ static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_I8_Crd_F8(PyObj
   __PYX_XDEC_MEMVIEW(&p->crds_nc, 1);
   __PYX_XDEC_MEMVIEW(&p->crds_cc, 1);
   PyObject_GC_Track(o);
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_CyField(o);
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_CyField(o);
 }
 
-static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = {
+static PyTypeObject __pyx_type_6viscid_6cython_7cyfield_Field_I8_Crd_F8 = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.Field_I8_Crd_F8", /*tp_name*/
-  sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_I8_Crd_F8), /*tp_basicsize*/
+  "viscid.cython.cyfield.Field_I8_Crd_F8", /*tp_name*/
+  sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_I8_Crd_F8, /*tp_dealloc*/
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_I8_Crd_F8, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -18740,8 +18740,8 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = {
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6viscid_10calculator_7cyfield_CyField, /*tp_traverse*/
-  __pyx_tp_clear_6viscid_10calculator_7cyfield_CyField, /*tp_clear*/
+  __pyx_tp_traverse_6viscid_6cython_7cyfield_CyField, /*tp_traverse*/
+  __pyx_tp_clear_6viscid_6cython_7cyfield_CyField, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -18756,7 +18756,7 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_6viscid_10calculator_7cyfield_Field_I8_Crd_F8, /*tp_new*/
+  __pyx_tp_new_6viscid_6cython_7cyfield_Field_I8_Crd_F8, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -18771,11 +18771,11 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = {
   #endif
 };
 
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_F4_Crd_F4(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *p;
-  PyObject *o = __pyx_tp_new_6viscid_10calculator_7cyfield_CyField(t, a, k);
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_F4_Crd_F4(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *p;
+  PyObject *o = __pyx_tp_new_6viscid_6cython_7cyfield_CyField(t, a, k);
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *)o);
+  p = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)o);
   p->data.data = NULL;
   p->data.memview = NULL;
   p->x.data = NULL;
@@ -18805,8 +18805,8 @@ static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_F4_Crd_F4(PyTy
   return o;
 }
 
-static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_F4_Crd_F4(PyObject *o) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *p = (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 *)o;
+static void __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_F4_Crd_F4(PyObject *o) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *p = (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)o;
   #if PY_VERSION_HEX >= 0x030400a1
   if (unlikely(Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -18827,15 +18827,15 @@ static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_F4_Crd_F4(PyObj
   __PYX_XDEC_MEMVIEW(&p->crds_nc, 1);
   __PYX_XDEC_MEMVIEW(&p->crds_cc, 1);
   PyObject_GC_Track(o);
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_CyField(o);
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_CyField(o);
 }
 
-static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = {
+static PyTypeObject __pyx_type_6viscid_6cython_7cyfield_Field_F4_Crd_F4 = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.Field_F4_Crd_F4", /*tp_name*/
-  sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F4_Crd_F4), /*tp_basicsize*/
+  "viscid.cython.cyfield.Field_F4_Crd_F4", /*tp_name*/
+  sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_F4_Crd_F4, /*tp_dealloc*/
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_F4_Crd_F4, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -18856,8 +18856,8 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = {
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6viscid_10calculator_7cyfield_CyField, /*tp_traverse*/
-  __pyx_tp_clear_6viscid_10calculator_7cyfield_CyField, /*tp_clear*/
+  __pyx_tp_traverse_6viscid_6cython_7cyfield_CyField, /*tp_traverse*/
+  __pyx_tp_clear_6viscid_6cython_7cyfield_CyField, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -18872,7 +18872,7 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_6viscid_10calculator_7cyfield_Field_F4_Crd_F4, /*tp_new*/
+  __pyx_tp_new_6viscid_6cython_7cyfield_Field_F4_Crd_F4, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -18887,11 +18887,11 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = {
   #endif
 };
 
-static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_F8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *p;
-  PyObject *o = __pyx_tp_new_6viscid_10calculator_7cyfield_CyField(t, a, k);
+static PyObject *__pyx_tp_new_6viscid_6cython_7cyfield_Field_F8_Crd_F8(PyTypeObject *t, PyObject *a, PyObject *k) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *p;
+  PyObject *o = __pyx_tp_new_6viscid_6cython_7cyfield_CyField(t, a, k);
   if (unlikely(!o)) return 0;
-  p = ((struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *)o);
+  p = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)o);
   p->data.data = NULL;
   p->data.memview = NULL;
   p->x.data = NULL;
@@ -18921,8 +18921,8 @@ static PyObject *__pyx_tp_new_6viscid_10calculator_7cyfield_Field_F8_Crd_F8(PyTy
   return o;
 }
 
-static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_F8_Crd_F8(PyObject *o) {
-  struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *p = (struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 *)o;
+static void __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_F8_Crd_F8(PyObject *o) {
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)o;
   #if PY_VERSION_HEX >= 0x030400a1
   if (unlikely(Py_TYPE(o)->tp_finalize) && !_PyGC_FINALIZED(o)) {
     if (PyObject_CallFinalizerFromDealloc(o)) return;
@@ -18943,15 +18943,15 @@ static void __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_F8_Crd_F8(PyObj
   __PYX_XDEC_MEMVIEW(&p->crds_nc, 1);
   __PYX_XDEC_MEMVIEW(&p->crds_cc, 1);
   PyObject_GC_Track(o);
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_CyField(o);
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_CyField(o);
 }
 
-static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = {
+static PyTypeObject __pyx_type_6viscid_6cython_7cyfield_Field_F8_Crd_F8 = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.Field_F8_Crd_F8", /*tp_name*/
-  sizeof(struct __pyx_obj_6viscid_10calculator_7cyfield_Field_F8_Crd_F8), /*tp_basicsize*/
+  "viscid.cython.cyfield.Field_F8_Crd_F8", /*tp_name*/
+  sizeof(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_6viscid_10calculator_7cyfield_Field_F8_Crd_F8, /*tp_dealloc*/
+  __pyx_tp_dealloc_6viscid_6cython_7cyfield_Field_F8_Crd_F8, /*tp_dealloc*/
   0, /*tp_print*/
   0, /*tp_getattr*/
   0, /*tp_setattr*/
@@ -18972,8 +18972,8 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = {
   0, /*tp_as_buffer*/
   Py_TPFLAGS_DEFAULT|Py_TPFLAGS_HAVE_VERSION_TAG|Py_TPFLAGS_CHECKTYPES|Py_TPFLAGS_HAVE_NEWBUFFER|Py_TPFLAGS_BASETYPE|Py_TPFLAGS_HAVE_GC, /*tp_flags*/
   0, /*tp_doc*/
-  __pyx_tp_traverse_6viscid_10calculator_7cyfield_CyField, /*tp_traverse*/
-  __pyx_tp_clear_6viscid_10calculator_7cyfield_CyField, /*tp_clear*/
+  __pyx_tp_traverse_6viscid_6cython_7cyfield_CyField, /*tp_traverse*/
+  __pyx_tp_clear_6viscid_6cython_7cyfield_CyField, /*tp_clear*/
   0, /*tp_richcompare*/
   0, /*tp_weaklistoffset*/
   0, /*tp_iter*/
@@ -18988,7 +18988,7 @@ static PyTypeObject __pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = {
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_6viscid_10calculator_7cyfield_Field_F8_Crd_F8, /*tp_new*/
+  __pyx_tp_new_6viscid_6cython_7cyfield_Field_F8_Crd_F8, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -19120,7 +19120,7 @@ static PyBufferProcs __pyx_tp_as_buffer_array = {
 
 static PyTypeObject __pyx_type___pyx_array = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.array", /*tp_name*/
+  "viscid.cython.cyfield.array", /*tp_name*/
   sizeof(struct __pyx_array_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_array, /*tp_dealloc*/
@@ -19225,7 +19225,7 @@ static PyMethodDef __pyx_methods_Enum[] = {
 
 static PyTypeObject __pyx_type___pyx_MemviewEnum = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.Enum", /*tp_name*/
+  "viscid.cython.cyfield.Enum", /*tp_name*/
   sizeof(struct __pyx_MemviewEnum_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_Enum, /*tp_dealloc*/
@@ -19471,7 +19471,7 @@ static PyBufferProcs __pyx_tp_as_buffer_memoryview = {
 
 static PyTypeObject __pyx_type___pyx_memoryview = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield.memoryview", /*tp_name*/
+  "viscid.cython.cyfield.memoryview", /*tp_name*/
   sizeof(struct __pyx_memoryview_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc_memoryview, /*tp_dealloc*/
@@ -19595,7 +19595,7 @@ static struct PyGetSetDef __pyx_getsets__memoryviewslice[] = {
 
 static PyTypeObject __pyx_type___pyx_memoryviewslice = {
   PyVarObject_HEAD_INIT(0, 0)
-  "viscid.calculator.cyfield._memoryviewslice", /*tp_name*/
+  "viscid.cython.cyfield._memoryviewslice", /*tp_name*/
   sizeof(struct __pyx_memoryviewslice_obj), /*tp_basicsize*/
   0, /*tp_itemsize*/
   __pyx_tp_dealloc__memoryviewslice, /*tp_dealloc*/
@@ -19805,7 +19805,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "viscid/calculator/cyfield.pyx":20
+  /* "viscid/cython/cyfield.pyx":20
  *     # elif fld_dtype == np.dtype('i8'):
  *     #     fld = _init_cyfield(Field_I8_Crd_F8(), vfield, 'i8', 'f8')
  *     if fld_dtype == np.dtype('f4'):             # <<<<<<<<<<<<<<
@@ -19816,7 +19816,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "viscid/calculator/cyfield.pyx":22
+  /* "viscid/cython/cyfield.pyx":22
  *     if fld_dtype == np.dtype('f4'):
  *         fld = _init_cyfield(Field_F4_Crd_F4(), vfield, 'f4', 'f4')
  *     elif fld_dtype == np.dtype('f8'):             # <<<<<<<<<<<<<<
@@ -19827,7 +19827,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "viscid/calculator/cyfield.pyx":38
+  /* "viscid/cython/cyfield.pyx":38
  *     fld.center = vfield.center
  * 
  *     x, y, z = vfield.get_crds("xyz")             # <<<<<<<<<<<<<<
@@ -19838,7 +19838,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "viscid/calculator/cyfield.pyx":39
+  /* "viscid/cython/cyfield.pyx":39
  * 
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")             # <<<<<<<<<<<<<<
@@ -19849,7 +19849,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__4);
   __Pyx_GIVEREF(__pyx_tuple__4);
 
-  /* "viscid/calculator/cyfield.pyx":40
+  /* "viscid/cython/cyfield.pyx":40
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")
  *     xcc, ycc, zcc = vfield.get_crds_cc("xyz")             # <<<<<<<<<<<<<<
@@ -19860,7 +19860,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
 
-  /* "viscid/calculator/cyfield.pyx":101
+  /* "viscid/cython/cyfield.pyx":101
  * 
  *         fld.cached_ind[i] = 0
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
@@ -19871,7 +19871,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
-  /* "viscid/calculator/cyfield.pyx":108
+  /* "viscid/cython/cyfield.pyx":108
  * 
  *         if fld.xh[i] < fld.xl[i]:
  *             raise RuntimeError("Forward crds only in cython code")             # <<<<<<<<<<<<<<
@@ -19882,7 +19882,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
 
-  /* "viscid/calculator/cyfield.pyx":38
+  /* "viscid/cython/cyfield.pyx":38
  *     fld.center = vfield.center
  * 
  *     x, y, z = vfield.get_crds("xyz")             # <<<<<<<<<<<<<<
@@ -19893,7 +19893,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__8);
   __Pyx_GIVEREF(__pyx_tuple__8);
 
-  /* "viscid/calculator/cyfield.pyx":39
+  /* "viscid/cython/cyfield.pyx":39
  * 
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")             # <<<<<<<<<<<<<<
@@ -19904,7 +19904,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__9);
   __Pyx_GIVEREF(__pyx_tuple__9);
 
-  /* "viscid/calculator/cyfield.pyx":40
+  /* "viscid/cython/cyfield.pyx":40
  *     x, y, z = vfield.get_crds("xyz")
  *     xnc, ync, znc = vfield.get_crds_nc("xyz")
  *     xcc, ycc, zcc = vfield.get_crds_cc("xyz")             # <<<<<<<<<<<<<<
@@ -19915,7 +19915,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
 
-  /* "viscid/calculator/cyfield.pyx":101
+  /* "viscid/cython/cyfield.pyx":101
  * 
  *         fld.cached_ind[i] = 0
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
@@ -19926,7 +19926,7 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__11);
   __Pyx_GIVEREF(__pyx_tuple__11);
 
-  /* "viscid/calculator/cyfield.pyx":108
+  /* "viscid/cython/cyfield.pyx":108
  * 
  *         if fld.xh[i] < fld.xl[i]:
  *             raise RuntimeError("Forward crds only in cython code")             # <<<<<<<<<<<<<<
@@ -20272,14 +20272,14 @@ PyMODINIT_FUNC PyInit_cyfield(void)
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   #endif
-  if (__pyx_module_is_main_viscid__calculator__cyfield) {
+  if (__pyx_module_is_main_viscid__cython__cyfield) {
     if (PyObject_SetAttrString(__pyx_m, "__name__", __pyx_n_s_main) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    if (!PyDict_GetItemString(modules, "viscid.calculator.cyfield")) {
-      if (unlikely(PyDict_SetItemString(modules, "viscid.calculator.cyfield", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (!PyDict_GetItemString(modules, "viscid.cython.cyfield")) {
+      if (unlikely(PyDict_SetItemString(modules, "viscid.cython.cyfield", __pyx_m) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
@@ -20295,32 +20295,32 @@ PyMODINIT_FUNC PyInit_cyfield(void)
   indirect_contiguous = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("make_cyfield", (void (*)(void))__pyx_f_6viscid_10calculator_7cyfield_make_cyfield, "struct __pyx_obj_6viscid_10calculator_7cyfield_CyField *(PyObject *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("make_cyfield", (void (*)(void))__pyx_f_6viscid_6cython_7cyfield_make_cyfield, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(PyObject *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_6viscid_10calculator_7cyfield_CyField) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_type_6viscid_10calculator_7cyfield_CyField.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "CyField", (PyObject *)&__pyx_type_6viscid_10calculator_7cyfield_CyField) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_CyField = &__pyx_type_6viscid_10calculator_7cyfield_CyField;
-  __pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8.tp_base = __pyx_ptype_6viscid_10calculator_7cyfield_CyField;
-  if (PyType_Ready(&__pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "Field_I4_Crd_F8", (PyObject *)&__pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_I4_Crd_F8 = &__pyx_type_6viscid_10calculator_7cyfield_Field_I4_Crd_F8;
-  __pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8.tp_base = __pyx_ptype_6viscid_10calculator_7cyfield_CyField;
-  if (PyType_Ready(&__pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "Field_I8_Crd_F8", (PyObject *)&__pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_I8_Crd_F8 = &__pyx_type_6viscid_10calculator_7cyfield_Field_I8_Crd_F8;
-  __pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4.tp_base = __pyx_ptype_6viscid_10calculator_7cyfield_CyField;
-  if (PyType_Ready(&__pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "Field_F4_Crd_F4", (PyObject *)&__pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_F4_Crd_F4 = &__pyx_type_6viscid_10calculator_7cyfield_Field_F4_Crd_F4;
-  __pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8.tp_base = __pyx_ptype_6viscid_10calculator_7cyfield_CyField;
-  if (PyType_Ready(&__pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "Field_F8_Crd_F8", (PyObject *)&__pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_ptype_6viscid_10calculator_7cyfield_Field_F8_Crd_F8 = &__pyx_type_6viscid_10calculator_7cyfield_Field_F8_Crd_F8;
+  if (PyType_Ready(&__pyx_type_6viscid_6cython_7cyfield_CyField) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_type_6viscid_6cython_7cyfield_CyField.tp_print = 0;
+  if (PyObject_SetAttrString(__pyx_m, "CyField", (PyObject *)&__pyx_type_6viscid_6cython_7cyfield_CyField) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 13; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_CyField = &__pyx_type_6viscid_6cython_7cyfield_CyField;
+  __pyx_type_6viscid_6cython_7cyfield_Field_I4_Crd_F8.tp_base = __pyx_ptype_6viscid_6cython_7cyfield_CyField;
+  if (PyType_Ready(&__pyx_type_6viscid_6cython_7cyfield_Field_I4_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_type_6viscid_6cython_7cyfield_Field_I4_Crd_F8.tp_print = 0;
+  if (PyObject_SetAttrString(__pyx_m, "Field_I4_Crd_F8", (PyObject *)&__pyx_type_6viscid_6cython_7cyfield_Field_I4_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8 = &__pyx_type_6viscid_6cython_7cyfield_Field_I4_Crd_F8;
+  __pyx_type_6viscid_6cython_7cyfield_Field_I8_Crd_F8.tp_base = __pyx_ptype_6viscid_6cython_7cyfield_CyField;
+  if (PyType_Ready(&__pyx_type_6viscid_6cython_7cyfield_Field_I8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_type_6viscid_6cython_7cyfield_Field_I8_Crd_F8.tp_print = 0;
+  if (PyObject_SetAttrString(__pyx_m, "Field_I8_Crd_F8", (PyObject *)&__pyx_type_6viscid_6cython_7cyfield_Field_I8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8 = &__pyx_type_6viscid_6cython_7cyfield_Field_I8_Crd_F8;
+  __pyx_type_6viscid_6cython_7cyfield_Field_F4_Crd_F4.tp_base = __pyx_ptype_6viscid_6cython_7cyfield_CyField;
+  if (PyType_Ready(&__pyx_type_6viscid_6cython_7cyfield_Field_F4_Crd_F4) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_type_6viscid_6cython_7cyfield_Field_F4_Crd_F4.tp_print = 0;
+  if (PyObject_SetAttrString(__pyx_m, "Field_F4_Crd_F4", (PyObject *)&__pyx_type_6viscid_6cython_7cyfield_Field_F4_Crd_F4) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4 = &__pyx_type_6viscid_6cython_7cyfield_Field_F4_Crd_F4;
+  __pyx_type_6viscid_6cython_7cyfield_Field_F8_Crd_F8.tp_base = __pyx_ptype_6viscid_6cython_7cyfield_CyField;
+  if (PyType_Ready(&__pyx_type_6viscid_6cython_7cyfield_Field_F8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_type_6viscid_6cython_7cyfield_Field_F8_Crd_F8.tp_print = 0;
+  if (PyObject_SetAttrString(__pyx_m, "Field_F8_Crd_F8", (PyObject *)&__pyx_type_6viscid_6cython_7cyfield_Field_F8_Crd_F8) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8 = &__pyx_type_6viscid_6cython_7cyfield_Field_F8_Crd_F8;
   if (PyType_Ready(&__pyx_type___pyx_array) < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 99; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type___pyx_array.tp_print = 0;
   __pyx_array_type = &__pyx_type___pyx_array;
@@ -20365,7 +20365,7 @@ PyMODINIT_FUNC PyInit_cyfield(void)
   /*--- Function import code ---*/
   /*--- Execution code ---*/
 
-  /* "viscid/calculator/cyfield.pyx":4
+  /* "viscid/cython/cyfield.pyx":4
  * from cyfield cimport *
  * 
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -20377,7 +20377,7 @@ PyMODINIT_FUNC PyInit_cyfield(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 4; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "viscid/calculator/cyfield.pyx":1
+  /* "viscid/cython/cyfield.pyx":1
  * # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False             # <<<<<<<<<<<<<<
  * from cyfield cimport *
  * 
@@ -20511,11 +20511,11 @@ PyMODINIT_FUNC PyInit_cyfield(void)
   __Pyx_XDECREF(__pyx_t_1);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init viscid.calculator.cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init viscid.cython.cyfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_DECREF(__pyx_m); __pyx_m = 0;
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init viscid.calculator.cyfield");
+    PyErr_SetString(PyExc_ImportError, "init viscid.cython.cyfield");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

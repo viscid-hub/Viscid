@@ -36,6 +36,7 @@ else:
 cmdclass = {}
 pkgs = ['viscid',
         'viscid.calculator',
+        'viscid.cython',
         'viscid.compat',
         'viscid.plot',
         'viscid.readers'
@@ -54,24 +55,24 @@ ext_mods = []
 cy_ccflags = ["-Wno-unused-function"]
 cy_ldflags = []
 cy_defs = []
-cy_defs.append(["viscid.calculator.cycalc",
-                ["viscid/calculator/cycalc"],
+cy_defs.append(["viscid.cython.cycalc",
+                ["viscid/cython/cycalc"],
                 dict()
                ])
-cy_defs.append(["viscid.calculator.integrate",
-                ["viscid/calculator/integrate"],
+cy_defs.append(["viscid.cython.integrate",
+                ["viscid/cython/integrate"],
                 dict()
                ])
-cy_defs.append(["viscid.calculator.streamline",
-                ["viscid/calculator/streamline"],
+cy_defs.append(["viscid.cython.streamline",
+                ["viscid/cython/streamline"],
                 dict()
                ])
-cy_defs.append(["viscid.calculator.cyfield",
-                ["viscid/calculator/cyfield"],
+cy_defs.append(["viscid.cython.cyfield",
+                ["viscid/cython/cyfield"],
                 dict()
                ])
-cy_defs.append(["viscid.cyamr",
-                ["viscid/cyamr"],
+cy_defs.append(["viscid.cython.cyamr",
+                ["viscid/cython/cyamr"],
                 dict()
                ])
 

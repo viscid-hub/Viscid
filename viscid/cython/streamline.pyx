@@ -118,8 +118,8 @@ _global_fld = None
 
 #####################
 # now the good stuff
-def streamlines(vfield, seed, nr_procs=1, force_parallel=False,
-                nr_chunks_factor=1, **kwargs):
+def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
+                     nr_chunks_factor=1, **kwargs):
     r"""Trace streamlines
 
     Args:
@@ -223,6 +223,9 @@ def streamlines(vfield, seed, nr_procs=1, force_parallel=False,
         else:
             topo = None
     return lines, topo
+
+# for legacy code
+streamlines = calc_streamlines
 
 @cython.wraparound(True)
 def _do_streamline_star(args):

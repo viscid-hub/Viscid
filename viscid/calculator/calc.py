@@ -11,7 +11,7 @@ import numpy as np
 
 from viscid import logger
 from viscid import verror
-from viscid.calculator import seed
+from viscid import seed
 from viscid.compat import OrderedDict
 
 try:

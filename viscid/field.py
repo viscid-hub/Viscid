@@ -19,13 +19,7 @@ from viscid.compat import string_types, izip_longest
 from viscid import coordinate
 from viscid import vutil
 from viscid import tree
-
-try:
-    from viscid.calculator import cycalc
-    _HAS_CYCALC = True
-except ImportError:
-    # in case cycalc isn't built
-    _HAS_CYCALC = False
+from viscid.cython import interp_trilin
 
 LAYOUT_DEFAULT = "none"  # do not translate
 LAYOUT_INTERLACED = "interlaced"
@@ -1020,12 +1014,7 @@ class Field(tree.Leaf):
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
-        if _HAS_CYCALC:
-            fld_dat = cycalc.interp_trilin(self, seeds)
-        else:
-            raise RuntimeError("Can't interpolate unless cython code is "
-                               "built. Run `./setup.py build_ext -i` or "
-                               "some equivalent.")
+        fld_dat = interp_trilin(self, seeds)
         new_fld = self.wrap(fld_dat, context=dict(crds=seeds))
         new_fld = new_fld.slice_reduce("")
         return new_fld
