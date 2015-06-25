@@ -14,6 +14,11 @@ from cycalc cimport int_min, int_max
 def interp_trilin(vfield, seeds):
     """Interpolate a field to points described by seeds
 
+    Note:
+        Nearest neighbor is used between the last value and
+        `vfield.crds.xh`. This is done to keep from extrapolating and
+        introducing new maxima.
+
     Parameters:
         vfield (viscid.field.Field): Some Vector or Scalar field
         seeds (viscid.claculator.seed): locations for the interpolation
@@ -85,30 +90,30 @@ def _py_interp_trilin(FusedField fld, points, real_t[:, ::1] result):
 
 cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
     cdef int d, ind
-    cdef int[3] ix
-    cdef int[3] p  # increment, used for 2d fields
-    cdef real_t[3] xd
+    cdef int ix[3]
+    cdef int p[3]  # increment, used for 2d fields
+    cdef real_t xd[3]
 
     cdef real_t c00, c10, c01, c11, c0, c1, c
 
     # find closest inds
     for d in range(3):
-        nr_cells = fld.nr_cells[d]
-        if nr_cells > 1:
-            ind = closest_preceeding_ind(fld, d, x[d])
-            ix[d] = ind
-            p[d] = 1
-            # if ind + 1 >= fld.nr_cells[d]:
-            #     raise ValueError("d: {0}, ind: {1}".format(d, ind))
-            xd[d] = ((x[d] - fld.crds[d, ind]) /
-                     (fld.crds[d, ind + 1] - fld.crds[d, ind]))
-            # xd[d] *= 0.9  # break the interpolation, for testing
-        else:
+        if fld.n[d] == 1 or x[d] <= fld.xl[d]:
             ind = 0
             ix[d] = ind
             p[d] = 0
-            xd[d] = 1.0
-            # xd[d] *= 0.9  # break the interpolation, for testing
+            xd[d] = 0.0
+        elif x[d] >= fld.xh[d]:
+            # switch to nearest neighbor for points beyond last value
+            ind = fld.n[d] - 1
+            p[d] = 0
+            xd[d] = 0.0
+        else:
+            ind = closest_preceeding_ind(fld, d, x[d])
+            p[d] = 1
+            xd[d] = ((x[d] - fld.crds[d, ind]) /
+                     (fld.crds[d, ind + 1] - fld.crds[d, ind]))
+        ix[d] = ind
 
     # INTERLACED ... z first
     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
@@ -166,11 +171,8 @@ cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
     return fld.data[ind[0], ind[1], ind[2], m]
 
 
-cdef int closest_preceeding_ind(FusedField fld, int d, real_t value):
+cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value):
     """Index of the element closest (and to the left) of x = value
-
-    This function returns the closest index preceeding value such that
-    fld.data[..., i, ...] and fld.data[..., i + 1, ...] exist.
 
     Parameters:
         fld (FusedField): field
@@ -181,7 +183,7 @@ cdef int closest_preceeding_ind(FusedField fld, int d, real_t value):
         int: closest indext preceeding value in the coordinate array d
     """
     cdef real_t frac
-    cdef int i, ind, done
+    cdef int i, ind, found_ind
     cdef int n = fld.n[d]
     cdef int startind = fld.cached_ind[d]
 
@@ -190,41 +192,42 @@ cdef int closest_preceeding_ind(FusedField fld, int d, real_t value):
     elif fld.uniform_crds:
         frac = (value - fld.xl[d]) / (fld.L[d])
         i = <int> floor((fld.nm1[d]) * frac)
-        ind = int_min(int_max(i, 0), fld.nm2[d])
+        ind = int_min(int_max(i, 0), fld.nm1[d])
     else:
-        done = 0
-
-        # if startind >= fld.nr_cells[d]:
-        #     raise ValueError("d: {0}, startind: {1}".format(d, startind))
+        found_ind = 0
         if fld.crds[d, startind] <= value:
             i = startind
             for i in range(startind, n - 1):
-                # if i >= fld.nr_cells[d]:
-                #     raise ValueError("d: {0}, i: {1}".format(d, i))
                 if fld.crds[d, i + 1] > value:
+                    found_ind = 1
                     break
-            ind = int_min(i, n - 2)
+            if not found_ind:
+                i = n - 1
         else:
             i = startind - 1
             for i in range(startind - 1, -1, -1):
-                # if i >= fld.nr_cells[d]:
-                #     raise ValueError("d: {0}, i: {1}".format(d, i))
                 if fld.crds[d, i] <= value:
+                    found_ind = 1
                     break
-            ind = int_max(i, 0)
+            if not found_ind:
+                i = 0
+        ind = i
 
     fld.cached_ind[d] = ind
     return ind
 
-cdef int closest_ind(FusedField fld, int d, real_t value):
+cdef inline int closest_ind(FusedField fld, int d, real_t value):
     cdef double d1, d2
     cdef int preceeding_ind = closest_preceeding_ind(fld, d, value)
-    d1 = fabs(fld.crds[d, preceeding_ind] - value)
-    d2 = fabs(fld.crds[d, preceeding_ind + 1] - value)
-    if d1 <= d2:
-        return preceeding_ind
+    if preceeding_ind == fld.n[d] - 1:
+        return fld.n[d] - 1
     else:
-        return preceeding_ind + 1
+        d1 = fabs(fld.crds[d, preceeding_ind] - value)
+        d2 = fabs(fld.crds[d, preceeding_ind + 1] - value)
+        if d1 <= d2:
+            return preceeding_ind
+        else:
+            return preceeding_ind + 1
 
 ##
 ## EOF
