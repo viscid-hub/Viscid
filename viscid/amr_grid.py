@@ -7,7 +7,8 @@ import numpy as np
 
 from viscid.grid import Grid
 from viscid.amr_field import AMRField
-# from viscid import cyamr
+from viscid.cython import CythonNotBuilt
+from viscid.cython import cyamr
 
 def dataset_to_amr_grid(dset, template_skeleton=None):
     """Try to divine AMR-ness from a Dataset
@@ -42,13 +43,15 @@ def dataset_to_amr_grid(dset, template_skeleton=None):
 class AMRSkeleton(object):
     """Organizes the neighbor relationships of AMR grids"""
     patches = None
-    neighbors_index = None  # list of dicts, parallel with patches
-    all_neighbors_index = None  # list of dicts, parallel with patches
 
     xl = None  # shape == (npatches x 3)
     xm = None  # shape == (npatches x 3)
     xh = None  # shape == (npatches x 3)
     L = None  # shape == (npatches x 3)
+
+    nr_neighbors = None  # shape == (npatches)
+    neighbors = None  # shape == (npatches x 48)
+    neighbor_mask = None  # shape == (npatches x 48)
 
     global_xl = None
     global_xh = None
@@ -83,7 +86,38 @@ class AMRSkeleton(object):
         self.global_xl = np.min(self.xl, axis=0)
         self.global_xh = np.max(self.xh, axis=0)
 
-        # self.discover_neighbors()
+        try:
+            # from timeit import default_timer as time
+            # t0 = time()
+            neighbor_info = cyamr.discover_neighbors(self)
+            nr_neighbors, neighbors, neighbor_mask = neighbor_info
+            self.nr_neighbors = nr_neighbors
+            self.neighbors = neighbors
+            self.neighbor_mask = neighbor_mask
+            # print("nr_neighbors:", nr_neighbors)
+            # cyamr.discover_neighbors(self)
+            # t1 = time()
+            # print("discover took: {0:g} secs".format(t1 - t0))
+
+            # Sort neighbors such that face neighbors appear before edge
+            # neighbors appear before corner neighbors
+            # hamming weight is # of 1s in binary representation of an int
+            # NOTE: 0 is intentionally set to the largest number since
+            #       the mask is 0 for empty values
+            # t0 = time()
+            # hamming_weight = np.array([9, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2,
+            #                            3, 3, 4, 1], dtype='i')
+            # # heapsort sort is not stable, do i need mergesort here?
+            # new_order = np.argsort(hamming_weight[neighbor_mask >> 6], axis=1,
+            #                        kind='heapsort')
+            # neighbors = neighbors[new_order]
+            # neighbor_mask = neighbor_mask[new_order]
+            # t1 = time()
+            # print("sort took: {0:g} secs".format(t1 - t0))
+        except CythonNotBuilt:
+            # at the moment, only cython code uses the neighbor index,
+            # so we can ignore this for now, but maybe not in the future
+            pass
 
     def compatable_with(self, dset):
         # TODO: i should make /store a hash for this
@@ -102,65 +136,6 @@ class AMRSkeleton(object):
         # t1 = default_timer()
         # print(">> compatable   {0:g} secs".format(t1 - t0))
         return True
-
-    def discover_neighbors(self):
-        d = dict(xm=[], xp=[], ym=[], yp=[], zm=[], zp=[])
-        self.neighbors_index = [d.copy() for _ in self.patches]
-        self.all_neighbors_index = [[] for _ in self.patches]
-
-        # call find_relationships (N * (N - 1)) / 2 times
-        for i, patch in enumerate(self.patches):
-            for j, other in enumerate(self.patches[:i]):
-                rels = patch.find_relationships(other)
-                # print("RELS:", i, j, rels)
-                for rel in rels:
-                    self.neighbors_index[i][rel[0]].append(j)
-                    self.neighbors_index[j][rel[1]].append(i)
-
-                    if j not in self.all_neighbors_index[i]:
-                        self.all_neighbors_index[i].append(j)
-                    if i not in self.all_neighbors_index[j]:
-                        self.all_neighbors_index[j].append(i)
-        self.tell_patches_about_neighbors()
-
-    def tell_patches_about_neighbors(self):
-        for i, neighbors_dict in enumerate(self.neighbors_index):
-            # print(">>", i, neighbors_dict)
-            _d = {}
-            for relationship, neighbor_inds in neighbors_dict.items():
-                _d[relationship] = []
-                for ind in neighbor_inds:
-                    _d[relationship].append(self.patches[ind])
-            _l = [self.patches[v] for v in self.all_neighbors_index[i]]
-            self.patches[i].set_neighbors(_d, _l)
-
-    def patch_by_loc(self, loc):
-        """returns index of patch that contans loc"""
-        loc = np.asarray(loc)
-        contains = np.all(np.abs(loc - self.xm) <= (0.5 * self.L), axis=1)
-        # argmax is slightly faster, but gives no indication if loc is outside
-        # the global domain
-        # return np.argmax(contains)
-        nonzero_inds = np.flatnonzero(contains)
-        if len(nonzero_inds) == 0:
-            return -1
-        else:
-            return nonzero_inds[0]
-
-    def patch_by_loc2(self, loc):
-        """slower implementation"""
-        loc = np.asarray(loc)
-        for i, patch in enumerate(self.patches):
-            if np.all(loc >= patch.xl) and np.all(loc <= patch.xh):
-                return i
-        return -1
-
-    # def selected_inds(self, slc):
-    #     """return list of indices of patches that are selected
-    #     by a given slice"""
-    #     # axes =
-    #     contains = np.all(np.abs(loc - self.xm) <= (0.5 * self.L), axis=1)
-    #     pass
 
 # SLICING NOTES: have field level parsing of slices that raise a ValueError
 # if the slices are ints (slice by index)
