@@ -11,7 +11,7 @@ cimport numpy as cnp
 
 from libc.math cimport fabs
 
-from cyfield cimport real_t
+from viscid.cython.cyfield cimport real_t
 
 
 cdef inline int isclose(real_t a, real_t b):

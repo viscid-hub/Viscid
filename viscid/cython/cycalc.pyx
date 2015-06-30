@@ -7,9 +7,9 @@ import numpy as np
 from cython.operator cimport dereference as deref
 from libc.math cimport floor, fabs
 
-from cyfield cimport real_t, fld_t
-from cyfield cimport CyField, FusedField, make_cyfield
-from cycalc cimport int_min, int_max
+from viscid.cython.cyfield cimport real_t
+from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
+from viscid.cython.cycalc cimport int_min, int_max
 
 def interp_trilin(vfield, seeds):
     """Interpolate a field to points described by seeds

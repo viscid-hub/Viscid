@@ -1,5 +1,5 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
-from cyfield cimport *
+from viscid.cython.cyfield cimport *
 
 import numpy as np
 

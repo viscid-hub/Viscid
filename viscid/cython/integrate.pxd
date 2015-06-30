@@ -1,5 +1,5 @@
-from cyfield cimport real_t
-from cyfield cimport FusedField
+from viscid.cython.cyfield cimport real_t
+from viscid.cython.cyfield cimport FusedField
 
 cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,
                    real_t tol_lo, real_t tol_hi,

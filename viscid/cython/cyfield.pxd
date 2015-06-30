@@ -4,12 +4,6 @@ ctypedef fused real_t:
     cnp.float32_t
     cnp.float64_t
 
-ctypedef fused fld_t:
-    cnp.float32_t
-    cnp.float64_t
-    # cnp.int32_t
-    # cnp.int64_t
-
 cdef class CyField:
     # cdef bool uniform_crds
     cdef vfield

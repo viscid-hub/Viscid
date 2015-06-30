@@ -31,9 +31,9 @@ cimport cython
 from libc.math cimport fabs
 cimport numpy as cnp
 
-from cyfield cimport real_t, fld_t
-from cyfield cimport CyField, FusedField, make_cyfield
-from integrate cimport _c_euler1, _c_rk2, _c_rk12, _c_euler1a
+from viscid.cython.cyfield cimport real_t
+from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
+from viscid.cython.integrate cimport _c_euler1, _c_rk2, _c_rk12, _c_euler1a
 
 
 EULER1 = 1  # euler1 non-adaptive

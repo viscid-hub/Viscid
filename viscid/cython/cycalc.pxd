@@ -1,5 +1,5 @@
-from cyfield cimport real_t, fld_t
-from cyfield cimport CyField, FusedField, make_cyfield
+from viscid.cython.cyfield cimport real_t
+from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 
 cdef inline int int_min(int a, int b):
     return b if b < a else a
