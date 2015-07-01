@@ -12,6 +12,10 @@ Note:
     copy the entire field. This will only work on \*nix, and I have
     absolutely no idea what will happen on Windows.
 """
+# NOTE: this take a minute to compile on account of _py_streamline makes way
+#       WAY too many fused copies of itself, but i see no way to tell cython
+#       which fused declarations are valid... the compiled version is like
+#       2MB, that's rediculous
 
 from __future__ import print_function
 from timeit import default_timer as time
@@ -31,7 +35,8 @@ cimport cython
 from libc.math cimport fabs
 cimport numpy as cnp
 
-from viscid.cython.cyfield cimport real_t
+from viscid.cython.cyfield cimport MAX_FLOAT, real_t
+from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_block
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.integrate cimport _c_euler1, _c_rk2, _c_rk12, _c_euler1a
 
@@ -173,8 +178,9 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
     if vfield.nr_sdims != 3 or vfield.nr_comps != 3:
         raise ValueError("Streamlines are only written in 3D.")
 
-    fld = make_cyfield(vfield)
-    fld = make_cyfield(vfield.as_cell_centered())
+    # fld = make_cyfield(vfield)
+    # fld = make_cyfield(vfield.as_cell_centered())
+    fld = make_cyamrfield(vfield)
 
     nr_streams = seed.nr_points(center=vfield.center)
 
@@ -234,17 +240,25 @@ def _do_streamline_star(args):
     """
     return _streamline_fused_wrapper(_global_fld, *(args[0]), **(args[1]))
 
-def _streamline_fused_wrapper(FusedField fld, int nr_streams, seed,
+def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
                               seed_slice=(None,), **kwargs):
     """Wrapper to make sure type specialization is same as fld's dtypes"""
-    func = _py_streamline[cython.typeof(fld), cython.typeof(fld.xl[0])]
-    return func(fld, nr_streams, seed, seed_slice=seed_slice, **kwargs)
+    # cdef str amr_type = cython.typeof(amrfld)
+    # # FIXME: **THUNDER-HACK** trim off the AMR part of the type name
+    # #        This might be the only way to type-specialize AMR streamlines
+    # cdef str fld_type = amr_type[3:]  #
+    # cdef int nbits = 8 * int(fld_type.split("_")[1][1])
+    # cdef str real_type = "float{0}_t".format(nbits)
+    func = _py_streamline[cython.typeof(fld), cython.typeof(fld.active_block),
+                          cython.typeof(fld.min_dx)]
+    return func(fld, fld.active_block, nr_streams, seed, seed_slice=seed_slice, **kwargs)
 
 @cython.wraparound(True)
-def _py_streamline(FusedField fld, int nr_streams, seed, seed_slice=(None, ),
+def _py_streamline(FusedAMRField amrfld, FusedField active_block,
+                   int nr_streams, seed, seed_slice=(None, ),
                    real_t ds0=0.0, real_t ibound=0.0, obound0=None, obound1=None,
                    int stream_dir=DIR_BOTH, int output=OUTPUT_BOTH, int method=EULER1,
-                   int maxit=10000, real_t max_length=1e30,
+                   int maxit=90000, real_t max_length=1e30,
                    real_t tol_lo=1e-3, real_t tol_hi=1e-2,
                    real_t fac_refine=0.5, real_t fac_coarsen=1.25,
                    real_t smallest_step=1e-4, real_t largest_step=1e2,
@@ -252,7 +266,9 @@ def _py_streamline(FusedField fld, int nr_streams, seed, seed_slice=(None, ),
     r""" Start calculating a streamline at x0
 
     Args:
-        fld (FusedField): Some Vector Field with 3 components
+        amrfld (FusedAMRField): Some Vector Field with 3 components
+        active_block (FusedField): amrfld.active_block, needed for its
+            ctype b/c integrate_funcs are cdef'd for performance
         nr_streams (int):
         seed: can be a Seeds instance or a Coordinates instance, or
             anything that exposes an iter_points method
@@ -279,7 +295,7 @@ def _py_streamline(FusedField fld, int nr_streams, seed, seed_slice=(None, ),
         real_t min_dx[3]
 
         # just for c
-        int (*integrate_func)(FusedField _fld, real_t x[3], real_t *ds,
+        int (*integrate_func)(FusedField fld, real_t x[3], real_t *ds,
                               real_t tol_lo, real_t tol_hi,
                               real_t fac_refine, real_t fac_coarsen,
                               real_t smallest_step, real_t largest_step) except -1
@@ -317,42 +333,33 @@ def _py_streamline(FusedField fld, int nr_streams, seed, seed_slice=(None, ),
 
     # set up ds0 and c_obound from the limits of fld if they're not already
     # given
-    if ds0 == 0.0:
-        find_ds0 = True
-        ds0 = 1e30
-
     if obound0 is not None:
-        py_obound0 = np.array(obound0, dtype=fld.crd_dtype)
+        py_obound0 = np.array(obound0, dtype=amrfld.crd_dtype)
         for i in range(3):
             c_obound0[i] = py_obound0[i]
 
     if obound1 is not None:
-        py_obound1 = np.array(obound1, dtype=fld.crd_dtype)
+        py_obound1 = np.array(obound1, dtype=amrfld.crd_dtype)
         for i in range(3):
             c_obound1[i] = py_obound1[i]
 
     for i in range(3):
-        n = fld.n[i]
-        nnc = fld.nr_nodes[i]
-        if n == 1:
+        # n = fld.n[i]
+        # nnc = fld.nr_nodes[i]
+        if active_block.n[i] == 1:
             # these hoops are required for processing 2d fields
             if obound0 is None:
-                c_obound0[i] = -1e30
+                c_obound0[i] = -MAX_FLOAT
             if obound1 is None:
-                c_obound1[i] = 1e30
+                c_obound1[i] = MAX_FLOAT
         else:
             if obound0 is None:
-                c_obound0[i] = fld.crds_nc[i][0]
+                c_obound0[i] = amrfld.global_xl[i]
             if obound1 is None:
-                c_obound1[i] = fld.crds_nc[i][nnc - 1]
-            if find_ds0:
-                dx = np.nan * np.empty((nnc - 1), dtype=fld.crd_dtype)
-                for j in range(nnc - 1):
-                    dx[j] = fld.crds_nc[i][j + 1] - fld.crds_nc[i][j]
-                ds0 = min(ds0, np.min(dx))
+                c_obound1[i] = amrfld.global_xh[i]
 
-    if find_ds0:
-        ds0 *= 0.5
+    if ds0 == 0.0:
+        ds0 = 0.5 * amrfld.min_dx
 
     # which integrator are we using?
     if method == EULER1:
@@ -375,7 +382,7 @@ def _py_streamline(FusedField fld, int nr_streams, seed, seed_slice=(None, ),
     # establish arrays for output
     if output & OUTPUT_STREAMLINES:
         # 2 (0=backward, 1=forward), 3 z,y,x, maxit points in the line
-        line_ndarr = np.empty((2, 3, maxit), dtype=fld.crd_dtype)
+        line_ndarr = np.empty((2, 3, maxit), dtype=amrfld.crd_dtype)
         line_mv = line_ndarr
         lines = []
     if output & OUTPUT_TOPOLOGY:
@@ -386,7 +393,7 @@ def _py_streamline(FusedField fld, int nr_streams, seed, seed_slice=(None, ),
     t0_all = time()
     t0 = time()
 
-    seed_iter = islice(seed.iter_points(center=fld.center), *seed_slice)
+    seed_iter = islice(seed.iter_points(center=active_block.center), *seed_slice)
     for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
@@ -429,7 +436,10 @@ def _py_streamline(FusedField fld, int nr_streams, seed, seed_slice=(None, ),
                 nr_segs += 1
                 pre_ds = fabs(ds)
 
-                ret = integrate_func(fld, s, &ds,
+                # this if statement appears to give no speedup
+                # if amrfld.nr_blocks > 1:
+                activate_block[FusedAMRField, real_t](amrfld, s)
+                ret = integrate_func(amrfld.active_block, s, &ds,
                                      tol_lo, tol_hi, fac_refine , fac_coarsen,
                                      smallest_step, largest_step)
 

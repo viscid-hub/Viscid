@@ -7,7 +7,9 @@ from libc.math cimport sqrt, isnan, fabs
 
 from viscid.cython.cyfield cimport real_t
 from viscid.cython.cyfield cimport FusedField
-from viscid.cython.cycalc cimport _c_interp_trilin, real_min, real_max
+from viscid.cython.cycalc cimport _c_interp_trilin
+from viscid.cython.misc_inlines cimport real_min, real_max
+
 
 cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,
                    real_t tol_lo, real_t tol_hi,

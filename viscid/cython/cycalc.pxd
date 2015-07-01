@@ -1,17 +1,5 @@
 from viscid.cython.cyfield cimport real_t
-from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
-
-cdef inline int int_min(int a, int b):
-    return b if b < a else a
-
-cdef inline int int_max(int a, int b):
-    return b if b > a else a
-
-cdef inline real_t real_min(real_t a, real_t b):
-    return b if b < a else a
-
-cdef inline real_t real_max(real_t a, real_t b):
-    return b if b > a else a
+from viscid.cython.cyfield cimport FusedField
 
 # heavy lifting interpolation functions
 cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3])

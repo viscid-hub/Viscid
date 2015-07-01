@@ -4,6 +4,9 @@ ctypedef fused real_t:
     cnp.float32_t
     cnp.float64_t
 
+cdef float MAX_FLOAT
+cdef double MAX_DOUBLE
+
 cdef class CyField:
     # cdef bool uniform_crds
     cdef vfield
@@ -18,6 +21,7 @@ cdef class CyField:
     cdef int nr_nodes[3]
     cdef int nr_cells[3]
     cdef int cached_ind[3]
+    cdef cnp.float64_t min_dx
 
 cdef class Field_I4_Crd_F8(CyField):
     cdef cnp.int32_t[:,:,:,::1] data

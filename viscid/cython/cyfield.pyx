@@ -3,6 +3,12 @@ from viscid.cython.cyfield cimport *
 
 import numpy as np
 
+# should be 3.4028235e+38 ?
+cdef float MAX_FLOAT = 1e37
+# should be 1.7976931348623157e+308 ?
+cdef double MAX_DOUBLE = 1e307
+
+
 cdef inline int _c_int_max(int a, int b):
     if a >= b:
         return a
@@ -13,10 +19,10 @@ cdef CyField make_cyfield(vfield):
     vfield = vfield.as_interlaced(force_c_contiguous=True)
     fld_dtype = np.dtype(vfield.dtype)
 
-    # if fld_dtype == np.dtype('i4'):
-    #     fld = _init_cyfield(Field_I4_Crd_F8(), vfield, 'i4', 'f8')
-    # elif fld_dtype == np.dtype('i8'):
-    #     fld = _init_cyfield(Field_I8_Crd_F8(), vfield, 'i8', 'f8')
+    if fld_dtype == np.dtype('i4'):
+        fld = _init_cyfield(Field_I4_Crd_F8(), vfield, 'i4', 'f8')
+    elif fld_dtype == np.dtype('i8'):
+        fld = _init_cyfield(Field_I8_Crd_F8(), vfield, 'i8', 'f8')
     if fld_dtype == np.dtype('f4'):
         fld = _init_cyfield(Field_F4_Crd_F4(), vfield, 'f4', 'f4')
     elif fld_dtype == np.dtype('f8'):
@@ -65,6 +71,8 @@ cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
     fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)
     sshape_cc_max = max(sshape_cc)
     fld.crds_cc = np.nan * np.empty((3, sshape_cc_max), dtype=crd_dtype)
+
+    fld.min_dx = np.min(vfield.crds.min_dx_nc)
 
     for i in range(3):
         fld.xlnc[i] = vfield.crds.xl_nc[i]
