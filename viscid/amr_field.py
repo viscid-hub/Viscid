@@ -100,6 +100,9 @@ class AMRField(object):
             # logic goes this way cause extent has NaNs in
             # dimensions that aren't specified in selection... super-kludge
 
+            # also, temporarily disable warnings on NaNs in numpy
+            invalid_err_level = np.geterr()['invalid']
+            np.seterr(invalid='ignore')
             atol = 100 * np.finfo(fld.crds.xl_nc.dtype).eps
             if (not np.any(np.logical_or(fld.crds.xl_nc - atol > extent[1],
                                          fld.crds.xh_nc <= extent[0]))):
@@ -107,6 +110,7 @@ class AMRField(object):
                     maybe.append(i)
                 else:
                     inds.append(i)
+            np.seterr(invalid=invalid_err_level)
         # if we found some maybes, but no real hits, then use the maybes
         if maybe and not inds:
             inds = maybe
