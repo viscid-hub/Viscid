@@ -1,6 +1,6 @@
 
 FC=gfortran
-F2PY=f2py-2.7
+F2PY=f2py
 
 %.f: %.for
 	fppn -c -- $< >$@
