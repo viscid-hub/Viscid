@@ -1,4 +1,16 @@
-"""Some speedy compiled functions for interpolation and streamlines"""
+"""Some speedy compiled functions for interpolation and streamlines
+
+So, some comments on the cython code are probably warranted. There
+are many places where you'll see the code going sideways in order
+to accomodate Fused types and retain it's typedness. This is especially
+true with the weird `def _py_*` functions. These are all done to keep
+important function calls in C (important meaning say called once per
+segment in a streamline). The end result is that the cython code is
+almost on par with a fortran streamline tracer, but far more versatile.
+In short, anything that makes you think "why'd he do that?" you can
+probably assume it's the path of least resistance in the whole Cython
+mess.
+"""
 
 __all__ = ["cyamr", "cycalc", "cyfield", "integrate", "streamline"]
 

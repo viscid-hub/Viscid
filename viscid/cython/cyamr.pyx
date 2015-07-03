@@ -38,7 +38,7 @@ def discover_neighbors(skel):
           mask of the relationship to the neighboring patch. Touching
           in x is 1 or 2, touching in y is 3 or 4, touching in z is 5
           or 6. The lesser value is used if the neighboring patch is
-          to the ``right''.
+          to the "right".
 
     Note:
         The rules for `neighbor_mask` are:

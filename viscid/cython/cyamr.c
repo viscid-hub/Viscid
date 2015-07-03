@@ -2348,7 +2348,7 @@ static PyObject *__pyx_codeobj__32;
 
 /* Python wrapper */
 static PyObject *__pyx_pw_6viscid_6cython_5cyamr_1discover_neighbors(PyObject *__pyx_self, PyObject *__pyx_v_skel); /*proto*/
-static char __pyx_doc_6viscid_6cython_5cyamr_discover_neighbors[] = "Find which patches touch\n\n    Args:\n        skel (:py:class:`viscid.amr_grid.AMRSkeleton`): A skeleton with\n            valid xm and L.\n\n    Returns:\n        (nr_neighbors, neighbors, neighbor_mask)\n\n        * `nr_neighbors` (ndarray with shape (npatches,)): how many\n          neighbors a patch has\n        * `neighbors` (int ndarray with shape (npatches, 48)): gives\n          index of all the neighbors of a given patch. Empty values\n          are filled with -1\n        * `neighbor_mask` (int ndarray with shape (npatches, 48)): Bit\n          mask of the relationship to the neighboring patch. Touching\n          in x is 1 or 2, touching in y is 3 or 4, touching in z is 5\n          or 6. The lesser value is used if the neighboring patch is\n          to the ``right''.\n\n    Note:\n        The rules for `neighbor_mask` are:\n\n        * `mask >> 6` will be a bitmask of 3 bits that says if patches\n          touch in a given direction. So if they touch in x,\n          `mask >> 6 == 0b100` and if they touch in x and y,\n          `mask >> 6 == 0b110`\n        * TODO: document the 6 least significant bits\n    ";
+static char __pyx_doc_6viscid_6cython_5cyamr_discover_neighbors[] = "Find which patches touch\n\n    Args:\n        skel (:py:class:`viscid.amr_grid.AMRSkeleton`): A skeleton with\n            valid xm and L.\n\n    Returns:\n        (nr_neighbors, neighbors, neighbor_mask)\n\n        * `nr_neighbors` (ndarray with shape (npatches,)): how many\n          neighbors a patch has\n        * `neighbors` (int ndarray with shape (npatches, 48)): gives\n          index of all the neighbors of a given patch. Empty values\n          are filled with -1\n        * `neighbor_mask` (int ndarray with shape (npatches, 48)): Bit\n          mask of the relationship to the neighboring patch. Touching\n          in x is 1 or 2, touching in y is 3 or 4, touching in z is 5\n          or 6. The lesser value is used if the neighboring patch is\n          to the \"right\".\n\n    Note:\n        The rules for `neighbor_mask` are:\n\n        * `mask >> 6` will be a bitmask of 3 bits that says if patches\n          touch in a given direction. So if they touch in x,\n          `mask >> 6 == 0b100` and if they touch in x and y,\n          `mask >> 6 == 0b110`\n        * TODO: document the 6 least significant bits\n    ";
 static PyMethodDef __pyx_mdef_6viscid_6cython_5cyamr_1discover_neighbors = {"discover_neighbors", (PyCFunction)__pyx_pw_6viscid_6cython_5cyamr_1discover_neighbors, METH_O, __pyx_doc_6viscid_6cython_5cyamr_discover_neighbors};
 static PyObject *__pyx_pw_6viscid_6cython_5cyamr_1discover_neighbors(PyObject *__pyx_self, PyObject *__pyx_v_skel) {
   PyObject *__pyx_r = 0;
@@ -5264,12 +5264,12 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -5814,12 +5814,12 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -6364,13 +6364,13 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -6915,12 +6915,12 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)

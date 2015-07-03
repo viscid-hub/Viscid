@@ -1,7 +1,7 @@
-viscid.calculator.cycalc module
+viscid.cython.streamline module
 ===============================
 
-.. automodule:: viscid.calculator.cycalc
+.. automodule:: viscid.cython.streamline
     :members:
     :undoc-members:
     :show-inheritance:
