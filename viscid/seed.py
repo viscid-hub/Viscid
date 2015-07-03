@@ -206,14 +206,16 @@ class Plane(SeedGen):
         arr = np.empty((3, res_l * res_m), dtype=self.dtype)
         l = np.linspace(len_l[0], len_l[1], res_l).astype(self.dtype)
         m = np.linspace(len_m[0], len_m[1], res_m).astype(self.dtype)
-        arr[0, :] = np.repeat(m, res_l)
-        arr[1, :] = np.tile(l, res_m)
+        arr[0, :] = np.repeat(l, res_m)
+        arr[1, :] = np.tile(m, res_l)
         arr[2, :] = 0.0
 
         # create matrix to go LNM -> xyz
-        trans = np.array([Mdir, Ldir, Ndir])
+        trans = np.array([Ldir, Mdir, Ndir])
 
-        arr_transformed = p0 + np.dot(trans, arr)
+        # transpose trans b/c np.dot semmantics are not the same as matrix
+        # vector multiply, but they are if you transpose the matrix
+        arr_transformed = p0 + np.dot(trans.T, arr)
 
         return arr_transformed
 
@@ -366,16 +368,15 @@ class SphericalCap(Sphere):
             # the rotation around the cone's axis, so no need for that one
             # the convention used here is y-z-x, as in theta0 around y,
             # phi0 around z, and psi0 around x, but without the last one
-            # FIXME: is this euler rot matrix still good in xyz ordering?
             sint0 = np.sin(theta0)
             cost0 = np.cos(theta0)
             sinp0 = np.sin(phi0)
             cosp0 = np.cos(phi0)
-            mat = np.array([[cost0,            0.0, -sint0],          # pylint: disable=C0326
-                            [sinp0 * sint0,  cosp0,  sinp0 * cost0],  # pylint: disable=C0326
-                            [cosp0 * sint0, -sinp0,  cosp0 * cost0],  # pylint: disable=C0326
+            mat = np.array([[ cosp0 * cost0, -sinp0, cosp0 * sint0],  # pylint: disable=C0326
+                            [ sinp0 * cost0,  cosp0, sinp0 * sint0],  # pylint: disable=C0326
+                            [-sint0,          0.0,   cost0,       ],  # pylint: disable=C0326
                            ], dtype=self.dtype)
-            self._euler_rot = mat.T  # transpose b/c i did this matrix for zyx?
+            self._euler_rot = mat
         return self._euler_rot
 
     def spherical_to_xyz(self, theta, phi):
@@ -420,45 +421,61 @@ class Circle(SphericalCap):
 #         return theta, phi
 
 
+def main():
+    from viscid.calculator import interp_trilin
+    from viscid.plot import mpl
+
+    x = np.linspace(-2, 2, 32)
+    y = np.linspace(-2, 2, 32)
+    z = np.linspace(-2, 2, 32)
+    fld = viscid.empty([x, y, z])
+    X, Y, Z = fld.crds.get_crds_cc("xyz", shaped=True)
+    fld[:, :, :] = X * Y * Z
+
+    def run_test(_fld, _seeds, plot_2d=True, plot_3d=True, selection=None):
+        arr = interp_trilin(_fld, _seeds)
+        ifld = _seeds.wrap_field(arr)
+        if plot_2d:
+            mpl.plot(ifld, selection=selection, show=True)
+        if plot_3d:
+            mpl.scatter_3d(_seeds.points(), arr)
+            mpl.plt.gca().set_aspect('equal')
+
+    # ### PLANE
+    # p0 = [0.5, 0.6, 0.7][::1]
+    # N = [1., 2., 3.][::1]
+    # L = [-3., -2., -1.][::1]
+    # plane = Plane(p0, N, L, 2., 2., 15, 20)
+    # run_test(fld, plane, True, True)
+
+    # ### Volume
+    # p0 = [-0.7, -0.6, -0.5][::1]
+    # p1 = [+0.7, +0.6, +0.5][::1]
+    # volume = Volume(p0, p1)
+    # run_test(fld, volume, True, True, "z=3")
+
+    # ### Sphere
+    # p0 = [1.0, 1.0, 1.0][::1]
+    # sphere = Sphere(p0, 1.0, 15, 15)
+    # run_test(fld, sphere, True, True)
+
+    ### Sphere Cap
+    p0 = [0.5, 0.6, 0.7][::1]
+    p1 = [1.7, 1.6, 1.5][::1]
+    sphere_cap = SphericalCap(p0, p1, 120.0, 32, 32)
+    run_test(fld, sphere_cap, True, True)
+
+    # ### Circle
+    # p0 = [0.5, 0.6, 0.7][::1]
+    # p1 = [0.7, 0.6, 0.5][::1]
+    # sphere_cap = Circle(p0, p1, 20, r=0.8)
+    # run_test(fld, sphere_cap, True, True)
+
+    return 0
+
 if __name__ == "__main__":
-    # import matplotlib.pyplot as plt
-    # from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
-    # ax = plt.gca(projection='3d')
-    # lin = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
-    # ax.plot(lin[:, 0], lin[:, 1], lin[:, 2], 'g.')
-    # s = Sphere((0.0, 0.0, 0.0), 2.0, 10, 20).points()
-    # ax.plot(s[:, 0], s[:, 1], s[:, 2], 'b')
-    # p = Plane((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0),
-    #                  2.0, 3.0, 10, 20).points()
-    # ax.plot(p[:, 0], p[:, 1], p[:, 2], 'r')
-    # plt.xlabel("X")
-    # plt.ylabel("Y")
-    # plt.show()
-
-    from timeit import default_timer as time
-    from mayavi import mlab
-    from viscid import vlab
-    from viscid.calculator import calc
-    from viscid.calculator import cycalc
-
-    B = vlab.get_dipole(m=[0.0, 0.0, -1.0])
-    bmag = calc.magnitude(B)
-    t0 = time()
-    _p0 = [1.0, 1.0, 1.0]
-    _p1 = [0.0, 0.0, 0.0]
-    cap = SphericalCap(_p0, _p1, 120.0, r=1.0, cache=True)
-    interp_vals = cycalc.interp_trilin(bmag, cap)
-    t1 = time()
-    # logger.info("interp took {0:.3e}s to compute.".format(t1 - t0))
-    _pts = cap.points()
-    mlab.points3d(_p0[2], _p0[1], _p0[0],
-                  scale_factor=0.07, color=(0.0, 0.0, 0.0))
-    mlab.points3d(_p1[2], _p1[1], _p1[0],
-                  scale_factor=0.07, color=(1.0, 1.0, 1.0))
-    mlab.points3d(_pts[2], _pts[1], _pts[0], interp_vals,
-                  scale_factor=0.07, scale_mode="none")
-    mlab.axes(nb_labels=5)
-    mlab.show()
+    import sys
+    sys.exit(main())
 
 ##
 ## EOF
