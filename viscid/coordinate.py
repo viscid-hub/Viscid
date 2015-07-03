@@ -26,7 +26,7 @@ import itertools
 
 import numpy as np
 
-from viscid.compat import string_types
+from viscid.compat import string_types, izip
 from viscid import vutil
 
 
@@ -92,7 +92,7 @@ class Coordinates(object):
     def is_spherical(self):
         return "spherical" in self._TYPE
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         pass
 
     def as_coordinates(self):
@@ -210,18 +210,14 @@ class StructuredCrds(Coordinates):
 
     def clear_crds(self):
         self._src_crds_nc = {}
-        self._purge_cache()
+        self.clear_cache()
         # for d in self.axes:
         #     for sfx in self.SUFFIXES:
         #         self.__crds[d + sfx] = None
         #         self.__crds[d.upper() + sfx] = None
 
-    def _purge_cache(self):
+    def clear_cache(self):
         self.__crds = None
-
-    def unload(self):
-        """ does not guarentee that the memory will be freed """
-        self._purge_cache()
 
     def set_crds(self, clist):
         """ called with a list of lists:
@@ -241,7 +237,8 @@ class StructuredCrds(Coordinates):
             Coordinates with reflections applied
         """
         if len(self.reflect_axes) > 0:
-            return type(self)(self.get_clist(), has_cc=self.has_cc)
+            return type(self)(self.get_clist(), has_cc=self.has_cc,
+                              dtype=self.dtype)
         else:
             return self
 
@@ -388,27 +385,31 @@ class StructuredCrds(Coordinates):
             return self.axes[axis]
 
     def get_slice_extent(self, selection):
-        """ work in progress """
+        """work in progress"""
         # print("get slice extent::", selection)
+        float_err_msg = ("Can only get the extent of slices by location, aka "
+                         "'x = 0f' or field['0f']")
         selection = self._parse_slice(selection)
         extent = np.nan * np.empty((2, self.nr_dims), dtype='f')
 
-        for dind, axis in enumerate(self.axes):
-            if axis in selection:
-                sel = selection[axis]
+        for i, slc in enumerate(selection):
+            if slc != slice(None):
+                slc = vutil.convert_deprecated_floats(slc, "slc")
 
-                if isinstance(sel, slice):
-                    if isinstance(sel.start, (float, np.floating)) and \
-                       isinstance(sel.stop, (float, np.floating)):
-                        extent[:, dind] = (sel.start, sel.stop)
+                if not isinstance(slc, string_types):
+                    raise TypeError(float_err_msg + ":: {0}".format(slc))
+
+                split_slc = slc.split(":")
+                for j, s in enumerate(split_slc):
+                    if s[-1] == 'f':
+                        split_slc[j] = float(s[:-1])
                     else:
-                        raise TypeError("floats only")
-                else:
-                    if not isinstance(sel, (list, tuple)):
-                        sel = [sel]
-                    if not all([isinstance(s, (float, np.floating)) for s in sel]):
-                        raise ValueError("floats only")
-                    extent[:, dind] = sel
+                        raise ValueError(float_err_msg + ":: {0}".format(s))
+
+                if len(split_slc) > 2:
+                    raise NotImplementedError("get_slice_extent doesn't work "
+                                              "with stride yet")
+                extent[:, i] = split_slc
 
         # enforce that the values are increasing
         for d in range(extent.shape[1]):
@@ -418,62 +419,32 @@ class StructuredCrds(Coordinates):
         return extent
 
     def _parse_slice(self, selection):
-        """ parse a selection string or dict. integers are interpreted
-        as indices, floats are interpreted as coordinates... ex:
-        selection = 'y=12.32,z=-1.0' is line of data
-        closest to (x, y=12.32, z=-1.0)
-        selection = {'y=12:14,z=1 is the slice [:,12:14,1]
-        """
-        # parse string to dict if necessary
-        if isinstance(selection, dict):
-            return selection
-        elif isinstance(selection, (slice, int, float)):
-            return {self._axes[0]: selection}
-        elif selection is None or len(selection) == 0:
-            return {}
+        # SIDE-EFFECT: selection won't have any whitespace
+        # parse selection if it's a string into a list of selections
+        # that are in the same order as the dimensions of self
+        if not selection:
+            selection = slice(None)
         elif isinstance(selection, string_types):
-            sel = {}
-            for i, s in enumerate(selection.replace('_', ',').split(',')):
-                s = s.split('=')
-                if len(s) < 2:
-                    s.insert(0, self.axes[i])
-                # this extra : split is for asking for a subset in one
-                # dimension
-                dim = s[0].strip()
-                slclst = s[1].strip().split(':')
+            slices = [slice(None)] * self.nr_dims
+            # kill all whitespace
+            selection = "".join(selection.split())
+            split_sel = selection.split(',')
+            for i, single_sel in enumerate(split_sel):
+                if "=" in single_sel:
+                    ax, slc = single_sel.split("=")
+                    slices[self.axes.index(ax)] = slc
+                else:
+                    # it's probably not wise to use this branch
+                    slices[i] = single_sel
+            selection = slices
 
-                # if number ends in i or j, cast to int as index, else leave
-                # as float to denote a crd... also, if it's the 3rd value then
-                # it's a stride... cant really have a float stride can we
-                for i, val in enumerate(slclst):
-                    if len(val) == 0:
-                        slclst[i] = None
-                    else:
-                        try:
-                            slclst[i] = int(val)
-                        except ValueError:
-                            slclst[i] = float(val)
-                sel[dim] = slclst
-            return sel
-        elif isinstance(selection, (tuple, list)):
-            ret = {}
-            try:
-                # put ':' slices in for an Ellipsis
-                i = selection.index(Ellipsis)
-                sln = [slice(None)] * (self.nr_dims - (len(selection) - 1))
-                selection = selection[:i] + sln + selection[i + 1:]
+        try:
+            selection = list(selection)
+        except TypeError:
+            selection = [selection]
+        selection += [slice(None)] * (self.nr_dims - len(selection))
 
-                for i in range(selection):
-                    if selection[i] == Ellipsis:
-                        selection[i] = slice(None)
-            except ValueError:
-                pass
-
-            for sel, axis in zip(selection, self._axes):
-                ret[axis] = sel
-            return ret
-        else:
-            raise TypeError()
+        return selection
 
     def _native_slice(self, axis, slc):
         """Get a sliced crd array to construct crds of same type
@@ -515,18 +486,18 @@ class StructuredCrds(Coordinates):
     def make_slice(self, selection, cc=False):
         """Turns a slice string into a slice (should be private?)
 
-        Slices should be made using the normal ``field[selecton]``
+        Slices should be made using the normal ``field[selection]``
         syntax. This function is more for internal use; however it
         does document the slice string syntax.
 
-        In practice, selection can be a string like "y=3:6:2,z=0.0"
-        where integers indicate an index as opposed to floats
-        which slice by crd value. The example slice would be the 3rd
-        and 5th crds in y, and the z = 0.0 plane. Selection can also
-        be the usual tuple of slice objects / integers like one would
-        give to numpy.
+        In practice, selection can be a string like
+        "y = 3:6:2, z = 0.0f" where integers indicate an index as
+        opposed to floats followed by an 'f' which slice by crd value.
+        The example slice would be the 3rd and 5th crds in y, and the
+        z = 0.0 plane. Selection can also be the usual tuple of slice
+        objects / integers like one would give to numpy.
 
-        "y=3:6:2,z=0.0" will give (if z[32] is closest to z=0.0)::
+        "y = 3:6:2, z = 0.0" will give (if z[32] is closest to z=0.0)::
 
             ([slice(None), slice(3, 6, 2), 32],
              [['x', ndarray(all nc x crds)], ['y', array(y[3], y[5])]],
@@ -534,7 +505,7 @@ class StructuredCrds(Coordinates):
             )
 
         Parameters:
-            selecton (str): slice string
+            selection (int, str, slice): slice string
             cc (bool): cell centered slice
 
         Returns:
@@ -550,98 +521,58 @@ class StructuredCrds(Coordinates):
         Note: cc is necessary for finding the closest plane, otherwise it
             might be off by half a grid cell
         """
-        # this turns all types of selection input styles into a selection dict
-        # which looks like {'axis': (start,stop?,step?), ...}
-        # where start /step are optional and start / stop can be floats which
-        # indicate that we need to lookup the index
+        # print("> make slice", selection)
+        # parse selection if it's a string into a list of selections where
+        # the axes are in the same order as self.axes
         selection = self._parse_slice(selection)
-        slices = [None] * self.nr_dims
-        slcrds = [None] * self.nr_dims
+
+        if cc:
+            crd_arrs = self.get_crds_cc()
+        else:
+            crd_arrs = self.get_crds_nc()
+
+        slices = list(vutil.to_slices(crd_arrs, selection))
+
+        # Figure out what the selection is doing. If the slice reduces
+        # out a dimension, put it in reduced. Also apply the slices to
+        # the coordinate arrays so they can be used in to create new
+        # fields later on.
+        sliced_clist = []
         reduced = []
 
-        # go through all axes and see if they are selected
-        for dind, axis in enumerate(self.axes):
-            if not axis in selection:
-                slices[dind] = slice(None)
-                # slcrds[dind] = [axis, self.get_nc(axis)]
-                slcrds[dind] = [axis, self._native_slice(axis, None)]
-                continue
+        for i, slc in enumerate(slices):
+            axis = self.axes[i]
 
-            sel = selection[axis]
+            if isinstance(slc, slice):
+                sss = (slc.start, slc.stop, slc.step)
+                if not all(s is None or hasattr(s, "__index__") for s in sss):
+                    raise TypeError("bad sss:", sss)
 
-            if isinstance(sel, slice):
-                if isinstance(sel.start, (float, np.floating)) or \
-                   isinstance(sel.stop, (float, np.floating)):
-                    sel = [sel.start, sel.stop, sel.step]
-                else:
-                    slc = sel
+                crd_slc = slice(slc.start, slc.stop, slc.step)
+                # if we're doing a cc slice, there needs to be one more nc crd
+                # than data element, so add an extra node to slc.stop
+                if cc and crd_slc.stop is not None:
+                    if crd_slc.stop >= 0:
+                        if crd_slc.step is None or crd_slc.step > 0:
+                            newstop = crd_slc.stop + 1
+                        else:
+                            newstop = crd_slc.stop - 1
+                    else:  # slc.stop < 0
+                        # this will slice crds nc, so if we're going backward,
+                        # the extra crd will be included
+                        # print("am i used?", crd_slc.step)
+                        newstop = crd_slc.stop
+                    crd_slc = slice(crd_slc.start, newstop, crd_slc.step)
+                sliced_clist.append([axis, self._native_slice(axis, crd_slc)])
 
-            # expect val to be a list to describe start, stop, stride
-            if isinstance(sel, (int, float, np.number)):
-                sel = [sel]
+            elif hasattr(slc, "__index__"):
+                reduced.append([axis, self._native_slice(axis, slc)])
 
-            if isinstance(sel, (list, tuple)):
-                # do plane finding if vals are floats for the first two
-                # elements only, the third would be a stride, no lookup
-                # necessary
-                if cc:
-                    crd_arr = self.get_cc(axis)
-                else:
-                    crd_arr = self.get_nc(axis)
-
-                if len(sel) == 1:
-                    if isinstance(sel[0], (float, np.floating)):
-                        sel = [np.argmin(np.abs(crd_arr - sel[0]))]
-                else:
-                    sel = vutil.convert_floating_slice(crd_arr, *sel)
-
-                # ok, if one value specified, numpy semantics say reduce that
-                # dimension out
-                if len(sel) == 1:
-                    ind = sel[0]
-
-                    slices[dind] = ind
-                    slcrds[dind] = None
-                    if cc:
-                        loc = self.get_cc(axis)[ind]
-                    else:
-                        loc = self.get_nc(axis)[ind]
-                    reduced.append([axis, loc])
-
-                    # we set slices, slcrds, and reduced and there needs be no
-                    # extra cc logic to extend the slice stop since there are
-                    # no more coords in this dimension
-                    continue
-
-                elif len(sel) == 2:
-                    slc = np.s_[sel[0]:sel[1]]
-                elif len(sel) == 3:
-                    slc = np.s_[sel[0]:sel[1]:sel[2]]
-                else:
-                    raise ValueError()
-
-            # if we're doing a cc slice, there needs to be one more node
-            # than data element, so add an extra node to slc.stop
-            if cc and slc.stop is not None:
-                if slc.stop >= 0:
-                    newstop = slc.stop + 1
-                else:  # slc.stop < 0
-                    # this will slice crds nc, so if we're going backward, the
-                    # extra crd will be included
-                    newstop = slc.stop
-                crd_slc = slice(slc.start, newstop, slc.step)
             else:
-                crd_slc = slc
-            slices[dind] = slc
-            # slcrds[dind] = [axis, self[axis][crd_slc].reshape(-1)]
-            slcrds[dind] = [axis, self._native_slice(axis, crd_slc)]
+                raise TypeError()
 
-        # remove dimensions that were sliced out
-        slcrds = [crd for crd in slcrds if crd is not None]
-
-        # print("MAKE SLICE : slices", slices, "crdlst", slcrds,
-        #       "reduced", reduced)
-        return slices, slcrds, reduced
+        # print("< slice made", slices)
+        return slices, sliced_clist, reduced
 
     def make_slice_reduce(self, selection, cc=False):
         """make slice, and reduce dims that were not explicitly sliced"""
@@ -728,7 +659,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
 
     def slice_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
@@ -740,7 +671,7 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
 
     def slice_keep(self, selection, cc=False):
         slices, crdlst, reduced = self.make_slice_keep(selection,
@@ -748,7 +679,28 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst)
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
+
+    def slice_interp(self, selection, cc=False):
+        _, crdlst, _ = self.make_slice_keep(selection, cc=cc)
+
+        selection = self._parse_slice(selection)
+
+        # for slices that were specified using a float, set that crd
+        # to the desired float instead of the nearest crd as does slice_keep
+        for i, slc in enumerate(selection):
+            slc = vutil.convert_deprecated_floats(slc, "slc")
+            if isinstance(slc, string_types):
+                assert slc[-1] == 'f'
+                val = np.array(float(slc[:-1]), dtype=self.dtype)
+                if cc:
+                    dxh = 0.5 * (crdlst[i][1][1] - crdlst[i][1][0])
+                    crdlst[i][1][0] = val - dxh
+                    crdlst[i][1][1] = val + dxh
+                else:
+                    # FIXME: I don't think this is right
+                    crdlst[i][1][0] = val
+        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
 
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,
@@ -1111,10 +1063,14 @@ class UniformCrds(StructuredCrds):
             proxy_crd = self.get_crd(axis, center='node')
         else:
             proxy_crd = self.get_crd(axis, center='node')[slc]
-        nx = len(proxy_crd)
-        xl = proxy_crd[0]
-        xh = proxy_crd[-1]
-        return [xl, xh, nx]
+
+        try:
+            nx = len(proxy_crd)
+            xl = proxy_crd[0]
+            xh = proxy_crd[-1]
+            return [xl, xh, nx]
+        except TypeError:
+            return proxy_crd
 
     def extend_by_half(self):
         """Extend coordinates half a grid cell in all directions

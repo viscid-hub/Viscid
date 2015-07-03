@@ -8,9 +8,9 @@ from __future__ import print_function
 # import sys
 import os
 import re
-import types
 from time import time
 
+from viscid import logger
 from viscid.dataset import Dataset, DatasetTemporal
 from viscid import grid
 from viscid import field
@@ -51,6 +51,11 @@ class VFile(Dataset):
     """Generic File
 
     Note:
+        If you want a file that can load other files (like how XDMF
+        files need to be able to load HDF5 files) then subclass off of
+        :py:class:`viscid.readers.vfile_bucket.ContainerFile` instead.
+
+    Note:
         Important when subclassing: Do not call the constructors for a
         dataset / grid yourself, dispatch through _make_dataset and
         _make_grid.
@@ -63,8 +68,11 @@ class VFile(Dataset):
     _temporal_dataset_type = DatasetTemporal
     _grid_opts = {}
 
-    vfilebucket = None
+    SAVE_ONLY = False
+
+    parent_bucket = None
     load_time = None
+    handle_name = None  # set in VFileBucket.load_files
 
     fname = None
     dirname = None
@@ -73,7 +81,7 @@ class VFile(Dataset):
                  # for instance hdf5 File object
     # grids = None  # already part of Dataset
 
-    def __init__(self, fname, vfilebucket=None, grid_type=None, grid_opts=None,
+    def __init__(self, fname, parent_bucket=None, grid_type=None, grid_opts=None,
                  **kwargs):
         """  """
         super(VFile, self).__init__(fname, **kwargs)
@@ -82,10 +90,10 @@ class VFile(Dataset):
             self._grid_type = grid_type
         if grid_opts is not None:
             self.grid_opts = grid_opts
-        assert self._grid_type is not None
         assert isinstance(self._grid_opts, dict)
 
-        self.vfilebucket = vfilebucket
+        self.parent_bucket = parent_bucket
+
         self.load(fname)
 
     def load(self, fname):
@@ -96,16 +104,21 @@ class VFile(Dataset):
         self.load_time = time()
         self._parse()
 
-    def refresh(self):
-        #self.unload()
+    def reload(self):
+        self._clear_cache()
+        self.remove_all_items()
         self.load(self.fname)
 
-    def unload(self):
-        """ unload is meant to give children a chance to free caches, the idea
-        being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload
-        """
-        super(VFile, self).unload()
+    def unload(self, **kwargs):
+        """Really unload a file, don't just clear the cache"""
+        self._clear_cache()
+        self.remove_all_items()
+        if self.parent_bucket:
+            self.parent_bucket.remove_reference(self, **kwargs)
+
+    def __exit__(self, exc_type, value, traceback):
+        self.unload()
+        return None
 
     # some classy saving utility methods, should be sufficient to override
     # save and save_fields
@@ -168,6 +181,8 @@ class VFile(Dataset):
 
         if grid_type is None:
             grid_type = self._grid_type
+        if grid_type is None:
+            raise TypeError("{0} can't create grids".format(type(self)))
 
         g = grid_type(name=name, **other)
         if parent_node is not None:
@@ -192,7 +207,7 @@ class VFile(Dataset):
         raise NotImplementedError("override _parse to read a file")
 
     @classmethod
-    def detect_type(cls, fname):
+    def detect_type(cls, fname, mode='r'):
         """ recursively detect a filetype using _detector regex string.
         this is called recursively for all subclasses and results
         further down the tree are given precedence.
@@ -204,10 +219,12 @@ class VFile(Dataset):
         """
         # reversed gives precedence to the more recently declared classes
         for filetype in reversed(cls.__subclasses__()): #pylint: disable=E1101
-            td = filetype.detect_type(fname)
+            td = filetype.detect_type(fname, mode=mode)
             if td:
                 return td
         if cls._detector and re.match(cls._detector, fname):
+            if 'r' in mode and cls.SAVE_ONLY:
+                return None
             return cls
         return None
 

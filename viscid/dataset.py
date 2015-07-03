@@ -3,9 +3,7 @@
 
 from __future__ import print_function
 import re
-from string import ascii_letters
-from datetime import datetime
-from itertools import islice, chain
+from itertools import chain
 
 import numpy as np
 
@@ -14,7 +12,7 @@ from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid import tree
 from viscid import vutil
-from viscid.vutil import tree_prefix, convert_floating_slice
+from viscid.vutil import tree_prefix, to_slice
 
 class Dataset(tree.Node):
     """Datasets contain grids or other datasets
@@ -50,17 +48,19 @@ class Dataset(tree.Node):
         if set_active:
             self.active_child = child
 
-    def unload(self):
-        """ unload is meant to give children a chance to free caches, the idea
-        being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload
-        """
+    def _clear_cache(self):
         for child in self.children:
-            child.unload()
-        # TODO: does anything else need to be unloaded in here?
+            child.clear_cache()
 
-    # def remove_all_items(self):
-    #     raise NotImplementedError()
+    def clear_cache(self):
+        """Clear all childrens' caches"""
+        self._clear_cache()
+
+    def remove_all_items(self):
+        for child in self.children:
+            self.tear_down_child(child)
+            child.remove_all_items()
+        self.children = Bucket(ordered=True)
 
     def activate(self, child_handle):
         """ it may not look like it, but this will recursively look
@@ -169,7 +169,7 @@ class Dataset(tree.Node):
 
     def __delitem__(self, item):
         child = self.get_child(item)
-        child.unload()
+        child.clear_cache()
         self.children.remove_item(child)
 
     def __len__(self):
@@ -192,7 +192,7 @@ class Dataset(tree.Node):
         return self
 
     def __exit__(self, exc_type, value, traceback):
-        self.unload()
+        self.clear_cache()
         return None
 
     def __iter__(self):
@@ -235,14 +235,16 @@ class DatasetTemporal(Dataset):
         if set_active:
             self.active_child = child
 
-    def unload(self):
-        """ unload is meant to give children a chance to free caches, the idea
-        being that an unload will free memory, but all the functionality is
-        preserved, so data is accessable without an explicit reload
-        """
+    def remove_all_items(self):
         for child in self.children:
-            child[1].unload()
-        # TODO: does anything else need to be unloaded in here?
+            self.tear_down_child(child[1])
+            child[1].remove_all_items()
+        self.children = []
+
+    def clear_cache(self):
+        """Clear all childrens' caches"""
+        for child in self.children:
+            child[1].clear_cache()
 
     def activate(self, time):
         self.active_child = self.get_child(time)
@@ -263,20 +265,22 @@ class DatasetTemporal(Dataset):
                 time slice
 
         Returns:
-            one of {int, float, string, or slice (can contain ints,
+            one of {int, string, or slice (can contain ints,
             floats, or strings)}
 
         Note:
             Individual elements of the slice can look like an int,
-            float, or they can have the form [A-Z]+[\d:]+\.\d*. This
-            last one is a datetime-like representation with some
-            preceding letters. The preceding letters are
+            float with trailing 'f', or they can have the form
+            [A-Z]+[\d:]+\.\d*. This last one is a datetime-like
+            representation with some preceding letters. The preceding
+            letters are
         """
         # regex parse the sting into a list of datetime-like strings,
         # integers, floats, and bare colons that mark the slices
         # Note: for datetime-like strings, the letters preceeding a datetime
         # are necessary, otherwise 02:20:30.01 would have more than one meaning
-        rstr = r"\s*(?:(?!:)[A-Z]+[-\d:]+\.\d*|:|(?=.)-?\d*(?:\.\d*)?)\s*"
+        rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+f?)\s*|"
+                r"[-+]?[0-9]+")
         r = re.compile(rstr, re.I)
 
         all_times = r.findall(slc_str)
@@ -310,6 +314,7 @@ class DatasetTemporal(Dataset):
         Returns:
             list of slices (containing integers only) or ints
         """
+        # print("> slice time", slc)
         # print("SLC::", slc)
         if not isinstance(slc, (list, tuple)):
             slc = [slc]
@@ -331,35 +336,29 @@ class DatasetTemporal(Dataset):
                 s = self._parse_time_slice_str(s)
 
             if isinstance(s, slice):
+                single_val = False
                 slc_lst = [s.start, s.stop, s.step]
             else:
+                single_val = True
                 slc_lst = [s]
 
             # do translation from string/datetime/etc -> floats
             for i in range(min(len(slc_lst), 2)):
                 translation = self._translate_time(slc_lst[i])
                 if translation != NotImplemented:
+                    # hack: convert floats to a string with a trailing f as per
+                    # the rest of viscid. we do this because _translate_time
+                    # returns a float
+                    if isinstance(translation, (float, np.floating)):
+                        translation = "{0}f".format(translation)
                     slc_lst[i] = translation
 
-            # convert floats in the slice to integers
-            if len(slc_lst) == 1:
-                if isinstance(slc_lst[0], (float, np.floating)):
-                    slc_lst = [np.argmin(np.abs(times - slc_lst[0]))]
+            if single_val:
+                ret.append(to_slice(times, slc_lst[0]))
             else:
-                slc_lst = convert_floating_slice(times, *slc_lst)
+                ret.append(to_slice(times, slc_lst))
 
-            inttypes = (int, np.integer)
-            isint = [isinstance(v, inttypes) for v in slc_lst if v is not None]
-            if not all(isint):
-                raise ValueError("Could not decipher time slice: "
-                                 "{0}".format(s))
-
-            if len(slc_lst) == 1:
-                ret += slc_lst
-            else:
-                # make the slice inclusive, no matter what
-                slc_lst = [None if _s is None else int(_s) for _s in slc_lst]
-                ret.append(slice(*slc_lst))
+        # print("< time slice made:", ret)
         return ret
 
     def _time_slice_to_iterator(self, slc):
@@ -394,7 +393,11 @@ class DatasetTemporal(Dataset):
         child_iterator = self._time_slice_to_iterator(slc)
 
         for child in child_iterator:
-            with child[1] as target:
+            # FIXME: this isn't general, but so far the only files we're
+            # read have only contained one Grid / AMRGrid. Without get_grid()
+            # here, the context manager will unload the file when done, but
+            # that's not what we wanted here, we wanted to just clear caches
+            with child[1].get_grid() as target:
                 yield target
 
     def get_times(self, slice_str=":"):
@@ -469,13 +472,19 @@ class DatasetTemporal(Dataset):
         return child
 
     def __contains__(self, item):
-        if isinstance(item, int) and item < len(self.children):
+        if isinstance(item, int) and item > 0 and item < len(self.children):
             return True
-        try:
-            float(item)
-            return True
-        except ValueError:
-            return item in self.active_child
+        if isinstance(item, string_types) and item[-1] == 'f':
+            try:
+                val = float(item[:-1])
+                if (val >= self.children[0][0] and
+                    val <= self.children[-1][0]):  # pylint: disable=bad-continuation
+                    return True
+                else:
+                    return False
+            except ValueError:
+                pass
+        return item in self.active_child
 
     def __iter__(self):
         for child in self.children:

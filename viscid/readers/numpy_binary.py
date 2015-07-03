@@ -13,7 +13,6 @@ import numpy as np
 from viscid import logger
 from viscid.readers import vfile
 from viscid import coordinate
-from viscid import field
 
 class NPZDataWrapper(vfile.DataWrapper):
     """  """

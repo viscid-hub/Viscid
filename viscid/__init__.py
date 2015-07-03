@@ -50,7 +50,6 @@ Attributes:
 __all__ = ['amr_field',  # Modules
            'amr_grid',
            'calculator',
-           'plot',
            'readers',
            'bucket',
            'coordinate',
@@ -66,6 +65,8 @@ __all__ = ['amr_field',  # Modules
            'logger',  # logger
            'load_file',  # reader helpers
            'load_files',
+           'unload_file',
+           'reload_file',
            'get_file',
            'save_grid',
            'save_field',
@@ -95,6 +96,8 @@ del _handler
 from viscid import readers
 load_file = readers.load_file
 load_files = readers.load_files
+unload_file = readers.unload_file
+reload_file = readers.reload_file
 get_file = readers.get_file
 save_grid = readers.save_grid
 save_field = readers.save_field
@@ -115,6 +118,7 @@ wrap_field = field.wrap_field
 
 from viscid import coordinate
 arrays2crds = coordinate.arrays2crds
+wrap_crds = coordinate.wrap_crds
 
 # pull other useful modules into the namespace
 # Note: plot and calculator are intentionally left
@@ -127,6 +131,7 @@ from viscid import bucket
 from viscid import dataset
 from viscid import grid
 from viscid import parallel
+from viscid import pyeval
 from viscid import tree
 from viscid import verror
 from viscid import vjson

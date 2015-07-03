@@ -1,7 +1,6 @@
 import os
 import re
 
-from viscid import dataset
 from viscid.readers import xdmf
 from viscid.readers import athena
 

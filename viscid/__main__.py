@@ -5,6 +5,7 @@ import sys
 
 print("Viscid says: from viscid import *")
 from viscid import *
+import viscid
 
 print("Viscid says: importing numpy as np")
 import numpy as np

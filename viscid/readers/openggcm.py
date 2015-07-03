@@ -19,10 +19,9 @@ except ImportError:
     _has_numexpr = False
 
 from viscid import logger
-from viscid.compat import string_types, izip
-from viscid.readers.vfile_bucket import VFileBucket
+from viscid.compat import string_types
+from viscid.readers.vfile_bucket import ContainerFile
 from viscid.readers.ggcm_logfile import GGCMLogFile
-from viscid.readers import vfile
 # from viscid.dataset import Dataset, DatasetTemporal
 # from viscid.vutil import time_as_datetime, time_as_timedelta
 from viscid import vutil
@@ -71,7 +70,7 @@ def group_ggcm_files_common(detector, fnames):
                  fname=m.string)
         try:
             d["time"] = int(grps[2])
-        except TypeError:
+        except (TypeError, ValueError):
             # grps[2] is none for "RUN.3d.xdmf" files
             d["time"] = -1
         infolst.append(d)
@@ -388,7 +387,7 @@ class GGCMGrid(grid.Grid):
         return psi
 
 
-class GGCMFile(object):
+class GGCMFile(object):  # pylint: disable=abstract-method
     """Mixin some GGCM convenience stuff
 
     Attributes:
@@ -411,7 +410,6 @@ class GGCMFile(object):
     read_log_file = False
 
     _collection = None
-    vfilebucket = None
 
     def read_logfile(self):
         if self.read_log_file:
@@ -429,15 +427,11 @@ class GGCMFile(object):
 
             if log_fname is not None:
                 self.set_info("_viscid_log_fname", log_fname)
-                if self.vfilebucket is None:
-                    self.vfilebucket = VFileBucket()
-                log_f = self.vfilebucket.load_file(log_fname,
-                                                   file_type=GGCMLogFile,
-                                                   index_handle=False)
-                # print("!!", log_f)
 
-                # self.parents.append(log_f)  # this way makes me uncomfortable
-                self._info.update(log_f.info)
+                with GGCMLogFile(log_fname) as log_f:
+                    # self._info.update(log_f.info)
+                    for key, val in log_f.info.items():
+                        self.update_info(key, val)
             else:
                 # print("**", log_f)
                 self.set_info("_viscid_log_fname", None)
@@ -478,7 +472,9 @@ class GGCMFile(object):
                 # the super class
                 return NotImplemented
             dipoletime = self._get_dipoletime_as_datetime()
-            delta = dipoletime - datetime.strptime("00", "%S")
+            # Why was this relative to time 0?
+            # delta = dipoletime - datetime.strptime("00", "%S")
+            delta = time - dipoletime
             return delta.total_seconds()
 
         return NotImplemented
@@ -513,7 +509,7 @@ class GGCMFile(object):
         return NotImplemented
 
 
-class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
+class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-method
     """An abstract class from which jrrle and fortbin files are derived
 
     Note:
@@ -525,15 +521,10 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
     _fld_templates = None
     grid2 = None
 
-    def __init__(self, fname, vfilebucket=None, crds=None, fld_templates=None,
-                 **kwargs):
-        if vfilebucket is None:
-            vfilebucket = VFileBucket()
-
+    def __init__(self, fname, crds=None, fld_templates=None, **kwargs):
         self._crds = crds
         self._fld_templates = fld_templates
-
-        super(GGCMFileFortran, self).__init__(fname, vfilebucket, **kwargs)
+        super(GGCMFileFortran, self).__init__(fname, **kwargs)
 
     @classmethod
     def group_fnames(cls, fnames):
@@ -593,10 +584,10 @@ class GGCMFileFortran(GGCMFile, vfile.VFile):  # pylint: disable=abstract-method
             self._fld_templates = self._make_template(self._collection[0])
 
             for fname in self._collection:
-                f = self.vfilebucket.load_file(fname, index_handle=False,
-                                               file_type=type(self),
-                                               crds=self._crds,
-                                               fld_templates=self._fld_templates)
+                f = self._load_child_file(fname, index_handle=False,
+                                          file_type=type(self),
+                                          crds=self._crds,
+                                          fld_templates=self._fld_templates)
                 data_temporal.add(f)
             data_temporal.activate(0)
             self.add(data_temporal)

@@ -11,7 +11,7 @@ Submodules
 
    viscid.plot.cmap_tools
    viscid.plot.cubehelix
-   viscid.plot.extra_cmaps
+   viscid.plot.mpl_extra
    viscid.plot.mpl
    viscid.plot.mvi
    viscid.plot.vseaborn

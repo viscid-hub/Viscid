@@ -19,7 +19,18 @@ There is also preliminary support for reading and plotting AMR datasets from XDM
 
 Below are some simple examples to get you started with Viscid. There are some far more interesting examples in the ``Viscid/tests`` directory, but they are not always as straight forward or documented as the examples here.
 
-Contents:
+Quick Start
+-----------
+
+I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable. Check :doc:`installation` for the list of dependancies. To build Viscid, I recommend running ``./setup.py build_ext -i`` and adding the ``Viscid`` directory to your ``PYTHONPATH`` and ``Viscid/scripts`` to your ``PATH``.
+
+Contents
+--------
+
+.. toctree::
+  :maxdepth: 1
+
+  ChangeLog<changes>
 
 .. toctree::
   :maxdepth: 3

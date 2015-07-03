@@ -10,15 +10,13 @@ import re
 
 import numpy as np
 
-from viscid.readers.vfile_bucket import VFileBucket
-from viscid.readers import athena
 from viscid.readers import vfile
-from viscid import dataset
-from viscid import field
+from viscid.readers.vfile_bucket import ContainerFile
+from viscid.readers import athena
 from viscid import coordinate
 
 
-class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract-method
+class AthenaBinFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstract-method
     """An Athena binary file reader"""
     _detector = r"^\s*(.*)\.([0-9]+)\.(bin)\s*$"
 
@@ -31,8 +29,7 @@ class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
     var_type = None
     _crds = None
 
-    def __init__(self, fname, vfilebucket=None, crds=None,
-                 float_type_name=None, var_type=None,
+    def __init__(self, fname, crds=None, float_type_name=None, var_type=None,
                  **kwargs):
         """
         Keyword Arguments:
@@ -40,14 +37,11 @@ class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
                 the data type of the file's data.
             var_type (str): either 'cons' or 'prim'
         """
-        if vfilebucket is None:
-            vfilebucket = VFileBucket()
-
+        # there is no parent bucket, so we need to new one up for children
         self.float_type_name = float_type_name
         self.var_type = var_type
         self._crds = crds
-
-        super(AthenaBinFile, self).__init__(fname, vfilebucket, **kwargs)
+        super(AthenaBinFile, self).__init__(fname, **kwargs)
 
     @classmethod
     def group_fnames(cls, fnames):
@@ -87,11 +81,11 @@ class AthenaBinFile(athena.AthenaFile, vfile.VFile):  # pylint: disable=abstract
                                                name="AthenaTemporalCollection")
 
             for fname in self._collection:
-                f = self.vfilebucket.load_file(fname, index_handle=False,
-                                               file_type=type(self),
-                                               crds=self._crds,
-                                               float_type_name=self.float_type_name,
-                                               var_type=self.var_type)
+                f = self._load_child_file(fname, index_handle=False,
+                                          file_type=type(self),
+                                          crds=self._crds,
+                                          float_type_name=self.float_type_name,
+                                          var_type=self.var_type)
                 data_temporal.add(f)
             data_temporal.activate(0)
             self.add(data_temporal)

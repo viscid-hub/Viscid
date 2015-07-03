@@ -19,6 +19,7 @@ from viscid.compat import string_types, izip_longest
 from viscid import coordinate
 from viscid import vutil
 from viscid import tree
+from viscid.cython import interp_trilin
 
 LAYOUT_DEFAULT = "none"  # do not translate
 LAYOUT_INTERLACED = "interlaced"
@@ -344,6 +345,7 @@ class Field(tree.Leaf):
 
     post_reshape_transform_func = None
     transform_func_kwargs = None
+    defer_wrapping = False
 
     # _parent_field is a hacky way to keep a 'parent' field in sync when data
     # is loaded... this is used for converting cell centered data ->
@@ -458,12 +460,12 @@ class Field(tree.Leaf):
 
     @layout.setter
     def layout(self, new_layout):
-        """ UNTESTED, unload data if layout changes """
+        """ UNTESTED, clear cache if layout changes """
         new_layout = new_layout.lower()
         if self.is_loaded():
             current_layout = self.layout
             if new_layout != current_layout:
-                self.unload()
+                self.clear_cache()
         self.deep_meta["force_layout"] = new_layout
         self._layout = None
 
@@ -473,6 +475,10 @@ class Field(tree.Leaf):
         the underlying data, but is assumed a priori so no data load is
         done here """
         return self.nr_sdims + 1
+
+    @property
+    def ndim(self):
+        return self.nr_dims
 
     @property
     def nr_sdims(self):
@@ -592,14 +598,14 @@ class Field(tree.Leaf):
     @property
     def data(self):
         """ if you want to fill the cache, this will do it, note that
-        to empty the cache later you can always use unload """
+        to empty the cache later you can always use clear_cache """
         if self._cache is None:
             self._fill_cache()
         return self._cache
     @data.setter
     def data(self, dat):
         # clean up
-        self._purge_cache()
+        self.clear_cache()
         self._layout = None
         self._nr_comp = None
         self._nr_comps = None
@@ -619,7 +625,7 @@ class Field(tree.Leaf):
     def is_loaded(self):
         return self._cache is not None
 
-    def _purge_cache(self):
+    def clear_cache(self):
         """ does not guarentee that the memory will be freed """
         self._cache = None
         if self._parent_field is not None:
@@ -1006,6 +1012,13 @@ class Field(tree.Leaf):
         # print("??", type(self._src_crds), crdlst)
         return self._finalize_slice(slices, crdlst, reduced, comp_slc)
 
+    def interpolated_slice(self, selection):
+        seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
+        fld_dat = interp_trilin(self, seeds)
+        new_fld = self.wrap(fld_dat, context=dict(crds=seeds))
+        new_fld = new_fld.slice_reduce("")
+        return new_fld
+
     def set_slice(self, selection, value):
         """Used for fld.__setitem__
 
@@ -1021,10 +1034,6 @@ class Field(tree.Leaf):
             pass
         self.data[tuple(slices)] = value
         return None
-
-    def unload(self):
-        """ does not guarentee that the memory will be freed """
-        self._purge_cache()
 
     @classmethod
     def istype(cls, type_str):
@@ -1042,8 +1051,8 @@ class Field(tree.Leaf):
         return self
 
     def __exit__(self, exc_type, value, traceback):
-        """ unload the data """
-        self.unload()
+        """clear cached data"""
+        self.clear_cache()
         return None
 
     def __iter__(self):
@@ -1120,9 +1129,9 @@ class Field(tree.Leaf):
 
         So, fields that belong to files are kept around for the
         lifetime of the file bucket, which is probably the lifetime
-        of the main script. That means you have to explicitly unload
-        to clear the cache (important if reading a timeseries of fields
-        > 1GB). This function will return a new field instance with
+        of the main script. That means you have to explicitly clear the
+        cache (important if reading a timeseries of fields > 1GB).
+        This function will return a new field instance with
         references to all the same internals as self, except for the
         cache. Effectively, this turns the parent field into a
         lightweight "field shell", from which a memory intensive field
@@ -1256,7 +1265,7 @@ class Field(tree.Leaf):
             ret = self.wrap(np.ascontiguousarray(self.data))
 
         if not was_loaded and ret is not self:
-            self.unload()
+            self.clear_cache()
         return ret
 
     #######################
@@ -1284,91 +1293,139 @@ class Field(tree.Leaf):
         # dtype = None is ok, datatype won't change
         return np.array(self.data, dtype=dtype, copy=False)
 
-    def wrap(self, arr, context=None, fldtype=None):
+    def wrap(self, arr, context=None, fldtype=None, npkwargs=None, other=None):
         """ arr is the data to wrap... context is exta deep_meta to pass
         to the constructor. The return is just a number if arr is a
         1 element ndarray, this is for ufuncs that reduce to a scalar """
+
+        if self.defer_wrapping and hasattr(other, "wrap"):
+            return other.wrap(arr, context=context, fldtype=fldtype,
+                              npkwargs=npkwargs)
+
         if arr is NotImplemented:
             return NotImplemented
         # if just 1 number wrappen in an array, unpack the value and
         # return it... this is more ufuncy behavior
-        if isinstance(arr, np.ndarray) and arr.size == 1:
-            return np.ravel(arr)[0]
+        try:
+            if arr.size == 1:
+                return np.ravel(arr)[0]
+        except AttributeError:
+            pass
+
         if context is None:
             context = {}
         name = context.pop("name", self.name)
         pretty_name = context.pop("pretty_name", self.pretty_name)
         crds = context.pop("crds", self.crds)
-        center = context.pop("center", self.center)
+        center = context.pop("center", self.center).lower()
         time = context.pop("time", self.time)
         # should it always return the same type as self?
+
+        # hack for reduction operations (ops that have npkwargs['axis'])
+        defer_wrapping = self.defer_wrapping
+        if npkwargs:
+            axis = npkwargs.get('axis', None)
+            if axis is not None:
+                reduce_axis = crds.axes[axis]
+                crd_slc = "{0}=0".format(reduce_axis)
+                default_keepdims = len(self.shape) == len(crds.shape)
+                iscc = self.iscentered('cell')
+                if npkwargs.get("keepdims", default_keepdims):
+                    crds = self.crds.slice_keep(crd_slc, cc=iscc)
+                else:
+                    crds = self.crds.slice_reduce(crd_slc, cc=iscc)
+                defer_wrapping = True
+
+        # little hack for broadcasting vectors and scalars together
+        crd_shape = crds.shape_nc if center == "node" else crds.shape_cc
+        crd_shape = list(crd_shape)
+        try:
+            arr_shape = list(arr.shape)
+        except AttributeError:
+            arr_shape = [len(arr)] + list(arr[0].shape)
+
+        if fldtype is None and arr_shape == crd_shape:
+            fldtype = "scalar"
+        if fldtype is None and (arr_shape[1:] == crd_shape or
+                                arr_shape[:-1] == crd_shape):
+            fldtype = "vector"
+
         if fldtype is None:
             fldtype = type(self)
         else:
             fldtype = field_type(fldtype)
+
         # Transform functions are intentionally omitted. The idea being that
         # the transform was already applied when creating arr
-        return fldtype(name, crds, arr, time=time, center=center,
-                   meta=self.meta, deep_meta=context, parents=[self],
-                   pretty_name=pretty_name)
+        fld = fldtype(name, crds, arr, time=time, center=center,
+                      meta=self.meta, deep_meta=context, parents=[self],
+                      pretty_name=pretty_name)
+        # if the operation reduced a vector to something with 1 component,
+        # then turn the result into a ScalarField
+        if fld.nr_comps == 1:
+            fld = fld.component_fields()[0]
+        return fld
 
     def __array_wrap__(self, out_arr, context=None): #pylint: disable=W0613
-        # print("wrapping")
         return self.wrap(out_arr)
 
-    # def __array_finalize__(self, *args, **kwargs):
-    #     print("attempted call to field.__array_finalize__")
+    def _ow(self, other):
+        # hack because Fields don't broadcast correctly after a ufunc?
+        try:
+            return other.__array__()
+        except AttributeError:
+            return other
 
     def __add__(self, other):
-        return self.wrap(self.data.__add__(other))
+        return self.wrap(self.data.__add__(self._ow(other)), other=other)
     def __sub__(self, other):
-        return self.wrap(self.data.__sub__(other))
+        return self.wrap(self.data.__sub__(self._ow(other)), other=other)
     def __mul__(self, other):
-        return self.wrap(self.data.__mul__(other))
+        return self.wrap(self.data.__mul__(self._ow(other)), other=other)
     def __div__(self, other):
-        return self.wrap(self.data.__div__(other))
+        return self.wrap(self.data.__div__(self._ow(other)), other=other)
     def __truediv__(self, other):
-        return self.wrap(self.data.__truediv__(other))
+        return self.wrap(self.data.__truediv__(self._ow(other)), other=other)
     def __floordiv__(self, other):
-        return self.wrap(self.data.__floordiv__(other))
+        return self.wrap(self.data.__floordiv__(self._ow(other)), other=other)
     def __mod__(self, other):
-        return self.wrap(self.data.__mod__(other))
+        return self.wrap(self.data.__mod__(self._ow(other)), other=other)
     def __divmod__(self, other):
-        return self.wrap(self.data.__divmod__(other))
+        return self.wrap(self.data.__divmod__(self._ow(other)), other=other)
     def __pow__(self, other):
-        return self.wrap(self.data.__pow__(other))
+        return self.wrap(self.data.__pow__(self._ow(other)), other=other)
     def __lshift__(self, other):
-        return self.wrap(self.data.__lshift__(other))
+        return self.wrap(self.data.__lshift__(self._ow(other)), other=other)
     def __rshift__(self, other):
-        return self.wrap(self.data.__rshift__(other))
+        return self.wrap(self.data.__rshift__(self._ow(other)), other=other)
     def __and__(self, other):
-        return self.wrap(self.data.__and__(other))
+        return self.wrap(self.data.__and__(self._ow(other)), other=other)
     def __xor__(self, other):
-        return self.wrap(self.data.__xor__(other))
+        return self.wrap(self.data.__xor__(self._ow(other)), other=other)
     def __or__(self, other):
-        return self.wrap(self.data.__or__(other))
+        return self.wrap(self.data.__or__(self._ow(other)), other=other)
 
     def __radd__(self, other):
-        return self.wrap(self.data.__radd__(other))
+        return self.wrap(self.data.__radd__(self._ow(other)), other=other)
     def __rsub__(self, other):
-        return self.wrap(self.data.__rsub__(other))
+        return self.wrap(self.data.__rsub__(self._ow(other)), other=other)
     def __rmul__(self, other):
-        return self.wrap(self.data.__rmul__(other))
+        return self.wrap(self.data.__rmul__(self._ow(other)), other=other)
     def __rdiv__(self, other):
-        return self.wrap(self.data.__rdiv__(other))
+        return self.wrap(self.data.__rdiv__(self._ow(other)), other=other)
     def __rtruediv__(self, other):
-        return self.wrap(self.data.__rtruediv__(other))
+        return self.wrap(self.data.__rtruediv__(self._ow(other)), other=other)
     def __rfloordiv__(self, other):
-        return self.wrap(self.data.__rfloordiv__(other))
+        return self.wrap(self.data.__rfloordiv__(self._ow(other)), other=other)
     def __rmod__(self, other):
-        return self.wrap(self.data.__rmod__(other))
+        return self.wrap(self.data.__rmod__(self._ow(other)), other=other)
     def __rdivmod__(self, other):
-        return self.wrap(self.data.__rdivmod__(other))
+        return self.wrap(self.data.__rdivmod__(self._ow(other)), other=other)
     def __rpow__(self, other):
-        return self.wrap(self.data.__rpow__(other))
+        return self.wrap(self.data.__rpow__(self._ow(other)), other=other)
 
     # inplace operations are not implemented since the data
-    # can up and disappear (due to unload)... this could cause
+    # can up and disappear (due to clear_cache)... this could cause
     # confusion
     def __iadd__(self, other):
         return NotImplemented
@@ -1396,23 +1453,56 @@ class Field(tree.Leaf):
     def __invert__(self):
         return self.wrap(self.data.__invert__())
 
-    def any(self):
-        return self.data.any()
-    def all(self):
-        return self.data.all()
-
     def __lt__(self, other):
-        return self.wrap(self.data.__lt__(other))
+        return self.wrap(self.data.__lt__(self._ow(other)), other=other)
     def __le__(self, other):
-        return self.wrap(self.data.__le__(other))
+        return self.wrap(self.data.__le__(self._ow(other)), other=other)
     def __eq__(self, other):
-        return self.wrap(self.data.__eq__(other))
+        return self.wrap(self.data.__eq__(self._ow(other)), other=other)
     def __ne__(self, other):
-        return self.wrap(self.data.__ne__(other))
+        return self.wrap(self.data.__ne__(self._ow(other)), other=other)
     def __gt__(self, other):
-        return self.wrap(self.data.__gt__(other))
+        # print("::__gt__::", self.data.shape, other.shape,
+        #       self.data.__gt__(other).shape, "ndim", other.ndim)
+        return self.wrap(self.data.__gt__(self._ow(other)), other=other)
     def __ge__(self, other):
-        return self.wrap(self.data.__ge__(other))
+        return self.wrap(self.data.__ge__(self._ow(other)), other=other)
+
+    def any(self, **kwargs):
+        return self.wrap(self.data.any(**kwargs), npkwargs=kwargs)
+    def all(self, **kwargs):
+        return self.wrap(self.data.all(**kwargs), npkwargs=kwargs)
+    def argmax(self, axis=None, **kwargs):
+        kwargs.update(axis=axis)
+        return self.wrap(self.data.argmax(**kwargs), npkwargs=kwargs)
+    def argmin(self, axis=None, **kwargs):
+        kwargs.update(axis=axis)
+        return self.wrap(self.data.argmin(**kwargs), npkwargs=kwargs)
+    def argpartition(self, **kwargs):
+        return self.wrap(self.data.argpartition(**kwargs), npkwargs=kwargs)
+    def argsort(self, axis=-1, kind='quicksort', order=None, **kwargs):
+        kwargs.update(axis=axis, kind=kind, order=order)
+        return self.wrap(self.data.argsort(**kwargs), npkwargs=kwargs)
+    def cumprod(self, axis=None, dtype=None, order=None, **kwargs):
+        kwargs.update(axis=axis, dtype=dtype, order=order)
+        return self.wrap(self.data.cumprod(**kwargs), npkwargs=kwargs)
+    def cumsum(self, axis=None, dtype=None, order=None, **kwargs):
+        kwargs.update(axis=axis, dtype=dtype, order=order)
+        return self.wrap(self.data.cumsum(**kwargs), npkwargs=kwargs)
+    def max(self, **kwargs):
+        return self.wrap(self.data.max(**kwargs), npkwargs=kwargs)
+    def mean(self, **kwargs):
+        return self.wrap(self.data.mean(**kwargs), npkwargs=kwargs)
+    def min(self, **kwargs):
+        return self.wrap(self.data.min(**kwargs), npkwargs=kwargs)
+    def partition(self, **kwargs):
+        return self.wrap(self.data.partition(**kwargs), npkwargs=kwargs)
+    def prod(self, **kwargs):
+        return self.wrap(self.data.prod(**kwargs), npkwargs=kwargs)
+    def std(self, **kwargs):
+        return self.wrap(self.data.std(**kwargs), npkwargs=kwargs)
+    def sum(self, **kwargs):
+        return self.wrap(self.data.sum(**kwargs), npkwargs=kwargs)
 
     @property
     def real(self):
@@ -1561,7 +1651,7 @@ class VectorField(Field):
             ret = self.wrap(self.data, ctx)
 
         if not was_loaded and ret is not self:
-            self.unload()
+            self.clear_cache()
         return ret
 
 class MatrixField(Field):

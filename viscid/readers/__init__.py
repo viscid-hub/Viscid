@@ -23,11 +23,12 @@ from viscid.readers import ascii
 # specific sim packages
 from viscid.readers import ggcm_xdmf
 from viscid.readers import ggcm_fortbin
+from viscid.readers import psc
+from viscid.readers import gkeyll
 from viscid.readers import athena_bin
 from viscid.readers import athena_tab
 from viscid.readers import athena_hst
 from viscid.readers import athena_xdmf
-from viscid.readers import psc
 try:
     from viscid.readers import ggcm_jrrle
 except ImportError:
@@ -85,6 +86,12 @@ def load_files(fnames, **kwargs):
     """
     return __filebucket__.load_files(fnames, **kwargs)
 
+def unload_file(handle):
+    __filebucket__[handle].unload()
+
+def reload_file(handle):
+    __filebucket__[handle].reload()
+
 def get_file(handle):
     """ return a file that's already been loaded by either
     number (as in nth file loaded), of file name
@@ -105,7 +112,7 @@ def save_field(fname, fld, **kwargs):
 def save_fields(fname, flds, **kwargs):
     """ save a list of fields, filetype is inferred from fname
     """
-    ftype = VFile.detect_type(fname)
+    ftype = VFile.detect_type(fname, mode='w')
     ftype.save_fields(fname, flds, **kwargs)
 
 def unload_all_files():

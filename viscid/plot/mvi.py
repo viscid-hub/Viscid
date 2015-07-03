@@ -48,7 +48,7 @@ from viscid.calculator.topology import color_from_topology
 #     b.dimensions = collection[0]['b'].shape[:-1][::-1]
 #
 #     b_src = VTKDataSource(data=b)
-#     collection.unload()
+#     collection.clear_cache()
 
 def field_to_source(fld):
     """Convert a field to a mayavi source

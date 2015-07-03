@@ -483,8 +483,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
                       "values")
                 vmin, vmax = 1e-20, 1e-20
             elif vmin <= 0.0:
-                print("Warning: Using log scale on a field with negative "
-                      "values. Only plotting 4 decades.")
+                print("Warning: Using log scale on a field with values <= 0. "
+                      "Only plotting 4 decades.")
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
         elif vscale is None:
@@ -577,6 +577,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         cbar = None
 
     if not nolabels:
+        if flip_plot:
+            namex, namey = namey, namex
         if not xlabel:
             xlabel = namex
         if not ylabel:
@@ -621,7 +623,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     if fld.nr_blocks > 1:
         raise TypeError("plot2d_mapfield doesn't do multi-block fields yet")
 
+    _new_axis = False
     if not ax:
+        if len(plt.gcf().axes) == 0:
+            _new_axis = True
         ax = plt.gca()
 
     # parse plot_opts
@@ -674,18 +679,20 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         absboundinglat = np.abs(bounding_lat)
 
         if ax is None:
-            ax = plt.gca()
+            # ax got set above, non?
+            raise RuntimeError("Shouldn't be here")
         if not hasattr(ax, "set_thetagrids"):
             ax = plt.subplot(*ax.get_geometry(), projection='polar')
-            logger.warn("Clobbering axis for subplot %s; please give a polar "
-                        "axis to plot2d_mapfield if you indend to use it "
-                        "later.", ax.get_geometry())
+            if not _new_axis:
+                logger.warn("Clobbering axis for subplot %s; please give a "
+                            "polar axis to plot2d_mapfield if you indend to "
+                            "use it later.", ax.get_geometry())
 
         if hemisphere == "north":
-            sl_fld = fld["lat=:{0}".format(absboundinglat)]
+            sl_fld = fld["lat=:{0}f".format(absboundinglat)]
             maxlat = sl_fld.get_crd_nc('lat')[-1]
         elif hemisphere == "south":
-            sl_fld = fld["lat={0}:".format(180.0 - absboundinglat)]["lat=::-1"]
+            sl_fld = fld["lat={0}f:".format(180.0 - absboundinglat)]["lat=::-1"]
             maxlat = 180.0 - sl_fld.get_crd_nc('lat')[-1]
 
         lat, lon = sl_fld.get_crds_nc(['lat', 'lon'])
@@ -1043,6 +1050,46 @@ def tighten(**kwargs):
         plt.tight_layout(**kwargs)
     except AttributeError:
         logger.warn("No matplotlib tight layout support")
+
+def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
+    """Wrapper to adjust subplots w/ tight_layout remembering axes lims
+
+    Args:
+        fig (Figure): a matplotlib figure
+        tight_layout (bool, dict): flag for whether or not to apply a
+            tight layout. If a dict, then it's unpacked into
+            `plt.tight_layout(...)`
+        subplot_params (dict): unpacked into `fig.subplots_adjust(...)`
+
+    Returns:
+        dict: keyword arguments for fig.subplots_adjust that describe
+            the current figure after all adjustments are made
+    """
+    if fig is None:
+        fig = plt.gcf()
+
+    # remember the axes' limits before the call to tight_layout
+    pre_tighten_xlim = [ax.get_xlim() for ax in fig.axes]
+    pre_tighten_ylim = [ax.get_ylim() for ax in fig.axes]
+
+    if tight_layout or isinstance(tight_layout, dict):
+        if not isinstance(tight_layout, dict):
+            tight_layout = {}
+        tighten(**tight_layout)
+
+    # apply specific subplot_params if given; hack for movies that wiggle
+    if subplot_params:
+        fig.subplots_adjust(**subplot_params)
+
+    # re-apply the old axis limits; hack for movies that wiggle
+    for ax, xlim, ylim in zip(fig.axes, pre_tighten_xlim, pre_tighten_ylim):
+        ax.set_xlim(*xlim)
+        ax.set_ylim(*ylim)
+
+    p = fig.subplotpars
+    ret = {'left': p.left, 'right': p.right, 'top': p.top,
+           'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
+    return ret
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="mhd",

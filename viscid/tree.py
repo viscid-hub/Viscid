@@ -35,6 +35,12 @@ class Node(object):
         if not self in obj.parents:
             obj.parents.append(self)
 
+    def tear_down_child(self, obj):
+        try:
+            obj.parents.remove(self)
+        except ValueError:
+            pass
+
     def _parent_bfs(self, condition, getvalue=None):
         """Breadth first search of parent
 

@@ -69,8 +69,10 @@ def main():
     global_popts = getattr(args, "global_popts", None)
 
     if getattr(args, "plot_vars", None) is None:
-        args.plot_vars = [["pp,y=0.0", {"plot_opts":"x=-20.0_12.0,y=-8.0_8.0,log=5e-2_5e3"}],
-                          ["by,y=0.0", {"plot_opts":"x=-20.0_12.0,y=-8.0_8.0,lin=-5_5"}]]
+        args.plot_vars = [["pp,y=0.0", {"plot_opts":"x=-20.0f_12.0f,y=-8.0f_8.0f,"
+                                                    "log=5e-2_5e3"}],
+                          ["by,y=0.0", {"plot_opts":"x=-20.0f_12.0f,y=-8.0f_8.0f,"
+                                                    "lin=-5_5"}]]
 
     if args.animate is not None and args.prefix is None:
         args.prefix = os.path.splitext(args.animate)[0]
@@ -98,9 +100,9 @@ def main():
             reader_opts[k] = v
 
     file_ = readers.load_file(args.file, **reader_opts)
-    vlab.multiplot(file_, args.plot_vars, nprocs=args.np, time_slice=args.t,
-                   share_axes=(not args.own), global_popts=global_popts,
-                   show=args.show, kwopts=kwopts)
+    vlab.multiplot(file_, plot_vars=args.plot_vars, nprocs=args.np,
+                   time_slice=args.t, share_axes=(not args.own),
+                   global_popts=global_popts, show=args.show, kwopts=kwopts)
 
     if args.animate:
         sub.Popen("ffmpeg -r {0} -i {2}_%06d.png -pix_fmt yuv420p "

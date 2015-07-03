@@ -36,6 +36,7 @@ else:
 cmdclass = {}
 pkgs = ['viscid',
         'viscid.calculator',
+        'viscid.cython',
         'viscid.compat',
         'viscid.plot',
         'viscid.readers'
@@ -54,20 +55,24 @@ ext_mods = []
 cy_ccflags = ["-Wno-unused-function"]
 cy_ldflags = []
 cy_defs = []
-cy_defs.append(["viscid.calculator.cycalc",
-                ["viscid/calculator/cycalc"],
+cy_defs.append(["viscid.cython.cycalc",
+                ["viscid/cython/cycalc"],
                 dict()
                ])
-cy_defs.append(["viscid.calculator.integrate",
-                ["viscid/calculator/integrate"],
+cy_defs.append(["viscid.cython.integrate",
+                ["viscid/cython/integrate"],
                 dict()
                ])
-cy_defs.append(["viscid.calculator.streamline",
-                ["viscid/calculator/streamline"],
+cy_defs.append(["viscid.cython.streamline",
+                ["viscid/cython/streamline"],
                 dict()
                ])
-cy_defs.append(["viscid.cyamr",
-                ["viscid/cyamr"],
+cy_defs.append(["viscid.cython.cyfield",
+                ["viscid/cython/cyfield"],
+                dict()
+               ])
+cy_defs.append(["viscid.cython.cyamr",
+                ["viscid/cython/cyamr"],
                 dict()
                ])
 
@@ -156,12 +161,29 @@ for i, d in enumerate(cy_defs):
             cy_defs[i] = None
             break
 
+def clean_pyc_files(dry_run=False):
+    """remove all .pyc / .pyo files"""
+    cwd = os.getcwd()
+    if cwd.endswith("Viscid"):
+        for root, _, files in os.walk(cwd, topdown=False):
+            for name in files:
+                if name.endswith('.pyc') or name.endswith('.pyo'):
+                    if os.path.isfile(os.path.join(root, name)):
+                        print('removing: %s' % os.path.join(root, name))
+                        if not dry_run:
+                            os.remove(os.path.join(root, name))
+    else:
+        print("Not in Viscid directory, not cleaning pyc/pyo files")
+
+
 # get clean to remove inplace files
 class Clean(clean):
     def run(self):
         # distutils uses old-style classes???
         #super(Clean, self).run()
         clean.run(self)
+
+        clean_pyc_files(self.dry_run)
 
         if self.all:
             # remove inplace extensions

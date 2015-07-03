@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Launch a python interpreter and bring viscid into the namespace
+#
+# Give "pylab" on the command line to load matplotlib's pylab.
+# Give "mlab"  on the command line to load mayavi's mlab
+
+viscid_python=${viscid_python:-$(which ipython)}
+viscid_python=${viscid_python:-$(which python)}
+
+args=" ${*} "
+if [[ ${args} == *" --help "* || ${args} == *" -h"* ]]; then
+  echo "Launch a python interpreter and bring viscid into the namespace." >&2
+  echo "If you want to use a specific version of python, set viscid_python" >&2
+  echo "as an environment variable to the desired python binary." >&2
+  echo "" >&2
+  echo "usage: viscid [mode]" >&2
+  echo "  mode    'pylab' or 'mlab' if you want that library imported too" >&2
+  echo "" >&2
+  exit 0
+fi
+
+${viscid_python} -im viscid.__main__ ${args}
+
+##
+##  EOF
+##

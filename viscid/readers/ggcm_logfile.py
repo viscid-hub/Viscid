@@ -8,7 +8,9 @@ import re
 
 import numpy as np
 
-class GGCMLogFile(object):  # pylint: disable=W0223
+from viscid.readers import vfile
+
+class GGCMLogFile(vfile.VFile):  # pylint: disable=W0223
     """Libmrc log file reader
 
     This class looks at the mrc_view info before the run starts
@@ -27,12 +29,7 @@ class GGCMLogFile(object):  # pylint: disable=W0223
                        "ggcm_mhd_ic",
                        "ggcm_dipole"]
 
-    fname = None
     info = None
-
-    def __init__(self, fname, *args, **kwargs):  # pylint: disable=unused-argument
-        self.fname = fname
-        self._parse()
 
     def _parse(self):
         _info = {}
@@ -129,8 +126,9 @@ class GGCMLogFile(object):  # pylint: disable=W0223
         val = cls._parse_value(val)
         return key, val
 
-    def unload(self):
+    def unload(self, **kwargs):
         self.info = {}
+        super(GGCMLogFile, self).unload(**kwargs)
 
 ##
 ## EOF

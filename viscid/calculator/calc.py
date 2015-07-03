@@ -11,7 +11,7 @@ import numpy as np
 
 from viscid import logger
 from viscid import verror
-from viscid.calculator import seed
+from viscid import seed
 from viscid.compat import OrderedDict
 
 try:
@@ -128,10 +128,15 @@ abs_val.add_implementation("numpy", np.abs)
 abs_max.add_implementation("numpy", lambda a: np.max(np.abs(a)))
 abs_min.add_implementation("numpy", lambda a: np.min(np.abs(a)))
 
+def dot_np(fld_a, fld_b):
+    if fld_a.nr_comp != fld_b.nr_comp:
+        raise ValueError("field must have same layout (flat or interlaced)")
+    return np.sum(fld_a * fld_b, axis=fld_a.nr_comp)
+dot.add_implementation("numpy", dot_np)
+
 def magnitude_np(fld):
     vx, vy, vz = fld.component_views()
     return np.sqrt((vx**2) + (vy**2) + (vz**2))
-
 magnitude.add_implementation("numpy", magnitude_np)
 
 # native versions

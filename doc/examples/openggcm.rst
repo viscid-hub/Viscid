@@ -16,7 +16,7 @@ This is just one way to customize the OpenGGCM reader. For more, check out :clas
     openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
     f3d = viscid.load_file(_viscid_root + '/../../sample/sample.3df.xdmf')
-    pp = f3d["pp"]["x=-20.0:20.0,y=0.0,z=-10.0:10.0"]
+    pp = f3d["pp"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"]
     mpl.plot(pp, plot_opts="log,x_-30_15", earth=True)
     mpl.plt.title(pp.format_time("UT"))
 
@@ -42,7 +42,7 @@ Time Series
 
     for i, grid in enumerate(f3d.iter_times()):
         t[i] = grid.time_as_datetime()
-        pressure[i] = grid['pp']['x=10.0, y=0.0, z=0.0']
+        pressure[i] = grid['pp']['x=10.0f, y=0.0f, z=0.0f']
     plt.plot(t, pressure)
     plt.ylabel('Pressure')
 

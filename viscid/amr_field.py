@@ -8,8 +8,15 @@ Note:
 from __future__ import print_function
 import numpy as np
 
-from viscid.compat import string_types
+# from viscid.compat import string_types
 from viscid.field import Field
+
+try:
+    from viscid.calculator import cycalc
+    _HAS_CYCALC = True
+except ImportError:
+    # in case cycalc isn't built
+    _HAS_CYCALC = False
 
 
 def is_list_of_fields(lst):
@@ -93,6 +100,9 @@ class AMRField(object):
             # logic goes this way cause extent has NaNs in
             # dimensions that aren't specified in selection... super-kludge
 
+            # also, temporarily disable warnings on NaNs in numpy
+            invalid_err_level = np.geterr()['invalid']
+            np.seterr(invalid='ignore')
             atol = 100 * np.finfo(fld.crds.xl_nc.dtype).eps
             if (not np.any(np.logical_or(fld.crds.xl_nc - atol > extent[1],
                                          fld.crds.xh_nc <= extent[0]))):
@@ -100,6 +110,7 @@ class AMRField(object):
                     maybe.append(i)
                 else:
                     inds.append(i)
+            np.seterr(invalid=invalid_err_level)
         # if we found some maybes, but no real hits, then use the maybes
         if maybe and not inds:
             inds = maybe
@@ -165,6 +176,14 @@ class AMRField(object):
         fld_lst = [fld.slice_and_keep(selection) for fld in fld_lst]
         return self._finalize_amr_slice(fld_lst)
 
+    def interpolated_slice(self, selection):
+        fld_lst, _ = self._prepare_amr_slice(selection)
+        if not isinstance(fld_lst, list):
+            raise RuntimeError("can't interpolate to that slice?")
+
+        ret_lst = [fld.interpolated_slice(selection) for fld in fld_lst]
+        return self._finalize_amr_slice(ret_lst)
+
     ###################
     ## special methods
 
@@ -181,114 +200,198 @@ class AMRField(object):
         return self
 
     def __exit__(self, exc_type, value, traceback):
-        """ unload the data """
+        """clear all caches"""
         for blk in self.blocks:
-            blk.unload()
+            blk.clear_cache()
         return None
 
-    def wrap_special_method(self, attrname, *args, **kwargs):
-        # print(">>> wrap_special_method:", attrname)
-        lst = []
-        for fld in self.blocks:
-            lst.append(getattr(fld, attrname)(*args, **kwargs))
-        return AMRField(lst, self.skeleton)
+    def wrap_field_method(self, attrname, *args, **kwargs):
+        """Wrap methods whose args are Fields and return a Field"""
+        # make sure all args have same number of blocks as self
+        is_field = [None] * len(args)
+        for i, arg in enumerate(args):
+            try:
+                if arg.nr_blocks != self.nr_blocks and arg.nr_blocks != 1:
+                    raise ValueError("AMR fields in math operations must "
+                                     "have the same number of blocks")
+                is_field[i] = True
+            except AttributeError:
+                is_field[i] = False
 
-    def __array__(self, *args, **kwargs):  # pylint: disable=unused-argument,no-self-use
-        raise NotImplementedError("AMRFields can not make a single ndarray")
+        lst = [None] * self.nr_blocks
+        other = [None] * len(args)
+        # FIXME: There must be a better way
+        for i, block in enumerate(self.blocks):
+            for j, arg in enumerate(args):
+                if is_field[j]:
+                    try:
+                        other[j] = arg.blocks[i]
+                    except IndexError:
+                        other[j] = arg.blocks[0]
+                else:
+                    other[j] = arg
+            lst[i] = getattr(block, attrname)(*other, **kwargs)
+
+        if np.asarray(lst[0]).size == 1:
+            # operation reduced to scalar
+            arr = np.array(lst)
+            return getattr(arr, attrname)(**kwargs)
+        else:
+            return AMRField(lst, self.skeleton)
+
+    # TODO: as of numpy 1.10, this will be called on ufuncs... this
+    #       will help some of the FIXMEs in __array__
+    # def __numpy_ufunc__(self, ufunc, method, i, inputs, **kwargs):
+    #     pass
+
+    def __array__(self, *args, **kwargs):
+        # FIXME: This is heinously inefficient for large arrays because it
+        #        makes an  copy of all the arrays... but I don't see
+        #        a way around this because ufuncs expect a single array
+
+        # FIXME: adding a dimension to the arrays will break cases like
+        #        np.sum(fld, axis=-1), cause that -1 will now be the patch
+        #        dimension
+
+        blocks = [block.__array__(*args, **kwargs) for block in self.blocks]
+        for i, block in enumerate(blocks):
+            blocks[i] = np.expand_dims(block, 0)
+        # the vstack will copy all the arrays, this is what __numpy_ufunc__
+        # will be able to avoid
+        arr = np.vstack(blocks)
+        # roll the patch dimension to the last dimension... this is for ufuncs
+        # that take an axis argument... this way axis will only be confused
+        # if it's negative, this is the main reason to use __numpy_ufunc__
+        # in the future
+        arr = np.rollaxis(arr, 0, len(arr.shape))
+        return arr
+
+    def __array_wrap__(self, arr, context=None):  # pylint: disable=unused-argument
+        # print(">> __array_wrap__", arr.shape, context)
+        flds = []
+        for i in range(arr.shape[-1]):
+            block_arr = arr[..., i]
+            fld = self.blocks[i].__array_wrap__(block_arr, context=context)
+            flds.append(fld)
+        return AMRField(flds, self.skeleton)
 
     def __add__(self, other):
-        return self.wrap_special_method("__add__", other)
+        return self.wrap_field_method("__add__", other)
     def __sub__(self, other):
-        return self.wrap_special_method("__sub__", other)
+        return self.wrap_field_method("__sub__", other)
     def __mul__(self, other):
-        return self.wrap_special_method("__mul__", other)
+        return self.wrap_field_method("__mul__", other)
     def __div__(self, other):
-        return self.wrap_special_method("__div__", other)
+        return self.wrap_field_method("__div__", other)
     def __truediv__(self, other):
-        return self.wrap_special_method("__truediv__", other)
+        return self.wrap_field_method("__truediv__", other)
     def __floordiv__(self, other):
-        return self.wrap_special_method("__floordiv__", other)
+        return self.wrap_field_method("__floordiv__", other)
     def __mod__(self, other):
-        return self.wrap_special_method("__mod__", other)
+        return self.wrap_field_method("__mod__", other)
     def __divmod__(self, other):
-        return self.wrap_special_method("__divmod__", other)
+        return self.wrap_field_method("__divmod__", other)
     def __pow__(self, other):
-        return self.wrap_special_method("__pow__", other)
+        return self.wrap_field_method("__pow__", other)
     def __lshift__(self, other):
-        return self.wrap_special_method("__lshift__", other)
+        return self.wrap_field_method("__lshift__", other)
     def __rshift__(self, other):
-        return self.wrap_special_method("__rshift__", other)
+        return self.wrap_field_method("__rshift__", other)
     def __and__(self, other):
-        return self.wrap_special_method("__and__", other)
+        return self.wrap_field_method("__and__", other)
     def __xor__(self, other):
-        return self.wrap_special_method("__xor__", other)
+        return self.wrap_field_method("__xor__", other)
     def __or__(self, other):
-        return self.wrap_special_method("__or__", other)
+        return self.wrap_field_method("__or__", other)
 
     def __radd__(self, other):
-        return self.wrap_special_method("__radd__", other)
+        return self.wrap_field_method("__radd__", other)
     def __rsub__(self, other):
-        return self.wrap_special_method("__rsub__", other)
+        return self.wrap_field_method("__rsub__", other)
     def __rmul__(self, other):
-        return self.wrap_special_method("__rmul__", other)
+        return self.wrap_field_method("__rmul__", other)
     def __rdiv__(self, other):
-        return self.wrap_special_method("__rdiv__", other)
+        return self.wrap_field_method("__rdiv__", other)
     def __rtruediv__(self, other):
-        return self.wrap_special_method("__rtruediv__", other)
+        return self.wrap_field_method("__rtruediv__", other)
     def __rfloordiv__(self, other):
-        return self.wrap_special_method("__rfloordiv__", other)
+        return self.wrap_field_method("__rfloordiv__", other)
     def __rmod__(self, other):
-        return self.wrap_special_method("__rmod__", other)
+        return self.wrap_field_method("__rmod__", other)
     def __rdivmod__(self, other):
-        return self.wrap_special_method("__rdivmod__", other)
+        return self.wrap_field_method("__rdivmod__", other)
     def __rpow__(self, other):
-        return self.wrap_special_method("__rpow__", other)
+        return self.wrap_field_method("__rpow__", other)
 
     def __iadd__(self, other):
-        return self.wrap_special_method("__iadd__", other)
+        return self.wrap_field_method("__iadd__", other)
     def __isub__(self, other):
-        return self.wrap_special_method("__isub__", other)
+        return self.wrap_field_method("__isub__", other)
     def __imul__(self, other):
-        return self.wrap_special_method("__imul__", other)
+        return self.wrap_field_method("__imul__", other)
     def __idiv__(self, other):
-        return self.wrap_special_method("__idiv__", other)
+        return self.wrap_field_method("__idiv__", other)
     def __itruediv__(self, other):
-        return self.wrap_special_method("__itruediv__", other)
+        return self.wrap_field_method("__itruediv__", other)
     def __ifloordiv__(self, other):
-        return self.wrap_special_method("__ifloordiv__", other)
+        return self.wrap_field_method("__ifloordiv__", other)
     def __imod__(self, other):
-        return self.wrap_special_method("__imod__", other)
+        return self.wrap_field_method("__imod__", other)
     def __ipow__(self, other):
-        return self.wrap_special_method("__ipow__", other)
+        return self.wrap_field_method("__ipow__", other)
 
     def __neg__(self):
-        return self.wrap_special_method("__neg__", )
+        return self.wrap_field_method("__neg__")
     def __pos__(self):
-        return self.wrap_special_method("__pos__", )
+        return self.wrap_field_method("__pos__")
     def __abs__(self):
-        return self.wrap_special_method("__abs__", )
+        return self.wrap_field_method("__abs__")
     def __invert__(self):
-        return self.wrap_special_method("__invert__", )
-
-    def any(self):
-        it = (fld.any() for fld in self.blocks)
-        return any(it)
-    def all(self):
-        it = (fld.all() for fld in self.blocks)
-        return all(it)
+        return self.wrap_field_method("__invert__")
 
     def __lt__(self, other):
-        return self.wrap_special_method("__lt__", other)
+        return self.wrap_field_method("__lt__", other)
     def __le__(self, other):
-        return self.wrap_special_method("__le__", other)
+        return self.wrap_field_method("__le__", other)
     def __eq__(self, other):
-        return self.wrap_special_method("__eq__", other)
+        return self.wrap_field_method("__eq__", other)
     def __ne__(self, other):
-        return self.wrap_special_method("__ne__", other)
+        return self.wrap_field_method("__ne__", other)
     def __gt__(self, other):
-        return self.wrap_special_method("__gt__", other)
+        return self.wrap_field_method("__gt__", other)
     def __ge__(self, other):
-        return self.wrap_special_method("__ge__", other)
+        return self.wrap_field_method("__ge__", other)
+
+    def any(self, **kwargs):
+        return self.wrap_field_method("any", **kwargs)
+    def all(self, **kwargs):
+        return self.wrap_field_method("all", **kwargs)
+    def argmax(self, **kwargs):
+        return self.wrap_field_method("argmax", **kwargs)
+    def argmin(self, **kwargs):
+        return self.wrap_field_method("argmin", **kwargs)
+    def argpartition(self, **kwargs):
+        return self.wrap_field_method("argpartition", **kwargs)
+    def argsort(self, **kwargs):
+        return self.wrap_field_method("argsort", **kwargs)
+    def cumprod(self, **kwargs):
+        return self.wrap_field_method("cumprod", **kwargs)
+    def cumsum(self, **kwargs):
+        return self.wrap_field_method("cumsum", **kwargs)
+    def max(self, **kwargs):
+        return self.wrap_field_method("max", **kwargs)
+    def mean(self, **kwargs):
+        return self.wrap_field_method("mean", **kwargs)
+    def min(self, **kwargs):
+        return self.wrap_field_method("min", **kwargs)
+    def partition(self, **kwargs):
+        return self.wrap_field_method("partition", **kwargs)
+    def prod(self, **kwargs):
+        return self.wrap_field_method("prod", **kwargs)
+    def std(self, **kwargs):
+        return self.wrap_field_method("std", **kwargs)
+    def sum(self, **kwargs):
+        return self.wrap_field_method("sum", **kwargs)
 
     def __getattr__(self, name):
         # define a callback to finalize
@@ -301,10 +404,22 @@ class AMRField(object):
                     return lst
             return _FieldListCallableAttrWrapper(self.blocks, name, _wrap)
         else:
-            return [getattr(fld, name) for fld in self.blocks]
-
+            # return [getattr(fld, name) for fld in self.blocks]
+            ret0 = getattr(self.blocks[0], name)
+            # Check that all blocks have the same value. Maybe this should
+            # have a debugging flag attached to it since it will take time.
+            try:
+                all_same = all(getattr(blk, name) == ret0
+                               for blk in self.blocks[1:])
+            except ValueError:
+                all_same = all(np.all(getattr(blk, name) == ret0)
+                               for blk in self.blocks[1:])
+            if not all_same:
+                raise ValueError("different blocks of the AMRField have "
+                                 "different values for attribute: {0}"
+                                 "".format(name))
+            return ret0
 
 ##
 ## EOF
 ##
-

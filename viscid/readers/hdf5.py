@@ -19,23 +19,31 @@ class H5pyDataWrapper(vfile.DataWrapper):
 
     fname = None
     loc = None
+    comp_dim = None
+    comp_idx = None
+    transpose = None
 
     _shape = None
     _dtype = None
 
-    def __init__(self, fname, loc):
+    def __init__(self, fname, loc, comp_dim=None, comp_idx=None,
+                 transpose=False):
+        assert HAS_H5PY
         super(H5pyDataWrapper, self).__init__()
         self.fname = fname
         self.loc = loc
+        self.comp_dim = comp_dim
+        self.comp_idx = comp_idx
+        self.transpose = transpose
 
     def _read_info(self):
-        # this takes super long when reading 3 hrs worth of ggcm data
-        # over sshfs
-        # import pdb; pdb.set_trace()
         try:
             with h5py.File(self.fname, 'r') as f:
                 dset = f[self.loc]
-                self._shape = dset.shape
+                self._shape = list(dset.shape)
+                if self.comp_dim is not None:
+                    self._shape.pop(self.comp_dim)
+                self._shape = tuple(self._shape)
                 self._dtype = dset.dtype
         except IOError:
             logger.error("Problem opening hdf5 file, '%s'", self.fname)
@@ -47,7 +55,10 @@ class H5pyDataWrapper(vfile.DataWrapper):
         for large temporal datasets over sshfs """
         if self._shape is None:
             self._read_info()
-        return self._shape
+        if self.transpose:
+            return self._shape[::-1]
+        else:
+            return self._shape
 
     @property
     def dtype(self):
@@ -57,21 +68,62 @@ class H5pyDataWrapper(vfile.DataWrapper):
             self._read_info()
         return self._dtype
 
-    def wrap_func(self, func_name, *args, **kwargs):
-        with h5py.File(self.fname, 'r') as f:
-            return getattr(f[self.loc], func_name)(*args, **kwargs)
+    def __len__(self):
+        if self.transpose:
+            return self.shape[-1]
+        else:
+            return self.shape[0]
 
     def __array__(self, *args, **kwargs):
-        return self.wrap_func("__array__", *args, **kwargs)
+        arr = np.empty(self.shape, dtype=self.dtype)
+        self.read_direct(arr)
+        return arr
 
-    def read_direct(self, *args, **kwargs):
-        return self.wrap_func("read_direct", *args, **kwargs)
+    def _inject_comp_slice(self, slc):
+        if self.comp_dim is not None:
+            new_slc = []
+            if slc is not None:
+                try:
+                    new_slc = list(slc)
+                except TypeError:
+                    new_slc = [slc]
+                new_slc += [slice(None)] * (len(self.shape) - len(new_slc))
+            else:
+                new_slc = [slice(None)] * len(self.shape)
 
-    def len(self):
-        return self.wrap_func("len")
+            if self.comp_dim < 0:
+                self.comp_dim += len(self.shape) + 1
+            if self.comp_dim < 0:
+                raise ValueError("comp_dim can't be < -len(self.shape)")
+
+            new_slc.insert(self.comp_dim, self.comp_idx)
+            slc = tuple(new_slc)
+        return slc
+
+    def read_direct(self, arr, **kwargs):
+        source_sel = kwargs.pop("source_sel", None)
+        source_sel = self._inject_comp_slice(source_sel)
+        with h5py.File(self.fname, 'r') as f:
+            fill_arr = arr
+            if self.transpose:
+                # FIXME: the temp array here isn't pretty, but transposing
+                # the array is kind of a hack anyway. it is fixed by the
+                # ability for fields to specify their xyz/zyx order in the
+                # xyz branch, but that branch isn't fully tested yet
+                fill_arr = np.empty(arr.shape[::-1], dtype=arr.dtype)
+            f[self.loc].read_direct(fill_arr, source_sel=source_sel,
+                                    **kwargs)
+            if self.transpose:
+                arr[...] = fill_arr.T
 
     def __getitem__(self, item):
-        return self.wrap_func("__getitem__", item)
+        item = self._inject_comp_slice(item)
+        with h5py.File(self.fname, 'r') as f:
+            arr = f[self.loc][item]
+            if self.transpose:
+                return np.transpose(arr)
+            else:
+                return arr
 
 
 class FileLazyHDF5(vfile.VFile):
@@ -96,6 +148,8 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
     """ this is an abstract-ish class from which other types of hdf5 readers
     should derrive """
     _detector = r".*\.h5\s*$"
+
+    SAVE_ONLY = True
 
     _CRDS_GROUP = "/crds"
     _FLD_GROUPS = {"node": "/flds_nc",

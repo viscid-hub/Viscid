@@ -5,13 +5,14 @@ from datetime import datetime, timedelta
 
 import numpy as np
 
-from viscid import field
 from viscid import grid
 from viscid.readers import vfile
 from viscid.readers import openggcm
 from viscid.readers._fortfile_wrapper import FortranFile
 from viscid.readers import _jrrle
 from viscid.compat import OrderedDict
+
+read_ascii = False
 
 
 class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method
@@ -23,8 +24,8 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
     _data_item_templates = None
     _def_fld_center = "Cell"
 
-    def __init__(self, filename, vfilebucket=None, **kwargs):
-        super(GGCMFileJrrleMHD, self).__init__(filename, vfilebucket, **kwargs)
+    def __init__(self, filename, **kwargs):
+        super(GGCMFileJrrleMHD, self).__init__(filename, **kwargs)
 
     def _shape_discovery_hack(self, filename):
         with JrrleFileWrapper(filename) as f:
@@ -140,7 +141,7 @@ class JrrleFileWrapper(FortranFile):
         """
         meta = self.inquire(fld_name)
         arr = np.empty(meta['dims'], dtype='float32', order='F')
-        self._read_func[ndim - 1](self.unit, arr, fld_name)
+        self._read_func[ndim - 1](self.unit, arr, fld_name, read_ascii)
         return meta, arr
 
     def inquire_all_fields(self, reinquire=False):

@@ -4,8 +4,9 @@ import itertools
 import numpy as np
 try:
     import numexpr as ne
+    _HAS_NUMEXPR = True
 except ImportError:
-    pass
+    _HAS_NUMEXPR = False
 
 from viscid import logger
 from viscid import parallel
@@ -47,11 +48,18 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False):
     m = np.array(m, dtype=dtype)
     mx, my, mz = m #pylint: disable=W0612
 
-    rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
-    mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
-    B['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
-    B['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
-    B['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+    if _HAS_NUMEXPR:
+        rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2") #pylint: disable=W0612
+        mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc") #pylint: disable=W0612
+        B['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
+        B['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
+        B['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+    else:
+        rsq = Xcc**2 + Ycc**2 + Zcc**2
+        mdotr = mx * Xcc + my * Ycc + mz * Zcc
+        B['x'] = ((three * Xcc * mdotr / rsq) - mx) / rsq**1.5
+        B['y'] = ((three * Ycc * mdotr / rsq) - my) / rsq**1.5
+        B['z'] = ((three * Zcc * mdotr / rsq) - mz) / rsq**1.5
 
     return B
 
@@ -83,50 +91,68 @@ def get_trilinear_field():
                 1.0 * (X - x03) * (Y - y03) * (Z - z03)
     return b
 
-def multiplot(file_, plot_vars, nprocs=1, time_slice=":", global_popts=None,
-              share_axes=False, show=False, kwopts=None):
+def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
     """Make lots of plots
+
+    Calls plot_func (or vlab._do_multiplot if plot_func is None) with 2
+    positional arguments (int, Grid), and all the kwargs given to
+    multiplot.
+
+    Grid is determined by vfile.iter_times(time_slice).
+
+    plot_func gets additional keyword arguments first_run (bool) and
+    first_run_result (whatever is returned from plot_func by the first
+    call).
 
     This is the function used by the ``p2d`` script. It may be useful
     to you.
+
+    Args:
+        vfile (VFile, Grid): Something that has iter_times
+        plot_func (callable): Function that makes a single plot. It
+            must take an int (index of time slice), a Grid, and any
+            number of keyword argumets. If None, _do_multiplot is used
+        nprocs (int): number of parallel processes to farm out
+            plot_func to
+        time_slice (str): passed to vfile.iter_times()
+        **kwargs: passed as keword aguments to plot_func
     """
     # make sure time slice yields >= 1 actual time slice
     try:
-        next(file_.iter_times(time_slice))
+        next(vfile.iter_times(time_slice))
     except StopIteration:
         raise ValueError("Time slice '{0}' yields no data".format(time_slice))
 
-    grid_iter = izip(
-                     itertools.count(),
-                     file_.iter_times(time_slice),
-                     itertools.repeat(plot_vars),
-                     itertools.repeat(global_popts),
-                     itertools.repeat(share_axes),
-                     itertools.repeat(show),
-                     itertools.repeat(kwopts),
-                    )
+    if plot_func is None:
+        plot_func = _do_multiplot
 
-    # FIXME: this is a wicked hack, it does one plot before splitting off
-    # in order to make the subplot adjustments the same for all plots
-    # this matters when making movies since gridspec is very badly
-    # behaved and subplots will dance around during the movie; bad gridspec
-    hack_opts = {}
-    if "subplot_params" not in kwopts:
-        r = parallel.map(1, _do_multiplot, [next(grid_iter)],
-                         args_kw=dict(_return_subplot_params=True),
+    grid_iter = izip(itertools.count(), vfile.iter_times(time_slice))
+
+    args_kw = kwargs.copy()
+    args_kw["first_run"] = True
+    args_kw["first_run_result"] = None
+
+    if "subplot_params" not in args_kw.get("kwopts", {}):
+        r = parallel.map(1, plot_func, [next(grid_iter)], args_kw=args_kw,
                          force_subprocess=(nprocs > 1))
-        hack_opts['_subplot_params'] = r[0]
 
     # now get back to your regularly scheduled programming
-    parallel.map(nprocs, _do_multiplot, grid_iter, args_kw=hack_opts)
+    args_kw["first_run"] = False
+    args_kw["first_run_result"] = r[0]
+    parallel.map(nprocs, plot_func, grid_iter, args_kw=args_kw)
 
-def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
-                  show=False, kwopts=None, _subplot_params=None,
-                  _return_subplot_params=True):
+def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
+                  share_axes=False, show=False, subplot_params=None,
+                  first_run_result=None, first_run=False, **kwargs):
     import matplotlib.pyplot as plt
     from viscid.plot import mpl
 
-    logger.info("Plotting timestep: {0}, {1}".format(tind, grid.time))
+    logger.info("Plotting timestep: %d, %g", tind, grid.time)
+
+    if plot_vars is None:
+        raise ValueError("No plot_vars given to vlab._do_multiplot :(")
+    if kwargs:
+        logger.info("Unused kwargs: {0}".format(kwargs))
 
     if kwopts is None:
         kwopts = {}
@@ -139,7 +165,7 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     timeformat = kwopts.get("timeformat", ".02f")
     tighten = kwopts.get("tighten", False)
     # wicked hacky
-    subplot_params = kwopts.get("subplot_params", _subplot_params)
+    # subplot_params = kwopts.get("subplot_params", _subplot_params)
 
     # nrows = len(plot_vars)
     nrows = len([pv[0] for pv in plot_vars if not pv[0].startswith('^')])
@@ -213,18 +239,15 @@ def _do_multiplot(tind, grid, plot_vars, global_popts=None, share_axes=False,
     if timeformat and timeformat.lower() != "none":
         plt.suptitle(grid.format_time(timeformat))
 
+    # for adjusting subplots / tight_layout and applying the various
+    # hacks to keep plots from dancing around in movies
+    if not subplot_params and first_run_result:
+        subplot_params = first_run_result
     if tighten:
-        mpl.tighten(rect=[0, 0.03, 1, 0.90])
-
-    # for movies where plots wiggle
-    if subplot_params:
-        plt.gcf().subplots_adjust(**subplot_params)
-
-    if _return_subplot_params:
-        p = plt.gcf().subplotpars
-        ret = {'left': p.left, 'right': p.right, 'top': p.top,
-               'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
-    else:
+        tighten = dict(rect=[0, 0.03, 1, 0.90])
+    ret = mpl.auto_adjust_subplots(tight_layout=tighten,
+                                   subplot_params=subplot_params)
+    if not first_run:
         ret = None
 
     if out_prefix:

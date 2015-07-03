@@ -15,43 +15,51 @@ Here is an example rc file,
   {
     ### For Everything
     ## use shell copies so we don't have to call unload()
-    "grid.Grid.longterm_field_caches": false
+    "grid.Grid.longterm_field_caches": false,
 
     ### for OpenGGCM
     ## try to get extra run information
-    "readers.openggcm.GGCMFile.read_log_file": true
+    "readers.openggcm.GGCMFile.read_log_file": true,
     ## everyone likes GSE coords :)
-    "readers.openggcm.GGCMGrid.mhd_to_gse_on_read": "auto"
+    "readers.openggcm.GGCMGrid.mhd_to_gse_on_read": "auto",
 
     ### For Athena
     ## this doesn't work for some reason
-    # "readers.athena_bin.AthenaBinFileWrapper.var_type": "prim"
+    # "readers.athena_bin.AthenaBinFileWrapper.var_type": "prim",
 
     # evaluator control for security
-    "calculator.evaluator.enabled": false
+    "calculator.evaluator.enabled": false,
 
     # note, the redhelix colormap is defined in viscid.plot.mpl_extra
     "plot.mpl_extra.default_cmap": "redhelix",
+    "plot.mpl_extra.symmetric_cmap": "seismic",
     "plot.mpl_extra.default_cbarfmt": "steve",
     "plot.mpl_extra.default_majorfmt": "steve",
 
     # pretty plotting
-    "plot.vseaborn.enabled": true
-    "plot.vseaborn.context": "poster"
-    "plot.vseaborn.style": "ticks"
-    "plot.vseaborn.palette": ["husl", 8]
-    # "plot.vseaborn.palette": [["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71"]]
-    # "plot.vseaborn.rc": {"lines.markeredgewidth": 0.01, "image.cmap": "redhelix"}
+    "plot.vseaborn.enabled": true,
+    "plot.vseaborn.context": "poster",
+    "plot.vseaborn.style": "ticks",
+    "plot.vseaborn.palette": ["husl", 8],
+    # "plot.vseaborn.palette": [["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71"]],
+    # "plot.vseaborn.rc": {"lines.markeredgewidth": 0.01},
   }
 
 Common Customizations
 ---------------------
 
-viscid.plot.extra_cmaps.default_cmap
--------------------------------------
+viscid.plot.mpl_extra
+---------------------
 
 * **default_cmap**: Changes the default color maps for plots made using
   :py:mod:`viscid.plot.mpl`
+* **symmetric_cmap**: Changes the default color maps for plots that are
+  symmetric about 0
+* **default_cbarfmt**: Change the default tick formatter for colbars
+* **default_majorfmt**: Change the default major tick formatter for axes
+* **default_minorfmt**: Change the default major tick formatter for axes
+* **default_majorloc**: Change the default major tick locator for axes
+* **default_minorloc**: Change the default major tick locator for axes
 
 viscid.grid.Grid
 ----------------

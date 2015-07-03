@@ -7,7 +7,6 @@
 			"name": "viscid",
 			"shell": true,
 			"shell_cmd": "python setup.py build",
-			"syntax": "Packages/Makefile/Make.build-language",
 			"variants":
 			[
 				{

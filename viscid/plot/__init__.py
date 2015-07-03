@@ -3,7 +3,7 @@ other libraries (Matplotlib / Mayavi)"""
 
 __all__ = ["cmap_tools",
            "cubehelix",
-           "extra_cmaps",
+           "mpl_extra",
            "mpl",
            "mvi",
            "vseaborn"
