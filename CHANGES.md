@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.80.8 dev
-==========
+0.80.8
+======
 
 Changes:
   - Files can now be unloaded (treating a file like a context manager will unload it on __exit__)
