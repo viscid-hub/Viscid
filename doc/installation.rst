@@ -17,25 +17,18 @@ The optional calculator modules (necalc and cycalc) are all dispatched through
 calculator.calc, and it is intelligent enough not to use a library that is not
 installed.
 
+To get the dependancies squared away, I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable.
+
 Standard Setup
 --------------
 
-Just call the usual distutils commands. This compiles all the cython code (cython is not required for this).::
+The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code. To build Viscid, I recommend running::
+
+  ./setup.py build_ext -i
+
+and adding the `Viscid` directory to your `PYTHONPATH` and `Viscid/scripts` to your `PATH`. This makes editing Viscid far easier.
+
+However the standard distutils commands also work if you're so inclined::
 
     ./setup.py build
     ./setup.py install
-
-For Developers
---------------
-
-For a better dev experience, I recommend adding Viscid to your PYTHONPATH,
-viscid/scripts to your PATH, and building in-place with::
-
-    ./setup.py build_ext -i --with-cython
-
-If you want to ensure the cython generated code is up to date, you can use the
-shortcut::
-
-    ./setup.py dev
-
-which is the same as above, but it ensures that cython is being used.

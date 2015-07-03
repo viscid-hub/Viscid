@@ -1,14 +1,17 @@
-# Changelog
+Changes
+-------
 
-## 0.80.8 dev
+0.80.8 dev
+==========
 
 Changes:
   - Files can now be unloaded (treating a file like a context manager will unload it on __exit__)
   - jrrle readers can handle files with ascii in them
   - hdf5 datawrappers can specify a component dimension / index
   - preliminary gkeyll reader
-  - All fields (regular + amr) now have an 'interpolated_slice' method
   - add `mpl.auto_adjust_subplots()` which is like tighen, but doesn't change axes limits on you.
+  - All fields (regular + amr) now have an 'interpolated_slice' method
+  - Cython Interpolate and Streamline now work on AMR Fields
 
 Bugfixes:
   - calling ufuncs with AMR fields
@@ -18,7 +21,8 @@ Bugfixes:
 Backward Incompatible Changes:
   - Slices by value are now a string of '[0-9\.]+f'. Slicing by floats prints a warning.
 
-## 0.80.7
+0.80.7
+======
 
 Backward Incompatible Changes:
   - Arguments to viscid.field.wrap_field have changed
@@ -30,14 +34,16 @@ Changes:
   - add viscid.field.arrays2field and viscid.coordinates.arrays2crds
   - viscid.field now has empty, ones, zeros, empty_like, ones_like, zeros_like that act roughly the same as the numpy functions, except that these create fields
 
-## 0.80.6
+0.80.6
+======
 
 Changes:
   - Ascii dataset field names are now "c[0-9]+" where the number is the column number
   - Add a way to generate your own cubehelix colormaps
   - Sphinx has no more warnings
 
-## 0.80.5
+0.80.5
+======
 
 Features:
   - add amr_field.patch_indices to lookup patch index at a location
@@ -45,19 +51,22 @@ Features:
 Bugfixes:
   - AMR slicing bugs
 
-## 0.80.4
+0.80.4
+======
 
 Bugfixes:
   - ./setup.py install wasn't installing parsers
   - command line utilities had bugs
 
-## 0.80.3
+0.80.3
+======
 
 Bugfixes:
   - Fix size of earth in AMR files
   - Fix matplotlib colorscale options
 
-## 0.80.2
+0.80.2
+======
 
 Features:
   - RC file and plot_opts can be given in Yaml syntax if user has PyYaml, otherwise the rc file has to be JSON and the plot_opts have to use the weird comma/space syntax
@@ -65,12 +74,14 @@ Features:
 Bugfixes:
   - amr fields now work with command line utils
 
-## 0.80.1
+0.80.1
+======
 
 Bugfix:
   - vjson not found
 
-## 0.80.0
+0.80.0
+======
 
 Features:
   - preliminary amr support (1D and 2D matplotlib plots)
@@ -84,7 +95,8 @@ Changes:
 Bugfixes:
   - Ionosphere files wouldn't plot with pcolormesh
 
-## 0.60.3
+0.60.3
+======
 
 Features:
   - thousands of jrrle files load fast over sshfs
@@ -94,7 +106,8 @@ Features:
 Changes:
   - Lots of little bugfixes
 
-## 0.60.2
+0.60.2
+======
 
 Features:
   - The attribute `grid.Grid.longterm_field_caches` controls how long caches hang around
@@ -117,12 +130,14 @@ Other:
   - Customization attributes have their own sphinx page for easy lookup
   - performance enhancements when globbing files on a remote server
 
-## 0.60.1
+0.60.1
+======
 
 Bugfix:
   - Time slices were acting silly
 
-## 0.60.0
+0.60.0
+======
 
 Features:
   - Implement Ionosphere reading / plotting
@@ -131,7 +146,8 @@ Features:
 Backward Incompatible Changes:
   - CHANGE FIELD SLICING SYNTAX! No more trailing 'i' to slice by index. Instead, use an integer to mean an index. For slicing by coordinate value, the decimal now needs to be explicit, so all code that slices like "y=0" now needs to be refactored to "y=0.0"
 
-## 0.50.2
+0.50.2
+======
 
 Features:
   - Support for custom grids (this allows for custom readers for GGCM / PSC / etc)
@@ -150,7 +166,8 @@ Backward Incompatible Changes:
 Other:
   - Precedence for auto-detecting classes is given to those more recently declared
 
-## 0.50.1
+0.50.1
+======
 
 Features:
   - Field slicing semantics are now the same as numpy in terms of when dimensions get reduced. To enforce specific reductions, use Field.slice_reduce() or Field.slice_keep()
@@ -176,7 +193,8 @@ Backward Incompatible Changes:
 Deprecated:
   - readers.load() -> readers.load_file("...") or readers.load_files(["..."])
 
-## 0.50.0 Release
+0.50.0 Release
+==============
 
 Features:
   - Remove lxml dependency
