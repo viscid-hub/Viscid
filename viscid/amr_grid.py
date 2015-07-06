@@ -76,12 +76,14 @@ class AMRSkeleton(object):
         self.xm = np.empty_like(self.xl)
         self.xh = np.empty_like(self.xl)
         self.L = np.empty_like(self.xl)
+        self.n = np.empty_like(self.xl, dtype='i')
 
         for i, patch in enumerate(self.patches):
             self.xl[i, :] = patch.xl
             self.xm[i, :] = patch.xm
             self.xh[i, :] = patch.xh
             self.L[i, :] = patch.L
+            self.n[i, :] = patch.n
 
         self.global_xl = np.min(self.xl, axis=0)
         self.global_xh = np.max(self.xh, axis=0)

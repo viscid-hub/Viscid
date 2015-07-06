@@ -81,6 +81,15 @@ class AMRField(object):
     def xh(self):
         return np.max(self.skeleton.xh, axis=0)
 
+    def get_slice_extent(self, selection):
+        extent = self.blocks[0]._src_crds.get_slice_extent(selection)
+        for i in range(3):
+            if np.isnan(extent[0, i]):
+                extent[0, i] = self.xl[i]
+            if np.isnan(extent[1, i]):
+                extent[1, i] = self.xh[i]
+        return extent
+
     ###########
     ## slicing
     def _prepare_amr_slice(self, selection):
