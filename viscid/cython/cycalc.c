@@ -9754,14 +9754,14 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -9773,7 +9773,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -9800,7 +9800,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -10246,14 +10246,14 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -10265,7 +10265,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -10292,7 +10292,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -10738,14 +10738,14 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -10757,7 +10757,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -10784,7 +10784,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -11230,14 +11230,14 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -11249,7 +11249,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -11276,7 +11276,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -11722,14 +11722,14 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -11741,7 +11741,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -11768,7 +11768,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -12214,14 +12214,14 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -12233,7 +12233,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -12260,7 +12260,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -12706,14 +12706,14 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -12725,7 +12725,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -12752,7 +12752,7 @@ static __pyx_t_5numpy_float32_t __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -13198,14 +13198,14 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c
  *                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
  *         ix[d] = ind             # <<<<<<<<<<<<<<
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  */
     (__pyx_v_ix[__pyx_v_d]) = __pyx_v_ind;
   }
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -13217,7 +13217,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c
   __pyx_t_12 = __pyx_v_m;
 
   /* "viscid/cython/cycalc.pyx":148
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -             # <<<<<<<<<<<<<<
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))
@@ -13244,7 +13244,7 @@ static __pyx_t_5numpy_float64_t __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c
 
   /* "viscid/cython/cycalc.pyx":147
  * 
- *     # INTERLACED ... z first
+ *     # INTERLACED ... x first
  *     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +             # <<<<<<<<<<<<<<
  *            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
  *                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))

@@ -26,9 +26,9 @@ cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,
         # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
         return 1
-    x[0] += deref(ds) * v[2] / vmag
+    x[0] += deref(ds) * v[0] / vmag
     x[1] += deref(ds) * v[1] / vmag
-    x[2] += deref(ds) * v[0] / vmag
+    x[2] += deref(ds) * v[2] / vmag
     return 0
 
 cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
@@ -49,9 +49,9 @@ cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
     if vmag0 == 0.0 or isnan(vmag0):
         # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
-    x1[0] = x[0] + ds_half * v0[2] / vmag0
+    x1[0] = x[0] + ds_half * v0[0] / vmag0
     x1[1] = x[1] + ds_half * v0[1] / vmag0
-    x1[2] = x[2] + ds_half * v0[0] / vmag0
+    x1[2] = x[2] + ds_half * v0[2] / vmag0
 
     v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
     v1[1] = _c_interp_trilin[FusedField, real_t](fld, 1, x1)
@@ -61,9 +61,9 @@ cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
     if vmag1 == 0.0 or isnan(vmag1):
         # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
         return 1
-    x[0] += deref(ds) * v1[2] / vmag1
+    x[0] += deref(ds) * v1[0] / vmag1
     x[1] += deref(ds) * v1[1] / vmag1
-    x[2] += deref(ds) * v1[0] / vmag1
+    x[2] += deref(ds) * v1[2] / vmag1
     return 0
 
 cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
@@ -95,13 +95,13 @@ cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
 
-        x_first[0] = x[0] + deref(ds) * v0[2] / vmag0
+        x_first[0] = x[0] + deref(ds) * v0[0] / vmag0
         x_first[1] = x[1] + deref(ds) * v0[1] / vmag0
-        x_first[2] = x[2] + deref(ds) * v0[0] / vmag0
+        x_first[2] = x[2] + deref(ds) * v0[2] / vmag0
 
-        x1[0] = x[0] + ds_half * v0[2] / vmag0
+        x1[0] = x[0] + ds_half * v0[0] / vmag0
         x1[1] = x[1] + ds_half * v0[1] / vmag0
-        x1[2] = x[2] + ds_half * v0[0] / vmag0
+        x1[2] = x[2] + ds_half * v0[2] / vmag0
 
         # print("B", start_inds[0], start_inds[1], start_inds[2])
         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
@@ -112,9 +112,9 @@ cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
         if vmag1 == 0.0 or isnan(vmag1):
             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
             return 1
-        x_second[0] = x[0] + deref(ds) * v1[2] / vmag1
+        x_second[0] = x[0] + deref(ds) * v1[0] / vmag1
         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
-        x_second[2] = x[2] + deref(ds) * v1[0] / vmag1
+        x_second[2] = x[2] + deref(ds) * v1[2] / vmag1
 
         dist = sqrt((x_second[0] - x_first[0])**2 + \
                     (x_second[1] - x_first[1])**2 + \
@@ -166,9 +166,9 @@ cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,
             # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
             return 1
 
-        x1[0] = x[0] + deref(ds) * v0[2] / vmag0
+        x1[0] = x[0] + deref(ds) * v0[0] / vmag0
         x1[1] = x[1] + deref(ds) * v0[1] / vmag0
-        x1[2] = x[2] + deref(ds) * v0[0] / vmag0
+        x1[2] = x[2] + deref(ds) * v0[2] / vmag0
 
         # now go backward
         v1[0] = _c_interp_trilin[FusedField, real_t](fld, 0, x1)
@@ -181,9 +181,9 @@ cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,
             # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
             return 1
 
-        x2[0] = x1[0] - deref(ds) * v1[2] / vmag1
+        x2[0] = x1[0] - deref(ds) * v1[0] / vmag1
         x2[1] = x1[1] - deref(ds) * v1[1] / vmag1
-        x2[2] = x1[2] - deref(ds) * v1[0] / vmag1
+        x2[2] = x1[2] - deref(ds) * v1[2] / vmag1
 
         dist = sqrt((x2[0] - x[0])**2 + \
                     (x2[1] - x[1])**2 + \

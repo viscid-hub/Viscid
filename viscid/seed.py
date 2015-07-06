@@ -60,7 +60,7 @@ class SeedGen(object):
         raise NotImplementedError()
 
     def genr_points(self):
-        """this should return an iterable of (z, y, x) points"""
+        """this should return an iterable of (x, y, z) points"""
         raise NotImplementedError()
 
     def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
@@ -77,7 +77,7 @@ class Point(SeedGen):
     into :meth:`vicid.calculator.streamline.streamlines`.
     """
     def __init__(self, points, cache=False, dtype=None):
-        """points should be an n x 3 array of zyx points"""
+        """points should be an n x 3 array of xyz points"""
         super(Point, self).__init__(cache=cache, dtype=dtype)
         self.params["points"] = points
 
@@ -112,7 +112,7 @@ class Line(SeedGen):
     Defined by to endpoints
     """
     def __init__(self, p0, p1, res=20, cache=False, dtype=None):
-        """ p0 & p1 are (z, y, x) points as list, tuple, or ndarray
+        """ p0 & p1 are (x, y, z) points as list, tuple, or ndarray
         res is the number of need points to generate """
         super(Line, self).__init__(cache=cache, dtype=dtype)
         self.params["p0"] = p0
@@ -126,10 +126,10 @@ class Line(SeedGen):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
-        z = np.linspace(p0[0], p1[0], res).astype(self.dtype)
+        x = np.linspace(p0[0], p1[0], res).astype(self.dtype)
         y = np.linspace(p0[1], p1[1], res).astype(self.dtype)
-        x = np.linspace(p0[2], p1[2], res).astype(self.dtype)
-        return np.array([z, y, x])
+        z = np.linspace(p0[2], p1[2], res).astype(self.dtype)
+        return np.array([x, y, z])
 
     def as_coordinates(self):
         p0 = np.array(self.params["p0"])
@@ -201,19 +201,21 @@ class Plane(SeedGen):
         # normalize Ldir
         Ldir = Ldir / np.sqrt(np.dot(Ldir, Ldir))
         # compute Mdir
-        Mdir = np.cross(Ldir, Ndir)  # zyx => left handed cross product
+        Mdir = np.cross(Ndir, Ldir)
 
         arr = np.empty((3, res_l * res_m), dtype=self.dtype)
         l = np.linspace(len_l[0], len_l[1], res_l).astype(self.dtype)
         m = np.linspace(len_m[0], len_m[1], res_m).astype(self.dtype)
-        arr[0, :] = np.repeat(m, res_l)
-        arr[1, :] = np.tile(l, res_m)
+        arr[0, :] = np.repeat(l, res_m)
+        arr[1, :] = np.tile(m, res_l)
         arr[2, :] = 0.0
 
-        # create matrix to go LNM -> zyx
-        trans = np.array([Mdir, Ldir, Ndir]).T
+        # create matrix to go LNM -> xyz
+        trans = np.array([Ldir, Mdir, Ndir])
 
-        arr_transformed = p0 + np.dot(trans, arr)
+        # transpose trans b/c np.dot semmantics are not the same as matrix
+        # vector multiply, but they are if you transpose the matrix
+        arr_transformed = p0 + np.dot(trans.T, arr)
 
         return arr_transformed
 
@@ -226,7 +228,7 @@ class Plane(SeedGen):
         l = np.linspace(len_l[0], len_l[1], res_l)
         m = np.linspace(len_m[0], len_m[1], res_m)
 
-        crds = viscid.wrap_crds("nonuniform_cartesian", (('y', m), ('x', l)))
+        crds = viscid.wrap_crds("nonuniform_cartesian", (('x', l), ('y', m)))
         return crds
 
 
@@ -236,8 +238,8 @@ class Volume(SeedGen):
     Defined by two opposite corners of a box in 3d
     """
     def __init__(self, p0, p1, res=(20, 20, 20), cache=False):
-        """ p1 & p2 are (z, y, x) points as list, tuple, or ndarray
-        res is the number of need points to generate (nz, ny, nx) """
+        """ p1 & p2 are (x, y, z) points as list, tuple, or ndarray
+        res is the number of need points to generate (nx, ny, nz) """
         super(Volume, self).__init__(cache=cache)
         self.params["p0"] = p0
         self.params["p1"] = p1
@@ -259,19 +261,19 @@ class Volume(SeedGen):
         p0 = self.params["p0"]
         p1 = self.params["p1"]
         res = self.params["res"]
-        z = np.linspace(p0[0], p1[0], res[0]).astype(self.dtype)
+        x = np.linspace(p0[0], p1[0], res[0]).astype(self.dtype)
         y = np.linspace(p0[1], p1[1], res[1]).astype(self.dtype)
-        x = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype)
-        return z, y, x
+        z = np.linspace(p0[2], p1[2], res[2]).astype(self.dtype)
+        return x, y, z
 
     def iter_points(self, **kwargs):
-        z, y, x = self._make_arrays()
-        return itertools.product(z, y, x)
+        x, y, z = self._make_arrays()
+        return itertools.product(x, y, z)
 
     def as_coordinates(self):
-        z, y, x = self._make_arrays()
+        x, y, z = self._make_arrays()
         crd = viscid.wrap_crds("nonuniform_cartesian",
-                                   (('z', z), ('y', y), ('x', x)))
+                               (('x', x), ('y', y), ('z', z)))
         return crd
 
 
@@ -292,16 +294,16 @@ class Sphere(SeedGen):
 
     def genr_points(self):
         theta, phi = self._get_all_theta_phi()
-        return self.spherical_to_zyx(theta, phi)
+        return self.spherical_to_xyz(theta, phi)
 
-    def spherical_to_zyx(self, theta, phi):
+    def spherical_to_xyz(self, theta, phi):
         p0 = self.params["p0"]
-        return p0.reshape((-1, 1)) + self._local_zyx(theta, phi)
+        return p0.reshape((-1, 1)) + self._local_xyz(theta, phi)
 
     def as_coordinates(self):
         theta, phi = self._get_all_theta_phi()
         crds = viscid.wrap_crds("nonuniform_cartesian",
-                                    (('y', theta), ('x', phi)))
+                                (('x', phi), ('y', theta)))
         return crds
 
     def _get_all_theta_phi(self):
@@ -314,17 +316,17 @@ class Sphere(SeedGen):
                           endpoint=False).astype(self.dtype)
         return theta, phi
 
-    def _local_zyx(self, theta, phi):
+    def _local_xyz(self, theta, phi):
         r = self.params["r"]
-        phi = np.asarray(phi).reshape(-1)
         theta = np.asarray(theta).reshape(-1)
-        T, P = np.ix_(theta, phi)
+        phi = np.asarray(phi).reshape(-1)
+        P, T = np.ix_(phi, theta)
 
         a = np.empty((3, len(theta) * len(phi)), dtype=self.dtype)
-        # 2 == x, 1 == y, 0 == z
-        a[2, :] = (r * np.sin(T) * np.cos(P)).reshape(-1)
+        # 0 == x, 1 == y, 2 == z
+        a[0, :] = (r * np.sin(T) * np.cos(P)).reshape(-1)
         a[1, :] = (r * np.sin(T) * np.sin(P)).reshape(-1)
-        a[0, :] = (r * np.cos(T) + 0.0 * P).reshape(-1)
+        a[2, :] = (r * np.cos(T) + 0.0 * P).reshape(-1)
         return a
 
 class SphericalCap(Sphere):
@@ -359,8 +361,8 @@ class SphericalCap(Sphere):
             script_r = p1 - p0
             script_rmag = np.sqrt(np.sum(script_r**2))
 
-            theta0 = np.arccos(script_r[0] / script_rmag)
-            phi0 = np.arctan2(script_r[1], script_r[2])
+            theta0 = np.arccos(script_r[2] / script_rmag)
+            phi0 = np.arctan2(script_r[1], script_r[0])
 
             # first 2 euler angle rotations, the 3rd one would be
             # the rotation around the cone's axis, so no need for that one
@@ -370,16 +372,16 @@ class SphericalCap(Sphere):
             cost0 = np.cos(theta0)
             sinp0 = np.sin(phi0)
             cosp0 = np.cos(phi0)
-            mat = np.array([[cost0,            0.0, -sint0],          # pylint: disable=C0326
-                            [sinp0 * sint0,  cosp0,  sinp0 * cost0],  # pylint: disable=C0326
-                            [cosp0 * sint0, -sinp0,  cosp0 * cost0],  # pylint: disable=C0326
+            mat = np.array([[ cosp0 * cost0, -sinp0, cosp0 * sint0],  # pylint: disable=C0326
+                            [ sinp0 * cost0,  cosp0, sinp0 * sint0],  # pylint: disable=C0326
+                            [-sint0,          0.0,   cost0,       ],  # pylint: disable=C0326
                            ], dtype=self.dtype)
             self._euler_rot = mat
         return self._euler_rot
 
-    def spherical_to_zyx(self, theta, phi):
+    def spherical_to_xyz(self, theta, phi):
         p0 = self.params["p0"]
-        a = self._local_zyx(theta, phi)
+        a = self._local_xyz(theta, phi)
         return p0.reshape((-1, 1)) + np.dot(self.euler_rot, a)
 
     def _get_all_theta_phi(self):
@@ -419,45 +421,61 @@ class Circle(SphericalCap):
 #         return theta, phi
 
 
+def main():
+    from viscid.calculator import interp_trilin
+    from viscid.plot import mpl
+
+    x = np.linspace(-2, 2, 32)
+    y = np.linspace(-2, 2, 32)
+    z = np.linspace(-2, 2, 32)
+    fld = viscid.empty([x, y, z])
+    X, Y, Z = fld.crds.get_crds_cc("xyz", shaped=True)
+    fld[:, :, :] = X * Y * Z
+
+    def run_test(_fld, _seeds, plot_2d=True, plot_3d=True, selection=None):
+        arr = interp_trilin(_fld, _seeds)
+        ifld = _seeds.wrap_field(arr)
+        if plot_2d:
+            mpl.plot(ifld, selection=selection, show=True)
+        if plot_3d:
+            mpl.scatter_3d(_seeds.points(), arr)
+            mpl.plt.gca().set_aspect('equal')
+
+    # ### PLANE
+    # p0 = [0.5, 0.6, 0.7][::1]
+    # N = [1., 2., 3.][::1]
+    # L = [-3., -2., -1.][::1]
+    # plane = Plane(p0, N, L, 2., 2., 15, 20)
+    # run_test(fld, plane, True, True)
+
+    # ### Volume
+    # p0 = [-0.7, -0.6, -0.5][::1]
+    # p1 = [+0.7, +0.6, +0.5][::1]
+    # volume = Volume(p0, p1)
+    # run_test(fld, volume, True, True, "z=3")
+
+    # ### Sphere
+    # p0 = [1.0, 1.0, 1.0][::1]
+    # sphere = Sphere(p0, 1.0, 15, 15)
+    # run_test(fld, sphere, True, True)
+
+    ### Sphere Cap
+    p0 = [0.5, 0.6, 0.7][::1]
+    p1 = [1.7, 1.6, 1.5][::1]
+    sphere_cap = SphericalCap(p0, p1, 120.0, 32, 32)
+    run_test(fld, sphere_cap, True, True)
+
+    # ### Circle
+    # p0 = [0.5, 0.6, 0.7][::1]
+    # p1 = [0.7, 0.6, 0.5][::1]
+    # sphere_cap = Circle(p0, p1, 20, r=0.8)
+    # run_test(fld, sphere_cap, True, True)
+
+    return 0
+
 if __name__ == "__main__":
-    # import matplotlib.pyplot as plt
-    # from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
-    # ax = plt.gca(projection='3d')
-    # lin = Line((-1.0, -1.0, -1.0), (1.0, 1.0, 1.0)).points()
-    # ax.plot(lin[:, 2], lin[:, 1], lin[:, 0], 'g.')
-    # s = Sphere((0.0, 0.0, 0.0), 2.0, 10, 20).points()
-    # ax.plot(s[:, 2], s[:, 1], s[:, 0], 'b')
-    # p = Plane((0.0, 0.0, 0.0), (1.0, 1.0, 1.0), (0.0, 0.0, 1.0),
-    #                  2.0, 3.0, 10, 20).points()
-    # ax.plot(p[:, 2], p[:, 1], p[:, 0], 'r')
-    # plt.xlabel("X")
-    # plt.ylabel("Y")
-    # plt.show()
-
-    from timeit import default_timer as time
-    from mayavi import mlab
-    from viscid import vlab
-    from viscid.calculator import calc
-    from viscid.calculator import cycalc
-
-    B = vlab.get_dipole(m=[0.0, 0.0, -1.0])
-    bmag = calc.magnitude(B)
-    t0 = time()
-    _p0 = [1.0, 1.0, 1.0]
-    _p1 = [0.0, 0.0, 0.0]
-    cap = SphericalCap(_p0, _p1, 120.0, r=1.0, cache=True)
-    interp_vals = cycalc.interp_trilin(bmag, cap)
-    t1 = time()
-    # logger.info("interp took {0:.3e}s to compute.".format(t1 - t0))
-    _pts = cap.points()
-    mlab.points3d(_p0[2], _p0[1], _p0[0],
-                  scale_factor=0.07, color=(0.0, 0.0, 0.0))
-    mlab.points3d(_p1[2], _p1[1], _p1[0],
-                  scale_factor=0.07, color=(1.0, 1.0, 1.0))
-    mlab.points3d(_pts[2], _pts[1], _pts[0], interp_vals,
-                  scale_factor=0.07, scale_mode="none")
-    mlab.axes(nb_labels=5)
-    mlab.show()
+    import sys
+    sys.exit(main())
 
 ##
 ## EOF

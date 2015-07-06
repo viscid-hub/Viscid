@@ -29,7 +29,7 @@ LAYOUT_OTHER = "other"
 
 
 def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
-                 crd_names="zyxwvu"):
+                 crd_names="xyzuvw"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.
 
     This is a convenience function that takes care of making coordnates
@@ -40,7 +40,7 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
     Args:
         dat_arr (ndarray): data with len(crd_arrs) or len(crd_arrs) + 1
             dimensions
-        crd_arrs (list of ndarrays): zyx list of ndarrays that
+        crd_arrs (list of ndarrays): xyz list of ndarrays that
             describe the node centered coordnates of the field
         name (str): some name
         center (str, None): If not None, translate field to this
@@ -116,7 +116,7 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
     return arrays2field(name, crd_arrs, dat_arr, center=center)
 
 def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
-          nr_comps=0, crd_names="zyxwvu", _initial_vals="empty", **kwargs):
+          nr_comps=0, crd_names="xyzuvw", _initial_vals="empty", **kwargs):
     """Analogous to `numpy.empty` (uninitialized array)
 
     Parameters:
@@ -319,8 +319,10 @@ def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
         raise NotImplementedError("can not decipher field")
 
 def rewrap_field(fld):
+    # zyx_native is false b/c we're using fld.data
     ret = type(fld)(fld.name, fld.crds, fld.data, center=fld.center,
-                    forget_source=True, _copy=True, parents=[fld])
+                    forget_source=True, _copy=True, zyx_native=False,
+                    parents=[fld])
     return ret
 
 class Field(tree.Leaf):
@@ -362,6 +364,7 @@ class Field(tree.Leaf):
 
     # set when data is retrieved
     _cache = None  # this will always be a numpy array
+    _cached_xyz_src_view = None
 
     def __init__(self, name, crds, data, center="Node", time=0.0, meta=None,
                  deep_meta=None, forget_source=False, pretty_name=None,
@@ -383,6 +386,9 @@ class Field(tree.Leaf):
             the deep_meta dict without the leading _. Everything else
             is added to the meta dict
         """
+        # if name == "b":
+        #     print("initing b")
+        #     import pdb; pdb.set_trace()
         super(Field, self).__init__(name, time, info, parents)
         self.center = center
         self._src_crds = crds
@@ -407,8 +413,8 @@ class Field(tree.Leaf):
         else:
             self.transform_func_kwargs = {}
 
-        self.meta = {} if meta is None else meta
-        self.deep_meta = {} if deep_meta is None else deep_meta
+        self.meta = {} if meta is None else meta.copy()
+        self.deep_meta = {} if deep_meta is None else deep_meta.copy()
         for k, v in kwargs.items():
             if k.startswith("_"):
                 self.deep_meta[k[1:]] = v
@@ -539,7 +545,17 @@ class Field(tree.Leaf):
             s.insert(self.nr_comp, self.nr_comps)
         except TypeError:
             pass
+        return s
 
+    @property
+    def native_shape(self):
+        """ returns the shape of the underlying data, does not explicitly load
+        the data """
+        s = self.native_sshape
+        try:
+            s.insert(self.nr_comp, self.nr_comps)
+        except TypeError:
+            pass
         return s
 
     @property
@@ -557,6 +573,13 @@ class Field(tree.Leaf):
             logger.warn("edge/face vectors not implemented, assuming "
                         "node shape")
             return self._src_crds.shape
+
+    @property
+    def native_sshape(self):
+        sshape = self.sshape
+        if self.meta.get("zyx_native", False):
+            sshape = sshape[::-1]
+        return sshape
 
     @property
     def size(self):
@@ -628,17 +651,57 @@ class Field(tree.Leaf):
     def clear_cache(self):
         """ does not guarentee that the memory will be freed """
         self._cache = None
+        self._cached_xyz_src_view = None
         if self._parent_field is not None:
             self._parent_field._cache = self._cache
+            self._parent_field._cached_xyz_src_view = self._cached_xyz_src_view
+
     def _fill_cache(self):
         """ actually load data into the cache """
         self._cache = self._src_data_to_ndarray()
         if self._parent_field is not None:
             self._parent_field._cache = self._cache
+            # self._parent_field._cached_xyz_src_view = self._cached_xyz_src_view
 
     # um, what was this for? looks dangerous
     # def _translate_src_data(self):
     #     pass
+
+    # @staticmethod
+    # def _zyx_transpose(dat):
+    #     if isinstance(dat, Field):
+    #         pass
+    #     else:
+    #         return dat.T
+
+    @property
+    def _xyz_src_data(self):
+        """Return a view of _src_data that is xyz ordered
+
+        Note that this will always cause the cache to be filled
+        """
+        if self._cached_xyz_src_view is None:
+            if self.meta.get("zyx_native", False):
+                if isinstance(self._src_data, (list, tuple)):
+                    lst = [np.array(d).T for d in self._src_data]
+                    self._cached_xyz_src_view = lst
+                else:
+                    spatial_transpose = list(range(len(self.shape)))
+                    try:
+                        nr_comp = self.nr_comp
+                        spatial_transpose.remove(nr_comp)
+                        spatial_transpose = spatial_transpose[::-1]
+                        spatial_transpose.insert(nr_comp, nr_comp)
+                    except TypeError:
+                        spatial_transpose = spatial_transpose[::-1]
+                    # transposed view
+                    Tview = np.transpose(self._src_data.__array__(),
+                                         spatial_transpose)
+                    self._cached_xyz_src_view = np.array(Tview)
+
+            else:
+                self._cached_xyz_src_view = self._src_data
+        return self._cached_xyz_src_view
 
     def _src_data_to_ndarray(self):
         """ prep the src data into something usable and enforce a layout """
@@ -652,13 +715,13 @@ class Field(tree.Leaf):
         # do no translation
         if force_layout == LAYOUT_DEFAULT or \
            force_layout == src_data_layout:
-            return self._dat_to_ndarray(self._src_data)
+            return self._dat_to_ndarray(self._xyz_src_data)
 
         # if layout is found to be other, i cant do anything with that
         elif src_data_layout == LAYOUT_OTHER:
             logger.warn("Cannot auto-detect layout; not translating; "
                         "performance may suffer")
-            return self._dat_to_ndarray(self._src_data)
+            return self._dat_to_ndarray(self._xyz_src_data)
 
         # ok, we demand FLAT arrays, make it so
         elif force_layout == LAYOUT_FLAT:
@@ -669,7 +732,7 @@ class Field(tree.Leaf):
             data_dest = np.empty(self.shape, dtype=self.dtype)
             for i in range(nr_comps):
                 # NOTE: I wonder if this is the fastest way to reorder
-                data_dest[i, ...] = self._src_data[..., i]
+                data_dest[i, ...] = self._xyz_src_data[..., i]
                 # NOTE: no special case for lists, they are not
                 # interpreted this way
             return self._dat_to_ndarray(data_dest)
@@ -683,7 +746,7 @@ class Field(tree.Leaf):
             dtype = self.dtype
             data_dest = np.empty(self.shape, dtype=dtype)
             for i in range(nr_comps):
-                data_dest[..., i] = self._src_data[i]
+                data_dest[..., i] = self._xyz_src_data[i]
 
             self._layout = LAYOUT_INTERLACED
             return self._dat_to_ndarray(data_dest)
@@ -753,11 +816,20 @@ class Field(tree.Leaf):
             ret = arr.reshape(self.shape)
             return ret
 
-    def _detect_layout(self, dat):
-        """ returns LAYOUT_XXX, this just looks at len(dat) or dat.shape """
+    def _detect_layout(self, dat, native=True):
+        """ returns LAYOUT_XXX, this just looks at len(dat) or dat.shape
+        Note:
+            dat should be in 'native layout', meaning zyx is _src_data is
+            zyx, or xyz if _src_data is xyz
+        """
+        # if native, then compare dat's shape against the native shape
+        if native:
+            sshape = list(self.native_sshape)
+        else:
+            sshape = list(self.sshape)
+
         # if i receive a list, then i suppose i have a list of
         # arrays, one for each component... this is a flat layout
-        sshape = list(self.sshape)
         if isinstance(dat, (list, tuple)):
             # Make sure the list makes sense... this strictly speaking
             # doesn't need to happen, but it's a bad habbit to allow
@@ -770,7 +842,9 @@ class Field(tree.Leaf):
             #     assert(list(d.shape) == list(sshape))
             return LAYOUT_FLAT
 
-        if list(dat.shape) == sshape:
+        dat_shape = list(dat.shape)
+
+        if dat_shape == sshape:
             return LAYOUT_SCALAR
 
         # if the crds shape has more values than the dat.shape
@@ -778,28 +852,30 @@ class Field(tree.Leaf):
         # this can happen when crds are 3d, but field is only 2d
         ## I'm not sure why this needs to happen... but tests fail
         ## without it
-        while len(sshape) > len(dat.shape) - 1:
+        while len(sshape) > len(dat_shape) - 1:
             try:
                 sshape.remove(1)
             except ValueError:
                 break
 
         # check which dims match the shape of the crds
-        if list(dat.shape) == sshape:
+        if dat_shape == sshape:
             layout = LAYOUT_SCALAR
-        elif list(dat.shape[1:]) == sshape:
+        elif dat_shape[1:] == sshape:
             layout = LAYOUT_FLAT
-        elif list(dat.shape[:-1]) == sshape:
+        elif dat_shape[:-1] == sshape:
             layout = LAYOUT_INTERLACED
-        elif dat.shape[0] == np.prod(sshape):
+        elif dat_shape[0] == np.prod(sshape):
             layout = LAYOUT_INTERLACED
-        elif dat.shape[-1] == np.prod(sshape):
+        elif dat_shape[-1] == np.prod(sshape):
             layout = LAYOUT_FLAT
         else:
             # if this happens, don't ignore it even if it happens to work
+            # print("??", self, self.native_shape, self.shape, )
+            # import pdb; pdb.set_trace()
             logger.warn("could not detect layout for '{0}': shape = {1} "
                         "target shape = {2}"
-                        "".format(self.name, dat.shape, sshape))
+                        "".format(self.name, dat_shape, sshape))
             layout = LAYOUT_OTHER
 
         return layout
@@ -848,6 +924,8 @@ class Field(tree.Leaf):
         return selection, comp_slc
 
     def _finalize_slice(self, slices, crdlst, reduced, comp_slc):
+        # if self.name == "b":
+        #     import pdb; pdb.set_trace()
         all_none = (list(slices) == [slice(None)] * len(slices))
         no_sslices = slices is None or all_none
         no_compslice = comp_slc is None or comp_slc == slice(None)
@@ -866,6 +944,11 @@ class Field(tree.Leaf):
                 raise NotImplementedError()
             return self._src_data[comp_slc]
 
+        # IMPORTANT NOTE: from this point on, crds of the result will be
+        # "transformed", and the data will be xyz ordered. This is the end
+        # of the line for lazily keeping track of zyx native arrays b/c
+        # the slice will have to load the data
+
         # coord transforms are not copied on purpose
         crds = coordinate.wrap_crds(self._src_crds.crdtype, crdlst)
 
@@ -875,16 +958,24 @@ class Field(tree.Leaf):
         slced_dat = None
 
         hypersliceable = getattr(self._src_data, "_hypersliceable", False)
-        single_comp_slc = isinstance(comp_slc, (int, np.integer))
+        single_comp_slc = hasattr(comp_slc, "__index__")
         cc = self.iscentered("Cell")
+
+        zyx_native = self.meta.get("zyx_native", False)
+        # if zyx_native:
+        #     native_slices = slices[::-1]
+        # else:
+        #     native_slices = slices
 
         if self._cache is None and src_is_fld_list:
             if single_comp_slc:
                 # this may not work as advertised since slices may
                 # not be complete?
+                # using xyz slices because it's calling Field.__getitem__
                 slced_dat = self._src_data[comp_slc][slices]
             else:
                 comps = self._src_data[comp_slc]
+                # using xyz slices because it's calling Field.__getitem__
                 slced_dat = [c[slices] for c in comps]
         elif self._cache is None and hypersliceable:
             # we have to flip the slice, meaning: if the array looks like
@@ -898,27 +989,39 @@ class Field(tree.Leaf):
             # way to do this for large data sets is _src_data[0:3][::-1]
             # We will always read _src_data forward, then flip it since
             # h5py won't do a slice of [3:0:-1]
-            first_slc, second_slc = self._src_crds.reflect_slices(slices, cc, False)
+
+            # using xyz slices b/c that's the order of the crds
+            first_slc, second_slc = self._src_crds.reflect_slices(slices,
+                                                                  cc, False)
+
+            if zyx_native:
+                native_first_slc = first_slc[::-1]
+                native_second_slc = second_slc[::-1]
+            else:
+                native_first_slc = native_first_slc
+                native_second_slc = native_second_slc
 
             # now put component slice back in
             try:
                 nr_comp = self.nr_comp
                 first_slc.insert(self.nr_comp, comp_slc)
+                native_first_slc.insert(self.nr_comp, comp_slc)
                 if not single_comp_slc:
                     second_slc.insert(self.nr_comp, slice(None))
+                    native_second_slc.insert(self.nr_comp, slice(None))
             except TypeError:
                 nr_comp = None
 
             # this is a bad hack for the fact that fields and the slices
             # have 3 spatial dimensions, but the src_data may have fewer
-            _first, _second = first_slc, second_slc
+            _first, _second = native_first_slc, native_second_slc
             if len(self._src_data.shape) != len(_first):
                 _first, _second = [], []
                 j = 0  # trailing index
-                it = izip_longest(count(), first_slc, second_slc,
+                it = izip_longest(count(), native_first_slc, native_second_slc,
                                   fillvalue=None)
                 for i, a, b in islice(it, None, len(first_slc)):
-                    if self._src_data.shape[j] == self.shape[i]:
+                    if self._src_data.shape[j] == self.native_shape[i]:
                         _first.append(a)
                         _second.append(b)
                         j += 1
@@ -929,7 +1032,12 @@ class Field(tree.Leaf):
             # only hyperslice _src_data if our slice has the right shape
             if len(self._src_data.shape) == len(_first):
                 # do the hyper-slice
+                # these sliced have to be native b/c they're slicing the
+                # _src_data directly which means the data could be stored
+                # zyx in a lazy hdf5 file
                 slced_dat = self._src_data[tuple(_first)][tuple(_second)]
+                if zyx_native:
+                    slced_dat = np.array(slced_dat.T)
 
                 # post-reshape-transform
                 if self.post_reshape_transform_func is not None:
@@ -949,6 +1057,7 @@ class Field(tree.Leaf):
                 slices.insert(self.nr_comp, comp_slc)
             except TypeError:
                 pass
+            # use xyz slices cause self.data is guarenteed to be xyz
             slced_dat = self.data[tuple(slices)]
 
         if len(reduced) == len(slices) or getattr(slced_dat, 'size', 0) == 1:
@@ -956,7 +1065,7 @@ class Field(tree.Leaf):
             # return the value that's left, ndarrays have the same behavior
             ret = slced_dat
         else:
-            ctx = dict(crds=crds)
+            ctx = dict(crds=crds, zyx_native=False)
             fldtype = None
             # if we sliced a vector down to one component
             if self.nr_comps is not None:
@@ -975,6 +1084,7 @@ class Field(tree.Leaf):
 
     def forget_source(self):
         self._src_data = self.data
+        self._cached_xyz_src_view = self.data
 
     def slice(self, selection):
         """ Slice the field using a string like "y=3:6:2,z=0" or a standard
@@ -1155,6 +1265,8 @@ class Field(tree.Leaf):
         # Note: this is fragile if a subclass takes additional parameters
         # in an overridden __init__; in that case, the developer MUST
         # override shell_copy and pass the extra kwargs in to here.
+        # note, zyx_native of the child should be the same as self since we're
+        # passing src_data here
         f = type(self)(self.name, self._src_crds, self._src_data, center=self.center,
                        time=self.time, meta=self.meta, deep_meta=self.deep_meta,
                        forget_source=False,
@@ -1238,6 +1350,7 @@ class Field(tree.Leaf):
             #FIME: this is such a hack to try our hardest to keep the
             # reference to the data the same
             f._src_data = self._src_data
+            f._cached_xyz_src_view = self._cached_xyz_src_view
             f._cache = self._cache
 
             return f
@@ -1359,9 +1472,11 @@ class Field(tree.Leaf):
 
         # Transform functions are intentionally omitted. The idea being that
         # the transform was already applied when creating arr
+        # same idea with zyx_native... whatever created arr should have done
+        # so using the natural xyz order since that's the shape of Field.data
         fld = fldtype(name, crds, arr, time=time, center=center,
                       meta=self.meta, deep_meta=context, parents=[self],
-                      pretty_name=pretty_name)
+                      zyx_native=False, pretty_name=pretty_name)
         # if the operation reduced a vector to something with 1 component,
         # then turn the result into a ScalarField
         if fld.nr_comps == 1:

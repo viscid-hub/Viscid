@@ -143,8 +143,8 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
         ds0 (float): initial spatial step for streamlines (if 0.0, it
             will be half the minimum d[xyz])
         ibound (float): Inner boundary as distance from (0, 0, 0)
-        obound0 (array-like): lower corner of outer boundary (z, y, x)
-        obound1 (array-like): upper corner of outer boundary (z, y, x)
+        obound0 (array-like): lower corner of outer boundary (x, y, z)
+        obound1 (array-like): upper corner of outer boundary (x, y, z)
         maxit (int): maximum number of line segments
         max_length (float): maximum streamline length
         stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
@@ -505,17 +505,17 @@ cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
         else:
             done = _C_END_IBOUND_SOUTH
     elif pt[0] < obound0[0]:
-        done = _C_END_OBOUND_ZL
+        done = _C_END_OBOUND_XL
     elif pt[1] < obound0[1]:
         done = _C_END_OBOUND_YL
     elif pt[2] < obound0[2]:
-        done = _C_END_OBOUND_XL
+        done = _C_END_OBOUND_ZL
     elif pt[0] > obound1[0]:
-        done = _C_END_OBOUND_ZH
+        done = _C_END_OBOUND_XH
     elif pt[1] > obound1[1]:
         done = _C_END_OBOUND_YH
     elif pt[2] > obound1[2]:
-        done = _C_END_OBOUND_XH
+        done = _C_END_OBOUND_ZH
     elif length > max_length:
         done = _C_END_MAX_LENGTH
 

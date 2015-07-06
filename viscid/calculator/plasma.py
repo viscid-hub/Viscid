@@ -41,38 +41,38 @@ def calc_psi(B, reversed=False):
         raise ValueError("flux function implemented for 2D fields")
 
     comps = ""
-    for comp in "zyx":
+    for comp in "xyz":
         if comp in B.crds.axes:
             comps += comp
-    # ex: comps = "zy", comp_inds = [2, 1]
+    # ex: comps = "yz", comp_inds = [1, 2]
     comp_inds = [dict(x=0, y=1, z=2)[comp] for comp in comps]
 
     # Note: what follows says y, z, but it has been generalized
     # to any two directions, so hy isn't necessarily hy, but it's
     # easier to see at a glance if it's correct using a specific
     # example
-    zcc, ycc = B.get_crds(comps)
+    ycc, zcc = B.get_crds(comps)
     comp_views = B.component_views()
-    hz, hy = comp_views[comp_inds[0]], comp_views[comp_inds[1]]
-    dz = zcc[1:] - zcc[:-1]
+    hy, hz = comp_views[comp_inds[0]], comp_views[comp_inds[1]]
     dy = ycc[1:] - ycc[:-1]
-    nz, ny = len(zcc), len(ycc)
+    dz = zcc[1:] - zcc[:-1]
+    ny, nz = len(ycc), len(zcc)
 
-    A = np.empty((nz, ny), dtype=B.dtype)
+    A = np.empty((ny, nz), dtype=B.dtype)
 
     if reversed:
         A[-1, -1] = 0.0
-        for i in range(nz - 2, -1, -1):
+        for i in range(ny - 2, -1, -1):
             A[i, -1] = A[i + 1, -1] - dz[i] * 0.5 * (hy[i, -1] + hy[i + 1, -1])
 
-        for j in range(ny - 2, -1, -1):
+        for j in range(nz - 2, -1, -1):
             A[:, j] = A[:, j + 1] + dy[j] * 0.5 * (hz[:, j + 1] + hz[:, j])
     else:
         A[0, 0] = 0.0
-        for i in range(1, nz):
+        for i in range(1, ny):
             A[i, 0] = A[i - 1, 0] + dz[i - 1] * 0.5 * (hy[i, 0] + hy[i - 1, 0])
 
-        for j in range(1, ny):
+        for j in range(1, nz):
             A[:, j] = A[:, j - 1] - dy[j - 1] * 0.5 * (hz[:, j - 1] + hz[:, j])
 
     return field.wrap_field(A, B.crds, name="psi", center=B.center,

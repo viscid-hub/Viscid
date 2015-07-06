@@ -37,9 +37,9 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False):
     if twod:
         y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
 
-    B = field.empty([z, y, x], nr_comps=3, name="B", center='cell',
+    B = field.empty([x, y, z], nr_comps=3, name="B", center='cell',
                     layout='interlaced', dtype=dtype)
-    Zcc, Ycc, Xcc = B.get_crds_cc(shaped=True) #pylint: disable=W0612
+    Xcc, Ycc, Zcc = B.get_crds_cc(shaped=True) #pylint: disable=W0612
 
     one = np.array([1.0], dtype=dtype) #pylint: disable=W0612
     three = np.array([3.0], dtype=dtype) #pylint: disable=W0612
@@ -71,10 +71,10 @@ def get_trilinear_field():
     y = np.linspace(yl, yh, ny)
     z = np.linspace(zl, zh, nz)
     crds = coordinate.wrap_crds("nonuniform_cartesian",
-                                [('z', z), ('y', y), ('x', x)])
+                                [('x', x), ('y', y), ('z', z)])
     b = field.empty(crds, name="f", nr_comps=3, center="Cell",
                     layout="interlaced")
-    Z, Y, X = b.get_crds(shaped=True)
+    X, Y, Z = b.get_crds(shaped=True)
 
     x01, y01, z01 = 0.5, 0.5, 0.5
     x02, y02, z02 = 0.5, 0.5, 0.5
@@ -278,7 +278,7 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
             automatically calculated
         add_seed_cadence: how often to add the add_seeds points
         add_seed_pts: an n x 3 ndarray of n points to add every
-            add_seed_cadence (zyx)
+            add_seed_cadence (xyz)
         speed_scale: speed_scale * v should be in units of ds0 / dt
 
     Returns:
@@ -326,7 +326,7 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
     logger.info("working on timestep {0} {1}".format(i, grid.time))
     v = grid["v"]
     # automatically zero symmetry dimension of a 2d field
-    for axis, s in zip('zyx', v.sshape):
+    for axis, s in zip('xyz', v.sshape):
         if s == 1:
             v[axis] = 0.0
     logger.debug("finished reading V field")

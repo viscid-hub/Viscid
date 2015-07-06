@@ -61,9 +61,9 @@ def main():
     x = np.array(np.linspace(-5, 5, 512), dtype=dtype)
     y = np.array(np.linspace(-5, 5, 256), dtype=dtype)
     z = np.array(np.linspace(-5, 5, 256), dtype=dtype)
-    v = viscid.empty([z, y, x], name="V", nr_comps=3, center='node',
-                         layout='interlaced')
-    Z, Y, X = v.get_crds_nc(shaped=True)
+    v = viscid.empty([x, y, z], name="V", nr_comps=3, center='node',
+                     layout='interlaced')
+    X, Y, Z = v.get_crds_nc(shaped=True)
     v['x'] = 0.5 * X**2 +       Y    + 0.0 * Z
     v['y'] = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z
     v['z'] = 0.0 * X    + 0.0 * Y    + 0.5 * Z**2

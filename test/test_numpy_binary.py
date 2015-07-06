@@ -27,12 +27,12 @@ def main():
     x = np.linspace(-2, 2, 20)
     y = np.linspace(-2.5, 2.5, 25)
     z = np.linspace(-3, 3, 30)
-    psi = viscid.empty([z, y, x], name='psi', center='node')
-    b = viscid.empty([z, y, x], nr_comps=3, name='b', center='cell',
+    psi = viscid.empty([x, y, z], name='psi', center='node')
+    b = viscid.empty([x, y, z], nr_comps=3, name='b', center='cell',
                      layout='interlaced')
 
-    Z, Y, X = psi.get_crds_nc("zyx", shaped=True)
-    Zcc, Ycc, Xcc = psi.get_crds_cc("zyx", shaped=True)
+    X, Y, Z = psi.get_crds_nc("xyz", shaped=True)
+    Xcc, Ycc, Zcc = psi.get_crds_cc("xyz", shaped=True)
     psi[:, :, :] = 0.5 * (X**2 + Y**2 - Z**2)
     b['x'] = Xcc
     b['y'] = Ycc

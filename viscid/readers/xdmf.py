@@ -282,8 +282,8 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             crdlist = None
 
         elif geotype.upper() == "X_Y_Z":
-            crdlookup = {'z': 0, 'y': 1, 'x': 2}
-            crdlist = [['z', None], ['y', None], ['x', None]]
+            crdlookup = {'x': 0, 'y': 1, 'z': 2}
+            crdlist = [['x', None], ['y', None], ['z', None]]
             # can't use ./DataItem[@Name='X'] so python2.6 works
             dataitems = geo.findall("./DataItem")
             for di in dataitems:
@@ -297,8 +297,8 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             crdkwargs["full_arrays"] = True
 
         elif geotype.upper() == "VXVYVZ":
-            crdlookup = {'z': 0, 'y': 1, 'x': 2}
-            crdlist = [['z', None], ['y', None], ['x', None]]
+            crdlookup = {'x': 0, 'y': 1, 'z': 2}
+            crdlist = [['x', None], ['y', None], ['z', None]]
             # can't use ./DataItem[@Name='VX'] so python2.6 works
             dataitems = geo.findall("./DataItem")
             for di in dataitems:
@@ -326,7 +326,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
                 raise ValueError("ORIGIN_DXDYDZ has no number of elements...")
             n = [int(num) for num in nstr.split()]
             crdlist = [None] * 3
-            for i, crd in enumerate(['z', 'y', 'x']):
+            for i, crd in enumerate(['x', 'y', 'z']):
                 n_nc, n_cc = n[i], n[i] - 1
                 crd_arr = [data_o[i], data_o[i] + (n_cc * data_dx[i]), n_nc]
                 crdlist[i] = (crd, crd_arr)
@@ -348,7 +348,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             ######## anyway... if we assume a 2d spherical grid spans the
             ######## whole sphere, and radius doesnt matter, all we need are
             ######## the nr_phis / nr_thetas, so let's just do that
-            # # this asserts that attrs["Dimensions"] will have the zyx
+            # # this asserts that attrs["Dimensions"] will have the xyz
             # # dimensions
             # # turn x, y, z -> phi, theta, r
             # dims = [int(s) for
@@ -357,7 +357,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             # nr, ntheta, nphi = [d for d in dims]
             # # dtype = crdlist[0][1].dtype
             # # phi, theta, r = [np.empty((n,), dtype=dtype) for n in dims]
-            # z, y, x = (crdlist[i][1].reshape(dims) for i in range(3))
+            # x, y, z = (crdlist[i][1].reshape(dims) for i in range(3))
             # nphitheta = nphi * ntheta
             # r = np.sqrt(x[::nphitheta, 0, 0]**2 + y[::nphitheta, 0, 0]**2 +
             #             z[::nphitheta, 0, 0]**2)
@@ -378,8 +378,8 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             #            ['phi', [0.0, 360.0, nphi]]]
             ######## names on a map
             nlat, nlon = [int(s) for s in topoattrs["Dimensions"].split(' ')]
-            crdlist = [['lat', [0.0, 180.0, nlat]],
-                       ['lon', [0.0, 360.0, nlon]]]
+            crdlist = [['lon', [0.0, 360.0, nlon]],
+                       ['lat', [0.0, 180.0, nlat]]]
             crdkwargs["full_arrays"] = False
 
         elif topotype in ['3DSMesh']:
@@ -403,7 +403,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
         center = attrs["Center"]
         fldtype = attrs["AttributeType"]
         fld = self._make_field(parent_node, fldtype, name, crds, data,
-                               center=center, time=time)
+                               center=center, time=time, zyx_native=True)
         return fld
 
     def _parse_dataitem(self, item, keep_flat=False):

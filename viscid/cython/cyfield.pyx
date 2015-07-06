@@ -62,9 +62,9 @@ cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
     cdef int[3] sshape_nc = vfield.crds.shape_nc
     cdef int[3] sshape_cc = vfield.crds.shape_cc
 
-    _crd_lst = [z, y, x]
-    _crd_lst_nc = [znc, ync, xnc]
-    _crd_lst_cc = [zcc, ycc, xcc]
+    _crd_lst = [x, y, z]
+    _crd_lst_nc = [xnc, ync, znc]
+    _crd_lst_cc = [xcc, ycc, zcc]
     sshape_max = max(sshape)
     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
     sshape_nc_max = max(sshape_nc)

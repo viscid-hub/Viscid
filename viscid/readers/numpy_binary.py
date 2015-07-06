@@ -106,13 +106,13 @@ class FileNumpyNPZ(vfile.VFile):
 
             crd_names = []
             # try to get crds names from an array of strings called _KEY_CRDS
-            # else, assume it's z, y, x and see if that works
+            # else, assume it's x, y, z and see if that works
             try:
                 clist = [(ax, f[ax]) for ax in f[self._KEY_CRDS]]
                 crd_names = f[self._KEY_CRDS]
                 fld_names.remove(self._KEY_CRDS)
             except KeyError:
-                for axisname in "zyx":
+                for axisname in "xyz":
                     if axisname in f:
                         crd_names.append(axisname)
             clist = [(cn, NPZDataWrapper(self.fname, cn)) for cn in crd_names]

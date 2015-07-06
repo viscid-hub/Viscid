@@ -223,7 +223,7 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
         #        hdf5 / xdmf / numpy binary output
         clist = flds[0].crds.get_clist(full_arrays=True)
         crd_arrs = [np.array([0.0])] * 3
-        crd_names = ["z", "y", "x"]
+        crd_names = ["x", "y", "z"]
         for i, c in enumerate(clist):
             crd_arrs[i] = c[1]
         crd_shape = [len(arr) for arr in crd_arrs]
@@ -237,20 +237,21 @@ class FileHDF5(vfile.VFile): #pylint: disable=R0922
 
             for fld in flds:
                 loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + fld.name
-                f[loc] = fld.data
+                # xdmf files use kji ordering
+                f[loc] = fld.data.T
 
         # now write an xdmf file
         xdmf_fname = os.path.splitext(fname)[0] + ".xdmf"
         relh5fname = "./" + os.path.basename(fname)
         with open(xdmf_fname, 'w') as f:
-            xloc = cls._CRDS_GROUP + '/' + crd_names[2]
+            xloc = cls._CRDS_GROUP + '/' + crd_names[0]
             yloc = cls._CRDS_GROUP + '/' + crd_names[1]
-            zloc = cls._CRDS_GROUP + '/' + crd_names[0]
-            dim_str = " ".join([str(l) for l in crd_shape])
+            zloc = cls._CRDS_GROUP + '/' + crd_names[2]
+            dim_str = " ".join([str(l) for l in crd_shape][::-1])
             f.write(cls._XDMF_TEMPLATE_BEGIN.format(time=time))
             s = cls._XDMF_TEMPLATE_RECTILINEAR_GRID_BEGIN.format(
                 grid_name="vgrid", crd_dims=dim_str, h5fname=relh5fname,
-                xdim=crd_shape[2], ydim=crd_shape[1], zdim=crd_shape[0],
+                xdim=crd_shape[0], ydim=crd_shape[1], zdim=crd_shape[2],
                 xloc=xloc, yloc=yloc, zloc=zloc)
             f.write(s)
 
