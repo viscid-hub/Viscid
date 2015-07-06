@@ -245,34 +245,6 @@ class AMRPatch(object):
         self.L = self.xh - self.xl
         self.n = crds.shape_cc
 
-        self.reset_neighbors()
-
-    def reset_neighbors(self):
-        self.neighbors = dict(xm=[], xp=[], ym=[], yp=[], zm=[], zp=[])
-        self.all_neighbors = []
-
-    def set_neighbors(self, relationship_dict, all_neighbors_list):
-        self.neighbors = relationship_dict
-        self.all_neighbors = all_neighbors_list
-
-    def find_relationships(self, patch):
-        # if r > 0, it's a p relationship for self, eles it's an m
-        rel_list = []
-        r = patch.xm - self.xm
-        d = 0.5 * (self.L + patch.L)
-        # print("A>", self.xl, self.xh, self.xm)
-        # print("B>", patch.xl, patch.xh, patch.xm)
-        # print("?", np.abs(r) - d)
-        close = np.isclose(np.abs(r) - d, 0.0)
-        for ri, flagi, ax in zip(r, close, 'xyz'):
-            if flagi:
-                if ri > 0:
-                    rel_list.append((ax + 'p', ax + 'm'))
-                else:
-                    rel_list.append((ax + 'p', ax + 'm'))
-        return rel_list
-
-
 ##
 ## EOF
 ##
