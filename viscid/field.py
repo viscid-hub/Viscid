@@ -312,6 +312,19 @@ def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
     """
     #
     #len(clist), clist[0][0], len(clist[0][1]), type)
+
+    # try to auto-detect vector fields
+    try:
+        size = data.size
+        if (data.size % np.prod(crds.shape_nc) == 0 and
+            data.size // np.prod(crds.shape_nc) > 1):
+            fldtype = "vector"
+        elif (data.size % np.prod(crds.shape_cc) == 0 and
+              data.size // np.prod(crds.shape_cc) > 1):
+            fldtype = "vector"
+    except AttributeError:
+        pass
+
     cls = field_type(fldtype)
     if cls is not None:
         return cls(name, crds, data, **kwargs)
