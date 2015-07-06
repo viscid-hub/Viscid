@@ -1156,8 +1156,8 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                                            fc=nightcol, zorder=zorder))
     return None
 
- plot_streamlines = plot_lines
- plot_streamlines2d = plot_lines2d
+plot_streamlines = plot_lines
+plot_streamlines2d = plot_lines2d
 
 ##
 ## EOF
