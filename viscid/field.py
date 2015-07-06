@@ -645,6 +645,14 @@ class Field(tree.Leaf):
     def nr_blocks(self):  # pylint: disable=no-self-use
         return 1
 
+    @property
+    def xl(self):
+        return self.crds.xl_nc
+
+    @property
+    def xh(self):
+        return self.crds.xh_nc
+
     def is_loaded(self):
         return self._cache is not None
 

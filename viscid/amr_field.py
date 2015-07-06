@@ -73,6 +73,14 @@ class AMRField(object):
         self.blocks = fields
         self.nr_blocks = len(fields)
 
+    @property
+    def xl(self):
+        return np.min(self.skeleton.xl, axis=0)
+
+    @property
+    def xh(self):
+        return np.max(self.skeleton.xh, axis=0)
+
     ###########
     ## slicing
     def _prepare_amr_slice(self, selection):
