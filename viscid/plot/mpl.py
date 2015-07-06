@@ -314,13 +314,15 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         X *= mod[0]
         Y *= mod[1]
 
-    dat = fld.data
+    dat = fld.data.T
     if scale is not None:
         dat *= scale
     # print(x.shape, y.shape, fld.data.shape)
     if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
         all_masked = all_masked and dat.mask.all()
+
+    # Field.data is now xyz as are the crds
 
     if flip_plot:
         X, Y = Y.T, X.T
@@ -522,11 +524,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     ##############################
     # now actually make the plots
-
-    # THIS IS BACKWARD, on account of the convention for
-    # Coordinates where z, y, x is used since that is how
-    # xdmf data is
-    namey, namex = block0.crds.axes # fld.crds.get_culled_axes()
+    namex, namey = block0.crds.axes # fld.crds.get_culled_axes()
 
     all_masked = False
     for block in fld.blocks:
@@ -577,6 +575,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         cbar = None
 
     if not nolabels:
+        # Field.data is now xyz as are the crds
         if flip_plot:
             namex, namey = namey, namex
         if not xlabel:
@@ -703,10 +702,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         # new_lon = (lon - 90.0) * np.pi / 180.0
         new_lon = lon * np.pi / 180.0
         new_crds = coordinate.wrap_crds("uniform_spherical",
-                                        [('lat', [new_lat[0], new_lat[-1],
-                                                  len(new_lat)]),
-                                         ('lon', [new_lon[0], new_lon[-1],
-                                                  len(new_lon)])])
+                                        [('lon', [new_lon[0], new_lon[-1],
+                                                  len(new_lon)]),
+                                         ('lat', [new_lat[0], new_lat[-1],
+                                                  len(new_lat)])])
         new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
 
         plot_kwargs['nolabels'] = True
@@ -879,7 +878,7 @@ def plot_lines(lines, topology=None, ax=None, show=False, equal=False,
 
     Parameters:
         lines (list): A set of N lines. Elements should have the shape
-            3xP where 3 is the axes zyx (in that order) and P is the
+            3xP where 3 is the axes xyz (in that order) and P is the
             number of points in the line. As an ndarray, the required
             shape is Nx3xP.
         topology (optional): Value used to color the lines. Should have
@@ -900,9 +899,9 @@ def plot_lines(lines, topology=None, ax=None, show=False, equal=False,
 
     for i, line in enumerate(lines):
         line = np.array(line, copy=False)
-        z = line[0]
+        x = line[0]
         y = line[1]
-        x = line[2]
+        z = line[2]
 
         if topo_color:
             kwargs["color"] = color_from_topology(topology[i])
@@ -921,7 +920,7 @@ def plot_lines2d(lines, symdir=None, topology=None, ax=None,
 
     Parameters:
         lines (list): A set of N lines. Elements should have the shape
-            3xP where 3 is the axes zyx (in that order) and P is the
+            3xP where 3 is the axes xyz (in that order) and P is the
             number of points in the line. As an ndarray, the required
             shape is Nx3xP.
         symdir (str, optional): one of xyz for the plane on which to
@@ -948,16 +947,16 @@ def plot_lines2d(lines, symdir=None, topology=None, ax=None,
     for i, line in enumerate(lines):
         line = np.array(line, copy=False)
         if len(line) == 2:
-            x = line[1]
-            y = line[0]
+            x = line[0]
+            y = line[1]
         elif symdir.lower() == "x":
             x = line[1]
-            y = line[0]
+            y = line[2]
         elif symdir.lower() == "y":
-            x = line[2]
-            y = line[0]
+            x = line[0]
+            y = line[2]
         elif symdir.lower() == "z":
-            x = line[2]
+            x = line[0]
             y = line[1]
         else:
             raise ValueError("For 3d lines, symdir should be x, y, or z")
@@ -989,6 +988,7 @@ def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
     # downscaling a field; i think this is a prickley one
     if fld.nr_blocks > 1:
         raise TypeError("plot2d_quiver doesn't do multi-block fields yet")
+    logger.warn("quiver plots untested since zyx->xyz transition")
 
     vx, vy, vz = fld.component_views()
     x, y = fld.get_crds_cc(shaped=True)
@@ -1001,7 +1001,7 @@ def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
     elif symdir.lower() == "z":
         # x, y = xcc, ycc
         pvx, pvy = vx, vy
-    X, Y = np.meshgrid(y, x)
+    Y, X = np.meshgrid(x, y)
     if downscale != 1:
         X = X[::downscale]
         Y = Y[::downscale]
@@ -1015,7 +1015,7 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
 
     Parameters:
         points: something shaped 3xN for N points, where 3 are the
-            zyx cartesian directions in that order
+            xyz cartesian directions in that order
         c (str, optional): color (in matplotlib format)
         ax (matplotlib Axis, optional): axis on which to plot (should
             be a 3d axis)
@@ -1025,9 +1025,9 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     if not ax:
         ax = plt.gca(projection='3d')
 
-    z = points[0]
+    x = points[0]
     y = points[1]
-    x = points[2]
+    z = points[2]
     p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
         ax.axis("equal")

@@ -105,10 +105,10 @@ class AthenaTabFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
             else:
                 shape = self._crds.shape_nc
 
-            data = data_wrapper(filename, fld_name, shape, i)
+            data = data_wrapper(filename, fld_name, shape[::-1], i)
             fld = self._make_field(_grid, "Scalar", fld_name, self._crds,
                                    data, center=self._def_fld_center,
-                                   time=time)
+                                   time=time, zyx_native=True)
             _grid.add_field(fld)
         return _grid
 
@@ -137,7 +137,6 @@ class AthenaTabFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
 
             meta['time'] = float(t)
             # these dims are xyz... this is not the standard 'fortran ordering'
-            # zyx of the data that all the other readers use
             meta['dims'] = dims
             # the first 2 * len(dims) are coordinates
             meta['fld_names'] = fld_names[2 * len(dims):]
@@ -175,8 +174,7 @@ class AthenaTabFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
                 nc = np.array([cc[0] - hd, cc[0] + hd])
             nclist.append((axis, nc))
 
-        # flip crds to zyx before wrapping
-        return coordinate.wrap_crds("nonuniform_cartesian", nclist[::-1])
+        return coordinate.wrap_crds("nonuniform_cartesian", nclist)
 
 class AthenaTabDataWrapper(vfile.DataWrapper):
     filename = None

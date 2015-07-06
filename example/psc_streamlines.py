@@ -48,8 +48,8 @@ def main():
     # mpl.plot(f["hz"], flip_plot=True)
     # mpl.mplshow()
 
-    # make a line of 30 seeds straight along the z axis (z, y, x ordered)
-    seeds1 = seed.Line((2.0, 0.0, 0.0), (1022.0, 0.0, 0.0), 60)
+    # make a line of 30 seeds straight along the z axis (x, y, z ordered)
+    seeds1 = seed.Line((0.0, 0.0, 2.0), (1022.0, 0.0, 0.0), 60)
     # set outer boundary limits for streamlines
     ds = 0.005  # spatial step along the stream line curve
     obound0 = np.array([1, -128, -1000], dtype=h1.dtype)

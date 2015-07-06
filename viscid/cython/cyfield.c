@@ -3177,7 +3177,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_fuse_0__
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc             # <<<<<<<<<<<<<<
  * 
- *     _crd_lst = [z, y, x]
+ *     _crd_lst = [x, y, z]
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_crds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
@@ -3191,69 +3191,69 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_fuse_0__
   /* "viscid/cython/cyfield.pyx":65
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc
  * 
- *     _crd_lst = [z, y, x]             # <<<<<<<<<<<<<<
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]             # <<<<<<<<<<<<<<
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_z);
-  __Pyx_GIVEREF(__pyx_v_z);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_z);
+  __Pyx_INCREF(__pyx_v_x);
+  __Pyx_GIVEREF(__pyx_v_x);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_x);
   __Pyx_INCREF(__pyx_v_y);
   __Pyx_GIVEREF(__pyx_v_y);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_y);
-  __Pyx_INCREF(__pyx_v_x);
-  __Pyx_GIVEREF(__pyx_v_x);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_x);
+  __Pyx_INCREF(__pyx_v_z);
+  __Pyx_GIVEREF(__pyx_v_z);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_z);
   __pyx_v__crd_lst = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":66
  * 
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]             # <<<<<<<<<<<<<<
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]             # <<<<<<<<<<<<<<
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_znc);
-  __Pyx_GIVEREF(__pyx_v_znc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_znc);
+  __Pyx_INCREF(__pyx_v_xnc);
+  __Pyx_GIVEREF(__pyx_v_xnc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xnc);
   __Pyx_INCREF(__pyx_v_ync);
   __Pyx_GIVEREF(__pyx_v_ync);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ync);
-  __Pyx_INCREF(__pyx_v_xnc);
-  __Pyx_GIVEREF(__pyx_v_xnc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xnc);
+  __Pyx_INCREF(__pyx_v_znc);
+  __Pyx_GIVEREF(__pyx_v_znc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_znc);
   __pyx_v__crd_lst_nc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":67
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]             # <<<<<<<<<<<<<<
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]             # <<<<<<<<<<<<<<
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_zcc);
-  __Pyx_GIVEREF(__pyx_v_zcc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_zcc);
+  __Pyx_INCREF(__pyx_v_xcc);
+  __Pyx_GIVEREF(__pyx_v_xcc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xcc);
   __Pyx_INCREF(__pyx_v_ycc);
   __Pyx_GIVEREF(__pyx_v_ycc);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ycc);
-  __Pyx_INCREF(__pyx_v_xcc);
-  __Pyx_GIVEREF(__pyx_v_xcc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xcc);
+  __Pyx_INCREF(__pyx_v_zcc);
+  __Pyx_GIVEREF(__pyx_v_zcc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_zcc);
   __pyx_v__crd_lst_cc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":68
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)             # <<<<<<<<<<<<<<
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)
@@ -3272,7 +3272,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_fuse_0__
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":69
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
  *     sshape_nc_max = max(sshape_nc)
@@ -4709,7 +4709,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_fuse_1__
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc             # <<<<<<<<<<<<<<
  * 
- *     _crd_lst = [z, y, x]
+ *     _crd_lst = [x, y, z]
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_crds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
@@ -4723,69 +4723,69 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_fuse_1__
   /* "viscid/cython/cyfield.pyx":65
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc
  * 
- *     _crd_lst = [z, y, x]             # <<<<<<<<<<<<<<
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]             # <<<<<<<<<<<<<<
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_z);
-  __Pyx_GIVEREF(__pyx_v_z);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_z);
+  __Pyx_INCREF(__pyx_v_x);
+  __Pyx_GIVEREF(__pyx_v_x);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_x);
   __Pyx_INCREF(__pyx_v_y);
   __Pyx_GIVEREF(__pyx_v_y);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_y);
-  __Pyx_INCREF(__pyx_v_x);
-  __Pyx_GIVEREF(__pyx_v_x);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_x);
+  __Pyx_INCREF(__pyx_v_z);
+  __Pyx_GIVEREF(__pyx_v_z);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_z);
   __pyx_v__crd_lst = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":66
  * 
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]             # <<<<<<<<<<<<<<
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]             # <<<<<<<<<<<<<<
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_znc);
-  __Pyx_GIVEREF(__pyx_v_znc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_znc);
+  __Pyx_INCREF(__pyx_v_xnc);
+  __Pyx_GIVEREF(__pyx_v_xnc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xnc);
   __Pyx_INCREF(__pyx_v_ync);
   __Pyx_GIVEREF(__pyx_v_ync);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ync);
-  __Pyx_INCREF(__pyx_v_xnc);
-  __Pyx_GIVEREF(__pyx_v_xnc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xnc);
+  __Pyx_INCREF(__pyx_v_znc);
+  __Pyx_GIVEREF(__pyx_v_znc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_znc);
   __pyx_v__crd_lst_nc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":67
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]             # <<<<<<<<<<<<<<
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]             # <<<<<<<<<<<<<<
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_zcc);
-  __Pyx_GIVEREF(__pyx_v_zcc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_zcc);
+  __Pyx_INCREF(__pyx_v_xcc);
+  __Pyx_GIVEREF(__pyx_v_xcc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xcc);
   __Pyx_INCREF(__pyx_v_ycc);
   __Pyx_GIVEREF(__pyx_v_ycc);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ycc);
-  __Pyx_INCREF(__pyx_v_xcc);
-  __Pyx_GIVEREF(__pyx_v_xcc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xcc);
+  __Pyx_INCREF(__pyx_v_zcc);
+  __Pyx_GIVEREF(__pyx_v_zcc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_zcc);
   __pyx_v__crd_lst_cc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":68
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)             # <<<<<<<<<<<<<<
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)
@@ -4804,7 +4804,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_fuse_1__
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":69
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
  *     sshape_nc_max = max(sshape_nc)
@@ -6242,7 +6242,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc             # <<<<<<<<<<<<<<
  * 
- *     _crd_lst = [z, y, x]
+ *     _crd_lst = [x, y, z]
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_crds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
@@ -6256,69 +6256,69 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__
   /* "viscid/cython/cyfield.pyx":65
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc
  * 
- *     _crd_lst = [z, y, x]             # <<<<<<<<<<<<<<
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]             # <<<<<<<<<<<<<<
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_z);
-  __Pyx_GIVEREF(__pyx_v_z);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_z);
+  __Pyx_INCREF(__pyx_v_x);
+  __Pyx_GIVEREF(__pyx_v_x);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_x);
   __Pyx_INCREF(__pyx_v_y);
   __Pyx_GIVEREF(__pyx_v_y);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_y);
-  __Pyx_INCREF(__pyx_v_x);
-  __Pyx_GIVEREF(__pyx_v_x);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_x);
+  __Pyx_INCREF(__pyx_v_z);
+  __Pyx_GIVEREF(__pyx_v_z);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_z);
   __pyx_v__crd_lst = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":66
  * 
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]             # <<<<<<<<<<<<<<
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]             # <<<<<<<<<<<<<<
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_znc);
-  __Pyx_GIVEREF(__pyx_v_znc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_znc);
+  __Pyx_INCREF(__pyx_v_xnc);
+  __Pyx_GIVEREF(__pyx_v_xnc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xnc);
   __Pyx_INCREF(__pyx_v_ync);
   __Pyx_GIVEREF(__pyx_v_ync);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ync);
-  __Pyx_INCREF(__pyx_v_xnc);
-  __Pyx_GIVEREF(__pyx_v_xnc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xnc);
+  __Pyx_INCREF(__pyx_v_znc);
+  __Pyx_GIVEREF(__pyx_v_znc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_znc);
   __pyx_v__crd_lst_nc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":67
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]             # <<<<<<<<<<<<<<
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]             # <<<<<<<<<<<<<<
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_zcc);
-  __Pyx_GIVEREF(__pyx_v_zcc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_zcc);
+  __Pyx_INCREF(__pyx_v_xcc);
+  __Pyx_GIVEREF(__pyx_v_xcc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xcc);
   __Pyx_INCREF(__pyx_v_ycc);
   __Pyx_GIVEREF(__pyx_v_ycc);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ycc);
-  __Pyx_INCREF(__pyx_v_xcc);
-  __Pyx_GIVEREF(__pyx_v_xcc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xcc);
+  __Pyx_INCREF(__pyx_v_zcc);
+  __Pyx_GIVEREF(__pyx_v_zcc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_zcc);
   __pyx_v__crd_lst_cc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":68
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)             # <<<<<<<<<<<<<<
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)
@@ -6337,7 +6337,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":69
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
  *     sshape_nc_max = max(sshape_nc)
@@ -7774,7 +7774,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__
  *     cdef int[3] sshape_nc = vfield.crds.shape_nc
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc             # <<<<<<<<<<<<<<
  * 
- *     _crd_lst = [z, y, x]
+ *     _crd_lst = [x, y, z]
  */
   __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_crds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
@@ -7788,69 +7788,69 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__
   /* "viscid/cython/cyfield.pyx":65
  *     cdef int[3] sshape_cc = vfield.crds.shape_cc
  * 
- *     _crd_lst = [z, y, x]             # <<<<<<<<<<<<<<
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]             # <<<<<<<<<<<<<<
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_z);
-  __Pyx_GIVEREF(__pyx_v_z);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_z);
+  __Pyx_INCREF(__pyx_v_x);
+  __Pyx_GIVEREF(__pyx_v_x);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_x);
   __Pyx_INCREF(__pyx_v_y);
   __Pyx_GIVEREF(__pyx_v_y);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_y);
-  __Pyx_INCREF(__pyx_v_x);
-  __Pyx_GIVEREF(__pyx_v_x);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_x);
+  __Pyx_INCREF(__pyx_v_z);
+  __Pyx_GIVEREF(__pyx_v_z);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_z);
   __pyx_v__crd_lst = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":66
  * 
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]             # <<<<<<<<<<<<<<
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]             # <<<<<<<<<<<<<<
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_znc);
-  __Pyx_GIVEREF(__pyx_v_znc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_znc);
+  __Pyx_INCREF(__pyx_v_xnc);
+  __Pyx_GIVEREF(__pyx_v_xnc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xnc);
   __Pyx_INCREF(__pyx_v_ync);
   __Pyx_GIVEREF(__pyx_v_ync);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ync);
-  __Pyx_INCREF(__pyx_v_xnc);
-  __Pyx_GIVEREF(__pyx_v_xnc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xnc);
+  __Pyx_INCREF(__pyx_v_znc);
+  __Pyx_GIVEREF(__pyx_v_znc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_znc);
   __pyx_v__crd_lst_nc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":67
- *     _crd_lst = [z, y, x]
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]             # <<<<<<<<<<<<<<
+ *     _crd_lst = [x, y, z]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]             # <<<<<<<<<<<<<<
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  */
   __pyx_t_4 = PyList_New(3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_INCREF(__pyx_v_zcc);
-  __Pyx_GIVEREF(__pyx_v_zcc);
-  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_zcc);
+  __Pyx_INCREF(__pyx_v_xcc);
+  __Pyx_GIVEREF(__pyx_v_xcc);
+  PyList_SET_ITEM(__pyx_t_4, 0, __pyx_v_xcc);
   __Pyx_INCREF(__pyx_v_ycc);
   __Pyx_GIVEREF(__pyx_v_ycc);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_ycc);
-  __Pyx_INCREF(__pyx_v_xcc);
-  __Pyx_GIVEREF(__pyx_v_xcc);
-  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_xcc);
+  __Pyx_INCREF(__pyx_v_zcc);
+  __Pyx_GIVEREF(__pyx_v_zcc);
+  PyList_SET_ITEM(__pyx_t_4, 2, __pyx_v_zcc);
   __pyx_v__crd_lst_cc = ((PyObject*)__pyx_t_4);
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":68
- *     _crd_lst_nc = [znc, ync, xnc]
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_nc = [xnc, ync, znc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)             # <<<<<<<<<<<<<<
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)
  *     sshape_nc_max = max(sshape_nc)
@@ -7869,7 +7869,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__
   __pyx_t_4 = 0;
 
   /* "viscid/cython/cyfield.pyx":69
- *     _crd_lst_cc = [zcc, ycc, xcc]
+ *     _crd_lst_cc = [xcc, ycc, zcc]
  *     sshape_max = max(sshape)
  *     fld.crds = np.nan * np.empty((3, sshape_max), dtype=crd_dtype)             # <<<<<<<<<<<<<<
  *     sshape_nc_max = max(sshape_nc)

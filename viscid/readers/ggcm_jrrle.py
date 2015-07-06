@@ -66,7 +66,8 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
                                 item['shape'])
             fld = self._make_field(_grid, "Scalar", item['fld_name'],
                                    self._crds, data,
-                                   center=self._def_fld_center, time=time)
+                                   center=self._def_fld_center, time=time,
+                                   zyx_native=True)
             _grid.add_field(fld)
         return _grid
 

@@ -143,7 +143,7 @@ cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
         ix[d] = ind
 
-    # INTERLACED ... z first
+    # INTERLACED ... x first
     c00 = (fld.data[ix[0], ix[1]       , ix[2]       , m] +
            xd[0] * (fld.data[ix[0] + p[0], ix[1]       , ix[2]       , m] -
                     fld.data[ix[0]       , ix[1]       , ix[2]       , m]))

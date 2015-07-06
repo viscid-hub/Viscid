@@ -66,7 +66,7 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
                                 item['shape'], item['file_position'])
             fld = self._make_field(_grid, "Scalar", item['fld_name'],
                                    self._crds, data, center=self._def_fld_center,
-                                   time=time)
+                                   time=time, zyx_native=True)
             _grid.add_field(fld)
         return _grid
 
@@ -337,7 +337,6 @@ class FortbinDataWrapper(vfile.DataWrapper):
         self.file_wrapper = file_wrapper
         self.filename = file_wrapper.filename
         self.fld_name = fld_name
-        # translate to zyx
         self.expected_shape = expected_shape
         self.file_position = file_position
 

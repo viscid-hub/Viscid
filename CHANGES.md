@@ -1,6 +1,12 @@
 Changes
 -------
 
+0.90.0
+======
+
+Backward Incompatible Changes:
+  - ALL indexing is now in the natural order (xyz as opposed to zyx). This means seeds, lines, fields... everything. Since this is such a big change that unavoidably breaks many things, this is the only feature of this release, so if you have code that depends on zyx ordering, stay at version 0.80.8.
+
 0.80.9
 ======
 

@@ -264,7 +264,7 @@ class AMRPatch(object):
         # print("B>", patch.xl, patch.xh, patch.xm)
         # print("?", np.abs(r) - d)
         close = np.isclose(np.abs(r) - d, 0.0)
-        for ri, flagi, ax in zip(r, close, 'zyx'):
+        for ri, flagi, ax in zip(r, close, 'xyz'):
             if flagi:
                 if ri > 0:
                     rel_list.append((ax + 'p', ax + 'm'))

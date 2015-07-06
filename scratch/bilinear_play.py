@@ -84,7 +84,7 @@ def main():
     bz = field.empty(crds, name="$B_z$", center="Node")
     fld = field.empty(crds, name="B", nr_comps=3, center="Node",
                       layout="interlaced")
-    Z, Y, X = crds.get_crds(shaped=True)
+    X, Y, Z = crds.get_crds(shaped=True)
 
     x01, y01, z01 = 0.5, 0.5, 0.5
     x02, y02, z02 = 0.5, 0.5, 0.5

@@ -83,14 +83,12 @@ def field_to_point_source(fld):
     dat_target = grid.point_data
 
     if fld.iscentered("Cell"):
-        # grid.dimensions is x, y, z not z, y, x
-        grid.dimensions = tuple(fld.crds.shape_cc[::-1])
+        grid.dimensions = tuple(fld.crds.shape_cc)
         grid.x_coordinates = fld.get_crd_cc('x')
         grid.y_coordinates = fld.get_crd_cc('y')
         grid.z_coordinates = fld.get_crd_cc('z')
     elif fld.iscentered("Node"):
-        # grid.dimensions is x, y, z not z, y, x
-        grid.dimensions = tuple(fld.crds.shape_nc[::-1])
+        grid.dimensions = tuple(fld.crds.shape_nc)
         grid.x_coordinates = fld.get_crd_nc('x')
         grid.y_coordinates = fld.get_crd_nc('y')
         grid.z_coordinates = fld.get_crd_nc('z')
@@ -112,8 +110,7 @@ def field_to_cell_source(fld):
     dat_target = grid.cell_data
 
     if fld.iscentered("Cell"):
-        # grid.dimensions is x, y, z not z, y, x
-        grid.dimensions = tuple(fld.crds.shape_cc[::-1])
+        grid.dimensions = tuple(fld.crds.shape_cc)
         grid.x_coordinates = fld.get_crd_nc('x')
         grid.y_coordinates = fld.get_crd_nc('y')
         grid.z_coordinates = fld.get_crd_nc('z')
@@ -127,13 +124,22 @@ def field_to_cell_source(fld):
 def _prep_field(fld):
     grid = tvtk.RectilinearGrid()
 
+    # note, the transpose operations are b/c fld.data is now xyz ordered,
+    # but vtk expects zyx data
+
+    # import pdb; pdb.set_trace()
+
     if isinstance(fld, field.ScalarField):
-        arr = np.reshape(fld.data, (-1,))
+        zyx_dat = fld.data.T
+        arr = np.reshape(zyx_dat, (-1,))
+        # vtk expects zyx data, but fld.data is now xyz
     elif isinstance(fld, field.VectorField):
         if fld.layout == field.LAYOUT_INTERLACED:
-            arr = np.reshape(fld.data, (-1, 3))
+            zyx_dat = np.transpose(fld.data, (2, 1, 0, 3))
+            arr = np.reshape(zyx_dat, (-1, 3))
         elif fld.layout == field.LAYOUT_FLAT:
-            arr = np.reshape(np.rollaxis(fld.data, 0, len(fld.shape)), (-1, 3))
+            zyx_dat = np.transpose(fld.data, (0, 3, 2, 1))
+            arr = np.reshape(np.rollaxis(zyx_dat, 0, len(fld.shape)), (-1, 3))
         else:
             raise ValueError()
     else:
@@ -174,9 +180,9 @@ def plot_lines(lines, topology=None, scalar=None, **kwargs):
             kwargs["color"] = color_from_topology(topology[i])
 
         if scalar is not None:
-            mlab.plot3d(line[2], line[1], line[0], scalar, **kwargs)
+            mlab.plot3d(line[0], line[1], line[2], scalar, **kwargs)
         else:
-            mlab.plot3d(line[2], line[1], line[0], **kwargs)
+            mlab.plot3d(line[0], line[1], line[2], **kwargs)
 
 def mlab_earth(pipeline=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
                crd_system="mhd"):

@@ -2,8 +2,8 @@
 """ Container for grid coordinates
 
 Coordinates primarily go into Field objects. The order of coords in
-the clist should mirror the data layout, as in if data[iz, iy, ix]
-(C-order, ix is fastest varying index) then list should go z, y, x...
+the clist should mirror the data layout, as in if data[ix, iy, iz]
+(C-order, ix is fastest varying index) then list should go x, y, z...
 this is the default order
 
 types:
@@ -30,14 +30,14 @@ from viscid.compat import string_types, izip
 from viscid import vutil
 
 
-def arrays2crds(crd_arrs, crd_names="zyxwvu"):
+def arrays2crds(crd_arrs, crd_names="xyzuvw"):
     """make either uniform or nonuniform coordnates given full arrays
 
     Args:
         crd_arrs (array-like): for n-dimensional crds, supply a list
             of n ndarrays
         crd_names (iterable): names of coordinates in the same order
-            as crd_arrs. Should always be in zyx order.
+            as crd_arrs. Should always be in xyz order.
     """
     clist = []
     uniform_clist = []
@@ -106,7 +106,7 @@ class StructuredCrds(Coordinates):
                "face": "fc", "edge": "ec"}
     SUFFIXES = list(_CENTER.values())
 
-    _axes = ["z", "y", "x"]
+    _axes = ["x", "y", "z"]
 
     _src_crds_nc = None
 
@@ -1149,12 +1149,12 @@ class NonuniformCrds(StructuredCrds):
 
 class UniformCartesianCrds(UniformCrds):
     _TYPE = "uniform_cartesian"
-    _axes = ["z", "y", "x"]
+    _axes = ["x", "y", "z"]
 
 
 class NonuniformCartesianCrds(NonuniformCrds):
     _TYPE = "nonuniform_cartesian"
-    _axes = ["z", "y", "x"]
+    _axes = ["x", "y", "z"]
 
 
 class UniformSphericalCrds(UniformCrds):

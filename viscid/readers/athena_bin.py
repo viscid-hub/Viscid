@@ -121,10 +121,11 @@ class AthenaBinFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
                 shape = self._crds.shape_nc
 
             data = data_wrapper(self._file_wrapper, fld_name,
-                                shape, i)
+                                shape[::-1], i)
             fld = self._make_field(_grid, "Scalar", fld_name,
                                    self._crds, data, time=time,
-                                   center=self._def_fld_center)
+                                   center=self._def_fld_center,
+                                   zyx_native=True)
             _grid.add_field(fld)
         return _grid
 
@@ -150,7 +151,7 @@ class AthenaBinFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
                     dxminh = 0.5 * dxmin
                     nc = np.array([cc[0] - dxminh, cc[0] + dxminh])
                 new_clist.append([crd_clist[i][0], nc])
-            crds = coordinate.wrap_crds("nonuniform_cartesian", new_clist)
+            crds = coordinate.wrap_crds("nonuniform_cartesian", new_clist[::-1])
         return crds
 
 
