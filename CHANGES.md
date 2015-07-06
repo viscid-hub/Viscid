@@ -4,7 +4,8 @@ Changes
 0.80.9 dev
 ==========
 
-
+Bugfixes:
+  - vector -> scalar numpy reduction operations
 
 0.80.8
 ======
