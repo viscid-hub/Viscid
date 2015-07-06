@@ -325,6 +325,11 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             else:
                 raise ValueError("ORIGIN_DXDYDZ has no number of elements...")
             n = [int(num) for num in nstr.split()]
+            # FIXME: OpenGGCM output uses ZYX ordering even though the xdmf
+            # website says it should be XYZ, BUT, the file opens correctly
+            # in Paraview with zyx, so... I guess i need to do this [::-1]
+            # nonsense here
+            data_o, data_dx, n = data_o[::-1], data_dx[::-1], n[::-1]
             crdlist = [None] * 3
             for i, crd in enumerate(['x', 'y', 'z']):
                 n_nc, n_cc = n[i], n[i] - 1
