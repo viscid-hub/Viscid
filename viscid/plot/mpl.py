@@ -873,8 +873,8 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         mplshow()
     return p, None
 
-def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
-                     **kwargs):
+def plot_lines(lines, topology=None, ax=None, show=False, equal=False,
+               **kwargs):
     """Plot lines on a matplotlib 3D plot, optionally colored by value
 
     Parameters:
@@ -915,8 +915,8 @@ def plot_streamlines(lines, topology=None, ax=None, show=True, equal=False,
         plt.show()
     return p, None
 
-def plot_streamlines2d(lines, symdir=None, topology=None, ax=None,
-                       show=False, flip_plot=False, **kwargs):
+def plot_lines2d(lines, symdir=None, topology=None, ax=None,
+                 show=False, flip_plot=False, **kwargs):
     """Project 3D lines onto a 2D plot
 
     Parameters:
@@ -1010,7 +1010,7 @@ def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
     # print(X.shape, Y.shape, pvx.shape, pvy.shape)
     return plt.quiver(X, Y, pvx, pvy, **kwargs)
 
-def scatter_3d(points, c='b', ax=None, show=True, equal=False, **kwargs):
+def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     """Plot scattered points on a matplotlib 3d plot
 
     Parameters:
@@ -1155,6 +1155,9 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
             axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
                                            fc=nightcol, zorder=zorder))
     return None
+
+plot_streamlines = plot_lines
+plot_streamlines2d = plot_lines2d
 
 ##
 ## EOF

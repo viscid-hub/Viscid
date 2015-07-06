@@ -1,6 +1,12 @@
 Changes
 -------
 
+0.80.9
+======
+
+Bugfixes:
+  - vector -> scalar numpy reduction operations
+
 0.80.8
 ======
 
