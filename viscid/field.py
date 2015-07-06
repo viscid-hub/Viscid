@@ -998,8 +998,8 @@ class Field(tree.Leaf):
                 native_first_slc = first_slc[::-1]
                 native_second_slc = second_slc[::-1]
             else:
-                native_first_slc = native_first_slc
-                native_second_slc = native_second_slc
+                native_first_slc = first_slc
+                native_second_slc = second_slc
 
             # now put component slice back in
             try:
