@@ -1480,7 +1480,7 @@ class Field(tree.Leaf):
                 crd_slc = "{0}=0".format(reduce_axis)
                 default_keepdims = len(self.shape) == len(crds.shape)
                 iscc = self.iscentered('cell')
-                if axis == self.nr_comp:
+                if self.nr_comps > 0 and axis == self.nr_comp:
                     pass
                 elif npkwargs.get("keepdims", default_keepdims):
                     crds = self.crds.slice_keep(crd_slc, cc=iscc)
