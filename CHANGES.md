@@ -1,10 +1,18 @@
 Changes
 -------
 
-0.90.1 dev
-==========
+0.90.1
+======
 
+Changes:
+  - xl and xh properties added to Fields and AMRFields
+  - Fields now have get_slice_extent
 
+Bugfixes:
+  - XDMF reading uniform crds was wrong; ggcm is using zyx order for O+dxdydz since that seems to work for Paraview, but the xdmf docs call for xyz order, so something isn't kosher here but I guess this works for now
+  - xyz ordering for scalar_fields_to_vector
+  - TypeError on numpy reduction operations on ScalarFields
+  - fix Volume genr_points for xyz ordering
 
 0.90.0
 ======
