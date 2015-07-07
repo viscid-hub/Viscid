@@ -269,6 +269,13 @@ def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
 
     _crds = type(crds)(crds.get_clist())
 
+    # component fields will already be transposed when filling caches, so
+    # the source will already be xyz
+    if not "zyx_native" in kwargs:
+        kwargs["zyx_native"] = False
+    else:
+        print("Warning: did you really want to do another transpose?")
+
     vfield = VectorField(name, _crds, fldlist, center=center, time=time,
                          meta=fldlist[0].meta, parents=[fldlist[0]],
                          **kwargs)
@@ -312,6 +319,19 @@ def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
     """
     #
     #len(clist), clist[0][0], len(clist[0][1]), type)
+
+    # try to auto-detect vector fields
+    try:
+        size = data.size
+        if (data.size % np.prod(crds.shape_nc) == 0 and
+            data.size // np.prod(crds.shape_nc) > 1):
+            fldtype = "vector"
+        elif (data.size % np.prod(crds.shape_cc) == 0 and
+              data.size // np.prod(crds.shape_cc) > 1):
+            fldtype = "vector"
+    except AttributeError:
+        pass
+
     cls = field_type(fldtype)
     if cls is not None:
         return cls(name, crds, data, **kwargs)
@@ -645,6 +665,23 @@ class Field(tree.Leaf):
     def nr_blocks(self):  # pylint: disable=no-self-use
         return 1
 
+    @property
+    def xl(self):
+        return self.crds.xl_nc
+
+    @property
+    def xh(self):
+        return self.crds.xh_nc
+
+    def get_slice_extent(self, selection):
+        extent = self.blocks[0]._src_crds.get_slice_extent(selection)
+        for i in range(3):
+            if np.isnan(extent[0, i]):
+                extent[0, i] = self.xl[i]
+            if np.isnan(extent[1, i]):
+                extent[1, i] = self.xh[i]
+        return extent
+
     def is_loaded(self):
         return self._cache is not None
 
@@ -687,12 +724,12 @@ class Field(tree.Leaf):
                     self._cached_xyz_src_view = lst
                 else:
                     spatial_transpose = list(range(len(self.shape)))
-                    try:
+                    if self.nr_comps > 0:
                         nr_comp = self.nr_comp
                         spatial_transpose.remove(nr_comp)
                         spatial_transpose = spatial_transpose[::-1]
                         spatial_transpose.insert(nr_comp, nr_comp)
-                    except TypeError:
+                    else:
                         spatial_transpose = spatial_transpose[::-1]
                     # transposed view
                     Tview = np.transpose(self._src_data.__array__(),
@@ -998,8 +1035,8 @@ class Field(tree.Leaf):
                 native_first_slc = first_slc[::-1]
                 native_second_slc = second_slc[::-1]
             else:
-                native_first_slc = native_first_slc
-                native_second_slc = native_second_slc
+                native_first_slc = first_slc
+                native_second_slc = second_slc
 
             # now put component slice back in
             try:
@@ -1443,7 +1480,7 @@ class Field(tree.Leaf):
                 crd_slc = "{0}=0".format(reduce_axis)
                 default_keepdims = len(self.shape) == len(crds.shape)
                 iscc = self.iscentered('cell')
-                if axis == self.nr_comp:
+                if self.nr_comps > 0 and axis == self.nr_comp:
                     pass
                 elif npkwargs.get("keepdims", default_keepdims):
                     crds = self.crds.slice_keep(crd_slc, cc=iscc)
