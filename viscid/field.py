@@ -269,6 +269,13 @@ def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
 
     _crds = type(crds)(crds.get_clist())
 
+    # component fields will already be transposed when filling caches, so
+    # the source will already be xyz
+    if not "zyx_native" in kwargs:
+        kwargs["zyx_native"] = False
+    else:
+        print("Warning: did you really want to do another transpose?")
+
     vfield = VectorField(name, _crds, fldlist, center=center, time=time,
                          meta=fldlist[0].meta, parents=[fldlist[0]],
                          **kwargs)
@@ -717,12 +724,12 @@ class Field(tree.Leaf):
                     self._cached_xyz_src_view = lst
                 else:
                     spatial_transpose = list(range(len(self.shape)))
-                    try:
+                    if self.nr_comps > 0:
                         nr_comp = self.nr_comp
                         spatial_transpose.remove(nr_comp)
                         spatial_transpose = spatial_transpose[::-1]
                         spatial_transpose.insert(nr_comp, nr_comp)
-                    except TypeError:
+                    else:
                         spatial_transpose = spatial_transpose[::-1]
                     # transposed view
                     Tview = np.transpose(self._src_data.__array__(),
