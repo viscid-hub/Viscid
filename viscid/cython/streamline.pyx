@@ -500,7 +500,7 @@ cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
     cdef real_t rsq = pt[0]**2 + pt[1]**2 + pt[2]**2
 
     if rsq < ibound**2:
-        if pt[0] >= 0.0:
+        if pt[2] >= 0.0:
             done = _C_END_IBOUND_NORTH
         else:
             done = _C_END_IBOUND_SOUTH
