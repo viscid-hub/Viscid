@@ -550,10 +550,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         if "use_gridspec" not in colorbar:
             colorbar["use_gridspec"] = True
 
-        if vscale == "log" and colorbar is not None and "ticks" not in colorbar:
-            colorbar["ticks"] = matplotlib.ticker.LogLocator()
-        elif symmetric_vlims and "ticks" not in colorbar:
-            colorbar["ticks"] = matplotlib.ticker.MaxNLocator()
+        if "ticks" not in colorbar:
+            if vscale == "log":
+                colorbar["ticks"] = matplotlib.ticker.LogLocator()
+            elif symmetric_vlims:
+                colorbar["ticks"] = matplotlib.ticker.MaxNLocator()
+            else:
+                colorbar["ticks"] = matplotlib.ticker.LinearLocator()
 
         cbarfmt = colorbar.pop("format", mpl_extra.default_cbarfmt)
         if cbarfmt == "steve":
