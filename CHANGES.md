@@ -4,7 +4,16 @@ Changes
 0.90.2 dev
 ==========
 
+Changes:
+  - Use LinearLocator for linear colorbars by default
+  - better error message when trying to mpl.plot vector fields
 
+Refactors:
+  - blocks -> patches everywhere
+  - block -> patch everywhere
+
+Bugfixes:
+  - ibound topology detection (north/south accidently became dayside/nightside in version 0.90.0)
 
 0.90.1
 ======
