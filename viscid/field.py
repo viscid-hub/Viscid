@@ -658,11 +658,11 @@ class Field(tree.Leaf):
         # do some sort of lazy pre-setup _src_data inspection?
 
     @property
-    def blocks(self):
+    def patches(self):
         return [self]
 
     @property
-    def nr_blocks(self):  # pylint: disable=no-self-use
+    def nr_patches(self):  # pylint: disable=no-self-use
         return 1
 
     @property
@@ -674,7 +674,7 @@ class Field(tree.Leaf):
         return self.crds.xh_nc
 
     def get_slice_extent(self, selection):
-        extent = self.blocks[0]._src_crds.get_slice_extent(selection)
+        extent = self.patches[0]._src_crds.get_slice_extent(selection)
         for i in range(3):
             if np.isnan(extent[0, i]):
                 extent[0, i] = self.xl[i]

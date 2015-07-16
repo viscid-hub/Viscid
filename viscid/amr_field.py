@@ -63,15 +63,15 @@ class AMRField(object):
     """
     _TYPE = "amr"
     skeleton = None
-    blocks = None
-    nr_blocks = None
+    patches = None
+    nr_patches = None
 
     def __init__(self, fields, skeleton):
         if not is_list_of_fields(fields):
             raise TypeError("AMRField can only contain Fields:", fields)
         self.skeleton = skeleton
-        self.blocks = fields
-        self.nr_blocks = len(fields)
+        self.patches = fields
+        self.nr_patches = len(fields)
 
     @property
     def xl(self):
@@ -82,7 +82,7 @@ class AMRField(object):
         return np.max(self.skeleton.xh, axis=0)
 
     def get_slice_extent(self, selection):
-        extent = self.blocks[0]._src_crds.get_slice_extent(selection)
+        extent = self.patches[0]._src_crds.get_slice_extent(selection)
         for i in range(3):
             if np.isnan(extent[0, i]):
                 extent[0, i] = self.xl[i]
@@ -93,20 +93,20 @@ class AMRField(object):
     ###########
     ## slicing
     def _prepare_amr_slice(self, selection):
-        """ return list of blocks that contain selection """
+        """ return list of patches that contain selection """
         # FIXME: it's not good to reach in to src_field[0]'s private methods
         # like this, but it's also not good to implement these things twice
-        # print("??", len(self.blocks))
-        if len(self.blocks) == 0:
-            raise ValueError("AMR field must contain blocks to be slicable")
-        selection, _ = self.blocks[0]._prepare_slice(selection)
-        extent = self.blocks[0]._src_crds.get_slice_extent(selection)
+        # print("??", len(self.patches))
+        if len(self.patches) == 0:
+            raise ValueError("AMR field must contain patches to be slicable")
+        selection, _ = self.patches[0]._prepare_slice(selection)
+        extent = self.patches[0]._src_crds.get_slice_extent(selection)
 
         inds = []
         maybe = []  # these are patches that look like they contain selection
                     # but might not due to finite precision errors when
                     # calculating xh
-        for i, fld in enumerate(self.blocks):
+        for i, fld in enumerate(self.patches):
             # - if xl - atol > the extent of the slice in any direction, then
             #   there's no overlap
             # - if xh <= the lower corner of the slice in any direction, then
@@ -134,7 +134,7 @@ class AMRField(object):
 
         if len(inds) == 0:
             print("Warning: selection", selection, "not in any patch")
-            print("         @ time", self.blocks[0].time)
+            print("         @ time", self.patches[0].time)
             if self.skeleton:
                 print("         skeleton: xl=", self.skeleton.global_xl,
                       "xh=", self.skeleton.global_xh)
@@ -142,9 +142,9 @@ class AMRField(object):
             flds = None
         elif len(inds) == 1:
             inds = inds[0]
-            flds = self.blocks[inds]
+            flds = self.patches[inds]
         else:
-            flds = [self.blocks[i] for i in inds]
+            flds = [self.patches[i] for i in inds]
 
         return flds, inds
 
@@ -152,16 +152,16 @@ class AMRField(object):
         skeleton = None  # FIXME
         for fld in fld_lst:
             if isinstance(fld, (int, float, np.number)):
-                m = ("Trying to make an AMRField where 1+ blocks "
+                m = ("Trying to make an AMRField where 1+ patches "
                      "is just a number... You probably slice_reduced "
                      "a field down to a scalar value")
                 print("Warning:", m)
         return AMRField(fld_lst, skeleton)
 
     def patch_indices(self, selection):
-        return self.block_indices(selection)
+        return self.patch_indices(selection)
 
-    def block_indices(self, selection):
+    def patch_indices(self, selection):
         """get the indices of the patches that overlap selection
         Args:
             selection (slice, str): anything that can slice a field
@@ -218,36 +218,36 @@ class AMRField(object):
 
     def __exit__(self, exc_type, value, traceback):
         """clear all caches"""
-        for blk in self.blocks:
+        for blk in self.patches:
             blk.clear_cache()
         return None
 
     def wrap_field_method(self, attrname, *args, **kwargs):
         """Wrap methods whose args are Fields and return a Field"""
-        # make sure all args have same number of blocks as self
+        # make sure all args have same number of patches as self
         is_field = [None] * len(args)
         for i, arg in enumerate(args):
             try:
-                if arg.nr_blocks != self.nr_blocks and arg.nr_blocks != 1:
+                if arg.nr_patches != self.nr_patches and arg.nr_patches != 1:
                     raise ValueError("AMR fields in math operations must "
-                                     "have the same number of blocks")
+                                     "have the same number of patches")
                 is_field[i] = True
             except AttributeError:
                 is_field[i] = False
 
-        lst = [None] * self.nr_blocks
+        lst = [None] * self.nr_patches
         other = [None] * len(args)
         # FIXME: There must be a better way
-        for i, block in enumerate(self.blocks):
+        for i, patch in enumerate(self.patches):
             for j, arg in enumerate(args):
                 if is_field[j]:
                     try:
-                        other[j] = arg.blocks[i]
+                        other[j] = arg.patches[i]
                     except IndexError:
-                        other[j] = arg.blocks[0]
+                        other[j] = arg.patches[0]
                 else:
                     other[j] = arg
-            lst[i] = getattr(block, attrname)(*other, **kwargs)
+            lst[i] = getattr(patch, attrname)(*other, **kwargs)
 
         if np.asarray(lst[0]).size == 1:
             # operation reduced to scalar
@@ -270,12 +270,12 @@ class AMRField(object):
         #        np.sum(fld, axis=-1), cause that -1 will now be the patch
         #        dimension
 
-        blocks = [block.__array__(*args, **kwargs) for block in self.blocks]
-        for i, block in enumerate(blocks):
-            blocks[i] = np.expand_dims(block, 0)
+        patches = [patch.__array__(*args, **kwargs) for patch in self.patches]
+        for i, patch in enumerate(patches):
+            patches[i] = np.expand_dims(patch, 0)
         # the vstack will copy all the arrays, this is what __numpy_ufunc__
         # will be able to avoid
-        arr = np.vstack(blocks)
+        arr = np.vstack(patches)
         # roll the patch dimension to the last dimension... this is for ufuncs
         # that take an axis argument... this way axis will only be confused
         # if it's negative, this is the main reason to use __numpy_ufunc__
@@ -287,8 +287,8 @@ class AMRField(object):
         # print(">> __array_wrap__", arr.shape, context)
         flds = []
         for i in range(arr.shape[-1]):
-            block_arr = arr[..., i]
-            fld = self.blocks[i].__array_wrap__(block_arr, context=context)
+            patch_arr = arr[..., i]
+            fld = self.patches[i].__array_wrap__(patch_arr, context=context)
             flds.append(fld)
         return AMRField(flds, self.skeleton)
 
@@ -413,26 +413,26 @@ class AMRField(object):
     def __getattr__(self, name):
         # define a callback to finalize
         # print("!! getting attr::", name)
-        if callable(getattr(self.blocks[0], name)):
+        if callable(getattr(self.patches[0], name)):
             def _wrap(lst):
                 try:
                     return AMRField(lst, self.skeleton)
                 except TypeError:
                     return lst
-            return _FieldListCallableAttrWrapper(self.blocks, name, _wrap)
+            return _FieldListCallableAttrWrapper(self.patches, name, _wrap)
         else:
-            # return [getattr(fld, name) for fld in self.blocks]
-            ret0 = getattr(self.blocks[0], name)
-            # Check that all blocks have the same value. Maybe this should
+            # return [getattr(fld, name) for fld in self.patches]
+            ret0 = getattr(self.patches[0], name)
+            # Check that all patches have the same value. Maybe this should
             # have a debugging flag attached to it since it will take time.
             try:
                 all_same = all(getattr(blk, name) == ret0
-                               for blk in self.blocks[1:])
+                               for blk in self.patches[1:])
             except ValueError:
                 all_same = all(np.all(getattr(blk, name) == ret0)
-                               for blk in self.blocks[1:])
+                               for blk in self.patches[1:])
             if not all_same:
-                raise ValueError("different blocks of the AMRField have "
+                raise ValueError("different patches of the AMRField have "
                                  "different values for attribute: {0}"
                                  "".format(name))
             return ret0

@@ -1002,22 +1002,22 @@ struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 {
  * 
  * cdef class CyAMRField:             # <<<<<<<<<<<<<<
  *     cdef str crd_dtype
- *     cdef int nr_blocks
+ *     cdef int nr_patches
  */
 struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField {
   PyObject_HEAD
   PyObject *crd_dtype;
-  int nr_blocks;
+  int nr_patches;
   __Pyx_memviewslice nr_neighbors;
   __Pyx_memviewslice neighbors;
   __Pyx_memviewslice neighbor_mask;
-  int active_block_index;
-  PyObject *blocks;
+  int active_patch_index;
+  PyObject *patches;
 };
 
 
 /* "viscid/cython/cyamr.pxd":16
- *     cdef list blocks  # maybe this can become a typed array?
+ *     cdef list patches  # maybe this can become a typed array?
  * 
  * cdef class AMRField_I4_Crd_F8(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float64_t[:, ::1] xl, xm, xh
@@ -1031,12 +1031,12 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 {
   __pyx_t_5numpy_float64_t global_xl[3];
   __pyx_t_5numpy_float64_t global_xh[3];
   __pyx_t_5numpy_float64_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *active_patch;
 };
 
 
 /* "viscid/cython/cyamr.pxd":23
- *     cdef Field_I4_Crd_F8 active_block
+ *     cdef Field_I4_Crd_F8 active_patch
  * 
  * cdef class AMRField_I8_Crd_F8(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float64_t[:, ::1] xl, xm, xh
@@ -1050,12 +1050,12 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 {
   __pyx_t_5numpy_float64_t global_xl[3];
   __pyx_t_5numpy_float64_t global_xh[3];
   __pyx_t_5numpy_float64_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *active_patch;
 };
 
 
 /* "viscid/cython/cyamr.pxd":30
- *     cdef Field_I8_Crd_F8 active_block
+ *     cdef Field_I8_Crd_F8 active_patch
  * 
  * cdef class AMRField_F4_Crd_F4(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float32_t[:, ::1] xl, xm, xh
@@ -1069,12 +1069,12 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 {
   __pyx_t_5numpy_float32_t global_xl[3];
   __pyx_t_5numpy_float32_t global_xh[3];
   __pyx_t_5numpy_float32_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *active_patch;
 };
 
 
 /* "viscid/cython/cyamr.pxd":37
- *     cdef Field_F4_Crd_F4 active_block
+ *     cdef Field_F4_Crd_F4 active_patch
  * 
  * cdef class AMRField_F8_Crd_F8(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float64_t[:, ::1] xl, xm, xh
@@ -1088,7 +1088,7 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 {
   __pyx_t_5numpy_float64_t global_xl[3];
   __pyx_t_5numpy_float64_t global_xh[3];
   __pyx_t_5numpy_float64_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *active_patch;
 };
 
 
@@ -1862,14 +1862,14 @@ static PyTypeObject *__pyx_ptype_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 = 0;
 static PyTypeObject *__pyx_ptype_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 = 0;
 static PyTypeObject *__pyx_ptype_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 = 0;
 static struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *(*__pyx_f_6viscid_6cython_5cyamr_make_cyamrfield)(PyObject *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_block)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(*__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_patch)(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
 
 /* Module declarations from 'viscid.cython.misc_inlines' */
 static CYTHON_INLINE int __pyx_f_6viscid_6cython_12misc_inlines_int_min(int, int); /*proto*/
@@ -2124,10 +2124,10 @@ static char __pyx_k_TypeError[] = "TypeError";
 static char __pyx_k_enumerate[] = "enumerate";
 static char __pyx_k_float32_t[] = "float32_t";
 static char __pyx_k_float64_t[] = "float64_t";
-static char __pyx_k_nr_blocks[] = "nr_blocks";
 static char __pyx_k_nr_points[] = "nr_points";
 static char __pyx_k_IndexError[] = "IndexError";
 static char __pyx_k_ValueError[] = "ValueError";
+static char __pyx_k_nr_patches[] = "nr_patches";
 static char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static char __pyx_k_signatures[] = "signatures";
 static char __pyx_k_ImportError[] = "ImportError";
@@ -2308,8 +2308,8 @@ static PyObject *__pyx_kp_u_ndarray_is_not_C_contiguous;
 static PyObject *__pyx_kp_u_ndarray_is_not_Fortran_contiguou;
 static PyObject *__pyx_n_s_ndim;
 static PyObject *__pyx_n_s_np;
-static PyObject *__pyx_n_s_nr_blocks;
 static PyObject *__pyx_n_s_nr_comps;
+static PyObject *__pyx_n_s_nr_patches;
 static PyObject *__pyx_n_s_nr_points;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_n_s_obj;
@@ -2587,7 +2587,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
  *     else:
  *         scalar = False             # <<<<<<<<<<<<<<
  * 
- *     if vfield.nr_blocks > 1 or force_amr_version:
+ *     if vfield.nr_patches > 1 or force_amr_version:
  */
     __pyx_v_scalar = 0;
   }
@@ -2596,11 +2596,11 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
   /* "viscid/cython/cycalc.pyx":41
  *         scalar = False
  * 
- *     if vfield.nr_blocks > 1 or force_amr_version:             # <<<<<<<<<<<<<<
+ *     if vfield.nr_patches > 1 or force_amr_version:             # <<<<<<<<<<<<<<
  *         amrfld = make_cyamrfield(vfield)
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_blocks); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_patches); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = PyObject_RichCompare(__pyx_t_3, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 41; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2618,7 +2618,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
 
     /* "viscid/cython/cycalc.pyx":42
  * 
- *     if vfield.nr_blocks > 1 or force_amr_version:
+ *     if vfield.nr_patches > 1 or force_amr_version:
  *         amrfld = make_cyamrfield(vfield)             # <<<<<<<<<<<<<<
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
  *         _py_interp_trilin_amr(amrfld, seeds.iter_points(center=vfield.center), result)
@@ -2629,7 +2629,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
     __pyx_t_2 = 0;
 
     /* "viscid/cython/cycalc.pyx":43
- *     if vfield.nr_blocks > 1 or force_amr_version:
+ *     if vfield.nr_patches > 1 or force_amr_version:
  *         amrfld = make_cyamrfield(vfield)
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)             # <<<<<<<<<<<<<<
  *         _py_interp_trilin_amr(amrfld, seeds.iter_points(center=vfield.center), result)
@@ -2673,7 +2673,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
  *         _py_interp_trilin_amr(amrfld, seeds.iter_points(center=vfield.center), result)             # <<<<<<<<<<<<<<
  *     else:
- *         # about 12% faster than the AMR version on fields w/ 1 block
+ *         # about 12% faster than the AMR version on fields w/ 1 patch
  */
     __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_py_interp_trilin_amr); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 44; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_7);
@@ -2726,7 +2726,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
 
     /* "viscid/cython/cycalc.pyx":47
  *     else:
- *         # about 12% faster than the AMR version on fields w/ 1 block
+ *         # about 12% faster than the AMR version on fields w/ 1 patch
  *         fld = make_cyfield(vfield)             # <<<<<<<<<<<<<<
  *         result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
  *         _py_interp_trilin(fld, seeds.iter_points(center=vfield.center), result)
@@ -2737,7 +2737,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
     __pyx_t_2 = 0;
 
     /* "viscid/cython/cycalc.pyx":48
- *         # about 12% faster than the AMR version on fields w/ 1 block
+ *         # about 12% faster than the AMR version on fields w/ 1 patch
  *         fld = make_cyfield(vfield)
  *         result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)             # <<<<<<<<<<<<<<
  *         _py_interp_trilin(fld, seeds.iter_points(center=vfield.center), result)
@@ -3072,7 +3072,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
  *     else:
  *         scalar = False             # <<<<<<<<<<<<<<
  * 
- *     if vfield.nr_blocks > 1 or force_amr_version:
+ *     if vfield.nr_patches > 1 or force_amr_version:
  */
     __pyx_v_scalar = 0;
   }
@@ -3081,11 +3081,11 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
   /* "viscid/cython/cycalc.pyx":76
  *         scalar = False
  * 
- *     if vfield.nr_blocks > 1 or force_amr_version:             # <<<<<<<<<<<<<<
+ *     if vfield.nr_patches > 1 or force_amr_version:             # <<<<<<<<<<<<<<
  *         amrfld = make_cyamrfield(vfield)
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
  */
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_blocks); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_patches); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = PyObject_RichCompare(__pyx_t_3, __pyx_int_1, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -3103,7 +3103,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
 
     /* "viscid/cython/cycalc.pyx":77
  * 
- *     if vfield.nr_blocks > 1 or force_amr_version:
+ *     if vfield.nr_patches > 1 or force_amr_version:
  *         amrfld = make_cyamrfield(vfield)             # <<<<<<<<<<<<<<
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
  *         _py_interp_nearest_amr(amrfld, seeds.iter_points(center=vfield.center), result)
@@ -3114,7 +3114,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
     __pyx_t_2 = 0;
 
     /* "viscid/cython/cycalc.pyx":78
- *     if vfield.nr_blocks > 1 or force_amr_version:
+ *     if vfield.nr_patches > 1 or force_amr_version:
  *         amrfld = make_cyamrfield(vfield)
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)             # <<<<<<<<<<<<<<
  *         _py_interp_nearest_amr(amrfld, seeds.iter_points(center=vfield.center), result)
@@ -3158,7 +3158,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
  *         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
  *         _py_interp_nearest_amr(amrfld, seeds.iter_points(center=vfield.center), result)             # <<<<<<<<<<<<<<
  *     else:
- *         # about 6% faster than the AMR version on fields w/ 1 block
+ *         # about 6% faster than the AMR version on fields w/ 1 patch
  */
     __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_py_interp_nearest_amr); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_7);
@@ -3211,7 +3211,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
 
     /* "viscid/cython/cycalc.pyx":82
  *     else:
- *         # about 6% faster than the AMR version on fields w/ 1 block
+ *         # about 6% faster than the AMR version on fields w/ 1 patch
  *         fld = make_cyfield(vfield)             # <<<<<<<<<<<<<<
  *         result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
  *         _py_interp_nearest(fld, seeds.iter_points(center=vfield.center), result)
@@ -3222,7 +3222,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
     __pyx_t_2 = 0;
 
     /* "viscid/cython/cycalc.pyx":83
- *         # about 6% faster than the AMR version on fields w/ 1 block
+ *         # about 6% faster than the AMR version on fields w/ 1 patch
  *         fld = make_cyfield(vfield)
  *         result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)             # <<<<<<<<<<<<<<
  *         _py_interp_nearest(fld, seeds.iter_points(center=vfield.center), result)
@@ -7427,7 +7427,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_30_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -7439,8 +7439,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_30_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -7451,22 +7451,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_30_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -7475,8 +7475,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_30_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -7711,7 +7711,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_32_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -7723,8 +7723,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_32_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -7735,22 +7735,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_32_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -7759,8 +7759,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_32_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -7995,7 +7995,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_34_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8007,8 +8007,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_34_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8019,22 +8019,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_34_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -8043,8 +8043,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_34_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -8279,7 +8279,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_36_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8291,8 +8291,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_36_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8303,22 +8303,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_36_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -8327,8 +8327,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_36_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -8563,7 +8563,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_38_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8575,8 +8575,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_38_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8587,22 +8587,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_38_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -8611,8 +8611,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_38_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -8847,7 +8847,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_40_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8859,8 +8859,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_40_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -8871,22 +8871,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_40_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -8895,8 +8895,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_40_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -9131,7 +9131,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_42_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -9143,8 +9143,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_42_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -9155,22 +9155,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_42_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -9179,8 +9179,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_42_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -9415,7 +9415,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_44_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -9427,8 +9427,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_44_py_interp_trilin_amr(CYTHON
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -9439,22 +9439,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_44_py_interp_trilin_amr(CYTHON
       /* "viscid/cython/cycalc.pyx":115
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":116
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -9463,8 +9463,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_44_py_interp_trilin_amr(CYTHON
     }
 
     /* "viscid/cython/cycalc.pyx":117
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -17497,7 +17497,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_66_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -17509,8 +17509,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_66_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -17521,22 +17521,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_66_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -17545,8 +17545,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_66_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -17781,7 +17781,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_68_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -17793,8 +17793,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_68_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -17805,22 +17805,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_68_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -17829,8 +17829,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_68_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -18065,7 +18065,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_70_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18077,8 +18077,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_70_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18089,22 +18089,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_70_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -18113,8 +18113,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_70_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -18349,7 +18349,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_72_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18361,8 +18361,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_72_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18373,22 +18373,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_72_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -18397,8 +18397,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_72_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -18633,7 +18633,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_74_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18645,8 +18645,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_74_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18657,22 +18657,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_74_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -18681,8 +18681,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_74_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -18917,7 +18917,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_76_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18929,8 +18929,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_76_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -18941,22 +18941,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_76_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -18965,8 +18965,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_76_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -19201,7 +19201,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_78_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -19213,8 +19213,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_78_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -19225,22 +19225,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_78_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -19249,8 +19249,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_78_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -19485,7 +19485,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_80_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]             # <<<<<<<<<<<<<<
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 202; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -19497,8 +19497,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_80_py_interp_nearest_amr(CYTHO
  *             x[0] = pt[0]
  *             x[1] = pt[1]
  *             x[2] = pt[2]             # <<<<<<<<<<<<<<
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  */
       __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_pt, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 203; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_4);
@@ -19509,22 +19509,22 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_80_py_interp_nearest_amr(CYTHO
       /* "viscid/cython/cycalc.pyx":204
  *             x[1] = pt[1]
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)             # <<<<<<<<<<<<<<
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1
  */
-      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_block(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = ((PyObject *)__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(__pyx_v_amrfld, __pyx_v_x)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 204; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
       /* "viscid/cython/cycalc.pyx":205
  *             x[2] = pt[2]
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)             # <<<<<<<<<<<<<<
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)             # <<<<<<<<<<<<<<
  *         i += 1
  * 
  */
-      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_block);
+      __pyx_t_4 = ((PyObject *)__pyx_v_amrfld->active_patch);
       __Pyx_INCREF(__pyx_t_4);
       __pyx_t_8 = __pyx_v_i;
       __pyx_t_9 = __pyx_v_m;
@@ -19533,8 +19533,8 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_80_py_interp_nearest_amr(CYTHO
     }
 
     /* "viscid/cython/cycalc.pyx":206
- *             activate_block[FusedAMRField, real_t](amrfld, x)
- *             result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+ *             activate_patch[FusedAMRField, real_t](amrfld, x)
+ *             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
  *         i += 1             # <<<<<<<<<<<<<<
  * 
  * cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
@@ -37842,8 +37842,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_ndarray_is_not_Fortran_contiguou, __pyx_k_ndarray_is_not_Fortran_contiguou, sizeof(__pyx_k_ndarray_is_not_Fortran_contiguou), 0, 1, 0, 0},
   {&__pyx_n_s_ndim, __pyx_k_ndim, sizeof(__pyx_k_ndim), 0, 0, 1, 1},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
-  {&__pyx_n_s_nr_blocks, __pyx_k_nr_blocks, sizeof(__pyx_k_nr_blocks), 0, 0, 1, 1},
   {&__pyx_n_s_nr_comps, __pyx_k_nr_comps, sizeof(__pyx_k_nr_comps), 0, 0, 1, 1},
+  {&__pyx_n_s_nr_patches, __pyx_k_nr_patches, sizeof(__pyx_k_nr_patches), 0, 0, 1, 1},
   {&__pyx_n_s_nr_points, __pyx_k_nr_points, sizeof(__pyx_k_nr_points), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
@@ -38535,14 +38535,14 @@ PyMODINIT_FUNC PyInit_cycalc(void)
   Py_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_3 = __Pyx_ImportModule("viscid.cython.cyamr"); if (!__pyx_t_3) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   if (__Pyx_ImportFunction(__pyx_t_3, "make_cyamrfield", (void (**)(void))&__pyx_f_6viscid_6cython_5cyamr_make_cyamrfield, "struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *(PyObject *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_0_0activate_block", (void (**)(void))&__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_0_1activate_block", (void (**)(void))&__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_1_0activate_block", (void (**)(void))&__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_1_1activate_block", (void (**)(void))&__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_2_0activate_block", (void (**)(void))&__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_2_1activate_block", (void (**)(void))&__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_3_0activate_block", (void (**)(void))&__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_3_1activate_block", (void (**)(void))&__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_0_0activate_patch", (void (**)(void))&__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_0_1activate_patch", (void (**)(void))&__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_1_0activate_patch", (void (**)(void))&__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_1_1activate_patch", (void (**)(void))&__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_2_0activate_patch", (void (**)(void))&__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_2_1activate_patch", (void (**)(void))&__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_3_0activate_patch", (void (**)(void))&__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_3, "__pyx_fuse_3_1activate_patch", (void (**)(void))&__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   Py_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   /*--- Execution code ---*/
 

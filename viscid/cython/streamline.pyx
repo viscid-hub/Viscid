@@ -36,7 +36,7 @@ from libc.math cimport fabs
 cimport numpy as cnp
 
 from viscid.cython.cyfield cimport MAX_FLOAT, real_t
-from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_block
+from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_patch
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.integrate cimport _c_euler1, _c_rk2, _c_rk12, _c_euler1a
 
@@ -249,12 +249,12 @@ def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
     # cdef str fld_type = amr_type[3:]  #
     # cdef int nbits = 8 * int(fld_type.split("_")[1][1])
     # cdef str real_type = "float{0}_t".format(nbits)
-    func = _py_streamline[cython.typeof(fld), cython.typeof(fld.active_block),
+    func = _py_streamline[cython.typeof(fld), cython.typeof(fld.active_patch),
                           cython.typeof(fld.min_dx)]
-    return func(fld, fld.active_block, nr_streams, seed, seed_slice=seed_slice, **kwargs)
+    return func(fld, fld.active_patch, nr_streams, seed, seed_slice=seed_slice, **kwargs)
 
 @cython.wraparound(True)
-def _py_streamline(FusedAMRField amrfld, FusedField active_block,
+def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                    int nr_streams, seed, seed_slice=(None, ),
                    real_t ds0=0.0, real_t ibound=0.0, obound0=None, obound1=None,
                    int stream_dir=DIR_BOTH, int output=OUTPUT_BOTH, int method=EULER1,
@@ -267,7 +267,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
 
     Args:
         amrfld (FusedAMRField): Some Vector Field with 3 components
-        active_block (FusedField): amrfld.active_block, needed for its
+        active_patch (FusedField): amrfld.active_patch, needed for its
             ctype b/c integrate_funcs are cdef'd for performance
         nr_streams (int):
         seed: can be a Seeds instance or a Coordinates instance, or
@@ -346,7 +346,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
     for i in range(3):
         # n = fld.n[i]
         # nnc = fld.nr_nodes[i]
-        if active_block.n[i] == 1:
+        if active_patch.n[i] == 1:
             # these hoops are required for processing 2d fields
             if obound0 is None:
                 c_obound0[i] = -MAX_FLOAT
@@ -393,7 +393,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
     t0_all = time()
     t0 = time()
 
-    seed_iter = islice(seed.iter_points(center=active_block.center), *seed_slice)
+    seed_iter = islice(seed.iter_points(center=active_patch.center), *seed_slice)
     for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
@@ -437,9 +437,9 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
                 pre_ds = fabs(ds)
 
                 # this if statement appears to give no speedup
-                # if amrfld.nr_blocks > 1:
-                activate_block[FusedAMRField, real_t](amrfld, s)
-                ret = integrate_func(amrfld.active_block, s, &ds,
+                # if amrfld.nr_patches > 1:
+                activate_patch[FusedAMRField, real_t](amrfld, s)
+                ret = integrate_func(amrfld.active_patch, s, &ds,
                                      tol_lo, tol_hi, fac_refine , fac_coarsen,
                                      smallest_step, largest_step)
 

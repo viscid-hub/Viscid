@@ -69,18 +69,18 @@ def plot(fld, selection=None, **kwargs):
     """
     fld = fld.slice_reduce(selection)
 
-    if not hasattr(fld, "blocks"):
+    if not hasattr(fld, "patches"):
         raise TypeError("Selection '{0}' sliced away too many "
                         "dimensions".format(selection))
     if fld.nr_comps > 1:
         raise TypeError("Scalar Fields only")
 
-    block0 = fld.blocks[0]
-    nr_sdims = block0.nr_sdims
+    patch0 = fld.patches[0]
+    nr_sdims = patch0.nr_sdims
     if nr_sdims == 1:
         return plot1d_field(fld, **kwargs)
     elif nr_sdims == 2:
-        is_spherical = block0.is_spherical()
+        is_spherical = patch0.is_spherical()
         if is_spherical:
             return plot2d_mapfield(fld, **kwargs)
         return plot2d_field(fld, **kwargs)
@@ -284,13 +284,13 @@ def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
 def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
                    masknan, latlon, flip_plot, patchec, patchlw, patchaa,
                    all_masked, extra_args, **kwargs):
-    """Make a 2d plot of a single block
+    """Make a 2d plot of a single patch
 
     Returns:
         result of the actual matplotlib plotting command
         (pcolormesh, contourf, etc.)
     """
-    assert fld.nr_blocks == 1
+    assert fld.nr_patches == 1
 
     # pcolor mesh uses node coords, and cell data, if we have
     # node data, fake it by using cell centered coords and
@@ -378,8 +378,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     See Also:
         * :doc:`/plot_options`: Contains a full list of plot options
     """
-    block0 = fld.blocks[0]
-    if block0.nr_sdims != 2:
+    patch0 = fld.patches[0]
+    if patch0.nr_sdims != 2:
         raise RuntimeError("I will only contour a 2d field")
 
     # raise some deprecation errors
@@ -464,13 +464,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         vmin, vmax = norm_dict['clim']
 
         if vmin is None:
-            vmin = np.nanmin([np.nanmin(blk) for blk in fld.blocks])
+            vmin = np.nanmin([np.nanmin(blk) for blk in fld.patches])
         if vmax is None:
-            vmax = np.nanmax([np.nanmax(blk) for blk in fld.blocks])
+            vmax = np.nanmax([np.nanmax(blk) for blk in fld.patches])
 
         # vmin / vmax will only be nan if all values are nan
         if np.isnan(vmin) or np.isnan(vmax):
-            print("Warning: All-Nan encountered in Field,", block0.name)
+            print("Warning: All-Nan encountered in Field,", patch0.name)
             vmin, vmax = 1e38, 1e38
             norm_dict['symmetric'] = False
 
@@ -527,11 +527,11 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     ##############################
     # now actually make the plots
-    namex, namey = block0.crds.axes # fld.crds.get_culled_axes()
+    namex, namey = patch0.crds.axes # fld.crds.get_culled_axes()
 
     all_masked = False
-    for block in fld.blocks:
-        p, all_masked = _plot2d_single(action_ax, block, style,
+    for patch in fld.patches:
+        p, all_masked = _plot2d_single(action_ax, patch, style,
                                        namex, namey, mod, scale, masknan,
                                        latlon, flip_plot,
                                        patchec, patchlw, patchaa,
@@ -575,7 +575,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             cbar = plt.colorbar(p, **colorbar)
             if not nolabels:
                 if not cbarlabel:
-                    cbarlabel = block0.pretty_name
+                    cbarlabel = patch0.pretty_name
                 cbar.set_label(cbarlabel)
     else:
         cbar = None
@@ -625,8 +625,8 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     See Also:
         * :doc:`/plot_options`: Contains a full list of plot options
     """
-    if fld.nr_blocks > 1:
-        raise TypeError("plot2d_mapfield doesn't do multi-block fields yet")
+    if fld.nr_patches > 1:
+        raise TypeError("plot2d_mapfield doesn't do multi-patch fields yet")
 
     _new_axis = False
     if not ax:
@@ -793,7 +793,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     See Also:
         * :doc:`/plot_options`: Contains a full list of plot options
     """
-    block0 = fld.blocks[0]
+    patch0 = fld.patches[0]
     if not ax:
         ax = plt.gca()
 
@@ -816,20 +816,20 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # 1d plot options
     legend = plot_kwargs.pop("legend", False)
-    label = plot_kwargs.pop("label", block0.pretty_name)
+    label = plot_kwargs.pop("label", patch0.pretty_name)
     mod = plot_kwargs.pop("mod", None)
 
     plot_kwargs["label"] = label
-    namex, = block0.crds.axes
+    namex, = patch0.crds.axes
 
-    if block0.iscentered("Node"):
-        x = np.concatenate([blk.get_crd_nc(namex) for blk in fld.blocks])
-    elif block0.iscentered("Cell"):
-        x = np.concatenate([blk.get_crd_cc(namex) for blk in fld.blocks])
+    if patch0.iscentered("Node"):
+        x = np.concatenate([blk.get_crd_nc(namex) for blk in fld.patches])
+    elif patch0.iscentered("Cell"):
+        x = np.concatenate([blk.get_crd_cc(namex) for blk in fld.patches])
     else:
         raise ValueError("1d plots can do node or cell centered data only")
 
-    dat = np.concatenate([blk.data for blk in fld.blocks])
+    dat = np.concatenate([blk.data for blk in fld.patches])
 
     if mod:
         x *= mod
@@ -992,8 +992,8 @@ def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
     """
     # FIXME: with dowscale != 1, this reveals a problem when slice and
     # downscaling a field; i think this is a prickley one
-    if fld.nr_blocks > 1:
-        raise TypeError("plot2d_quiver doesn't do multi-block fields yet")
+    if fld.nr_patches > 1:
+        raise TypeError("plot2d_quiver doesn't do multi-patch fields yet")
     logger.warn("quiver plots untested since zyx->xyz transition")
 
     vx, vy, vz = fld.component_views()
@@ -1119,11 +1119,11 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
     import matplotlib.patches as mpatches
 
     # this is kind of a hacky way to
-    if hasattr(plane_spec, "blocks"):
+    if hasattr(plane_spec, "patches"):
         # this is for both Fields and AMRFields
-        crd_system = plane_spec.blocks[0].meta.get("crd_system", crd_system)
+        crd_system = plane_spec.patches[0].meta.get("crd_system", crd_system)
         values = []
-        for blk in plane_spec.blocks:
+        for blk in plane_spec.patches:
             # take only the 1st reduced.nr_sdims... this should just work
             try:
                 plane, _value = blk.deep_meta["reduced"][0]

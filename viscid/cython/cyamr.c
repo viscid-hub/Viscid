@@ -1002,22 +1002,22 @@ struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 {
  * 
  * cdef class CyAMRField:             # <<<<<<<<<<<<<<
  *     cdef str crd_dtype
- *     cdef int nr_blocks
+ *     cdef int nr_patches
  */
 struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField {
   PyObject_HEAD
   PyObject *crd_dtype;
-  int nr_blocks;
+  int nr_patches;
   __Pyx_memviewslice nr_neighbors;
   __Pyx_memviewslice neighbors;
   __Pyx_memviewslice neighbor_mask;
-  int active_block_index;
-  PyObject *blocks;
+  int active_patch_index;
+  PyObject *patches;
 };
 
 
 /* "viscid/cython/cyamr.pxd":16
- *     cdef list blocks  # maybe this can become a typed array?
+ *     cdef list patches  # maybe this can become a typed array?
  * 
  * cdef class AMRField_I4_Crd_F8(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float64_t[:, ::1] xl, xm, xh
@@ -1031,12 +1031,12 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 {
   __pyx_t_5numpy_float64_t global_xl[3];
   __pyx_t_5numpy_float64_t global_xh[3];
   __pyx_t_5numpy_float64_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *active_patch;
 };
 
 
 /* "viscid/cython/cyamr.pxd":23
- *     cdef Field_I4_Crd_F8 active_block
+ *     cdef Field_I4_Crd_F8 active_patch
  * 
  * cdef class AMRField_I8_Crd_F8(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float64_t[:, ::1] xl, xm, xh
@@ -1050,12 +1050,12 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 {
   __pyx_t_5numpy_float64_t global_xl[3];
   __pyx_t_5numpy_float64_t global_xh[3];
   __pyx_t_5numpy_float64_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *active_patch;
 };
 
 
 /* "viscid/cython/cyamr.pxd":30
- *     cdef Field_I8_Crd_F8 active_block
+ *     cdef Field_I8_Crd_F8 active_patch
  * 
  * cdef class AMRField_F4_Crd_F4(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float32_t[:, ::1] xl, xm, xh
@@ -1069,12 +1069,12 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 {
   __pyx_t_5numpy_float32_t global_xl[3];
   __pyx_t_5numpy_float32_t global_xh[3];
   __pyx_t_5numpy_float32_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *active_patch;
 };
 
 
 /* "viscid/cython/cyamr.pxd":37
- *     cdef Field_F4_Crd_F4 active_block
+ *     cdef Field_F4_Crd_F4 active_patch
  * 
  * cdef class AMRField_F8_Crd_F8(CyAMRField):             # <<<<<<<<<<<<<<
  *     cdef cnp.float64_t[:, ::1] xl, xm, xh
@@ -1088,7 +1088,7 @@ struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 {
   __pyx_t_5numpy_float64_t global_xl[3];
   __pyx_t_5numpy_float64_t global_xh[3];
   __pyx_t_5numpy_float64_t min_dx;
-  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *active_block;
+  struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *active_patch;
 };
 
 
@@ -1897,22 +1897,22 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
 static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, PyObject *, PyObject *); /*proto*/
 static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, PyObject *, PyObject *); /*proto*/
 static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, PyObject *, PyObject *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
+static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *); /*proto*/
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -2082,7 +2082,6 @@ static char __pyx_k_xh_nc[] = "xh_nc";
 static char __pyx_k_xl_nc[] = "xl_nc";
 static char __pyx_k_zeros[] = "zeros";
 static char __pyx_k_astype[] = "astype";
-static char __pyx_k_blocks[] = "blocks";
 static char __pyx_k_f_flag[] = "f_flag";
 static char __pyx_k_format[] = "format";
 static char __pyx_k_i_flag[] = "i_flag";
@@ -2107,9 +2106,9 @@ static char __pyx_k_float64_t[] = "float64_t";
 static char __pyx_k_global_xh[] = "global_xh";
 static char __pyx_k_global_xl[] = "global_xl";
 static char __pyx_k_neighbors[] = "neighbors";
-static char __pyx_k_nr_blocks[] = "nr_blocks";
 static char __pyx_k_IndexError[] = "IndexError";
 static char __pyx_k_ValueError[] = "ValueError";
+static char __pyx_k_nr_patches[] = "nr_patches";
 static char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
 static char __pyx_k_signatures[] = "signatures";
 static char __pyx_k_ImportError[] = "ImportError";
@@ -2199,7 +2198,6 @@ static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_args;
 static PyObject *__pyx_n_s_astype;
 static PyObject *__pyx_n_s_base;
-static PyObject *__pyx_n_s_blocks;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
 static PyObject *__pyx_n_s_class;
@@ -2255,8 +2253,8 @@ static PyObject *__pyx_n_s_neighbor_mask;
 static PyObject *__pyx_n_s_neighbors;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_npatches;
-static PyObject *__pyx_n_s_nr_blocks;
 static PyObject *__pyx_n_s_nr_neighbors;
+static PyObject *__pyx_n_s_nr_patches;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_n_s_obj;
 static PyObject *__pyx_n_s_ones;
@@ -4959,13 +4957,13 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *__pyx_f_6viscid_6cyth
  * 
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):             # <<<<<<<<<<<<<<
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks
+ *     cdef int nr_patches = vfield.nr_patches
  */
 
 static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_crd_dtype) {
   int __pyx_v_i;
-  int __pyx_v_nr_blocks;
-  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__block = 0;
+  int __pyx_v_nr_patches;
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__patch = 0;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -4992,21 +4990,21 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
   /* "viscid/cython/cyamr.pyx":130
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks             # <<<<<<<<<<<<<<
- *     cdef CyField _block
+ *     cdef int nr_patches = vfield.nr_patches             # <<<<<<<<<<<<<<
+ *     cdef CyField _patch
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_nr_blocks = __pyx_t_2;
+  __pyx_v_nr_patches = __pyx_t_2;
 
   /* "viscid/cython/cyamr.pyx":133
- *     cdef CyField _block
+ *     cdef CyField _patch
  * 
  *     amrfld.crd_dtype = crd_dtype             # <<<<<<<<<<<<<<
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  */
   if (!(likely(PyString_CheckExact(__pyx_v_crd_dtype))||((__pyx_v_crd_dtype) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_crd_dtype)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -5021,14 +5019,14 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
   /* "viscid/cython/cyamr.pyx":134
  * 
  *     amrfld.crd_dtype = crd_dtype
- *     amrfld.nr_blocks = nr_blocks             # <<<<<<<<<<<<<<
+ *     amrfld.nr_patches = nr_patches             # <<<<<<<<<<<<<<
  * 
  *     try:
  */
-  __pyx_v_amrfld->__pyx_base.nr_blocks = __pyx_v_nr_blocks;
+  __pyx_v_amrfld->__pyx_base.nr_patches = __pyx_v_nr_patches;
 
   /* "viscid/cython/cyamr.pyx":136
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  *     try:             # <<<<<<<<<<<<<<
  *         amrfld.nr_neighbors = vfield.skeleton.nr_neighbors
@@ -5264,12 +5262,12 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -5358,45 +5356,45 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
  * 
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT             # <<<<<<<<<<<<<<
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
  */
   __pyx_v_amrfld->min_dx = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
 
   /* "viscid/cython/cyamr.pyx":157
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []             # <<<<<<<<<<<<<<
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
+ *     amrfld.patches = []             # <<<<<<<<<<<<<<
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
  */
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __pyx_v_amrfld->__pyx_base.blocks = ((PyObject*)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.patches);
+  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.patches);
+  __pyx_v_amrfld->__pyx_base.patches = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":158
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):             # <<<<<<<<<<<<<<
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):             # <<<<<<<<<<<<<<
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
  */
-  __pyx_t_2 = __pyx_v_nr_blocks;
+  __pyx_t_2 = __pyx_v_nr_patches;
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_2; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
     /* "viscid/cython/cyamr.pyx":159
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])             # <<<<<<<<<<<<<<
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_1, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 0, 1); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_9);
@@ -5404,81 +5402,81 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
     __pyx_t_1 = ((PyObject *)__pyx_f_6viscid_6cython_7cyfield_make_cyfield(__pyx_t_9)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __Pyx_XDECREF_SET(__pyx_v__block, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
+    __Pyx_XDECREF_SET(__pyx_v__patch, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
     __pyx_t_1 = 0;
 
     /* "viscid/cython/cyamr.pyx":160
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)
  */
-    __pyx_t_15 = ((__pyx_v__block->min_dx < __pyx_v_amrfld->min_dx) != 0);
+    __pyx_t_15 = ((__pyx_v__patch->min_dx < __pyx_v_amrfld->min_dx) != 0);
     if (__pyx_t_15) {
 
       /* "viscid/cython/cyamr.pyx":161
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx             # <<<<<<<<<<<<<<
- *         amrfld.blocks.append(_block)
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx             # <<<<<<<<<<<<<<
+ *         amrfld.patches.append(_patch)
  * 
  */
-      __pyx_t_12 = __pyx_v__block->min_dx;
+      __pyx_t_12 = __pyx_v__patch->min_dx;
       __pyx_v_amrfld->min_dx = __pyx_t_12;
       goto __pyx_L19;
     }
     __pyx_L19:;
 
     /* "viscid/cython/cyamr.pyx":162
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)             # <<<<<<<<<<<<<<
  * 
- *     amrfld.active_block_index = 0
+ *     amrfld.active_patch_index = 0
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "append");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.blocks, ((PyObject *)__pyx_v__block)); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.patches, ((PyObject *)__pyx_v__patch)); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "viscid/cython/cyamr.pyx":164
- *         amrfld.blocks.append(_block)
+ *         amrfld.patches.append(_patch)
  * 
- *     amrfld.active_block_index = 0             # <<<<<<<<<<<<<<
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch_index = 0             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  */
-  __pyx_v_amrfld->__pyx_base.active_block_index = 0;
+  __pyx_v_amrfld->__pyx_base.active_patch_index = 0;
 
   /* "viscid/cython/cyamr.pyx":165
  * 
- *     amrfld.active_block_index = 0
- *     amrfld.active_block = amrfld.blocks[0]             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch_index = 0
+ *     amrfld.active_patch = amrfld.patches[0]             # <<<<<<<<<<<<<<
  * 
  *     return amrfld
  */
-  if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+  if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-  __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+  __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":167
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  *     return amrfld             # <<<<<<<<<<<<<<
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  */
   __Pyx_XDECREF(((PyObject *)__pyx_r));
   __Pyx_INCREF(((PyObject *)__pyx_v_amrfld));
@@ -5490,7 +5488,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
  * 
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):             # <<<<<<<<<<<<<<
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks
+ *     cdef int nr_patches = vfield.nr_patches
  */
 
   /* function exit code */
@@ -5506,7 +5504,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
   __Pyx_AddTraceback("viscid.cython.cyamr._init_cyamrfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v__block);
+  __Pyx_XDECREF((PyObject *)__pyx_v__patch);
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -5514,8 +5512,8 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
 
 static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_crd_dtype) {
   int __pyx_v_i;
-  int __pyx_v_nr_blocks;
-  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__block = 0;
+  int __pyx_v_nr_patches;
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__patch = 0;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -5542,21 +5540,21 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
   /* "viscid/cython/cyamr.pyx":130
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks             # <<<<<<<<<<<<<<
- *     cdef CyField _block
+ *     cdef int nr_patches = vfield.nr_patches             # <<<<<<<<<<<<<<
+ *     cdef CyField _patch
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_nr_blocks = __pyx_t_2;
+  __pyx_v_nr_patches = __pyx_t_2;
 
   /* "viscid/cython/cyamr.pyx":133
- *     cdef CyField _block
+ *     cdef CyField _patch
  * 
  *     amrfld.crd_dtype = crd_dtype             # <<<<<<<<<<<<<<
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  */
   if (!(likely(PyString_CheckExact(__pyx_v_crd_dtype))||((__pyx_v_crd_dtype) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_crd_dtype)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -5571,14 +5569,14 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
   /* "viscid/cython/cyamr.pyx":134
  * 
  *     amrfld.crd_dtype = crd_dtype
- *     amrfld.nr_blocks = nr_blocks             # <<<<<<<<<<<<<<
+ *     amrfld.nr_patches = nr_patches             # <<<<<<<<<<<<<<
  * 
  *     try:
  */
-  __pyx_v_amrfld->__pyx_base.nr_blocks = __pyx_v_nr_blocks;
+  __pyx_v_amrfld->__pyx_base.nr_patches = __pyx_v_nr_patches;
 
   /* "viscid/cython/cyamr.pyx":136
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  *     try:             # <<<<<<<<<<<<<<
  *         amrfld.nr_neighbors = vfield.skeleton.nr_neighbors
@@ -5814,12 +5812,12 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -5908,45 +5906,45 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
  * 
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT             # <<<<<<<<<<<<<<
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
  */
   __pyx_v_amrfld->min_dx = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
 
   /* "viscid/cython/cyamr.pyx":157
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []             # <<<<<<<<<<<<<<
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
+ *     amrfld.patches = []             # <<<<<<<<<<<<<<
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
  */
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __pyx_v_amrfld->__pyx_base.blocks = ((PyObject*)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.patches);
+  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.patches);
+  __pyx_v_amrfld->__pyx_base.patches = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":158
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):             # <<<<<<<<<<<<<<
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):             # <<<<<<<<<<<<<<
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
  */
-  __pyx_t_2 = __pyx_v_nr_blocks;
+  __pyx_t_2 = __pyx_v_nr_patches;
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_2; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
     /* "viscid/cython/cyamr.pyx":159
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])             # <<<<<<<<<<<<<<
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_1, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 0, 1); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_9);
@@ -5954,81 +5952,81 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
     __pyx_t_1 = ((PyObject *)__pyx_f_6viscid_6cython_7cyfield_make_cyfield(__pyx_t_9)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __Pyx_XDECREF_SET(__pyx_v__block, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
+    __Pyx_XDECREF_SET(__pyx_v__patch, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
     __pyx_t_1 = 0;
 
     /* "viscid/cython/cyamr.pyx":160
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)
  */
-    __pyx_t_15 = ((__pyx_v__block->min_dx < __pyx_v_amrfld->min_dx) != 0);
+    __pyx_t_15 = ((__pyx_v__patch->min_dx < __pyx_v_amrfld->min_dx) != 0);
     if (__pyx_t_15) {
 
       /* "viscid/cython/cyamr.pyx":161
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx             # <<<<<<<<<<<<<<
- *         amrfld.blocks.append(_block)
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx             # <<<<<<<<<<<<<<
+ *         amrfld.patches.append(_patch)
  * 
  */
-      __pyx_t_12 = __pyx_v__block->min_dx;
+      __pyx_t_12 = __pyx_v__patch->min_dx;
       __pyx_v_amrfld->min_dx = __pyx_t_12;
       goto __pyx_L19;
     }
     __pyx_L19:;
 
     /* "viscid/cython/cyamr.pyx":162
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)             # <<<<<<<<<<<<<<
  * 
- *     amrfld.active_block_index = 0
+ *     amrfld.active_patch_index = 0
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "append");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.blocks, ((PyObject *)__pyx_v__block)); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.patches, ((PyObject *)__pyx_v__patch)); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "viscid/cython/cyamr.pyx":164
- *         amrfld.blocks.append(_block)
+ *         amrfld.patches.append(_patch)
  * 
- *     amrfld.active_block_index = 0             # <<<<<<<<<<<<<<
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch_index = 0             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  */
-  __pyx_v_amrfld->__pyx_base.active_block_index = 0;
+  __pyx_v_amrfld->__pyx_base.active_patch_index = 0;
 
   /* "viscid/cython/cyamr.pyx":165
  * 
- *     amrfld.active_block_index = 0
- *     amrfld.active_block = amrfld.blocks[0]             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch_index = 0
+ *     amrfld.active_patch = amrfld.patches[0]             # <<<<<<<<<<<<<<
  * 
  *     return amrfld
  */
-  if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+  if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-  __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+  __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":167
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  *     return amrfld             # <<<<<<<<<<<<<<
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  */
   __Pyx_XDECREF(((PyObject *)__pyx_r));
   __Pyx_INCREF(((PyObject *)__pyx_v_amrfld));
@@ -6040,7 +6038,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
  * 
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):             # <<<<<<<<<<<<<<
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks
+ *     cdef int nr_patches = vfield.nr_patches
  */
 
   /* function exit code */
@@ -6056,7 +6054,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
   __Pyx_AddTraceback("viscid.cython.cyamr._init_cyamrfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v__block);
+  __Pyx_XDECREF((PyObject *)__pyx_v__patch);
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -6064,8 +6062,8 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
 
 static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_crd_dtype) {
   int __pyx_v_i;
-  int __pyx_v_nr_blocks;
-  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__block = 0;
+  int __pyx_v_nr_patches;
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__patch = 0;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -6093,21 +6091,21 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
   /* "viscid/cython/cyamr.pyx":130
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks             # <<<<<<<<<<<<<<
- *     cdef CyField _block
+ *     cdef int nr_patches = vfield.nr_patches             # <<<<<<<<<<<<<<
+ *     cdef CyField _patch
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_nr_blocks = __pyx_t_2;
+  __pyx_v_nr_patches = __pyx_t_2;
 
   /* "viscid/cython/cyamr.pyx":133
- *     cdef CyField _block
+ *     cdef CyField _patch
  * 
  *     amrfld.crd_dtype = crd_dtype             # <<<<<<<<<<<<<<
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  */
   if (!(likely(PyString_CheckExact(__pyx_v_crd_dtype))||((__pyx_v_crd_dtype) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_crd_dtype)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -6122,14 +6120,14 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
   /* "viscid/cython/cyamr.pyx":134
  * 
  *     amrfld.crd_dtype = crd_dtype
- *     amrfld.nr_blocks = nr_blocks             # <<<<<<<<<<<<<<
+ *     amrfld.nr_patches = nr_patches             # <<<<<<<<<<<<<<
  * 
  *     try:
  */
-  __pyx_v_amrfld->__pyx_base.nr_blocks = __pyx_v_nr_blocks;
+  __pyx_v_amrfld->__pyx_base.nr_patches = __pyx_v_nr_patches;
 
   /* "viscid/cython/cyamr.pyx":136
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  *     try:             # <<<<<<<<<<<<<<
  *         amrfld.nr_neighbors = vfield.skeleton.nr_neighbors
@@ -6364,13 +6362,13 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
     __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -6459,45 +6457,45 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
  * 
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT             # <<<<<<<<<<<<<<
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
  */
   __pyx_v_amrfld->min_dx = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
 
   /* "viscid/cython/cyamr.pyx":157
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []             # <<<<<<<<<<<<<<
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
+ *     amrfld.patches = []             # <<<<<<<<<<<<<<
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
  */
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __pyx_v_amrfld->__pyx_base.blocks = ((PyObject*)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.patches);
+  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.patches);
+  __pyx_v_amrfld->__pyx_base.patches = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":158
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):             # <<<<<<<<<<<<<<
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):             # <<<<<<<<<<<<<<
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
  */
-  __pyx_t_2 = __pyx_v_nr_blocks;
+  __pyx_t_2 = __pyx_v_nr_patches;
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_2; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
     /* "viscid/cython/cyamr.pyx":159
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])             # <<<<<<<<<<<<<<
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_1, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 0, 1); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_9);
@@ -6505,81 +6503,81 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
     __pyx_t_1 = ((PyObject *)__pyx_f_6viscid_6cython_7cyfield_make_cyfield(__pyx_t_9)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __Pyx_XDECREF_SET(__pyx_v__block, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
+    __Pyx_XDECREF_SET(__pyx_v__patch, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
     __pyx_t_1 = 0;
 
     /* "viscid/cython/cyamr.pyx":160
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)
  */
-    __pyx_t_15 = ((__pyx_v__block->min_dx < __pyx_v_amrfld->min_dx) != 0);
+    __pyx_t_15 = ((__pyx_v__patch->min_dx < __pyx_v_amrfld->min_dx) != 0);
     if (__pyx_t_15) {
 
       /* "viscid/cython/cyamr.pyx":161
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx             # <<<<<<<<<<<<<<
- *         amrfld.blocks.append(_block)
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx             # <<<<<<<<<<<<<<
+ *         amrfld.patches.append(_patch)
  * 
  */
-      __pyx_t_16 = __pyx_v__block->min_dx;
+      __pyx_t_16 = __pyx_v__patch->min_dx;
       __pyx_v_amrfld->min_dx = __pyx_t_16;
       goto __pyx_L19;
     }
     __pyx_L19:;
 
     /* "viscid/cython/cyamr.pyx":162
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)             # <<<<<<<<<<<<<<
  * 
- *     amrfld.active_block_index = 0
+ *     amrfld.active_patch_index = 0
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "append");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_17 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.blocks, ((PyObject *)__pyx_v__block)); if (unlikely(__pyx_t_17 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_17 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.patches, ((PyObject *)__pyx_v__patch)); if (unlikely(__pyx_t_17 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "viscid/cython/cyamr.pyx":164
- *         amrfld.blocks.append(_block)
+ *         amrfld.patches.append(_patch)
  * 
- *     amrfld.active_block_index = 0             # <<<<<<<<<<<<<<
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch_index = 0             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  */
-  __pyx_v_amrfld->__pyx_base.active_block_index = 0;
+  __pyx_v_amrfld->__pyx_base.active_patch_index = 0;
 
   /* "viscid/cython/cyamr.pyx":165
  * 
- *     amrfld.active_block_index = 0
- *     amrfld.active_block = amrfld.blocks[0]             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch_index = 0
+ *     amrfld.active_patch = amrfld.patches[0]             # <<<<<<<<<<<<<<
  * 
  *     return amrfld
  */
-  if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+  if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-  __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+  __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":167
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  *     return amrfld             # <<<<<<<<<<<<<<
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  */
   __Pyx_XDECREF(((PyObject *)__pyx_r));
   __Pyx_INCREF(((PyObject *)__pyx_v_amrfld));
@@ -6591,7 +6589,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
  * 
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):             # <<<<<<<<<<<<<<
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks
+ *     cdef int nr_patches = vfield.nr_patches
  */
 
   /* function exit code */
@@ -6607,7 +6605,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
   __Pyx_AddTraceback("viscid.cython.cyamr._init_cyamrfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v__block);
+  __Pyx_XDECREF((PyObject *)__pyx_v__patch);
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -6615,8 +6613,8 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
 
 static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, PyObject *__pyx_v_vfield, PyObject *__pyx_v_crd_dtype) {
   int __pyx_v_i;
-  int __pyx_v_nr_blocks;
-  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__block = 0;
+  int __pyx_v_nr_patches;
+  struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_v__patch = 0;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -6643,21 +6641,21 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
   /* "viscid/cython/cyamr.pyx":130
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks             # <<<<<<<<<<<<<<
- *     cdef CyField _block
+ *     cdef int nr_patches = vfield.nr_patches             # <<<<<<<<<<<<<<
+ *     cdef CyField _patch
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_nr_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 130; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_v_nr_blocks = __pyx_t_2;
+  __pyx_v_nr_patches = __pyx_t_2;
 
   /* "viscid/cython/cyamr.pyx":133
- *     cdef CyField _block
+ *     cdef CyField _patch
  * 
  *     amrfld.crd_dtype = crd_dtype             # <<<<<<<<<<<<<<
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  */
   if (!(likely(PyString_CheckExact(__pyx_v_crd_dtype))||((__pyx_v_crd_dtype) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_v_crd_dtype)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 133; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -6672,14 +6670,14 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
   /* "viscid/cython/cyamr.pyx":134
  * 
  *     amrfld.crd_dtype = crd_dtype
- *     amrfld.nr_blocks = nr_blocks             # <<<<<<<<<<<<<<
+ *     amrfld.nr_patches = nr_patches             # <<<<<<<<<<<<<<
  * 
  *     try:
  */
-  __pyx_v_amrfld->__pyx_base.nr_blocks = __pyx_v_nr_blocks;
+  __pyx_v_amrfld->__pyx_base.nr_patches = __pyx_v_nr_patches;
 
   /* "viscid/cython/cyamr.pyx":136
- *     amrfld.nr_blocks = nr_blocks
+ *     amrfld.nr_patches = nr_patches
  * 
  *     try:             # <<<<<<<<<<<<<<
  *         amrfld.nr_neighbors = vfield.skeleton.nr_neighbors
@@ -6915,12 +6913,12 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -7009,45 +7007,45 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
  * 
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT             # <<<<<<<<<<<<<<
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
  */
   __pyx_v_amrfld->min_dx = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
 
   /* "viscid/cython/cyamr.pyx":157
  *     # give max some breathing room?
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []             # <<<<<<<<<<<<<<
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
+ *     amrfld.patches = []             # <<<<<<<<<<<<<<
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
  */
   __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 157; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.blocks);
-  __pyx_v_amrfld->__pyx_base.blocks = ((PyObject*)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->__pyx_base.patches);
+  __Pyx_DECREF(__pyx_v_amrfld->__pyx_base.patches);
+  __pyx_v_amrfld->__pyx_base.patches = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":158
  *     amrfld.min_dx = MAX_FLOAT
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):             # <<<<<<<<<<<<<<
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):             # <<<<<<<<<<<<<<
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
  */
-  __pyx_t_2 = __pyx_v_nr_blocks;
+  __pyx_t_2 = __pyx_v_nr_patches;
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_2; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
     /* "viscid/cython/cyamr.pyx":159
- *     amrfld.blocks = []
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])             # <<<<<<<<<<<<<<
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
+ *     amrfld.patches = []
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
  */
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_blocks); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_vfield, __pyx_n_s_patches); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_1, __pyx_v_i, int, 1, __Pyx_PyInt_From_int, 0, 0, 1); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_9);
@@ -7055,81 +7053,81 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
     __pyx_t_1 = ((PyObject *)__pyx_f_6viscid_6cython_7cyfield_make_cyfield(__pyx_t_9)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 159; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __Pyx_XDECREF_SET(__pyx_v__block, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
+    __Pyx_XDECREF_SET(__pyx_v__patch, ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_t_1));
     __pyx_t_1 = 0;
 
     /* "viscid/cython/cyamr.pyx":160
- *     for i in range(nr_blocks):
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)
+ *     for i in range(nr_patches):
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:             # <<<<<<<<<<<<<<
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)
  */
-    __pyx_t_15 = ((__pyx_v__block->min_dx < __pyx_v_amrfld->min_dx) != 0);
+    __pyx_t_15 = ((__pyx_v__patch->min_dx < __pyx_v_amrfld->min_dx) != 0);
     if (__pyx_t_15) {
 
       /* "viscid/cython/cyamr.pyx":161
- *         _block = make_cyfield(vfield.blocks[i])
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx             # <<<<<<<<<<<<<<
- *         amrfld.blocks.append(_block)
+ *         _patch = make_cyfield(vfield.patches[i])
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx             # <<<<<<<<<<<<<<
+ *         amrfld.patches.append(_patch)
  * 
  */
-      __pyx_t_12 = __pyx_v__block->min_dx;
+      __pyx_t_12 = __pyx_v__patch->min_dx;
       __pyx_v_amrfld->min_dx = __pyx_t_12;
       goto __pyx_L19;
     }
     __pyx_L19:;
 
     /* "viscid/cython/cyamr.pyx":162
- *         if _block.min_dx < amrfld.min_dx:
- *             amrfld.min_dx = _block.min_dx
- *         amrfld.blocks.append(_block)             # <<<<<<<<<<<<<<
+ *         if _patch.min_dx < amrfld.min_dx:
+ *             amrfld.min_dx = _patch.min_dx
+ *         amrfld.patches.append(_patch)             # <<<<<<<<<<<<<<
  * 
- *     amrfld.active_block_index = 0
+ *     amrfld.active_patch_index = 0
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%s'", "append");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.blocks, ((PyObject *)__pyx_v__block)); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_amrfld->__pyx_base.patches, ((PyObject *)__pyx_v__patch)); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 162; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
 
   /* "viscid/cython/cyamr.pyx":164
- *         amrfld.blocks.append(_block)
+ *         amrfld.patches.append(_patch)
  * 
- *     amrfld.active_block_index = 0             # <<<<<<<<<<<<<<
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch_index = 0             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  */
-  __pyx_v_amrfld->__pyx_base.active_block_index = 0;
+  __pyx_v_amrfld->__pyx_base.active_patch_index = 0;
 
   /* "viscid/cython/cyamr.pyx":165
  * 
- *     amrfld.active_block_index = 0
- *     amrfld.active_block = amrfld.blocks[0]             # <<<<<<<<<<<<<<
+ *     amrfld.active_patch_index = 0
+ *     amrfld.active_patch = amrfld.patches[0]             # <<<<<<<<<<<<<<
  * 
  *     return amrfld
  */
-  if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+  if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
     {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_1);
   if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 165; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GIVEREF(__pyx_t_1);
-  __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-  __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_1);
+  __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+  __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+  __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_1);
   __pyx_t_1 = 0;
 
   /* "viscid/cython/cyamr.pyx":167
- *     amrfld.active_block = amrfld.blocks[0]
+ *     amrfld.active_patch = amrfld.patches[0]
  * 
  *     return amrfld             # <<<<<<<<<<<<<<
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  */
   __Pyx_XDECREF(((PyObject *)__pyx_r));
   __Pyx_INCREF(((PyObject *)__pyx_v_amrfld));
@@ -7141,7 +7139,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
  * 
  * cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):             # <<<<<<<<<<<<<<
  *     cdef int i, j
- *     cdef int nr_blocks = vfield.nr_blocks
+ *     cdef int nr_patches = vfield.nr_patches
  */
 
   /* function exit code */
@@ -7157,7 +7155,7 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
   __Pyx_AddTraceback("viscid.cython.cyamr._init_cyamrfield", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
-  __Pyx_XDECREF((PyObject *)__pyx_v__block);
+  __Pyx_XDECREF((PyObject *)__pyx_v__patch);
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -7166,12 +7164,12 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
 /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
-static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7186,14 +7184,14 @@ static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_0_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_0_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -7201,12 +7199,12 @@ static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -7228,13 +7226,13 @@ static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -7253,8 +7251,8 @@ static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -7265,11 +7263,11 @@ static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -7277,21 +7275,21 @@ static CYTHON_INLINE int __pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7306,14 +7304,14 @@ static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_1_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_1_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -7321,12 +7319,12 @@ static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -7348,13 +7346,13 @@ static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -7373,8 +7371,8 @@ static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -7385,11 +7383,11 @@ static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -7397,21 +7395,21 @@ static CYTHON_INLINE int __pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7426,14 +7424,14 @@ static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_0_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_0_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -7441,12 +7439,12 @@ static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -7468,13 +7466,13 @@ static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -7493,8 +7491,8 @@ static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -7505,11 +7503,11 @@ static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -7517,21 +7515,21 @@ static CYTHON_INLINE int __pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7546,14 +7544,14 @@ static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_1_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_1_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -7561,12 +7559,12 @@ static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -7588,13 +7586,13 @@ static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -7613,8 +7611,8 @@ static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -7625,11 +7623,11 @@ static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -7637,21 +7635,21 @@ static CYTHON_INLINE int __pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7666,14 +7664,14 @@ static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_2_0_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_0_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -7681,12 +7679,12 @@ static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -7708,13 +7706,13 @@ static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -7733,8 +7731,8 @@ static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -7745,11 +7743,11 @@ static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -7757,21 +7755,21 @@ static CYTHON_INLINE int __pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7786,14 +7784,14 @@ static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_2_1_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_1_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -7801,12 +7799,12 @@ static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -7828,13 +7826,13 @@ static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -7853,8 +7851,8 @@ static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -7865,11 +7863,11 @@ static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -7877,21 +7875,21 @@ static CYTHON_INLINE int __pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -7906,14 +7904,14 @@ static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_3_0_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_0_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -7921,12 +7919,12 @@ static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -7948,13 +7946,13 @@ static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -7973,8 +7971,8 @@ static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -7985,11 +7983,11 @@ static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -7997,21 +7995,21 @@ static CYTHON_INLINE int __pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_iblock, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, int __pyx_v_ipatch, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_i;
   int __pyx_r;
   __Pyx_RefNannyDeclarations
@@ -8026,14 +8024,14 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_3_1_contains_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_1_contains_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":171
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
  *     cdef int i
  *     for i in range(3):             # <<<<<<<<<<<<<<
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  */
   for (__pyx_t_1 = 0; __pyx_t_1 < 3; __pyx_t_1+=1) {
     __pyx_v_i = __pyx_t_1;
@@ -8041,12 +8039,12 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_
     /* "viscid/cython/cyamr.pyx":172
  *     cdef int i
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or             # <<<<<<<<<<<<<<
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or             # <<<<<<<<<<<<<<
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  */
     if (unlikely(!__pyx_v_amrfld->xl.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 172; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_3 = __pyx_v_iblock;
+    __pyx_t_3 = __pyx_v_ipatch;
     __pyx_t_4 = __pyx_v_i;
     __pyx_t_5 = -1;
     if (__pyx_t_3 < 0) {
@@ -8068,13 +8066,13 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_
 
     /* "viscid/cython/cyamr.pyx":173
  *     for i in range(3):
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):             # <<<<<<<<<<<<<<
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):             # <<<<<<<<<<<<<<
  *             return 0
  *     return 1
  */
     if (unlikely(!__pyx_v_amrfld->xh.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 173; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
-    __pyx_t_5 = __pyx_v_iblock;
+    __pyx_t_5 = __pyx_v_ipatch;
     __pyx_t_7 = __pyx_v_i;
     __pyx_t_8 = -1;
     if (__pyx_t_5 < 0) {
@@ -8093,8 +8091,8 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_
     if (__pyx_t_2) {
 
       /* "viscid/cython/cyamr.pyx":174
- *         if (less_not_close(x[i], amrfld.xl[iblock, i]) or
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *         if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0             # <<<<<<<<<<<<<<
  *     return 1
  * 
@@ -8105,11 +8103,11 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_
   }
 
   /* "viscid/cython/cyamr.pyx":175
- *             greater_not_close(x[i], amrfld.xh[iblock, i])):
+ *             greater_not_close(x[i], amrfld.xh[ipatch, i])):
  *             return 0
  *     return 1             # <<<<<<<<<<<<<<
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
  */
   __pyx_r = 1;
   goto __pyx_L0;
@@ -8117,14 +8115,14 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_
   /* "viscid/cython/cyamr.pyx":169
  *     return amrfld
  * 
- * cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     for i in range(3):
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_block", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
+  __Pyx_WriteUnraisable("viscid.cython.cyamr._contains_patch", __pyx_clineno, __pyx_lineno, __pyx_filename, 0, 0);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
@@ -8134,12 +8132,12 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_
 /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -8163,71 +8161,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_0activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_0activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -8244,11 +8242,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -8269,134 +8267,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -8404,17 +8402,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -8422,7 +8420,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -8470,7 +8468,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -8478,8 +8476,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -8490,49 +8488,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -8540,7 +8538,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -8548,7 +8546,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_0__pyx_f_
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -8572,71 +8570,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_0_1activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_0_1activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -8653,11 +8651,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -8678,134 +8676,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -8813,17 +8811,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -8831,7 +8829,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -8879,7 +8877,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -8887,8 +8885,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -8899,49 +8897,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I4_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -8949,7 +8947,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -8957,7 +8955,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_0_1__pyx_f_
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -8981,71 +8979,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_0activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_0activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -9062,11 +9060,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -9087,134 +9085,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -9222,17 +9220,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -9240,7 +9238,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -9288,7 +9286,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -9296,8 +9294,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -9308,49 +9306,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -9358,7 +9356,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -9366,7 +9364,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_0__pyx_f_
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -9390,71 +9388,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_1_1activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_1_1activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -9471,11 +9469,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -9496,134 +9494,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -9631,17 +9629,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -9649,7 +9647,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -9697,7 +9695,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -9705,8 +9703,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -9717,49 +9715,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_I8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -9767,7 +9765,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -9775,7 +9773,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_1_1__pyx_f_
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -9799,71 +9797,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_2_0activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_0activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -9880,11 +9878,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -9905,134 +9903,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -10040,17 +10038,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -10058,7 +10056,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -10106,7 +10104,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -10114,8 +10112,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -10126,49 +10124,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -10176,7 +10174,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -10184,7 +10182,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_0__pyx_f_
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -10208,71 +10206,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_2_1activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_2_1activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -10289,11 +10287,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -10314,134 +10312,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -10449,17 +10447,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -10467,7 +10465,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -10515,7 +10513,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -10523,8 +10521,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -10535,49 +10533,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F4_Crd_F4))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -10585,7 +10583,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -10593,7 +10591,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_2_1__pyx_f_
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float32_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -10617,71 +10615,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_3_0activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_0activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -10698,11 +10696,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -10723,134 +10721,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -10858,17 +10856,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -10876,7 +10874,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -10924,7 +10922,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -10932,8 +10930,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -10944,49 +10942,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -10994,7 +10992,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -11002,7 +11000,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_0__pyx_f_
   return __pyx_r;
 }
 
-static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_block(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
+static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_patch(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_v_amrfld, __pyx_t_5numpy_float64_t *__pyx_v_x) {
   int __pyx_v_active_idx;
   int __pyx_v_j;
   int __pyx_v_k;
@@ -11026,71 +11024,71 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("__pyx_fuse_3_1activate_block", 0);
+  __Pyx_RefNannySetupContext("__pyx_fuse_3_1activate_patch", 0);
 
   /* "viscid/cython/cyamr.pyx":181
  *     cdef real_t rsq, closest_rsq
  * 
- *     if amrfld.nr_blocks == 1:             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *     if amrfld.nr_patches == 1:             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  *     else:
  */
-  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_blocks == 1) != 0);
+  __pyx_t_1 = ((__pyx_v_amrfld->__pyx_base.nr_patches == 1) != 0);
   if (__pyx_t_1) {
 
     /* "viscid/cython/cyamr.pyx":182
  * 
- *     if amrfld.nr_blocks == 1:
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *     if amrfld.nr_patches == 1:
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  *     else:
- *         active_idx = amrfld.active_block_index
+ *         active_idx = amrfld.active_patch_index
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
   /*else*/ {
 
     /* "viscid/cython/cyamr.pyx":184
- *         return amrfld.active_block
+ *         return amrfld.active_patch
  *     else:
- *         active_idx = amrfld.active_block_index             # <<<<<<<<<<<<<<
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index             # <<<<<<<<<<<<<<
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch
  */
-    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_block_index;
+    __pyx_t_2 = __pyx_v_amrfld->__pyx_base.active_patch_index;
     __pyx_v_active_idx = __pyx_t_2;
 
     /* "viscid/cython/cyamr.pyx":185
  *     else:
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
- *             return amrfld.active_block
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):             # <<<<<<<<<<<<<<
+ *             return amrfld.active_patch
  * 
  */
-    __pyx_t_1 = (__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
+    __pyx_t_1 = (__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_active_idx, __pyx_v_x) != 0);
     if (__pyx_t_1) {
 
       /* "viscid/cython/cyamr.pyx":186
- *         active_idx = amrfld.active_block_index
- *         if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
- *             return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         active_idx = amrfld.active_patch_index
+ *         if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+ *             return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  */
       __Pyx_XDECREF(((PyObject *)__pyx_r));
-      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+      __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+      __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
       goto __pyx_L0;
     }
 
     /* "viscid/cython/cyamr.pyx":189
  * 
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):             # <<<<<<<<<<<<<<
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
  */
     if (unlikely(!__pyx_v_amrfld->__pyx_base.nr_neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
     __pyx_t_2 = __pyx_v_active_idx;
@@ -11107,11 +11105,11 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
       __pyx_v_ineighbor = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":190
- *         # search neighbors of the current active block
+ *         # search neighbors of the current active patch
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
       if (unlikely(!__pyx_v_amrfld->__pyx_base.neighbors.memview)) {PyErr_SetString(PyExc_AttributeError,"Memoryview is not initialized");{__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L1_error;}}
       __pyx_t_5 = __pyx_v_active_idx;
@@ -11132,134 +11130,134 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
       /* "viscid/cython/cyamr.pyx":191
  *         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":192
  *             j = amrfld.neighbors[active_idx, ineighbor]
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 192; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":193
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":194
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # search all blocks
+ *         # search all patches
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":197
  * 
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":198
- *         # search all blocks
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
+ *         # search all patches
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
  */
-      __pyx_t_1 = (__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_block(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
+      __pyx_t_1 = (__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr__contains_patch(__pyx_v_amrfld, __pyx_v_j, __pyx_v_x) != 0);
       if (__pyx_t_1) {
 
         /* "viscid/cython/cyamr.pyx":199
- *         for j in range(amrfld.nr_blocks):
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]             # <<<<<<<<<<<<<<
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block
+ *         for j in range(amrfld.nr_patches):
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch
  */
-        if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+        if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
-        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_8);
         if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 199; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GIVEREF(__pyx_t_8);
-        __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
+        __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+        __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
         __pyx_t_8 = 0;
 
         /* "viscid/cython/cyamr.pyx":200
- *             if _contains_block[FusedAMRField, real_t](amrfld, j, x):
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j             # <<<<<<<<<<<<<<
- *                 return amrfld.active_block
+ *             if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j             # <<<<<<<<<<<<<<
+ *                 return amrfld.active_patch
  * 
  */
-        __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_j;
+        __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_j;
 
         /* "viscid/cython/cyamr.pyx":201
- *                 amrfld.active_block = amrfld.blocks[j]
- *                 amrfld.active_block_index = j
- *                 return amrfld.active_block             # <<<<<<<<<<<<<<
+ *                 amrfld.active_patch = amrfld.patches[j]
+ *                 amrfld.active_patch_index = j
+ *                 return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  */
         __Pyx_XDECREF(((PyObject *)__pyx_r));
-        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+        __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+        __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
         goto __pyx_L0;
       }
     }
 
     /* "viscid/cython/cyamr.pyx":204
  * 
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0             # <<<<<<<<<<<<<<
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  */
     __pyx_v_closest = 0;
 
     /* "viscid/cython/cyamr.pyx":205
- *         # TODO: find closest block?
+ *         # TODO: find closest patch?
  *         closest = 0
  *         closest_rsq = MAX_FLOAT             # <<<<<<<<<<<<<<
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  */
     __pyx_v_closest_rsq = __pyx_v_6viscid_6cython_7cyfield_MAX_FLOAT;
@@ -11267,17 +11265,17 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":206
  *         closest = 0
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):             # <<<<<<<<<<<<<<
+ *         for j in range(amrfld.nr_patches):             # <<<<<<<<<<<<<<
  *             rsq = 0.0
  *             for k in range(3):
  */
-    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_blocks;
+    __pyx_t_3 = __pyx_v_amrfld->__pyx_base.nr_patches;
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
       /* "viscid/cython/cyamr.pyx":207
  *         closest_rsq = MAX_FLOAT
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0             # <<<<<<<<<<<<<<
  *             for k in range(3):
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -11285,7 +11283,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
       __pyx_v_rsq = 0.0;
 
       /* "viscid/cython/cyamr.pyx":208
- *         for j in range(amrfld.nr_blocks):
+ *         for j in range(amrfld.nr_patches):
  *             rsq = 0.0
  *             for k in range(3):             # <<<<<<<<<<<<<<
  *                 rsq += (x[k] - amrfld.xm[j, k])**2
@@ -11333,7 +11331,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq             # <<<<<<<<<<<<<<
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
+ *         amrfld.active_patch = amrfld.patches[closest]
  */
         __pyx_v_closest_rsq = __pyx_v_rsq;
 
@@ -11341,8 +11339,8 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
  *             if rsq < closest_rsq:
  *                 closest_rsq = rsq
  *                 closest = j             # <<<<<<<<<<<<<<
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
  */
         __pyx_v_closest = __pyx_v_j;
         goto __pyx_L15;
@@ -11353,49 +11351,49 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
     /* "viscid/cython/cyamr.pyx":213
  *                 closest_rsq = rsq
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]             # <<<<<<<<<<<<<<
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch
  */
-    if (unlikely(__pyx_v_amrfld->__pyx_base.blocks == Py_None)) {
+    if (unlikely(__pyx_v_amrfld->__pyx_base.patches == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
       {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.blocks, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_GetItemInt_List(__pyx_v_amrfld->__pyx_base.patches, __pyx_v_closest, int, 1, __Pyx_PyInt_From_int, 1, 0, 1); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     if (!(likely(((__pyx_t_8) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_8, __pyx_ptype_6viscid_6cython_7cyfield_Field_F8_Crd_F8))))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GIVEREF(__pyx_t_8);
-    __Pyx_GOTREF(__pyx_v_amrfld->active_block);
-    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_v_amrfld->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
+    __Pyx_GOTREF(__pyx_v_amrfld->active_patch);
+    __Pyx_DECREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_v_amrfld->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)__pyx_t_8);
     __pyx_t_8 = 0;
 
     /* "viscid/cython/cyamr.pyx":214
  *                 closest = j
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest             # <<<<<<<<<<<<<<
- *         return amrfld.active_block
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest             # <<<<<<<<<<<<<<
+ *         return amrfld.active_patch
  * 
  */
-    __pyx_v_amrfld->__pyx_base.active_block_index = __pyx_v_closest;
+    __pyx_v_amrfld->__pyx_base.active_patch_index = __pyx_v_closest;
 
     /* "viscid/cython/cyamr.pyx":215
- *         amrfld.active_block = amrfld.blocks[closest]
- *         amrfld.active_block_index = closest
- *         return amrfld.active_block             # <<<<<<<<<<<<<<
+ *         amrfld.active_patch = amrfld.patches[closest]
+ *         amrfld.active_patch_index = closest
+ *         return amrfld.active_patch             # <<<<<<<<<<<<<<
  * 
  * ##
  */
     __Pyx_XDECREF(((PyObject *)__pyx_r));
-    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_block));
-    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_block);
+    __Pyx_INCREF(((PyObject *)__pyx_v_amrfld->active_patch));
+    __pyx_r = ((struct __pyx_obj_6viscid_6cython_7cyfield_CyField *)__pyx_v_amrfld->active_patch);
     goto __pyx_L0;
   }
 
   /* "viscid/cython/cyamr.pyx":177
  *     return 1
  * 
- * cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
+ * cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):             # <<<<<<<<<<<<<<
  *     cdef int active_idx, j, k, ineighbor, closest
  *     cdef real_t rsq, closest_rsq
  */
@@ -11403,7 +11401,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_CyField *__pyx_fuse_3_1__pyx_f_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_AddTraceback("viscid.cython.cyamr.activate_block", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("viscid.cython.cyamr.activate_patch", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF((PyObject *)__pyx_r);
@@ -24767,7 +24765,7 @@ static PyObject *__pyx_tp_new_6viscid_6cython_5cyamr_CyAMRField(PyTypeObject *t,
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *)o);
   p->crd_dtype = ((PyObject*)Py_None); Py_INCREF(Py_None);
-  p->blocks = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  p->patches = ((PyObject*)Py_None); Py_INCREF(Py_None);
   p->nr_neighbors.data = NULL;
   p->nr_neighbors.memview = NULL;
   p->neighbors.data = NULL;
@@ -24786,7 +24784,7 @@ static void __pyx_tp_dealloc_6viscid_6cython_5cyamr_CyAMRField(PyObject *o) {
   #endif
   PyObject_GC_UnTrack(o);
   Py_CLEAR(p->crd_dtype);
-  Py_CLEAR(p->blocks);
+  Py_CLEAR(p->patches);
   __PYX_XDEC_MEMVIEW(&p->nr_neighbors, 1);
   __PYX_XDEC_MEMVIEW(&p->neighbors, 1);
   __PYX_XDEC_MEMVIEW(&p->neighbor_mask, 1);
@@ -24796,8 +24794,8 @@ static void __pyx_tp_dealloc_6viscid_6cython_5cyamr_CyAMRField(PyObject *o) {
 static int __pyx_tp_traverse_6viscid_6cython_5cyamr_CyAMRField(PyObject *o, visitproc v, void *a) {
   int e;
   struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *p = (struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *)o;
-  if (p->blocks) {
-    e = (*v)(p->blocks, a); if (e) return e;
+  if (p->patches) {
+    e = (*v)(p->patches, a); if (e) return e;
   }
   return 0;
 }
@@ -24805,8 +24803,8 @@ static int __pyx_tp_traverse_6viscid_6cython_5cyamr_CyAMRField(PyObject *o, visi
 static int __pyx_tp_clear_6viscid_6cython_5cyamr_CyAMRField(PyObject *o) {
   PyObject* tmp;
   struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *p = (struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *)o;
-  tmp = ((PyObject*)p->blocks);
-  p->blocks = ((PyObject*)Py_None); Py_INCREF(Py_None);
+  tmp = ((PyObject*)p->patches);
+  p->patches = ((PyObject*)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
@@ -24873,7 +24871,7 @@ static PyObject *__pyx_tp_new_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8(PyTypeOb
   PyObject *o = __pyx_tp_new_6viscid_6cython_5cyamr_CyAMRField(t, a, k);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *)o);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)Py_None); Py_INCREF(Py_None);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)Py_None); Py_INCREF(Py_None);
   p->xl.data = NULL;
   p->xl.memview = NULL;
   p->xm.data = NULL;
@@ -24891,7 +24889,7 @@ static void __pyx_tp_dealloc_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8(PyObject 
   }
   #endif
   PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->active_block);
+  Py_CLEAR(p->active_patch);
   __PYX_XDEC_MEMVIEW(&p->xl, 1);
   __PYX_XDEC_MEMVIEW(&p->xm, 1);
   __PYX_XDEC_MEMVIEW(&p->xh, 1);
@@ -24903,8 +24901,8 @@ static int __pyx_tp_traverse_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8(PyObject 
   int e;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *)o;
   e = __pyx_tp_traverse_6viscid_6cython_5cyamr_CyAMRField(o, v, a); if (e) return e;
-  if (p->active_block) {
-    e = (*v)(((PyObject*)p->active_block), a); if (e) return e;
+  if (p->active_patch) {
+    e = (*v)(((PyObject*)p->active_patch), a); if (e) return e;
   }
   return 0;
 }
@@ -24913,8 +24911,8 @@ static int __pyx_tp_clear_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8(PyObject *o)
   PyObject* tmp;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *)o;
   __pyx_tp_clear_6viscid_6cython_5cyamr_CyAMRField(o);
-  tmp = ((PyObject*)p->active_block);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)Py_None); Py_INCREF(Py_None);
+  tmp = ((PyObject*)p->active_patch);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
@@ -24981,7 +24979,7 @@ static PyObject *__pyx_tp_new_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8(PyTypeOb
   PyObject *o = __pyx_tp_new_6viscid_6cython_5cyamr_CyAMRField(t, a, k);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *)o);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
   p->xl.data = NULL;
   p->xl.memview = NULL;
   p->xm.data = NULL;
@@ -24999,7 +24997,7 @@ static void __pyx_tp_dealloc_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8(PyObject 
   }
   #endif
   PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->active_block);
+  Py_CLEAR(p->active_patch);
   __PYX_XDEC_MEMVIEW(&p->xl, 1);
   __PYX_XDEC_MEMVIEW(&p->xm, 1);
   __PYX_XDEC_MEMVIEW(&p->xh, 1);
@@ -25011,8 +25009,8 @@ static int __pyx_tp_traverse_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8(PyObject 
   int e;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *)o;
   e = __pyx_tp_traverse_6viscid_6cython_5cyamr_CyAMRField(o, v, a); if (e) return e;
-  if (p->active_block) {
-    e = (*v)(((PyObject*)p->active_block), a); if (e) return e;
+  if (p->active_patch) {
+    e = (*v)(((PyObject*)p->active_patch), a); if (e) return e;
   }
   return 0;
 }
@@ -25021,8 +25019,8 @@ static int __pyx_tp_clear_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8(PyObject *o)
   PyObject* tmp;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *)o;
   __pyx_tp_clear_6viscid_6cython_5cyamr_CyAMRField(o);
-  tmp = ((PyObject*)p->active_block);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
+  tmp = ((PyObject*)p->active_patch);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
@@ -25089,7 +25087,7 @@ static PyObject *__pyx_tp_new_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4(PyTypeOb
   PyObject *o = __pyx_tp_new_6viscid_6cython_5cyamr_CyAMRField(t, a, k);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *)o);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)Py_None); Py_INCREF(Py_None);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)Py_None); Py_INCREF(Py_None);
   p->xl.data = NULL;
   p->xl.memview = NULL;
   p->xm.data = NULL;
@@ -25107,7 +25105,7 @@ static void __pyx_tp_dealloc_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4(PyObject 
   }
   #endif
   PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->active_block);
+  Py_CLEAR(p->active_patch);
   __PYX_XDEC_MEMVIEW(&p->xl, 1);
   __PYX_XDEC_MEMVIEW(&p->xm, 1);
   __PYX_XDEC_MEMVIEW(&p->xh, 1);
@@ -25119,8 +25117,8 @@ static int __pyx_tp_traverse_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4(PyObject 
   int e;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *)o;
   e = __pyx_tp_traverse_6viscid_6cython_5cyamr_CyAMRField(o, v, a); if (e) return e;
-  if (p->active_block) {
-    e = (*v)(((PyObject*)p->active_block), a); if (e) return e;
+  if (p->active_patch) {
+    e = (*v)(((PyObject*)p->active_patch), a); if (e) return e;
   }
   return 0;
 }
@@ -25129,8 +25127,8 @@ static int __pyx_tp_clear_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4(PyObject *o)
   PyObject* tmp;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *)o;
   __pyx_tp_clear_6viscid_6cython_5cyamr_CyAMRField(o);
-  tmp = ((PyObject*)p->active_block);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)Py_None); Py_INCREF(Py_None);
+  tmp = ((PyObject*)p->active_patch);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
@@ -25197,7 +25195,7 @@ static PyObject *__pyx_tp_new_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8(PyTypeOb
   PyObject *o = __pyx_tp_new_6viscid_6cython_5cyamr_CyAMRField(t, a, k);
   if (unlikely(!o)) return 0;
   p = ((struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *)o);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
   p->xl.data = NULL;
   p->xl.memview = NULL;
   p->xm.data = NULL;
@@ -25215,7 +25213,7 @@ static void __pyx_tp_dealloc_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8(PyObject 
   }
   #endif
   PyObject_GC_UnTrack(o);
-  Py_CLEAR(p->active_block);
+  Py_CLEAR(p->active_patch);
   __PYX_XDEC_MEMVIEW(&p->xl, 1);
   __PYX_XDEC_MEMVIEW(&p->xm, 1);
   __PYX_XDEC_MEMVIEW(&p->xh, 1);
@@ -25227,8 +25225,8 @@ static int __pyx_tp_traverse_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8(PyObject 
   int e;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *)o;
   e = __pyx_tp_traverse_6viscid_6cython_5cyamr_CyAMRField(o, v, a); if (e) return e;
-  if (p->active_block) {
-    e = (*v)(((PyObject*)p->active_block), a); if (e) return e;
+  if (p->active_patch) {
+    e = (*v)(((PyObject*)p->active_patch), a); if (e) return e;
   }
   return 0;
 }
@@ -25237,8 +25235,8 @@ static int __pyx_tp_clear_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8(PyObject *o)
   PyObject* tmp;
   struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *p = (struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *)o;
   __pyx_tp_clear_6viscid_6cython_5cyamr_CyAMRField(o);
-  tmp = ((PyObject*)p->active_block);
-  p->active_block = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
+  tmp = ((PyObject*)p->active_patch);
+  p->active_patch = ((struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *)Py_None); Py_INCREF(Py_None);
   Py_XDECREF(tmp);
   return 0;
 }
@@ -26013,7 +26011,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_args, __pyx_k_args, sizeof(__pyx_k_args), 0, 0, 1, 1},
   {&__pyx_n_s_astype, __pyx_k_astype, sizeof(__pyx_k_astype), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
-  {&__pyx_n_s_blocks, __pyx_k_blocks, sizeof(__pyx_k_blocks), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
@@ -26069,8 +26066,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_neighbors, __pyx_k_neighbors, sizeof(__pyx_k_neighbors), 0, 0, 1, 1},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_npatches, __pyx_k_npatches, sizeof(__pyx_k_npatches), 0, 0, 1, 1},
-  {&__pyx_n_s_nr_blocks, __pyx_k_nr_blocks, sizeof(__pyx_k_nr_blocks), 0, 0, 1, 1},
   {&__pyx_n_s_nr_neighbors, __pyx_k_nr_neighbors, sizeof(__pyx_k_nr_neighbors), 0, 0, 1, 1},
+  {&__pyx_n_s_nr_patches, __pyx_k_nr_patches, sizeof(__pyx_k_nr_patches), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
   {&__pyx_n_s_ones, __pyx_k_ones, sizeof(__pyx_k_ones), 0, 0, 1, 1},
@@ -26587,14 +26584,14 @@ PyMODINIT_FUNC PyInit_cyamr(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   if (__Pyx_ExportFunction("make_cyamrfield", (void (*)(void))__pyx_f_6viscid_6cython_5cyamr_make_cyamrfield, "struct __pyx_obj_6viscid_6cython_5cyamr_CyAMRField *(PyObject *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0activate_block", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1activate_block", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0activate_block", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1activate_block", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0activate_block", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1activate_block", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0activate_block", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1activate_block", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_block, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0activate_patch", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1activate_patch", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0activate_patch", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1activate_patch", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0activate_patch", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1activate_patch", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0activate_patch", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1activate_patch", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_5cyamr_activate_patch, "struct __pyx_obj_6viscid_6cython_7cyfield_CyField *(struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Type init code ---*/
   if (PyType_Ready(&__pyx_type_6viscid_6cython_5cyamr_CyAMRField) < 0) {__pyx_filename = __pyx_f[3]; __pyx_lineno = 7; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type_6viscid_6cython_5cyamr_CyAMRField.tp_print = 0;

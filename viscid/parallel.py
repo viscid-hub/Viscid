@@ -110,7 +110,7 @@ def chunk_interslices(nchunks):
     """Make staggered chunks
 
     Similar to chunk_slices, but pick every nth element instead of
-    getting a contiguous block for each chunk
+    getting a contiguous patch for each chunk
 
     Parameters:
         nchunks: how many chunks to make

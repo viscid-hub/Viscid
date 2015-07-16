@@ -7,7 +7,7 @@ import numpy as np
 from cython.operator cimport dereference as deref
 from libc.math cimport floor, fabs
 
-from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_block
+from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_patch
 from viscid.cython.cyfield cimport real_t
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.misc_inlines cimport int_min, int_max
@@ -38,12 +38,12 @@ def interp_trilin(vfield, seeds, force_amr_version=False):
     else:
         scalar = False
 
-    if vfield.nr_blocks > 1 or force_amr_version:
+    if vfield.nr_patches > 1 or force_amr_version:
         amrfld = make_cyamrfield(vfield)
         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
         _py_interp_trilin_amr(amrfld, seeds.iter_points(center=vfield.center), result)
     else:
-        # about 12% faster than the AMR version on fields w/ 1 block
+        # about 12% faster than the AMR version on fields w/ 1 patch
         fld = make_cyfield(vfield)
         result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
         _py_interp_trilin(fld, seeds.iter_points(center=vfield.center), result)
@@ -73,12 +73,12 @@ def interp_nearest(vfield, seeds, force_amr_version=False):
     else:
         scalar = False
 
-    if vfield.nr_blocks > 1 or force_amr_version:
+    if vfield.nr_patches > 1 or force_amr_version:
         amrfld = make_cyamrfield(vfield)
         result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
         _py_interp_nearest_amr(amrfld, seeds.iter_points(center=vfield.center), result)
     else:
-        # about 6% faster than the AMR version on fields w/ 1 block
+        # about 6% faster than the AMR version on fields w/ 1 patch
         fld = make_cyfield(vfield)
         result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
         _py_interp_nearest(fld, seeds.iter_points(center=vfield.center), result)
@@ -112,8 +112,8 @@ def _py_interp_trilin_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
-            activate_block[FusedAMRField, real_t](amrfld, x)
-            result[i, m] = _c_interp_trilin(amrfld.active_block, m, x)
+            activate_patch[FusedAMRField, real_t](amrfld, x)
+            result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
         i += 1
 
 cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]):
@@ -201,8 +201,8 @@ def _py_interp_nearest_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
-            activate_block[FusedAMRField, real_t](amrfld, x)
-            result[i, m] = _c_interp_nearest(amrfld.active_block, m, x)
+            activate_patch[FusedAMRField, real_t](amrfld, x)
+            result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
         i += 1
 
 cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]):
