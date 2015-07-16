@@ -70,8 +70,11 @@ def plot(fld, selection=None, **kwargs):
     fld = fld.slice_reduce(selection)
 
     if not hasattr(fld, "blocks"):
-        raise ValueError("Selection '{0}' sliced away too many "
-                         "dimensions".format(selection))
+        raise TypeError("Selection '{0}' sliced away too many "
+                        "dimensions".format(selection))
+    if fld.nr_comps > 1:
+        raise TypeError("Scalar Fields only")
+
     block0 = fld.blocks[0]
     nr_sdims = block0.nr_sdims
     if nr_sdims == 1:
