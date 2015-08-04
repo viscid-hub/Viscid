@@ -11,40 +11,6 @@ Attributes:
     logger (logging.Logger): a logging object whose verbosity can be
         set from the command line using
         :py:func`viscid.vutil.common_argparse`.
-    load_file (function): convience reference for
-        :py:func:`viscid.readers.load_file`
-    load_files (function): convience reference for
-        :py:func:`viscid.readers.load_files`
-    get_file (function): convience reference for
-        :py:func:`viscid.readers.get_file`
-    save_grid (function): convience reference for
-        :py:func:`viscid.readers.save_grid`
-    save_field (function): convience reference for
-        :py:func:`viscid.readers.save_field`
-    save_fields (function): convience reference for
-        :py:func:`viscid.readers.save_fields`
-    arrays2field (function): convience reference for
-        :py:func:`viscid.field.arrays2field`
-    dat2field (function): convience reference for
-        :py:func:`viscid.field.dat2field`
-    empty (function): convience reference for
-        :py:func:`viscid.field.empty`
-    zeros (function): convience reference for
-        :py:func:`viscid.field.zeros`
-    ones (function): convience reference for
-        :py:func:`viscid.field.ones`
-    empty_like (function): convience reference for
-        :py:func:`viscid.field.empty_like`
-    zeros_like (function): convience reference for
-        :py:func:`viscid.field.zeros_like`
-    ones_like (function): convience reference for
-        :py:func:`viscid.field.ones_like`
-    scalar_fields_to_vector (function): convience reference for
-        :py:func:`viscid.field.scalar_fields_to_vector`
-    wrap_field (function): convience reference for
-        :py:func:`viscid.field.wrap_field`
-    arrays2crds (function): convience reference for
-        :py:func:`viscid.coordinate.arrays2crds`
 """
 
 __all__ = ['amr_field',  # Modules
