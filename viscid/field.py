@@ -113,7 +113,7 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
         raise ValueError("Unknown type: {0}".format(fldtype))
 
     crd_arrs = [np.arange(s).astype(dat_arr.dtype) for s in sshape]
-    return arrays2field(name, crd_arrs, dat_arr, center=center)
+    return arrays2field(dat_arr, crd_arrs, name=name, center=center)
 
 def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
           nr_comps=0, crd_names="xyzuvw", _initial_vals="empty", **kwargs):
