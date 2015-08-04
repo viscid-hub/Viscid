@@ -26,6 +26,12 @@ try:
 except ImportError as e:
     has_numexpr = False
 
+__all__ = ['add', 'diff', 'mul', 'relative_diff', 'abs_diff', 'abs_val',
+           'abs_max', 'abs_min', 'magnitude', 'dot', 'cross', 'div', 'curl',
+           'jacobian_at_point', 'jacobian_at_ind', 'jacobian_eig_at_point',
+           'jacobian_eig_at_ind', 'div_at_point', 'curl_at_point']
+
+
 class Operation(object):
     default_backends = ["numexpr", "cython", "numpy"]
 
@@ -128,19 +134,19 @@ abs_val.add_implementation("numpy", np.abs)
 abs_max.add_implementation("numpy", lambda a: np.max(np.abs(a)))
 abs_min.add_implementation("numpy", lambda a: np.min(np.abs(a)))
 
-def dot_np(fld_a, fld_b):
+def _dot_np(fld_a, fld_b):
     if fld_a.nr_comp != fld_b.nr_comp:
         raise ValueError("field must have same layout (flat or interlaced)")
     return np.sum(fld_a * fld_b, axis=fld_a.nr_comp)
-dot.add_implementation("numpy", dot_np)
+dot.add_implementation("numpy", _dot_np)
 
-def magnitude_np(fld):
+def _magnitude_np(fld):
     vx, vy, vz = fld.component_views()
     return np.sqrt((vx**2) + (vy**2) + (vz**2))
-magnitude.add_implementation("numpy", magnitude_np)
+magnitude.add_implementation("numpy", _magnitude_np)
 
 # native versions
-def magnitude_native(fld):
+def _magnitude_native(fld):
     vx, vy, vz = fld.component_views()
     mag = np.empty_like(vx)
     for i in range(mag.shape[0]):
@@ -150,7 +156,7 @@ def magnitude_native(fld):
                                        vz[i, j, k]**2)
     return vx.wrap(mag, context={"name": "{0} magnitude".format(fld.name)})
 
-magnitude.add_implementation("native", magnitude_native)
+magnitude.add_implementation("native", _magnitude_native)
 
 def local_vector_points(B, x, y, z, dx=None, dy=None, dz=None):
     """Get B at 6 points surrounding X
@@ -288,27 +294,6 @@ def curl_at_point(A, x, y, z, dx=None, dy=None, dz=None):
     c[2] = ((As[2 * 2 + 1, 1] - As[2 * 2 + 0, 1]) / (2.0 * dcrd[0]) -
             (As[2 * 1 + 1, 0] - As[2 * 1 + 0, 0]) / (2.0 * dcrd[1]))
     return c
-
-def closest1d_ind(arr, val):
-    """ DEPRECATED """
-    #i = np.argmin(ne.evaluate("abs(arr - val)"))
-    return np.argmin(np.abs(arr - val))
-
-def closest1d_val(arr, val):
-    """ DEPRECATED """
-    #i = np.argmin(ne.evaluate("abs(arr - val)"))
-    i = np.argmin(np.abs(arr - val))
-    return arr[i]
-
-def nearest_val(fld, point):
-    """ DEPRECATED
-    find value of field closest to point
-    """
-    x, y, z = point
-    xind = closest1d_ind(fld.crds['x'], x)
-    yind = closest1d_ind(fld.crds['y'], y)
-    zind = closest1d_ind(fld.crds['z'], z)
-    return fld[xind, yind, zind]
 
 ##
 ## EOF

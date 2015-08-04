@@ -9,6 +9,9 @@ import numpy as np
 import viscid
 from viscid.compat import izip
 
+__all__ = ['SeedGen', 'Point', 'Line', 'Plane', 'Volume',
+           'Sphere', 'SphericalCap', 'Circle']
+
 class SeedGen(object):
     """All about seeds
 
@@ -77,7 +80,13 @@ class Point(SeedGen):
     into :meth:`vicid.calculator.streamline.streamlines`.
     """
     def __init__(self, points, cache=False, dtype=None):
-        """points should be an n x 3 array of xyz points"""
+        """Seed with an explicit set of points
+
+        Args:
+            points (ndarray or list): should look like something that
+                np.array(points) can turn to an Nx3 array of xyz
+                points. This can be 3xN so long as N != 3.
+        """
         super(Point, self).__init__(cache=cache, dtype=dtype)
         self.params["points"] = points
 
@@ -421,7 +430,7 @@ class Circle(SphericalCap):
 #         return theta, phi
 
 
-def main():
+def _main():
     from viscid.calculator import interp_trilin
     from viscid.plot import mpl
 
@@ -475,7 +484,7 @@ def main():
 
 if __name__ == "__main__":
     import sys
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

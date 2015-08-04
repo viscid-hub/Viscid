@@ -58,6 +58,7 @@ __all__ = ['amr_field',  # Modules
            'grid',
            'parallel',
            'pyeval',
+           'seed',
            'verror',
            'vjson',
            'vlab',
@@ -82,6 +83,11 @@ __all__ = ['amr_field',  # Modules
            'scalar_fields_to_vector',
            'wrap_field',
            'arrays2crds',  # Crd helpers
+           'interp_nearest',  # cython helpers
+           'interp_trilin',
+           'calc_streamlines',
+           # viscid.calculator.calc.* is added below
+           # viscid.seed.* is added below
           ]
 
 # setup logger for use throughout viscid
@@ -119,6 +125,18 @@ wrap_field = field.wrap_field
 from viscid import coordinate
 arrays2crds = coordinate.arrays2crds
 wrap_crds = coordinate.wrap_crds
+
+from viscid.seed import *
+from viscid import seed
+__all__ += seed.__all__
+
+from viscid.calculator.calc import *  # pylint: disable=wildcard-import
+from viscid.calculator import calc
+__all__ += calc.__all__
+
+from viscid.cython import interp_nearest
+from viscid.cython import interp_trilin
+from viscid.cython import calc_streamlines
 
 # pull other useful modules into the namespace
 # Note: plot and calculator are intentionally left
