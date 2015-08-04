@@ -39,6 +39,7 @@ def main():
     v['z'] = 0.0 * X    + 0.0 * Y    + 0.5 * Z**2
 
     mag = calc.magnitude(v)
+    mag2 = np.sqrt(np.sum(v * v, axis=v.nr_comp))
     another = np.transpose(mag)
 
     plt.subplot(151)
@@ -46,9 +47,9 @@ def main():
     plt.subplot(152)
     mpl.plot(v['y'])
     plt.subplot(153)
-    mpl.plot(v['z'])
-    plt.subplot(154)
     mpl.plot(mag)
+    plt.subplot(154)
+    mpl.plot(mag2)
     plt.subplot(155)
     mpl.plot(another)
 

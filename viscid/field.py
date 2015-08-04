@@ -1490,17 +1490,20 @@ class Field(tree.Leaf):
         if npkwargs:
             axis = npkwargs.get('axis', None)
             if axis is not None:
-                reduce_axis = crds.axes[axis]
-                crd_slc = "{0}=0".format(reduce_axis)
-                default_keepdims = len(self.shape) == len(crds.shape)
-                iscc = self.iscentered('cell')
                 if self.nr_comps > 0 and axis == self.nr_comp:
+                    # reducing vector -> scalar, no need to play with crds
                     pass
-                elif npkwargs.get("keepdims", default_keepdims):
-                    crds = self.crds.slice_keep(crd_slc, cc=iscc)
                 else:
-                    crds = self.crds.slice_reduce(crd_slc, cc=iscc)
-                defer_wrapping = True
+                    reduce_axis = crds.axes[axis]
+                    crd_slc = "{0}=0".format(reduce_axis)
+                    default_keepdims = len(self.shape) == len(crds.shape)
+                    iscc = self.iscentered('cell')
+
+                    if npkwargs.get("keepdims", default_keepdims):
+                        crds = self.crds.slice_keep(crd_slc, cc=iscc)
+                    else:
+                        crds = self.crds.slice_reduce(crd_slc, cc=iscc)
+                    defer_wrapping = True
 
         # little hack for broadcasting vectors and scalars together
         crd_shape = crds.shape_nc if center == "node" else crds.shape_cc
