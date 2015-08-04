@@ -931,6 +931,20 @@ class Field(tree.Leaf):
                     _ = selection.replace('_', ',')
                     sel_lst = [s for s in _.split(",")]  # pylint: disable=maybe-no-member
                     _isstr = True
+                elif isinstance(selection, np.ndarray):
+                    # FIXME: advanced slicing by ndarrays involves
+                    #        understanding how exactly these slices are parsed
+                    #        in numpy. Additionally, there will probably be
+                    #        some ambiguity about what the crds should be after
+                    #        the slice, so for now it's arguably better to let
+                    #        the end user do this themselves.
+                    raise NotImplementedError("Viscid fields can't slice by "
+                        "int / bool ndarrays yet. To achieve this, one can "
+                        "slice a field's `data` attribute since that's "
+                        "guarenteed to be and ndarray. The only rub is "
+                        "you'll need to construct your own coordinates and "
+                        "re-wrap the field if you want a field at the end of "
+                        "the day.")
                 else:
                     raise TypeError()
 
