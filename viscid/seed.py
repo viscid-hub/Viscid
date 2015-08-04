@@ -9,8 +9,23 @@ import numpy as np
 import viscid
 from viscid.compat import izip
 
-__all__ = ['SeedGen', 'Point', 'Line', 'Plane', 'Volume',
+__all__ = ['to_seeds', 'SeedGen', 'Point', 'Line', 'Plane', 'Volume',
            'Sphere', 'SphericalCap', 'Circle']
+
+def to_seeds(pts):
+    """Try to turn anything into a set of seeds
+
+    Args:
+        points (ndarray or list): should look like something that
+            np.array(points) can turn to an Nx3 array of xyz points.
+            This can be 3xN so long as N != 3.
+    """
+    if (hasattr(pts, "nr_points") and hasattr(pts, "iter_points") and
+        hasattr(pts, "points")):  # pylint: disable=bad-continuation
+        return pts
+    else:
+        return Point(pts)
+
 
 class SeedGen(object):
     """All about seeds

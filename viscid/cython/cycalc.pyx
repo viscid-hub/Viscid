@@ -4,6 +4,8 @@ from __future__ import print_function
 
 import numpy as np
 
+from viscid.seed import to_seeds
+
 from cython.operator cimport dereference as deref
 from libc.math cimport floor, fabs
 
@@ -30,6 +32,7 @@ def interp_trilin(vfield, seeds, force_amr_version=False):
         or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
         Vector field.
     """
+    seeds = to_seeds(seeds)
     cdef int nr_points = seeds.nr_points(center=vfield.center)
     cdef int nr_comps = vfield.nr_comps
     if nr_comps == 0:
@@ -65,6 +68,7 @@ def interp_nearest(vfield, seeds, force_amr_version=False):
         or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
         Vector field.
     """
+    seeds = to_seeds(seeds)
     cdef int nr_points = seeds.nr_points(center=vfield.center)
     cdef int nr_comps = vfield.nr_comps
     if nr_comps == 0:

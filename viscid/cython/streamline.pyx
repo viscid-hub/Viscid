@@ -27,6 +27,7 @@ from itertools import islice, repeat
 import numpy as np
 
 from viscid import parallel
+from viscid.seed import to_seeds
 from viscid.compat import izip
 
 ###########
@@ -181,6 +182,8 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
     # fld = make_cyfield(vfield)
     # fld = make_cyfield(vfield.as_cell_centered())
     fld = make_cyamrfield(vfield)
+
+    seed = to_seeds(seed)
 
     nr_streams = seed.nr_points(center=vfield.center)
 
