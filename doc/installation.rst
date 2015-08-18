@@ -25,6 +25,9 @@ Standard Setup
 The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code. To build Viscid, I recommend running::
 
   ./setup.py build_ext -i
+  viscid_dir=$(pwd)
+  export PYTHONPATH=$PYTHONPATH:${viscid_dir}
+  export PATH=$PATH:${viscid_dir}/scripts
 
 and adding the `Viscid` directory to your `PYTHONPATH` and `Viscid/scripts` to your `PATH`. This makes editing Viscid far easier.
 
