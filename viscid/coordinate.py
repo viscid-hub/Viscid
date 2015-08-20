@@ -1103,6 +1103,20 @@ class UniformCrds(StructuredCrds):
         new_clist = [(ax, [xl[i], xh[i], nx[i]]) for i, ax in enumerate(axes)]
         return type(self)(new_clist)
 
+    def atleast_3d(self, xl=-1, xh=1, cc=False):
+        if self.nr_dims >= 3:
+            return self
+        else:
+            axes3 = "xyz"
+            new_clist = self.get_clist()
+            for ax in axes3[self.nr_dims:]:
+                if cc:
+                    new_clist.append((ax, [xl, xh, 1]))
+                else:
+                    x0 = 0.5 * (xl + xh)
+                    new_clist.append((ax, [x0, x0, 1]))
+            return type(self)(new_clist)
+
     def get_clist(self, axes=None, slc=None, full_arrays=False, center="node"):
         if full_arrays:
             return super(UniformCrds, self).get_clist(axes=axes, slc=slc,
@@ -1144,6 +1158,19 @@ class NonuniformCrds(StructuredCrds):
         if not full_arrays:
             raise ValueError("did you want Uniform crds?")
         super(NonuniformCrds, self).__init__(init_clist, **kwargs)
+
+    def atleast_3d(self, xl=-1, xh=1, cc=False):
+        if self.nr_dims >= 3:
+            return self
+        else:
+            axes3 = ['fill_x', 'fill_y', 'fill_z']
+            new_clist = self.get_clist()
+            for ax in axes3[self.nr_dims:]:
+                if cc:
+                    new_clist.append((ax, [xl, xh]))
+                else:
+                    new_clist.append((ax, [0.5 * (xl + xh)]))
+            return type(self)(new_clist)
 
     def get_clist(self, axes=None, slc=None, full_arrays=True, center="node"):
         """??
