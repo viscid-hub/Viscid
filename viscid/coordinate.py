@@ -54,7 +54,12 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw"):
             atol = 100 * np.finfo(arr.dtype).eps
         except ValueError:
             atol = 0
-        diff = arr[1:] - arr[:-1]
+
+        if len(arr) > 1:
+            diff = arr[1:] - arr[:-1]
+        else:
+            diff = [1, 1]
+
         if np.allclose(diff[0], diff[1:], atol=atol):
             uniform_clist.append((crd_name, [arr[0], arr[-1], len(arr)]))
         else:
@@ -310,9 +315,12 @@ class StructuredCrds(Coordinates):
 
         # recalculate all cell centers, and refresh face / edges
         sfx = self._CENTER["cell"]
-        for a in self.axes:
+        for i, a in enumerate(self.axes):
             # a = self.axis_name(a)  # validate input
-            ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
+            if self.shape[i] == 1:
+                ccarr = self.__crds[a]
+            else:
+                ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
             flatarr, openarr = self._ogrid_single(a, ccarr)
             self.__crds[a + sfx] = flatarr
             self.__crds[a.upper() + sfx] = openarr
@@ -954,7 +962,10 @@ class UniformCrds(StructuredCrds):
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
                 arr = np.asarray(arr)
-                diff = arr[1:] - arr[:-1]
+                if len(arr) > 1:
+                    diff = arr[1:] - arr[:-1]
+                else:
+                    diff = np.array([1, 1])
                 # This allclose is the problem... when slicing, it doesn't
                 # always pass
                 atol = 100 * np.finfo(arr.dtype).eps
@@ -974,6 +985,8 @@ class UniformCrds(StructuredCrds):
         for args in _nc_linspace_args:
             half_dx = 0.5 * (args[1] - args[0]) / args[2]
             cc_args = [args[0] + half_dx, args[1] - half_dx, args[2] - 1]
+            if cc_args[2] == 0:
+                cc_args[2] = 1
             self._cc_linspace_args.append(cc_args)
 
         # node centered things
