@@ -204,15 +204,36 @@ class Plane(SeedGen):
     # def _make_arrays(self):
     #     pass
 
-    def genr_points(self):
-        # turn N and L into flat ndarrays
+    def get_lmn_transform(self):
+        """Get transformation from xyz to lmn
+
+        Returns:
+            3x3 ndarray
+
+        Example:
+            >>> import numpy as np
+            >>> import viscid
+            >>>
+            >>> x = np.linspace(-1, 1, 32)
+            >>> y = np.linspace(-1, 1, 32)
+            >>> z = np.linspace(-1, 1, 32)
+            >>> Bxyz = viscid.zeros([x, y, z], center='node',
+            >>>                     nr_comps=3, layout="interlaced")
+            >>> Bxyz['x'] = 1.0
+            >>>
+            >>> plane = viscid.Plane([0, 0, 0], [1, 1, 0], [1, -1, 0],
+            >>>                      0.5, 0.5)
+            >>> transform = plane.get_lmn_transform()
+            >>>
+            >>> Blmn = np.einsum("ij,lmj->lmi", transform, Bxyz)
+            >>> (Blmn == Blmn2).all()
+            True
+
+        Raises:
+            RuntimeError: if Ndir == Ldir, can't determine a plane
+        """
         Ndir = np.array(self.params["Ndir"], dtype=self.dtype).reshape(-1)
         Ldir = np.array(self.params["Ldir"], dtype=self.dtype).reshape(-1)
-        len_l = self.params["len_l"]
-        len_m = self.params["len_m"]
-        res_l = self.params["res_l"]
-        res_m = self.params["res_m"]
-        p0 = np.array(self.params["p0"]).reshape((3, 1))
 
         if (Ndir == Ldir).all():
             raise RuntimeError("Ndir == Ldir, this does not define a plane")
@@ -226,6 +247,15 @@ class Plane(SeedGen):
         Ldir = Ldir / np.sqrt(np.dot(Ldir, Ldir))
         # compute Mdir
         Mdir = np.cross(Ndir, Ldir)
+        return np.array(np.array([Ldir, Mdir, Ndir]).T)
+
+    def genr_points(self):
+        # turn N and L into flat ndarrays
+        len_l = self.params["len_l"]
+        len_m = self.params["len_m"]
+        res_l = self.params["res_l"]
+        res_m = self.params["res_m"]
+        p0 = np.array(self.params["p0"]).reshape((3, 1))
 
         arr = np.empty((3, res_l * res_m), dtype=self.dtype)
         l = np.linspace(len_l[0], len_l[1], res_l).astype(self.dtype)
@@ -235,11 +265,11 @@ class Plane(SeedGen):
         arr[2, :] = 0.0
 
         # create matrix to go LNM -> xyz
-        trans = np.array([Ldir, Mdir, Ndir])
+        trans = self.get_lmn_transform()
 
         # transpose trans b/c np.dot semmantics are not the same as matrix
         # vector multiply, but they are if you transpose the matrix
-        arr_transformed = p0 + np.dot(trans.T, arr)
+        arr_transformed = p0 + np.dot(trans, arr)
 
         return arr_transformed
 
