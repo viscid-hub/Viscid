@@ -301,7 +301,8 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         int (*integrate_func)(FusedField fld, real_t x[3], real_t *ds,
                               real_t tol_lo, real_t tol_hi,
                               real_t fac_refine, real_t fac_coarsen,
-                              real_t smallest_step, real_t largest_step) except -1
+                              real_t smallest_step, real_t largest_step,
+                              real_t vscale[3]) except -1
         int (*end_flags_to_topology)(int _end_flags)
 
         int i, j, it
@@ -322,6 +323,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         int _dir_d[2]
         real_t x0[3]
         real_t s[3]
+        real_t vscale[3]
         int line_ends[2]
 
         int[:] topology_mv = None
@@ -355,11 +357,13 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                 c_obound0[i] = -MAX_FLOAT
             if obound1 is None:
                 c_obound1[i] = MAX_FLOAT
+            vscale[i] = 0.0
         else:
             if obound0 is None:
                 c_obound0[i] = amrfld.global_xl[i]
             if obound1 is None:
                 c_obound1[i] = amrfld.global_xh[i]
+            vscale[i] = 1.0
 
     if ds0 == 0.0:
         ds0 = 0.5 * amrfld.min_dx
@@ -444,7 +448,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                 activate_patch[FusedAMRField, real_t](amrfld, s)
                 ret = integrate_func(amrfld.active_patch, s, &ds,
                                      tol_lo, tol_hi, fac_refine , fac_coarsen,
-                                     smallest_step, largest_step)
+                                     smallest_step, largest_step, vscale)
 
                 if fabs(ds) >= pre_ds:
                     stream_length += pre_ds
