@@ -14,6 +14,7 @@ from inspect import isclass
 
 import numpy as np
 
+import viscid
 from viscid import logger
 from viscid.compat import string_types, izip_longest
 from viscid import coordinate
@@ -1202,6 +1203,14 @@ class Field(tree.Leaf):
 
     def iscentered(self, center_str):
         return self.center == center_str.lower()
+
+    def to_seeds(self):
+        return viscid.to_seeds(self.points())
+
+    def points(self, center=None):
+        if center is None:
+            center = self.center
+        return self._src_crds.points(center=center)
 
     def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center is None:
