@@ -41,9 +41,9 @@ cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
 
     fld.center = vfield.center
 
-    x, y, z = vfield.get_crds("xyz")
-    xnc, ync, znc = vfield.get_crds_nc("xyz")
-    xcc, ycc, zcc = vfield.get_crds_cc("xyz")
+    x, y, z = vfield.get_crds()
+    xnc, ync, znc = vfield.get_crds_nc()
+    xcc, ycc, zcc = vfield.get_crds_cc()
 
     fld.x = x.astype(crd_dtype, copy=False)
     fld.y = y.astype(crd_dtype, copy=False)
