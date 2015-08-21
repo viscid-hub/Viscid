@@ -99,6 +99,7 @@ def _py_interp_trilin(FusedField fld, points, real_t[:, ::1] result):
     i = 0
     for pt in points:
         for m in range(nr_comps):
+            assert len(pt) == 3
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
@@ -113,6 +114,7 @@ def _py_interp_trilin_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
     i = 0
     for pt in points:
         for m in range(nr_comps):
+            assert len(pt) == 3, "Seeds must have 3 spatial dimensions"
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
@@ -188,6 +190,7 @@ def _py_interp_nearest(FusedField fld, points, real_t[:, ::1] result):
     i = 0
     for pt in points:
         for m in range(nr_comps):
+            assert len(pt) == 3, "Seeds must have 3 spatial dimensions"
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]

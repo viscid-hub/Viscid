@@ -409,6 +409,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                          t1 - t0))
             t0 = time()
 
+        assert len(seed_pt) == 3, "Seeds must have 3 spatial dimensions"
         x0[0] = seed_pt[0]
         x0[1] = seed_pt[1]
         x0[2] = seed_pt[2]
