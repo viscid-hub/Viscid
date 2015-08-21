@@ -975,7 +975,7 @@ class Field(tree.Leaf):
 
         return selection, comp_slc
 
-    def _finalize_slice(self, slices, crdlst, reduced, comp_slc):
+    def _finalize_slice(self, slices, crdlst, reduced, crd_type, comp_slc):
         # if self.name == "b":
         #     import pdb; pdb.set_trace()
         all_none = (list(slices) == [slice(None)] * len(slices))
@@ -1002,7 +1002,7 @@ class Field(tree.Leaf):
         # the slice will have to load the data
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(self._src_crds.crdtype, crdlst)
+        crds = coordinate.wrap_crds(crd_type, crdlst)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -1150,8 +1150,8 @@ class Field(tree.Leaf):
         """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self._src_crds.make_slice(selection, cc=cc)
-        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+        slices, crdlst, reduced, crd_type = self._src_crds.make_slice(selection, cc=cc)
+        return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
     def slice_reduce(self, selection):
         """ Slice the field, then go through all dims and look for dimensions
@@ -1159,9 +1159,9 @@ class Field(tree.Leaf):
         field """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self._src_crds.make_slice_reduce(selection,
-                                                                   cc=cc)
-        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+        slices, crdlst, reduced, crd_type = self._src_crds.make_slice_reduce(selection,
+                                                                             cc=cc)
+        return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
     def slice_and_keep(self, selection):
         """ Slice the field, then go through dimensions that would be reduced
@@ -1169,10 +1169,10 @@ class Field(tree.Leaf):
         in the new field """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self._src_crds.make_slice_keep(selection,
-                                                                 cc=cc)
+        slices, crdlst, reduced, crd_type = self._src_crds.make_slice_keep(selection,
+                                                                           cc=cc)
         # print("??", type(self._src_crds), crdlst)
-        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+        return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))

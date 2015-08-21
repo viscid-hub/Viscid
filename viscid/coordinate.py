@@ -78,7 +78,7 @@ def wrap_crds(crdtype, clist, **kwargs):
         if cls.istype(crdtype):
             # return an instance
             return cls(clist, **kwargs)
-    raise NotImplementedError("can not decipher crds")
+    raise NotImplementedError("can not decipher crds: {0}".format(crdtype))
 
 
 class Coordinates(object):
@@ -114,6 +114,7 @@ class StructuredCrds(Coordinates):
     _axes = ["x", "y", "z"]
 
     _src_crds_nc = None
+    _src_crds_cc = None
 
     _reflect_axes = None
     has_cc = None
@@ -215,6 +216,7 @@ class StructuredCrds(Coordinates):
 
     def clear_crds(self):
         self._src_crds_nc = {}
+        self._src_crds_cc = {}
         self.clear_cache()
         # for d in self.axes:
         #     for sfx in self.SUFFIXES:
@@ -229,12 +231,16 @@ class StructuredCrds(Coordinates):
         (('x', ndarray), ('y',ndarray), ('z',ndarray))
         Note: input crds are assumed to be node centered
         """
-        for axis, data in clist:
-            # axis = self.axis_name(axis)
+        for ci in clist:
+            axis = ci[0]
+            dat_nc = ci[1]
+
             if not axis in self._axes:
                 raise KeyError()
-            # ind = self.ind(axis)
-            self._src_crds_nc[axis.lower()] = data
+
+            self._src_crds_nc[axis.lower()] = ci[1]
+            if len(ci) > 2:
+                self._src_crds_cc[axis.lower()] = ci[2]
 
     def apply_reflections(self):
         """
@@ -317,7 +323,9 @@ class StructuredCrds(Coordinates):
         sfx = self._CENTER["cell"]
         for i, a in enumerate(self.axes):
             # a = self.axis_name(a)  # validate input
-            if self.shape[i] == 1:
+            if a in self._src_crds_cc:
+                ccarr = self._src_crds_cc[a]
+            elif self.shape[i] == 1:
                 ccarr = self.__crds[a]
             else:
                 ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
@@ -454,7 +462,7 @@ class StructuredCrds(Coordinates):
 
         return selection
 
-    def _native_slice(self, axis, slc):
+    def _native_slice(self, axis, slc, center='node'):
         """Get a sliced crd array to construct crds of same type
 
         Args:
@@ -467,9 +475,9 @@ class StructuredCrds(Coordinates):
             by default
         """
         if slc is None:
-            return self[axis].reshape(-1)
+            return self.get_crd(axis, center=center).reshape(-1)
         else:
-            return self[axis][slc].reshape(-1)
+            return self.get_crd(axis, center=center)[slc].reshape(-1)
 
     def extend_by_half(self):
         """Extend coordinates half a grid cell in all directions
@@ -548,6 +556,8 @@ class StructuredCrds(Coordinates):
         sliced_clist = []
         reduced = []
 
+        crds_type = self._TYPE
+
         for i, slc in enumerate(slices):
             axis = self.axes[i]
 
@@ -557,9 +567,27 @@ class StructuredCrds(Coordinates):
                     raise TypeError("bad sss:", sss)
 
                 crd_slc = slice(slc.start, slc.stop, slc.step)
-                # if we're doing a cc slice, there needs to be one more nc crd
-                # than data element, so add an extra node to slc.stop
-                if cc and crd_slc.stop is not None:
+
+                sliced_clist_item = None
+
+                # if using step on a cell centered field, we need to figure
+                # stuff out, since the data && crd slices can't be the same,
+                # and it's not as simple as just adding 1 b/c of the stride
+                if cc and crd_slc.step not in [None, 1, -1]:
+                    crd_cc = self.get_crd(axis, center='cell')[slc]
+                    crd_nc = 0.5 * (crd_cc[1:] + crd_cc[:-1])
+
+                    allslc = slice(crd_slc.start, crd_slc.stop,
+                                   crd_slc.step // np.abs(crd_slc.step))
+                    allnc = self.get_crd(axis, center='node')[allslc]
+                    crd_nc = np.concatenate([[allnc[0]], crd_nc, [allnc[-1]]])
+
+                    crds_type = "nonuniform"
+                    if len(self._TYPE.split("_")) > 1:
+                        crds_type += "_" + "_".join(crds_type.split('_')[1:])
+                    sliced_clist_item = [axis, crd_nc, crd_cc]
+
+                elif cc and crd_slc.stop is not None:
                     if crd_slc.stop >= 0:
                         if crd_slc.step is None or crd_slc.step > 0:
                             newstop = crd_slc.stop + 1
@@ -571,7 +599,11 @@ class StructuredCrds(Coordinates):
                         # print("am i used?", crd_slc.step)
                         newstop = crd_slc.stop
                     crd_slc = slice(crd_slc.start, newstop, crd_slc.step)
-                sliced_clist.append([axis, self._native_slice(axis, crd_slc)])
+
+                if sliced_clist_item is None:
+                    sliced_clist_item = [axis, self._native_slice(axis, crd_slc)]
+
+                sliced_clist.append(sliced_clist_item)
 
             elif hasattr(slc, "__index__"):
                 reduced.append([axis, self._native_slice(axis, slc)])
@@ -580,11 +612,11 @@ class StructuredCrds(Coordinates):
                 raise TypeError()
 
         # print("< slice made", slices)
-        return slices, sliced_clist, reduced
+        return slices, sliced_clist, reduced, crds_type
 
     def make_slice_reduce(self, selection, cc=False):
         """make slice, and reduce dims that were not explicitly sliced"""
-        slices, crdlst, reduced = self.make_slice(selection, cc=cc)
+        slices, crdlst, reduced, crds_type = self.make_slice(selection, cc=cc)
         # augment slices / reduced
         for i, axis in enumerate(self.axes):
             reduce_axis = False
@@ -608,11 +640,11 @@ class StructuredCrds(Coordinates):
         crdlst = [crd for crd in crdlst if crd is not None]
         # print("MAKE SLICE REDUCE : slices", slices, "crdlst", crdlst,
         #       "reduced", reduced)
-        return slices, crdlst, reduced
+        return slices, crdlst, reduced, crds_type
 
     def make_slice_keep(self, selection, cc=False):
         """make slice, but put back dims that were explicitly reduced"""
-        slices, crdlst, reduced = self.make_slice(selection, cc=cc)
+        slices, crdlst, reduced, crds_type = self.make_slice(selection, cc=cc)
         # put reduced dims back, reduced will be in the same order as self.axes
         # since make_slice loops over self.axes to do the slices; this enables
         # us to call insert in the loop
@@ -656,41 +688,41 @@ class StructuredCrds(Coordinates):
         reduced = []
         # print("MAKE SLICE KEEP : slices", slices, "crdlst", crdlst,
         #       "reduced", reduced)
-        return slices, crdlst, reduced
+        return slices, crdlst, reduced, crds_type
 
     def slice(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid.
         Reduces dims the same way numpy / fields do. Chances are
         you want either slice_reduce or slice_keep
         """
-        slices, crdlst, reduced = self.make_slice(selection, cc=cc)
+        slices, crdlst, reduced, crds_type = self.make_slice(selection, cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
     def slice_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
         through, and if the slice didn't touch a dim with only one crd,
         reduce it
         """
-        slices, crdlst, reduced = self.make_slice_reduce(selection,
-                                                         cc=cc)
+        slices, crdlst, reduced, crds_type = self.make_slice_reduce(selection,
+                                                                    cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
     def slice_keep(self, selection, cc=False):
-        slices, crdlst, reduced = self.make_slice_keep(selection,
-                                                       cc=cc)
+        slices, crdlst, reduced, crds_type = self.make_slice_keep(selection,
+                                                                  cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
     def slice_interp(self, selection, cc=False):
-        _, crdlst, _ = self.make_slice_keep(selection, cc=cc)
+        _, crdlst, _, crds_type = self.make_slice_keep(selection, cc=cc)
 
         selection = self._parse_slice(selection)
 
@@ -708,7 +740,7 @@ class StructuredCrds(Coordinates):
                 else:
                     # FIXME: I don't think this is right
                     crdlst[i][1][0] = val
-        return wrap_crds(self._TYPE, crdlst, dtype=self.dtype)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,
@@ -794,7 +826,14 @@ class StructuredCrds(Coordinates):
             slc = slice(None)
         if axes is None:
             axes = self.axes
-        return [[axis, self.get_crd(axis, center=center)[slc]] for axis in axes]
+
+        ret = [[axis, self.get_crd(axis, center=center)[slc]] for axis in axes]
+
+        if slc is None and full_arrays and center == 'node' and self._src_crds_cc:
+            for i, axis in enumerate(axes):
+                if axis in self._src_crds_cc:
+                    ret[i].append(self._src_crds_cc[axis])
+        return ret
 
     ## These methods just return one crd axis
     def get_nc(self, axis, shaped=False):
@@ -1060,7 +1099,7 @@ class UniformCrds(StructuredCrds):
         else:
             return self.size_cc
 
-    def _native_slice(self, axis, slc):
+    def _native_slice(self, axis, slc, center='node'):
         """Get a sliced crd array to construct crds of same type
 
         Args:
@@ -1074,9 +1113,9 @@ class UniformCrds(StructuredCrds):
         """
         # inds = list(range(self.shape))
         if slc is None:
-            proxy_crd = self.get_crd(axis, center='node')
+            proxy_crd = self.get_crd(axis, center=center)
         else:
-            proxy_crd = self.get_crd(axis, center='node')[slc]
+            proxy_crd = self.get_crd(axis, center=center)[slc]
 
         try:
             nx = len(proxy_crd)
