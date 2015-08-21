@@ -861,7 +861,8 @@ class StructuredCrds(Coordinates):
     def get_dx(self, axes=None, center='node'):
         """Get cell widths if center == 'node', or distances between cell
         centers if center == 'cell' """
-        return [x[1:] - x[:-1] for x in self.get_crds(axes, center=center)]
+        return [x[1:] - x[:-1] if len(x) > 1 else 1.0
+                for x in self.get_crds(axes, center=center)]
 
     def get_min_dx(self, axes=None, center='node'):
         """Get a minimum cell width for each axis"""
@@ -1167,9 +1168,11 @@ class NonuniformCrds(StructuredCrds):
             new_clist = self.get_clist()
             for ax in axes3[self.nr_dims:]:
                 if cc:
-                    new_clist.append((ax, [xl, xh]))
+                    new_clist.append((ax, np.array([xl, xh],
+                                                   dtype=self.dtype)))
                 else:
-                    new_clist.append((ax, [0.5 * (xl + xh)]))
+                    new_clist.append((ax, np.array([0.5 * (xl + xh)],
+                                                   dtype=self.dtype)))
             return type(self)(new_clist)
 
     def get_clist(self, axes=None, slc=None, full_arrays=True, center="node"):
