@@ -20,6 +20,7 @@ try:
 except ImportError:
     _HAS_BASEMAP = False
 
+import viscid
 from viscid import pyeval
 from viscid import logger
 from viscid.compat import string_types
@@ -978,43 +979,123 @@ def plot_lines2d(lines, symdir=None, topology=None, ax=None,
         plt.show()
     return p, None
 
-def plot2d_quiver(fld, symdir, downscale=1, **kwargs):
+def plot2d_quiver(fld, step=1, **kwargs):
     """Put quivers on a 2D plot
 
-    Parameters:
-        fld: Vector field to plot
-        symdir (str): One of xyz for direction orthogonal to 2D plane
-        downscale (int, optional): only quiver every Nth grid cell
-        kwargs: passed along to :meth:`plt.quiver`
+    The quivers will be plotted in the 2D plane of fld, so if fld
+    is 3D, then one and only one dimenstion must have shape 1.
 
     Note:
-        There are some edge cases where downscale doesn't work.
+        There are some edge cases where step doesn't work.
+
+    Args:
+        fld: 2.5-D Vector field to plot
+        step (int): only quiver every Nth grid cell. Can also
+            be a list of ints to specify x & y downscaling separatly
+        **kwargs: passed to :py:func:`matplotlpb.pyplot.quiver`
+
+    Raises:
+        TypeError: vector field check
+        ValueError: 2d field check
+
+    Returns:
+        result of :py:func:`matplotlpb.pyplot.quiver`
     """
-    # FIXME: with dowscale != 1, this reveals a problem when slice and
-    # downscaling a field; i think this is a prickley one
     if fld.nr_patches > 1:
         raise TypeError("plot2d_quiver doesn't do multi-patch fields yet")
-    logger.warn("quiver plots untested since zyx->xyz transition")
 
-    vx, vy, vz = fld.component_views()
-    x, y = fld.get_crds_cc(shaped=True)
-    if symdir.lower() == "x":
-        # x, y = ycc, zcc
-        pvx, pvy = vy, vz
-    elif symdir.lower() == "y":
-        # x, y = xcc, zcc
-        pvx, pvy = vx, vz
-    elif symdir.lower() == "z":
-        # x, y = xcc, ycc
-        pvx, pvy = vx, vy
-    Y, X = np.meshgrid(x, y)
-    if downscale != 1:
-        X = X[::downscale]
-        Y = Y[::downscale]
-        pvx = pvx[::downscale]
-        pvy = pvy[::downscale]
-    # print(X.shape, Y.shape, pvx.shape, pvy.shape)
-    return plt.quiver(X, Y, pvx, pvy, **kwargs)
+    fld = fld.slice_reduce(None)
+
+    if fld.patches[0].nr_sdims != 2:
+        raise ValueError("2D Fields only for plot2d_quiver")
+    if fld.nr_comps != 3:
+        raise TypeError("Vector Fields only for plot2d_quiver")
+
+    # get lm axes, ie, the axes in the plane
+    l, m = fld.crds.axes
+    lm = "".join([l, m])
+
+    # get stepd scalar fields for the vector components in the plane
+    if not hasattr(step, "__getitem__") or len(step) < 2:
+        step = np.array([step, step]).reshape(-1)
+    first_l = (fld.shape[0] % step[0]) // 2
+    first_m = (fld.shape[1] % step[1]) // 2
+    vl = fld[l][first_l::step[0], first_m::step[1]]
+    vm = fld[m][first_l::step[0], first_m::step[1]]
+
+    # get coordinates
+    xl, xm = vl.get_crds(lm, shaped=True)
+    xl, xm = np.broadcast_arrays(xl, xm)
+
+    return plt.quiver(xl, xm, vl, vm, **kwargs)
+
+def streamplot(fld, **kwargs):
+    """Plot 2D streamlines with :py:func:`matplotlib.pyplot.streamplot`
+
+    Args:
+        fld (VectorField): Some 2.5-D Vector Field
+        **kwargs: passed to :py:func:`matplotlib.pyplot.streamplot`
+
+    Raises:
+        TypeError: vector field check
+        ValueError: 2d field check
+
+    Returns:
+        result of :py:func:`matplotlib.pyplot.streamplot`
+    """
+    if fld.nr_patches > 1:
+        raise TypeError("plot2d_quiver doesn't do multi-patch fields yet")
+
+    fld = fld.slice_reduce(None)
+
+    if fld.patches[0].nr_sdims != 2:
+        raise ValueError("2D Fields only for plot2d_quiver")
+    if fld.nr_comps != 3:
+        raise TypeError("Vector Fields only for plot2d_quiver")
+
+    # get lm axes, ie, the axes in the plane
+    l, m = fld.crds.axes
+    lm = "".join([l, m])
+
+    # get scalar fields for the vector components in the plane
+    vl, vm = fld[l], fld[m]
+    xl, xm = fld.get_crds(lm, shaped=False)
+
+    # matplotlib's streamplot is for uniform grids only, if crds are non
+    # uniform, then interpolate onto a new plane with uniform resolution
+    # matching the most refined region of fld
+    dxl = xl[1:] - xl[:-1]
+    dxm = xm[1:] - xm[:-1]
+    if not np.allclose(dxl[0], dxl) or not np.allclose(dxm[0], dxm):
+        # viscid.logger.warn("Matplotlib's streamplot is for uniform grids only")
+        nl = np.ceil((xl[-1] - xl[0]) / np.min(dxl))
+        nm = np.ceil((xm[-1] - xm[0]) / np.min(dxm))
+
+        vol = viscid.Volume([xl[0], xm[0], 0], [xl[-1], xm[-1], 0],
+                            [nl, nm, 1])
+        vl = vol.wrap_field(viscid.interp_trilin(vl, vol)).slice_reduce(None)
+        vm = vol.wrap_field(viscid.interp_trilin(vm, vol)).slice_reduce(None)
+        xl, xm = vl.get_crds(lm, shaped=False)
+
+        # interpolate linewidth and color too if given
+        for other in ['linewidth', 'color']:
+            try:
+                if isinstance(kwargs[other], viscid.field.Field):
+                    o_fld = kwargs[other]
+                    o_fld = vol.wrap_field(viscid.interp_trilin(o_fld, vol))
+                    kwargs[other] = o_fld.slice_reduce(None)
+            except KeyError:
+                pass
+
+    # streamplot isn't happy if linewidth are color are Fields
+    for other in ['linewidth', 'color']:
+        try:
+            if isinstance(kwargs[other], viscid.field.Field):
+                kwargs[other] = kwargs[other].data
+        except KeyError:
+            pass
+
+    return plt.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
 
 def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     """Plot scattered points on a matplotlib 3d plot

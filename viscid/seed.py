@@ -205,12 +205,30 @@ class Plane(SeedGen):
     #     pass
 
     def get_lmn_transform(self):
-        """Get transformation from xyz to lmn
+        """Get transformation from xyz -> lmn
+
+        To transform lmn -> xyz, transpose the result since it's
+        an orthogonal matrix.
 
         Returns:
             3x3 ndarray
 
         Example:
+            >>> # Transform a set of points from lmn coordinates to xyz
+            >>> import numpy as np
+            >>> import viscid
+            >>>
+            >>> # p0 is the origin of the plane
+            >>> p0 = np.array([0, 0, 0])
+            >>> plane = viscid.Plane(p0, [1, 1, 0], [1, -1, 0],
+            >>>                      0.5, 0.5)
+            >>> lmn_to_xyz = plane.get_lmn_transform().T
+            >>>
+            >>> # make 10 random points in lmn coorinates
+            >>> lmn = np.random(3, 10)
+            >>> xyz = p0 + np.dot(lmn_to_xyz, lmn)
+
+            >>> # Transform vector compenents from xyz to lmn
             >>> import numpy as np
             >>> import viscid
             >>>
@@ -223,11 +241,9 @@ class Plane(SeedGen):
             >>>
             >>> plane = viscid.Plane([0, 0, 0], [1, 1, 0], [1, -1, 0],
             >>>                      0.5, 0.5)
-            >>> transform = plane.get_lmn_transform()
+            >>> xyz_to_lmn = plane.get_lmn_transform()
             >>>
-            >>> Blmn = np.einsum("ij,lmj->lmi", transform, Bxyz)
-            >>> (Blmn == Blmn2).all()
-            True
+            >>> Blmn = np.einsum("ij,lmj->lmi", xyz_to_lmn, Bxyz)
 
         Raises:
             RuntimeError: if Ndir == Ldir, can't determine a plane
@@ -247,7 +263,7 @@ class Plane(SeedGen):
         Ldir = Ldir / np.sqrt(np.dot(Ldir, Ldir))
         # compute Mdir
         Mdir = np.cross(Ndir, Ldir)
-        return np.array(np.array([Ldir, Mdir, Ndir]).T)
+        return np.array([Ldir, Mdir, Ndir])
 
     def genr_points(self):
         # turn N and L into flat ndarrays
@@ -265,7 +281,7 @@ class Plane(SeedGen):
         arr[2, :] = 0.0
 
         # create matrix to go LNM -> xyz
-        trans = self.get_lmn_transform()
+        trans = self.get_lmn_transform().T
 
         # transpose trans b/c np.dot semmantics are not the same as matrix
         # vector multiply, but they are if you transpose the matrix
