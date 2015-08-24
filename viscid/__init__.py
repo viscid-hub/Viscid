@@ -99,7 +99,7 @@ from viscid import coordinate
 arrays2crds = coordinate.arrays2crds
 wrap_crds = coordinate.wrap_crds
 
-from viscid.seed import *
+from viscid.seed import *  # pylint: disable=wildcard-import
 from viscid import seed
 __all__ += seed.__all__
 
@@ -110,6 +110,13 @@ __all__ += calc.__all__
 from viscid.cython import interp_nearest
 from viscid.cython import interp_trilin
 from viscid.cython import calc_streamlines
+
+from viscid.cython import streamline
+for attr in dir(streamline):
+    if attr[0] != '_' and attr.isupper():
+        vars()[attr] = getattr(streamline, attr)
+        __all__.append(attr)
+del streamline
 
 # pull other useful modules into the namespace
 # Note: plot and calculator are intentionally left
