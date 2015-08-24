@@ -1,6 +1,7 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
 """3D Integrators of Vector Fields with 3 Components"""
 from __future__ import print_function
+from viscid import logger
 
 from cython.operator cimport dereference as deref
 from libc.math cimport sqrt, isnan, fabs
@@ -24,7 +25,7 @@ cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,
     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
     if vmag == 0.0 or isnan(vmag):
-        # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+        # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
         #                 x[0], x[1], x[2], vx, vy, vz, vmag))
         return 1
     x[0] += deref(ds) * v[0] / vmag
@@ -49,7 +50,7 @@ cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
     if vmag0 == 0.0 or isnan(vmag0):
-        # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logger.warn("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
     x1[0] = x[0] + ds_half * v0[0] / vmag0
     x1[1] = x[1] + ds_half * v0[1] / vmag0
@@ -61,7 +62,7 @@ cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
     if vmag1 == 0.0 or isnan(vmag1):
-        # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+        # logger.warn("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
         return 1
     x[0] += deref(ds) * v1[0] / vmag1
     x[1] += deref(ds) * v1[1] / vmag1
@@ -95,7 +96,7 @@ cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
         if vmag0 == 0.0 or isnan(vmag0):
-            # logger.warning("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warn("vmag0 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
 
         x_first[0] = x[0] + deref(ds) * v0[0] / vmag0
@@ -113,7 +114,7 @@ cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
         if vmag1 == 0.0 or isnan(vmag1):
-            # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+            # logger.warn("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
             return 1
         x_second[0] = x[0] + deref(ds) * v1[0] / vmag1
         x_second[1] = x[1] + deref(ds) * v1[1] / vmag1
@@ -167,7 +168,7 @@ cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,
         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
         if vmag0 == 0.0 or isnan(vmag0):
-            # logger.warning("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
+            # logger.warn("vmag0 issue at: {0} {1} {2}".format(x0[0], x0[1], x0[2]))
             return 1
 
         x1[0] = x[0] + deref(ds) * v0[0] / vmag0
@@ -182,7 +183,7 @@ cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,
 
         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
         if vmag1 == 0.0 or isnan(vmag1):
-            # logger.warning("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
+            # logger.warn("vmag1 issue at: {0} {1} {2}".format(x1[0], x1[1], x1[2]))
             return 1
 
         x2[0] = x1[0] - deref(ds) * v1[0] / vmag1

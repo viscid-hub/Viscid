@@ -9,6 +9,7 @@
 
 __DEBUG_IMPORT_ERRORS = False
 
+import viscid
 # import vfile
 from viscid.readers.vfile import VFile
 from viscid.readers import vfile_bucket
@@ -49,11 +50,10 @@ def load(fnames):
     Returns:
         one or many VFiles
     """
-    from warnings import warn
     # this is not a deprecated warning since by default those aren't shown
     # and i want this to be a loud and clear do not use :)
-    warn("readers.load deprecated in favor of load_file or load_files",
-         stacklevel=2)
+    viscid.logger.warn("readers.load is deprecated in favor of load_file or "
+                       "load_files")
     files = load_files(fnames)
     if isinstance(fnames, (list, tuple)):
         return files

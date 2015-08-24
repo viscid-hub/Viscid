@@ -8,7 +8,6 @@ convenience functions for creating fields similar to `Numpy`.
 """
 
 from __future__ import print_function
-import warnings
 from itertools import count, islice
 from inspect import isclass
 
@@ -275,7 +274,7 @@ def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
     if not "zyx_native" in kwargs:
         kwargs["zyx_native"] = False
     else:
-        print("Warning: did you really want to do another transpose?")
+        logger.warn("did you really want to do another transpose?")
 
     vfield = VectorField(name, _crds, fldlist, center=center, time=time,
                          meta=fldlist[0].meta, parents=[fldlist[0]],
@@ -444,8 +443,8 @@ class Field(tree.Leaf):
 
         if not "force_layout" in self.deep_meta:
             if "force_layout" in self.meta:
-                warnings.warn("deprecated force_layout syntax: kwarg should "
-                              "be given as _force_layout")
+                logger.warn("deprecated force_layout syntax: kwarg should "
+                            "be given as _force_layout")
                 self.deep_meta["force_layout"] = self.meta["force_layout"]
             else:
                 self.deep_meta["force_layout"] = LAYOUT_DEFAULT

@@ -60,8 +60,15 @@ __all__ = ['amr_field',  # Modules
 import logging
 logger = logging.getLogger("viscid")
 _handler = logging.StreamHandler()
-_handler.setFormatter(logging.Formatter())
+_handler.setFormatter(logging.Formatter(fmt="%(levelname)s: %(message)s"))
 logger.addHandler(_handler)
+class CustomFilter(logging.Filter):
+    def filter(self, record):
+        spaces = ' ' * (len(record.levelname) + 2)
+        record.msg = record.msg.replace('\n', '\n' + spaces)
+        return super(CustomFilter, self).filter(record)
+logger.addFilter(CustomFilter())
+logger.propagate = False
 del _handler
 
 # pull file reading helpers into namespace

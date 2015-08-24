@@ -23,6 +23,7 @@ FIXME: uniform coordinates are generally unsupported, but they're just
 from __future__ import print_function
 # from timeit import default_timer as time
 import itertools
+import sys
 
 import numpy as np
 
@@ -998,7 +999,7 @@ class UniformCrds(StructuredCrds):
         if full_arrays:
             print(r"DEPRECATION WARNING: full arrays for uniform crds\n"
                   r"                     shouldn't be used due to finite\n"
-                  r"                     precision errors")
+                  r"                     precision errors", file=sys.stderr)
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
                 arr = np.asarray(arr)

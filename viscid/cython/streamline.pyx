@@ -19,13 +19,13 @@ Note:
 
 from __future__ import print_function
 from timeit import default_timer as time
-from logging import info, warning
 from multiprocessing import Pool, cpu_count
 from contextlib import closing
 from itertools import islice, repeat
 
 import numpy as np
 
+import viscid
 from viscid import parallel
 from viscid.seed import to_seeds
 from viscid.compat import izip
@@ -404,9 +404,10 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
-            info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
-                         nr_streams, int(100.0 * i_stream / nr_streams),
-                         t1 - t0))
+            viscid.logger.info("Streamline {0} of {1}: {2}% done, {3:.03e}"
+                               "".format(i_stream, nr_streams,
+                                         int(100.0 * i_stream / nr_streams),
+                                         t1 - t0))
             t0 = time()
 
         assert len(seed_pt) == 3, "Seeds must have 3 spatial dimensions"

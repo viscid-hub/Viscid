@@ -65,7 +65,7 @@ def add_mpl_output_arguments(parser):
                         help="show plots with plt.show()")
     return parser
 
-def common_argparse(parser, default_verb=0, logging_fmt=None):
+def common_argparse(parser, default_verb=0):
     """ add some common verbosity stuff to argparse, parse the
     command line args, and setup the logging levels
     parser should be an ArgumentParser instance, and kwargs
@@ -87,11 +87,6 @@ def common_argparse(parser, default_verb=0, logging_fmt=None):
         # default = 30 WARNING
         verb = args.v - args.q
         logger.setLevel(int(30 - 10 * verb))
-
-    # the 0th handler going to stderr should always be setup
-    if not logging_fmt:
-        logging_fmt = "(%(levelname)s): %(message)s"
-    logger.handlers[0].setFormatter(logging.Formatter(logging_fmt))
 
     return args
 

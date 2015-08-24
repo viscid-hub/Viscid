@@ -8,6 +8,7 @@ Note:
 from __future__ import print_function
 import numpy as np
 
+import viscid
 # from viscid.compat import string_types
 from viscid.field import Field
 
@@ -133,8 +134,8 @@ class AMRField(object):
             inds = maybe
 
         if len(inds) == 0:
-            print("Warning: selection", selection, "not in any patch")
-            print("         @ time", self.patches[0].time)
+            viscid.logger.warn("selection {0} not in any patch\n@ time {1}"
+                               "".format(selection, self.patches[0].time))
             if self.skeleton:
                 print("         skeleton: xl=", self.skeleton.global_xl,
                       "xh=", self.skeleton.global_xh)
@@ -155,7 +156,7 @@ class AMRField(object):
                 m = ("Trying to make an AMRField where 1+ patches "
                      "is just a number... You probably slice_reduced "
                      "a field down to a scalar value")
-                print("Warning:", m)
+                viscid.logger.warn(m)
         return AMRField(fld_lst, skeleton)
 
     def patch_indices(self, selection):

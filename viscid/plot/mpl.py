@@ -471,7 +471,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         # vmin / vmax will only be nan if all values are nan
         if np.isnan(vmin) or np.isnan(vmax):
-            print("Warning: All-Nan encountered in Field,", patch0.name)
+            logger.warn("All-Nan encountered in Field, {0}"
+                        "".format(patch0.name))
             vmin, vmax = 1e38, 1e38
             norm_dict['symmetric'] = False
 
@@ -485,12 +486,12 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             if norm_dict['symmetric']:
                 raise ValueError("Can't use symmetric color bar with logscale")
             if vmax <= 0.0:
-                print("Warning: Using log scale on a field with no positive "
-                      "values")
+                logger.warn("Using log scale on a field with no "
+                            "positive values")
                 vmin, vmax = 1e-20, 1e-20
             elif vmin <= 0.0:
-                print("Warning: Using log scale on a field with values <= 0. "
-                      "Only plotting 4 decades.")
+                logger.warn("Using log scale on a field with values "
+                            "<= 0. Only plotting 4 decades.")
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
         elif vscale is None:

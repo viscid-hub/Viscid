@@ -45,17 +45,17 @@ def set_attribute(path, value):
     # try:
     #     value = _parse_rc_value(value)
     # except RCValueError as e:
-    #     print("WARNING: Skipping bad ~/.viscidrc value:: {0}".format(value))
-    #     print("                                          {0}".format(e.message))
+    #     viscid.logger.warn("Skipping bad ~/.viscidrc value:: {0}\n".format(value)
+    #                        "                                 {0}".format(e.message))
     #     return None
 
     p = path.split('.')
     obj = _get_obj(viscid, p[:-1])
 
     if not hasattr(obj, p[-1]):
-        print("WARNING: from rc file, object '{0}' has no attribute '{1}'.\n"
-              "         If this isn't a typeo then the functionality may "
-              "have moved.".format(".".join(p[:-1]), p[-1]))
+        viscid.logger.warn("from rc file; '{0}' has no attribute '{1}'.\n"
+                           "If this isn't a typeo then the functionality may"
+                           "have moved.".format(".".join(p[:-1]), p[-1]))
     setattr(obj, p[-1], value)
 
 def load_rc_file(fname):
@@ -80,9 +80,10 @@ def load_rc_file(fname):
             try:
                 set_attribute(path, val)
             except RCPathError as e:
-                print("WARNING: from rc file, {0}\n"
-                      "         If this isn't a typeo then the "
-                      "functionality may have moved.".format(e.message))
+                viscid.logger.warn("from rc file; {0}\n"
+                                   "If this isn't a typeo then the "
+                                   "functionality may have moved."
+                                   "".format(e.message))
     except IOError:
         pass
 
