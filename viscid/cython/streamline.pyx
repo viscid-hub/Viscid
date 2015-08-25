@@ -195,6 +195,10 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
     else:
         # wrap the above around some parallelizing logic that is way more
         # cumbersome than it needs to be
+        viscid.logger.warn("Parallel streamlines have been segfaulting lately.\n"
+                           "I'm not exactly sure why, but it might have to do \n"
+                           "with setting a global struct before forking to \n"
+                           "share fields with subprocesses.")
         nr_chunks = nr_chunks_factor * nr_procs
         seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points
         # seed_slices = parallel.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
@@ -241,7 +245,9 @@ def _do_streamline_star(args):
     """Wrapper for running in parallel using :py:module`Viscid.parallel`'s
     subprocessing helpers
     """
-    return _streamline_fused_wrapper(_global_fld, *(args[0]), **(args[1]))
+    # print("_global_fld type::", type(_global_fld))
+    gfld = _global_fld
+    return _streamline_fused_wrapper(gfld, *(args[0]), **(args[1]))
 
 def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
                               seed_slice=(None,), **kwargs):
