@@ -5,6 +5,7 @@ Note:
 """
 from __future__ import print_function
 import code
+import sys
 
 import numpy as np
 from mayavi import mlab
@@ -285,6 +286,24 @@ def clear_data(scenes=None):
             remove_source(child)
         s.start()
     return
+
+def resize_window(size, fig=None):
+    if fig is None:
+        fig = mlab.gcf()
+
+    if sys.platform == "darwin":
+        # thunder-hack because scene.set_size doesn't work on OS X
+        # Qt backend only
+        try:
+            sc = fig.scene
+            window_height = sc.control.parent().size().height()
+            render_height = sc.render_window.size[1]
+            h = window_height - render_height
+            sc.control.parent().resize(size[0], size[1] + h)
+        except Exception as e:  # pylint: disable=broad-except
+            print("Resize didn't work::", repr(e))
+    else:
+        fig.scene.set_size(size)
 
 def interact(local=None):
     """Switch to interactive interpreter
