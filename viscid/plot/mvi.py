@@ -293,25 +293,30 @@ def resize_window(size, fig=None):
     if fig is None:
         fig = mlab.gcf()
 
-    if sys.platform == "darwin" or sys.platform.startswith('linux'):
-        # thunder-hack because scene.set_size doesn't work on OS X
-        # Qt backend only
-        if mayavi.ETSConfig.toolkit == 'qt4':
-            try:
+    try:
+        # scene.set_size doesn't seem to work on linux && os x, so...
+        if sys.platform == "darwin" or sys.platform.startswith('linux'):
+            toolkit = mayavi.ETSConfig.toolkit
+
+            if toolkit == 'qt4':
                 sc = fig.scene
                 window_height = sc.control.parent().size().height()
                 render_height = sc.render_window.size[1]
                 h = window_height - render_height
                 sc.control.parent().resize(size[0], size[1] + h)
-            except Exception as e:  # pylint: disable=broad-except
-                viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
-        elif mayavi.ETSConfig.toolkit == 'wx':
-            fig.scene.set_size(size)
-            viscid.logger.warn("Don't know how to resize the wx backend")
+
+            elif toolkit == 'wx':
+                w, h = size[0], size[1]
+                fig.scene.control.Parent.Parent.SetClientSizeWH(w, h)
+
+            else:
+                viscid.logger.warn("Unknown mayavi backend {0} (not qt4 or "
+                                   "wx); not resizing.".format(toolkit))
         else:
-            raise ValueError("unknown mayavi backend (not qt4 or wx)")
-    else:
-        fig.scene.set_size(size)
+            fig.scene.set_size(size)
+    except Exception as e:
+        viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
+
 
 def interact(local=None):
     """Switch to interactive interpreter
