@@ -124,7 +124,7 @@ _global_fld = None
 
 #####################
 # now the good stuff
-def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
+def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
                      nr_chunks_factor=1, **kwargs):
     r"""Trace streamlines
 
@@ -134,7 +134,7 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
             anything that exposes an iter_points method
         nr_procs: how many processes for streamlines (>1 only works on
             \*nix systems)
-        force_parallel (bool): always calc streamlines in a separate
+        force_subprocess (bool): always calc streamlines in a separate
             process, even if nr_procs == 1
         nr_chunks_factor (int): If streamlines are really unbalanced
             in length, try bumping this up
@@ -190,64 +190,50 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
     if nr_procs == "all" or nr_procs == "auto":
         nr_procs = cpu_count()
 
-    if nr_procs == 1 and not force_parallel:
-        lines, topo = _streamline_fused_wrapper(fld, nr_streams, seed, **kwargs)
+    nr_chunks = nr_chunks_factor * nr_procs
+    seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points
+    # seed_slices = parallel.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
+    chunk_sizes = parallel.chunk_sizes(nr_streams, nr_chunks)
+
+    global _global_fld
+    if _global_fld is not None:
+        raise RuntimeError("Another process is doing streamlines in this "
+                           "global memory space")
+    _global_fld = fld
+    grid_iter = izip(chunk_sizes, repeat(seed), seed_slices)
+    r = parallel.map(nr_procs, _do_streamline_star, grid_iter,
+                     args_kw=kwargs, force_subprocess=force_subprocess)
+    _global_fld = None
+
+    # rearrange the output to be the exact same as if we just called
+    # _py_streamline straight up (like for nr_procs == 1)
+    if r[0][0] is not None:
+        lines = np.empty((nr_streams,), dtype=np.ndarray)  # [None] * nr_streams
+        for i in range(nr_chunks):
+            lines[slice(*seed_slices[i])] = r[i][0]
     else:
-        # wrap the above around some parallelizing logic that is way more
-        # cumbersome than it needs to be
-        viscid.logger.warn("Parallel streamlines have been segfaulting lately.\n"
-                           "I'm not exactly sure why, but it might have to do \n"
-                           "with setting a global struct before forking to \n"
-                           "share fields with subprocesses.")
-        nr_chunks = nr_chunks_factor * nr_procs
-        seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points
-        # seed_slices = parallel.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
-        chunk_sizes = parallel.chunk_sizes(nr_streams, nr_chunks)
+        lines = None
 
-        global _global_fld
-        # if they were already set, then some other process sharing this
-        # global memory is doing streamlines
-        if _global_fld is not None:
-            raise RuntimeError("Another process is doing streamlines in this "
-                               "global memory space")
-        _global_fld = fld
-        grid_iter = izip(chunk_sizes, repeat(seed), seed_slices)
-        args = izip(grid_iter, repeat(kwargs))
+    if r[0][1] is not None:
+        topo = np.empty((nr_streams,), dtype=r[0][1].dtype)
+        for i in range(nr_chunks):
+            topo[slice(*seed_slices[i])] = r[i][1]
+    else:
+        topo = None
 
-        with closing(Pool(nr_procs)) as p:
-            r = p.map_async(_do_streamline_star, args).get(1e8)
-        p.join()
-
-        _global_fld = None
-
-        # rearrange the output to be the exact same as if we just called
-        # _py_streamline straight up (like for nr_procs == 1)
-        if r[0][0] is not None:
-            lines = np.empty((nr_streams,), dtype=np.ndarray)  # [None] * nr_streams
-            for i in range(nr_chunks):
-                lines[slice(*seed_slices[i])] = r[i][0]
-        else:
-            lines = None
-
-        if r[0][1] is not None:
-            topo = np.empty((nr_streams,), dtype=r[0][1].dtype)
-            for i in range(nr_chunks):
-                topo[slice(*seed_slices[i])] = r[i][1]
-        else:
-            topo = None
     return lines, topo
 
 # for legacy code
 streamlines = calc_streamlines
 
 @cython.wraparound(True)
-def _do_streamline_star(args):
+def _do_streamline_star(*args, **kwargs):
     """Wrapper for running in parallel using :py:module`Viscid.parallel`'s
     subprocessing helpers
     """
     # print("_global_fld type::", type(_global_fld))
     gfld = _global_fld
-    return _streamline_fused_wrapper(gfld, *(args[0]), **(args[1]))
+    return _streamline_fused_wrapper(gfld, *args, **kwargs)
 
 def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
                               seed_slice=(None,), **kwargs):
