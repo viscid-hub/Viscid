@@ -216,13 +216,14 @@ def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
         1 b
         2 c
     """
-    if "mayavi.mlab" in sys.modules or "mayavi" in sys.modules:
+    if sys.platform == 'darwin' and ("mayavi.mlab" in sys.modules or
+                                     "mayavi" in sys.modules):
         import mayavi
         if mayavi.ETSConfig.toolkit == 'qt4':
-            viscid.logger.warn("Using multiprocessing with Mayavi + Qt4 will"
-                               "cause segfaults on join. A\n"
-                               "workaround is to use the wx backend "
-                               "(`os.environ['ETS_TOOLKIT'] = 'wx'`).")
+            viscid.logger.critical("Using multiprocessing with Mayavi + Qt4 "
+                                   "will cause segfaults on join.\n"
+                                   "A workaround is to use the wx backend "
+                                   "(`os.environ['ETS_TOOLKIT'] = 'wx'`).")
 
     if args_kw is None:
         args_kw = {}
