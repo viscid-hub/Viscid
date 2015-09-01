@@ -11,6 +11,7 @@ Changes:
 Refactors:
   - blocks -> patches everywhere
   - block -> patch everywhere
+  - vlab.multiplot argument nprocs -> nr_procs
 
 Bugfixes:
   - ibound topology detection (north/south accidently became dayside/nightside in version 0.90.0)
