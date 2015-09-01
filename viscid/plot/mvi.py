@@ -293,7 +293,7 @@ def resize_window(size, fig=None):
     if fig is None:
         fig = mlab.gcf()
 
-    if sys.platform == "darwin":
+    if sys.platform == "darwin" or sys.platform.startswith('linux'):
         # thunder-hack because scene.set_size doesn't work on OS X
         # Qt backend only
         if mayavi.ETSConfig.toolkit == 'qt4':
