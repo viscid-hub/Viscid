@@ -289,13 +289,16 @@ def clear_data(scenes=None):
         s.start()
     return
 
-def resize_window(size, fig=None):
+def resize(size, fig=None):
     if fig is None:
         fig = mlab.gcf()
 
     try:
-        # scene.set_size doesn't seem to work on linux && os x, so...
-        if sys.platform == "darwin" or sys.platform.startswith('linux'):
+        # scene.set_size doesn't seem to work when rendering on screen, so
+        # go into the backend and do it by hand
+        if mlab.options.offscreen:
+            fig.scene.set_size(size)
+        else:
             toolkit = mayavi.ETSConfig.toolkit
 
             if toolkit == 'qt4':
@@ -312,8 +315,7 @@ def resize_window(size, fig=None):
             else:
                 viscid.logger.warn("Unknown mayavi backend {0} (not qt4 or "
                                    "wx); not resizing.".format(toolkit))
-        else:
-            fig.scene.set_size(size)
+
     except Exception as e:
         viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
 
