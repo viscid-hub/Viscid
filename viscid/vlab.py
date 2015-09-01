@@ -92,7 +92,7 @@ def get_trilinear_field():
                 1.0 * (X - x03) * (Y - y03) * (Z - z03)
     return b
 
-def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
+def multiplot(vfile, plot_func=None, nr_procs=1, time_slice=":", **kwargs):
     """Make lots of plots
 
     Calls plot_func (or vlab._do_multiplot if plot_func is None) with 2
@@ -113,7 +113,7 @@ def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
         plot_func (callable): Function that makes a single plot. It
             must take an int (index of time slice), a Grid, and any
             number of keyword argumets. If None, _do_multiplot is used
-        nprocs (int): number of parallel processes to farm out
+        nr_procs (int): number of parallel processes to farm out
             plot_func to
         time_slice (str): passed to vfile.iter_times()
         **kwargs: passed as keword aguments to plot_func
@@ -135,12 +135,12 @@ def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
 
     if "subplot_params" not in args_kw.get("kwopts", {}):
         r = parallel.map(1, plot_func, [next(grid_iter)], args_kw=args_kw,
-                         force_subprocess=(nprocs > 1))
+                         force_subprocess=(nr_procs > 1))
 
     # now get back to your regularly scheduled programming
     args_kw["first_run"] = False
     args_kw["first_run_result"] = r[0]
-    parallel.map(nprocs, plot_func, grid_iter, args_kw=args_kw)
+    parallel.map(nr_procs, plot_func, grid_iter, args_kw=args_kw)
 
 def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
                   share_axes=False, show=False, subplot_params=None,

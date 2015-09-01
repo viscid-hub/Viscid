@@ -100,7 +100,7 @@ def main():
             reader_opts[k] = v
 
     file_ = readers.load_file(args.file, **reader_opts)
-    vlab.multiplot(file_, plot_vars=args.plot_vars, nprocs=args.np,
+    vlab.multiplot(file_, plot_vars=args.plot_vars, nr_procs=args.np,
                    time_slice=args.t, share_axes=(not args.own),
                    global_popts=global_popts, show=args.show, kwopts=kwopts)
 
