@@ -8,11 +8,13 @@ import code
 import sys
 
 import numpy as np
+import mayavi
 from mayavi import mlab
 from mayavi.sources.vtk_data_source import VTKDataSource
 from mayavi.sources.builtin_surface import BuiltinSurface
 from tvtk.api import tvtk
 
+import viscid
 from viscid import field
 from viscid.calculator.topology import color_from_topology
 
@@ -294,14 +296,20 @@ def resize_window(size, fig=None):
     if sys.platform == "darwin":
         # thunder-hack because scene.set_size doesn't work on OS X
         # Qt backend only
-        try:
-            sc = fig.scene
-            window_height = sc.control.parent().size().height()
-            render_height = sc.render_window.size[1]
-            h = window_height - render_height
-            sc.control.parent().resize(size[0], size[1] + h)
-        except Exception as e:  # pylint: disable=broad-except
-            print("Resize didn't work::", repr(e))
+        if mayavi.ETSConfig.toolkit == 'qt4':
+            try:
+                sc = fig.scene
+                window_height = sc.control.parent().size().height()
+                render_height = sc.render_window.size[1]
+                h = window_height - render_height
+                sc.control.parent().resize(size[0], size[1] + h)
+            except Exception as e:  # pylint: disable=broad-except
+                viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
+        elif mayavi.ETSConfig.toolkit == 'wx':
+            fig.scene.set_size(size)
+            viscid.logger.warn("Don't know how to resize the wx backend")
+        else:
+            raise ValueError("unknown mayavi backend (not qt4 or wx)")
     else:
         fig.scene.set_size(size)
 
