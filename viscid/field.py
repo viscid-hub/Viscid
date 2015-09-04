@@ -62,7 +62,7 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
             discovered_center = "cell"
         else:
             raise ValueError("Can't detect centering for scalar dat_arr")
-    elif len(dat_arr.shape) + 1 == len(crds.shape_nc):
+    elif len(dat_arr.shape) == len(crds.shape_nc) + 1:
         discovered_type = "vector"
         if crds_shape_nc == dat_arr_shape[:-1]:
             discovered_layout = LAYOUT_INTERLACED
@@ -105,8 +105,8 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
     elif fldtype.lower() == "vector":
         if layout == LAYOUT_FLAT:
             sshape = dat_arr.shape[1:]
-        elif layout == LAYOUT_FLAT:
-            sshape = dat_arr.shape[1:]
+        elif layout == LAYOUT_INTERLACED:
+            sshape = dat_arr.shape[:-1]
         else:
             raise ValueError("Unknown layout: {0}".format(layout))
     else:
