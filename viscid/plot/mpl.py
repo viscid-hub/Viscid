@@ -38,7 +38,7 @@ if mpl_extra.default_cmap:
     plt.rcParams['image.cmap'] = mpl_extra.default_cmap
 
 
-def plot(fld, selection=None, **kwargs):
+def plot(fld, selection=":", **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
 
     * If fld has 1 spatial dimensions, call
@@ -86,7 +86,7 @@ def plot(fld, selection=None, **kwargs):
             return plot2d_mapfield(fld, **kwargs)
         return plot2d_field(fld, **kwargs)
     else:
-        raise ValueError("mpl can only do 1-D or 2-D fields. Either slice the"
+        raise ValueError("mpl can only do 1-D or 2-D fields. Either slice the "
                          "field yourself, or use the selection keyword "
                          "argument")
 
