@@ -928,6 +928,7 @@ class Field(tree.Leaf):
                     sel_lst = list(selection)
                     _isstr = False
                 elif isinstance(selection, string_types):
+                    selection = "".join(selection.split())
                     _ = selection.replace('_', ',')
                     sel_lst = [s for s in _.split(",")]  # pylint: disable=maybe-no-member
                     _isstr = True
@@ -957,10 +958,40 @@ class Field(tree.Leaf):
                             break
                     except AttributeError:
                         continue
-                if len(sel_lst) == self.nr_dims and comp_slc is None:
-                    comp_slc = sel_lst.pop(self.nr_comp)
 
-                if isinstance(comp_slc, string_types):
+                # figure out if there is a slice for the comonent dimension
+                # and remove it... this is prickly b/c newaxis and Ellipsis
+                # must be removed / expanded to see if the slice has a value
+                # for the component dimension
+                if comp_slc is None:
+                    cull_lst = [np.newaxis, 'none', 'newaxis']
+                    culled_selection = []
+                    orig_ind = []
+                    for i, s in enumerate(sel_lst):
+                        try:
+                            s = s.lower().strip()
+                        except AttributeError:
+                            pass
+                        if s not in cull_lst:
+                            if s in ['...', 'ellipsis']:
+                                s = Ellipsis
+                            culled_selection.append(s)
+                            orig_ind.append(i)
+                    if Ellipsis in culled_selection:
+                        assert culled_selection.count(Ellipsis) <= 1
+                        ellipsis_ind = culled_selection.index(Ellipsis)
+                        culled_selection.pop(ellipsis_ind)
+                        orig_ind.pop(ellipsis_ind)
+                        for _ in range(self.nr_dims - len(culled_selection)):
+                            culled_selection.insert(ellipsis_ind, slice(None))
+                            orig_ind.insert(ellipsis_ind, -1)
+
+                    if len(culled_selection) > self.nr_comp:
+                        comp_slc = culled_selection[self.nr_comp]
+                        if orig_ind[self.nr_comp] >= 0:
+                            sel_lst.pop(orig_ind[self.nr_comp])
+
+                if comp_slc in self._COMPONENT_NAMES:
                     comp_slc = self._COMPONENT_NAMES.index(comp_slc)
                 if _isstr:
                     selection = ",".join(sel_lst)
@@ -971,6 +1002,7 @@ class Field(tree.Leaf):
 
         if comp_slc is None:
             comp_slc = slice(None)
+        comp_slc = vutil.to_slice(None, comp_slc)
 
         return selection, comp_slc
 
