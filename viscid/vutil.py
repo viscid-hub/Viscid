@@ -622,7 +622,12 @@ def to_slice(arr, s, endpoint=True, tol=100):
                              "{0}".format(s))
         # sss -> start step step
 
-        if len(slclst) == 1:
+        if arr is None:
+            if len(slclst) == 1:
+                ret = int(slclst[0])
+            else:
+                ret = slice(*[None if a is None else int(a) for a in slclst])
+        elif len(slclst) == 1:
             ret = _closest_index(arr, slclst[0])
         else:
             sss = extract_index(arr, *slclst, endpoint=endpoint,
