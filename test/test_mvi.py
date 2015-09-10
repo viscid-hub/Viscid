@@ -35,7 +35,7 @@ def main():
     else:
         raise RuntimeError("Where have all the B fields gone...")
 
-    b_src = mvi.field_to_point_source(b)
+    b_src = mvi.field2source(b, center='node')
     bsl2 = mlab.pipeline.streamline(b_src, seedtype='sphere',
                                     integration_direction='both',
                                     seed_resolution=4)
@@ -48,7 +48,7 @@ def main():
     bsl2.start()
     bsl2.seed.widget.enabled = True
 
-    mvi.mlab_earth(mlab.pipeline, crd_system="gse")
+    mvi.plot_earth_3d(mlab.pipeline, crd_system="gse")
 
     if args.show:
         mlab.show()

@@ -106,13 +106,9 @@ def main():
     fig = mlab.figure(size=(1150, 850),
                       bgcolor=(1.0, 1.0, 1.0),
                       fgcolor=(0.0, 0.0, 0.0))
-    f1_src = mvi.field_to_source(bx)
-    f2_src = mvi.field_to_source(by)
-    f3_src = mvi.field_to_source(bz)
-    e = mlab.get_engine()
-    e.add_source(f1_src)
-    e.add_source(f2_src)
-    e.add_source(f3_src)
+    f1_src = mvi.add_field(bx)
+    f2_src = mvi.add_field(by)
+    f3_src = mvi.add_field(bz)
     mlab.pipeline.iso_surface(f1_src, contours=[0.0],
                               opacity=1.0, color=(1.0, 0.0, 0.0))
     mlab.pipeline.iso_surface(f2_src, contours=[0.0],

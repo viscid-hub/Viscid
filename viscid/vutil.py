@@ -14,6 +14,7 @@ import subprocess as sub
 import sys
 from timeit import default_timer as time
 
+import viscid
 from viscid import logger
 from viscid.compat import izip, string_types
 
@@ -755,6 +756,119 @@ def convert_deprecated_floats(value, varname="value"):
               "".format(varname, value), file=sys.stderr)
         value = "{0}f".format(value)
     return value
+
+def prepare_lines(lines, scalars=None, do_connections=False):
+    """Concatenate and standardize a list of lines
+
+    Args:
+        lines (list): Must be a list of 3xN or 4xN ndarrays of xyz(s)
+            data for N points along the line. N need not be the same
+            for all lines. Can alse be 6xN such that lines[:][3:, :]
+            are interpreted as rgb colors
+        scalars (ndarray, list): Can have shape 1xN for a single scalar
+            or 3xN for an rgb color for each point. If the shape is
+            1xNlines, the scalar is broadcast so the whole line gets
+            the same value, and likewise for 3xNlines and rgb colors.
+            Otherwise, scalars is reshaped to -1xN.
+        do_connections (bool): Whether or not to make connections array
+
+    Returns:
+        (lines, scalars, connections)
+
+        * lines (ndarray): 3xN array of N xyz points. N is the sum of
+            the lengths of all the lines
+        * scalars (ndarray): N array of scalars, 3xN array of uint8
+            rgb values, or None
+        * connections (ndarray): 2xN array describing the forward and
+            backward connectedness of the lines, or None
+
+    Raises:
+        ValueError: If rgb data is not in a valid range or the shape
+            of scalars is not understood
+    """
+    nlines = len(lines)
+    npts = [line.shape[1] for line in lines]
+    first_idx = np.cumsum([0] + npts[:-1])
+    lines = [np.asarray(line) for line in lines]
+    lines = np.concatenate(lines, axis=1)
+
+    if lines.shape[0] > 3:
+        if scalars is not None:
+            viscid.logger.warn("Overriding line scalars with scalars kwarg")
+        else:
+            scalars = lines[3:, :]
+            lines = lines[:3, :]
+
+    if scalars is not None:
+        scalars = np.atleast_2d(scalars)
+        if scalars.shape == (1, nlines) or scalars.shape == (nlines, 1):
+            # one scalar for each line, so broadcast it
+            scalars = scalars.reshape(nlines, 1)
+            scalars = [scalars[i].repeat(ni) for i, ni in enumerate(npts)]
+            scalars = np.concatenate(scalars, axis=0).reshape(1, np.sum(npts))
+        elif scalars.shape == (3, nlines) or scalars.shape == (nlines, 3):
+            # one rgb color for each line, so broadcast it
+            if scalars.shape == (3, nlines):
+                scalars = scalars.T
+            colors = []
+            for i, ni in enumerate(npts):
+                c = scalars[i].reshape(3, 1).repeat(ni, axis=1)
+                colors.append(c)
+            scalars = np.concatenate(colors, axis=1)
+        else:
+            scalars = scalars.reshape(-1, np.sum(npts))
+
+        if scalars.shape[0] == 1:
+            scalars = scalars.reshape(-1)
+        elif scalars.shape[0] == 3:
+            # The scalars encode rgb data, standardize the result
+            if np.all(scalars >= 0) and np.all(scalars <= 1):
+                scalars = (255 * scalars).round().astype('u1')
+            elif np.all(scalars >= 0) and np.all(scalars < 256):
+                scalars = scalars.round().astype('u1')
+            else:
+                raise ValueError("Rgb data should be in range [0, 1] or "
+                                 "[0, 255], range given is [{0}, {1}]"
+                                 "".format(np.min(scalars), np.max(scalars)))
+        else:
+            raise ValueError("Scalars should either be a number, or set of "
+                             "rgb values, shape is {0}".format(scalars.shape))
+
+    if do_connections:
+        connections = [None] * nlines
+        for i, ni in enumerate(npts):
+            # i0 is the index of the first point of the i'th line in lines
+            i0 = first_idx[i]
+            connections[i] = np.vstack([np.arange(i0, i0 + ni - 1.5),
+                                        np.arange(i0 + 1, i0 + ni - 0.5)]).T
+        connections = np.concatenate(connections, axis=0)
+    else:
+        connections = None
+
+    return lines, scalars, connections
+
+def meshlab_convert(fname, fmt="dae", quiet=True):
+    """Run meshlabserver to convert 3D mesh files
+
+    Uses `MeshLab <http://meshlab.sourceforge.net/>`_, which is a great
+    little program for playing with 3D meshes. The best part is that
+    OS X's Preview can open the COLLADA (*.dae) format. How cool is
+    that?
+
+    Args:
+        fname (str): file to convert
+        fmt (str): extension of result, defaults to COLLADA format
+        quiet (bool): redirect output to :py:attr:`os.devnull`
+
+    Returns:
+        None
+    """
+    iname = fname
+    oname = '.'.join(iname.split('.')[:-1]) + "." + fmt.strip()
+    redirect = "&> {0}".format(os.devnull) if quiet else ""
+    cmd = ("meshlabserver -i {0} -o {1} -om vc vn fc fn {2}"
+           "".format(iname, oname, redirect))
+    sub.Popen(cmd, shell=True, stdout=None, stderr=None)
 
 ##
 ## EOF

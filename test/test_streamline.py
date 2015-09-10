@@ -21,7 +21,7 @@ def run_test(_fld, _seeds, show=False, try_mvi=True, **kwargs):
         from viscid.plot import mvi
         mvi.plot_lines(lines)
         if show:
-            mvi.mlab.show()
+            mvi.show()
     except ImportError:
         mpl.plot_streamlines(lines, show=show)
 

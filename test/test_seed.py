@@ -21,7 +21,7 @@ def run_test(_fld, _seeds, plot_2d=True, plot_3d=True, selection=None,
             from viscid.plot import mvi
             mvi.mlab.points3d(pts[0], pts[1], pts[2], arr, scale_mode='none')
             if show:
-                mvi.mlab.show()
+                mvi.show()
         except ImportError:
             mpl.scatter_3d(pts, arr)
             mpl.plt.gca().set_aspect('equal')
