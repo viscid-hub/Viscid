@@ -776,10 +776,10 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
             reshaped and the like the same way scalars is
 
     Returns:
-        (lines, scalars, connections, dict)
+        (vertices, scalars, connections, dict)
 
-        * lines (ndarray): 3xN array of N xyz points. N is the sum of
-            the lengths of all the lines
+        * vertices (ndarray): 3xN array of N xyz points. N is the sum
+            of the lengths of all the lines
         * scalars (ndarray): N array of scalars, 3xN array of uint8
             rgb values, or None
         * connections (ndarray): 2xN array describing the forward and
@@ -794,19 +794,21 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
     npts = [line.shape[1] for line in lines]
     N = np.sum(npts)
     first_idx = np.cumsum([0] + npts[:-1])
-    lines = [np.asarray(line) for line in lines]
-    lines = np.concatenate(lines, axis=1)
+    vertices = [np.asarray(line) for line in lines]
+    vertices = np.concatenate(lines, axis=1)
 
-    if lines.shape[0] > 3:
+    if vertices.shape[0] > 3:
         if scalars is not None:
             viscid.logger.warn("Overriding line scalars with scalars kwarg")
         else:
-            scalars = lines[3:, :]
-        lines = lines[:3, :]
+            scalars = vertices[3:, :]
+        vertices = vertices[:3, :]
 
     if scalars is not None:
         scalars = np.atleast_2d(scalars)
-        if scalars.shape == (1, nlines) or scalars.shape == (nlines, 1):
+        if scalars.shape == (1, 1):
+            scalars = scalars.repeat(N, axis=1)
+        elif scalars.shape == (1, nlines) or scalars.shape == (nlines, 1):
             # one scalar for each line, so broadcast it
             scalars = scalars.reshape(nlines, 1)
             scalars = [scalars[i].repeat(ni) for i, ni in enumerate(npts)]
@@ -852,19 +854,20 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
                              "rgb values, shape is {0}".format(scalars.shape))
 
     # broadcast / reshape additional arrays given in other
-    for key, arr in other.items():
-        if arr is None:
-            pass
-        elif arr.shape == (1, nlines) or arr.shape == (nlines, 1):
-            arr = arr.reshape(nlines, 1)
-            arr = [arr[i].repeat(ni) for i, ni in enumerate(npts)]
-            other[key] = np.concatenate(arr, axis=0).reshape(1, N)
-        else:
-            try:
-                other[key] = arr.reshape(-1, N)
-            except ValueError:
-                viscid.logger.warn("Unknown dimension, dropping array {0}"
-                                   "".format(key))
+    if other:
+        for key, arr in other.items():
+            if arr is None:
+                pass
+            elif arr.shape == (1, nlines) or arr.shape == (nlines, 1):
+                arr = arr.reshape(nlines, 1)
+                arr = [arr[i].repeat(ni) for i, ni in enumerate(npts)]
+                other[key] = np.concatenate(arr, axis=0).reshape(1, N)
+            else:
+                try:
+                    other[key] = arr.reshape(-1, N)
+                except ValueError:
+                    viscid.logger.warn("Unknown dimension, dropping array {0}"
+                                       "".format(key))
 
     if do_connections:
         connections = [None] * nlines
@@ -877,7 +880,7 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
     else:
         connections = None
 
-    return lines, scalars, connections, other
+    return vertices, scalars, connections, other
 
 def meshlab_convert(fname, fmt="dae", quiet=True):
     """Run meshlabserver to convert 3D mesh files
