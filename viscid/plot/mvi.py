@@ -77,17 +77,17 @@ def lines2source(lines, scalars=None, name="NoName"):
             xyzrgb data for N points along the line. N need not be the
             same for all lines.
         scalars (ndarray, list): Scalars for each point, or each line.
-            See :py:func:`prepare_lines` for more details
+            See :py:func:`viscid.vutil.prepare_lines` for more details
         name (str): name of vtk object
 
     Returns:
         :py:class:`mayavi.sources.vtk_data_source.VTKDataSource`
 
     See Also:
-        * :py:func:`prepare_lines`
+        * :py:func:`viscid.vutil.prepare_lines`
     """
     r = viscid.vutil.prepare_lines(lines, scalars, do_connections=True)
-    lines, scalars, connections = r
+    lines, scalars, connections, other = r
 
     src = mlab.pipeline.scalar_scatter(lines[0], lines[1], lines[2])
     if scalars is not None:
@@ -225,7 +225,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
 
     Example:
         A common use case of setting the line color from a topology
-        will want to use :py:func:`viscid.color_from_topology`::
+        will want to use :py:func:`viscid.topology2color`::
 
             >>> import viscid
             >>> from viscid.plot import mvi

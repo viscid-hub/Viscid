@@ -48,10 +48,6 @@ def topology2color(topology, topo_style="msphere", bad_color=None):
     Returns:
         Nx3 array of rgb data or (R, G, B) tuple if topology is a
         single value
-
-    Note:
-        to override this color scheme, just set
-        `topoloy.color_from_topology = some_function`
     """
     if isinstance(topo_style, dict):
         mapping = topo_style
@@ -72,7 +68,6 @@ def topology2color(topology, topo_style="msphere", bad_color=None):
             except KeyError:
                 ret[i] = bad_color
     except TypeError:
-        raise
         try:
             ret = mapping[int(topology)]
         except KeyError:
