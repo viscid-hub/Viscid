@@ -987,12 +987,35 @@ class Field(tree.Leaf):
                             orig_ind.insert(ellipsis_ind, -1)
 
                     if len(culled_selection) > self.nr_comp:
-                        comp_slc = culled_selection[self.nr_comp]
-                        if orig_ind[self.nr_comp] >= 0:
-                            sel_lst.pop(orig_ind[self.nr_comp])
+                        comp_val = culled_selection[self.nr_comp]
 
-                if comp_slc in self._COMPONENT_NAMES:
-                    comp_slc = self._COMPONENT_NAMES.index(comp_slc)
+                        # comp_slc = comp_val
+                        # if orig_ind[self.nr_comp] >= 0:
+                        #     sel_lst.pop(orig_ind[self.nr_comp])
+
+                        is_valid_comp = False
+                        try:
+                            if comp_val in self._COMPONENT_NAMES:
+                                is_valid_comp = True
+                            else:
+                                raise TypeError
+                        except TypeError:
+                            try:
+                                _ = int(comp_val)
+                                is_valid_comp = True
+                            except ValueError:
+                                pass
+                        if is_valid_comp:
+                            comp_slc = comp_val
+                            if orig_ind[self.nr_comp] >= 0:
+                                sel_lst.pop(orig_ind[self.nr_comp])
+
+                try:
+                    if comp_slc in self._COMPONENT_NAMES:
+                        comp_slc = self._COMPONENT_NAMES.index(comp_slc)
+                except TypeError:
+                    pass
+
                 if _isstr:
                     selection = ",".join(sel_lst)
                 else:
@@ -1087,11 +1110,12 @@ class Field(tree.Leaf):
             # now put component slice back in
             try:
                 nr_comp = self.nr_comp
-                first_slc.insert(self.nr_comp, comp_slc)
-                native_first_slc.insert(self.nr_comp, comp_slc)
+                nr_comp += first_slc[:nr_comp].count(np.newaxis)
+                first_slc.insert(nr_comp, comp_slc)
+                native_first_slc.insert(nr_comp, comp_slc)
                 if not single_comp_slc:
-                    second_slc.insert(self.nr_comp, slice(None))
-                    native_second_slc.insert(self.nr_comp, slice(None))
+                    second_slc.insert(nr_comp, slice(None))
+                    native_second_slc.insert(nr_comp, slice(None))
             except TypeError:
                 nr_comp = None
 
@@ -1137,7 +1161,9 @@ class Field(tree.Leaf):
         # fallback: either not hypersliceable, or the shapes didn't match up
         if slced_dat is None:
             try:
-                slices.insert(self.nr_comp, comp_slc)
+                nr_comp = self.nr_comp
+                nr_comp += slices[:nr_comp].count(np.newaxis)
+                slices.insert(nr_comp, comp_slc)
             except TypeError:
                 pass
             # use xyz slices cause self.data is guarenteed to be xyz
@@ -1222,7 +1248,9 @@ class Field(tree.Leaf):
         selection, comp_slc = self._prepare_slice(selection)
         slices, _ = self._src_crds.make_slice(selection, cc=cc)[:2]
         try:
-            slices.insert(self.nr_comp, comp_slc)
+            nr_comp = self.nr_comp
+            nr_comp += slices[:nr_comp].count(np.newaxis)
+            slices.insert(nr_comp, comp_slc)
         except TypeError:
             pass
         self.data[tuple(slices)] = value

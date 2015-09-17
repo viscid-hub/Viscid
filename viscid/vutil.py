@@ -536,6 +536,14 @@ def extract_index(arr, start=None, stop=None, step=None, endpoint=True,
             sss[i] = s.__index__()
     return sss
 
+def _expand_newaxis(arrs, slices):
+    for i, sl in enumerate(slices):
+        if sl in [None, np.newaxis, "None", "newaxis"]:
+            if len(arrs) < len(slices):
+                arrs.insert(i, None)
+            slices[i] = np.newaxis
+    return arrs, slices
+
 def to_slices(arrs, slices, endpoint=True, tol=100):
     """Wraps :py:func:`to_slice` for multiple arrays / slices
 
@@ -566,7 +574,10 @@ def to_slices(arrs, slices, endpoint=True, tol=100):
         raise TypeError("To wrap a single slice use vutil.to_slice(...)")
 
     if arrs is None:
-        arrs = [None] * len()
+        arrs = [None] * len(slices)
+
+    arrs, slices = _expand_newaxis(arrs, slices)
+
     if len(arrs) != len(slices):
         raise ValueError("len(arrs) must == len(slices):: {0} {1}"
                          "".format(len(arrs), len(slices)))
@@ -602,8 +613,16 @@ def to_slice(arr, s, endpoint=True, tol=100):
     """
     ret = None
 
+    try:
+        # kill whitespace
+        s = "".join(s.split())
+    except AttributeError:
+        pass
+
     if hasattr(s, "__index__"):
         ret = s
+    elif s in [np.newaxis, None, "newaxis", "None"]:
+        ret = np.newaxis
     else:
         if isinstance(s, slice):
             slclst = [s.start, s.stop, s.step]
