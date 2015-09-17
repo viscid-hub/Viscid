@@ -9,7 +9,7 @@ from viscid.calculator import interp_trilin
 from viscid.plot import mpl
 from viscid.vlab import get_dipole
 
-def run_test(_fld, _seeds, plot_2d=True, plot_3d=True, selection=None,
+def run_test(_fld, _seeds, plot_2d=True, plot_3d=True, selection=":",
              show=False):
     arr = interp_trilin(_fld, _seeds)
     ifld = _seeds.wrap_field(arr)

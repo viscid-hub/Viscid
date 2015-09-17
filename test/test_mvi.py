@@ -48,7 +48,7 @@ def main():
     bsl2.start()
     bsl2.seed.widget.enabled = True
 
-    mvi.plot_earth_3d(mlab.pipeline, crd_system="gse")
+    mvi.plot_earth_3d(crd_system="gse")
 
     if args.show:
         mlab.show()
