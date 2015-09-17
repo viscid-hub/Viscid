@@ -26,7 +26,7 @@ from viscid import logger
 from viscid.compat import string_types
 from viscid import field
 from viscid import coordinate
-from viscid.calculator.topology import color_from_topology
+from viscid import topology2color
 from viscid.plot import mpl_extra
 from viscid.plot import vseaborn
 
@@ -912,7 +912,7 @@ def plot_lines(lines, topology=None, ax=None, show=False, equal=False,
         z = line[2]
 
         if topo_color:
-            kwargs["color"] = color_from_topology(topology[i])
+            kwargs["color"] = topology2color(topology[i])
         p = ax.plot(x, y, z, **kwargs)
     if equal:
         ax.axis("equal")
@@ -973,7 +973,7 @@ def plot_lines2d(lines, symdir=None, topology=None, ax=None,
             x, y = y, x
 
         if topo_color:
-            kwargs["color"] = color_from_topology(topology[i])
+            kwargs["color"] = topology2color(topology[i])
         p = ax.plot(x, y, **kwargs)
 
     if show:
