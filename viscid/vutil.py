@@ -805,7 +805,13 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
         vertices = vertices[:3, :]
 
     if scalars is not None:
+        if isinstance(scalars, viscid.field.Field):
+            scalars = viscid.interp_trilin(scalars, vertices)
+            if scalars.size != N:
+                raise ValueError("Scalars was not a scalar field")
+
         scalars = np.atleast_2d(scalars)
+
         if scalars.shape == (1, 1):
             scalars = scalars.repeat(N, axis=1)
         elif scalars.shape == (1, nlines) or scalars.shape == (nlines, 1):
