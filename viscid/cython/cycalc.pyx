@@ -33,7 +33,7 @@ def interp_trilin(vfield, seeds, force_amr_version=False):
         Vector field.
     """
     seeds = to_seeds(seeds)
-    cdef int nr_points = seeds.nr_points(center=vfield.center)
+    cdef int nr_points = seeds.get_nr_points(center=vfield.center)
     cdef int nr_comps = vfield.nr_comps
     if nr_comps == 0:
         scalar = True

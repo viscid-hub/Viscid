@@ -2089,6 +2089,7 @@ static char __pyx_k_MemoryError[] = "MemoryError";
 static char __pyx_k_iter_points[] = "iter_points";
 static char __pyx_k_viscid_seed[] = "viscid.seed";
 static char __pyx_k_RuntimeError[] = "RuntimeError";
+static char __pyx_k_get_nr_points[] = "get_nr_points";
 static char __pyx_k_interp_trilin[] = "interp_trilin";
 static char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
 static char __pyx_k_AttributeError[] = "AttributeError";
@@ -2245,6 +2246,7 @@ static PyObject *__pyx_n_s_force_amr_version;
 static PyObject *__pyx_n_s_format;
 static PyObject *__pyx_n_s_fortran;
 static PyObject *__pyx_n_u_fortran;
+static PyObject *__pyx_n_s_get_nr_points;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_id;
@@ -2557,7 +2559,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
  *         Vector field.
  *     """
  *     seeds = to_seeds(seeds)             # <<<<<<<<<<<<<<
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps
  */
   __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_to_seeds); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -2593,11 +2595,11 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
   /* "viscid/cython/cycalc.pyx":36
  *     """
  *     seeds = to_seeds(seeds)
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)             # <<<<<<<<<<<<<<
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)             # <<<<<<<<<<<<<<
  *     cdef int nr_comps = vfield.nr_comps
  *     if nr_comps == 0:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_seeds, __pyx_n_s_nr_points); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_seeds, __pyx_n_s_get_nr_points); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 36; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
@@ -2615,7 +2617,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
 
   /* "viscid/cython/cycalc.pyx":37
  *     seeds = to_seeds(seeds)
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps             # <<<<<<<<<<<<<<
  *     if nr_comps == 0:
  *         scalar = True
@@ -2627,7 +2629,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
   __pyx_v_nr_comps = __pyx_t_5;
 
   /* "viscid/cython/cycalc.pyx":38
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps
  *     if nr_comps == 0:             # <<<<<<<<<<<<<<
  *         scalar = True
@@ -2655,7 +2657,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_interp_trilin(CYTHON_UNUSED Py
     __pyx_v_nr_comps = 1;
 
     /* "viscid/cython/cycalc.pyx":38
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps
  *     if nr_comps == 0:             # <<<<<<<<<<<<<<
  *         scalar = True
@@ -40021,6 +40023,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_format, __pyx_k_format, sizeof(__pyx_k_format), 0, 0, 1, 1},
   {&__pyx_n_s_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 0, 1, 1},
   {&__pyx_n_u_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 1, 0, 1},
+  {&__pyx_n_s_get_nr_points, __pyx_k_get_nr_points, sizeof(__pyx_k_get_nr_points), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},

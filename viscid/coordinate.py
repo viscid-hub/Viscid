@@ -1039,7 +1039,10 @@ class StructuredCrds(Coordinates):
         """
         return self.get_crds(axes=axes, center="face", shaped=shaped)
 
-    def points(self, center="none"):
+    def points(self, center=None, **kwargs):
+        return self.get_points(center=center, **kwargs)
+
+    def get_points(self, center="none", **kwargs):
         """returns all points in a grid defined by crds as a
         nr_dims x nr_points ndarray
         """
@@ -1054,7 +1057,7 @@ class StructuredCrds(Coordinates):
     def as_surface_mesh(self, center="none"):
         crds = self.get_crds(shaped=False, center=center)
         shape = [len(c) for c in crds]
-        pts = self.points(center=center)
+        pts = self.get_points(center=center)
         while len(shape) > 2:
             try:
                 shape.remove(1)
@@ -1084,7 +1087,11 @@ class StructuredCrds(Coordinates):
         return (self.get_xh(axes, center=center) -
                 self.get_xl(axes, center=center))
 
-    def nr_points(self, center="none"):
+    @property
+    def nr_points(self):
+        return self.get_nr_points()
+
+    def get_nr_points(self, center="none", **kwargs):
         """returns the number of points in a grid defined by these crds"""
         return np.prod([len(crd) for crd in self.get_crds(center=center)])
 
@@ -1257,7 +1264,11 @@ class UniformCrds(StructuredCrds):
         return self._pull_out_axes([self.L_nc, self.L_cc], axes,
                                    center=center)
 
-    def nr_points(self, center="none"):
+    @property
+    def nr_points(self):
+        return self.get_nr_points()
+
+    def get_nr_points(self, center="none", **kwargs):
         """returns the number of points in a grid defined by these crds"""
         center = center.lower()
         if center == 'none' or center == 'node':

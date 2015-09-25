@@ -1264,14 +1264,26 @@ class Field(tree.Leaf):
         return self.center == center_str.lower()
 
     def to_seeds(self):
-        return viscid.to_seeds(self.points())
+        return viscid.to_seeds(self.get_points())
 
-    def points(self, center=None):
+    @property
+    def nr_points(self):
+        return self.get_nr_points()
+
+    def get_nr_points(self, center=None, **kwargs):  # pylint: disable=unused-argument
         if center is None:
             center = self.center
-        return self._src_crds.points(center=center)
+        return self._src_crds.get_nr_points(center=center)
 
-    def as_surface_mesh(self, center=None):
+    def points(self, center=None, **kwargs):
+        return self.get_points(center=center, **kwargs)
+
+    def get_points(self, center=None, **kwargs):  # pylint: disable=unused-argument
+        if center is None:
+            center = self.center
+        return self._src_crds.get_points(center=center)
+
+    def as_surface_mesh(self, center=None, **kwargs):  # pylint: disable=unused-argument
         if center is None:
             center = self.center
         return self._src_crds.as_surface_mesh(center=center)

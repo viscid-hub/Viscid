@@ -185,7 +185,7 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
 
     seed = to_seeds(seed)
 
-    nr_streams = seed.nr_points(center=vfield.center)
+    nr_streams = seed.get_nr_points(center=vfield.center)
 
     if nr_procs == "all" or nr_procs == "auto":
         nr_procs = cpu_count()
