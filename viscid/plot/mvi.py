@@ -69,6 +69,21 @@ def add_field(fld, figure=None, center="", name=""):
     add_source(src, figure=figure)
     return src
 
+def points2source(vertices, scalars=None, name="NoName"):
+    r = viscid.vutil.prepare_vertices(lines, scalars)
+    verts, scalars, other = r
+
+    src = mlab.pipeline.scalar_scatter(verts[0], verts[1], verts[2])
+    if scalars is not None:
+        if scalars.dtype == np.dtype('u1'):
+            sc = tvtk.UnsignedCharArray()
+            sc.from_array(scalars.T)
+            scalars = sc
+        src.mlab_source.dataset.point_data.scalars = scalars
+        src.mlab_source.dataset.modified()
+    src.name = name
+    return src
+
 def lines2source(lines, scalars=None, name="NoName"):
     """Turn a list of lines as ndarrays into vtk data source
 
@@ -213,6 +228,35 @@ def _finalize_source(fld, arr, grid, dat_target):
         dat_target.vectors.name = fld.name
     src = VTKDataSource(data=grid)
     src.name = fld.name
+    return src
+
+def field2sphere(vertices):
+    pass
+
+def plot_mesh(vertices, scalars=None, color=None, name="NoName", **kwargs):
+    # discover the 2d shape of vertices that indicates the connectivity
+    # of vertices
+    connective_shape = list(vertices.shape[1:])
+    r = viscid.vutil.prepare_vertices(vertices.reshape(3, -1), scalars)
+    verts, scalars, other = r  # pylint: disable=unused-variable
+
+    # reshape verts, scalars, and color
+    target_shape = [3] + connective_shape
+    verts = verts.reshape(target_shape)
+
+    if scalars is not None:
+        if color is None and scalars.dtype == np.dtype('u1'):
+            color = scalars.astype('f').reshape(target_shape) / 255.0
+            scalars = None
+        elif scalars.dtype == np.dtype('u1'):
+            # color should have precidence over this since it was explicitly
+            # given
+            pass
+        else:
+            scalars = scalars.reshape(target_shape[1:])
+
+    src = mlab.mesh(verts[0], verts[1], verts[2], scalars=scalars,
+                    color=color, name=name, **kwargs)
     return src
 
 def plot_lines(lines, scalars=None, style="tube", figure=None,

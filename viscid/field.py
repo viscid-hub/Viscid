@@ -1271,6 +1271,11 @@ class Field(tree.Leaf):
             center = self.center
         return self._src_crds.points(center=center)
 
+    def as_surface_mesh(self, center=None):
+        if center is None:
+            center = self.center
+        return self._src_crds.as_surface_mesh(center=center)
+
     def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center is None:
             center = self.center

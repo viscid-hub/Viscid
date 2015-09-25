@@ -1051,6 +1051,18 @@ class StructuredCrds(Coordinates):
                                 np.prod(shape[i + 1:]))
         return arr
 
+    def as_surface_mesh(self, center="none"):
+        crds = self.get_crds(shaped=False, center=center)
+        shape = [len(c) for c in crds]
+        pts = self.points(center=center)
+        while len(shape) > 2:
+            try:
+                shape.remove(1)
+            except ValueError:
+                raise ValueError("Only crds with 2 meaningful dimensions can "
+                                 "create a surface mesh")
+        return pts.reshape([3] + shape)
+
     def get_dx(self, axes=None, center='node'):
         """Get cell widths if center == 'node', or distances between cell
         centers if center == 'cell' """
