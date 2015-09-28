@@ -38,7 +38,7 @@ if mpl_extra.default_cmap:
     plt.rcParams['image.cmap'] = mpl_extra.default_cmap
 
 
-def plot(fld, selection=":", **kwargs):
+def plot(fld, selection=":", force_cartesian=False, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
 
     * If fld has 1 spatial dimensions, call
@@ -50,9 +50,11 @@ def plot(fld, selection=":", **kwargs):
       uses basemap to make its axes.
 
     Parameters:
+        fld (Field): Some Field
         selection (optional): something that describes a field slice
-        kwargs: passed as keyword arguments to the actual plotting
-            function
+        force_cartesian (bool): if false, then spherical plots will use
+            plot_mapfield
+        **kwargs: Passed on to plotting function
 
     Returns:
         tuple: (plot, colorbar)
@@ -67,6 +69,10 @@ def plot(fld, selection=":", **kwargs):
     Note:
         Field slices are done using "slice_reduce", meaning extra
         dimensions are reduced out.
+
+    Raises:
+        TypeError: Description
+        ValueError: Description
     """
     fld = fld.slice_reduce(selection)
 
@@ -82,9 +88,10 @@ def plot(fld, selection=":", **kwargs):
         return plot1d_field(fld, **kwargs)
     elif nr_sdims == 2:
         is_spherical = patch0.is_spherical()
-        if is_spherical:
+        if is_spherical and not force_cartesian:
             return plot2d_mapfield(fld, **kwargs)
-        return plot2d_field(fld, **kwargs)
+        else:
+            return plot2d_field(fld, **kwargs)
     else:
         raise ValueError("mpl can only do 1-D or 2-D fields. Either slice the "
                          "field yourself, or use the selection keyword "
