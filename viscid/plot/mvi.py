@@ -319,8 +319,58 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     surface = mlab.pipeline.surface(lines, **kwargs)
     return surface
 
-def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
-                  crd_system="mhd"):
+def plot_ionosphere(fld, radius=1.063, crd_system="mhd", opacity=1.0,
+                    figure=None, **kwargs):
+    """Plot an ionospheric field
+
+    Args:
+        fld (Field): Some spherical (phi, theta) / (lot, lat) field
+        radius (float): Defaults to 1Re + 400km == 1.063Re
+        crd_system (str): Either 'gse' or 'mhd'
+        opacity (float): If < 1, then automatically plot call
+            plot_earth_3d to put a sunlit globe underneath
+        figure (mayavi.core.scene.Scene): specific figure, or
+            :py:func:`mayavi.mlab.gcf`
+        **kwargs: passed to :py:func:`mayavi.mlab.mesh`
+
+    Raises:
+        ValueError: Description
+    """
+    if figure is None:
+        figure = mlab.gcf()
+
+    if crd_system == "mhd":
+        roll = 0.0
+    elif crd_system == "gse":
+        roll = 180.0
+    else:
+        raise ValueError("crd_system == '{0}' not understood"
+                         "".format(crd_system))
+
+    nphi, ntheta = fld.shape
+    sphere = viscid.Sphere([0, 0, 0], r=radius, ntheta=ntheta, nphi=nphi,
+                           theta_phi=False, roll=roll)
+    verts, arr = sphere.wrap_mesh(fld.data)
+
+    m = mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, opacity=opacity,
+                  figure=figure, **kwargs)
+
+    m.parent.parent.filter.auto_orient_normals = True
+    # m.parent.parent.filter.flip_normals = True
+    m.actor.mapper.interpolate_scalars_before_mapping = True
+    m.actor.property.backface_culling = True
+
+    m.module_manager.scalar_lut_manager.lut_mode = 'RdBu'
+    m.module_manager.scalar_lut_manager.reverse_lut = True
+
+    if opacity < 1.0:
+        plot_earth_3d(figure=figure, radius=(0.94 * radius),
+                      crd_system=crd_system)
+
+    return m
+
+def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
+                  radius=1.0, res=15, crd_system="mhd"):
     """Plot a black and white sphere (Earth) showing sunward direction
 
     Parameters:
@@ -345,15 +395,15 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0), res=15,
         theta_dusk, theta_dawn = 90, 270
 
     night = BuiltinSurface(source='sphere', name='night')
-    night.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=theta_dusk,
-                          end_theta=theta_dawn, theta_resolution=res,
-                          phi_resolution=res)
+    night.data_source.set(center=(0, 0, 0), radius=radius,
+                          start_theta=theta_dusk, end_theta=theta_dawn,
+                          theta_resolution=res, phi_resolution=res)
     mlab.pipeline.surface(night, color=nightcol, figure=figure)
 
     day = BuiltinSurface(source='sphere', name='day')
-    day.data_source.set(center=(0, 0, 0), radius=1.0, start_theta=theta_dawn,
-                        end_theta=theta_dusk, theta_resolution=res,
-                        phi_resolution=res)
+    day.data_source.set(center=(0, 0, 0), radius=radius,
+                        start_theta=theta_dawn, end_theta=theta_dusk,
+                        theta_resolution=res, phi_resolution=res)
     mlab.pipeline.surface(day, color=daycol, figure=figure)
 
     return day, night
