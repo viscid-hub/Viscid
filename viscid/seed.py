@@ -597,7 +597,7 @@ class Sphere(SeedGen):
     """Make seeds on the surface of a sphere"""
 
     def __init__(self, p0, r=0.0, pole=None, ntheta=20, nphi=20,
-                 pole_is_vector=True, theta_phi=False, cache=False,
+                 pole_is_vector=True, theta_phi=False, roll=0.0, cache=False,
                  dtype=None):
         """Make seeds on the surface of a sphere
 
@@ -638,6 +638,7 @@ class Sphere(SeedGen):
         self.ntheta = ntheta
         self.nphi = nphi
         self.theta_phi = theta_phi
+        self.roll = roll
 
     def get_nr_points(self, **kwargs):
         return self.ntheta * self.nphi
@@ -683,7 +684,8 @@ class Sphere(SeedGen):
         return theta, phi
 
     def get_rotation(self):
-        return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.pole)
+        return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.pole,
+                                    roll=self.roll)
 
     def as_coordinates(self):
         theta, phi = self._make_local_axes()
@@ -748,7 +750,7 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
     cone, and the half angle of the cone.
     """
     def __init__(self, p0, r=0.0, pole=None, angle=90.0, ntheta=20, nphi=20,
-                 pole_is_vector=True, theta_phi=False, cache=False,
+                 pole_is_vector=True, theta_phi=False, roll=0.0, cache=False,
                  dtype=None):
         """Summary
 
@@ -769,8 +771,8 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
         super(SphericalCap, self).__init__(p0, r=r, pole=pole, ntheta=ntheta,
                                            nphi=nphi,
                                            pole_is_vector=pole_is_vector,
-                                           theta_phi=theta_phi, cache=cache,
-                                           dtype=dtype)
+                                           theta_phi=theta_phi, roll=roll,
+                                           cache=cache, dtype=dtype)
         self.angle = angle * (np.pi / 180.0)
 
     def to_local(self, pts_3d):
@@ -810,7 +812,7 @@ class Circle(SphericalCap):
 
     Defined by a center and a point normal to the plane of the circle
     """
-    def __init__(self, p0, pole, n=20, r=None, pole_is_vector=True,
+    def __init__(self, p0, pole, n=20, r=None, pole_is_vector=True, roll=0.0,
                  cache=False, dtype=None):
         """Summary
 
@@ -825,7 +827,7 @@ class Circle(SphericalCap):
                 vector
         """
         super(Circle, self).__init__(p0, r=r, pole=pole, angle=90.0, nphi=n,
-                                     pole_is_vector=pole_is_vector,
+                                     pole_is_vector=pole_is_vector, roll=roll,
                                      cache=cache, dtype=dtype)
 
     def to_local(self, pts_3d):
