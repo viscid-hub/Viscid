@@ -117,7 +117,7 @@ class SeedGen(object):
             - :py:meth:`get_rotation`: This should return an
               orthonormal rotation matrix if there is some rotation
               required to go from local coordinates to 3D space.
-            - :py:meth:`as_surface_mesh`
+            - :py:meth:`as_mesh`
             - :py:meth:`as_coordinates`
             - :py:meth:`wrap_field`
 
@@ -145,7 +145,7 @@ class SeedGen(object):
 
             - :py:attr:`local_shape`
             - :py:meth:`to_local`
-            - :py:meth:`as_surface_mesh`
+            - :py:meth:`as_mesh`
             - :py:meth:`as_coordinates`
             - :py:meth:`wrap_field`
     """
@@ -240,11 +240,6 @@ class SeedGen(object):
         raise RuntimeError("{0} does not define get_rotation"
                            "".format(type(self).__name__))
 
-    def as_surface_mesh(self):
-        """Make a 3xUxV array that describes a 3D mesh surface"""
-        raise RuntimeError("{0} does not define as_surface_mesh"
-                           "".format(type(self).__name__))
-
     def as_coordinates(self):
         """Make :py:class:`Coordinates` for the local representation"""
         raise RuntimeError("{0} does not define as_coordinates"
@@ -255,6 +250,15 @@ class SeedGen(object):
         crds = self.as_coordinates()
         return viscid.wrap_field(data, crds, name=name, fldtype=fldtype,
                                  **kwargs)
+
+    def as_mesh(self):
+        """Make a 3xUxV array that describes a 3D mesh surface"""
+        raise RuntimeError("{0} does not define as_mesh"
+                           "".format(type(self).__name__))
+
+    def wrap_mesh(self, arr):
+        raise RuntimeError("{0} does not define wrap_mesh"
+                           "".format(type(self).__name__))
 
 
 class Point(SeedGen):
@@ -342,15 +346,15 @@ class Line(SeedGen):
     def _make_local_axes(self):
         return np.linspace(0.0, 1.0, self.n)
 
-    def as_surface_mesh(self):
-        return self.get_points().reshape(3, self.n, 1)
-
     def as_coordinates(self):
         dp = self.p1 - self.p0
         dist = np.sqrt(np.dot(dp, dp))
         x = np.linspace(0.0, dist, self.n)
         crd = viscid.wrap_crds("nonuniform_cartesian", (('x', x),))
         return crd
+
+    def as_mesh(self):
+        return self.get_points().reshape(3, self.n, 1)
 
 
 class Plane(SeedGen):
@@ -500,13 +504,17 @@ class Plane(SeedGen):
         """
         return np.array([self.Ldir, self.Mdir, self.Ndir]).T
 
-    def as_surface_mesh(self):
-        return self.get_points().reshape(3, self.res_l, self.res_m)
-
     def as_coordinates(self):
         l, m = self._make_local_axes()
         crds = viscid.wrap_crds("nonuniform_cartesian", (('x', l), ('y', m)))
         return crds
+
+    def as_mesh(self):
+        return self.get_points().reshape(3, self.nl, self.nm)
+
+    def wrap_mesh(self, arr):
+        vertices = self.as_mesh()
+        return vertices, arr.reshape(vertices.shape[1:])
 
 
 class Volume(SeedGen):
@@ -564,7 +572,13 @@ class Volume(SeedGen):
         x, y, z = self._make_local_axes()
         return itertools.product(x, y, z)
 
-    def as_surface_mesh(self):
+    def as_coordinates(self):
+        x, y, z = self._make_local_axes()
+        crd = viscid.wrap_crds("nonuniform_cartesian",
+                               (('x', x), ('y', y), ('z', z)))
+        return crd
+
+    def as_mesh(self):
         n = self.n.tolist()
         try:
             ind = n.index(1)
@@ -572,13 +586,11 @@ class Volume(SeedGen):
             n.pop(ind)
             return pts.reshape([3] + n)
         except ValueError:
-            raise ValueError("Can't make a 2d surface from a 3d volume")
+            raise RuntimeError("Can't make a 2d surface from a 3d volume")
 
-    def as_coordinates(self):
-        x, y, z = self._make_local_axes()
-        crd = viscid.wrap_crds("nonuniform_cartesian",
-                               (('x', x), ('y', y), ('z', z)))
-        return crd
+    def wrap_mesh(self, arr):
+        vertices = self.as_mesh()
+        return vertices, arr.reshape(vertices.shape[1:])
 
 
 class Sphere(SeedGen):
@@ -620,6 +632,7 @@ class Sphere(SeedGen):
 
         if not r:
             r = np.linalg.norm(self.pole)
+        self.pole = self.pole / np.linalg.norm(self.pole)
 
         self.r = r
         self.ntheta = ntheta
@@ -672,9 +685,6 @@ class Sphere(SeedGen):
     def get_rotation(self):
         return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.pole)
 
-    def as_surface_mesh(self):
-        return self.get_points().reshape(3, self.ntheta, self.nphi)
-
     def as_coordinates(self):
         theta, phi = self._make_local_axes()
         if self.theta_phi:
@@ -684,6 +694,51 @@ class Sphere(SeedGen):
             crds = viscid.wrap_crds("nonuniform_cartesian",
                                     (('x', phi), ('y', theta)))
         return crds
+
+    def as_mesh(self):
+        new_shape = [3] + list(self.local_shape)
+        pts = self.get_points().reshape(new_shape)
+
+        if self.theta_phi:
+            pole0 = np.empty((3, 1, self.nphi), dtype=pts.dtype)
+            pole1 = np.empty((3, 1, self.nphi), dtype=pts.dtype)
+        else:
+            pole0 = np.empty((3, self.nphi, 1), dtype=pts.dtype)
+            pole1 = np.empty((3, self.nphi, 1), dtype=pts.dtype)
+
+        pole0[...] = (self.p0 + (self.r * self.pole)).reshape(3, 1, 1)
+        pole1[...] = (self.p0 - (self.r * self.pole)).reshape(3, 1, 1)
+
+        if self.theta_phi:
+            pts = np.concatenate([pole0, pts, pole1], axis=1)
+            pts = np.concatenate([pts, pts[:, :, 0, None]], axis=2)
+        else:
+            pts = np.concatenate([pole0, pts, pole1], axis=2)
+            pts = np.concatenate([pts, pts[:, 0, None, :]], axis=1)
+
+        return pts
+
+    def wrap_mesh(self, arr):
+        vertices = self.as_mesh()
+
+        arr = arr.reshape(self.local_shape)
+
+        if self.theta_phi:
+            p0 = np.repeat(np.mean(arr[0, :, None], keepdims=1),
+                           arr.shape[1], axis=1)
+            p1 = np.repeat(np.mean(arr[-1, :, None], keepdims=1),
+                           arr.shape[1], axis=1)
+            arr = np.concatenate([p0, arr, p1], axis=0)
+            arr = np.concatenate([arr, arr[:, 0, None]], axis=1)
+        else:
+            p0 = np.repeat(np.mean(arr[:, 0, None], keepdims=1),
+                           arr.shape[0], axis=0)
+            p1 = np.repeat(np.mean(arr[:, -1, None], keepdims=1),
+                           arr.shape[0], axis=0)
+            arr = np.concatenate([p0, arr, p1], axis=1)
+            arr = np.concatenate([arr, arr[0, None, :]], axis=0)
+
+        return vertices, arr
 
 
 class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
@@ -728,6 +783,27 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
                           endpoint=False).astype(self.dtype)
         return theta, phi
 
+    def as_mesh(self):
+        pts = super(SphericalCap, self).as_mesh()
+
+        # don't include anti-pole direction since this is a cap
+        if self.theta_phi:
+            pts = pts[:, :-1, :]
+        else:
+            pts = pts[:, :, :-1]
+
+        return pts
+
+    def wrap_mesh(self, arr):
+        vertices, arr = super(SphericalCap, self).wrap_mesh(arr)
+
+        # don't include anti-pole direction since this is a cap
+        if self.theta_phi:
+            arr = arr[:-1, :]
+        else:
+            arr = arr[:, :-1]
+
+        return vertices, arr
 
 class Circle(SphericalCap):
     """A circle of seeds
@@ -770,14 +846,14 @@ class SphericalPatch(SeedGen):
         p1 = np.array(p1, copy=False, dtype=dtype).reshape(-1)
 
         if not p1_is_vector:
-            p1 = p0 - p1
+            p1 = p1 - p0
 
         if not r:
             r = np.linalg.norm(p1)
         else:
             p1 = p0 + r * p1 / np.linalg.norm(p1)
 
-        if np.sin(max_alpha)**2 + np.sin(max_beta)**2 >= r**2:
+        if np.sin(max_alpha)**2 + np.sin(max_beta)**2 > 1:
             raise ValueError("Invalid alpha/beta ranges, if you want "
                              "something with more angular coverage you'll "
                              "need a SphericalCap")
@@ -799,8 +875,8 @@ class SphericalPatch(SeedGen):
 
     def to_3d(self, pts_local):
         arr = np.zeros((3, self.nr_points), dtype=self.dtype)
-        arr[0, :] = np.sin(pts_local[0, :])
-        arr[1, :] = np.sin(pts_local[1, :])
+        arr[0, :] = self.r * np.sin(pts_local[0, :])
+        arr[1, :] = self.r * np.sin(pts_local[1, :])
         arr[2, :] = np.sqrt(self.r**2 - arr[0, :]**2 - arr[1, :]**2)
         return self.p0.reshape((3, 1)) + np.dot(self.get_rotation(), arr)
 
@@ -830,6 +906,13 @@ class SphericalPatch(SeedGen):
         crds = viscid.wrap_crds("nonuniform_cartesian",
                                 (('x', alpha), ('y', beta)))
         return crds
+
+    def as_mesh(self):
+        return self.get_points().reshape(3, self.nalpha, self.nbeta)
+
+    def wrap_mesh(self, arr):
+        vertices = self.as_mesh()
+        return vertices, arr.reshape(vertices.shape[1:])
 
 
 class PolarIonosphere(Sphere):

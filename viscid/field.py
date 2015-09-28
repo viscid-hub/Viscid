@@ -1283,10 +1283,10 @@ class Field(tree.Leaf):
             center = self.center
         return self._src_crds.get_points(center=center)
 
-    def as_surface_mesh(self, center=None, **kwargs):  # pylint: disable=unused-argument
+    def as_mesh(self, center=None, **kwargs):  # pylint: disable=unused-argument
         if center is None:
             center = self.center
-        return self._src_crds.as_surface_mesh(center=center)
+        return self._src_crds.as_mesh(center=center)
 
     def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center is None:

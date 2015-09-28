@@ -1054,7 +1054,7 @@ class StructuredCrds(Coordinates):
                                 np.prod(shape[i + 1:]))
         return arr
 
-    def as_surface_mesh(self, center="none"):
+    def as_mesh(self, center="none"):
         crds = self.get_crds(shaped=False, center=center)
         shape = [len(c) for c in crds]
         pts = self.get_points(center=center)
