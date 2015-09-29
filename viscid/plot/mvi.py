@@ -5,14 +5,14 @@ Note:
 """
 from __future__ import print_function
 import code
+import os
 
 import numpy as np
 import mayavi
 from mayavi import mlab
-from mayavi.sources.vtk_data_source import VTKDataSource
 from mayavi.sources.builtin_surface import BuiltinSurface
+from mayavi.sources.vtk_data_source import VTKDataSource
 from tvtk.api import tvtk
-
 import viscid
 from viscid import field
 
@@ -70,7 +70,7 @@ def add_field(fld, figure=None, center="", name=""):
     return src
 
 def points2source(vertices, scalars=None, name="NoName"):
-    r = viscid.vutil.prepare_vertices(lines, scalars)
+    r = viscid.vutil.prepare_vertices(vertices, scalars)
     verts, scalars, other = r
 
     src = mlab.pipeline.scalar_scatter(verts[0], verts[1], verts[2])
@@ -230,9 +230,6 @@ def _finalize_source(fld, arr, grid, dat_target):
     src.name = fld.name
     return src
 
-def field2sphere(vertices):
-    pass
-
 def plot_mesh(vertices, scalars=None, color=None, name="NoName", **kwargs):
     # discover the 2d shape of vertices that indicates the connectivity
     # of vertices
@@ -319,18 +316,17 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     surface = mlab.pipeline.surface(lines, **kwargs)
     return surface
 
-def plot_ionosphere(fld, radius=1.063, crd_system="mhd", opacity=1.0,
-                    figure=None, **kwargs):
+def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
+                    bounding_lat=0.0, **kwargs):
     """Plot an ionospheric field
 
     Args:
         fld (Field): Some spherical (phi, theta) / (lot, lat) field
         radius (float): Defaults to 1Re + 400km == 1.063Re
         crd_system (str): Either 'gse' or 'mhd'
-        opacity (float): If < 1, then automatically plot call
-            plot_earth_3d to put a sunlit globe underneath
         figure (mayavi.core.scene.Scene): specific figure, or
             :py:func:`mayavi.mlab.gcf`
+        bounding_lat (float): Description
         **kwargs: passed to :py:func:`mayavi.mlab.mesh`
 
     Raises:
@@ -352,25 +348,73 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", opacity=1.0,
                            theta_phi=False, roll=roll)
     verts, arr = sphere.wrap_mesh(fld.data)
 
-    m = mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, opacity=opacity,
-                  figure=figure, **kwargs)
+    if 'name' not in kwargs:
+        kwargs['name'] = fld.name
+    m = mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, figure=figure,
+                  **kwargs)
 
-    m.parent.parent.filter.auto_orient_normals = True
-    # m.parent.parent.filter.flip_normals = True
+    if bounding_lat:
+        rp = 1.5 * radius
+        z = radius * np.cos((np.pi / 180.0) * bounding_lat)
+        clip = mlab.pipeline.data_set_clipper(m.module_manager.parent)
+        clip.widget.widget.place_widget(-rp, rp, -rp, rp, -z, z)
+        clip.widget.update_implicit_function()
+        clip.widget.widget.enabled = False
+        insert_filter(clip, m.module_manager)
+        m.module_manager.parent.parent.filter.auto_orient_normals = True
+    else:
+        m.module_manager.parent.filter.auto_orient_normals = True
     m.actor.mapper.interpolate_scalars_before_mapping = True
-    m.actor.property.backface_culling = True
 
     m.module_manager.scalar_lut_manager.lut_mode = 'RdBu'
     m.module_manager.scalar_lut_manager.reverse_lut = True
 
-    if opacity < 1.0:
-        plot_earth_3d(figure=figure, radius=(0.94 * radius),
-                      crd_system=crd_system)
-
     return m
 
+def insert_filter(filtr, module_manager):
+    """Insert a filter above an existing module_manager
+
+    Args:
+        filter (TYPE): Description
+        module_manager (TYPE): Description
+    """
+    filtr.parent.children.remove(module_manager)
+    filtr.children.append(module_manager)
+
+def plot_blue_marble(r=1.0, orientation=None, figure=None):
+    # make a plane, then deform it into a sphere
+    eps = 1e-4
+    ps = tvtk.PlaneSource(origin=(r, np.pi - eps, 0.0),
+                          point1=(r, np.pi - eps, 2 * np.pi),
+                          point2=(r, eps, 0.0),
+                          x_resolution=32,
+                          y_resolution=16)
+    ps.update()
+    transform = tvtk.SphericalTransform()
+    tpoly = tvtk.TransformPolyDataFilter(transform=transform, input=ps.output)
+    src = VTKDataSource(data=tpoly.output, name="blue_marble")
+    surf = mlab.pipeline.surface(src)
+
+    # now load a jpg, and use it to texture the sphere
+    fname = os.path.realpath(os.path.dirname(__file__) + '/blue_marble.jpg')
+    img = tvtk.JPEGReader(file_name=fname)
+    texture = tvtk.Texture(interpolate=1)
+    texture.input = img.output
+    surf.actor.enable_texture = True
+    surf.actor.texture = texture
+
+    if orientation:
+        surf.actor.actor.orientation = orientation
+    else:
+        surf.actor.actor.orientation = (0, 0, -45.0)
+
+    add_source(src, figure=figure)
+
+    return src
+
 def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
-                  radius=1.0, res=15, crd_system="mhd"):
+                  radius=1.0, res=24, crd_system="mhd", night_only=False,
+                  **kwargs):
     """Plot a black and white sphere (Earth) showing sunward direction
 
     Parameters:
@@ -398,13 +442,18 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
     night.data_source.set(center=(0, 0, 0), radius=radius,
                           start_theta=theta_dusk, end_theta=theta_dawn,
                           theta_resolution=res, phi_resolution=res)
-    mlab.pipeline.surface(night, color=nightcol, figure=figure)
+    mod = mlab.pipeline.surface(night, color=nightcol, figure=figure, **kwargs)
+    mod.actor.property.backface_culling = True
 
-    day = BuiltinSurface(source='sphere', name='day')
-    day.data_source.set(center=(0, 0, 0), radius=radius,
-                        start_theta=theta_dawn, end_theta=theta_dusk,
-                        theta_resolution=res, phi_resolution=res)
-    mlab.pipeline.surface(day, color=daycol, figure=figure)
+    if not night_only:
+        day = BuiltinSurface(source='sphere', name='day')
+        day.data_source.set(center=(0, 0, 0), radius=radius,
+                            start_theta=theta_dawn, end_theta=theta_dusk,
+                            theta_resolution=res, phi_resolution=res)
+        mod = mlab.pipeline.surface(day, color=daycol, figure=figure, **kwargs)
+        mod.actor.property.backface_culling = True
+    else:
+        day = None
 
     return day, night
 
@@ -520,7 +569,7 @@ def resize(size, figure=None):
                 viscid.logger.warn("Unknown mayavi backend {0} (not qt4 or "
                                    "wx); not resizing.".format(toolkit))
 
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
 
 

@@ -256,9 +256,14 @@ class SeedGen(object):
         raise RuntimeError("{0} does not define as_mesh"
                            "".format(type(self).__name__))
 
-    def wrap_mesh(self, arr):
-        raise RuntimeError("{0} does not define wrap_mesh"
+    def arr2mesh(self, arr):  # pylint: disable=unused-argument
+        raise RuntimeError("{0} does not define arr2mesh"
                            "".format(type(self).__name__))
+
+    def wrap_mesh(self, *arrs):
+        vertices = self.as_mesh()
+        arrs = [self.arr2mesh(arr).astype(arr.dtype) for arr in arrs]
+        return [vertices] + arrs
 
 
 class Point(SeedGen):
@@ -512,7 +517,7 @@ class Plane(SeedGen):
     def as_mesh(self):
         return self.get_points().reshape(3, self.nl, self.nm)
 
-    def wrap_mesh(self, arr):
+    def arr2mesh(self, arr):
         vertices = self.as_mesh()
         return vertices, arr.reshape(vertices.shape[1:])
 
@@ -588,9 +593,8 @@ class Volume(SeedGen):
         except ValueError:
             raise RuntimeError("Can't make a 2d surface from a 3d volume")
 
-    def wrap_mesh(self, arr):
-        vertices = self.as_mesh()
-        return vertices, arr.reshape(vertices.shape[1:])
+    def arr2mesh(self, arr):
+        return arr.reshape(vertices.shape[1:])
 
 
 class Sphere(SeedGen):
@@ -720,9 +724,7 @@ class Sphere(SeedGen):
 
         return pts
 
-    def wrap_mesh(self, arr):
-        vertices = self.as_mesh()
-
+    def arr2mesh(self, arr):
         arr = arr.reshape(self.local_shape)
 
         if self.theta_phi:
@@ -740,7 +742,7 @@ class Sphere(SeedGen):
             arr = np.concatenate([p0, arr, p1], axis=1)
             arr = np.concatenate([arr, arr[0, None, :]], axis=0)
 
-        return vertices, arr
+        return arr
 
 
 class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
@@ -796,8 +798,8 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
 
         return pts
 
-    def wrap_mesh(self, arr):
-        vertices, arr = super(SphericalCap, self).wrap_mesh(arr)
+    def arr2mesh(self, arr):
+        arr = super(SphericalCap, self).arr2mesh(arr)
 
         # don't include anti-pole direction since this is a cap
         if self.theta_phi:
@@ -805,7 +807,7 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
         else:
             arr = arr[:, :-1]
 
-        return vertices, arr
+        return arr
 
 class Circle(SphericalCap):
     """A circle of seeds
@@ -912,9 +914,8 @@ class SphericalPatch(SeedGen):
     def as_mesh(self):
         return self.get_points().reshape(3, self.nalpha, self.nbeta)
 
-    def wrap_mesh(self, arr):
-        vertices = self.as_mesh()
-        return vertices, arr.reshape(vertices.shape[1:])
+    def arr2mesh(self, arr):
+        return arr.reshape(self.local_shape)
 
 
 class PolarIonosphere(Sphere):

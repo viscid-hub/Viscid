@@ -44,6 +44,7 @@ Contents
   philosophy
   custom_behavior
   plot_options
+  mayavi_plotting
   command_line
   extending_readers
 

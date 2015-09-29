@@ -282,6 +282,7 @@ setup(name='viscid',
       include_dirs=[np.get_include()],
       ext_modules=ext_mods,
       scripts=scripts,
+      data_files=[('viscid/plot', ['viscid/plot/blue_marble.jpg'])]
      )
 
 ##

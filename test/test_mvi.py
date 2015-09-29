@@ -22,7 +22,8 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.xdmf')
+    f3d = viscid.load_file(_viscid_root + '/../sample/sample.3df.[0].xdmf')
+    f_iono = viscid.load_file(_viscid_root + "/../sample/*.iof.[0].xdmf")
 
     b = f3d["b"]
     pp = f3d["pp"]
@@ -32,6 +33,8 @@ def main():
     scp = mlab.pipeline.scalar_cut_plane(pp_src, plane_orientation='z_axes',
                                          transparent=True, opacity=0.5,
                                          view_controls=False)
+    scp.implicit_plane.normal = [0, 0, -1]
+    scp.implicit_plane.origin = [0, 0, 0]
     # i don't know why this log10 doesn't seem to work
     scp.module_manager.scalar_lut_manager.lut.scale = 'log10'
     scp.module_manager.scalar_lut_manager.lut_mode = 'Reds'
@@ -61,25 +64,39 @@ def main():
     bsl2.seed.widget.enabled = True
 
     # Plot the ionosphere too
-    f_iono = viscid.load_file(_viscid_root + "/../sample/*.iof.[0].xdmf")
     fac_tot = 1e9 * f_iono['fac_tot']
 
     crd_system = 'gse'
-    m = mvi.plot_ionosphere(fac_tot, crd_system=crd_system,
+    m = mvi.plot_ionosphere(fac_tot, crd_system=crd_system, bounding_lat=30.0,
                             vmin=-300, vmax=300, opacity=0.75)
     m.module_manager.scalar_lut_manager.lut_mode = 'RdBu'
     m.module_manager.scalar_lut_manager.reverse_lut = True
 
-    # plot_earth_3d is handled by plot_ionosphere since opacity < 1.0
-    # mvi.plot_earth_3d(crd_system="gse")
+    mvi.plot_blue_marble(r=1.0, orientation=(0, 21.5, -45.0))
+    # now shade the night side with a transparent black hemisphere
+    mvi.plot_earth_3d(radius=1.01, crd_system="gse", night_only=True,
+                      opacity=0.5)
 
     mlab.axes(pp_src, nb_labels=5)
     mlab.orientation_axes()
 
-    mvi.resize([600, 400])
-    mlab.view(azimuth=40, elevation=70, distance=40.0, focalpoint=[-3, 0, 0])
+    mvi.resize([1200, 800])
+    mlab.view(azimuth=40, elevation=70, distance=35.0, focalpoint=[-3, 0, 0])
 
-    if args.show or 1:
+    # # Save Figure
+    # print("saving png")
+    # mvi.mlab.savefig('mayavi_msphere_sample.png')
+    # print("saving x3d")
+    # # x3d files can be turned into COLLADA files with meshlab, and
+    # # COLLADA (.dae) files can be opened in OS X's preview
+    # #
+    # # IMPORTANT: for some reason, using bounding_lat in mvi.plot_ionosphere
+    # #            causes a segfault when saving x3d files
+    # #
+    # mvi.mlab.savefig('mayavi_msphere_sample.x3d')
+    # print("done")
+
+    if args.show:
         mlab.show()
 
 if __name__ == "__main__":
