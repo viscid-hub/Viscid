@@ -28,6 +28,7 @@ except ImportError as e:
 
 __all__ = ['add', 'diff', 'mul', 'relative_diff', 'abs_diff', 'abs_val',
            'abs_max', 'abs_min', 'magnitude', 'dot', 'cross', 'div', 'curl',
+           'project',
            'jacobian_at_point', 'jacobian_at_ind', 'jacobian_eig_at_point',
            'jacobian_eig_at_ind', 'div_at_point', 'curl_at_point']
 
@@ -106,6 +107,7 @@ abs_min = Operation("abs min", "absmin")
 magnitude = UnaryOperation("magnitude", "magnitude")
 dot = BinaryOperation("dot", "dot")
 cross = BinaryOperation("cross", "x")
+project = BinaryOperation("project", "dot mag")
 div = UnaryOperation("div", "div")
 curl = UnaryOperation("curl", "curl")
 
@@ -121,6 +123,7 @@ if has_numexpr:
     magnitude.add_implementation("numexpr", necalc.magnitude)
     dot.add_implementation("numexpr", necalc.dot)
     cross.add_implementation("numexpr", necalc.cross)
+    project.add_implementation("numexpr", necalc.project)
     div.add_implementation("numexpr", necalc.div)
     curl.add_implementation("numexpr", necalc.curl)
 
@@ -144,6 +147,12 @@ def _magnitude_np(fld):
     vx, vy, vz = fld.component_views()
     return np.sqrt((vx**2) + (vy**2) + (vz**2))
 magnitude.add_implementation("numpy", _magnitude_np)
+
+def _project_np(a, b):
+    """ project a along b (a dot b / |b|) """
+    return (np.sum(a * b, axis=b.nr_comp) /
+            np.sqrt(np.sum(b * b, axis=b.nr_comp)))
+project.add_implementation("numpy", _project_np)
 
 # native versions
 def _magnitude_native(fld):

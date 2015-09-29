@@ -86,6 +86,21 @@ def cross(fld_a, fld_b):
     prodz = ne.evaluate("ax * by - ay * bx")
     return fld_a.wrap([prodx, prody, prodz])
 
+def project(fld_a, fld_b):
+    """ project a along b (a dot b / |b|) """
+    # ax, ay, az = fld_a.component_views() #pylint: disable=W0612
+    # bx, by, bz = fld_b.component_views() #pylint: disable=W0612
+    # prod = ne.evaluate("(ax * bx) + (ay * by) + (az * bz)")
+    # mag = ne.evaluate("sqrt(bx**2 + by**2 + bz**2)")
+    # prod = prod / mag
+    # return fld_a.wrap(prod, fldtype="Scalar")
+
+    ax, ay, az = fld_a.component_views() #pylint: disable=W0612
+    bx, by, bz = fld_b.component_views() #pylint: disable=W0612
+    projection = ne.evaluate("((ax * bx) + (ay * by) + (az * bz)) / "
+                             "sqrt((bx**2) + (by**2) + (bz**2))")
+    return fld_a.wrap(projection, fldtype="Scalar")
+
 def div(fld):
     """ first order """
     vx, vy, vz = fld.component_views()
