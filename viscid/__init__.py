@@ -106,6 +106,10 @@ __all__ += seed.__all__
 from viscid.calculator.topology import topology2color
 __all__ += ["topology2color"]
 
+from viscid.calculator.plasma import *
+from viscid.calculator import plasma
+__all__ += plasma.__all__
+
 from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator import calc
 __all__ += calc.__all__

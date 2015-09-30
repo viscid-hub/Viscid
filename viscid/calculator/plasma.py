@@ -13,6 +13,8 @@ except ImportError:
 from viscid import field
 # from viscid.calculator import calc
 
+__all__ = ["calc_psi", "calc_beta"]
+
 
 def calc_psi(B, reversed=False):
     """Calc Flux function (only valid in 2d)
