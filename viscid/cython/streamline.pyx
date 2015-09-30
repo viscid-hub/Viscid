@@ -396,10 +396,10 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
-            viscid.logger.info("Streamline {0} of {1}: {2}% done, {3:.03e}"
-                               "".format(i_stream, nr_streams,
-                                         int(100.0 * i_stream / nr_streams),
-                                         t1 - t0))
+            viscid.logger.debug("Streamline {0} of {1}: {2}% done, {3:.03e}"
+                                "".format(i_stream, nr_streams,
+                                          int(100.0 * i_stream / nr_streams),
+                                          t1 - t0))
             t0 = time()
 
         assert len(seed_pt) == 3, "Seeds must have 3 spatial dimensions"
