@@ -1012,7 +1012,7 @@ def plot2d_quiver(fld, step=1, **kwargs):
     if fld.nr_patches > 1:
         raise TypeError("plot2d_quiver doesn't do multi-patch fields yet")
 
-    fld = fld.slice_reduce(None)
+    fld = fld.slice_reduce(":")
 
     if fld.patches[0].nr_sdims != 2:
         raise ValueError("2D Fields only for plot2d_quiver")
@@ -1054,7 +1054,7 @@ def streamplot(fld, **kwargs):
     if fld.nr_patches > 1:
         raise TypeError("plot2d_quiver doesn't do multi-patch fields yet")
 
-    fld = fld.slice_reduce(None)
+    fld = fld.slice_reduce(":")
 
     if fld.patches[0].nr_sdims != 2:
         raise ValueError("2D Fields only for plot2d_quiver")
@@ -1081,8 +1081,8 @@ def streamplot(fld, **kwargs):
 
         vol = viscid.Volume([xl[0], xm[0], 0], [xl[-1], xm[-1], 0],
                             [nl, nm, 1])
-        vl = vol.wrap_field(viscid.interp_trilin(vl, vol)).slice_reduce(None)
-        vm = vol.wrap_field(viscid.interp_trilin(vm, vol)).slice_reduce(None)
+        vl = vol.wrap_field(viscid.interp_trilin(vl, vol)).slice_reduce(":")
+        vm = vol.wrap_field(viscid.interp_trilin(vm, vol)).slice_reduce(":")
         xl, xm = vl.get_crds(lm, shaped=False)
 
         # interpolate linewidth and color too if given
@@ -1091,7 +1091,7 @@ def streamplot(fld, **kwargs):
                 if isinstance(kwargs[other], viscid.field.Field):
                     o_fld = kwargs[other]
                     o_fld = vol.wrap_field(viscid.interp_trilin(o_fld, vol))
-                    kwargs[other] = o_fld.slice_reduce(None)
+                    kwargs[other] = o_fld.slice_reduce(":")
             except KeyError:
                 pass
 
