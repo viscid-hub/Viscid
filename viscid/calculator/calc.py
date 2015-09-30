@@ -9,10 +9,11 @@ from itertools import count
 
 import numpy as np
 
+import viscid
 from viscid import logger
 from viscid import verror
 from viscid import seed
-from viscid.compat import OrderedDict
+from viscid.compat import izip, OrderedDict
 
 try:
     from viscid.calculator import cycalc
@@ -28,7 +29,7 @@ except ImportError as e:
 
 __all__ = ['add', 'diff', 'mul', 'relative_diff', 'abs_diff', 'abs_val',
            'abs_max', 'abs_min', 'magnitude', 'dot', 'cross', 'div', 'curl',
-           'project',
+           'project', 'integrate_along_lines',
            'jacobian_at_point', 'jacobian_at_ind', 'jacobian_eig_at_point',
            'jacobian_eig_at_ind', 'div_at_point', 'curl_at_point']
 
@@ -166,6 +167,31 @@ def _magnitude_native(fld):
     return vx.wrap(mag, context={"name": "{0} magnitude".format(fld.name)})
 
 magnitude.add_implementation("native", _magnitude_native)
+
+def integrate_along_lines(lines, fld):
+    """Integrate the value of fld along a list of lines
+
+    Args:
+        lines (list): list of 3xN ndarrays, N needs not be the same for
+            all lines
+        fld (Field): Field to interpolate / integrate
+
+    Returns:
+        ndarray with shape (len(lines), )
+    """
+    arr = np.zeros((len(lines),), dtype=fld.dtype)
+
+    cum_n = np.cumsum([0] + [line.shape[1] for line in lines])
+    all_verts = np.concatenate(lines, axis=1)
+    fld_on_verts = viscid.interp_trilin(fld, all_verts)
+
+    for i, start, stop in izip(count(), cum_n[:-1], cum_n[1:]):
+        ds = np.linalg.norm(lines[i][:, 1:] - lines[i][:, :-1], axis=0)
+        values = 0.5 * (fld_on_verts[start:stop - 1] +
+                        fld_on_verts[start + 1:stop])
+        arr[i] = np.sum(values * ds)
+
+    return arr
 
 def local_vector_points(B, x, y, z, dx=None, dy=None, dz=None):
     """Get B at 6 points surrounding X
