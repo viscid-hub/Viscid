@@ -87,7 +87,7 @@ def cross(fld_a, fld_b):
     return fld_a.wrap([prodx, prody, prodz])
 
 def project(fld_a, fld_b):
-    """ project a along b (a dot b / |b|) """
+    """ project a along b (a dot b / magnitude(b)) """
     # ax, ay, az = fld_a.component_views() #pylint: disable=W0612
     # bx, by, bz = fld_b.component_views() #pylint: disable=W0612
     # prod = ne.evaluate("(ax * bx) + (ay * by) + (az * bz)")
