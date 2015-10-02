@@ -7,6 +7,12 @@ Changes
 Changes:
   - Use LinearLocator for linear colorbars by default
   - better error message when trying to mpl.plot vector fields
+  - enable ionosphere plots in mayavi, see test_mvi.py
+  - enable plotting meshes in mayavi, see test_mvi.py
+
+Backward Incompatible Changes:
+  - Seeds now use a unified interface. If you use seeds, check out test_seed.py to see how things work now
+  - plot_lines (both matplotlib and mayavi) use a unified interface, check out test_streamline to see how things work now
 
 Refactors:
   - blocks -> patches everywhere
