@@ -6,16 +6,20 @@ best reference for all quirky options is :meth:`plot2d_field`.
 Note:
     You can't set rc parameters for this module!
 """
+
+# FIXME: this module is way too long
+
 from __future__ import print_function
 from distutils.version import LooseVersion
+from itertools import count
 
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize, LogNorm
-from mpl_toolkits.mplot3d import Axes3D #pylint: disable=W0611
 try:
-    from mpl_toolkits.basemap import Basemap
+    from mpl_toolkits.basemap import Basemap  # pylint: disable=no-name-in-module
     _HAS_BASEMAP = True
 except ImportError:
     _HAS_BASEMAP = False
@@ -23,10 +27,8 @@ except ImportError:
 import viscid
 from viscid import pyeval
 from viscid import logger
-from viscid.compat import string_types
-from viscid import field
+from viscid.compat import izip, string_types
 from viscid import coordinate
-from viscid import topology2color
 from viscid.plot import mpl_extra
 from viscid.plot import vseaborn
 
@@ -637,12 +639,6 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     if fld.nr_patches > 1:
         raise TypeError("plot2d_mapfield doesn't do multi-patch fields yet")
 
-    _new_axis = False
-    if not ax:
-        if len(plt.gcf().axes) == 0:
-            _new_axis = True
-        ax = plt.gca()
-
     # parse plot_opts
     plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
@@ -692,15 +688,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         absboundinglat = np.abs(bounding_lat)
 
-        if ax is None:
-            # ax got set above, non?
-            raise RuntimeError("Shouldn't be here")
-        if not hasattr(ax, "set_thetagrids"):
-            ax = plt.subplot(*ax.get_geometry(), projection='polar')
-            if not _new_axis:
-                logger.warn("Clobbering axis for subplot %s; please give a "
-                            "polar axis to plot2d_mapfield if you indend to "
-                            "use it later.", ax.get_geometry())
+        _get_polar_axis(ax=ax)
 
         if hemisphere == "north":
             sl_fld = fld["lat=:{0}f".format(absboundinglat)]
@@ -743,7 +731,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             ax.set_thetagrids(mlt_grid_pos, mlt_labels)
 
             abs_grid_dr = 10
-            grid_dr = abs_grid_dr * np.sign(bounding_lat)
+            # grid_dr = abs_grid_dr * np.sign(bounding_lat)
             lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
             lat_labels = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
             if label_lat == "from_pole":
@@ -764,6 +752,8 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         return ret
 
     else:
+        if not ax:
+            ax = plt.gca()
         m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
                     boundinglat=bounding_lat, ax=ax)
         plot_kwargs['latlon'] = True
@@ -887,105 +877,169 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         mplshow()
     return p, None
 
-def plot_lines(lines, topology=None, ax=None, show=False, equal=False,
-               **kwargs):
-    """Plot lines on a matplotlib 3D plot, optionally colored by value
+def plot2d_lines(lines, scalars=None, symdir="", ax=None,
+                 show=False, flip_plot=False, subsample=1,
+                 pts_interp='linear', scalar_interp='linear',
+                 marker=None, marker_kwargs=None, **kwargs):
+    """Plot a list of lines in 2D
 
-    Parameters:
-        lines (list): A set of N lines. Elements should have the shape
-            3xP where 3 is the axes xyz (in that order) and P is the
-            number of points in the line. As an ndarray, the required
-            shape is Nx3xP.
-        topology (optional): Value used to color the lines. Should have
-            length N.
-        ax (matplotlib axis, optional): axis on which to plot
-        show (bool, optional): plt.show() before returning
-        equal (bool, optional): set 1:1 aspect ratio on axes
-    """
-    if not ax:
-        ax = plt.gca(projection='3d')
+    Args:
+        lines (list): list of 3xN ndarrays describing N xyz points
+            along a line
+        scalars (list, ndarray): a bunch of floats, rgb tuples, or
+            '#0000ff' colors. These can be given as one per line,
+            or one per vertex. See
+            :py:func:`viscid.vutil.prepare_lines` for more info.
+        symdir (str): direction perpendiclar to plane; one of 'xyz'
+        ax (matplotlib Axis, optional): axis on which to plot (should
+            be a 3d axis)
+        show (bool): call plt.show when finished?
+        flip_plot (bool): flips x and y axes on the plot
+        subsample (int): Number of additional vertices per line
+            segment. Since each line segment us uniformly colored, this
+            is used to make lines appear smoothly colored. If 0, then
+            the line segments are colored with the value of its
+            preceeding vertex, so chances are you want a value >= 1.
+        pts_interp (str): What kind of interpolation to use for
+            vertices if subsample > 0. Must be a value recognized by
+            :py:func:`scipy.interpolate.interp1d`.
+        scalar_interp (str): What kind of interpolation to use for
+            scalars if subsample > 0. Must be a value recognized by
+            :py:func:`scipy.interpolate.interp1d`.
+        marker (str): if given, plot the vertices using plt.scatter
+        marker_kwargs (dict): additional kwargs for plt.scatter
+        **kwargs: passed to matplotlib.collections.LineCollection
 
-    if "color" not in kwargs and topology is not None:
-        if isinstance(topology, field.Field):
-            topology = topology.data.reshape(-1)
-        topo_color = True
-    else:
-        topo_color = False
+    Raises:
+        ValueError: If a 2D plane can't be determined
 
-    for i, line in enumerate(lines):
-        line = np.array(line, copy=False)
-        x = line[0]
-        y = line[1]
-        z = line[2]
-
-        if topo_color:
-            kwargs["color"] = topology2color(topology[i])
-        p = ax.plot(x, y, z, **kwargs)
-    if equal:
-        ax.axis("equal")
-    plt.xlabel("x")
-    plt.ylabel("y")
-    if show:
-        plt.show()
-    return p, None
-
-def plot_lines2d(lines, symdir=None, topology=None, ax=None,
-                 show=False, flip_plot=False, **kwargs):
-    """Project 3D lines onto a 2D plot
-
-    Parameters:
-        lines (list): A set of N lines. Elements should have the shape
-            3xP where 3 is the axes xyz (in that order) and P is the
-            number of points in the line. As an ndarray, the required
-            shape is Nx3xP.
-        symdir (str, optional): one of xyz for the plane on which to
-            orthogonally project lines. Not needed if lines are shaped
-            Nx2xP.
-        topology (optional): Value used to color the lines. Should have
-            length N.
-        ax (matplotlib axis, optional): axis on which to plot
-        show (bool, optional): plt.show() before returning
-        flip_plot (bool, optional): swap plot's x/y axes
+    Returns:
+        a LineCollection
     """
     if not ax:
         ax = plt.gca()
-    p = None
+    r = _prep_lines(lines, scalars=scalars, subsample=subsample,
+                    pts_interp=pts_interp, scalar_interp=scalar_interp)
+    verts, segments, vert_scalars, seg_scalars, colors, other = r  # pylint: disable=unused-variable
+    # alpha = other['alpha']
 
-    if topology is not None:
-        if isinstance(topology, field.Field):
-            topology = topology.data.reshape(-1)
-        if not "color" in kwargs:
-            topo_color = True
+    symdir = symdir.strip().lower()
+    if segments.shape[2] == 2:
+        xind, yind, zind = 0, 1, None
+    elif symdir == 'x':
+        xind, yind, zind = 1, 2, 0
+    elif symdir == 'y':
+        xind, yind, zind = 0, 2, 1
+    elif symdir == 'z':
+        xind, yind, zind = 0, 1, 2
     else:
-        topo_color = False
+        raise ValueError("For 3d lines, symdir should be x, y, or z")
 
-    for i, line in enumerate(lines):
-        line = np.array(line, copy=False)
-        if len(line) == 2:
-            x = line[0]
-            y = line[1]
-        elif symdir.lower() == "x":
-            x = line[1]
-            y = line[2]
-        elif symdir.lower() == "y":
-            x = line[0]
-            y = line[2]
-        elif symdir.lower() == "z":
-            x = line[0]
-            y = line[1]
-        else:
-            raise ValueError("For 3d lines, symdir should be x, y, or z")
+    if flip_plot:
+        xind, yind = yind, xind
 
-        if flip_plot:
-            x, y = y, x
+    if seg_scalars is None and colors is None and zind is not None:
+        vert_scalars = verts[zind, :]
+        seg_scalars = segments[:, 0, zind]
 
-        if topo_color:
-            kwargs["color"] = topology2color(topology[i])
-        p = ax.plot(x, y, **kwargs)
+    line_collection = LineCollection(segments[:, :, [xind, yind]],
+                                     array=seg_scalars, colors=colors,
+                                     **kwargs)
+    ax.add_collection(line_collection)
+
+    if marker:
+        if not marker_kwargs:
+            marker_kwargs = dict()
+
+        # if colors are not given,
+        if 'c' not in marker_kwargs:
+            if colors is not None:
+                marker_kwargs['c'] = colors
+            elif vert_scalars is not None:
+                marker_kwargs['c'] = vert_scalars
+        # pass along some kwargs to the scatter plot
+        for name in ['cmap', 'norm', 'vmin', 'vmax']:
+            if name in kwargs and name not in marker_kwargs:
+                marker_kwargs[name] = kwargs[name]
+        ax.scatter(verts[xind, :], verts[yind, :], marker=marker,
+                   **marker_kwargs)
+    else:
+        _autolimit_to_vertices(ax, verts[[xind, yind], :])
 
     if show:
         plt.show()
-    return p, None
+
+    return line_collection
+
+def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=1,
+                 pts_interp='linear', scalar_interp='linear',
+                 marker='', marker_kwargs=None, **kwargs):
+    """Plot a list of lines in 3D
+
+    Args:
+        lines (list): list of 3xN ndarrays describing N xyz points
+            along a line
+        scalars (list, ndarray): a bunch of floats, rgb tuples, or
+            '#0000ff' colors. These can be given as one per line,
+            or one per vertex. See
+            :py:func:`viscid.vutil.prepare_lines` for more info.
+        ax (matplotlib Axis, optional): axis on which to plot (should
+            be a 3d axis)
+        show (bool): call plt.show when finished?
+        subsample (int): Number of additional vertices per line
+            segment. Since each line segment us uniformly colored, this
+            is used to make lines appear smoothly colored. If 0, then
+            the line segments are colored with the value of its
+            preceeding vertex, so chances are you want a value >= 1.
+        pts_interp (str): What kind of interpolation to use for
+            vertices if subsample > 0. Must be a value recognized by
+            :py:func:`scipy.interpolate.interp1d`.
+        scalar_interp (str): What kind of interpolation to use for
+            scalars if subsample > 0. Must be a value recognized by
+            :py:func:`scipy.interpolate.interp1d`.
+        marker (str): if given, plot the vertices using plt.scatter
+        marker_kwargs (dict): additional kwargs for plt.scatter
+        **kwargs: passed to matplotlib.collections.LineCollection
+
+    Returns:
+        TYPE: Line3DCollection
+    """
+    from mpl_toolkits.mplot3d.art3d import Line3DCollection
+
+    ax = _get_3d_axis(ax)
+
+    r = _prep_lines(lines, scalars=scalars, subsample=subsample,
+                    pts_interp=pts_interp, scalar_interp=scalar_interp)
+    verts, segments, vert_scalars, seg_scalars, colors, other = r  # pylint: disable=unused-variable
+
+    line_collection = Line3DCollection(segments[:, :, [0, 1, 2]],
+                                       array=seg_scalars, colors=colors,
+                                       **kwargs)
+    ax.add_collection3d(line_collection)
+
+    if marker:
+        if not marker_kwargs:
+            marker_kwargs = dict()
+
+        # if colors are not given,
+        if 'c' not in marker_kwargs:
+            if colors is not None:
+                marker_kwargs['c'] = colors
+            elif vert_scalars is not None:
+                marker_kwargs['c'] = vert_scalars
+        # pass along some kwargs to the scatter plot
+        for name in ['cmap', 'norm', 'vmin', 'vmax']:
+            if name in kwargs and name not in marker_kwargs:
+                marker_kwargs[name] = kwargs[name]
+        ax.scatter(verts[0, :], verts[1, :], verts[2, :], marker=marker,
+                   **marker_kwargs)
+    else:
+        _autolimit_to_vertices(ax, verts)
+
+    if show:
+        plt.show()
+
+    return line_collection
 
 def plot2d_quiver(fld, step=1, **kwargs):
     """Put quivers on a 2D plot
@@ -997,7 +1051,7 @@ def plot2d_quiver(fld, step=1, **kwargs):
         There are some edge cases where step doesn't work.
 
     Args:
-        fld: 2.5-D Vector field to plot
+        fld(VectorField): 2.5-D Vector field to plot
         step (int): only quiver every Nth grid cell. Can also
             be a list of ints to specify x & y downscaling separatly
         **kwargs: passed to :py:func:`matplotlpb.pyplot.quiver`
@@ -1251,8 +1305,162 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                                            fc=nightcol, zorder=zorder))
     return None
 
-plot_streamlines = plot_lines
-plot_streamlines2d = plot_lines2d
+def _get_projected_axis(ax=None, projection='polar',
+                        check_attr='set_thetagrids'):
+    _new_axis = False
+    if not ax:
+        if len(plt.gcf().axes) == 0:
+            _new_axis = True
+        ax = plt.gca()
+    if not hasattr(ax, check_attr):
+        ax = plt.subplot(*ax.get_geometry(), projection='polar')
+        if not _new_axis:
+            viscid.logger.warn("Clobbering axis for subplot %s; please give a "
+                               "%s axis if you indend to use it later.",
+                               ax.get_geometry(), projection)
+    return ax
+
+def _get_polar_axis(ax=None):
+    return _get_projected_axis(ax=ax, projection='polar', check_attr='set_thetagrids')
+
+def _get_3d_axis(ax=None):
+    from mpl_toolkits.mplot3d import Axes3D  # pylint: disable=unused-variable
+    return _get_projected_axis(ax=ax, projection='3d', check_attr='zaxis')
+
+def _autolimit_to_vertices(ax, verts):
+    """Set limits on ax so that all verts are visible"""
+    xmin, xmax = np.min(verts[0, ...]), np.max(verts[0, ...])
+    ymin, ymax = np.min(verts[1, ...]), np.max(verts[1, ...])
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
+    if xlim[0] < xlim[1]:
+        if xmin < xlim[0]:
+            ax.set_xlim(left=xmin)
+        if xmax > xlim[1]:
+            ax.set_xlim(right=xmax)
+    else:
+        if xmax > xlim[0]:
+            ax.set_xlim(left=xmax)
+        if xmin < xlim[1]:
+            ax.set_xlim(right=xmin)
+
+    if ylim[0] < ylim[1]:
+        if ymin < ylim[0]:
+            ax.set_ylim(bottom=ymin)
+        if ymax > ylim[1]:
+            ax.set_ylim(top=ymax)
+    else:
+        if ymax > ylim[0]:
+            ax.set_ylim(bottom=ymax)
+        if ymin < ylim[1]:
+            ax.set_ylim(top=ymin)
+
+    # maybe z, maybe not
+    if verts.shape[0] > 2:
+        zlim = ax.get_zlim()
+        zmin, zmax = np.min(verts[2, ...]), np.max(verts[2, ...])
+        if zlim[0] < zlim[1]:
+            if zmin < zlim[0]:
+                ax.set_zlim(bottom=zmin)
+            if zmax > zlim[1]:
+                ax.set_zlim(top=zmax)
+        else:
+            if zmax > zlim[0]:
+                ax.set_zlim(bottom=zmax)
+            if zmin < zlim[1]:
+                ax.set_zlim(top=zmin)
+
+def _prep_lines(lines, scalars=None, subsample=1, pts_interp='linear',
+                scalar_interp='linear', other=None):
+    r = viscid.vutil.prepare_lines(lines, scalars, do_connections=True,
+                                   other=other)
+    verts, scalars, connections, other = r
+    nr_sdims = verts.shape[0]
+    nverts = verts.shape[1]
+    nsegs = connections.shape[0]
+    line_start = np.setdiff1d(np.arange(nverts), connections[:, 1],
+                              assume_unique=True)
+    line_stop = np.concatenate([line_start[1:], [nverts]])
+    verts_per_line = line_stop - line_start
+    nlines = len(line_start)
+    assert nverts == nlines + nsegs
+
+    scalars = np.atleast_2d(scalars)
+
+    # Use numpy / scipy to interpolate points and scalars
+    if subsample > 0:
+        fine_verts = [None] * nlines
+        fine_scalars = [None] * nlines
+        fine_connections = [None] * nlines
+
+        for i, start, stop in izip(count(), line_start, line_stop):
+            n_coarse = stop - start  # number of verts, not segments
+            n_fine = (subsample + 1) * (n_coarse - 1) + 1
+            coarse_verts = verts[:, start:stop]
+            coarse_scalars = scalars[:, start:stop]
+            fine_verts[i] = np.empty((3, n_fine), dtype=verts.dtype)
+            fine_scalars[i] = np.empty((scalars.shape[0], n_fine),
+                                       dtype=verts.dtype)
+            fine_connections[i] = np.empty((n_fine - 1, 2), dtype='i')
+            t_coarse = np.linspace(0, 1, n_coarse)
+            t_fine = np.linspace(0, 1, n_fine)
+
+            try:
+                # raise ImportError
+                from scipy.interpolate import interp1d
+                for j in range(coarse_verts.shape[0]):
+                    fine_verts[i][j, :] = interp1d(t_coarse, coarse_verts[j, :],
+                                                   kind=pts_interp)(t_fine)
+                for j in range(scalars.shape[0]):
+                    fine_scalars[i][j, :] = interp1d(t_coarse, coarse_scalars[j, :],
+                                                     kind=scalar_interp)(t_fine)
+            except ImportError:
+                if pts_interp != 'linear' or scalar_interp != 'linear':
+                    viscid.logger.error("Scipy is required to do anything "
+                                        "other than linear interpolation")
+                    raise
+
+                for j in range(coarse_verts.shape[0]):
+                    fine_verts[i][j, :] = np.interp(t_fine, t_coarse,
+                                                    coarse_verts[j, :])
+                for j in range(scalars.shape[0]):
+                    fine_scalars[i][j, :] = np.interp(t_fine, t_coarse,
+                                                      coarse_scalars[j, :])
+
+            new_start = np.sum((verts_per_line[:i] - 1) * (subsample + 1) + 1)
+            new_stop = new_start + n_fine
+            fine_connections[i][:, 0] = np.arange(new_start, new_stop - 1)
+            fine_connections[i][:, 1] = np.arange(new_start + 1, new_stop)
+
+        verts = np.concatenate(fine_verts, axis=1)
+        scalars = np.concatenate(fine_scalars, axis=1)
+        connections = np.concatenate(fine_connections, axis=0)
+        nverts = verts.shape[1]
+        nsegs = connections.shape[0]
+        assert nsegs == nverts - nlines
+
+    if scalars.shape[0] == 1:
+        scalars = scalars[0]
+
+    # go through and make list of connected segments for the line collection
+    segments = np.empty((nsegs, 2, nr_sdims), dtype=verts.dtype)
+    segments[:, 0, :] = verts[:, connections[:, 0]].T
+    segments[:, 1, :] = verts[:, connections[:, 1]].T
+
+    # # TODO: straighten out array=scalars from color=scalars
+    colors = None
+    if scalars.dtype == np.dtype('u1'):
+        scalars, colors = None, scalars.T / 255.0
+    seg_scalars = scalars[..., connections[:, 0]]
+    return verts, segments, scalars, seg_scalars, colors, other
+
+
+# man, i was really indecisive about these names... luckily, everything's
+# a reference in Python :)
+plot_lines = plot3d_lines
+plot_lines3d = plot3d_lines
+plot_lines2d = plot2d_lines
+plot_streamlines = plot3d_lines
+plot_streamlines2d = plot2d_lines
 
 ##
 ## EOF

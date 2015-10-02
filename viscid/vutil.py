@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# FIXME: this module is way too long and disorganized
+
 from __future__ import print_function, division
 
 from datetime import datetime
@@ -795,14 +797,15 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
             reshaped and the like the same way scalars is
 
     Returns:
-        (vertices, scalars, connections, dict)
+        (vertices, scalars, connections, other)
 
         * vertices (ndarray): 3xN array of N xyz points. N is the sum
             of the lengths of all the lines
         * scalars (ndarray): N array of scalars, 3xN array of uint8
             rgb values, or None
-        * connections (ndarray): 2xN array describing the forward and
-            backward connectedness of the lines, or None
+        * connections (ndarray): Nx2 array of ints (indices along
+            axis 1 of vertices) describing the forward and backward
+            connectedness of the lines, or None
         * other (dict): a dict of N length arrays
 
     Raises:
