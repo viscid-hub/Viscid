@@ -361,9 +361,10 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         clip.widget.update_implicit_function()
         clip.widget.widget.enabled = False
         insert_filter(clip, m.module_manager)
-        m.module_manager.parent.parent.filter.auto_orient_normals = True
+        # m.module_manager.parent.parent.filter.auto_orient_normals = True
     else:
-        m.module_manager.parent.filter.auto_orient_normals = True
+        pass
+        # m.module_manager.parent.filter.auto_orient_normals = True
     m.actor.mapper.interpolate_scalars_before_mapping = True
 
     m.module_manager.scalar_lut_manager.lut_mode = 'RdBu'

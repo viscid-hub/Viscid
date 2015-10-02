@@ -721,6 +721,7 @@ class Sphere(SeedGen):
         else:
             pts = np.concatenate([pole0, pts, pole1], axis=2)
             pts = np.concatenate([pts, pts[:, 0, None, :]], axis=1)
+            pts = pts[:, ::-1, :]  # normals out
 
         return pts
 
@@ -741,6 +742,7 @@ class Sphere(SeedGen):
                            arr.shape[0], axis=0)
             arr = np.concatenate([p0, arr, p1], axis=1)
             arr = np.concatenate([arr, arr[0, None, :]], axis=0)
+            arr = arr[::-1, :]  # normals out
 
         return arr
 

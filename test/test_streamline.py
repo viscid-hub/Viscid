@@ -44,9 +44,6 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, show=False, **kwargs):
             vertices, scalars = _seeds.wrap_mesh(topo_fld.data)
             mesh = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
                                  scalars=scalars, opacity=0.5)
-            # it's super annoying that my Spher.wrap_mesh returns a mesh
-            # with normals that face inward
-            mesh.module_manager.parent.filter.flip_normals = True
             mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass

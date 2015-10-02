@@ -36,8 +36,9 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, show=False):
 
         try:
             vertices, scalars = seeds.wrap_mesh(interpolated_fld)
-            p = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
-                              scalars=scalars)
+            mesh = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
+                                 scalars=scalars)
+            mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
 
