@@ -130,7 +130,6 @@ html_theme_options = {
         [("Tutorial", [("Installation", "installation"),
                        ("RC file", "custom_behavior"),
                        ("Plot Options", "plot_options"),
-                       ("3D Plots", "mayavi_plotting"),
                        ("Command Line Tools", "command_line"),
                        ("Extending Readers", "extending_readers"),
                       ]
@@ -139,6 +138,7 @@ html_theme_options = {
                        ("Slicing", "examples/slicing"),
                        ("Calculator", "examples/calc"),
                        ("OpenGGCM", "examples/openggcm"),
+                       ("3D Plots", "mayavi_plotting"),
                       ]
          )
         ]

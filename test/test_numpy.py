@@ -18,7 +18,6 @@ if not _viscid_root in sys.path:
 
 import viscid
 from viscid import vutil
-from viscid.calculator import calc
 from viscid.plot import mpl
 
 def main():
@@ -38,7 +37,7 @@ def main():
     v['y'] = 0.0 * X    + 0.5 * Y**2 + 0.0 * Z
     v['z'] = 0.0 * X    + 0.0 * Y    + 0.5 * Z**2
 
-    mag = calc.magnitude(v)
+    mag = viscid.magnitude(v)
     mag2 = np.sqrt(np.sum(v * v, axis=v.nr_comp))
     another = np.transpose(mag)
 

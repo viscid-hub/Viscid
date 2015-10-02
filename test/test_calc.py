@@ -20,7 +20,6 @@ if not _viscid_root in sys.path:
 import viscid
 from viscid import logger
 from viscid import vutil
-from viscid.calculator import calc
 from viscid.plot import mpl
 
 def run_mag_test(fld, show=False):
@@ -28,7 +27,7 @@ def run_mag_test(fld, show=False):
     vx, vy, vz = fld.component_fields()
 
     t0 = time()
-    mag_ne = calc.magnitude(fld, preferred="numexpr", only=True)
+    mag_ne = viscid.magnitude(fld, preferred="numexpr", only=True)
     t1 = time()
     logger.info("numexpr mag runtime: %g", t1 - t0)
     t0 = time()
