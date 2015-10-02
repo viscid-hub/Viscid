@@ -920,7 +920,7 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
         ax = plt.gca()
     r = _prep_lines(lines, scalars=scalars, subsample=subsample,
                     pts_interp=pts_interp, scalar_interp=scalar_interp)
-    verts, segments, vert_scalars, seg_scalars, colors, other = r  # pylint: disable=unused-variable
+    verts, segments, vert_scalars, seg_scalars, vert_colors, seg_colors, other = r  # pylint: disable=unused-variable
     # alpha = other['alpha']
 
     symdir = symdir.strip().lower()
@@ -938,12 +938,12 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     if flip_plot:
         xind, yind = yind, xind
 
-    if seg_scalars is None and colors is None and zind is not None:
+    if seg_scalars is None and seg_colors is None and zind is not None:
         vert_scalars = verts[zind, :]
         seg_scalars = segments[:, 0, zind]
 
     line_collection = LineCollection(segments[:, :, [xind, yind]],
-                                     array=seg_scalars, colors=colors,
+                                     array=seg_scalars, colors=seg_colors,
                                      **kwargs)
     ax.add_collection(line_collection)
 
@@ -953,8 +953,8 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
 
         # if colors are not given,
         if 'c' not in marker_kwargs:
-            if colors is not None:
-                marker_kwargs['c'] = colors
+            if vert_colors is not None:
+                marker_kwargs['c'] = vert_colors
             elif vert_scalars is not None:
                 marker_kwargs['c'] = vert_scalars
         # pass along some kwargs to the scatter plot
@@ -1010,10 +1010,10 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=1,
 
     r = _prep_lines(lines, scalars=scalars, subsample=subsample,
                     pts_interp=pts_interp, scalar_interp=scalar_interp)
-    verts, segments, vert_scalars, seg_scalars, colors, other = r  # pylint: disable=unused-variable
+    verts, segments, vert_scalars, seg_scalars, vert_colors, seg_colors, other = r  # pylint: disable=unused-variable
 
     line_collection = Line3DCollection(segments[:, :, [0, 1, 2]],
-                                       array=seg_scalars, colors=colors,
+                                       array=seg_scalars, colors=seg_colors,
                                        **kwargs)
     ax.add_collection3d(line_collection)
 
@@ -1023,8 +1023,8 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=1,
 
         # if colors are not given,
         if 'c' not in marker_kwargs:
-            if colors is not None:
-                marker_kwargs['c'] = colors
+            if vert_colors is not None:
+                marker_kwargs['c'] = vert_colors
             elif vert_scalars is not None:
                 marker_kwargs['c'] = vert_scalars
         # pass along some kwargs to the scatter plot
@@ -1384,7 +1384,10 @@ def _prep_lines(lines, scalars=None, subsample=1, pts_interp='linear',
     nlines = len(line_start)
     assert nverts == nlines + nsegs
 
-    scalars = np.atleast_2d(scalars)
+    if scalars is not None:
+        scalars = np.atleast_2d(scalars)
+    else:
+        scalars = np.empty((0, nverts), verts.dtype)
 
     # Use numpy / scipy to interpolate points and scalars
     if subsample > 0:
@@ -1432,14 +1435,14 @@ def _prep_lines(lines, scalars=None, subsample=1, pts_interp='linear',
             fine_connections[i][:, 1] = np.arange(new_start + 1, new_stop)
 
         verts = np.concatenate(fine_verts, axis=1)
+        was_uint8 = scalars.dtype == np.dtype('u1')
         scalars = np.concatenate(fine_scalars, axis=1)
+        if was_uint8:
+            scalars = scalars.round().astype('u1')
         connections = np.concatenate(fine_connections, axis=0)
         nverts = verts.shape[1]
         nsegs = connections.shape[0]
         assert nsegs == nverts - nlines
-
-    if scalars.shape[0] == 1:
-        scalars = scalars[0]
 
     # go through and make list of connected segments for the line collection
     segments = np.empty((nsegs, 2, nr_sdims), dtype=verts.dtype)
@@ -1447,11 +1450,22 @@ def _prep_lines(lines, scalars=None, subsample=1, pts_interp='linear',
     segments[:, 1, :] = verts[:, connections[:, 1]].T
 
     # # TODO: straighten out array=scalars from color=scalars
-    colors = None
-    if scalars.dtype == np.dtype('u1'):
-        scalars, colors = None, scalars.T / 255.0
-    seg_scalars = scalars[..., connections[:, 0]]
-    return verts, segments, scalars, seg_scalars, colors, other
+    colors, seg_colors = None, None
+    if scalars.shape[0] == 0:
+        scalars = None
+    elif scalars.shape[0] == 1:
+        scalars = scalars[0]
+
+    seg_scalars = None
+    if scalars is not None:
+        if scalars.dtype == np.dtype('u1'):
+            colors = scalars.T / 255.0
+            seg_colors = colors[connections[:, 0], ...]
+            scalars = None
+        else:
+            seg_scalars = scalars[..., connections[:, 0]]
+
+    return verts, segments, scalars, seg_scalars, colors, seg_colors, other
 
 
 # man, i was really indecisive about these names... luckily, everything's
