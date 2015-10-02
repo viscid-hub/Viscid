@@ -138,7 +138,7 @@ html_theme_options = {
                        ("Slicing", "examples/slicing"),
                        ("Calculator", "examples/calc"),
                        ("OpenGGCM", "examples/openggcm"),
-                       ("3D Plots", "mayavi_plotting"),
+                       ("3D Plots", "examples/mayavi_plotting"),
                       ]
          )
         ]
