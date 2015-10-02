@@ -1397,7 +1397,7 @@ def _prep_lines(lines, scalars=None, subsample=1, pts_interp='linear',
             n_fine = (subsample + 1) * (n_coarse - 1) + 1
             coarse_verts = verts[:, start:stop]
             coarse_scalars = scalars[:, start:stop]
-            fine_verts[i] = np.empty((3, n_fine), dtype=verts.dtype)
+            fine_verts[i] = np.empty((nr_sdims, n_fine), dtype=verts.dtype)
             fine_scalars[i] = np.empty((scalars.shape[0], n_fine),
                                        dtype=verts.dtype)
             fine_connections[i] = np.empty((n_fine - 1, 2), dtype='i')
