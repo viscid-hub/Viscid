@@ -518,8 +518,7 @@ class Plane(SeedGen):
         return self.get_points().reshape(3, self.nl, self.nm)
 
     def arr2mesh(self, arr):
-        vertices = self.as_mesh()
-        return vertices, arr.reshape(vertices.shape[1:])
+        return arr.reshape(self.local_shape)
 
 
 class Volume(SeedGen):
@@ -594,6 +593,7 @@ class Volume(SeedGen):
             raise RuntimeError("Can't make a 2d surface from a 3d volume")
 
     def arr2mesh(self, arr):
+        vertices = self.as_mesh()
         return arr.reshape(vertices.shape[1:])
 
 
