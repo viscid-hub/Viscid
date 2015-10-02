@@ -330,7 +330,6 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
     dat = fld.data.T
     if scale is not None:
         dat *= scale
-    # print(x.shape, y.shape, fld.data.shape)
     if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
         all_masked = all_masked and dat.mask.all()
@@ -676,8 +675,9 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     # drawcoastlines = kwargs.pop("drawcoastlines", False)
 
     if projection != "polar" and not _HAS_BASEMAP:
-        print("NOTE: install the basemap for the desired spherical "
-              "projection; falling back to matplotlib's polar plot.")
+        viscid.logger.error("NOTE: install the basemap for the desired "
+                            "spherical projection; falling back to "
+                            "matplotlib's polar plot.")
         projection = "polar"
 
     if projection == "polar":

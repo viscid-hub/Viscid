@@ -724,8 +724,8 @@ def slice_globbed_filenames(glob_pattern):
     n_slices = len(re.findall(slc_re, glob_pattern))
 
     if n_slices > 1:
-        print("Multiple filename slices found, only using the first.",
-              file=sys.stderr)
+        viscid.logger.warn("Multiple filename slices found, only using the "
+                           "first.")
 
     if n_slices:
         m = re.search(slc_re, glob_pattern)
@@ -771,10 +771,11 @@ def value_is_float_not_int(value):
 def convert_deprecated_floats(value, varname="value"):
     if value_is_float_not_int(value):
         # TODO: eventually, a ValueError should be raised here
-        print("Deprecation Warning!\n"
-              "  Slicing by float is deprecated. The slice by value syntax is \n"
-              "  now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
-              "".format(varname, value), file=sys.stderr)
+        s = ("DEPRECATION...\n"
+             "Slicing by float is deprecated. The slice by value syntax is \n"
+             "now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
+             "".format(varname, value))
+        viscid.logger.warn(s)
         value = "{0}f".format(value)
     return value
 

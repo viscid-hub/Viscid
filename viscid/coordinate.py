@@ -27,6 +27,7 @@ import sys
 
 import numpy as np
 
+import viscid
 from viscid.compat import string_types, izip
 from viscid import vutil
 
@@ -1169,9 +1170,10 @@ class UniformCrds(StructuredCrds):
         self.dtype = dtype
 
         if full_arrays:
-            print(r"DEPRECATION WARNING: full arrays for uniform crds\n"
-                  r"                     shouldn't be used due to finite\n"
-                  r"                     precision errors", file=sys.stderr)
+            s = ("DEPRECATION...\n"
+                 "Full arrays for uniform crds shouldn't be used due to \n"
+                 "finite precision errors")
+            viscid.logger.warn(s)
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
                 arr = np.asarray(arr)

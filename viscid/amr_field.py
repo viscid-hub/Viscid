@@ -137,8 +137,10 @@ class AMRField(object):
             viscid.logger.warn("selection {0} not in any patch\n@ time {1}"
                                "".format(selection, self.patches[0].time))
             if self.skeleton:
-                print("         skeleton: xl=", self.skeleton.global_xl,
-                      "xh=", self.skeleton.global_xh)
+                s = ("         skeleton: xl= {0} xh = {1}"
+                     "".format(self.skeleton.global_xl,
+                               self.skeleton.global_xh))
+                viscid.logger.warn(s)
             inds = None
             flds = None
         elif len(inds) == 1:
