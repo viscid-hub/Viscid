@@ -134,13 +134,13 @@ class AMRField(object):
             inds = maybe
 
         if len(inds) == 0:
-            viscid.logger.warn("selection {0} not in any patch\n@ time {1}"
-                               "".format(selection, self.patches[0].time))
+            viscid.logger.error("selection {0} not in any patch @ time {1}"
+                                "".format(selection, self.patches[0].time))
             if self.skeleton:
                 s = ("         skeleton: xl= {0} xh = {1}"
                      "".format(self.skeleton.global_xl,
                                self.skeleton.global_xh))
-                viscid.logger.warn(s)
+                viscid.logger.error(s)
             inds = None
             flds = None
         elif len(inds) == 1:
@@ -158,7 +158,7 @@ class AMRField(object):
                 m = ("Trying to make an AMRField where 1+ patches "
                      "is just a number... You probably slice_reduced "
                      "a field down to a scalar value")
-                viscid.logger.warn(m)
+                viscid.logger.error(m)
         return AMRField(fld_lst, skeleton)
 
     def patch_indices(self, selection):

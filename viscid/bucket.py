@@ -90,15 +90,15 @@ class Bucket(object):
             try:
                 hash(h)
             except TypeError:
-                logger.warn("A bucket says handle '{0}' is not hashable, "
-                            "ignoring it".format(h))
+                logger.error("A bucket says handle '{0}' is not hashable, "
+                             "ignoring it".format(h))
                 continue
 
             if (h in self._items) and (item is self._items[h]):
                 continue
             elif h in self._items:
-                logger.warn("The handle '{0}' is being hijacked! Memory leak "
-                            "could ensue.".format(h))
+                logger.error("The handle '{0}' is being hijacked! Memory leak "
+                             "could ensue.".format(h))
                 # romove handle from old item, since this check is here,
                 # there sholdn't be 2 items with the same handle in the
                 # items dict
@@ -116,8 +116,8 @@ class Bucket(object):
                 self._ref_count[hashable_item] += 1
         except KeyError:
             if len(handles_added) == 0:
-                logger.warn("No valid handles given, item '{0}' not added to "
-                            "bucket".format(hashable_item))
+                logger.error("No valid handles given, item '{0}' not added to "
+                             "bucket".format(hashable_item))
 
             else:
                 self._handles[hashable_item] = handles_added

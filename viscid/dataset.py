@@ -107,7 +107,7 @@ class Dataset(tree.Node):
         child = self.active_child
 
         if child is None:
-            logger.warn("Could not get appropriate child...")
+            logger.error("Could not get appropriate child...")
             return None
         else:
             return child.iter_fields(time=time, named=named)
@@ -138,7 +138,7 @@ class Dataset(tree.Node):
         child = self.active_child
 
         if child is None:
-            logger.warn("Could not get appropriate child...")
+            logger.error("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time, slc=slc)
@@ -148,7 +148,7 @@ class Dataset(tree.Node):
         child = self.active_child
 
         if child is None:
-            logger.warn("Could not get appropriate child...")
+            logger.error("Could not get appropriate child...")
             return None
         else:
             return child.get_grid(time=time)
@@ -225,7 +225,7 @@ class DatasetTemporal(Dataset):
             raise RuntimeError()
         if child.time is None:
             child.time = 0.0
-            logger.warn("A child with no time? Something is strange...")
+            logger.error("A child with no time? Something is strange...")
         # this keeps the children in time order
         self.prepare_child(child)
         self.children.append((child.time, child))
@@ -418,7 +418,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            logger.warn("Could not get appropriate child...")
+            logger.error("Could not get appropriate child...")
             return None
         else:
             return child.iter_fields(time=time, named=named)
@@ -444,7 +444,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            logger.warn("Could not get appropriate child...")
+            logger.error("Could not get appropriate child...")
             return None
         else:
             return child.get_field(fldname, time=time, slc=None)
@@ -457,7 +457,7 @@ class DatasetTemporal(Dataset):
             child = self.active_child
 
         if child is None:
-            logger.warn("Could not get appropriate child...")
+            logger.error("Could not get appropriate child...")
             return None
         else:
             return child.get_grid(time=time)

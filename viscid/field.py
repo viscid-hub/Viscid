@@ -300,7 +300,7 @@ def field_type(fldtype):
         for cls in vutil.subclass_spider(Field):
             if cls.istype(fldtype):
                 return cls
-    logger.warn("Field type {0} not understood".format(fldtype))
+    logger.error("Field type {0} not understood".format(fldtype))
     return None
 
 def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
@@ -910,9 +910,9 @@ class Field(tree.Leaf):
             # if this happens, don't ignore it even if it happens to work
             # print("??", self, self.native_shape, self.shape, )
             # import pdb; pdb.set_trace()
-            logger.warn("could not detect layout for '{0}': shape = {1} "
-                        "target shape = {2}"
-                        "".format(self.name, dat_shape, sshape))
+            logger.error("could not detect layout for '{0}': shape = {1} "
+                         "target shape = {2}"
+                         "".format(self.name, dat_shape, sshape))
             layout = LAYOUT_OTHER
 
         return layout
