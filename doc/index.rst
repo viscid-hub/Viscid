@@ -43,6 +43,7 @@ Contents
   installation
   philosophy
   custom_behavior
+  functions
   plot_options
   command_line
   extending_readers

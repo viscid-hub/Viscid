@@ -231,6 +231,7 @@ def _finalize_source(fld, arr, grid, dat_target):
     return src
 
 def plot_mesh(vertices, scalars=None, color=None, name="NoName", **kwargs):
+    """Plot :py:class:`viscid.SeedGen` as a mesh"""
     # discover the 2d shape of vertices that indicates the connectivity
     # of vertices
     connective_shape = list(vertices.shape[1:])
@@ -383,6 +384,7 @@ def insert_filter(filtr, module_manager):
     filtr.children.append(module_manager)
 
 def plot_blue_marble(r=1.0, orientation=None, figure=None):
+    """Plot Earth using the blue marble NASA image"""
     # make a plane, then deform it into a sphere
     eps = 1e-4
     ps = tvtk.PlaneSource(origin=(r, np.pi - eps, 0.0),
