@@ -688,7 +688,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         absboundinglat = np.abs(bounding_lat)
 
-        _get_polar_axis(ax=ax)
+        ax = _get_polar_axis(ax=ax)
 
         if hemisphere == "north":
             sl_fld = fld["lat=:{0}f".format(absboundinglat)]
@@ -1321,7 +1321,8 @@ def _get_projected_axis(ax=None, projection='polar',
     return ax
 
 def _get_polar_axis(ax=None):
-    return _get_projected_axis(ax=ax, projection='polar', check_attr='set_thetagrids')
+    return _get_projected_axis(ax=ax, projection='polar',
+                               check_attr='set_thetagrids')
 
 def _get_3d_axis(ax=None):
     from mpl_toolkits.mplot3d import Axes3D  # pylint: disable=unused-variable
