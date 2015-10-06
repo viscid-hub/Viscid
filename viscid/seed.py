@@ -316,7 +316,8 @@ class Point(SeedGen):
 
 class Line(SeedGen):
     """A line of seed points"""
-    def __init__(self, p0, p1, n=20, cache=False, dtype=None):
+    def __init__(self, p0=(0, 0, 0), p1=(1, 0, 0), n=20,
+                 cache=False, dtype=None):
         """p0 & p1 are `(x, y, z)` points as
 
         Args:
@@ -365,8 +366,9 @@ class Line(SeedGen):
 class Plane(SeedGen):
     """A plane of seed points"""
 
-    def __init__(self, p0, pN, pL, len_l, len_m, nl=20, nm=20,
-                 NL_are_vectors=True, cache=False, dtype=None):
+    def __init__(self, p0=(0, 0, 0), pN=(0, 0, 1), pL=(1, 0, 0),
+                 len_l=2, len_m=2, nl=20, nm=20, NL_are_vectors=True,
+                 cache=False, dtype=None):
         """Make a plane in L,M,N coordinates.
 
         Args:
@@ -526,7 +528,8 @@ class Volume(SeedGen):
 
     Defined by two opposite corners of a box in 3D
     """
-    def __init__(self, xl, xh, n=None, cache=False, dtype=None):
+    def __init__(self, xl=(-1, -1, -1), xh=(1, 1, 1), n=(20, 20, 20),
+                 cache=False, dtype=None):
         """Make a volume
 
         Args:
@@ -539,11 +542,8 @@ class Volume(SeedGen):
 
         self.xl = np.asarray(xl, dtype=self.dtype)
         self.xh = np.asarray(xh, dtype=self.dtype)
-        if n is None:
-            self.n = np.asarray([20, 20, 20], dtype='i')
-        else:
-            self.n = np.empty_like(self.xl, dtype='i')
-            self.n[:] = n
+        self.n = np.empty_like(self.xl, dtype='i')
+        self.n[:] = n
 
     def get_nr_points(self, **kwargs):
         return np.prod(self.n)
@@ -600,9 +600,9 @@ class Volume(SeedGen):
 class Sphere(SeedGen):
     """Make seeds on the surface of a sphere"""
 
-    def __init__(self, p0, r=0.0, pole=None, ntheta=20, nphi=20,
-                 pole_is_vector=True, theta_phi=False, roll=0.0, cache=False,
-                 dtype=None):
+    def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), ntheta=20, nphi=20,
+                 pole_is_vector=True, theta_phi=False, roll=0.0,
+                 cache=False, dtype=None):
         """Make seeds on the surface of a sphere
 
         Args:
@@ -623,8 +623,6 @@ class Sphere(SeedGen):
         self.p0 = np.asarray(p0, dtype=self.dtype)
 
         if pole_is_vector:
-            if pole is None:
-                pole = [0, 0, 1]
             self.pole = np.asarray(pole, dtype=self.dtype)
         else:
             if pole is None:
@@ -753,9 +751,9 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
     Defined by a center, and a point indicating the direction of the
     cone, and the half angle of the cone.
     """
-    def __init__(self, p0, r=0.0, pole=None, angle=90.0, ntheta=20, nphi=20,
-                 pole_is_vector=True, theta_phi=False, roll=0.0, cache=False,
-                 dtype=None):
+    def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), angle=90.0,
+                 ntheta=20, nphi=20, pole_is_vector=True, theta_phi=False,
+                 roll=0.0, cache=False, dtype=None):
         """Summary
 
         Args:
@@ -816,8 +814,8 @@ class Circle(SphericalCap):
 
     Defined by a center and a point normal to the plane of the circle
     """
-    def __init__(self, p0, pole, n=20, r=None, pole_is_vector=True, roll=0.0,
-                 cache=False, dtype=None):
+    def __init__(self, p0=(0, 0, 0), pole=(0, 0, 1), n=20, r=None,
+                 pole_is_vector=True, roll=0.0, cache=False, dtype=None):
         """Summary
 
         Args:
@@ -840,9 +838,9 @@ class Circle(SphericalCap):
 
 class SphericalPatch(SeedGen):
     """Make a rectangular (in theta and phi) patch on a sphere"""
-    def __init__(self, p0, p1, max_alpha, max_beta, nalpha=20, nbeta=20,
-                 roll=0.0, r=0.0, p1_is_vector=True, cache=False,
-                 dtype=None):
+    def __init__(self, p0=(0, 0, 0), p1=(0, 0, 1), max_alpha=45, max_beta=45,
+                 nalpha=20, nbeta=20, roll=0.0, r=0.0, p1_is_vector=True,
+                 cache=False, dtype=None):
         super(SphericalPatch, self).__init__(cache=cache, dtype=dtype)
 
         max_alpha = (np.pi / 180.0) * max_alpha
