@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # plane = seed.Plane((1., 1., 1.), (1., 1., 1.), (1., 0., 0.),
     #                    1.0, 1.0, 500, 500)
     vol = B.crds
-    # print(plane.points())
+    # print(plane.get_points())
     cProfile.runctx("""interp_vals = cycalc.interp_trilin(B, vol)""",
                     globals(), locals(), "interp.prof")
     t1 = time()
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     s = pstats.Stats("interp.prof")
     s.strip_dirs().sort_stats("cumtime").print_stats()
     # print([line.shape for line in lines])
-    # mpl.scatter_3d(vol.points(), interp_vals[:, 2], show=True)
+    # mpl.scatter_3d(vol.get_points(), interp_vals[:, 2], show=True)
 
     interp_field = field.wrap_field(interp_vals, vol.as_coordinates(),  # pylint: disable=undefined-variable
                                     name="interp", fldtype="vector",

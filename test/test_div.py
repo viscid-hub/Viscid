@@ -23,16 +23,15 @@ if not _viscid_root in sys.path:
 import viscid
 from viscid import logger
 from viscid import vutil
-from viscid.calculator import calc
 from viscid.plot import mpl
 
 def run_div_test(fld, exact, show=False, ignore_inexact=False):
     t0 = time()
-    result_numexpr = calc.div(fld, preferred="numexpr", only=True)
+    result_numexpr = viscid.div(fld, preferred="numexpr", only=True)
     t1 = time()
     logger.info("numexpr magnitude runtime: %g", t1 - t0)
 
-    result_diff = calc.diff(result_numexpr, exact[1:-1, 1:-1, 1:-1])
+    result_diff = viscid.diff(result_numexpr, exact[1:-1, 1:-1, 1:-1])
     if not ignore_inexact and not (result_diff.data < 5e-5).all():
         logger.warn("numexpr result is far from the exact result")
     logger.info("min/max(abs(numexpr - exact)): %g / %g",

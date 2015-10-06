@@ -175,6 +175,21 @@ def clean_pyc_files(dry_run=False):
     else:
         print("Not in Viscid directory, not cleaning pyc/pyo files")
 
+def clean_other_so_files(valid_so_list, dry_run=False):
+    """remove all .pyc / .pyo files"""
+    cwd = os.getcwd()
+    if cwd.endswith("Viscid"):
+        for root, _, files in os.walk(cwd, topdown=False):
+            for name in files:
+                name = os.path.join(root, name)
+                if name.endswith('.so') and name not in valid_so_list:
+                    if os.path.isfile(name):
+                        print('removing other: %s' % name)
+                        if not dry_run:
+                            os.remove(name)
+    else:
+        print("Not in Viscid directory, not cleaning pyc/pyo files")
+
 
 # get clean to remove inplace files
 class Clean(clean):
@@ -184,6 +199,14 @@ class Clean(clean):
         clean.run(self)
 
         clean_pyc_files(self.dry_run)
+
+        # clean inplace so files that are not in ext_modules
+        # this will clean old object files if cython modules move
+        so_file_list = []
+        for ext in self.distribution.ext_modules:
+            fn = os.path.join(*ext.name.split('.')) + ".so"
+            so_file_list.append(os.path.abspath(fn))
+        clean_other_so_files(so_file_list, self.dry_run)
 
         if self.all:
             # remove inplace extensions
@@ -259,6 +282,7 @@ setup(name='viscid',
       include_dirs=[np.get_include()],
       ext_modules=ext_mods,
       scripts=scripts,
+      data_files=[('viscid/plot', ['viscid/plot/blue_marble.jpg'])]
      )
 
 ##

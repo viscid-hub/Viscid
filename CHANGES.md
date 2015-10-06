@@ -5,6 +5,28 @@ Changes
 ======
 
 Changes:
+  - Use LinearLocator for linear colorbars by default
+  - better error message when trying to mpl.plot vector fields
+  - enable ionosphere plots in mayavi, see test_mvi.py
+  - enable plotting meshes in mayavi, see test_mvi.py
+
+Backward Incompatible Changes:
+  - Seeds now use a unified interface. If you use seeds, check out test_seed.py to see how things work now
+  - plot_lines (both matplotlib and mayavi) use a unified interface, check out test_streamline to see how things work now
+
+Refactors:
+  - blocks -> patches everywhere
+  - block -> patch everywhere
+  - vlab.multiplot argument nprocs -> nr_procs
+  - lots of names in `viscid.plot.mvi` and `viscid.calculator.topology`
+
+Bugfixes:
+  - ibound topology detection (north/south accidently became dayside/nightside in version 0.90.0)
+
+0.90.1
+======
+
+Changes:
   - xl and xh properties added to Fields and AMRFields
   - Fields now have get_slice_extent
 

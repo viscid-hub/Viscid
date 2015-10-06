@@ -6,9 +6,11 @@ import multiprocessing as mp
 import multiprocessing.pool
 from contextlib import closing
 from itertools import repeat
+import sys
 
 import numpy as np
 
+import viscid
 from viscid.compat import izip
 
 # Non daemonic processes are probably a really bad idea
@@ -110,7 +112,7 @@ def chunk_interslices(nchunks):
     """Make staggered chunks
 
     Similar to chunk_slices, but pick every nth element instead of
-    getting a contiguous block for each chunk
+    getting a contiguous patch for each chunk
 
     Parameters:
         nchunks: how many chunks to make
@@ -178,9 +180,9 @@ def map(nr_procs, func, args_iter, args_kw=None, timeout=1e8,
         args_iter = izip(repeat(func), args_iter, repeat(args_kw))
         return [_star_passthrough(args) for args in args_iter]
     else:
-        p, r = map_async(nr_procs, func, args_iter, args_kw,
+        p, r = map_async(nr_procs, func, args_iter, args_kw=args_kw,
                          daemonic=daemonic, pool=pool)
-        ret = r.get(timeout)
+        ret = r.get(int(timeout))
         # in principle this join should return almost immediately since
         # we already called r.get
         p.join()
@@ -214,6 +216,15 @@ def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
         1 b
         2 c
     """
+    if sys.platform == 'darwin' and ("mayavi.mlab" in sys.modules or
+                                     "mayavi" in sys.modules):
+        import mayavi
+        if mayavi.ETSConfig.toolkit == 'qt4':
+            viscid.logger.critical("Using multiprocessing with Mayavi + Qt4 "
+                                   "will cause segfaults on join.\n"
+                                   "A workaround is to use the wx backend "
+                                   "(`os.environ['ETS_TOOLKIT'] = 'wx'`).")
+
     if args_kw is None:
         args_kw = {}
     args_iter = izip(repeat(func), args_iter, repeat(args_kw))
@@ -221,14 +232,14 @@ def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
     # if given a pool, don't close it when we're done delegating tasks
     if pool is not None:
         return pool, pool.map_async(_star_passthrough, args_iter)
-
-    if daemonic:
-        pool = mp.Pool(nr_procs)
     else:
-        pool = NoDaemonPool(nr_procs)
+        if daemonic:
+            pool = mp.Pool(nr_procs)
+        else:
+            pool = NoDaemonPool(nr_procs)
 
-    with closing(pool) as p:
-        return p, p.map_async(_star_passthrough, args_iter)
+        with closing(pool) as p:
+            return p, p.map_async(_star_passthrough, args_iter)
 
 ##
 ## EOF

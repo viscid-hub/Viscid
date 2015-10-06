@@ -19,14 +19,15 @@ Note:
 
 from __future__ import print_function
 from timeit import default_timer as time
-from logging import info, warning
 from multiprocessing import Pool, cpu_count
 from contextlib import closing
 from itertools import islice, repeat
 
 import numpy as np
 
+import viscid
 from viscid import parallel
+from viscid.seed import to_seeds
 from viscid.compat import izip
 
 ###########
@@ -36,7 +37,7 @@ from libc.math cimport fabs
 cimport numpy as cnp
 
 from viscid.cython.cyfield cimport MAX_FLOAT, real_t
-from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_block
+from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_patch
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.integrate cimport _c_euler1, _c_rk2, _c_rk12, _c_euler1a
 
@@ -123,7 +124,7 @@ _global_fld = None
 
 #####################
 # now the good stuff
-def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
+def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
                      nr_chunks_factor=1, **kwargs):
     r"""Trace streamlines
 
@@ -133,7 +134,7 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
             anything that exposes an iter_points method
         nr_procs: how many processes for streamlines (>1 only works on
             \*nix systems)
-        force_parallel (bool): always calc streamlines in a separate
+        force_subprocess (bool): always calc streamlines in a separate
             process, even if nr_procs == 1
         nr_chunks_factor (int): If streamlines are really unbalanced
             in length, try bumping this up
@@ -182,63 +183,57 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_parallel=False,
     # fld = make_cyfield(vfield.as_cell_centered())
     fld = make_cyamrfield(vfield)
 
-    nr_streams = seed.nr_points(center=vfield.center)
+    seed = to_seeds(seed)
+
+    nr_streams = seed.get_nr_points(center=vfield.center)
 
     if nr_procs == "all" or nr_procs == "auto":
         nr_procs = cpu_count()
 
-    if nr_procs == 1 and not force_parallel:
-        lines, topo = _streamline_fused_wrapper(fld, nr_streams, seed, **kwargs)
+    nr_chunks = nr_chunks_factor * nr_procs
+    seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points
+    # seed_slices = parallel.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
+    chunk_sizes = parallel.chunk_sizes(nr_streams, nr_chunks)
+
+    global _global_fld
+    if _global_fld is not None:
+        raise RuntimeError("Another process is doing streamlines in this "
+                           "global memory space")
+    _global_fld = fld
+    grid_iter = izip(chunk_sizes, repeat(seed), seed_slices)
+    r = parallel.map(nr_procs, _do_streamline_star, grid_iter,
+                     args_kw=kwargs, force_subprocess=force_subprocess)
+    _global_fld = None
+
+    # rearrange the output to be the exact same as if we just called
+    # _py_streamline straight up (like for nr_procs == 1)
+    if r[0][0] is not None:
+        lines = np.empty((nr_streams,), dtype=np.ndarray)  # [None] * nr_streams
+        for i in range(nr_chunks):
+            lines[slice(*seed_slices[i])] = r[i][0]
     else:
-        # wrap the above around some parallelizing logic that is way more
-        # cumbersome than it needs to be
-        nr_chunks = nr_chunks_factor * nr_procs
-        seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points
-        # seed_slices = parallel.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
-        chunk_sizes = parallel.chunk_sizes(nr_streams, nr_chunks)
+        lines = None
 
-        global _global_fld
-        # if they were already set, then some other process sharing this
-        # global memory is doing streamlines
-        if _global_fld is not None:
-            raise RuntimeError("Another process is doing streamlines in this "
-                               "global memory space")
-        _global_fld = fld
-        grid_iter = izip(chunk_sizes, repeat(seed), seed_slices)
-        args = izip(grid_iter, repeat(kwargs))
+    if r[0][1] is not None:
+        topo = np.empty((nr_streams,), dtype=r[0][1].dtype)
+        for i in range(nr_chunks):
+            topo[slice(*seed_slices[i])] = r[i][1]
+    else:
+        topo = None
 
-        with closing(Pool(nr_procs)) as p:
-            r = p.map_async(_do_streamline_star, args).get(1e8)
-        p.join()
-
-        _global_fld = None
-
-        # rearrange the output to be the exact same as if we just called
-        # _py_streamline straight up (like for nr_procs == 1)
-        if r[0][0] is not None:
-            lines = np.empty((nr_streams,), dtype=np.ndarray)  # [None] * nr_streams
-            for i in range(nr_chunks):
-                lines[slice(*seed_slices[i])] = r[i][0]
-        else:
-            lines = None
-
-        if r[0][1] is not None:
-            topo = np.empty((nr_streams,), dtype=r[0][1].dtype)
-            for i in range(nr_chunks):
-                topo[slice(*seed_slices[i])] = r[i][1]
-        else:
-            topo = None
     return lines, topo
 
 # for legacy code
 streamlines = calc_streamlines
 
 @cython.wraparound(True)
-def _do_streamline_star(args):
+def _do_streamline_star(*args, **kwargs):
     """Wrapper for running in parallel using :py:module`Viscid.parallel`'s
     subprocessing helpers
     """
-    return _streamline_fused_wrapper(_global_fld, *(args[0]), **(args[1]))
+    # print("_global_fld type::", type(_global_fld))
+    gfld = _global_fld
+    return _streamline_fused_wrapper(gfld, *args, **kwargs)
 
 def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
                               seed_slice=(None,), **kwargs):
@@ -249,12 +244,12 @@ def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
     # cdef str fld_type = amr_type[3:]  #
     # cdef int nbits = 8 * int(fld_type.split("_")[1][1])
     # cdef str real_type = "float{0}_t".format(nbits)
-    func = _py_streamline[cython.typeof(fld), cython.typeof(fld.active_block),
+    func = _py_streamline[cython.typeof(fld), cython.typeof(fld.active_patch),
                           cython.typeof(fld.min_dx)]
-    return func(fld, fld.active_block, nr_streams, seed, seed_slice=seed_slice, **kwargs)
+    return func(fld, fld.active_patch, nr_streams, seed, seed_slice=seed_slice, **kwargs)
 
 @cython.wraparound(True)
-def _py_streamline(FusedAMRField amrfld, FusedField active_block,
+def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                    int nr_streams, seed, seed_slice=(None, ),
                    real_t ds0=0.0, real_t ibound=0.0, obound0=None, obound1=None,
                    int stream_dir=DIR_BOTH, int output=OUTPUT_BOTH, int method=EULER1,
@@ -267,7 +262,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
 
     Args:
         amrfld (FusedAMRField): Some Vector Field with 3 components
-        active_block (FusedField): amrfld.active_block, needed for its
+        active_patch (FusedField): amrfld.active_patch, needed for its
             ctype b/c integrate_funcs are cdef'd for performance
         nr_streams (int):
         seed: can be a Seeds instance or a Coordinates instance, or
@@ -298,7 +293,8 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
         int (*integrate_func)(FusedField fld, real_t x[3], real_t *ds,
                               real_t tol_lo, real_t tol_hi,
                               real_t fac_refine, real_t fac_coarsen,
-                              real_t smallest_step, real_t largest_step) except -1
+                              real_t smallest_step, real_t largest_step,
+                              real_t vscale[3]) except -1
         int (*end_flags_to_topology)(int _end_flags)
 
         int i, j, it
@@ -319,6 +315,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
         int _dir_d[2]
         real_t x0[3]
         real_t s[3]
+        real_t vscale[3]
         int line_ends[2]
 
         int[:] topology_mv = None
@@ -346,17 +343,19 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
     for i in range(3):
         # n = fld.n[i]
         # nnc = fld.nr_nodes[i]
-        if active_block.n[i] == 1:
+        if active_patch.n[i] == 1:
             # these hoops are required for processing 2d fields
             if obound0 is None:
                 c_obound0[i] = -MAX_FLOAT
             if obound1 is None:
                 c_obound1[i] = MAX_FLOAT
+            vscale[i] = 0.0
         else:
             if obound0 is None:
                 c_obound0[i] = amrfld.global_xl[i]
             if obound1 is None:
                 c_obound1[i] = amrfld.global_xh[i]
+            vscale[i] = 1.0
 
     if ds0 == 0.0:
         ds0 = 0.5 * amrfld.min_dx
@@ -393,15 +392,17 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
     t0_all = time()
     t0 = time()
 
-    seed_iter = islice(seed.iter_points(center=active_block.center), *seed_slice)
+    seed_iter = islice(seed.iter_points(center=active_patch.center), *seed_slice)
     for i_stream, seed_pt in enumerate(seed_iter):
         if i_stream % nprogress == 0:
             t1 = time()
-            info("Streamline {0} of {1}: {2}% done, {3:.03e}".format(i_stream,
-                         nr_streams, int(100.0 * i_stream / nr_streams),
-                         t1 - t0))
+            viscid.logger.debug("Streamline {0} of {1}: {2}% done, {3:.03e}"
+                                "".format(i_stream, nr_streams,
+                                          int(100.0 * i_stream / nr_streams),
+                                          t1 - t0))
             t0 = time()
 
+        assert len(seed_pt) == 3, "Seeds must have 3 spatial dimensions"
         x0[0] = seed_pt[0]
         x0[1] = seed_pt[1]
         x0[2] = seed_pt[2]
@@ -437,11 +438,11 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_block,
                 pre_ds = fabs(ds)
 
                 # this if statement appears to give no speedup
-                # if amrfld.nr_blocks > 1:
-                activate_block[FusedAMRField, real_t](amrfld, s)
-                ret = integrate_func(amrfld.active_block, s, &ds,
+                # if amrfld.nr_patches > 1:
+                activate_patch[FusedAMRField, real_t](amrfld, s)
+                ret = integrate_func(amrfld.active_patch, s, &ds,
                                      tol_lo, tol_hi, fac_refine , fac_coarsen,
-                                     smallest_step, largest_step)
+                                     smallest_step, largest_step, vscale)
 
                 if fabs(ds) >= pre_ds:
                     stream_length += pre_ds
@@ -500,7 +501,7 @@ cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
     cdef real_t rsq = pt[0]**2 + pt[1]**2 + pt[2]**2
 
     if rsq < ibound**2:
-        if pt[0] >= 0.0:
+        if pt[2] >= 0.0:
             done = _C_END_IBOUND_NORTH
         else:
             done = _C_END_IBOUND_SOUTH

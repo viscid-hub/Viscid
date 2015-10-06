@@ -22,7 +22,12 @@ Below are some simple examples to get you started with Viscid. There are some fa
 Quick Start
 -----------
 
-I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable. Check :doc:`installation` for the list of dependancies. To build Viscid, I recommend running ``./setup.py build_ext -i`` and adding the ``Viscid`` directory to your ``PYTHONPATH`` and ``Viscid/scripts`` to your ``PATH``.
+I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable. Check :doc:`installation` for the list of dependancies. To build Viscid, I recommend running::
+
+  ./setup.py build_ext -i
+  viscid_dir=$(pwd)
+  export PYTHONPATH=$PYTHONPATH:${viscid_dir}
+  export PATH=$PATH:${viscid_dir}/scripts
 
 Contents
 --------
@@ -38,6 +43,7 @@ Contents
   installation
   philosophy
   custom_behavior
+  functions
   plot_options
   command_line
   extending_readers

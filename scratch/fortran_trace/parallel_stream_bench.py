@@ -33,14 +33,14 @@ y1 = -5.0; y2 = 5.0 #pylint: disable=C0321
 z1 = -5.0; z2 = 5.0 #pylint: disable=C0321
 vol = seed.Volume((z1, y1, x1), (z2, y2, x2), gsize)
 
-def trace_cython(B, nr_procs, force_parallel=False):
+def trace_cython(B, nr_procs, force_subprocess=False):
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
                             maxit=5000, output=streamline.OUTPUT_BOTH,
                             method=streamline.EULER1,
                             tol_lo=0.005, tol_hi=0.1,
                             fac_refine=0.75, fac_coarsen=1.5,
                             nr_procs=nr_procs,
-                            force_parallel=force_parallel)
+                            force_subprocess=force_subprocess)
     return lines, topo
 
 def main():
@@ -76,7 +76,7 @@ def main():
     print("always parallel overhead now...")
     for i, nr_procs in enumerate(nr_procs_list):
         t0 = time()
-        lines, topo = trace_cython(B, nr_procs=nr_procs, force_parallel=True)
+        lines, topo = trace_cython(B, nr_procs=nr_procs, force_subprocess=True)
         t1 = time()
         fld = vol.wrap_field(topo, name="CyTopo")
         same_topo = (fld.data == topo_single.data).all()
@@ -102,12 +102,10 @@ def main():
         #mpl.plot_streamlines(lines, topology=topo, show=False)
         mpl.mplshow()
 
-        # topo_src = mvi.field_to_point_source(topo_fld)
-        # e = mlab.get_engine()
-        # e.add_source(topo_src)
+        # topo_src = mvi.add_field(topo_fld, center='node')
         # mvi.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,
         #                tube_radius=0.02)
-        # mvi.mlab_earth(mlab.pipeline)
+        # mvi.plot_earth_3d()
         # mlab.show()
 
 if __name__ == "__main__":

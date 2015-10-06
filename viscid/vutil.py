@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+# FIXME: this module is way too long and disorganized
+
 from __future__ import print_function, division
 
 from datetime import datetime
@@ -14,6 +16,7 @@ import subprocess as sub
 import sys
 from timeit import default_timer as time
 
+import viscid
 from viscid import logger
 from viscid.compat import izip, string_types
 
@@ -65,7 +68,7 @@ def add_mpl_output_arguments(parser):
                         help="show plots with plt.show()")
     return parser
 
-def common_argparse(parser, default_verb=0, logging_fmt=None):
+def common_argparse(parser, default_verb=0):
     """ add some common verbosity stuff to argparse, parse the
     command line args, and setup the logging levels
     parser should be an ArgumentParser instance, and kwargs
@@ -87,11 +90,6 @@ def common_argparse(parser, default_verb=0, logging_fmt=None):
         # default = 30 WARNING
         verb = args.v - args.q
         logger.setLevel(int(30 - 10 * verb))
-
-    # the 0th handler going to stderr should always be setup
-    if not logging_fmt:
-        logging_fmt = "(%(levelname)s): %(message)s"
-    logger.handlers[0].setFormatter(logging.Formatter(logging_fmt))
 
     return args
 
@@ -540,6 +538,14 @@ def extract_index(arr, start=None, stop=None, step=None, endpoint=True,
             sss[i] = s.__index__()
     return sss
 
+def _expand_newaxis(arrs, slices):
+    for i, sl in enumerate(slices):
+        if sl in [None, np.newaxis, "None", "newaxis"]:
+            if len(arrs) < len(slices):
+                arrs.insert(i, None)
+            slices[i] = np.newaxis
+    return arrs, slices
+
 def to_slices(arrs, slices, endpoint=True, tol=100):
     """Wraps :py:func:`to_slice` for multiple arrays / slices
 
@@ -570,7 +576,10 @@ def to_slices(arrs, slices, endpoint=True, tol=100):
         raise TypeError("To wrap a single slice use vutil.to_slice(...)")
 
     if arrs is None:
-        arrs = [None] * len()
+        arrs = [None] * len(slices)
+
+    arrs, slices = _expand_newaxis(arrs, slices)
+
     if len(arrs) != len(slices):
         raise ValueError("len(arrs) must == len(slices):: {0} {1}"
                          "".format(len(arrs), len(slices)))
@@ -606,8 +615,16 @@ def to_slice(arr, s, endpoint=True, tol=100):
     """
     ret = None
 
+    try:
+        # kill whitespace
+        s = "".join(s.split())
+    except AttributeError:
+        pass
+
     if hasattr(s, "__index__"):
         ret = s
+    elif s in [np.newaxis, None, "newaxis", "None"]:
+        ret = np.newaxis
     else:
         if isinstance(s, slice):
             slclst = [s.start, s.stop, s.step]
@@ -627,7 +644,12 @@ def to_slice(arr, s, endpoint=True, tol=100):
                              "{0}".format(s))
         # sss -> start step step
 
-        if len(slclst) == 1:
+        if arr is None:
+            if len(slclst) == 1:
+                ret = int(slclst[0])
+            else:
+                ret = slice(*[None if a is None else int(a) for a in slclst])
+        elif len(slclst) == 1:
             ret = _closest_index(arr, slclst[0])
         else:
             sss = extract_index(arr, *slclst, endpoint=endpoint,
@@ -702,8 +724,8 @@ def slice_globbed_filenames(glob_pattern):
     n_slices = len(re.findall(slc_re, glob_pattern))
 
     if n_slices > 1:
-        print("Multiple filename slices found, only using the first.",
-              file=sys.stderr)
+        viscid.logger.warn("Multiple filename slices found, only using the "
+                           "first.")
 
     if n_slices:
         m = re.search(slc_re, glob_pattern)
@@ -719,6 +741,8 @@ def slice_globbed_filenames(glob_pattern):
     fnames = glob(edited_glob)
 
     if n_slices:
+        if not fnames:
+            raise IOError("the glob {0} matched no files".format(edited_glob))
         times = [float(re.match(res_re, fn).group('TSLICE')) for fn in fnames]
         fnames = [fn for fn, t in sorted(zip(fnames, times), key=itemgetter(1))]
         times.sort()
@@ -747,12 +771,168 @@ def value_is_float_not_int(value):
 def convert_deprecated_floats(value, varname="value"):
     if value_is_float_not_int(value):
         # TODO: eventually, a ValueError should be raised here
-        print("Deprecation Warning!\n"
-              "  Slicing by float is deprecated. The slice by value syntax is \n"
-              "  now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
-              "".format(varname, value), file=sys.stderr)
+        s = ("DEPRECATION...\n"
+             "Slicing by float is deprecated. The slice by value syntax is \n"
+             "now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
+             "".format(varname, value))
+        viscid.logger.warn(s)
         value = "{0}f".format(value)
     return value
+
+def prepare_lines(lines, scalars=None, do_connections=False, other=None):
+    """Concatenate and standardize a list of lines
+
+    Args:
+        lines (list): Must be a list of 3xN or 4xN ndarrays of xyz(s)
+            data for N points along the line. N need not be the same
+            for all lines. Can alse be 6xN such that lines[:][3:, :]
+            are interpreted as rgb colors
+        scalars (ndarray, list): Can have shape 1xN for a single scalar
+            or 3xN for an rgb color for each point. If the shape is
+            1xNlines, the scalar is broadcast so the whole line gets
+            the same value, and likewise for 3xNlines and rgb colors.
+            Can also be a list of hex color (#ffffff) strings.
+            Otherwise, scalars is reshaped to -1xN.
+        do_connections (bool): Whether or not to make connections array
+        other (dict): a dictionary of other arrays that should be
+            reshaped and the like the same way scalars is
+
+    Returns:
+        (vertices, scalars, connections, other)
+
+        * vertices (ndarray): 3xN array of N xyz points. N is the sum
+            of the lengths of all the lines
+        * scalars (ndarray): N array of scalars, 3xN array of uint8
+            rgb values, or None
+        * connections (ndarray): Nx2 array of ints (indices along
+            axis 1 of vertices) describing the forward and backward
+            connectedness of the lines, or None
+        * other (dict): a dict of N length arrays
+
+    Raises:
+        ValueError: If rgb data is not in a valid range or the shape
+            of scalars is not understood
+    """
+    nlines = len(lines)
+    npts = [line.shape[1] for line in lines]
+    N = np.sum(npts)
+    first_idx = np.cumsum([0] + npts[:-1])
+    vertices = [np.asarray(line) for line in lines]
+    vertices = np.concatenate(lines, axis=1)
+
+    if vertices.shape[0] > 3:
+        if scalars is not None:
+            viscid.logger.warn("Overriding line scalars with scalars kwarg")
+        else:
+            scalars = vertices[3:, :]
+        vertices = vertices[:3, :]
+
+    if scalars is not None:
+        if isinstance(scalars, viscid.field.Field):
+            scalars = viscid.interp_trilin(scalars, vertices)
+            if scalars.size != N:
+                raise ValueError("Scalars was not a scalar field")
+
+        scalars = np.atleast_2d(scalars)
+
+        if scalars.shape == (1, 1):
+            scalars = scalars.repeat(N, axis=1)
+        elif scalars.shape == (1, nlines) or scalars.shape == (nlines, 1):
+            # one scalar for each line, so broadcast it
+            scalars = scalars.reshape(nlines, 1)
+            scalars = [scalars[i].repeat(ni) for i, ni in enumerate(npts)]
+            scalars = np.concatenate(scalars, axis=0).reshape(1, N)
+        elif scalars.shape == (N, 1) or scalars.shape == (1, N):
+            # catch these so they're not interpreted as colors if
+            # nlines == 1 and N == 3; ie. 1 line with 3 points
+            scalars = scalars.reshape(1, N)
+        elif scalars.shape == (3, nlines) or scalars.shape == (nlines, 3):
+            # one rgb color for each line, so broadcast it
+            if scalars.shape == (3, nlines):
+                scalars = scalars.T
+            colors = []
+            for i, ni in enumerate(npts):
+                c = scalars[i].reshape(3, 1).repeat(ni, axis=1)
+                colors.append(c)
+            scalars = np.concatenate(colors, axis=1)
+        else:
+            scalars = scalars.reshape(-1, N)
+
+        if scalars.dtype.kind == 'S':
+            # translate hex colors (#ff00ff) into rgb values
+            scalars = np.char.lstrip(scalars, '#').astype('S6')
+            scalars = np.char.zfill(scalars, 6)
+            scalars = np.frombuffer(np.char.decode(scalars, 'hex'), dtype='u1')
+            scalars = scalars.reshape(-1, 3).T
+        elif scalars.shape[0] == 1:
+            # normal scalars
+            scalars = scalars.reshape(-1)
+        elif scalars.shape[0] == 3:
+            # The scalars encode rgb data, standardize the result to a
+            # 3xN ndarray of 1 byte unsigned ints (chars)
+            if np.all(scalars >= 0) and np.all(scalars <= 1):
+                scalars = (255 * scalars).round().astype('u1')
+            elif np.all(scalars >= 0) and np.all(scalars < 256):
+                scalars = scalars.round().astype('u1')
+            else:
+                raise ValueError("Rgb data should be in range [0, 1] or "
+                                 "[0, 255], range given is [{0}, {1}]"
+                                 "".format(np.min(scalars), np.max(scalars)))
+        else:
+            raise ValueError("Scalars should either be a number, or set of "
+                             "rgb values, shape is {0}".format(scalars.shape))
+
+    # broadcast / reshape additional arrays given in other
+    if other:
+        for key, arr in other.items():
+            if arr is None:
+                pass
+            elif arr.shape == (1, nlines) or arr.shape == (nlines, 1):
+                arr = arr.reshape(nlines, 1)
+                arr = [arr[i].repeat(ni) for i, ni in enumerate(npts)]
+                other[key] = np.concatenate(arr, axis=0).reshape(1, N)
+            else:
+                try:
+                    other[key] = arr.reshape(-1, N)
+                except ValueError:
+                    viscid.logger.warn("Unknown dimension, dropping array {0}"
+                                       "".format(key))
+
+    if do_connections:
+        connections = [None] * nlines
+        for i, ni in enumerate(npts):
+            # i0 is the index of the first point of the i'th line in lines
+            i0 = first_idx[i]
+            connections[i] = np.vstack([np.arange(i0, i0 + ni - 1.5),
+                                        np.arange(i0 + 1, i0 + ni - 0.5)]).T
+        connections = np.concatenate(connections, axis=0).astype('i')
+    else:
+        connections = None
+
+    return vertices, scalars, connections, other
+
+def meshlab_convert(fname, fmt="dae", quiet=True):
+    """Run meshlabserver to convert 3D mesh files
+
+    Uses `MeshLab <http://meshlab.sourceforge.net/>`_, which is a great
+    little program for playing with 3D meshes. The best part is that
+    OS X's Preview can open the COLLADA (`*.dae`) format. How cool is
+    that?
+
+    Args:
+        fname (str): file to convert
+        fmt (str): extension of result, defaults to COLLADA format
+        quiet (bool): redirect output to :py:attr:`os.devnull`
+
+    Returns:
+        None
+    """
+    iname = fname
+    oname = '.'.join(iname.split('.')[:-1]) + "." + fmt.strip()
+    redirect = "&> {0}".format(os.devnull) if quiet else ""
+    cmd = ("meshlabserver -i {0} -o {1} -om vc vn fc fn {2}"
+           "".format(iname, oname, redirect))
+    sub.Popen(cmd, shell=True, stdout=None, stderr=None)
 
 ##
 ## EOF

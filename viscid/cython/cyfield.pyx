@@ -16,7 +16,7 @@ cdef inline int _c_int_max(int a, int b):
         return b
 
 cdef CyField make_cyfield(vfield):
-    vfield = vfield.as_interlaced(force_c_contiguous=True)
+    vfield = vfield.as_interlaced(force_c_contiguous=True).atleast_3d()
     fld_dtype = np.dtype(vfield.dtype)
 
     if fld_dtype == np.dtype('i4'):
@@ -35,15 +35,15 @@ cdef CyField make_cyfield(vfield):
 
 cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
     dat = vfield.data
-    if len(dat.shape) < 4:
+    while len(dat.shape) < 4:
         dat = np.expand_dims(dat, axis=4)
     fld.data = dat
 
     fld.center = vfield.center
 
-    x, y, z = vfield.get_crds("xyz")
-    xnc, ync, znc = vfield.get_crds_nc("xyz")
-    xcc, ycc, zcc = vfield.get_crds_cc("xyz")
+    x, y, z = vfield.get_crds()
+    xnc, ync, znc = vfield.get_crds_nc()
+    xcc, ycc, zcc = vfield.get_crds_cc()
 
     fld.x = x.astype(crd_dtype, copy=False)
     fld.y = y.astype(crd_dtype, copy=False)

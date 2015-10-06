@@ -129,6 +129,7 @@ html_theme_options = {
     'navbar_dropdown_links':
         [("Tutorial", [("Installation", "installation"),
                        ("RC file", "custom_behavior"),
+                       ("Useful Functions", "functions"),
                        ("Plot Options", "plot_options"),
                        ("Command Line Tools", "command_line"),
                        ("Extending Readers", "extending_readers"),
@@ -138,6 +139,7 @@ html_theme_options = {
                        ("Slicing", "examples/slicing"),
                        ("Calculator", "examples/calc"),
                        ("OpenGGCM", "examples/openggcm"),
+                       ("3D Plots", "examples/mayavi_plotting"),
                       ]
          )
         ]

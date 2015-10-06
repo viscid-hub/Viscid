@@ -8,3 +8,4 @@ Examples
   slicing
   calc
   openggcm
+  mayavi_plotting

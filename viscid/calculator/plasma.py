@@ -13,6 +13,8 @@ except ImportError:
 from viscid import field
 # from viscid.calculator import calc
 
+__all__ = ["calc_psi", "calc_beta"]
+
 
 def calc_psi(B, reversed=False):
     """Calc Flux function (only valid in 2d)
@@ -37,6 +39,7 @@ def calc_psi(B, reversed=False):
     # being that the loops are in python instead of some broadcasting
     # numpy type thing
 
+    B = B.slice_reduce(":")
     if B.nr_sdims != 2:
         raise ValueError("flux function implemented for 2D fields")
 
@@ -63,17 +66,17 @@ def calc_psi(B, reversed=False):
     if reversed:
         A[-1, -1] = 0.0
         for i in range(ny - 2, -1, -1):
-            A[i, -1] = A[i + 1, -1] - dz[i] * 0.5 * (hy[i, -1] + hy[i + 1, -1])
+            A[i, -1] = A[i + 1, -1] - dy[i] * 0.5 * (hz[i, -1] + hz[i + 1, -1])
 
         for j in range(nz - 2, -1, -1):
-            A[:, j] = A[:, j + 1] + dy[j] * 0.5 * (hz[:, j + 1] + hz[:, j])
+            A[:, j] = A[:, j + 1] + dz[j] * 0.5 * (hy[:, j + 1] + hy[:, j])
     else:
         A[0, 0] = 0.0
         for i in range(1, ny):
-            A[i, 0] = A[i - 1, 0] + dz[i - 1] * 0.5 * (hy[i, 0] + hy[i - 1, 0])
+            A[i, 0] = A[i - 1, 0] + dy[i - 1] * 0.5 * (hz[i, 0] + hz[i - 1, 0])
 
         for j in range(1, nz):
-            A[:, j] = A[:, j - 1] - dy[j - 1] * 0.5 * (hz[:, j - 1] + hz[:, j])
+            A[:, j] = A[:, j - 1] - dz[j - 1] * 0.5 * (hy[:, j - 1] + hy[:, j])
 
     return field.wrap_field(A, B.crds, name="psi", center=B.center,
                             pretty_name=r"$\psi$", parents=[B])

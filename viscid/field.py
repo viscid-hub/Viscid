@@ -8,12 +8,12 @@ convenience functions for creating fields similar to `Numpy`.
 """
 
 from __future__ import print_function
-import warnings
 from itertools import count, islice
 from inspect import isclass
 
 import numpy as np
 
+import viscid
 from viscid import logger
 from viscid.compat import string_types, izip_longest
 from viscid import coordinate
@@ -62,7 +62,7 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
             discovered_center = "cell"
         else:
             raise ValueError("Can't detect centering for scalar dat_arr")
-    elif len(dat_arr.shape) + 1 == len(crds.shape_nc):
+    elif len(dat_arr.shape) == len(crds.shape_nc) + 1:
         discovered_type = "vector"
         if crds_shape_nc == dat_arr_shape[:-1]:
             discovered_layout = LAYOUT_INTERLACED
@@ -105,15 +105,15 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
     elif fldtype.lower() == "vector":
         if layout == LAYOUT_FLAT:
             sshape = dat_arr.shape[1:]
-        elif layout == LAYOUT_FLAT:
-            sshape = dat_arr.shape[1:]
+        elif layout == LAYOUT_INTERLACED:
+            sshape = dat_arr.shape[:-1]
         else:
             raise ValueError("Unknown layout: {0}".format(layout))
     else:
         raise ValueError("Unknown type: {0}".format(fldtype))
 
     crd_arrs = [np.arange(s).astype(dat_arr.dtype) for s in sshape]
-    return arrays2field(name, crd_arrs, dat_arr, center=center)
+    return arrays2field(dat_arr, crd_arrs, name=name, center=center)
 
 def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
           nr_comps=0, crd_names="xyzuvw", _initial_vals="empty", **kwargs):
@@ -274,7 +274,7 @@ def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
     if not "zyx_native" in kwargs:
         kwargs["zyx_native"] = False
     else:
-        print("Warning: did you really want to do another transpose?")
+        logger.warn("did you really want to do another transpose?")
 
     vfield = VectorField(name, _crds, fldlist, center=center, time=time,
                          meta=fldlist[0].meta, parents=[fldlist[0]],
@@ -300,7 +300,7 @@ def field_type(fldtype):
         for cls in vutil.subclass_spider(Field):
             if cls.istype(fldtype):
                 return cls
-    logger.warn("Field type {0} not understood".format(fldtype))
+    logger.error("Field type {0} not understood".format(fldtype))
     return None
 
 def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
@@ -443,8 +443,8 @@ class Field(tree.Leaf):
 
         if not "force_layout" in self.deep_meta:
             if "force_layout" in self.meta:
-                warnings.warn("deprecated force_layout syntax: kwarg should "
-                              "be given as _force_layout")
+                logger.warn("deprecated force_layout syntax: kwarg should "
+                            "be given as _force_layout")
                 self.deep_meta["force_layout"] = self.meta["force_layout"]
             else:
                 self.deep_meta["force_layout"] = LAYOUT_DEFAULT
@@ -658,11 +658,11 @@ class Field(tree.Leaf):
         # do some sort of lazy pre-setup _src_data inspection?
 
     @property
-    def blocks(self):
+    def patches(self):
         return [self]
 
     @property
-    def nr_blocks(self):  # pylint: disable=no-self-use
+    def nr_patches(self):  # pylint: disable=no-self-use
         return 1
 
     @property
@@ -674,7 +674,7 @@ class Field(tree.Leaf):
         return self.crds.xh_nc
 
     def get_slice_extent(self, selection):
-        extent = self.blocks[0]._src_crds.get_slice_extent(selection)
+        extent = self.patches[0]._src_crds.get_slice_extent(selection)
         for i in range(3):
             if np.isnan(extent[0, i]):
                 extent[0, i] = self.xl[i]
@@ -910,9 +910,9 @@ class Field(tree.Leaf):
             # if this happens, don't ignore it even if it happens to work
             # print("??", self, self.native_shape, self.shape, )
             # import pdb; pdb.set_trace()
-            logger.warn("could not detect layout for '{0}': shape = {1} "
-                        "target shape = {2}"
-                        "".format(self.name, dat_shape, sshape))
+            logger.error("could not detect layout for '{0}': shape = {1} "
+                         "target shape = {2}"
+                         "".format(self.name, dat_shape, sshape))
             layout = LAYOUT_OTHER
 
         return layout
@@ -928,9 +928,24 @@ class Field(tree.Leaf):
                     sel_lst = list(selection)
                     _isstr = False
                 elif isinstance(selection, string_types):
+                    selection = "".join(selection.split())
                     _ = selection.replace('_', ',')
                     sel_lst = [s for s in _.split(",")]  # pylint: disable=maybe-no-member
                     _isstr = True
+                elif isinstance(selection, np.ndarray):
+                    # FIXME: advanced slicing by ndarrays involves
+                    #        understanding how exactly these slices are parsed
+                    #        in numpy. Additionally, there will probably be
+                    #        some ambiguity about what the crds should be after
+                    #        the slice, so for now it's arguably better to let
+                    #        the end user do this themselves.
+                    raise NotImplementedError("Viscid fields can't slice by "
+                        "int / bool ndarrays yet. To achieve this, one can "
+                        "slice a field's `data` attribute since that's "
+                        "guarenteed to be and ndarray. The only rub is "
+                        "you'll need to construct your own coordinates and "
+                        "re-wrap the field if you want a field at the end of "
+                        "the day.")
                 else:
                     raise TypeError()
 
@@ -943,11 +958,64 @@ class Field(tree.Leaf):
                             break
                     except AttributeError:
                         continue
-                if len(sel_lst) == self.nr_dims and comp_slc is None:
-                    comp_slc = sel_lst.pop(self.nr_comp)
 
-                if isinstance(comp_slc, string_types):
-                    comp_slc = self._COMPONENT_NAMES.index(comp_slc)
+                # figure out if there is a slice for the comonent dimension
+                # and remove it... this is prickly b/c newaxis and Ellipsis
+                # must be removed / expanded to see if the slice has a value
+                # for the component dimension
+                if comp_slc is None:
+                    cull_lst = [np.newaxis, 'none', 'newaxis']
+                    culled_selection = []
+                    orig_ind = []
+                    for i, s in enumerate(sel_lst):
+                        try:
+                            s = s.lower().strip()
+                        except AttributeError:
+                            pass
+                        if s not in cull_lst:
+                            if s in ['...', 'ellipsis']:
+                                s = Ellipsis
+                            culled_selection.append(s)
+                            orig_ind.append(i)
+                    if Ellipsis in culled_selection:
+                        assert culled_selection.count(Ellipsis) <= 1
+                        ellipsis_ind = culled_selection.index(Ellipsis)
+                        culled_selection.pop(ellipsis_ind)
+                        orig_ind.pop(ellipsis_ind)
+                        for _ in range(self.nr_dims - len(culled_selection)):
+                            culled_selection.insert(ellipsis_ind, slice(None))
+                            orig_ind.insert(ellipsis_ind, -1)
+
+                    if len(culled_selection) > self.nr_comp:
+                        comp_val = culled_selection[self.nr_comp]
+
+                        # comp_slc = comp_val
+                        # if orig_ind[self.nr_comp] >= 0:
+                        #     sel_lst.pop(orig_ind[self.nr_comp])
+
+                        is_valid_comp = False
+                        try:
+                            if comp_val in self._COMPONENT_NAMES:
+                                is_valid_comp = True
+                            else:
+                                raise TypeError
+                        except TypeError:
+                            try:
+                                _ = int(comp_val)
+                                is_valid_comp = True
+                            except ValueError:
+                                pass
+                        if is_valid_comp:
+                            comp_slc = comp_val
+                            if orig_ind[self.nr_comp] >= 0:
+                                sel_lst.pop(orig_ind[self.nr_comp])
+
+                try:
+                    if comp_slc in self._COMPONENT_NAMES:
+                        comp_slc = self._COMPONENT_NAMES.index(comp_slc)
+                except TypeError:
+                    pass
+
                 if _isstr:
                     selection = ",".join(sel_lst)
                 else:
@@ -957,10 +1025,11 @@ class Field(tree.Leaf):
 
         if comp_slc is None:
             comp_slc = slice(None)
+        comp_slc = vutil.to_slice(None, comp_slc)
 
         return selection, comp_slc
 
-    def _finalize_slice(self, slices, crdlst, reduced, comp_slc):
+    def _finalize_slice(self, slices, crdlst, reduced, crd_type, comp_slc):
         # if self.name == "b":
         #     import pdb; pdb.set_trace()
         all_none = (list(slices) == [slice(None)] * len(slices))
@@ -987,7 +1056,7 @@ class Field(tree.Leaf):
         # the slice will have to load the data
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(self._src_crds.crdtype, crdlst)
+        crds = coordinate.wrap_crds(crd_type, crdlst)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -1041,11 +1110,12 @@ class Field(tree.Leaf):
             # now put component slice back in
             try:
                 nr_comp = self.nr_comp
-                first_slc.insert(self.nr_comp, comp_slc)
-                native_first_slc.insert(self.nr_comp, comp_slc)
+                nr_comp += first_slc[:nr_comp].count(np.newaxis)
+                first_slc.insert(nr_comp, comp_slc)
+                native_first_slc.insert(nr_comp, comp_slc)
                 if not single_comp_slc:
-                    second_slc.insert(self.nr_comp, slice(None))
-                    native_second_slc.insert(self.nr_comp, slice(None))
+                    second_slc.insert(nr_comp, slice(None))
+                    native_second_slc.insert(nr_comp, slice(None))
             except TypeError:
                 nr_comp = None
 
@@ -1091,7 +1161,9 @@ class Field(tree.Leaf):
         # fallback: either not hypersliceable, or the shapes didn't match up
         if slced_dat is None:
             try:
-                slices.insert(self.nr_comp, comp_slc)
+                nr_comp = self.nr_comp
+                nr_comp += slices[:nr_comp].count(np.newaxis)
+                slices.insert(nr_comp, comp_slc)
             except TypeError:
                 pass
             # use xyz slices cause self.data is guarenteed to be xyz
@@ -1135,8 +1207,8 @@ class Field(tree.Leaf):
         """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self._src_crds.make_slice(selection, cc=cc)
-        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+        slices, crdlst, reduced, crd_type = self._src_crds.make_slice(selection, cc=cc)
+        return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
     def slice_reduce(self, selection):
         """ Slice the field, then go through all dims and look for dimensions
@@ -1144,9 +1216,9 @@ class Field(tree.Leaf):
         field """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self._src_crds.make_slice_reduce(selection,
-                                                                   cc=cc)
-        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+        slices, crdlst, reduced, crd_type = self._src_crds.make_slice_reduce(selection,
+                                                                             cc=cc)
+        return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
     def slice_and_keep(self, selection):
         """ Slice the field, then go through dimensions that would be reduced
@@ -1154,10 +1226,10 @@ class Field(tree.Leaf):
         in the new field """
         cc = self.iscentered("Cell")
         selection, comp_slc = self._prepare_slice(selection)
-        slices, crdlst, reduced = self._src_crds.make_slice_keep(selection,
-                                                                 cc=cc)
+        slices, crdlst, reduced, crd_type = self._src_crds.make_slice_keep(selection,
+                                                                           cc=cc)
         # print("??", type(self._src_crds), crdlst)
-        return self._finalize_slice(slices, crdlst, reduced, comp_slc)
+        return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
@@ -1176,7 +1248,9 @@ class Field(tree.Leaf):
         selection, comp_slc = self._prepare_slice(selection)
         slices, _ = self._src_crds.make_slice(selection, cc=cc)[:2]
         try:
-            slices.insert(self.nr_comp, comp_slc)
+            nr_comp = self.nr_comp
+            nr_comp += slices[:nr_comp].count(np.newaxis)
+            slices.insert(nr_comp, comp_slc)
         except TypeError:
             pass
         self.data[tuple(slices)] = value
@@ -1188,6 +1262,31 @@ class Field(tree.Leaf):
 
     def iscentered(self, center_str):
         return self.center == center_str.lower()
+
+    def to_seeds(self):
+        return viscid.to_seeds(self.get_points())
+
+    @property
+    def nr_points(self):
+        return self.get_nr_points()
+
+    def get_nr_points(self, center=None, **kwargs):  # pylint: disable=unused-argument
+        if center is None:
+            center = self.center
+        return self._src_crds.get_nr_points(center=center)
+
+    def points(self, center=None, **kwargs):
+        return self.get_points(center=center, **kwargs)
+
+    def get_points(self, center=None, **kwargs):  # pylint: disable=unused-argument
+        if center is None:
+            center = self.center
+        return self._src_crds.get_points(center=center)
+
+    def as_mesh(self, center=None, **kwargs):  # pylint: disable=unused-argument
+        if center is None:
+            center = self.center
+        return self._src_crds.as_mesh(center=center)
 
     def iter_points(self, center=None, **kwargs): #pylint: disable=W0613
         if center is None:
@@ -1418,6 +1517,24 @@ class Field(tree.Leaf):
             self.clear_cache()
         return ret
 
+    def atleast_3d(self, xl=-1, xh=1):
+        """return self, but with nr_sdims >= 3"""
+        nr_sdims = self.nr_sdims
+
+        if nr_sdims >= 3:
+            return self
+        elif nr_sdims < 3:
+            new_shape = self.sshape + [1] * (3 - nr_sdims)
+            if self.nr_comps:
+                new_shape.insert(self.nr_comp, self.nr_comps)
+
+            newcrds = self.crds.atleast_3d(xl, xh, cc=self.iscentered('cell'))
+            ctx = {'crds': newcrds}
+            if self.is_loaded:
+                return self.wrap(self.data.reshape(new_shape), context=ctx)
+            else:
+                return self.wrap(self._src_data, context=ctx)
+
     #######################
     ## emulate a container
 
@@ -1476,17 +1593,20 @@ class Field(tree.Leaf):
         if npkwargs:
             axis = npkwargs.get('axis', None)
             if axis is not None:
-                reduce_axis = crds.axes[axis]
-                crd_slc = "{0}=0".format(reduce_axis)
-                default_keepdims = len(self.shape) == len(crds.shape)
-                iscc = self.iscentered('cell')
                 if self.nr_comps > 0 and axis == self.nr_comp:
+                    # reducing vector -> scalar, no need to play with crds
                     pass
-                elif npkwargs.get("keepdims", default_keepdims):
-                    crds = self.crds.slice_keep(crd_slc, cc=iscc)
                 else:
-                    crds = self.crds.slice_reduce(crd_slc, cc=iscc)
-                defer_wrapping = True
+                    reduce_axis = crds.axes[axis]
+                    crd_slc = "{0}=0".format(reduce_axis)
+                    default_keepdims = len(self.shape) == len(crds.shape)
+                    iscc = self.iscentered('cell')
+
+                    if npkwargs.get("keepdims", default_keepdims):
+                        crds = self.crds.slice_keep(crd_slc, cc=iscc)
+                    else:
+                        crds = self.crds.slice_reduce(crd_slc, cc=iscc)
+                    defer_wrapping = True
 
         # little hack for broadcasting vectors and scalars together
         crd_shape = crds.shape_nc if center == "node" else crds.shape_cc

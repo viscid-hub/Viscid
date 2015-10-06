@@ -3,6 +3,8 @@ TOPOLOGY_* is copied here so that one can import this module
 without needing to have built the cython module streamline.pyx
 """
 
+import numpy as np
+
 TOPOLOGY_MS_NONE = 0  # no translation needed
 TOPOLOGY_MS_CLOSED = 1  # translated from 5, 6, 7(4|5|6)
 TOPOLOGY_MS_OPEN_NORTH = 2  # translated from 13 (8|5)
@@ -33,22 +35,19 @@ TOPOLOGY_INVALID = TOPOLOGY_MS_INVALID
 # TOPOLOGY_OTHER = TOPOLOGY_MS_OTHER
 color_map = color_map_msphere
 
-def color_from_topology(topology, topo_style="msphere"):
+def topology2color(topology, topo_style="msphere", bad_color=None):
     """Determine RGB from topology value
 
     Parameters:
-      topology (int): some value in
-          ``calculator.streamline.TOPOLOGY_*``
-      topo_style (string): msphere, or a dict with its own
-          mapping
+        topology (int, list, ndarray): some value in
+            ``calculator.streamline.TOPOLOGY_*``
+        topo_style (string): msphere, or a dict with its own
+            mapping
+        bad_color (tuple): rgb color for invalid topologies
 
     Returns:
-        (R, G, B)
-
-    Note:
-        to override this color scheme, just set
-
-            topoloy.color_from_topology = some_function
+        Nx3 array of rgb data or (R, G, B) tuple if topology is a
+        single value
     """
     if isinstance(topo_style, dict):
         mapping = topo_style
@@ -57,7 +56,20 @@ def color_from_topology(topology, topo_style="msphere"):
     else:
         mapping = color_map_generic
 
+    if bad_color is None:
+        bad_color = (0.0, 0.0, 0.0)
+
+    ret = None
     try:
-        return mapping[topology]
-    except KeyError:
-        return (0.0, 0.0, 0.0)
+        ret = np.empty((len(topology), 3))
+        for i, topo in enumerate(topology):
+            try:
+                ret[i, :] = mapping[topo]
+            except KeyError:
+                ret[i] = bad_color
+    except TypeError:
+        try:
+            ret = mapping[int(topology)]
+        except KeyError:
+            ret = bad_color
+    return ret

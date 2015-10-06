@@ -12,7 +12,7 @@ from libc.math cimport fabs
 cimport numpy as cnp
 
 from viscid.cython.cyamr cimport *
-# from viscid.cython.cyamr cimport _contains_block
+# from viscid.cython.cyamr cimport _contains_patch
 from viscid.cython.cyfield cimport MAX_FLOAT, real_t
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.misc_inlines cimport real_min, real_max
@@ -127,11 +127,11 @@ cdef CyAMRField make_cyamrfield(vfield):
 
 cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
     cdef int i, j
-    cdef int nr_blocks = vfield.nr_blocks
-    cdef CyField _block
+    cdef int nr_patches = vfield.nr_patches
+    cdef CyField _patch
 
     amrfld.crd_dtype = crd_dtype
-    amrfld.nr_blocks = nr_blocks
+    amrfld.nr_patches = nr_patches
 
     try:
         amrfld.nr_neighbors = vfield.skeleton.nr_neighbors
@@ -154,65 +154,65 @@ cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
 
     # give max some breathing room?
     amrfld.min_dx = MAX_FLOAT
-    amrfld.blocks = []
-    for i in range(nr_blocks):
-        _block = make_cyfield(vfield.blocks[i])
-        if _block.min_dx < amrfld.min_dx:
-            amrfld.min_dx = _block.min_dx
-        amrfld.blocks.append(_block)
+    amrfld.patches = []
+    for i in range(nr_patches):
+        _patch = make_cyfield(vfield.patches[i])
+        if _patch.min_dx < amrfld.min_dx:
+            amrfld.min_dx = _patch.min_dx
+        amrfld.patches.append(_patch)
 
-    amrfld.active_block_index = 0
-    amrfld.active_block = amrfld.blocks[0]
+    amrfld.active_patch_index = 0
+    amrfld.active_patch = amrfld.patches[0]
 
     return amrfld
 
-cdef inline int _contains_block(FusedAMRField amrfld, int iblock, real_t x[3]):
+cdef inline int _contains_patch(FusedAMRField amrfld, int ipatch, real_t x[3]):
     cdef int i
     for i in range(3):
-        if (less_not_close(x[i], amrfld.xl[iblock, i]) or
-            greater_not_close(x[i], amrfld.xh[iblock, i])):
+        if (less_not_close(x[i], amrfld.xl[ipatch, i]) or
+            greater_not_close(x[i], amrfld.xh[ipatch, i])):
             return 0
     return 1
 
-cdef CyField activate_block(FusedAMRField amrfld, real_t x[3]):
+cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3]):
     cdef int active_idx, j, k, ineighbor, closest
     cdef real_t rsq, closest_rsq
 
-    if amrfld.nr_blocks == 1:
-        return amrfld.active_block
+    if amrfld.nr_patches == 1:
+        return amrfld.active_patch
     else:
-        active_idx = amrfld.active_block_index
-        if _contains_block[FusedAMRField, real_t](amrfld, active_idx, x):
-            return amrfld.active_block
+        active_idx = amrfld.active_patch_index
+        if _contains_patch[FusedAMRField, real_t](amrfld, active_idx, x):
+            return amrfld.active_patch
 
-        # search neighbors of the current active block
+        # search neighbors of the current active patch
         for ineighbor in range(amrfld.nr_neighbors[active_idx]):
             j = amrfld.neighbors[active_idx, ineighbor]
-            if _contains_block[FusedAMRField, real_t](amrfld, j, x):
-                amrfld.active_block = amrfld.blocks[j]
-                amrfld.active_block_index = j
-                return amrfld.active_block
+            if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+                amrfld.active_patch = amrfld.patches[j]
+                amrfld.active_patch_index = j
+                return amrfld.active_patch
 
-        # search all blocks
-        for j in range(amrfld.nr_blocks):
-            if _contains_block[FusedAMRField, real_t](amrfld, j, x):
-                amrfld.active_block = amrfld.blocks[j]
-                amrfld.active_block_index = j
-                return amrfld.active_block
+        # search all patches
+        for j in range(amrfld.nr_patches):
+            if _contains_patch[FusedAMRField, real_t](amrfld, j, x):
+                amrfld.active_patch = amrfld.patches[j]
+                amrfld.active_patch_index = j
+                return amrfld.active_patch
 
-        # TODO: find closest block?
+        # TODO: find closest patch?
         closest = 0
         closest_rsq = MAX_FLOAT
-        for j in range(amrfld.nr_blocks):
+        for j in range(amrfld.nr_patches):
             rsq = 0.0
             for k in range(3):
                 rsq += (x[k] - amrfld.xm[j, k])**2
             if rsq < closest_rsq:
                 closest_rsq = rsq
                 closest = j
-        amrfld.active_block = amrfld.blocks[closest]
-        amrfld.active_block_index = closest
-        return amrfld.active_block
+        amrfld.active_patch = amrfld.patches[closest]
+        amrfld.active_patch_index = closest
+        return amrfld.active_patch
 
 ##
 ## EOF

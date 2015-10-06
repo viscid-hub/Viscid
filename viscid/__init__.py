@@ -11,40 +11,6 @@ Attributes:
     logger (logging.Logger): a logging object whose verbosity can be
         set from the command line using
         :py:func`viscid.vutil.common_argparse`.
-    load_file (function): convience reference for
-        :py:func:`viscid.readers.load_file`
-    load_files (function): convience reference for
-        :py:func:`viscid.readers.load_files`
-    get_file (function): convience reference for
-        :py:func:`viscid.readers.get_file`
-    save_grid (function): convience reference for
-        :py:func:`viscid.readers.save_grid`
-    save_field (function): convience reference for
-        :py:func:`viscid.readers.save_field`
-    save_fields (function): convience reference for
-        :py:func:`viscid.readers.save_fields`
-    arrays2field (function): convience reference for
-        :py:func:`viscid.field.arrays2field`
-    dat2field (function): convience reference for
-        :py:func:`viscid.field.dat2field`
-    empty (function): convience reference for
-        :py:func:`viscid.field.empty`
-    zeros (function): convience reference for
-        :py:func:`viscid.field.zeros`
-    ones (function): convience reference for
-        :py:func:`viscid.field.ones`
-    empty_like (function): convience reference for
-        :py:func:`viscid.field.empty_like`
-    zeros_like (function): convience reference for
-        :py:func:`viscid.field.zeros_like`
-    ones_like (function): convience reference for
-        :py:func:`viscid.field.ones_like`
-    scalar_fields_to_vector (function): convience reference for
-        :py:func:`viscid.field.scalar_fields_to_vector`
-    wrap_field (function): convience reference for
-        :py:func:`viscid.field.wrap_field`
-    arrays2crds (function): convience reference for
-        :py:func:`viscid.coordinate.arrays2crds`
 """
 
 __all__ = ['amr_field',  # Modules
@@ -58,6 +24,7 @@ __all__ = ['amr_field',  # Modules
            'grid',
            'parallel',
            'pyeval',
+           'seed',
            'verror',
            'vjson',
            'vlab',
@@ -82,14 +49,26 @@ __all__ = ['amr_field',  # Modules
            'scalar_fields_to_vector',
            'wrap_field',
            'arrays2crds',  # Crd helpers
+           'interp_nearest',  # cython helpers
+           'interp_trilin',
+           'calc_streamlines',
+           # viscid.calculator.calc.* is added below
+           # viscid.seed.* is added below
           ]
 
 # setup logger for use throughout viscid
 import logging
 logger = logging.getLogger("viscid")
 _handler = logging.StreamHandler()
-_handler.setFormatter(logging.Formatter())
+_handler.setFormatter(logging.Formatter(fmt="%(levelname)s: %(message)s"))
 logger.addHandler(_handler)
+class CustomFilter(logging.Filter):
+    def filter(self, record):
+        spaces = ' ' * (len(record.levelname) + 2)
+        record.msg = record.msg.replace('\n', '\n' + spaces)
+        return super(CustomFilter, self).filter(record)
+logger.addFilter(CustomFilter())
+logger.propagate = False
 del _handler
 
 # pull file reading helpers into namespace
@@ -119,6 +98,32 @@ wrap_field = field.wrap_field
 from viscid import coordinate
 arrays2crds = coordinate.arrays2crds
 wrap_crds = coordinate.wrap_crds
+
+from viscid.seed import *  # pylint: disable=wildcard-import
+from viscid import seed
+__all__ += seed.__all__
+
+from viscid.calculator.topology import topology2color
+__all__ += ["topology2color"]
+
+from viscid.calculator.plasma import *
+from viscid.calculator import plasma
+__all__ += plasma.__all__
+
+from viscid.calculator.calc import *  # pylint: disable=wildcard-import
+from viscid.calculator import calc
+__all__ += calc.__all__
+
+from viscid.cython import interp_nearest
+from viscid.cython import interp_trilin
+from viscid.cython import calc_streamlines
+
+from viscid.cython import streamline
+for attr in dir(streamline):
+    if attr[0] != '_' and attr.isupper():
+        vars()[attr] = getattr(streamline, attr)
+        __all__.append(attr)
+del streamline
 
 # pull other useful modules into the namespace
 # Note: plot and calculator are intentionally left

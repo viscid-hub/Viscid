@@ -83,14 +83,14 @@ class PscFieldFile(xdmf.FileXDMF):  # pylint: disable=W0223
     _grid_type = PscGrid
 
     def __init__(self, fname, *args, **kwargs):
-        print("Opening '%s'" % (fname))
+        # print("Opening '%s'" % (fname))
         super(PscFieldFile, self).__init__(fname, *args, **kwargs)
 
 
 class PscParticles(object):
     def __init__(self, path, step):
         filename = "%s/prt.%06d_p%06d.h5" % (path, step, 0)
-        print("Opening '%s'" % (filename))
+        # print("Opening '%s'" % (filename))
         if not _HAVE_H5PY:
             raise RuntimeError("Can't load psc particles w/o h5py")
         self._h5file = h5py.File(filename, 'r')

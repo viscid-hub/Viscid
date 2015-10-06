@@ -7,12 +7,13 @@ against levels appearing in the data due to a local maxima in the
 lightness of that color in the color map.
 
 Attributes:
-    cubeYF: My attempt to replicate the cubeYF map described at
+    cubeYF_rgba: My attempt to replicate the cubeYF map described at
         `mycarta <https://mycarta.wordpress.com/2013/02/21/perceptual-
         rainbow-palette-the-method/>`_.
-    coolhelix: From bordeax to cool white, counter-clockwise in hue
-    redhelix: From red to cyan, counter-clockwise in hue
-    bloodhelix: Same as redhelix, but with gamma == 1, so the
+    coolhelix_rgba: From bordeax to cool white, counter-clockwise in
+        hue
+    redhelix_rgba: From red to cyan, counter-clockwise in hue
+    bloodhelix_rgba: Same as redhelix, but with gamma == 1, so the
         intensity ramp is more linear instead of power law
 """
 

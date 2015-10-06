@@ -1,2 +1,3 @@
 include test/*.bash
 include viscid/calculator/*.c
+include viscid/plot/blue_marble.jpg

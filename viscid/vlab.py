@@ -8,6 +8,7 @@ try:
 except ImportError:
     _HAS_NUMEXPR = False
 
+import viscid
 from viscid import logger
 from viscid import parallel
 from viscid import field
@@ -17,9 +18,9 @@ from viscid.compat import izip
 
 # these compiled are needed for fluid following
 try:
+    from viscid import calc_streamlines
     from viscid.calculator import cycalc
     from viscid.calculator import streamline
-    from viscid.calculator.streamline import streamlines
 except ImportError:
     pass
 
@@ -91,7 +92,7 @@ def get_trilinear_field():
                 1.0 * (X - x03) * (Y - y03) * (Z - z03)
     return b
 
-def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
+def multiplot(vfile, plot_func=None, nr_procs=1, time_slice=":", **kwargs):
     """Make lots of plots
 
     Calls plot_func (or vlab._do_multiplot if plot_func is None) with 2
@@ -112,7 +113,7 @@ def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
         plot_func (callable): Function that makes a single plot. It
             must take an int (index of time slice), a Grid, and any
             number of keyword argumets. If None, _do_multiplot is used
-        nprocs (int): number of parallel processes to farm out
+        nr_procs (int): number of parallel processes to farm out
             plot_func to
         time_slice (str): passed to vfile.iter_times()
         **kwargs: passed as keword aguments to plot_func
@@ -134,12 +135,12 @@ def multiplot(vfile, plot_func=None, nprocs=1, time_slice=":", **kwargs):
 
     if "subplot_params" not in args_kw.get("kwopts", {}):
         r = parallel.map(1, plot_func, [next(grid_iter)], args_kw=args_kw,
-                         force_subprocess=(nprocs > 1))
+                         force_subprocess=(nr_procs > 1))
 
     # now get back to your regularly scheduled programming
     args_kw["first_run"] = False
     args_kw["first_run_result"] = r[0]
-    parallel.map(nprocs, plot_func, grid_iter, args_kw=args_kw)
+    parallel.map(nr_procs, plot_func, grid_iter, args_kw=args_kw)
 
 def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
                   share_axes=False, show=False, subplot_params=None,
@@ -259,8 +260,7 @@ def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
     return ret
 
 def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
-                 stream_opts, add_seed_cadence=0.0, add_seed_pts=None,
-                 speed_scale=1.0):
+                 stream_opts, **kwargs):
     """Trace fluid elements
 
     Note:
@@ -276,16 +276,47 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
             root_seeds [SeedGen])
         stream_opts: must have ds0 and max_length, maxit will be
             automatically calculated
-        add_seed_cadence: how often to add the add_seeds points
-        add_seed_pts: an n x 3 ndarray of n points to add every
-            add_seed_cadence (xyz)
-        speed_scale: speed_scale * v should be in units of ds0 / dt
 
     Returns:
         root points after following the fluid
     """
     times = np.array([grid.time for grid in vfile.iter_times(time_slice)])
     dt = np.roll(times, -1) - times  # Note: last element makes no sense
+
+    grid_iter = vfile.iter_times(time_slice)
+    return follow_fluid_generic(grid_iter, dt, initial_seeds, plot_function,
+                                stream_opts, **kwargs)
+
+def follow_fluid_generic(grid_iter, dt, initial_seeds, plot_function,
+                         stream_opts, add_seed_cadence=0.0, add_seed_pts=None,
+                         speed_scale=1.0):
+    """Trace fluid elements
+
+    Args:
+        grid_iter (iterable): Some iterable that yields grids
+        dt (float): Either one float for uniform dt, or a list
+            where di[i] = grid_iter[i + 1].time - grid_iter[i].time
+            The last element is repeated until grid_iter is exhausted
+        initial_seeds: any SeedGen object
+        plot_function: function that is called each time step,
+            arguments should be exactly: (i [int], grid, v [Vector
+            Field], v_lines [result of streamline trace],
+            root_seeds [SeedGen])
+        stream_opts: must have ds0 and max_length, maxit will be
+            automatically calculated
+        add_seed_cadence: how often to add the add_seeds points
+        add_seed_pts: an n x 3 ndarray of n points to add every
+            add_seed_cadence (xyz)
+        speed_scale: speed_scale * v should be in units of ds0 / dt
+
+    Returns:
+        TYPE: Description
+    """
+    if not hasattr(dt, "__iter__"):
+        dt = itertools.repeat(dt)
+    else:
+        dt = itertools.chain(dt, itertools.repeat(dt[-1]))
+
     root_seeds = initial_seeds
 
     # setup maximum number of iterations for a streamline
@@ -298,11 +329,11 @@ def follow_fluid(vfile, time_slice, initial_seeds, plot_function,
                        "otherwise I don't know how to follow the fluid")
 
     # iterate through the time steps from time_slice
-    for i, grid in enumerate(vfile.iter_times(time_slice)):
+    for i, grid, dti in izip(itertools.count(), grid_iter, dt):
         if i == 0:
             last_add_time = grid.time
 
-        root_pts = _follow_fluid_step(i, dt[i], grid, root_seeds,
+        root_pts = _follow_fluid_step(i, dti, grid, root_seeds,
                                       plot_function, stream_opts, speed_scale)
 
         # maybe add some new seed points to account for those that have left
@@ -325,17 +356,13 @@ def _follow_fluid_step(i, dt, grid, root_seeds, plot_function, stream_opts,
 
     logger.info("working on timestep {0} {1}".format(i, grid.time))
     v = grid["v"]
-    # automatically zero symmetry dimension of a 2d field
-    for axis, s in zip('xyz', v.sshape):
-        if s == 1:
-            v[axis] = 0.0
     logger.debug("finished reading V field")
 
     logger.debug("calculating new streamline positions")
-    flow_lines = streamlines(v, root_seeds,
-                             output=streamline.OUTPUT_STREAMLINES,
-                             stream_dir=sl_direction,
-                             **stream_opts)[0]
+    flow_lines = calc_streamlines(v, root_seeds,
+                                  output=viscid.OUTPUT_STREAMLINES,
+                                  stream_dir=sl_direction,
+                                  **stream_opts)[0]
 
     logger.debug("done with that, now i'm plotting...")
     plot_function(i, grid, v, flow_lines, root_seeds)
