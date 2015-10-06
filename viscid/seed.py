@@ -483,14 +483,22 @@ class Plane(SeedGen):
             >>> import viscid
             >>>
             >>> # p0 is the origin of the plane
-            >>> p0 = np.array([0, 0, 0])
-            >>> plane = viscid.Plane(p0, [1, 1, 0], [1, -1, 0],
-            >>>                      0.5, 0.5)
-            >>> lmn_to_xyz = plane.get_lmn_transform()
+            >>> p0 = np.array([0, 0, 0]).reshape(-1, 1)
+            >>> plane = viscid.Plane(p0=p0, pN=(1, 1, 0),
+            >>>                      pL=(1, -1, 0),
+            >>>                      len_l=2.0, len_m=2.0)
+            >>> lmn_to_xyz = plane.get_rotation()
             >>>
             >>> # make 10 random points in lmn coorinates
-            >>> lmn = np.random(3, 10)
+            >>> lmn = 2 * np.random.rand(3, 10) - 1
+            >>> lmn[2] = 0.0
             >>> xyz = p0 + np.dot(lmn_to_xyz, lmn)
+            >>>
+            >>> from viscid.plot import mvi
+            >>> verts = plane.as_mesh()
+            >>> mvi.mlab.mesh(verts[0], verts[1], verts[2])
+            >>> mvi.mlab.points3d(xyz[0], xyz[1], xyz[2])
+            >>> mvi.show()
 
             >>> # Transform vector compenents from xyz to lmn
             >>> import numpy as np
@@ -503,11 +511,32 @@ class Plane(SeedGen):
             >>>                     nr_comps=3, layout="interlaced")
             >>> Bxyz['x'] = 1.0
             >>>
-            >>> plane = viscid.Plane([0, 0, 0], [1, 1, 0], [1, -1, 0],
-            >>>                      0.5, 0.5)
-            >>> xyz_to_lmn = plane.get_lmn_transform().T
+            >>> plane = viscid.Plane(p0=[0, 0, 0], pN=[1, 1, 0],
+            >>>                      pL=[1, -1, 1],
+            >>>                      len_l=0.5, len_m=0.5)
+            >>> vals = viscid.interp_trilin(Bxyz, plane)
+            >>> B_interp = plane.wrap_field(vals, fldtype='vector',
+            >>>                             layout='interlaced')
+            >>> xyz_to_lmn = plane.get_rotation().T
+            >>> Blmn = np.einsum("ij,lmj->lmi", xyz_to_lmn, B_interp)
+            >>> Blmn = B_interp.wrap(Blmn)
             >>>
-            >>> Blmn = np.einsum("ij,lmj->lmi", xyz_to_lmn, Bxyz)
+            >>> # use xyz to show in 3d via mayavi
+            >>> from viscid.plot import mvi
+            >>> verts, s = plane.wrap_mesh(Blmn['z'].data)
+            >>> mvi.mlab.mesh(verts[0], verts[1], verts[2], scalars=s)
+            >>> verts, vx, vy, vz = plane.wrap_mesh(B_interp['x'].data,
+            >>>                                     B_interp['y'].data,
+            >>>                                     B_interp['z'].data)
+            >>> mvi.mlab.quiver3d(verts[0], verts[1], verts[2],
+            >>>                   vx, vy, vz)
+            >>> mvi.show()
+            >>>
+            >>> # use lmn to show in-plane / out-of-plane
+            >>> from viscid.plot import mpl
+            >>> mpl.plot(Blmn['z'])  # z means n here
+            >>> mpl.plot2d_quiver(Blmn)
+            >>> mpl.plt.show()
         """
         return np.array([self.Ldir, self.Mdir, self.Ndir]).T
 
