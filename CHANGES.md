@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.90.2 dev
-==========
+0.90.1
+======
 
 Changes:
   - Use LinearLocator for linear colorbars by default
