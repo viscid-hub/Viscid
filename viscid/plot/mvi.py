@@ -230,32 +230,32 @@ def _finalize_source(fld, arr, grid, dat_target):
     src.name = fld.name
     return src
 
-def plot_mesh(vertices, scalars=None, color=None, name="NoName", **kwargs):
-    """Plot :py:class:`viscid.SeedGen` as a mesh"""
-    # discover the 2d shape of vertices that indicates the connectivity
-    # of vertices
-    connective_shape = list(vertices.shape[1:])
-    r = viscid.vutil.prepare_vertices(vertices.reshape(3, -1), scalars)
-    verts, scalars, other = r  # pylint: disable=unused-variable
+# def plot_mesh(vertices, scalars=None, color=None, name="NoName", **kwargs):
+#     """Plot :py:class:`viscid.SeedGen` as a mesh"""
+#     # discover the 2d shape of vertices that indicates the connectivity
+#     # of vertices
+#     connective_shape = list(vertices.shape[1:])
+#     r = viscid.vutil.prepare_vertices(vertices.reshape(3, -1), scalars)
+#     verts, scalars, other = r  # pylint: disable=unused-variable
 
-    # reshape verts, scalars, and color
-    target_shape = [3] + connective_shape
-    verts = verts.reshape(target_shape)
+#     # reshape verts, scalars, and color
+#     target_shape = [3] + connective_shape
+#     verts = verts.reshape(target_shape)
 
-    if scalars is not None:
-        if color is None and scalars.dtype == np.dtype('u1'):
-            color = scalars.astype('f').reshape(target_shape) / 255.0
-            scalars = None
-        elif scalars.dtype == np.dtype('u1'):
-            # color should have precidence over this since it was explicitly
-            # given
-            pass
-        else:
-            scalars = scalars.reshape(target_shape[1:])
+#     if scalars is not None:
+#         if color is None and scalars.dtype == np.dtype('u1'):
+#             color = scalars.astype('f').reshape(target_shape) / 255.0
+#             scalars = None
+#         elif scalars.dtype == np.dtype('u1'):
+#             # color should have precidence over this since it was explicitly
+#             # given
+#             pass
+#         else:
+#             scalars = scalars.reshape(target_shape[1:])
 
-    src = mlab.mesh(verts[0], verts[1], verts[2], scalars=scalars,
-                    color=color, name=name, **kwargs)
-    return src
+#     src = mlab.mesh(verts[0], verts[1], verts[2], scalars=scalars,
+#                     color=color, name=name, **kwargs)
+#     return src
 
 def plot_lines(lines, scalars=None, style="tube", figure=None,
                name="Lines", tube_radius=0.05, tube_sides=6, **kwargs):
