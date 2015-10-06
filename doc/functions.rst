@@ -145,7 +145,6 @@ Function                                         Description
 :py:func:`viscid.plot.mvi.add_lines`             Given a list of lines, add them to a figure as a data source
 :py:func:`viscid.plot.mvi.add_lines`             Given a :py:class:`viscid.field.Field`, add it to a figure as
                                                  a data source
-:py:func:`viscid.plot.mvi.plot_mesh`             Plot :py:class:`viscid.Seed` objects as a mesh
 :py:func:`viscid.plot.mvi.plot_lines`            Plot colored lines in 3D
 :py:func:`viscid.plot.mvi.plot_ionosphere`       Plot an ionospheric Field in 3D
 :py:func:`viscid.plot.mvi.insert_filter`         Insert a filter above a module_manager.
