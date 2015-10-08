@@ -9,6 +9,7 @@ import os
 import glob
 from subprocess import Popen, CalledProcessError, PIPE
 from distutils.command.clean import clean
+from distutils.version import LooseVersion
 from distutils import log
 # from distutils.core import setup
 # from distutils.extension import Extension
@@ -272,18 +273,31 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
         print("I think there's a problem with your compiler ( CC =", cc,
               "), but I'll continue anyway...")
 
-setup(name='viscid',
-      version=str(ver.release),
-      description='Visualization in python',
-      author='Kris Maynard',
-      author_email='k.maynard@unh.edu',
-      packages=pkgs,
-      cmdclass=cmdclass,
-      include_dirs=[np.get_include()],
-      ext_modules=ext_mods,
-      scripts=scripts,
-      data_files=[('viscid/plot', ['viscid/plot/blue_marble.jpg'])]
-     )
+try:
+    setup(name='viscid',
+          version=str(ver.release),
+          description='Visualization in python',
+          author='Kris Maynard',
+          author_email='k.maynard@unh.edu',
+          packages=pkgs,
+          cmdclass=cmdclass,
+          include_dirs=[np.get_include()],
+          ext_modules=ext_mods,
+          scripts=scripts,
+          data_files=[('viscid/plot', ['viscid/plot/blue_marble.jpg'])]
+         )
+except SystemExit as e:
+    if ('gfortran' in e.message and os.uname()[0] == 'Darwin' and
+        LooseVersion(os.uname()[2]) >= LooseVersion('15.0.0')):  # pylint: disable=bad-continuation
+        print('\n'
+              'NOTE: OS X El Capitan has an issue you may be running into.\n'
+              '      If the compile is complaining that it can\'t find\n'
+              '      -lgcc_s.10.5, then run the following:\n'
+              '      \n'
+              '      $ sudo su root -c "mkdir -p /usr/local/lib && ln -s '
+              '/usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"'
+              '      \n', file=sys.stderr)
+    raise
 
 ##
 ## EOF

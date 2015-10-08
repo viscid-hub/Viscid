@@ -11,6 +11,7 @@ sample/test.npz
 *.pyd
 *.o
 *.so
+*.so.dSYM
 
 .tags
 .DS_Store
