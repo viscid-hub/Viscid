@@ -1,6 +1,12 @@
 Changes
 -------
 
+0.91.3
+======
+
+Changes:
+  - add workaround comment for fortran build on OS X El Capitain
+
 0.91.2
 ======
 
