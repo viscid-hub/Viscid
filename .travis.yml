@@ -87,9 +87,15 @@ before_script:
 script:
   - make instcheck
 
-deploy:
+after_script:
+  - 'echo "TODO: always deploy summary page"'
+
+after_success:
   provider: script
   script: doc/deploy_gh_pages.sh
   on:
-    branch: /^(master|dev)$/
+    branches:
+      only:
+        - master
+        - dev
     condition: '"${DEPLOY_DOCS}" == "1"'
