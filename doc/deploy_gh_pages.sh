@@ -5,6 +5,10 @@
 
 set -e
 
+dir0=${PWD}
+sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd ${sdir}
+
 doc_dir="${PWD}"
 build_dir="${doc_dir}/_build"
 html_dir="${build_dir}/html"
@@ -37,7 +41,16 @@ set -e
 make clean
 make html
 
-git clone -b gh-pages git@github.com:KristoforMaynard/Viscid.git ${ghp_dir}
+if [ -n "$GH_TOKEN" ] && [ -n "$GH_REF" ]; then
+  repo="https://${GH_TOKEN}@${GH_REF}"
+  git config user.name "Travis-CI"
+  git config user.email "nobody@travis-ci.org"
+  git config push.default simple
+else
+  repo="git@github.com:KristoforMaynard/Viscid.git"
+fi
+echo "using repo::" ${repo}
+git clone -b gh-pages ${repo} ${ghp_dir}
 
 dest_dir=${ghp_dir}/docs/${branch}
 
@@ -51,11 +64,16 @@ cp -r ${html_dir}/* ${dest_dir}
 
 cd ${ghp_dir}
 git add ${dest_dir}
-git commit -m "Automatic doc update ${branch}:${tags}"
-git push
+if [ "$(git diff --name-only --cached)" != "" ]; then
+  git commit -m "Automatic doc update ${branch}:${tags}"
+  git push
+else
+  echo "Docs didn't change"
+fi
 
-cd ${doc_dir}
+# cd ${doc_dir}
 rm -rf ${ghp_dir}
+cd ${dir0}
 set +e
 
 ##
