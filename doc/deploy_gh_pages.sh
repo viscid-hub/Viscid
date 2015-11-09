@@ -39,7 +39,7 @@ make html
 
 git clone -b gh-pages git@github.com:KristoforMaynard/Viscid.git ${ghp_dir}
 
-dest_dir=${ghp_dir}/doc/${branch}
+dest_dir=${ghp_dir}/docs/${branch}
 
 if [ -d ${dest_dir} ]; then
   rm -rf ${dest_dir}
@@ -47,8 +47,6 @@ fi
 
 mkdir -p ${dest_dir}
 echo "" >> ${ghp_dir}/.nojekyll
-echo "" >> ${ghp_dir}/doc/.nojekyll
-echo "" >> ${dest_dir}/.nojekyll
 cp -r ${html_dir}/* ${dest_dir}
 
 cd ${ghp_dir}
