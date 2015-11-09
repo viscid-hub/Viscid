@@ -91,11 +91,7 @@ after_script:
   - 'echo "TODO: always deploy summary page"'
 
 after_success:
-  provider: script
-  script: doc/deploy_gh_pages.sh
-  on:
-    branches:
-      only:
-        - master
-        - dev
-    condition: '"${DEPLOY_DOCS}" == "1"'
+  - 'if [[ (("${TRAVIS_BRANCH}" == "master") || ("${TRAVIS_BRANCH}" == "dev"))
+           && ("${DEPLOY_DOCS}" == "1") ]]; then
+       bash doc/deploy_gh_pages.sh
+     fi'
