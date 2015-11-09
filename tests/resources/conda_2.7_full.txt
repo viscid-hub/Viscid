@@ -1,0 +1,11 @@
+numpy
+matplotlib
+h5py
+
+numexpr
+
+seaborn
+
+mayavi
+
+flake8

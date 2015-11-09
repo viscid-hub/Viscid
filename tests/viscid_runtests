@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+#
+# Read Viscid/tests/README.md before creating / editing tests
+#
+
+args=" ${*} "
+if [[ ${args} == *" --help "* || ${args} == *" -h"* ]]; then
+  echo "Run all Viscid tests" >&2
+  echo "" >&2
+  echo "usage: viscid_runtests [args]" >&2
+  echo "  args     any number or arguments to pass to all test scripts" >&2
+  echo "" >&2
+  exit 0
+fi
+
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+NC='\033[0m'
+TOTALC=${NC}
+PASSC=${GREEN}
+XFAILC=${CYAN}
+FAILC=${RED}
+
+sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ ! -d ${sdir}/plots ]; then
+  mkdir ${sdir}/plots
+  echo "*.png" > ${sdir}/plots/.gitignore
+fi
+
+tests="$( ls ${sdir}/test_* | grep -Ev '.(log|stderr|stdout)$' )"
+
+total=0
+passed=0
+xfailed=0
+failed=0
+
+for test in ${tests}; do
+
+  if [[ $test == *.py ]]; then
+    cmd="python ${test} $@"
+  elif [[ $test == *.sh ]]; then
+    cmd="bash ${test} $@"
+  elif [[ -x ${test} ]]; then
+    cmd="./${test} $@"
+  fi
+
+  fstdout="${test}.stdout"
+  fstderr="${test}.stderr"
+  flog="${test}.log"
+
+  # ${cmd} > >(tee ${fstdout}) 2> >(tee ${fstderr} >&2)
+  ${cmd} 1>${fstdout} 2>${fstderr}
+  status=$?
+  cat ${fstderr} | grep -qE "^XFAIL:"
+  xfail_status=$?
+
+  echo "===== STDOUT =====" > ${flog}
+  cat ${fstdout} >> ${flog}
+  echo "===== STDERR =====" >> ${flog}
+  cat ${fstderr} >> ${flog}
+
+  total=$((total+1))
+  if [ ${status} -eq 0 ]; then
+    passed=$((passed+1))
+    echo -e "${PASSC}PASS${NC}: $(basename ${test})"
+    rm ${flog}
+  elif [ ${xfail_status} -eq 0 ]; then
+    xfailed=$((xfailed+1))
+    echo -e "${XFAILC}XFAIL${NC}: $(basename ${test})"
+    cat ${fstderr}
+  else
+    failed=$((failed+1))
+    echo -e "${FAILC}FAIL${NC}: $(basename ${test})"
+    cat ${fstderr}
+  fi
+
+  rm ${fstdout} ${fstderr}
+
+done
+
+echo -e "${RED}=====================${NC}"
+echo -e "${TOTALC}TOTAL: ${total}${NC}"
+echo -e "${PASSC}PASS:  ${passed}${NC}"
+echo -e "${XFAILC}XFAIL: ${xfailed}${NC}"
+echo -e "${FAILC}FAIL:  ${failed}${NC}"
+echo -e "${RED}=====================${NC}"
+
+${sdir}/viscid_make_summary_page
+
+exit ${failed}
+
+##
+## EOF
+##

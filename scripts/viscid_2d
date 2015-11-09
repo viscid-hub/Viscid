@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+""" plot some 2d data files with a slew of tuning arguments, and maybe make
+a movie too """
+
+from __future__ import print_function
+import argparse
+import subprocess as sub
+import copy as _copy
+import os
+
+from viscid import readers
+from viscid import vutil
+from viscid import vlab
+
+def _ensure_value(namespace, name, value):
+    if getattr(namespace, name, None) is None:
+        setattr(namespace, name, value)
+    return getattr(namespace, name)
+
+class AddPlotOpts(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        dst = getattr(namespace, self.dest, None)
+        if dst is None:
+            setattr(namespace, "global_popts", values)
+            return None
+        dst[-1][1]["plot_opts"] = values
+
+
+class AddPlotVar(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        items = _copy.copy(_ensure_value(namespace, self.dest, []))
+        items.append([values, {'plot_opts': ''}])
+        setattr(namespace, self.dest, items)
+
+
+def split_floats(arg_str):
+    return [float(s) for s in arg_str.split(',')]
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__,
+                                     conflict_handler='resolve')
+    vutil.add_animate_arguments(parser)
+    vutil.add_mpl_output_arguments(parser)
+    parser.add_argument("-t", default=":", help="times to plot in slice "
+                        "notation: ex : for all 60.0: for 60 mins on, and "
+                        ":120 for the first 120mins")
+    parser.add_argument("--timeformat", default=".02f",
+                        help="one of hms, dhms, ut, or some way to format a "
+                             "float like .02f")
+    parser.add_argument("--slice", help="spatial slice applied to all fields")
+    parser.add_argument("-p", "--var", dest="plot_vars", action=AddPlotVar,
+                        help="plot variable")
+    parser.add_argument("-o", "--popts", dest="plot_vars", action=AddPlotOpts,
+                        help="add plot options to most recent var on the "
+                        "command line. if no preceeding vars, popts are "
+                        "applied to all plots")
+    parser.add_argument("-T", "--transpose", action="store_true",
+                        help="desplay plots in a row, not a col")
+    parser.add_argument("--own", action="store_true", help="axes use their own "
+                        "x and y")
+    parser.add_argument("-n", "--np", type=int, default=1,
+                        help="run n simultaneous processes (not yet working)")
+    parser.add_argument("--tighten", action="store_true")
+    parser.add_argument("--reader_opts", default="",
+                        help="optional arguments passed to file constructor")
+    parser.add_argument('file', nargs='+', help='input file')
+    args = vutil.common_argparse(parser)
+
+    global_popts = getattr(args, "global_popts", None)
+
+    if getattr(args, "plot_vars", None) is None:
+        args.plot_vars = [["pp,y=0.0", {"plot_opts":"x=-20.0f_12.0f,y=-8.0f_8.0f,"
+                                                    "log=5e-2_5e3"}],
+                          ["by,y=0.0", {"plot_opts":"x=-20.0f_12.0f,y=-8.0f_8.0f,"
+                                                    "lin=-5_5"}]]
+
+    if args.animate is not None and args.prefix is None:
+        args.prefix = os.path.splitext(args.animate)[0]
+        # args.prefix = "tmp_image"
+
+    if args.prefix is None:
+        args.show = True
+
+    kwopts = {"transpose": args.transpose,
+              "out_prefix": args.prefix,
+              "out_format": args.format.strip('.'),
+              "plot_size": args.plot_size,
+              "dpi": args.dpi,
+              "selection": args.slice,
+              "timeformat": args.timeformat,
+              "tighten": args.tighten
+             }
+
+    reader_opts = {}
+    for opt in args.reader_opts.split(','):
+        if opt:
+            if not "=" in opt:
+                raise ValueError("reader_opts syntax: opt1=value,opt2=value")
+            k, v = opt.split('=')
+            reader_opts[k] = v
+
+    file_ = readers.load_file(args.file, **reader_opts)
+    vlab.multiplot(file_, plot_vars=args.plot_vars, nr_procs=args.np,
+                   time_slice=args.t, share_axes=(not args.own),
+                   global_popts=global_popts, show=args.show, kwopts=kwopts)
+
+    if args.animate:
+        sub.Popen("ffmpeg -r {0} -i {2}_%06d.png -pix_fmt yuv420p "
+                  "-qscale {1} {3}".format(args.framerate, args.qscale,
+                  args.prefix, args.animate), shell=True).communicate()
+    if args.animate is None and args.prefix is not None:
+        args.keep = True
+    if not args.keep:
+        sub.Popen("rm -f {0}_*.png".format(args.prefix),
+                  shell=True).communicate()
+
+
+if __name__ == "__main__":
+    main()
+
+##
+## EOF
+##

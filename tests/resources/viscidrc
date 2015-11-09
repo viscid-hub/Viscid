@@ -1,0 +1,35 @@
+# ~/.viscidrc
+
+{
+  ### For Everything
+  ## use shell copies so we don't have to call unload()
+  "grid.Grid.longterm_field_caches": false,
+
+  ### for OpenGGCM
+  ## try to get extra run information
+  "readers.openggcm.GGCMFile.read_log_file": true,
+  ## everyone likes GSE coords :)
+  "readers.openggcm.GGCMGrid.mhd_to_gse_on_read": "auto",
+
+  ### For Athena
+  ## this doesn't work for some reason
+  # "readers.athena_bin.AthenaBinFileWrapper.var_type": "prim",
+
+  # evaluator control for security
+  "calculator.evaluator.enabled": true,
+
+  "plot.mpl_extra.default_cmap": "bloodhelix",
+  "plot.mpl_extra.symmetric_cmap": "RdBu_r",  # seismic
+  "plot.mpl_extra.default_cbarfmt": "steve",
+  "plot.mpl_extra.default_majorfmt": "",
+
+  # pretty plotting
+  "plot.vseaborn.enabled": true,
+  "plot.vseaborn.context": "talk",
+  "plot.vseaborn.style": "ticks",
+  "plot.vseaborn.palette": [["#004358", "#FD7400", "#3da88e", "#83522b", "#00D4FD", "#e2d893"]]
+}
+
+##
+## EOF
+##

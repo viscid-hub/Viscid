@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+""""Embed images and videos into an HTML file"""
+
+from __future__ import print_function, division
+import argparse
+import base64
+import io
+import os
+import sys
+from xml.etree import ElementTree
+
+def embed_media(tag, media_type, dirname):
+    """Replace a media tag's src with the image data
+
+    Args:
+        tag (Element): ElementTree element ('img' or 'source'), ie,
+            something with `type` and `src` attribs
+        media_type (str): one if "image" or "video"
+        dirname (str): directory of html file; src files will be
+            relative to this directory
+    """
+    if not tag.attrib["src"].startswith("data:"):
+        resource = os.path.relpath(tag.attrib["src"], dirname)
+        ext = os.path.splitext(resource)[1][1:]
+
+        # if ext not in ['png', 'jpg', 'jpeg', 'bmp', 'mp4', 'ogg']:
+        #     print("Warning, unrecognized media type '{0}'"
+        #           "".format(resource), file=sys.stderr)
+
+        mtype = "{0}/{1}".format(media_type, ext)
+        enc_media = base64.b64encode(io.open(resource, 'r+b').read())
+        tag.attrib["type"] = mtype
+        tag.attrib["src"] = ("data:{0};base64,{1}"
+                             "".format(mtype, enc_media.decode('ascii')))
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("-o", "--output", help="output file name")
+    parser.add_argument("fname", help="Some HTML file")
+    args = parser.parse_args()
+
+    dirname = os.path.dirname(args.fname)
+    # basename = os.path.basename(args.fname)
+
+    tree = ElementTree.parse(args.fname)
+
+    for img in tree.findall(".//img"):
+        embed_media(img, "image", dirname)
+
+    for src in tree.findall(".//video/source"):
+        embed_media(src, "video", dirname)
+
+    if not args.output:
+        args.output = args.fname
+    tree.write(args.output, method='html')
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+
+##
+## EOF
+##

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#
+
+args=" ${*} "
+if [[ ${args} == *" --help "* || ${args} == *" -h"* ]]; then
+  echo "Update reference plots for some or all tests. Supply a list of" >&2
+  echo "test names to update specific plots, or specify nothing to update" >&2
+  echo "all reference plots. Tests can be specified using any unique part" >&2
+  echo "of their file name." >&2
+  echo "" >&2
+  echo "usage: viscid_update_ref_plots [name [name [...]]]" >&2
+  echo "  name      specific test to rebulid" >&2
+  echo "" >&2
+  exit 0
+fi
+
+sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+tests="$@"
+if [ "${tests}" == "" ]; then
+  tests="$( ls ${sdir}/test_* | grep -Ev '.(log|stderr|stdout)$' )"
+else
+  tests="$( cd ${sdir} && ls *$@* )"
+  for ((i=0;i<${#tests[@]};i++)); do
+      tests[i]="${sdir}/${tests[i]}"
+  done
+fi
+
+for test in ${tests}; do
+  test_name=$(basename "${test%.*}")
+  test_name=${test_name#test_}
+
+  rm -f ${sdir}/plots/${test_name}*.png
+  rm -f ${sdir}/ref_plots/${test_name}*.png
+
+  if [[ $test == *.py ]]; then
+    cmd="python ${test}"
+  elif [[ $test == *.sh ]]; then
+    cmd="bash ${test}"
+  elif [[ -x ${test} ]]; then
+    cmd="./${test}"
+  fi
+
+  ${cmd}
+
+  cp ${sdir}/plots/${test_name}*.png ${sdir}/ref_plots/
+done
+
+##
+## EOF
+##

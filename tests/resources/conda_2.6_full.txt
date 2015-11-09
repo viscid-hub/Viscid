@@ -1,0 +1,8 @@
+argparse
+numpy
+matplotlib
+h5py
+
+numexpr
+
+flake8

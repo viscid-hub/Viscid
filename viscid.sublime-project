@@ -1,0 +1,76 @@
+{
+	"build_systems":
+	[
+		{
+			"extra_err_parse": true,
+			"file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+			"name": "viscid",
+			"shell": true,
+			"shell_cmd": "python setup.py build",
+			"variants":
+			[
+				{
+					"name": "Develop",
+					"shell_cmd": "python setup.py dev -j4"
+				},
+				{
+					"name": "Clean",
+					"shell_cmd": "python setup.py devclean"
+				},
+				{
+					"name": "Install",
+					"shell_cmd": "python setup.py install -j4"
+				},
+			],
+			"working_dir": "${folder}"
+		},
+		{
+			"name": "viscid docs",
+			"shell": true,
+			"variants":
+			[
+				{
+					"name": "html",
+					"shell_cmd": "make html"
+				},
+				{
+					"name": "apidoc",
+					"shell_cmd": "sphinx-apidoc -d 1 -e -o api/ ../viscid"
+				},
+				{
+					"name": "clean",
+					"shell_cmd": "make clean"
+				}
+			],
+			"working_dir": "${folder}/doc"
+		}
+	],
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.sublime-workspace",
+				"*.sublime-project"
+			],
+			"folder_exclude_patterns":
+			[
+				"build"
+			],
+			"follow_symlinks": true,
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"build_switcher_systems":
+		[
+			"viscid#Develop",
+			"viscid#Clean",
+			"viscid#Install",
+			"viscid",
+			"viscid docs#html",
+			"viscid docs#clean"
+		]
+	}
+}

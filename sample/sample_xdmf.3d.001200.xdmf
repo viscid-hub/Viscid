@@ -1,0 +1,93 @@
+<?xml version='1.0' ?>
+<Xdmf xmlns:xi='http://www.w3.org/2001/XInclude' Version='2.0'>
+<Domain>
+<Grid GridType="Collection" CollectionType="Spatial">
+   <Time Type="Single" Value="1200.03" />
+   <Grid Name="mesh-3df-0" GridType="Uniform">
+     <Topology TopologyType="3DRectMesh" Dimensions="33 33 65"/>
+     <Geometry GeometryType="VXVYVZ">
+     <DataItem Name="VX" DataType="Float" Dimensions="65" Format="HDF">
+        ././/sample_xdmf.3d.001200_p000000.h5:/crd/x-0
+     </DataItem>
+     <DataItem Name="VY" DataType="Float" Dimensions="33" Format="HDF">
+        ././/sample_xdmf.3d.001200_p000000.h5:/crd/y-0
+     </DataItem>
+     <DataItem Name="VZ" DataType="Float" Dimensions="33" Format="HDF">
+        ././/sample_xdmf.3d.001200_p000000.h5:/crd/z-0
+     </DataItem>
+     </Geometry>
+
+     <Attribute Name="rr" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_rr-uid-0x7ff225980550/rr/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="pp" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_pp-uid-0x7ff225952390/pp/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="vx" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_vx-uid-0x7ff2259cc720/vx/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="vy" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_vy-uid-0x7ff225c3ac90/vy/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="vz" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_vz-uid-0x7ff225c4ecd0/vz/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="bx" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_bx-uid-0x7ff225c14630/bx/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="by" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_by-uid-0x7ff225c3d290/by/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="bz" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_bz-uid-0x7ff225c101c0/bz/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="jx" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_jx-uid-0x7ff225c2a300/jx/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="jy" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_jy-uid-0x7ff225ce8040/jy/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="jz" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_jz-uid-0x7ff225b32ee0/jz/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="ex_cc" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_ex_cc-uid-0x7ff225cdc5d0/ex_cc/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="ey_cc" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_ey_cc-uid-0x7ff22342a950/ey_cc/3d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="ez_cc" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 32 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.3d.001200_p000000.h5:/mrc_fld_ez_cc-uid-0x7ff2234a29d0/ez_cc/3d
+       </DataItem>
+     </Attribute>
+   </Grid>
+</Grid>
+</Domain>
+</Xdmf>

@@ -1,0 +1,84 @@
+language: generic
+
+env:
+  - PYTHON=2.6 DEPS=full
+  - PYTHON=2.7 DEPS=full FLAKE=1 DOCS=1
+  # - PYTHON=3.3 DEPS=full
+  # - PYTHON=3.4 DEPS=full
+  # - PYTHON=3.5 DEPS=full
+
+git:
+  submodules: false
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - gfortran
+
+cache:
+  directories:
+    - $HOME/miniconda
+    - $HOME/mycache
+
+before_install:
+  - 'if [ ! -f "$HOME/miniconda/bin/conda" ]; then
+       wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
+       rm -rf $HOME/miniconda;
+       bash ./miniconda.sh -b -p $HOME/miniconda;
+     fi'
+  - 'if [ ! -d "${HOME}/mycache" ]; then
+       mkdir ${HOME}/mycache;
+     fi'
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - cp tests/resources/matplotlibrc .
+  - cp tests/resources/viscidrc ~/.viscidrc
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+install:
+  - 'export envname="testenv-${PYTHON}-${DEPS}"'
+  - 'export envpath="$HOME/miniconda/envs/${envname}"'
+  - 'export pkg_list="tests/resources/conda_${PYTHON}_${DEPS}.txt"'
+  - 'export cached_pkg_list="${HOME}/mycache/conda_${PYTHON}_${DEPS}.txt"'
+  - 'export prefix="${HOME}/inst/${envname}"'
+
+  - ls ../Viscid/${pkg_list}
+
+  # if conda package list doesn't match the cached one, just blast
+  # the cached conda environment
+  - 'if [ -f ${cached_pkg_list} ]; then
+       if [ "$(diff -qw ${pkg_list} ${cached_pkg_list})" != "" ]; then
+         echo "Package Lists Differed, killing current venv";
+         echo "$(diff -w ${pkg_list} ${cached_pkg_list})";
+         rm ${cached_pkg_list};
+         rm -rf ${envpath};
+       fi
+     fi'
+
+  # if the conda envronment we need isn't cached, create it, otherwise
+  # do an update
+  - 'if [ ! -d "${envpath}" ]; then
+       conda create -q -n ${envname} python=${PYTHON};
+       source activate ${envname};
+       conda install --yes --file ${pkg_list};
+       cp ${pkg_list} ${cached_pkg_list};
+     else
+       source activate ${envname};
+       conda update --all --yes --file ${pkg_list};
+     fi'
+
+  - 'rm -rf ${prefix}'
+  - 'python setup.py install --prefix=${prefix} --install-lib=${prefix}'
+  - 'export PATH="${prefix}:${PATH}"'
+  - 'export PYTHONPATH="${prefix}:${PYTHONPATH}"'
+
+before_script:
+  - 'if [ "${FLAKE}" == "1" ]; then make flake8; fi'
+
+script:
+  - make instcheck

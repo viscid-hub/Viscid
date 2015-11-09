@@ -1,0 +1,93 @@
+<?xml version='1.0' ?>
+<Xdmf xmlns:xi='http://www.w3.org/2001/XInclude' Version='2.0'>
+<Domain>
+<Grid GridType="Collection" CollectionType="Spatial">
+   <Time Type="Single" Value="1245.07" />
+   <Grid Name="mesh-py_0-0" GridType="Uniform">
+     <Topology TopologyType="3DRectMesh" Dimensions="33 2 65"/>
+     <Geometry GeometryType="VXVYVZ">
+     <DataItem Name="VX" DataType="Float" Dimensions="65" Format="HDF">
+        ././/sample_xdmf.py_0.001245_p000000.h5:/crd/x
+     </DataItem>
+     <DataItem Name="VY" DataType="Float" Dimensions="2">
+        -0.01 0.01
+     </DataItem>
+     <DataItem Name="VZ" DataType="Float" Dimensions="33" Format="HDF">
+        ././/sample_xdmf.py_0.001245_p000000.h5:/crd/z
+     </DataItem>
+     </Geometry>
+
+     <Attribute Name="rr" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/rr/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="pp" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/pp/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="vx" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/vx/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="vy" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/vy/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="vz" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/vz/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="bx" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/bx/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="by" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/by/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="bz" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/bz/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="jx" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/jx/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="jy" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/jy/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="jz" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/jz/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="ex_cc" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/ex_cc/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="ey_cc" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/ey_cc/2d
+       </DataItem>
+     </Attribute>
+     <Attribute Name="ez_cc" AttributeType="Scalar" Center="Cell">
+       <DataItem Dimensions="32 1 64" NumberType="Float" Precision="4" Format="HDF">
+        .//sample_xdmf.py_0.001245_p000000.h5:/py_0/ez_cc/2d
+       </DataItem>
+     </Attribute>
+   </Grid>
+</Grid>
+</Domain>
+</Xdmf>
