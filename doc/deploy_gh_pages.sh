@@ -46,6 +46,10 @@ if [ -n "$GH_TOKEN" ] && [ -n "$GH_REF" ]; then
   git config user.name "Travis-CI"
   git config user.email "nobody@travis-ci.org"
   git config push.default simple
+elif if [ -n "$GH_REF" ]; then
+  echo ">> There is a GH_REF, but not TOKEN, this is probably a pull request,"
+  echo ">> and pull requests can't update the gh-pages"
+  exit 0
 else
   repo="git@github.com:KristoforMaynard/Viscid.git"
 fi
