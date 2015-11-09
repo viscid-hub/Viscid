@@ -92,4 +92,4 @@ deploy:
   script: doc/deploy_gh_pages.sh
   on:
     branch: /^(master|dev)$/
-    condition: "${DEPLOY_DOCS}" == "1"
+    condition: '"${DEPLOY_DOCS}" == "1"'
