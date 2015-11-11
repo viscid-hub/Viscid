@@ -85,6 +85,14 @@ install:
        fi
      fi'
 
+  # make sure the version string appears in CHANGES.md
+  - 'ver_re="__version__.*[\"\']+([^\"\']+)[\"\']+"'
+  - 'version=$([[ "$(grep __version__ viscid/__init__.py)" =~ ${ver_re} ]]; echo "${BASH_REMATCH[1]}")'
+  - 'if [ "$(grep -E "${version}\s*$" CHANGES.md)" == "" ]; then
+       echo "Oops, the version ${version} does not appear in CHANGES.md";
+       false;
+     fi'
+
   # if deplying docs, run tests inplace, this makes preparing the docs
   # faster since cython's fused types makes 8 times too much code, ug!
   - 'if [ "${DEPLOY_DOCS}" == "1" ]; then
