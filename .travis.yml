@@ -77,8 +77,8 @@ install:
 
   # before we build, check to see if we're in a release branch, and if
   # so, then do some 0th order validation on the viscid.__version__
-  - 'if [[ ($TRAVIS_BRANCH =~ release) ]]; then
-       if [ "$(grep __version__ viscid/__init__.py | grep dev)" != "" ]; then
+  - 'if [[ ($TRAVIS_BRANCH =~ ^(.*release.*|master)$) ]]; then
+       if [ "$(grep __version__ viscid/__init__.py | grep -E "(dev|travis)")" != "" ]; then
          echo "You are preparing a release, but you still have either dev";
          echo "or travis in the version number";
          false;
