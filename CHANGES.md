@@ -1,7 +1,7 @@
 Changes
 -------
 
-0.95.0 dev test changes.md fail
+0.95.0 dev
 ==========
 
 Changes
