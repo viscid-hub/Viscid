@@ -79,14 +79,14 @@ install:
   # so, then do some 0th order validation on the viscid.__version__
   - 'if [[ ($TRAVIS_BRANCH =~ release) ]]; then
        if [ "$(grep __version__ viscid/__init__.py | grep dev)" != "" ]; then
-         echo "You're preparing a release, but you still have either dev";
+         echo "You are preparing a release, but you still have either dev";
          echo "or travis in the version number";
          false;
        fi
      fi'
 
   # make sure the version string appears in CHANGES.md
-  - 'ver_re="__version__.*[\"\']+([^\"\']+)[\"\']+"'
+  - 'ver_re="__version__.*[\"'']+([^\"'']+)[\"'']+"'
   - 'version=$([[ "$(grep __version__ viscid/__init__.py)" =~ ${ver_re} ]]; echo "${BASH_REMATCH[1]}")'
   - 'if [ "$(grep -E "${version}\s*$" CHANGES.md)" == "" ]; then
        echo "Oops, the version ${version} does not appear in CHANGES.md";
