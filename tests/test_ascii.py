@@ -11,7 +11,6 @@ from viscid.plot import mpl
 
 
 def main():
-    raise RuntimeError("intentionally break Travis-CI build")
     parser = argparse.ArgumentParser(description="Test xdmf")
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
