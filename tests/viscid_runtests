@@ -87,8 +87,12 @@ echo -e "${XFAILC}XFAIL: ${xfailed}${NC}"
 echo -e "${FAILC}FAIL:  ${failed}${NC}"
 echo -e "${RED}=====================${NC}"
 
-${sdir}/viscid_make_summary_page
+##################################
+# make an html page for the plots
+${sdir}/viscid_make_summary_page ${sdir}/index.html
 
+#############################################
+# exit with the status from the actual tests
 exit ${failed}
 
 ##

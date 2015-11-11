@@ -3,11 +3,17 @@
 """
 
 from __future__ import division, print_function
+import argparse
+from datetime import datetime
 from glob import glob
 import os
+from os.path import abspath, basename, dirname, relpath
+from subprocess import Popen, CalledProcessError, PIPE
 import sys
 
-from viscid_test_common import plot_dir, ref_dir
+from viscid_test_common import test_dir, plot_dir, ref_dir
+import viscid
+from viscid.compat import OrderedDict
 
 
 header = """
@@ -29,25 +35,36 @@ h1 {
     margin-right: auto;
 }
 
-table {
+table.info {
+    margin-bottom: 2em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table.info td.leftmost {
+    padding-right: 2em;
+}
+
+table.plots {
     border-collapse: collapse;
     float: center;
 }
 
-td {
+table.plots td {
     border-left: 1px solid #98bf21;
     border-right: 1px solid #98bf21;
+    width: 50%;
 }
 
-td.leftmost {
+table.plots td.leftmost {
     border-left: none;
 }
 
-td.rightmost {
+table.plots td.rightmost {
     border-right: none;
 }
 
-th {
+table.plots th {
     font-size: 1.6em;
     text-align: center;
     padding-top: 0.4em;
@@ -56,7 +73,7 @@ th {
     color: #ffffff;
 }
 
-td.testname {
+table.plots td.testname {
     color: #A7C942;
     // background-color: #ffffff;
     border-left: none;
@@ -67,7 +84,7 @@ td.testname {
     padding-bottom: 0.0em;
 }
 
-td.plotname {
+table.plots td.plotname {
     text-align: center;
     color: #536421;
     // background-color: #ffffff;
@@ -78,7 +95,7 @@ td.plotname {
     padding-bottom: 1.5em;
 }
 
-.imgrow {
+table.plots .imgrow {
 }
 
 img {
@@ -105,13 +122,13 @@ footer = """
 """
 
 def make_img_cell(fname, tdclass=""):
-    if os.path.isfile(fname):
+    if os.path.isfile(os.path.join(dirname(args.fname), fname)):
         meat = "<img src='{0}'/>".format(fname)
     else:
         meat = "<p class='nofile'>Plot '{0}' does not exist</p>".format(fname)
     return "<td align='center' class='{0}'>{1}</td>\n".format(tdclass, meat)
 
-def make_plot(plot_name, rel_plot_dir=plot_dir, rel_ref_dir=ref_dir):
+def make_plot(plot_name, rel_plot_dir=plot_dir, rel_ref_dir=ref_dir, start='.'):
     meat = "<tr>\n"
     meat += "<td class='plotname' colspan='2'>{0}</td>\n".format(plot_name)
     meat += "</tr>\n"
@@ -126,10 +143,13 @@ def make_test_row(test_name):
     return meat
 
 def main():
-    output_dir = "./"
+    global args
+    parser = argparse.ArgumentParser(description="Make summary page")
+    parser.add_argument("fname", nargs="?", default="./summary.html")
+    args = viscid.vutil.common_argparse(parser)
 
-    rel_plot_dir = os.path.relpath(plot_dir)
-    rel_ref_dir = os.path.relpath(ref_dir)
+    rel_plot_dir = relpath(abspath(plot_dir), start=dirname(args.fname))
+    rel_ref_dir = relpath(abspath(ref_dir), start=dirname(args.fname))
 
     # make up file list
     fmt = "png"
@@ -142,7 +162,61 @@ def main():
     all_plots.sort()
 
     html = header
-    html += "<table>\n"
+
+    ################################
+    # make a table for the run info
+    info = OrderedDict()
+    info["Version"] = viscid.__version__
+
+    try:
+        git_version = Popen(["git", "--version"], stdout=PIPE,
+                            stderr=PIPE).communicate()[0]
+        info["Commit"] = Popen(['git', 'rev-parse', 'HEAD'],
+                               stdout=PIPE, stderr=PIPE).communicate()[0]
+        info["Branch"] = Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                               stdout=PIPE, stderr=PIPE).communicate()[0]
+        p0 = Popen(['git', 'tag', '-l', '--contains', 'HEAD'], stdout=PIPE)
+        p1 = Popen(['tr', '-s', ' ', ':'], stdin=p0.stdout, stdout=PIPE)
+        info["Tag"] = p1.communicate()[0].strip()
+    except CalledProcessError:
+        pass
+
+    try:
+        info["Commit"] = os.environ["TRAVIS_COMMIT"]
+        info["Branch"] = os.environ["TRAVIS_BRANCH"]
+        info["Tag"] = os.environ["TRAVIS_TAG"]
+        jobid = os.environ["TRAVIS_JOB_ID"]
+        jobnum = os.environ["TRAVIS_JOB_NUMBER"]
+        reposlug = os.environ["TRAVIS_REPO_SLUG"]
+        info["Travis-CI Job"] = ("<a href=https://travis-ci.org/{0}/jobs/{1}>{2}</a>"
+                                 "".format(reposlug, jobid, jobnum))
+    except KeyError:
+        pass
+
+    try:
+        if not info["Tag"]:
+            info["Tag"] = "-None-"
+    except KeyError:
+        pass
+
+    try:
+        info["Commit"] = info["Commit"][:16] + "..."
+    except KeyError:
+        pass
+
+    info["Python"] = "{0[0]}.{0[1]}.{0[2]}".format(sys.version_info)
+    info["OS"] = "{0[0]} {0[4]}".format(os.uname())
+    info["Time Generated"] = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    html += "<table class='info'>\n"
+    for k, v in info.items():
+        html += "<tr><td class='leftmost'>{0}:</td>".format(k)
+        html += "<td class='rightmost'>{0}</td></tr>\n".format(v)
+    html += "</table>\n"
+
+    ####################################
+    # make a table with the plots in it
+    html += "<table class='plots'>\n"
     html += "<tr><th>Test Plot</th><th>Reference Plot</th></tr>\n"
 
     last_test_name = ""
@@ -157,7 +231,7 @@ def main():
     html += "</table>\n"
     html += footer
 
-    with open(output_dir + "/summary.html", 'w') as f:
+    with open(args.fname, 'w') as f:
         f.write(html)
     return 0
 

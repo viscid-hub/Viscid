@@ -1,6 +1,14 @@
 Changes
 -------
 
+0.95.0
+======
+
+Changes
+  - Travis-CI builds upload test summaries to Github Pages
+  - Makefiles now have rules for all make / deploy steps
+  - Wrap savefig with offscreen rendering on linux
+
 0.94.0
 ======
 

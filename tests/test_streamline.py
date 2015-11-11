@@ -58,7 +58,7 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
         if title:
             mvi.mlab.title(title)
 
-        mvi.mlab.savefig(next_plot_fname(__file__, series='3d'))
+        mvi.savefig(next_plot_fname(__file__, series='3d'))
         if show:
             mvi.show()
 

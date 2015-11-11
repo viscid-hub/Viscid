@@ -15,7 +15,7 @@ ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext deploy-html-ghpages
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -158,5 +158,9 @@ doctest:
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
-deploy-gh-pages:
-	bash deploy_gh_pages.sh
+docdeploy: deploy-html-ghpages
+doc-deploy: deploy-html-ghpages
+deployhtml: deploy-html-ghpages
+deploy-html: deploy-html-ghpages
+deploy-html-ghpages:
+	bash deploy_html_ghpages.sh

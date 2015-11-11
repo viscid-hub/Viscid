@@ -19,9 +19,8 @@ Both the master and dev branches makes every attempt to be usable  (thanks to co
 
 Branch        | Docs                                                                      | Test Status
 ------------- | ------------------------------------------------------------------------- | -----------------------
-master        | [html](http://kristoformaynard.github.io/Viscid/docs/master/index.html)   | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master)](https://travis-ci.org/KristoforMaynard/Viscid)
-dev           | [html](http://kristoformaynard.github.io/Viscid/docs/dev/index.html)      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev)](https://travis-ci.org/KristoforMaynard/Viscid)
-travis        | None                                                                      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=travis3)](https://travis-ci.org/KristoforMaynard/Viscid)
+master        | [html](http://kristoformaynard.github.io/Viscid/docs/master/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/master-2.7-full/index.html)   | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master)](https://travis-ci.org/KristoforMaynard/Viscid)
+dev           | [html](http://kristoformaynard.github.io/Viscid/docs/dev/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/dev-2.7-full/index.html)      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev)](https://travis-ci.org/KristoforMaynard/Viscid)
 
 ## Install ##
 

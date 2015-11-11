@@ -6,6 +6,7 @@ Note:
 from __future__ import print_function
 import code
 import os
+import sys
 
 import numpy as np
 import mayavi
@@ -578,6 +579,17 @@ def resize(size, figure=None):
     except Exception as e:  # pylint: disable=broad-except
         viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
 
+def savefig(*args, **kwargs):
+    """Wrap mayavi.mlab.savefig with offscreen hack"""
+    fig = mlab.gcf()
+    prev_offscreen_state = fig.scene.off_screen_rendering
+    if sys.platform != "darwin":
+        fig.scene.off_screen_rendering = True
+
+    mlab.savefig(*args, **kwargs)
+
+    if fig.scene.off_screen_rendering != prev_offscreen_state:
+        fig.scene.off_screen_rendering = prev_offscreen_state
 
 def interact(local=None):
     """Switch to interactive interpreter

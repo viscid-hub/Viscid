@@ -9,3 +9,6 @@ seaborn
 mayavi
 
 flake8
+
+sphinx
+sphinx_rtd_theme

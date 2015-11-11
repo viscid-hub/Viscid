@@ -1,7 +1,7 @@
 
 export SHELL := /bin/bash
 
-.PHONY: inplace build install clean test insttest flake8 refupdate html docclean
+.PHONY: inplace build install clean test insttest flake8 refupdate deploy-html-ghpages doc-html doc-clean
 
 # flake codes come from: http://flake8.readthedocs.org/en/latest/warnings.html
 #                        http://pep8.readthedocs.org/en/latest/intro.html#error-codes
@@ -46,9 +46,15 @@ update_ref: refupdate
 refupdate:
 	bash tests/viscid_update_ref_plots
 
-docdeploy: doc-deploy
-doc-deploy:
-	make -C doc deploy-gh-pages
+deploysummary: deploy-summary-ghpages
+deploy-summary: deploy-summary-ghpages
+deploy-summary-ghpages:
+	bash tests/deploy_test_summary.sh
+
+deployhtml: deploy-html-ghpages
+deploy-html: deploy-html-ghpages
+deploy-html-ghpages:
+	make -C doc deploy-html
 
 html: doc-html
 dochtml: doc-html

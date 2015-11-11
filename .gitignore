@@ -7,6 +7,9 @@ viscid.sublime-workspace
 
 sample/test.npz
 
+tests/*.html
+tests/plots
+
 summary.html
 
 *.pyc

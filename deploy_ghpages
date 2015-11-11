@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+
+set -e
+
+dir0="${PWD}"
+sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+root_dir="${sdir}"
+ghp_dir="${root_dir}/.ghpages"
+
+doclean=0
+pretend=0
+msg="Automated Deployment"
+dest_dir=""
+files=""
+
+upstream_slug="KristoforMaynard/Viscid"
+TRAVIS_REPO_SLUG="${TRAVIS_REPO_SLUG:-${upstream_slug}}"
+
+# usage: abs_path="$(abspath ${relative_path} [${start}])"
+# `start` is the path that the relative path is relative to; it defaults to ${PWD}
+abspath() { cd "${2:-.}"; echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"; }
+
+##################
+# establish usage
+print_usage() {
+cat << EOF
+Usage: ${0##*/} [-hpc] [-m MSG] -d DEST file1 [file2 [file3 [...]]]
+
+Copy and commit a set of files to the gh-pages branch
+
+  Optional Arguments:
+    -h          help
+    -p          pretend, i.e., do not actually do the commit/push
+    -c          clean, i.e., remove (rm -rf) DEST
+    -m MSG      commit message
+
+  Required Arguments:
+    -d DEST     Destination directory relative to root on the gh-pages
+                branch
+    file*       One or more files to move to DEST and commit
+
+EOF
+exit $1
+}
+
+##################
+# parse arguments
+OPTIND=1
+while getopts "h?pcm:d:" arg; do
+  case $arg in
+    h|\?)
+      print_usage 0;;
+    p) pretend=1;;
+    c) doclean=1;;
+    m) msg=${OPTARG};;
+    d) dest_dir=${OPTARG};;
+    *) print_usage 1;;
+  esac
+done
+shift $((OPTIND-1))
+
+files=(); for f in "$@"; do files+=("${f}"); done
+
+if [ -z "${dest_dir}" ] || [ ${#files[@]} -eq 0 ]; then print_usage 1; fi
+
+###################
+# now we may begin
+
+if [ ${pretend} -ne 0 ]; then
+  addopt="-v"
+else
+  addopt=" "
+fi
+
+if [[ -n ${TRAVIS} && -n ${CONTINUOUS_INTEGRATION} ]]; then
+  if [ "${TRAVIS_REPO_SLUG}" != "${upstream_slug}" ]; then
+    echo ">> slug: '${TRAVIS_REPO_SLUG}' != '${upstream_slug}' (upstream),"
+    echo ">> i.e., this repo is not eligible for doc deployment. "
+    echo ">> Quietly exiting now..."
+    exit 0
+  elif [ -n "$GH_TOKEN" ]; then
+    repo="https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git"
+    git config --global user.name "Travis-CI"
+    git config --global user.email "nobody@travis-ci.org"
+    git config --global push.default simple
+  else
+    echo ">> I'm lost..."
+    exit 10
+  fi
+else
+  # this scipt is probably being run locally, so let's assume the user
+  # has set up passwordless access to github with an account that can
+  # push to the upstream repo
+  repo="git@github.com:${TRAVIS_REPO_SLUG}.git"
+fi
+
+echo "using repo::" ${repo}
+git clone -b gh-pages ${repo} "${ghp_dir}"
+cd "${ghp_dir}"
+
+if [[ ${doclean} && -d "${dest_dir}" ]]; then
+  rm -rf "${dest_dir}"
+fi
+set +e; mkdir -p "${dest_dir}"; set -e
+
+# make sure files are absolute paths
+for f in ${files[@]}; do
+  cp ${addopt} -r "$(abspath ${f} ${dir0})" "${dest_dir}"
+done
+
+git add --all --force ${dest_dir}
+if [ "$(git diff --name-only --cached)" != "" ]; then
+  if [ ${pretend} -ne 0 ]; then
+    echo "[PRETEND] ${msg}"
+  else
+    git commit -m "${msg}"
+    git push
+  fi
+else
+  echo "No changes made, so no commit for you"
+fi
+
+cd "${dir0}"
+rm -rf "${ghp_dir}"
+
+##
+## EOF
+##
