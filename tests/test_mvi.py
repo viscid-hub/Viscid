@@ -97,7 +97,7 @@ def main():
     # mvi.mlab.savefig('mayavi_msphere_sample.x3d')
     # print("done")
 
-    mvi.mlab.savefig(next_plot_fname(__file__))
+    mvi.savefig(next_plot_fname(__file__))
     if args.show:
         mlab.show()
 

@@ -54,7 +54,7 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         if view_kwargs:
             mvi.mlab.view(**view_kwargs)
 
-        mvi.mlab.savefig(next_plot_fname(__file__, series='3d'))
+        mvi.savefig(next_plot_fname(__file__, series='3d'))
         if show:
             mvi.show()
     except ImportError:
