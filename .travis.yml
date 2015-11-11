@@ -7,8 +7,8 @@ env:
     - PYTHON=2.6 DEPS=full
     - PYTHON=2.7 DEPS=full FLAKE=1 DEPLOY_DOCS=1
     # - PYTHON=3.3 DEPS=full
-    # - PYTHON=3.4 DEPS=full
-    # - PYTHON=3.5 DEPS=full
+    # - PYTHON=3.4 DEPS=full  # is this necessary if 3.3 and 3.5 are tested?
+    # - PYTHON=3.5 DEPS=full FLAKE=1
 
 git:
   submodules: false

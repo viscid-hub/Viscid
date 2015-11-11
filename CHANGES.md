@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.95.0 dev
-==========
+0.95.0
+======
 
 Changes
   - Travis-CI builds upload test summaries to Github Pages
