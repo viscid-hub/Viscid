@@ -1196,15 +1196,6 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
         plt.show()
     return p, None
 
-
-def mplshow():
-    """Calls :meth:`matplotlib.pyplot.show()`"""
-    # do i need to do anything special before i show?
-    # can't think of anything at this point...
-    plt.show()
-
-show = mplshow
-
 def tighten(**kwargs):
     """Calls `matplotlib.pyplot.tight_layout(**kwargs)`"""
     try:
@@ -1481,6 +1472,13 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
 
     return verts, segments, scalars, seg_scalars, colors, seg_colors, other
 
+# just explicitly bring in some matplotlib functions
+subplot = plt.subplot
+subplot2grid = plt.subplot2grid
+clf = plt.clf
+savefig = plt.savefig
+show = plt.show
+mplshow = show
 
 # man, i was really indecisive about these names... luckily, everything's
 # a reference in Python :)
