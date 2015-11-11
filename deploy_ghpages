@@ -108,7 +108,7 @@ for f in ${files[@]}; do
   cp ${addopt} -r "$(abspath ${f} ${dir0})" "${dest_dir}"
 done
 
-git add --force ${dest_dir}
+git add --all --force ${dest_dir}
 if [ "$(git diff --name-only --cached)" != "" ]; then
   if [ ${pretend} -ne 0 ]; then
     echo "[PRETEND] ${msg}"
