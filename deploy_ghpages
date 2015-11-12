@@ -114,7 +114,28 @@ if [ "$(git diff --name-only --cached)" != "" ]; then
     echo "[PRETEND] ${msg}"
   else
     git commit -m "${msg}"
-    git push
+
+    push_errcode=1
+    max_push_tries=5
+    push_tries=0
+    set +e
+    while [[ push_errcode -ne 0 && ${push_tries} -lt ${max_push_tries} ]]; do
+      echo "Push attempt ${push_tries}"
+      git push
+      push_errcode=$?
+      push_tries=$((${push_tries} + 1))
+      if [ ${push_errcode} -ne 0 ]; then
+        sleep 2
+      fi
+    done
+    set -e
+
+    if [ ${push_errcode} -eq 0 ]; then
+      echo "Push succeeded after ${push_tries} attempt(s)"
+    else
+      echo "Push failed ${push_tries} times"
+      exit ${push_errcode}
+    fi
   fi
 else
   echo "No changes made, so no commit for you"
