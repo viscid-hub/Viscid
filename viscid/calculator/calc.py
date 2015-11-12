@@ -179,9 +179,9 @@ magnitude.add_implementation("native", _magnitude_native)
 def project_vector(a, b):
     """Returns (a dot b) * b hat"""
     bnorm = normalize(b)
-    print(">>", type(bnorm), bnorm.shape, bnorm.nr_comps,
-          "MIN", np.min(np.linalg.norm(bnorm, axis=b.nr_comp)),
-          "MAX", np.max(np.linalg.norm(bnorm, axis=b.nr_comp)))
+    # print(">>", type(bnorm), bnorm.shape, bnorm.nr_comps,
+    #       "MIN", np.min(np.linalg.norm(bnorm, axis=b.nr_comp)),
+    #       "MAX", np.max(np.linalg.norm(bnorm, axis=b.nr_comp)))
     return project(a, b) * bnorm
 
 def resample_lines(lines, factor=1, kind="linear"):

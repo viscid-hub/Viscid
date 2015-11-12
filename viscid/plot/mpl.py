@@ -1121,9 +1121,9 @@ def streamplot(fld, **kwargs):
     fld = fld.slice_reduce(":")
 
     if fld.patches[0].nr_sdims != 2:
-        raise ValueError("2D Fields only for plot2d_quiver")
+        raise ValueError("2D Fields only for streamplot")
     if fld.nr_comps != 3:
-        raise TypeError("Vector Fields only for plot2d_quiver")
+        raise TypeError("Vector Fields only for streamplot")
 
     # get lm axes, ie, the axes in the plane
     l, m = fld.crds.axes
@@ -1147,7 +1147,8 @@ def streamplot(fld, **kwargs):
                             [nl, nm, 1])
         vl = vol.wrap_field(viscid.interp_trilin(vl, vol)).slice_reduce(":")
         vm = vol.wrap_field(viscid.interp_trilin(vm, vol)).slice_reduce(":")
-        xl, xm = vl.get_crds(lm, shaped=False)
+
+        xl, xm = vl.get_crds()[:2]
 
         # interpolate linewidth and color too if given
         for other in ['linewidth', 'color']:
@@ -1195,15 +1196,6 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     if show:
         plt.show()
     return p, None
-
-
-def mplshow():
-    """Calls :meth:`matplotlib.pyplot.show()`"""
-    # do i need to do anything special before i show?
-    # can't think of anything at this point...
-    plt.show()
-
-show = mplshow
 
 def tighten(**kwargs):
     """Calls `matplotlib.pyplot.tight_layout(**kwargs)`"""
@@ -1481,6 +1473,13 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
 
     return verts, segments, scalars, seg_scalars, colors, seg_colors, other
 
+# just explicitly bring in some matplotlib functions
+subplot = plt.subplot
+subplot2grid = plt.subplot2grid
+clf = plt.clf
+savefig = plt.savefig
+show = plt.show
+mplshow = show
 
 # man, i was really indecisive about these names... luckily, everything's
 # a reference in Python :)

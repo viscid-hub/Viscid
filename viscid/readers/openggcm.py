@@ -190,7 +190,8 @@ class GGCMGrid(grid.Grid):
     """
     _flip_vect_comp_names = "bx, by, b1x, b1y, " \
                             "vx, vy, rv1x, rv1y, " \
-                            "jx, jy, ex, ey, ex_cc, ey_cc".split(', ')
+                            "jx, jy, xjx, xjy, " \
+                            "ex, ey, ex_cc, ey_cc".split(', ')
     _flip_vect_names = "v, b, j, xj".split(', ')
     # _flip_vect_comp_names = []
     # _flip_vect_names = []
@@ -309,6 +310,15 @@ class GGCMGrid(grid.Grid):
     def _get_vz(self):
         return self['v']['z']
 
+    def _get_jx(self):
+        return self['xjx']
+
+    def _get_jy(self):
+        return self['xjy']
+
+    def _get_jz(self):
+        return self['xjz']
+
     def _assemble_vector(self, base_name, comp_names="xyz", suffix="",
                          forget_source=False, **kwargs):
         opts = dict(forget_source=forget_source, **kwargs)
@@ -334,6 +344,10 @@ class GGCMGrid(grid.Grid):
                                      pretty_name="E")
 
     def _get_j(self):
+        return self._assemble_vector("j", _force_layout=self.force_vector_layout,
+                                     pretty_name="J")
+
+    def _get_xj(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
                                      pretty_name="J")
 
@@ -579,6 +593,7 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
             for fname in self._collection:
                 f = self._load_child_file(fname, index_handle=False,
                                           file_type=type(self),
+                                          grid_type=self._grid_type,
                                           crds=self._crds,
                                           fld_templates=self._fld_templates)
                 data_temporal.add(f)
