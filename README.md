@@ -15,7 +15,7 @@ There is also preliminary support for reading and plotting AMR datasets from XDM
 
 ## Documentation ##
 
-Both the master and dev branches makes every attempt to be usable  (thanks to continuous integration), but the obvious caveats exist, i.e., the dev branch has more cool new features but it isn't _as_ tested.
+Both the master and dev branches should make every attempt to be usable (thanks to continuous integration), but the obvious caveats exist, i.e. the dev branch has more cool new features but it isn't _as_ tested.
 
 Branch        | Docs                                                                      | Test Status
 ------------- | ------------------------------------------------------------------------- | -----------------------
