@@ -28,6 +28,7 @@ def main():
 
     b = f3d["b"]
     pp = f3d["pp"]
+    e = f3d["e_cc"]
 
     # plot a scalar cut plane of pressure
     pp_src = mvi.field2source(pp, center='node')
@@ -37,10 +38,10 @@ def main():
     scp.implicit_plane.normal = [0, 0, -1]
     scp.implicit_plane.origin = [0, 0, 0]
     # i don't know why this log10 doesn't seem to work
-    scp.module_manager.scalar_lut_manager.lut.scale = 'log10'
-    scp.module_manager.scalar_lut_manager.lut_mode = 'Reds'
-    scp.module_manager.scalar_lut_manager.reverse_lut = True
-    scp.module_manager.scalar_lut_manager.show_scalar_bar = True
+    cbar = mlab.colorbar(scp, title=pp.name, orientation='vertical')
+    cbar.lut.scale = 'log10'
+    cbar.lut_mode = 'Reds'
+    cbar.reverse_lut = True
 
     # calculate B field lines && topology in viscid and plot them
     seeds = viscid.SphericalPatch([0, 0, 0], [2, 0, 1], 30, 15, r=5.0,
@@ -51,10 +52,29 @@ def main():
     mvi.plot_lines(b_lines, scalars=viscid.topology2color(topo))
 
     # Use Mayavi (VTK) to calculate field lines using an interactive seed
+    # These field lines are colored by E parallel, and while the syntax used
+    # to add Epar to the B field is hacky looking, it works.
     b_src = mvi.field2source(b, center='node')
+
+    # add e parallel to the b_src so we can use it to color the lines
+    epar = viscid.project(e, b)
+    epar.name = "Epar"
+    epar0_src = mvi.add_field(epar, center='node')
+    b_src._point_scalars_list.append(epar0_src.name)  # pylint: disable=protected-access
+    b_src.data.point_data.scalars = epar0_src.data.point_data.scalars
+    b_src.point_scalars_name = epar0_src.name
+
+    # now add the streamlines
     bsl2 = mlab.pipeline.streamline(b_src, seedtype='sphere',
                                     integration_direction='both',
-                                    seed_resolution=4)
+                                    seed_resolution=4, vmin=-0.1, vmax=0.1)
+
+    cbar = mlab.colorbar(bsl2, title=epar.name, orientation='horizontal')
+    cbar.scalar_bar_representation.position = (0.2, 0.01)
+    cbar.scalar_bar_representation.position2 = (0.6, 0.14)
+    redhelix = (viscid.plot.cubehelix.redhelix_rgba * 255).astype('i')
+    cbar.lut.table = redhelix[:, ::1]
+
     bsl2.stream_tracer.maximum_propagation = 20.
     bsl2.seed.widget.center = [-11, 0, 0]
     bsl2.seed.widget.radius = 1.0
@@ -62,7 +82,7 @@ def main():
     bsl2.tube_filter.radius = 0.03
     bsl2.stop()  # this stop/start was a hack to get something to work?
     bsl2.start()
-    bsl2.seed.widget.enabled = True
+    bsl2.seed.widget.enabled = False
 
     # Plot the ionosphere too
     fac_tot = 1e9 * f_iono['fac_tot']
@@ -78,11 +98,12 @@ def main():
     mvi.plot_earth_3d(radius=1.01, crd_system="gse", night_only=True,
                       opacity=0.5)
 
-    mlab.axes(pp_src, nb_labels=5)
-    mlab.orientation_axes()
+    # mlab.axes(pp_src, nb_labels=5)
+    oa = mlab.orientation_axes()
+    oa.marker.set_viewport(0.75, 0.75, 1.0, 1.0)
 
     mvi.resize([1200, 800])
-    mlab.view(azimuth=40, elevation=70, distance=35.0, focalpoint=[-3, 0, 0])
+    mlab.view(azimuth=45, elevation=70, distance=35.0, focalpoint=[-2, 0, 0])
 
     # # Save Figure
     # print("saving png")
