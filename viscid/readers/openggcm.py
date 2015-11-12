@@ -190,7 +190,8 @@ class GGCMGrid(grid.Grid):
     """
     _flip_vect_comp_names = "bx, by, b1x, b1y, " \
                             "vx, vy, rv1x, rv1y, " \
-                            "jx, jy, ex, ey, ex_cc, ey_cc".split(', ')
+                            "jx, jy, xjx, xjy, " \
+                            "ex, ey, ex_cc, ey_cc".split(', ')
     _flip_vect_names = "v, b, j, xj".split(', ')
     # _flip_vect_comp_names = []
     # _flip_vect_names = []
