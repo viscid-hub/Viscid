@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.95.1 dev
-==========
+0.95.1
+======
 
 Changes:
   - Add some mpl wrappers (clf, subplot, subplot2grid, savefig, show)
