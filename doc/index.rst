@@ -42,10 +42,11 @@ Contents
 
   installation
   philosophy
-  custom_behavior
   functions
   plot_options
+  custom_behavior
   command_line
+  dev_guide
   extending_readers
 
   examples/index

@@ -139,10 +139,12 @@ html_theme_options = {
     # 'navbar_links': [],
     'navbar_dropdown_links':
         [("Tutorial", [("Installation", "installation"),
-                       ("RC file", "custom_behavior"),
+                       ("Philosophy", "philosophy"),
                        ("Useful Functions", "functions"),
                        ("Plot Options", "plot_options"),
+                       ("RC file", "custom_behavior"),
                        ("Command Line Tools", "command_line"),
+                       ("Developer's Guide", "dev_guide"),
                        ("Extending Readers", "extending_readers"),
                       ]
          ),

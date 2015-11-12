@@ -4,7 +4,8 @@ Changes
 0.95.2 dev
 ==========
 
-
+Changes:
+  - add developer's guide to the docs
 
 0.95.1
 ======
