@@ -593,6 +593,7 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
             for fname in self._collection:
                 f = self._load_child_file(fname, index_handle=False,
                                           file_type=type(self),
+                                          grid_type=self._grid_type,
                                           crds=self._crds,
                                           fld_templates=self._fld_templates)
                 data_temporal.add(f)
