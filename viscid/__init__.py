@@ -13,7 +13,7 @@ Attributes:
         :py:func`viscid.vutil.common_argparse`.
 """
 
-__version__ = """0.95.1"""
+__version__ = """0.95.2 dev"""
 
 __all__ = ['amr_field',  # Modules
            'amr_grid',
