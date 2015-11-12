@@ -309,6 +309,15 @@ class GGCMGrid(grid.Grid):
     def _get_vz(self):
         return self['v']['z']
 
+    def _get_jx(self):
+        return self['xjx']
+
+    def _get_jy(self):
+        return self['xjy']
+
+    def _get_jz(self):
+        return self['xjz']
+
     def _assemble_vector(self, base_name, comp_names="xyz", suffix="",
                          forget_source=False, **kwargs):
         opts = dict(forget_source=forget_source, **kwargs)
@@ -334,6 +343,10 @@ class GGCMGrid(grid.Grid):
                                      pretty_name="E")
 
     def _get_j(self):
+        return self._assemble_vector("j", _force_layout=self.force_vector_layout,
+                                     pretty_name="J")
+
+    def _get_xj(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
                                      pretty_name="J")
 

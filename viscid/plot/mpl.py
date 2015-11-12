@@ -1121,9 +1121,9 @@ def streamplot(fld, **kwargs):
     fld = fld.slice_reduce(":")
 
     if fld.patches[0].nr_sdims != 2:
-        raise ValueError("2D Fields only for plot2d_quiver")
+        raise ValueError("2D Fields only for streamplot")
     if fld.nr_comps != 3:
-        raise TypeError("Vector Fields only for plot2d_quiver")
+        raise TypeError("Vector Fields only for streamplot")
 
     # get lm axes, ie, the axes in the plane
     l, m = fld.crds.axes
@@ -1147,7 +1147,8 @@ def streamplot(fld, **kwargs):
                             [nl, nm, 1])
         vl = vol.wrap_field(viscid.interp_trilin(vl, vol)).slice_reduce(":")
         vm = vol.wrap_field(viscid.interp_trilin(vm, vol)).slice_reduce(":")
-        xl, xm = vl.get_crds(lm, shaped=False)
+
+        xl, xm = vl.get_crds()[:2]
 
         # interpolate linewidth and color too if given
         for other in ['linewidth', 'color']:
