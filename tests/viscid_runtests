@@ -28,6 +28,7 @@ if [ ! -d ${sdir}/plots ]; then
   mkdir ${sdir}/plots
   echo "*.png" > ${sdir}/plots/.gitignore
 fi
+rm ${sdir}/plots/*.png
 
 tests="$( ls ${sdir}/test_* | grep -Ev '.(log|stderr|stdout)$' )"
 
