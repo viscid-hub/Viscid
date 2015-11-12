@@ -474,7 +474,7 @@ def extract_index(arr, start=None, stop=None, step=None, endpoint=True,
         # array is probably of type numpy.int*
         epsilon = 0.01
 
-    _step = 1 if step is None else step
+    _step = 1 if step is None else int(step)
     epsilon_step = epsilon if _step > 0 else -epsilon
 
     start = convert_deprecated_floats(start, "start")
