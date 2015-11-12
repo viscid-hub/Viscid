@@ -4,7 +4,16 @@ Changes
 0.95.1 dev
 ==========
 
+Changes:
+  - Add some mpl wrappers (clf, subplot, subplot2grid, savefig, show)
+  - Let jrrle files get current with 'jx', 'jy', 'jz'
+  - Tests now exersize xdmf/jrrle files for 3d/2d/timeseries/iof the same way
+  - Always remove old plots when running make check
 
+Bugfixes:
+  - Tests run on py3k again
+  - fix custom grids on jrrle files
+  - flip xjx, xjy when going mhd->gse
 
 0.95.0
 ======
