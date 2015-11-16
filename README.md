@@ -29,10 +29,10 @@ Dependencies:
 + Required
   + Python 2.7+ or 3.3+
   + Python 2.6 + argparse
-  + Numpy
+  + Numpy >= 1.9
 + Highly Recommended
   + H5py (if reading hdf5 files)
-  + Matplotlib (if you want to make 2d plots using viscid.plot.mpl)
+  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.mpl)
   + Numexpr (for the calculator.necalc module)
 + Truly Optional
   + Seaborn

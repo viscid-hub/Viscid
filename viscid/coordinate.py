@@ -1209,9 +1209,9 @@ class UniformCrds(StructuredCrds):
 
         # node centered things
         self.xl_nc = np.array([args[0] for args in self._nc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.xh_nc = np.array([args[1] for args in self._nc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.shape_nc = np.array([args[2] for args in self._nc_linspace_args],
                                  dtype='int')
         self.L_nc = self.xh_nc - self.xl_nc
@@ -1219,9 +1219,9 @@ class UniformCrds(StructuredCrds):
 
         # cell centered things
         self.xl_cc = np.array([args[0] for args in self._cc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.xh_cc = np.array([args[1] for args in self._cc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.shape_cc = np.array([args[2] for args in self._cc_linspace_args],
                                  dtype='int')
         self.L_cc = self.xh_cc - self.xl_cc
@@ -1384,8 +1384,7 @@ class UniformCrds(StructuredCrds):
         assert len(self._nc_linspace_args) == len(self._axes)
         self._src_crds_nc = {}
         for ax, p in zip(self._axes, self._nc_linspace_args):
-            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2],
-                                                dtype=self.dtype)
+            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2]).astype(self.dtype)
         return super(UniformCrds, self)._fill_crds_dict()
 
 

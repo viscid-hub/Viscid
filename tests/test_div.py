@@ -9,18 +9,23 @@ sign waves and we use a central difference divergence """
 from __future__ import print_function
 from time import time
 import argparse
+import sys
 
 import numpy as np
-import numexpr as ne
 import matplotlib.pyplot as plt
 
-from viscid_test_common import next_plot_fname
+from viscid_test_common import next_plot_fname, CODE_XFAIL
 
 import viscid
 from viscid import logger
 from viscid import vutil
 from viscid.plot import mpl
 
+try:
+    import numexpr as ne
+except ImportError:
+    print("XFAIL: numexpr is not installed", file=sys.stderr)
+    sys.exit(CODE_XFAIL)
 
 def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     t0 = time()

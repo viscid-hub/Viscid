@@ -148,8 +148,7 @@ def _dot_np(fld_a, fld_b):
 dot.add_implementation("numpy", _dot_np)
 
 def _magnitude_np(fld):
-    vx, vy, vz = fld.component_views()
-    return np.sqrt((vx**2) + (vy**2) + (vz**2))
+    return np.sqrt((np.sum(fld * fld, axis=fld.nr_comp)))
 magnitude.add_implementation("numpy", _magnitude_np)
 
 def _project_np(a, b):

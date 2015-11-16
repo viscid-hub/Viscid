@@ -5,7 +5,6 @@ from __future__ import print_function
 import argparse
 
 import numpy as np
-import numexpr as ne
 import matplotlib.pyplot as plt
 
 from viscid_test_common import next_plot_fname
@@ -26,7 +25,7 @@ def run_mpl_testA(show=False):
 
     fld_s = viscid.empty([x, y, z], center='cell')
     Xcc, Ycc, Zcc = fld_s.get_crds_cc(shaped=True)  # pylint: disable=unused-variable
-    fld_s[:, :, :] = ne.evaluate("(sin(Xcc) + cos(Ycc))")
+    fld_s[:, :, :] = np.sin(Xcc) + np.cos(Ycc)
 
     nrows = 4
     ncols = 1
@@ -57,7 +56,7 @@ def run_mpl_testB(show=False):
 
     fld_s = viscid.empty([x, y, z], center='node')
     X, Y, Z = fld_s.get_crds_nc(shaped=True)  # pylint: disable=W0612
-    fld_s[:, :, :] = ne.evaluate("sin(X) + cos(Y) - cos(Z)")
+    fld_s[:, :, :] = np.sin(X) + np.cos(Y) - np.cos(Z)
     # print("shape: ", fld_s.data.shape)
 
     nrows = 4

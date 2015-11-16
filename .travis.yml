@@ -5,7 +5,7 @@ env:
     - secure: LbEq8hL3eHuZ8DJQWCQvV5ZPcfSi6hS6k68shuCbLNGn5D8VuKwj96e4twzeB1k5AG860a47ZggaAPfeo1CCprzSeNoy1X0qct5PtJsgRiTlKhBfN7XmYGKbZ+dkxBuetrPJv1sRW7ed6R66QDSN52C00RMTKF36LpunvyYtXKqS28pFFJ9R5i++EL59PY33j6QYjTMQF4aFENnLgC/XAZgwCk9MGvCe40cND2P/AT8RkyYWuQhMqWnWKt+6VDdlbonSRKJmX/lLVMk63vLNnEUYiejGS5lAbcG76cAsKh4kA5tPI8lM/F37pF10n1q9Zu//VhAYLsWX94zb3ifbmBVH+fB1xUogF5OJChx6BYrSZdn3bfnoWWzpdsGLzOdmtndpzskizzuR7o/DhklNcs4IMdhKvKhNOiFFUqhA73YsEBIhffYpV/exP8DcX+eLq6goY3FIcn/ttW7Mx6u3QW1wHqHJh4jOq4KR8EKVz9ewMectf6Stu81hYqm2enyNhpYKd0bIVs5++5wim6/vQcWL18+t63xi8c7T5spoGggPRL4FDBGP5pGH5b4a5oOnnPq3tvJ/Es59syX7GI/YH8NCfPqBATWfPfOJq6Ewfyv/RPCwNRp1xXzb1sMtyB2QP4VPSAHg//2QPkuGZ4rrMTIsQNjMTHzWIYJ2TOYy2Lw=
     - 'deployable="^(master|dev|travis)$"'
   matrix:
-    - PYTHON=2.6 DEPS=full
+    - PYTHON=2.6 DEPS=red
     - PYTHON=2.7 DEPS=full FLAKE=1 DEPLOY_DOCS=1
     - PYTHON=3.3 DEPS=full
     # - PYTHON=3.4 DEPS=full  # is this necessary if 3.3 and 3.5 are tested?
