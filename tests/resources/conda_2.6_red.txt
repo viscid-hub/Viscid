@@ -1,6 +1,6 @@
 argparse
-numpy
-matplotlib
+numpy=1.9
+matplotlib=1.4
 h5py
 
 flake8
