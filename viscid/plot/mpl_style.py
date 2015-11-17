@@ -139,7 +139,7 @@ def post_rc_actions(show_warning=True):
             try:
                 style.use(s)
             except ValueError as e:
-                logger.warn(e.message)
+                logger.warn(str(e))
     except ImportError:
         if show_warning and use_styles:
             logger.warn("Upgrade to matplotlib >= 1.5.0 to use style sheets")

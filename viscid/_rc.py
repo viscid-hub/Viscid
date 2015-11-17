@@ -49,7 +49,7 @@ def set_attribute(path, value):
     #     value = _parse_rc_value(value)
     # except RCValueError as e:
     #     viscid.logger.warn("Skipping bad ~/.viscidrc value:: {0}\n".format(value)
-    #                        "                                 {0}".format(e.message))
+    #                        "                                 {0}".format(str(e)))
     #     return None
     p = path.split('.')
     obj = _get_obj(viscid, p[:-1])
@@ -88,7 +88,7 @@ def load_rc_file(fname):
                 viscid.logger.warn("from rc file; {0}\n"
                                    "If this isn't a typeo then the "
                                    "functionality may have moved."
-                                   "".format(e.message))
+                                   "".format(str(e)))
     except IOError:
         pass
 
