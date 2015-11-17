@@ -39,6 +39,8 @@ Rc Parameters:
 # https://github.com/matplotlib/matplotlib/tree/HEAD/lib/matplotlib/mpl-data/stylelib
 
 from __future__ import division, print_function
+from distutils.version import LooseVersion
+import re
 
 import matplotlib
 from viscid import logger
@@ -83,6 +85,15 @@ viscid.symmetric_cmap: RdBu_r
 viscid.cbarfmt: steve
 """
 }
+
+# hack the cycler stuff back to the pre-1.5.0 syntax
+if LooseVersion(matplotlib.__version__) < LooseVersion("1.5.0"):
+    for k, v in VISCID_STYLES.items():
+        v = re.sub(r"(.*?)\.prop_cycle\s*:\s*cycler\((['\"])(.*?)\2,\s*"
+                   r"\[\s*(.*)\s*\]\s*\)",
+                   r"\1.\3_cycle: \4", v)
+        v = v.replace("'", "").replace('"', "")
+        VISCID_STYLES[k] = v
 
 # register Viscid's special colormaps
 # register the cubehelix color maps
