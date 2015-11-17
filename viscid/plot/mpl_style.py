@@ -123,7 +123,7 @@ def post_rc_actions(show_warning=True):
         for s in use_styles:
             style.use(s)
     except ImportError:
-        if show_warning:
+        if show_warning and use_styles:
             logger.warn("Upgrade to matplotlib >= 1.5.0 to use style sheets")
 
     matplotlib.rcParams.update(rc_params)
@@ -131,7 +131,7 @@ def post_rc_actions(show_warning=True):
         matplotlib.rc(group, **params)
 
 inject_viscid_styles()
-post_rc_actions()
+post_rc_actions(show_warning=False)
 
 ##
 ## EOF
