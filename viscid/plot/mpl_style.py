@@ -121,7 +121,10 @@ def post_rc_actions(show_warning=True):
     try:
         from matplotlib import style
         for s in use_styles:
-            style.use(s)
+            try:
+                style.use(s)
+            except ValueError as e:
+                logger.warn(e.message)
     except ImportError:
         if show_warning and use_styles:
             logger.warn("Upgrade to matplotlib >= 1.5.0 to use style sheets")
