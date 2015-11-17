@@ -56,12 +56,14 @@ def set_attribute(path, value):
 
     if not hasattr(obj, p[-1]):
         viscid.logger.warn("from rc file; '{0}' has no attribute '{1}'.\n"
-                           "If this isn't a typeo then the functionality may"
+                           "If this isn't a typeo then the functionality may "
                            "have moved.".format(".".join(p[:-1]), p[-1]))
     setattr(obj, p[-1], value)
+    return obj
 
 
 def load_rc_file(fname):
+    touched_objects = []
     try:
         with open(os.path.expanduser(os.path.expandvars(fname)), 'r') as f:
             try:
@@ -81,7 +83,7 @@ def load_rc_file(fname):
 
         for path, val in rc_obj.items():
             try:
-                set_attribute(path, val)
+                touched_objects.append(set_attribute(path, val))
             except RCPathError as e:
                 viscid.logger.warn("from rc file; {0}\n"
                                    "If this isn't a typeo then the "
@@ -89,6 +91,12 @@ def load_rc_file(fname):
                                    "".format(e.message))
     except IOError:
         pass
+
+    for obj in set(touched_objects):
+        try:
+            obj.post_rc_actions()
+        except AttributeError:
+            pass
 
 ##
 ## EOF

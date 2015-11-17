@@ -131,6 +131,9 @@ for attr in dir(streamline):
         __all__.append(attr)
 del streamline
 
+# always bring in custom matplotlib stuff (colormaps & rc params)
+from viscid.plot import mpl_style
+
 # pull other useful modules into the namespace
 # Note: plot and calculator are intentionally left
 #       out of the viscid namespace since importing

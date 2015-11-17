@@ -10,6 +10,7 @@ seaborn can be used from this module.
 from __future__ import print_function
 import imp
 
+import viscid
 from viscid import logger
 
 SEABORN_ACTIVATED = False
@@ -41,6 +42,15 @@ def activate_from_viscid():
     importing viscid.plot.mpl. This can be done with the rc file.
     """
     if enabled:
+        from distutils.version import LooseVersion
+        import matplotlib
+
+        if LooseVersion(matplotlib.__version__) >= LooseVersion("1.5.0"):
+            logger.warn("Using this shim to seaborn for pretty plots "
+                        "is deprecated since you have matplotlib >= 1.5.\n"
+                        "Instead, use matplotlib's style sheets through "
+                        "`viscid.mpl_style`.")
+
         try:
             import seaborn as real_seaborn
             # just some fancyness so i can specify an arbitrary
@@ -75,6 +85,8 @@ def activate_from_viscid():
                 if not key.startswith("_"):
                     g[key] = value
             g['SEABORN_ACTIVATED'] = True
+            viscid.plot.mpl_extra.post_rc_actions(show_warning=False)
+            viscid.mpl_style.post_rc_actions(show_warning=False)
         except ImportError:
             logger.warn("seaborn package not installed")
 
