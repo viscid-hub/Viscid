@@ -121,7 +121,7 @@ if [ "$(git diff --name-only --cached)" != "" ]; then
     set +e
     while [[ push_errcode -ne 0 && ${push_tries} -lt ${max_push_tries} ]]; do
       echo "Push attempt ${push_tries}"
-      git pull
+      git pull --rebase
       git push
       push_errcode=$?
       push_tries=$((${push_tries} + 1))
