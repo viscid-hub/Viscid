@@ -29,7 +29,4 @@
   # "plot.vseaborn.enabled": true,
   # "plot.vseaborn.context": "poster",
   # "plot.vseaborn.style": "ticks",
-  # "plot.vseaborn.palette": ["husl", 8],
-  # "plot.vseaborn.palette": [["#9b59b6", "#3498db", "#95a5a6", "#e74c3c", "#34495e", "#2ecc71"]],
-  # "plot.vseaborn.rc": {"lines.markeredgewidth": 0.01},
 }
