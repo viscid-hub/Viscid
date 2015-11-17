@@ -42,6 +42,7 @@ from __future__ import division, print_function
 
 import matplotlib
 from viscid import logger
+from viscid.compat import unicode  # pylint: disable=redefined-builtin
 from viscid.plot.cmap_tools import register_cmap
 from viscid.plot import cubehelix  # import clac_helix_rgba
 
