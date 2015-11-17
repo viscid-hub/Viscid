@@ -72,15 +72,18 @@ for key, default_converter in viscid_mpl_rc_params.items():
     matplotlib.rcParamsDefault[key] = default_converter[0]
 
 VISCID_STYLES = {
+    #######################
     u"viscid-default": u"""
 viscid.symmetric_cmap: RdBu_r
 """,
+    ##########################
     u"viscid-colorblind": u"""
 axes.prop_cycle: cycler('color', ['004358', 'FD7400', '3DA88E', \
                                   '83522B', '00D4FD', 'E2D893'])
 image.cmap: redhelix
 viscid.symmetric_cmap: RdBu_r
 """,
+    #####################
     u"viscid-steve": u"""
 viscid.cbarfmt: steve
 """
