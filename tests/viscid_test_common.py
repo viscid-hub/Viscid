@@ -40,7 +40,7 @@ import viscid  # pylint: disable=unused-import
 try:
     from matplotlib import style
     style.use("seaborn-notebook")
-except ImportError:
+except (ImportError, ValueError):
     from viscid.plot import vseaborn
     vseaborn.context = "notebook"
 
