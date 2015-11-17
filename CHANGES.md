@@ -6,6 +6,11 @@ Changes
 
 Changes:
   - add developer's guide to the docs
+  - added `mpl_style` module to deprecate `mpl_extra` and `vseaborn`
+
+Deprecated:
+  - setting `mpl_extra` attributes from the rc file
+  - seaborn styling can be completely done in matplotlib >= 1.5.0
 
 0.95.1
 ======
