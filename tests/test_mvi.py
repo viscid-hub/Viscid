@@ -6,13 +6,12 @@ from __future__ import print_function
 import argparse
 import sys
 
-from viscid_test_common import sample_dir, next_plot_fname, CODE_XFAIL
+from viscid_test_common import sample_dir, next_plot_fname, xfail
 
 try:
     from mayavi import mlab
 except ImportError:
-    print("XFAIL: Mayavi not installed", file=sys.stderr)
-    sys.exit(CODE_XFAIL)
+    xfail("Mayavi not installed")
 
 import viscid
 from viscid import vutil

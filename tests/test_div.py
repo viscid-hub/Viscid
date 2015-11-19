@@ -14,7 +14,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-from viscid_test_common import next_plot_fname, CODE_XFAIL
+from viscid_test_common import next_plot_fname, xfail
 
 import viscid
 from viscid import logger
@@ -24,8 +24,7 @@ from viscid.plot import mpl
 try:
     import numexpr as ne
 except ImportError:
-    print("XFAIL: numexpr is not installed", file=sys.stderr)
-    sys.exit(CODE_XFAIL)
+    xfail("Numexpr is not installed")
 
 def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     t0 = time()

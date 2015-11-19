@@ -11,7 +11,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-from viscid_test_common import next_plot_fname, CODE_XFAIL
+from viscid_test_common import next_plot_fname, xfail
 
 import viscid
 from viscid import logger
@@ -29,8 +29,7 @@ def run_mag_test(fld, title="", show=False):
         t1 = time()
         logger.info("numexpr mag runtime: %g", t1 - t0)
     except viscid.verror.BackendNotFound:
-        print("XFAIL: Numexpr is not installed", file=sys.stderr)
-        sys.exit(CODE_XFAIL)
+        xfail("Numexpr is not installed")
 
     planes = ["z=0", "y=0"]
     nrows = 4

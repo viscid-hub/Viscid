@@ -86,6 +86,10 @@ def next_plot_fname(main__file__, series='', fmt='png'):
     NPLOT[series] += 1
     return name
 
+def xfail(msg):
+    print("XFAIL: {0}".format(msg), file=sys.stderr)
+    sys.exit(CODE_XFAIL)
+
 ##
 ## EOF
 ##
