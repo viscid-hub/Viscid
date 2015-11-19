@@ -14,7 +14,7 @@ from viscid.cython.cyfield cimport real_t
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.misc_inlines cimport int_min, int_max
 
-def interp_trilin(vfield, seeds, force_amr_version=False):
+def interp_trilin(vfield, seeds, force_amr_version=False, wrap=True):
     """Interpolate a field to points described by seeds
 
     Note:
@@ -26,6 +26,7 @@ def interp_trilin(vfield, seeds, force_amr_version=False):
         vfield (viscid.field.Field): Some Vector or Scalar field
         seeds (viscid.claculator.seed): locations for the interpolation
         force_amr_version (bool): used for benchmarking amr overhead
+        wrap (bool): if true, then call seeds.wrap on the result
 
     Returns:
         numpy.ndarray of interpolated values. Shaped (seed.nr_points,)
@@ -54,20 +55,23 @@ def interp_trilin(vfield, seeds, force_amr_version=False):
     if scalar:
         result = result[:, 0]
 
-    try:
-        result = seeds.wrap_field(result, name=vfield.name)
-    except (AttributeError, NotImplementedError):
-        pass
+    if wrap:
+        if scalar:
+            result = seeds.wrap_field(result, name=vfield.name)
+        else:
+            result = seeds.wrap_field(result, name=vfield.name,
+                                      fldtype="vector", layout="interlaced")
 
     return result
 
-def interp_nearest(vfield, seeds, force_amr_version=False):
+def interp_nearest(vfield, seeds, force_amr_version=False, wrap=True):
     """Interpolate a field to points described by seeds
 
     Parameters:
         vfield (viscid.field.Field): Some Vector or Scalar field
         seeds (viscid.claculator.seed): locations for the interpolation
         force_amr_version (bool): used for benchmarking amr overhead
+        wrap (bool): if true, call seeds.wrap on the result
 
     Returns:
         numpy.ndarray of interpolated values. Shaped (seed.nr_points,)
@@ -96,10 +100,12 @@ def interp_nearest(vfield, seeds, force_amr_version=False):
     if scalar:
         result = result[:, 0]
 
-    try:
-        result = seeds.wrap_field(result, name=vfield.name)
-    except (AttributeError, NotImplementedError):
-        pass
+    if wrap:
+        if scalar:
+            result = seeds.wrap_field(result, name=vfield.name)
+        else:
+            result = seeds.wrap_field(result, name=vfield.name,
+                                      fldtype="vector", layout="interlaced")
 
     return result
 

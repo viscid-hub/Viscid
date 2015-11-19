@@ -48,7 +48,7 @@ def main():
                                   nalpha=5, nbeta=5)
     b_lines, topo = viscid.calc_streamlines(b, seeds, ibound=3.5,
                                             obound0=[-25, -20, -20],
-                                            obound1=[15, 20, 20])
+                                            obound1=[15, 20, 20], wrap=True)
     mvi.plot_lines(b_lines, scalars=viscid.topology2color(topo))
 
     # Use Mayavi (VTK) to calculate field lines using an interactive seed

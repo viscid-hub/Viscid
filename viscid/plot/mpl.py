@@ -1145,8 +1145,8 @@ def streamplot(fld, **kwargs):
 
         vol = viscid.Volume([xl[0], xm[0], 0], [xl[-1], xm[-1], 0],
                             [nl, nm, 1])
-        vl = vol.wrap_field(viscid.interp_trilin(vl, vol)).slice_reduce(":")
-        vm = vol.wrap_field(viscid.interp_trilin(vm, vol)).slice_reduce(":")
+        vl = viscid.interp_trilin(vl, vol, wrap=True).slice_reduce(":")
+        vm = viscid.interp_trilin(vm, vol, wrap=True).slice_reduce(":")
 
         xl, xm = vl.get_crds()[:2]
 

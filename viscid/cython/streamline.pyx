@@ -133,7 +133,7 @@ _global_fld = None
 #####################
 # now the good stuff
 def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
-                     threads=False, nr_chunks_factor=1, **kwargs):
+                     threads=False, nr_chunks_factor=1, wrap=True, **kwargs):
     r"""Trace streamlines
 
     Args:
@@ -146,6 +146,7 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
             process, even if nr_procs == 1
         nr_chunks_factor (int): If streamlines are really unbalanced
             in length, try bumping this up
+        wrap (bool): if true, then call seed.wrap_field on topology
         **kwargs: more arguments for streamlines
 
     Keyword Arguments:
@@ -227,10 +228,8 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
         for i in range(nr_chunks):
             topo[slice(*seed_slices[i])] = r[i][1]
 
-        try:
+        if wrap:
             topo = seed.wrap_field(topo, name="Topology")
-        except (AttributeError, NotImplementedError):
-            pass
     else:
         topo = None
 

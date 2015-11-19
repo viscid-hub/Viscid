@@ -14,7 +14,6 @@ import viscid
 def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
              **kwargs):
     lines, topo = viscid.calc_streamlines(_fld, _seeds, **kwargs)
-    topo_fld = _seeds.wrap_field(topo)
     topo_color = viscid.topology2color(topo)
 
     # downsample lines for plotting
@@ -48,7 +47,7 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
             #       so one can't use topo_color on a mesh surface. This
             #       is a limitation of mayavi. To actually plot a specific
             #       set of colors on a mesh, one must use a texture
-            vertices, scalars = _seeds.wrap_mesh(topo_fld.data)
+            vertices, scalars = _seeds.wrap_mesh(topo.data)
             mesh = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
                                  scalars=scalars, opacity=0.5)
             mesh.actor.property.backface_culling = True

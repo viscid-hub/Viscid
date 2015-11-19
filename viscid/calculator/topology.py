@@ -4,6 +4,7 @@ without needing to have built the cython module streamline.pyx
 """
 
 import numpy as np
+import viscid
 
 TOPOLOGY_MS_NONE = 0  # no translation needed
 TOPOLOGY_MS_CLOSED = 1  # translated from 5, 6, 7(4|5|6)
@@ -61,6 +62,8 @@ def topology2color(topology, topo_style="msphere", bad_color=None):
 
     ret = None
     try:
+        if isinstance(topology, viscid.field.Field):
+            topology = topology.flat_data
         ret = np.empty((len(topology), 3))
         for i, topo in enumerate(topology):
             try:

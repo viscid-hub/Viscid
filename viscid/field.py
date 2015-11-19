@@ -655,6 +655,10 @@ class Field(tree.Leaf):
         # do some sort of lazy pre-setup _src_data inspection?
 
     @property
+    def flat_data(self):
+        return self.data.reshape(-1)
+
+    @property
     def patches(self):
         return [self]
 

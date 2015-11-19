@@ -261,6 +261,7 @@ class SeedGen(object):
                            "".format(type(self).__name__))
 
     def wrap_mesh(self, *arrs):
+        arrs = [a.data if isinstance(a, viscid.field.Field) else a for a in arrs]
         vertices = self.as_mesh()
         arrs = [self.arr2mesh(arr).astype(arr.dtype) for arr in arrs]
         return [vertices] + arrs
@@ -311,7 +312,12 @@ class Point(SeedGen):
         return self.pts
 
     def _make_local_axes(self):
-        raise NotImplementedError()
+        return np.arange(self.nr_points)
+
+    def as_coordinates(self):
+        x = self._make_local_axes()
+        crds = viscid.wrap_crds("nonuniform_cartesian", (('x', x), ))
+        return crds
 
 
 class MeshPoints(SeedGen):
