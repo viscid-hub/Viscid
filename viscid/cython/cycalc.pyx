@@ -53,6 +53,12 @@ def interp_trilin(vfield, seeds, force_amr_version=False):
 
     if scalar:
         result = result[:, 0]
+
+    try:
+        result = seeds.wrap_field(result, name=vfield.name)
+    except (AttributeError, NotImplementedError):
+        pass
+
     return result
 
 def interp_nearest(vfield, seeds, force_amr_version=False):
@@ -89,6 +95,12 @@ def interp_nearest(vfield, seeds, force_amr_version=False):
 
     if scalar:
         result = result[:, 0]
+
+    try:
+        result = seeds.wrap_field(result, name=vfield.name)
+    except (AttributeError, NotImplementedError):
+        pass
+
     return result
 
 def _py_interp_trilin(FusedField fld, points, real_t[:, ::1] result):

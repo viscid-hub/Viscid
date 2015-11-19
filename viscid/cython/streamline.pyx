@@ -226,6 +226,11 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
         topo = np.empty((nr_streams,), dtype=r[0][1].dtype)
         for i in range(nr_chunks):
             topo[slice(*seed_slices[i])] = r[i][1]
+
+        try:
+            topo = seed.wrap_field(topo, name="Topology")
+        except (AttributeError, NotImplementedError):
+            pass
     else:
         topo = None
 
