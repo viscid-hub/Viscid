@@ -2,6 +2,7 @@
 
 from __future__ import print_function, division
 from math import ceil
+import threading
 import multiprocessing as mp
 import multiprocessing.pool
 from contextlib import closing
@@ -12,6 +13,7 @@ import numpy as np
 
 import viscid
 from viscid.compat import izip
+from viscid.compat import futures
 
 # Non daemonic processes are probably a really bad idea
 class NoDaemonProcess(mp.Process):
@@ -29,6 +31,19 @@ class NoDaemonPool(multiprocessing.pool.Pool):  # pylint: disable=W0223
     are you don't actually want to use me
     """
     Process = NoDaemonProcess
+
+
+class _MapThread(threading.Thread):
+    def __init__(self, result_container, index, **kwargs):
+        self.results = result_container
+        self.index = index
+        self.target = kwargs.pop("target")
+        self.args = kwargs.pop("args", [])
+        self.kwargs = kwargs.pop("kwargs", {})
+        super(_MapThread, self).__init__(**kwargs)
+
+    def run(self):
+        self.results[self.index] = self.target(*self.args, **self.kwargs)
 
 
 def chunk_list(seq, nchunks, size=None):
@@ -171,14 +186,23 @@ def map(nr_procs, func, args_iter, args_kw=None, timeout=1e8,
 
     same as :meth:`map_async`, except it waits for the result to
     be ready and returns it
+
+    Note:
+        When using threads, this is WAY faster than map_async since
+        map_async uses the builtin python ThreadPool. I have no idea
+        why that's slower than making threads by hand.
     """
     if args_kw is None:
         args_kw = {}
 
     # don't waste time spinning up a new process
-    if pool is None and nr_procs == 1 and not force_subprocess:
+    if threads:
+        args = [(func, ai, args_kw) for ai in args_iter]
+        with futures.ThreadPoolExecutor(max_workers=nr_procs) as executor:
+            ret = [val for val in executor.map(_star_passthrough, args)]
+    elif pool is None and nr_procs == 1 and not force_subprocess:
         args_iter = izip(repeat(func), args_iter, repeat(args_kw))
-        return [_star_passthrough(args) for args in args_iter]
+        ret = [_star_passthrough(args) for args in args_iter]
     else:
         p, r = map_async(nr_procs, func, args_iter, args_kw=args_kw,
                          daemonic=daemonic, threads=threads, pool=pool)
@@ -186,7 +210,8 @@ def map(nr_procs, func, args_iter, args_kw=None, timeout=1e8,
         # in principle this join should return almost immediately since
         # we already called r.get
         p.join()
-        return ret
+
+    return ret
 
 def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
               threads=False, pool=None):
@@ -200,6 +225,11 @@ def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
 
     Returns:
         (tuple) (pool, multiprocessing.pool.AsyncResult)
+
+    Note:
+        When using threads, this is WAY slower than map since
+        map_async uses the builtin python ThreadPool. I have no idea
+        why that's slower than making threads by hand.
 
     Note: daemonic can be set to False if one needs to spawn child
         processes in func, BUT this could be vulnerable to creating
