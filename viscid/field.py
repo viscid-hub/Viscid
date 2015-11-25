@@ -1648,6 +1648,11 @@ class Field(tree.Leaf):
             fld = fld.component_fields()[0]
         return fld
 
+    def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
+        """Wrap an ndarray into a field in the local representation"""
+        return viscid.wrap_field(data, self.crds, name=name, fldtype=fldtype,
+                                 center=self.center, **kwargs)
+
     def __array_wrap__(self, out_arr, context=None):  # pylint: disable=W0613
         return self.wrap(out_arr)
 
