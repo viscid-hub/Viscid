@@ -111,6 +111,8 @@ __all__ += seed.__all__
 
 from viscid.calculator.topology import topology2color
 __all__ += ["topology2color"]
+from viscid.calculator.topology import cluster, find_sep_points_cartesian
+__all__ += ["cluster", "find_sep_points_cartesian"]
 
 from viscid.calculator.plasma import *
 from viscid.calculator import plasma
