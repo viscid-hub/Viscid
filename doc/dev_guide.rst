@@ -22,7 +22,7 @@ Forks can use Travis-CI by enabling it for their own GitHub accounts. The caveat
 Git structure
 -------------
 
-This project uses the Git Flow merge strategy for development / release cycles. Basically, changes should be made on `feature/*` branches and merged into the `dev` branch when ready. Releases should begin on a branch of dev named `release/version-number` which is pushed upstream. The push is important because it triggers CI tests. When the release branch instills confidence, it can be merged into both `master` and `dev`.
+This project uses the `Git Flow <https://github.com/nvie/gitflow>`_ merge strategy for development / release cycles. Basically, changes should be made on `feature/*` branches and merged into the `dev` branch when ready. Releases should begin on a branch of dev named `release/version-number` which is pushed upstream. The push is important because it triggers CI tests. When the release branch instills confidence, it can be merged into both `master` and `dev`.
 
 Here are some things to remember when doing releases and the like:
 
