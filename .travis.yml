@@ -107,6 +107,9 @@ install:
      else
        source activate ${envname};
        conda update --all --yes --file ${pkg_list};
+       echo "The following line is a hack since matplotlib 1.5 will not";
+       echo "install at the same time as mayavi due to numpy versions";
+       echo "$(conda install --yes ''matplotlib >=1.5.0'' || true)";
      fi'
 
   # if deplying docs, run tests inplace, this makes preparing the docs
