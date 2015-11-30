@@ -856,7 +856,7 @@ class StructuredCrds(Coordinates):
             return self
         return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
-    def slice_reduce(self, selection, cc=False):
+    def slice_and_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
         through, and if the slice didn't touch a dim with only one crd,
         reduce it
@@ -868,13 +868,16 @@ class StructuredCrds(Coordinates):
             return self
         return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
-    def slice_keep(self, selection, cc=False):
+    def slice_and_keep(self, selection, cc=False):
         slices, crdlst, reduced, crds_type = self.make_slice_keep(selection,
                                                                   cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
         return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+
+    slice_reduce = slice_and_reduce
+    slice_keep = slice_and_keep
 
     def slice_interp(self, selection, cc=False):
         _, crdlst, _, crds_type = self.make_slice_keep(selection, cc=cc)

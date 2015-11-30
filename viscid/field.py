@@ -1219,7 +1219,7 @@ class Field(tree.Leaf):
         slices, crdlst, reduced, crd_type = self._src_crds.make_slice(selection, cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
-    def slice_reduce(self, selection):
+    def slice_and_reduce(self, selection):
         """ Slice the field, then go through all dims and look for dimensions
         with only one coordinate. Reduce those dimensions out of the new
         field """
@@ -1239,6 +1239,9 @@ class Field(tree.Leaf):
                                                                            cc=cc)
         # print("??", type(self._src_crds), crdlst)
         return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
+
+    slice_reduce = slice_and_reduce
+    slice_keep = slice_and_keep
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
