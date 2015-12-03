@@ -3,6 +3,9 @@ TOPOLOGY_* is copied here so that one can import this module
 without needing to have built the cython module streamline.pyx
 """
 
+from __future__ import print_function
+from itertools import count
+
 import numpy as np
 import viscid
 
@@ -81,51 +84,126 @@ def topology2color(topology, topo_style="msphere", bad_color=None):
             ret = bad_color
     return ret
 
-def cluster(indx, indy, x, y, multiple=True):
+def distance_to_clusters(point, clusters, alt=()):
+    """L2 distance between point and clusters"""
+    x, y = point
+
+    dists = np.zeros((len(clusters),), dtype='f')
+    wraps = np.zeros((len(clusters), len(point)), dtype='int')
+
+    for i, (clx, cly) in enumerate(clusters):
+        clx, cly = np.asarray(clx), np.asarray(cly)
+
+        dists[i] = np.min(np.sqrt((clx - x)**2 +
+                                  (cly - y)**2))
+        for altx, alty in alt:
+            newdist = np.min(np.sqrt((clx - (x + altx))**2 +
+                                     (cly - (y + alty))**2))
+            if newdist < dists[i]:
+                dists[i] = newdist
+                wraps[i, :] = (altx, alty)
+
+    wraps = np.sign(wraps)
+    return dists, wraps
+
+def cluster(indx, indy, x, y, multiple=True, periodic=(False, False),
+            diagonals=True):
     """Cluster and average groups of neighboring points
 
     TODO: If absolutely necessary, could do some K-means clustering
         here by calling into scikit-learn.
 
     Args:
-        indx (list): list of x indices
-        indy (list): list of y indices
-        x (list): list of x locations (same size as indx)
-        y (list): list of y locations (same size as indy)
+        indx (sequence): list of x indices
+        indy (sequence): list of y indices
+        x (sequence): x coordinate array
+        y (sequence): y coordinate array
         multiple (bool): If False, average all points as a single
             cluster
+        periodic (sequence): indicate whether that direction is
+            periodic, and if so, whether the coordinate arrays are
+            overlapped or not. Values can be True, False, or '+'. '+'
+            indicates that x[0] and x[-1] are not colocated, so assume
+            they're dx apart where dx = x[-1] - x[-2].
+        diagonals (bool): if true, then diagonal points are considered
+            neighbors
 
     Returns:
-        ndarray: 3xN for N clusters
+        ndarray: 2xN for N clusters
     """
-    # find clusters of points
-    clusters = []
+    assert len(indx) == len(indy)
+    inds = np.array([indx, indy]).T
+    crds = [np.asarray(x), np.asarray(y)]
+    thresh = 1.5 if diagonals else 1.1
+
+    # setup some bookkeeping about periodicity
+    pd = [False if pi == "0" else bool(pi) for pi in periodic]
+    pdN = [len(_x) for _x in crds]
+    pdL = np.array([_x[-1] - _x[0] for _x in crds])
+    xh = np.array([_x[-1] for _x in crds])
+    xl = np.array([_x[0] for _x in crds])
+    for i, p in enumerate(periodic):
+        if not pd[i]:
+            pdN[i] = 0
+            pdL[i] = 0.0
+        elif str(p).strip() == '+':
+            pdL[i] += crds[i][-1] - crds[i][-2]
+    alt = []
+    if pd[0]:
+        alt += [(-pdN[0], 0), (pdN[0], 0)]
+    if pd[1]:
+        alt += [(0, -pdN[1]), (0, pdN[1])]
+    if pd[0] and pd[1]:
+        alt += [(-pdN[0], -pdN[1]), (pdN[0], pdN[1])]
+
+    # cli == cluster indices, clx == cluster locations
+    clx = []
+
     if multiple:
-        for ix, iy in zip(indx, indy):
-            clustered = False
-            for cl in clusters:
-                for clix, cliy in zip(cl[0], cl[1]):
-                    if np.abs(ix - clix) <= 1 and np.abs(iy - cliy) <= 1:
-                        clustered = True
-                        cl[0].append(ix)
-                        cl[1].append(iy)
-                        break
-                if clustered:
-                    break
-            if not clustered:
-                clusters.append([[ix], [iy]])
+        clusters = []
+        cli = []
+        for i, (ix, iy) in enumerate(inds):
+            ind = inds[i]
+            dists, wraps = distance_to_clusters((ix, iy), cli, alt=alt)
+            touching = dists < thresh
+            ntouching = np.sum(touching)
+            if ntouching > 1:
+                # if this point touches > 1 cluster, then merge the other
+                # clusters
+                clusters.append([i])
+                cli.append([[ix], [iy]])
+                clx.append([[x[ix]], [y[iy]]])
+
+                for k in reversed(np.flatnonzero(touching)):
+                    clusters[-1] += clusters.pop(k)
+                    icli = cli.pop(k)
+                    iclx = clx.pop(k)
+                    for j, N, L in zip(count(), pdN, pdL):
+                        iclij = np.asarray(icli[j]) - wraps[k][j] * N
+                        iclxj = np.asarray(iclx[j]) - wraps[k][j] * L
+                        cli[-1][j] += iclij.tolist()
+                        clx[-1][j] += iclxj.tolist()
+            elif ntouching == 1:
+                icluster = np.argmax(touching)
+                wrap = wraps[icluster]
+                clusters[icluster].append(i)
+                for j, N, L in zip(count(), pdN, pdL):
+                    cli[icluster][j].append(ind[j] + wrap[j] * N)
+                    clx[icluster][j].append(crds[j][ind[j]] + wrap[j] * L)
+            else:
+                clusters.append([i])
+                cli.append([[ix], [iy]])
+                clx.append([[x[ix]], [y[iy]]])
     else:
-        if len(indy) > 0:
-            clusters = [[indx, indy]]
+        clx = [[x[inds[0, :]], y[inds[1, :]]]]
 
-    pts_x = np.array([np.average(x[cl[0]]) for cl in clusters])
-    pts_y = np.array([np.average(y[cl[1]]) for cl in clusters])
-
-    return np.array([pts_x, pts_y])
+    pts = np.array([np.average(clxi, axis=1) for clxi in clx])
+    pts -= pdL * np.floor((pts - xl) / (xh - xl))
+    return pts.T
 
 def find_sep_points_cartesian(fld, min_iterations=1, max_iterations=10,
                               multiple=True, sep_val=SEP_VAL, plot=False,
-                              mask_limit=0b1111):
+                              mask_limit=0b1111, periodic="00", pt_bnds=()):
     """Find separator as intersection of all global topologies
 
     Neighbors are bitwise ORed until at least one value matches
@@ -143,11 +221,21 @@ def find_sep_points_cartesian(fld, min_iterations=1, max_iterations=10,
         plot (bool): Make a 2D plot of Fld and the sep candidates
         mask_limit (int): if > 0, then bitmask fld with mask_limit,
             i.e., fld = fld & mask_limit (bitwise and)
+        periodic (sequence): indicate whether that direction is
+            periodic, and if so, whether the coordinate arrays are
+            overlapped or not. Values can be True, False, or '+'. '+'
+            indicates that x[0] and x[-1] are not colocated, so assume
+            they're dx apart where dx = x[-1] - x[-2].
+        pt_bnd (sequence): Boundaries that come to a point, i.e., all
+            values along that boundary are neighbors such as the poles
+            of a sphere. Specified like "0-" for lower boundary of
+            dimension 0 or "1+" for the upper boundary of dimension 1.
 
     Returns:
         ndarray: 3xN for N clusters of separator points in the same
         coordinates as `fld`
     """
+    pd = [False if pi == "0" else bool(pi) for pi in periodic]
     fld = fld.slice_reduce(":")
     if mask_limit:
         fld = np.bitwise_and(fld, mask_limit)
@@ -155,16 +243,28 @@ def find_sep_points_cartesian(fld, min_iterations=1, max_iterations=10,
     x, y = fld.get_crds()
 
     for i in range(max_iterations):
+        if pd[0]:
+            a[(0, -1), :] |= a[(-1, 0), :]
+        if pd[1]:
+            a[:, (0, -1)] |= a[:, (-1, 0)]
+
         a = (a[ :-1,  :-1] | a[ :-1, 1:  ] |  # pylint: disable=bad-whitespace
              a[1:  ,  :-1] | a[1:  , 1:  ])   # pylint: disable=bad-whitespace
         x = 0.5 * (x[1:] + x[:-1])
         y = 0.5 * (y[1:] + y[:-1])
 
+        # bitwise_or an entire bounary if all points are neighbors, like
+        # at the poles of a sphere
+        for bnd in pt_bnds:
+            slc = [slice(None), slice(None)]
+            slc[int(bnd[0])] = -1 if bnd[1] == "+" else 0
+            a[slc] = np.bitwise_or.reduce(a[slc])
+
         indx, indy = np.where(a == sep_val)
         if i + 1 >= min_iterations and len(indx):
             break
 
-    pts = cluster(indx, indy, x, y, multiple=multiple)
+    pts = cluster(indx, indy, x, y, multiple=multiple, periodic=periodic)
 
     if plot:
         from viscid.plot import mpl
@@ -185,3 +285,35 @@ def find_sep_points_cartesian(fld, min_iterations=1, max_iterations=10,
         mpl.plt.show()
 
     return pts
+
+def find_sep_points_spherical(fld, theta_phi=False, overlap=False, cap=False,
+                              **kwargs):
+    """Wrap :py:func:`find_sep_points_cartesian` for spheres and caps
+
+    This is kind of a janky interface since data about
+    theta_phi / overlap / cap could exist in the field
+    """
+    pd = "1" if overlap else "+"
+    if theta_phi:
+        kwargs['periodic'] = (False, pd)
+        # kwargs['pt_bnds'] = ("0-",) if cap else ("0-", "0+")
+    else:
+        kwargs['periodic'] = (pd, False)
+        # kwargs['pt_bnds'] = ("1-",) if cap else ("1-", "1+")
+    return find_sep_points_cartesian(fld, **kwargs)
+
+def _main():
+    # test clustering; x == theta && y == phi
+    Nx, Lx = 16, 180.0
+    Ny, Ly = 32, 360.0
+    x = np.linspace(0, Lx, Nx)
+    y = np.linspace(0, Ly, Ny, endpoint=True)
+    ix = [0,      0, Nx - 1, Nx - 1, Nx - 4]  # pylint: disable=bad-whitespace
+    iy = [0, Ny - 1,      0, Ny - 1, Ny - 4]  # pylint: disable=bad-whitespace
+    pts = cluster(ix, iy, x, y, multiple=True, periodic="01")
+    print(pts.shape)
+    print(pts)
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(_main())
