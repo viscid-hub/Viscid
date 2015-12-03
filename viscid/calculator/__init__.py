@@ -6,11 +6,13 @@ etc.
 
 """
 
-__all__ = ["calc", "evaluator", "plasma", "topology"]
+__all__ = ["calc", "cluster", "evaluator", "plasma", "topology"]
 
 from viscid.calculator import evaluator
 from viscid.calculator import calc
+from viscid.calculator import cluster
 from viscid.calculator import plasma
+from viscid.calculator import separator
 from viscid.calculator import topology
 from viscid import seed
 

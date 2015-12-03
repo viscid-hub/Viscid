@@ -109,12 +109,18 @@ from viscid.seed import *  # pylint: disable=wildcard-import
 from viscid import seed
 __all__ += seed.__all__
 
+from viscid.calculator.cluster import cluster
+__all__ += ["cluster"]
+
 from viscid.calculator.topology import topology2color
 __all__ += ["topology2color"]
-from viscid.calculator.topology import cluster, find_sep_points_cartesian
-from viscid.calculator.topology import find_sep_points_spherical
-__all__ += ["cluster", "find_sep_points_cartesian",
-            "find_sep_points_spherical"]
+
+from viscid.calculator.separator import get_sep_pts_bitor
+from viscid.calculator.separator import get_sep_pts_bitor_spherical
+__all__ += ["get_sep_pts_bitor", "get_sep_pts_bitor_spherical"]
+
+from viscid.calculator.separator import get_sep_pts_bisect
+__all__ += ["get_sep_pts_bisect"]
 
 from viscid.calculator.plasma import *
 from viscid.calculator import plasma

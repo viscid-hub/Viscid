@@ -78,6 +78,10 @@ END_MAXIT = 4096 | END_OTHER         # 0b001100000000000  == 6144        12
 END_MAX_LENGTH = 8192 | END_OTHER    # 0b010100000000000  == 10240       13
 END_ZERO_LENGTH = 16384 | END_OTHER  # 0b100100000000000  == 18432       14
 
+# IMPORTANT! If TOPOLOGY_MS_* values change, make sure to also change the
+# values in viscid/cython/__init__.py since those are used if the cython
+# code is not built
+
 # ok, this is over complicated, but the goal was to or the topology value
 # with its neighbors to find a separator line... To this end, or-ing two
 # _C_END_* values doesn't help, so before streamlines returns, it will
@@ -89,6 +93,9 @@ TOPOLOGY_MS_OPEN_NORTH = 2  # translated from 13 (8|5)
 TOPOLOGY_MS_OPEN_SOUTH = 4  # translated from 14 (8|6)
 TOPOLOGY_MS_SW = 8  # no translation needed
 # TOPOLOGY_MS_CYCLIC = 16  # no translation needed
+
+TOPOLOGY_MS_SEPARATOR = (TOPOLOGY_MS_CLOSED | TOPOLOGY_MS_OPEN_NORTH |
+                         TOPOLOGY_MS_OPEN_SOUTH | TOPOLOGY_MS_SW)
 
 # ok, typing these masks gives a very, very small performance boost, but I
 # guess there's no reason not to... just have to remember to add new values
