@@ -75,6 +75,22 @@ Function                                  Description
 :py:func:`viscid.calc_beta`               Calculate plasma beta
 ========================================  ===========================================================
 
+Magnetic Topology and Separator Tools
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. cssclass:: table-striped
+
+=============================================  ===========================================================
+Function                                       Description
+=============================================  ===========================================================
+:py:func:`viscid.topology2color`               Turn topology bitmask into colors
+:py:func:`viscid.get_sep_pts_bisect`           Not Implemented
+:py:func:`viscid.get_sep_pts_bitor`            Use bitwise_or to find one or more separators in a
+                                               topology Field
+:py:func:`viscid.get_sep_pts_bitor_spherical`  Use bitwise_or to find one or more separators in a periodic
+                                               topology Field
+=============================================  ===========================================================
+
 Plotting
 --------
 
