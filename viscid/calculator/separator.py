@@ -7,21 +7,21 @@ import viscid
 from viscid.cython import streamline
 
 
-def get_sep_pts_bitor(fld, min_iterations=1, max_iterations=10,
-                      multiple=True, sep_val=streamline.TOPOLOGY_MS_SEPARATOR,
-                      plot=False, mask_limit=0b1111, periodic="00", pt_bnds=()):
+def get_sep_pts_bitor(fld, min_depth=1, max_depth=10, multiple=True,
+                      plot=False, sep_val=streamline.TOPOLOGY_MS_SEPARATOR,
+                      mask_limit=0b1111, periodic="00", pt_bnds=()):
     """Find separator as intersection of all global topologies
 
     Neighbors are bitwise ORed until at least one value matches
     `sep_val` which is presumably (Close | Open N | Open S | SW).
-    This happens between min_iterations and max_iterations times,
+    This happens between min_depth and max_depth times,
     where the resolution of each iteration is reduced by a factor
-    of two, ie, worst case 2**(max_iterations).
+    of two, ie, worst case 2**(max_depth).
 
     Args:
         fld (Field): Topology (bitmask) as a field
-        min_iterations (int): Iterate at least this many times
-        max_iterations (int): Iterate at most this many times
+        min_depth (int): Iterate at least this many times
+        max_depth (int): Iterate at most this many times
         multiple (bool): passed to :py:func:`viscid.cluster`
         sep_val (int): Value of bitmask that indicates a separator
         plot (bool): Make a 2D plot of Fld and the sep candidates
@@ -48,7 +48,7 @@ def get_sep_pts_bitor(fld, min_iterations=1, max_iterations=10,
     a = fld.data
     x, y = fld.get_crds()
 
-    for i in range(max_iterations):
+    for i in range(max_depth):
         if pd[0]:
             a[(0, -1), :] |= a[(-1, 0), :]
         if pd[1]:
@@ -67,7 +67,7 @@ def get_sep_pts_bitor(fld, min_iterations=1, max_iterations=10,
             a[slc] = np.bitwise_or.reduce(a[slc])
 
         indx, indy = np.where(a == sep_val)
-        if i + 1 >= min_iterations and len(indx):
+        if i + 1 >= min_depth and len(indx):
             break
 
     pts = viscid.cluster(indx, indy, x, y, multiple=multiple,
