@@ -25,7 +25,7 @@ For more info on streamlines, check out :py:func:`viscid.calc_streamlines` and s
     seeds = B.slice_keep('y=0f')
     lines, topo = viscid.calc_streamlines(B, seeds, ibound=2.5,
                                           output=viscid.OUTPUT_BOTH)
-    xpts_night = viscid.get_sep_pts_bitor(topo['x=:0f, y=0f'])
+    xpts_night = viscid.topology_bitor_clusters(topo['x=:0f, y=0f'])
 
     # The dayside is done separately here because the sample data is at such
     # low resolution. Super-sampling the grid with the seeds can sometimes help
@@ -33,7 +33,7 @@ For more info on streamlines, check out :py:func:`viscid.calc_streamlines` and s
     day_seeds = viscid.Volume((7.0, 0.0, -5.0), (12.0, 0.0, 5.0), (16, 1, 16))
     _, day_topo = viscid.calc_streamlines(B, day_seeds, ibound=2.5,
                                           output=viscid.OUTPUT_TOPOLOGY)
-    xpts_day = viscid.get_sep_pts_bitor(day_topo)
+    xpts_day = viscid.topology_bitor_clusters(day_topo)
 
     log_bmag = np.log(viscid.magnitude(B))
 
@@ -69,8 +69,7 @@ Streamlines
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
     lines, topo = viscid.calc_streamlines(B,
                                           viscid.Line((0.2, 0.0, 0.0),
-                                                      (1.0, 0.0, 0.0),
-                                                      10),
+                                                      (1.0, 0.0, 0.0), 10),
                                           ds0=0.01, ibound=0.1, maxit=10000,
                                           obound0=obound0, obound1=obound1,
                                           method=viscid.EULER1,

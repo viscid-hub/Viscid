@@ -115,11 +115,10 @@ __all__ += ["cluster"]
 from viscid.calculator.topology import topology2color
 __all__ += ["topology2color"]
 
+from viscid.calculator.separator import topology_bitor_clusters
 from viscid.calculator.separator import get_sep_pts_bitor
-from viscid.calculator.separator import get_sep_pts_bitor_spherical
-__all__ += ["get_sep_pts_bitor", "get_sep_pts_bitor_spherical"]
-
 from viscid.calculator.separator import get_sep_pts_bisect
+__all__ += ["topology_bitor_clusters", "get_sep_pts_bitor"]
 __all__ += ["get_sep_pts_bisect"]
 
 from viscid.calculator.plasma import *
