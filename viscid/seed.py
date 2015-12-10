@@ -849,7 +849,7 @@ class Sphere(SeedGen):
             r = np.linalg.norm(self.pole)
         self.pole = self.pole / np.linalg.norm(self.pole)
 
-        if not (len(thetalim) == len(philim) == 2):
+        if not len(thetalim) == len(philim) == 2:
             raise ValueError("thetalim and philim must have both min and max")
 
         self.r = r
@@ -860,6 +860,38 @@ class Sphere(SeedGen):
         self.phi_endpoint = phi_endpoint
         self.theta_phi = theta_phi
         self.roll = roll
+
+    @property
+    def _spans_theta(self):
+        return np.isclose(self.thetalim[1] - self.thetalim[0], np.pi)
+
+    @property
+    def _spans_phi(self):
+        return np.isclose(self.philim[1] - self.philim[0], 2 * np.pi)
+
+    @property
+    def _is_whole_sphere(self):
+        return self._spans_theta and self._spans_phi
+
+    @property
+    def pt_bnds(self):
+        which = "0" if self.theta_phi else "1"
+        pt = []
+        if np.any(np.isclose(self.thetalim[0], [0.0, np.pi])):
+            pt.append(which + "-")
+        if np.any(np.isclose(self.thetalim[1], [0.0, np.pi])):
+            pt.append(which + "+")
+        return pt
+
+    @property
+    def periodic(self):
+        if self._spans_phi:
+            if self.theta_phi:
+                return (False, "1")
+            else:
+                return ("1", False)
+        else:
+            return ()
 
     def get_nr_points(self, **kwargs):
         return self.ntheta * self.nphi
@@ -933,12 +965,6 @@ class Sphere(SeedGen):
 
     def as_local_coordinates(self):
         return self.as_uv_coordinates()
-
-    @property
-    def _is_whole_sphere(self):
-        delta_theta = self.thetalim[1] - self.thetalim[0]
-        delta_phi = self.philim[1] - self.philim[0]
-        return np.allclose([delta_theta, delta_phi], [np.pi, 2.0 * np.pi])
 
     def as_mesh(self):
         new_shape = [3] + list(self.uv_shape)
