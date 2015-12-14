@@ -98,7 +98,7 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
 
     return pts
 
-def get_sep_pts_bitor(fld, seed, trace_opts=None, **kwargs):
+def get_sep_pts_bitor(fld, seed, trace_opts=None, make_3d=False, **kwargs):
     """Wrap :py:func:`find_sep_points_cartesian` for spheres and caps
 
     This is kind of a janky interface since data about
@@ -121,7 +121,10 @@ def get_sep_pts_bitor(fld, seed, trace_opts=None, **kwargs):
     kwargs.setdefault('pt_bnds', pt_bnds)
     kwargs.setdefault('periodic', periodic)
 
-    return topology_bitor_clusters(topo, **kwargs)
+    pts = topology_bitor_clusters(topo, **kwargs)
+    if make_3d:
+        pts = seed.uv_to_3d(pts)
+    return pts
 
 def perimeter_check_bitwise_or(arr):
     """Does perimeter of arr topologies contain a separator?
@@ -133,7 +136,8 @@ def perimeter_check_bitwise_or(arr):
 
 def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=1, max_depth=7,
                        plot=False, perimeter_check=perimeter_check_bitwise_or,
-                       _base_quadrent="", _recurse0=True, _uneven_mask=0):
+                       make_3d=False, _base_quadrent="", _recurse0=True,
+                       _uneven_mask=0):
     if len(_base_quadrent) == max_depth:
         return [_base_quadrent]  # causes pylint to complain
     if trace_opts is None:
@@ -276,7 +280,10 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=1, max_depth=7,
             if plot.strip().lower() == "show":
                 mpl.show()
         # return seed.to_3d(seed.uv_to_local(pts_uv))
-        return pts_uv
+        if make_3d:
+            return seed.uv_to_3d(pts_uv)
+        else:
+            return pts_uv
     else:
         return ret
 
@@ -307,7 +314,9 @@ def _quadrent_limits(quad_str, xlim, ylim):
 def _quadrent_center(quad_str, xlim, ylim):
     xl, xh, yl, yh = _quadrent_limits(quad_str, xlim, ylim)
     midpt = UNEVEN_HALF if int(quad_str[-1], base=16) & UNEVEN_MASK else 0.5
-    return midpt * (xl + xh), midpt * (yl + yh)
+    xm = xl + midpt * (xh - xl)
+    ym = yl + midpt * (yh - yl)
+    return xm, ym
 
 def _make_square_segments(xl, xh, yl, yh, nx, ny):
     x = np.linspace(xl, xh, nx)
@@ -321,6 +330,7 @@ def _make_square_segments(xl, xh, yl, yh, nx, ny):
 def _make_square(xl, xh, yl, yh, nx, ny):
     bottom, right, top, left = _make_square_segments(xl, xh, yl, yh, nx, ny)
     return np.concatenate((bottom, right, top, left), axis=1)
+
 
 # def perimeter_check_pattern(arr):
 #     """Does perimeter of arr topologies contain a separator?
