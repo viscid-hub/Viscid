@@ -35,6 +35,7 @@ def add_source(src, figure=None):
     if src not in figure.children:
         engine = figure.parent
         engine.add_source(src, scene=figure)
+    return src
 
 def add_lines(lines, scalars=None, figure=None, name="NoName"):
     """Add list of lines to a figure
@@ -71,8 +72,9 @@ def add_field(fld, figure=None, center="", name=""):
     return src
 
 def points2source(vertices, scalars=None, name="NoName"):
-    r = viscid.vutil.prepare_vertices(vertices, scalars)
-    verts, scalars, other = r
+    # if scalars:
+    #     scalars = [scalars]
+    verts, scalars, _, other = viscid.vutil.prepare_lines([vertices], scalars)
 
     src = mlab.pipeline.scalar_scatter(verts[0], verts[1], verts[2])
     if scalars is not None:
@@ -376,6 +378,24 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
     m.module_manager.scalar_lut_manager.reverse_lut = True
 
     return m
+
+def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
+               Ocolor=(0.239, 0.659, 0.557), **kwargs):
+    kwargs.setdefault('scale_mode', 'none')
+    kwargs.setdefault('scale_factor', 0.3)
+
+    Opts = nulls['O'][1]
+    if Ocolor is not None and Opts.shape[1]:
+        mlab.points3d(Opts[0], Opts[1], Opts[2], color=Ocolor, **kwargs)
+
+    Apts = nulls['A'][1]
+    if Ocolor is not None and Opts.shape[1]:
+        mlab.points3d(Apts[0], Apts[1], Apts[2], color=Acolor, **kwargs)
+
+    Bpts = nulls['B'][1]
+    if Bcolor is not None and Bpts.shape[1]:
+        mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, **kwargs)
+
 
 def insert_filter(filtr, module_manager):
     """Insert a filter above an existing module_manager
