@@ -54,6 +54,8 @@ __all__ = ['amr_field',  # Modules
            'interp_nearest',  # cython helpers
            'interp_trilin',
            'calc_streamlines',
+           'find_classified_nulls',
+           'find_nulls'
            # viscid.calculator.calc.* is added below
            # viscid.seed.* is added below
           ]
@@ -129,16 +131,15 @@ from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator import calc
 __all__ += calc.__all__
 
-from viscid.cython import interp_nearest
-from viscid.cython import interp_trilin
+from viscid.cython import interp_nearest, interp_trilin
 from viscid.cython import calc_streamlines
-
 from viscid.cython import streamline
 for attr in dir(streamline):
     if attr[0] != '_' and attr.isupper():
         vars()[attr] = getattr(streamline, attr)
         __all__.append(attr)
 del streamline
+from viscid.cython import find_classified_nulls, find_nulls
 
 # always bring in custom matplotlib stuff (colormaps & rc params)
 from viscid.plot import mpl_style
