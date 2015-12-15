@@ -1751,10 +1751,8 @@ static char __pyx_k_ny[] = "ny";
 static char __pyx_k_nz[] = "nz";
 static char __pyx_k__23[] = "()";
 static char __pyx_k__25[] = "|";
-static char __pyx_k_abs[] = "abs";
 static char __pyx_k_dat[] = "dat";
 static char __pyx_k_end[] = "end";
-static char __pyx_k_eps[] = "eps";
 static char __pyx_k_ff3[] = "ff3";
 static char __pyx_k_fld[] = "fld";
 static char __pyx_k_ic1[] = "ic1";
@@ -1784,6 +1782,7 @@ static char __pyx_k_Apts[] = "Apts";
 static char __pyx_k_Bpts[] = "Bpts";
 static char __pyx_k_Opts[] = "Opts";
 static char __pyx_k_args[] = "args";
+static char __pyx_k_atol[] = "atol";
 static char __pyx_k_base[] = "base";
 static char __pyx_k_data[] = "data";
 static char __pyx_k_file[] = "file";
@@ -1799,6 +1798,7 @@ static char __pyx_k_ndim[] = "ndim";
 static char __pyx_k_pack[] = "pack";
 static char __pyx_k_r_sq[] = "r_sq";
 static char __pyx_k_real[] = "real";
+static char __pyx_k_rtol[] = "rtol";
 static char __pyx_k_s000[] = "s000";
 static char __pyx_k_s001[] = "s001";
 static char __pyx_k_s010[] = "s010";
@@ -1851,6 +1851,7 @@ static char __pyx_k_struct[] = "struct";
 static char __pyx_k_unpack[] = "unpack";
 static char __pyx_k_viscid[] = "viscid";
 static char __pyx_k_fortran[] = "fortran";
+static char __pyx_k_isclose[] = "isclose";
 static char __pyx_k_memview[] = "memview";
 static char __pyx_k_ndarray[] = "ndarray";
 static char __pyx_k_Ellipsis[] = "Ellipsis";
@@ -1991,13 +1992,13 @@ static PyObject *__pyx_kp_s__25;
 static PyObject *__pyx_n_s_a1;
 static PyObject *__pyx_n_s_a2;
 static PyObject *__pyx_n_s_a3;
-static PyObject *__pyx_n_s_abs;
 static PyObject *__pyx_n_s_all_roots;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_args;
 static PyObject *__pyx_n_s_array;
 static PyObject *__pyx_n_s_as_interlaced;
 static PyObject *__pyx_n_s_astype;
+static PyObject *__pyx_n_s_atol;
 static PyObject *__pyx_n_s_b;
 static PyObject *__pyx_n_s_b1;
 static PyObject *__pyx_n_s_b2;
@@ -2033,7 +2034,6 @@ static PyObject *__pyx_n_s_empty;
 static PyObject *__pyx_n_s_encode;
 static PyObject *__pyx_n_s_end;
 static PyObject *__pyx_n_s_enumerate;
-static PyObject *__pyx_n_s_eps;
 static PyObject *__pyx_n_s_error;
 static PyObject *__pyx_n_s_f;
 static PyObject *__pyx_n_s_ff3;
@@ -2065,6 +2065,7 @@ static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_inds;
 static PyObject *__pyx_n_s_int32;
 static PyObject *__pyx_n_s_int8;
+static PyObject *__pyx_n_s_isclose;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
 static PyObject *__pyx_n_s_itertools;
@@ -2134,6 +2135,7 @@ static PyObject *__pyx_n_s_roots1;
 static PyObject *__pyx_n_s_roots2;
 static PyObject *__pyx_n_s_rt1;
 static PyObject *__pyx_n_s_rt2;
+static PyObject *__pyx_n_s_rtol;
 static PyObject *__pyx_n_s_s000;
 static PyObject *__pyx_n_s_s001;
 static PyObject *__pyx_n_s_s010;
@@ -2172,9 +2174,9 @@ static PyObject *__pyx_n_s_zero_evals;
 static PyObject *__pyx_n_s_zero_evecs;
 static PyObject *__pyx_n_s_zeros_like;
 static PyObject *__pyx_n_s_zip;
-static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_fld, PyObject *__pyx_v_ibound, PyObject *__pyx_v_eps); /* proto */
+static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_fld, PyObject *__pyx_v_ibound, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol); /* proto */
 static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_fld, PyObject *__pyx_v_ibound); /* proto */
-static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_b, PyObject *__pyx_v_null_inds, PyObject *__pyx_v_eps); /* proto */
+static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_b, PyObject *__pyx_v_null_inds, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol); /* proto */
 static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_fld, PyObject *__pyx_v_ibound); /* proto */
 static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_candidates(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_fld, PyObject *__pyx_v_inds); /* proto */
 static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_signatures, PyObject *__pyx_v_args, PyObject *__pyx_v_kwargs, CYTHON_UNUSED PyObject *__pyx_v_defaults); /* proto */
@@ -2224,6 +2226,7 @@ static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyO
 static PyObject *__pyx_float_0_0;
 static PyObject *__pyx_float_1_0;
 static PyObject *__pyx_float_1eneg_5;
+static PyObject *__pyx_float_1eneg_8;
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_int_2;
@@ -2301,19 +2304,20 @@ static PyObject *__pyx_codeobj__65;
 /* "viscid/cython/null_tools.pyx":16
  * 
  * 
- * def find_classified_nulls(fld, ibound=0.0, eps=1e-5):             # <<<<<<<<<<<<<<
+ * def find_classified_nulls(fld, ibound=0.0, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
  *     """Find nulls, and classify them as in Cowley 1973
  * 
  */
 
 /* Python wrapper */
 static PyObject *__pyx_pw_6viscid_6cython_10null_tools_1find_classified_nulls(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6viscid_6cython_10null_tools_find_classified_nulls[] = "Find nulls, and classify them as in Cowley 1973\n\n    Args:\n        fld (VectorField): Magnetic field with nulls\n        ibound (float): ignore points within ibound of origin\n        eps (float): closest absolute tolerance to 0.0 when classifying\n\n    Returns:\n        dict: {\"O\": [Oinds, Opts], \"A\": [...], \"B\": [...]}\n            each of these are 3xN ndarrays of either ingegers of floats\n    ";
+static char __pyx_doc_6viscid_6cython_10null_tools_find_classified_nulls[] = "Find nulls, and classify them as in Cowley 1973\n\n    Args:\n        fld (VectorField): Magnetic field with nulls\n        ibound (float): ignore points within ibound of origin\n        rtol (float): used in np.isclose when classifying nulls\n        atol (float): used in np.isclose when classifying nulls\n\n    Returns:\n        dict: {\"O\": [Oinds, Opts], \"A\": [...], \"B\": [...]}\n            each of these are 3xN ndarrays of either ingegers of floats\n    ";
 static PyMethodDef __pyx_mdef_6viscid_6cython_10null_tools_1find_classified_nulls = {"find_classified_nulls", (PyCFunction)__pyx_pw_6viscid_6cython_10null_tools_1find_classified_nulls, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6viscid_6cython_10null_tools_find_classified_nulls};
 static PyObject *__pyx_pw_6viscid_6cython_10null_tools_1find_classified_nulls(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_fld = 0;
   PyObject *__pyx_v_ibound = 0;
-  PyObject *__pyx_v_eps = 0;
+  PyObject *__pyx_v_rtol = 0;
+  PyObject *__pyx_v_atol = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -2321,14 +2325,16 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_1find_classified_nulls(Py
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("find_classified_nulls (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_fld,&__pyx_n_s_ibound,&__pyx_n_s_eps,0};
-    PyObject* values[3] = {0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_fld,&__pyx_n_s_ibound,&__pyx_n_s_rtol,&__pyx_n_s_atol,0};
+    PyObject* values[4] = {0,0,0,0};
     values[1] = ((PyObject *)__pyx_float_0_0);
     values[2] = ((PyObject *)__pyx_float_1eneg_5);
+    values[3] = ((PyObject *)__pyx_float_1eneg_8);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
         case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -2347,8 +2353,13 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_1find_classified_nulls(Py
         }
         case  2:
         if (kw_args > 0) {
-          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_eps);
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_rtol);
           if (value) { values[2] = value; kw_args--; }
+        }
+        case  3:
+        if (kw_args > 0) {
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_atol);
+          if (value) { values[3] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
@@ -2356,6 +2367,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_1find_classified_nulls(Py
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
         case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -2365,24 +2377,25 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_1find_classified_nulls(Py
     }
     __pyx_v_fld = values[0];
     __pyx_v_ibound = values[1];
-    __pyx_v_eps = values[2];
+    __pyx_v_rtol = values[2];
+    __pyx_v_atol = values[3];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("find_classified_nulls", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("find_classified_nulls", 0, 1, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools.find_classified_nulls", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(__pyx_self, __pyx_v_fld, __pyx_v_ibound, __pyx_v_eps);
+  __pyx_r = __pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(__pyx_self, __pyx_v_fld, __pyx_v_ibound, __pyx_v_rtol, __pyx_v_atol);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_fld, PyObject *__pyx_v_ibound, PyObject *__pyx_v_eps) {
+static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_fld, PyObject *__pyx_v_ibound, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol) {
   PyObject *__pyx_v_null_inds = NULL;
   PyObject *__pyx_v_null_pts = NULL;
   PyObject *__pyx_v_Oi = NULL;
@@ -2407,24 +2420,24 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("find_classified_nulls", 0);
 
-  /* "viscid/cython/null_tools.pyx":28
+  /* "viscid/cython/null_tools.pyx":29
  *             each of these are 3xN ndarrays of either ingegers of floats
  *     """
  *     null_inds, null_pts = find_nulls(fld, ibound=ibound)             # <<<<<<<<<<<<<<
- *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, eps=eps)
+ *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, rtol=rtol, atol=atol)
  *     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_find_nulls); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_find_nulls); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_fld);
   __Pyx_GIVEREF(__pyx_v_fld);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_fld);
-  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_ibound, __pyx_v_ibound) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_ibound, __pyx_v_ibound) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2439,7 +2452,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     if (unlikely(size != 2)) {
       if (size > 2) __Pyx_RaiseTooManyValuesError(2);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -2452,15 +2465,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     __Pyx_INCREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_t_2);
     #else
-    __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     #endif
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
     Py_ssize_t index = -1;
-    __pyx_t_1 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_5 = Py_TYPE(__pyx_t_1)->tp_iternext;
@@ -2468,7 +2481,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     __Pyx_GOTREF(__pyx_t_3);
     index = 1; __pyx_t_2 = __pyx_t_5(__pyx_t_1); if (unlikely(!__pyx_t_2)) goto __pyx_L3_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_2);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_1), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_1), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_5 = NULL;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     goto __pyx_L4_unpacking_done;
@@ -2476,7 +2489,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_5 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 28; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_null_inds = __pyx_t_3;
@@ -2484,16 +2497,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __pyx_v_null_pts = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":29
+  /* "viscid/cython/null_tools.pyx":30
  *     """
  *     null_inds, null_pts = find_nulls(fld, ibound=ibound)
- *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, eps=eps)             # <<<<<<<<<<<<<<
+ *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, rtol=rtol, atol=atol)             # <<<<<<<<<<<<<<
  *     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]
  *     Opts, Apts, Bpts = null_pts[:, Oi], null_pts[:, Ai], null_pts[:, Bi]
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_classify_nulls); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_classify_nulls); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_fld);
   __Pyx_GIVEREF(__pyx_v_fld);
@@ -2501,10 +2514,11 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_null_inds);
   __Pyx_GIVEREF(__pyx_v_null_inds);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_v_null_inds);
-  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_eps, __pyx_v_eps) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_rtol, __pyx_v_rtol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_atol, __pyx_v_atol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2519,7 +2533,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     if (unlikely(size != 3)) {
       if (size > 3) __Pyx_RaiseTooManyValuesError(3);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -2535,17 +2549,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     __Pyx_INCREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_t_4);
     #else
-    __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     #endif
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   } else {
     Py_ssize_t index = -1;
-    __pyx_t_6 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_5 = Py_TYPE(__pyx_t_6)->tp_iternext;
@@ -2555,7 +2569,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     __Pyx_GOTREF(__pyx_t_2);
     index = 2; __pyx_t_4 = __pyx_t_5(__pyx_t_6); if (unlikely(!__pyx_t_4)) goto __pyx_L5_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_6), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_6), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_5 = NULL;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     goto __pyx_L6_unpacking_done;
@@ -2563,7 +2577,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_5 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 29; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_L6_unpacking_done:;
   }
   __pyx_v_Oi = __pyx_t_3;
@@ -2573,14 +2587,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __pyx_v_Bi = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/cython/null_tools.pyx":30
+  /* "viscid/cython/null_tools.pyx":31
  *     null_inds, null_pts = find_nulls(fld, ibound=ibound)
- *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, eps=eps)
+ *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, rtol=rtol, atol=atol)
  *     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]             # <<<<<<<<<<<<<<
  *     Opts, Apts, Bpts = null_pts[:, Oi], null_pts[:, Ai], null_pts[:, Bi]
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  */
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
@@ -2588,10 +2602,10 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Oi);
   __Pyx_GIVEREF(__pyx_v_Oi);
   PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_Oi);
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_null_inds, __pyx_t_1); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_null_inds, __pyx_t_1); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_slice__2);
   __Pyx_GIVEREF(__pyx_slice__2);
@@ -2599,10 +2613,10 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Ai);
   __Pyx_GIVEREF(__pyx_v_Ai);
   PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_Ai);
-  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_inds, __pyx_t_1); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_inds, __pyx_t_1); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_slice__3);
   __Pyx_GIVEREF(__pyx_slice__3);
@@ -2610,7 +2624,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Bi);
   __Pyx_GIVEREF(__pyx_v_Bi);
   PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_Bi);
-  __pyx_t_3 = PyObject_GetItem(__pyx_v_null_inds, __pyx_t_1); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_3 = PyObject_GetItem(__pyx_v_null_inds, __pyx_t_1); if (unlikely(__pyx_t_3 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_Oinds = __pyx_t_4;
@@ -2620,14 +2634,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __pyx_v_Binds = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "viscid/cython/null_tools.pyx":31
- *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, eps=eps)
+  /* "viscid/cython/null_tools.pyx":32
+ *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, rtol=rtol, atol=atol)
  *     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]
  *     Opts, Apts, Bpts = null_pts[:, Oi], null_pts[:, Ai], null_pts[:, Bi]             # <<<<<<<<<<<<<<
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  * 
  */
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_slice__4);
   __Pyx_GIVEREF(__pyx_slice__4);
@@ -2635,10 +2649,10 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Oi);
   __Pyx_GIVEREF(__pyx_v_Oi);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_Oi);
-  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_pts, __pyx_t_3); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_pts, __pyx_t_3); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_slice__5);
   __Pyx_GIVEREF(__pyx_slice__5);
@@ -2646,10 +2660,10 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Ai);
   __Pyx_GIVEREF(__pyx_v_Ai);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_Ai);
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_null_pts, __pyx_t_3); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_null_pts, __pyx_t_3); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_slice__6);
   __Pyx_GIVEREF(__pyx_slice__6);
@@ -2657,7 +2671,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Bi);
   __Pyx_GIVEREF(__pyx_v_Bi);
   PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_Bi);
-  __pyx_t_1 = PyObject_GetItem(__pyx_v_null_pts, __pyx_t_3); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_1 = PyObject_GetItem(__pyx_v_null_pts, __pyx_t_3); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_Opts = __pyx_t_2;
@@ -2667,7 +2681,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __pyx_v_Bpts = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":32
+  /* "viscid/cython/null_tools.pyx":33
  *     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]
  *     Opts, Apts, Bpts = null_pts[:, Oi], null_pts[:, Ai], null_pts[:, Bi]
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])             # <<<<<<<<<<<<<<
@@ -2675,9 +2689,9 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
  * def find_nulls(fld, ibound=0.0):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_v_Oinds);
   __Pyx_GIVEREF(__pyx_v_Oinds);
@@ -2685,9 +2699,9 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Opts);
   __Pyx_GIVEREF(__pyx_v_Opts);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_Opts);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_O, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_O, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_v_Ainds);
   __Pyx_GIVEREF(__pyx_v_Ainds);
@@ -2695,9 +2709,9 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Apts);
   __Pyx_GIVEREF(__pyx_v_Apts);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_Apts);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_A, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_A, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyList_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_v_Binds);
   __Pyx_GIVEREF(__pyx_v_Binds);
@@ -2705,7 +2719,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   __Pyx_INCREF(__pyx_v_Bpts);
   __Pyx_GIVEREF(__pyx_v_Bpts);
   PyList_SET_ITEM(__pyx_t_4, 1, __pyx_v_Bpts);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_B, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_B, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 33; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2714,7 +2728,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   /* "viscid/cython/null_tools.pyx":16
  * 
  * 
- * def find_classified_nulls(fld, ibound=0.0, eps=1e-5):             # <<<<<<<<<<<<<<
+ * def find_classified_nulls(fld, ibound=0.0, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
  *     """Find nulls, and classify them as in Cowley 1973
  * 
  */
@@ -2745,7 +2759,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_find_classified_nulls(CYT
   return __pyx_r;
 }
 
-/* "viscid/cython/null_tools.pyx":34
+/* "viscid/cython/null_tools.pyx":35
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  * 
  * def find_nulls(fld, ibound=0.0):             # <<<<<<<<<<<<<<
@@ -2791,7 +2805,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_3find_nulls(PyObject *__p
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "find_nulls") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "find_nulls") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -2806,7 +2820,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_3find_nulls(PyObject *__p
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("find_nulls", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("find_nulls", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools.find_nulls", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2837,14 +2851,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
   __Pyx_RefNannySetupContext("find_nulls", 0);
   __Pyx_INCREF(__pyx_v_fld);
 
-  /* "viscid/cython/null_tools.pyx":45
+  /* "viscid/cython/null_tools.pyx":46
  *             the first is integers, the second floats
  *     """
  *     fld = fld.as_interlaced()             # <<<<<<<<<<<<<<
  *     candidate_inds = _reduce_candidates(fld, ibound=ibound)
  *     null_inds, null_pts = _find_null_cells_from_candidates(fld, candidate_inds)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_as_interlaced); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_as_interlaced); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2857,34 +2871,34 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 45; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF_SET(__pyx_v_fld, __pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":46
+  /* "viscid/cython/null_tools.pyx":47
  *     """
  *     fld = fld.as_interlaced()
  *     candidate_inds = _reduce_candidates(fld, ibound=ibound)             # <<<<<<<<<<<<<<
  *     null_inds, null_pts = _find_null_cells_from_candidates(fld, candidate_inds)
  *     return null_inds, null_pts
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_reduce_candidates); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_reduce_candidates); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_fld);
   __Pyx_GIVEREF(__pyx_v_fld);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_fld);
-  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_ibound, __pyx_v_ibound) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 46; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_ibound, __pyx_v_ibound) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -2892,14 +2906,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
   __pyx_v_candidate_inds = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/cython/null_tools.pyx":47
+  /* "viscid/cython/null_tools.pyx":48
  *     fld = fld.as_interlaced()
  *     candidate_inds = _reduce_candidates(fld, ibound=ibound)
  *     null_inds, null_pts = _find_null_cells_from_candidates(fld, candidate_inds)             # <<<<<<<<<<<<<<
  *     return null_inds, null_pts
  * 
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_find_null_cells_from_candidates); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_find_null_cells_from_candidates); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_2 = NULL;
   __pyx_t_5 = 0;
@@ -2913,7 +2927,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
       __pyx_t_5 = 1;
     }
   }
-  __pyx_t_1 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyTuple_New(2+__pyx_t_5); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   if (__pyx_t_2) {
     __Pyx_GIVEREF(__pyx_t_2); PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_2); __pyx_t_2 = NULL;
@@ -2924,7 +2938,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
   __Pyx_INCREF(__pyx_v_candidate_inds);
   __Pyx_GIVEREF(__pyx_v_candidate_inds);
   PyTuple_SET_ITEM(__pyx_t_1, 1+__pyx_t_5, __pyx_v_candidate_inds);
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_1, NULL); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -2938,7 +2952,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
     if (unlikely(size != 2)) {
       if (size > 2) __Pyx_RaiseTooManyValuesError(2);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -2951,15 +2965,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
     __Pyx_INCREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_t_1);
     #else
-    __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_1 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     #endif
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
     Py_ssize_t index = -1;
-    __pyx_t_2 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_6 = Py_TYPE(__pyx_t_2)->tp_iternext;
@@ -2967,7 +2981,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
     __Pyx_GOTREF(__pyx_t_3);
     index = 1; __pyx_t_1 = __pyx_t_6(__pyx_t_2); if (unlikely(!__pyx_t_1)) goto __pyx_L3_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_1);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_2), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_2), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_6 = NULL;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     goto __pyx_L4_unpacking_done;
@@ -2975,7 +2989,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_6 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 47; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_null_inds = __pyx_t_3;
@@ -2983,15 +2997,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
   __pyx_v_null_pts = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":48
+  /* "viscid/cython/null_tools.pyx":49
  *     candidate_inds = _reduce_candidates(fld, ibound=ibound)
  *     null_inds, null_pts = _find_null_cells_from_candidates(fld, candidate_inds)
  *     return null_inds, null_pts             # <<<<<<<<<<<<<<
  * 
- * def _classify_nulls(b, null_inds, eps=1e-5):
+ * def _classify_nulls(b, null_inds, rtol=1e-5, atol=1e-8):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 48; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 49; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_v_null_inds);
   __Pyx_GIVEREF(__pyx_v_null_inds);
@@ -3003,7 +3017,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":34
+  /* "viscid/cython/null_tools.pyx":35
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  * 
  * def find_nulls(fld, ibound=0.0):             # <<<<<<<<<<<<<<
@@ -3029,22 +3043,23 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_2find_nulls(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "viscid/cython/null_tools.pyx":50
+/* "viscid/cython/null_tools.pyx":51
  *     return null_inds, null_pts
  * 
- * def _classify_nulls(b, null_inds, eps=1e-5):             # <<<<<<<<<<<<<<
- *     """ eps is the threshold for saying an eigenvalue is 0 or real """
+ * def _classify_nulls(b, null_inds, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
+ *     """rtol and atol used te determine what is close to 0"""
  *     # using terminology from Cowley 1973
  */
 
 /* Python wrapper */
 static PyObject *__pyx_pw_6viscid_6cython_10null_tools_5_classify_nulls(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_6viscid_6cython_10null_tools_4_classify_nulls[] = " eps is the threshold for saying an eigenvalue is 0 or real ";
+static char __pyx_doc_6viscid_6cython_10null_tools_4_classify_nulls[] = "rtol and atol used te determine what is close to 0";
 static PyMethodDef __pyx_mdef_6viscid_6cython_10null_tools_5_classify_nulls = {"_classify_nulls", (PyCFunction)__pyx_pw_6viscid_6cython_10null_tools_5_classify_nulls, METH_VARARGS|METH_KEYWORDS, __pyx_doc_6viscid_6cython_10null_tools_4_classify_nulls};
 static PyObject *__pyx_pw_6viscid_6cython_10null_tools_5_classify_nulls(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_b = 0;
   PyObject *__pyx_v_null_inds = 0;
-  PyObject *__pyx_v_eps = 0;
+  PyObject *__pyx_v_rtol = 0;
+  PyObject *__pyx_v_atol = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3052,13 +3067,15 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_5_classify_nulls(PyObject
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_classify_nulls (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_b,&__pyx_n_s_null_inds,&__pyx_n_s_eps,0};
-    PyObject* values[3] = {0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_b,&__pyx_n_s_null_inds,&__pyx_n_s_rtol,&__pyx_n_s_atol,0};
+    PyObject* values[4] = {0,0,0,0};
     values[2] = ((PyObject *)__pyx_float_1eneg_5);
+    values[3] = ((PyObject *)__pyx_float_1eneg_8);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
         case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -3073,19 +3090,25 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_5_classify_nulls(PyObject
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_null_inds)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_classify_nulls", 0, 2, 3, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_classify_nulls", 0, 2, 4, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (kw_args > 0) {
-          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_eps);
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_rtol);
           if (value) { values[2] = value; kw_args--; }
+        }
+        case  3:
+        if (kw_args > 0) {
+          PyObject* value = PyDict_GetItem(__pyx_kwds, __pyx_n_s_atol);
+          if (value) { values[3] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_classify_nulls") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_classify_nulls") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
         values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -3095,24 +3118,25 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_5_classify_nulls(PyObject
     }
     __pyx_v_b = values[0];
     __pyx_v_null_inds = values[1];
-    __pyx_v_eps = values[2];
+    __pyx_v_rtol = values[2];
+    __pyx_v_atol = values[3];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_classify_nulls", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("_classify_nulls", 0, 2, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools._classify_nulls", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(__pyx_self, __pyx_v_b, __pyx_v_null_inds, __pyx_v_eps);
+  __pyx_r = __pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(__pyx_self, __pyx_v_b, __pyx_v_null_inds, __pyx_v_rtol, __pyx_v_atol);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_b, PyObject *__pyx_v_null_inds, PyObject *__pyx_v_eps) {
+static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_b, PyObject *__pyx_v_null_inds, PyObject *__pyx_v_rtol, PyObject *__pyx_v_atol) {
   PyObject *__pyx_v_O_type = NULL;
   PyObject *__pyx_v_A_type = NULL;
   PyObject *__pyx_v_B_type = NULL;
@@ -3149,51 +3173,50 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
   Py_ssize_t __pyx_t_11;
   PyObject *(*__pyx_t_12)(PyObject *);
   int __pyx_t_13;
-  PyObject *__pyx_t_14 = NULL;
+  int __pyx_t_14;
   int __pyx_t_15;
-  int __pyx_t_16;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_classify_nulls", 0);
 
-  /* "viscid/cython/null_tools.pyx":53
- *     """ eps is the threshold for saying an eigenvalue is 0 or real """
+  /* "viscid/cython/null_tools.pyx":54
+ *     """rtol and atol used te determine what is close to 0"""
  *     # using terminology from Cowley 1973
  *     O_type = []             # <<<<<<<<<<<<<<
  *     A_type = []
  *     B_type = []
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 53; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_O_type = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":54
+  /* "viscid/cython/null_tools.pyx":55
  *     # using terminology from Cowley 1973
  *     O_type = []
  *     A_type = []             # <<<<<<<<<<<<<<
  *     B_type = []
  * 
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 54; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_A_type = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":55
+  /* "viscid/cython/null_tools.pyx":56
  *     O_type = []
  *     A_type = []
  *     B_type = []             # <<<<<<<<<<<<<<
  * 
  *     ixs, iys, izs = null_inds
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 55; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 56; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_B_type = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":57
+  /* "viscid/cython/null_tools.pyx":58
  *     B_type = []
  * 
  *     ixs, iys, izs = null_inds             # <<<<<<<<<<<<<<
@@ -3210,7 +3233,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     if (unlikely(size != 3)) {
       if (size > 3) __Pyx_RaiseTooManyValuesError(3);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -3226,16 +3249,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_INCREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_t_3);
     #else
-    __pyx_t_1 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     #endif
   } else {
     Py_ssize_t index = -1;
-    __pyx_t_4 = PyObject_GetIter(__pyx_v_null_inds); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyObject_GetIter(__pyx_v_null_inds); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_5 = Py_TYPE(__pyx_t_4)->tp_iternext;
     index = 0; __pyx_t_1 = __pyx_t_5(__pyx_t_4); if (unlikely(!__pyx_t_1)) goto __pyx_L3_unpacking_failed;
@@ -3244,7 +3267,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_GOTREF(__pyx_t_2);
     index = 2; __pyx_t_3 = __pyx_t_5(__pyx_t_4); if (unlikely(!__pyx_t_3)) goto __pyx_L3_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_3);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_4), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_4), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_5 = NULL;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     goto __pyx_L4_unpacking_done;
@@ -3252,7 +3275,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_t_5 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 57; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_ixs = __pyx_t_1;
@@ -3262,14 +3285,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
   __pyx_v_izs = __pyx_t_3;
   __pyx_t_3 = 0;
 
-  /* "viscid/cython/null_tools.pyx":58
+  /* "viscid/cython/null_tools.pyx":59
  * 
  *     ixs, iys, izs = null_inds
  *     for i, ix, iy, iz in zip(count(), ixs, iys, izs):             # <<<<<<<<<<<<<<
  *         e_vals, e_vecs = viscid.jacobian_eig_at_ind(b, ix, iy, iz)
  *         # categorize e-vals as 0, real, or complex
  */
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_count); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_count); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_1 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -3282,14 +3305,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     }
   }
   if (__pyx_t_1) {
-    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   } else {
-    __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_3);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
@@ -3303,16 +3326,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
   __Pyx_GIVEREF(__pyx_v_izs);
   PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_v_izs);
   __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_2, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (likely(PyList_CheckExact(__pyx_t_3)) || PyTuple_CheckExact(__pyx_t_3)) {
     __pyx_t_2 = __pyx_t_3; __Pyx_INCREF(__pyx_t_2); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_6 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_7 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_7 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   for (;;) {
@@ -3320,17 +3343,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_6); __Pyx_INCREF(__pyx_t_3); __pyx_t_6++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PySequence_ITEM(__pyx_t_2, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
         #endif
       }
@@ -3340,7 +3363,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         break;
       }
@@ -3356,7 +3379,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       if (unlikely(size != 4)) {
         if (size > 4) __Pyx_RaiseTooManyValuesError(4);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       #if CYTHON_COMPILING_IN_CPYTHON
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -3379,7 +3402,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
         Py_ssize_t i;
         PyObject** temps[4] = {&__pyx_t_1,&__pyx_t_4,&__pyx_t_8,&__pyx_t_9};
         for (i=0; i < 4; i++) {
-          PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(item);
           *(temps[i]) = item;
         }
@@ -3389,7 +3412,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     } else {
       Py_ssize_t index = -1;
       PyObject** temps[4] = {&__pyx_t_1,&__pyx_t_4,&__pyx_t_8,&__pyx_t_9};
-      __pyx_t_10 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_10 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_5 = Py_TYPE(__pyx_t_10)->tp_iternext;
@@ -3398,7 +3421,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
         __Pyx_GOTREF(item);
         *(temps[index]) = item;
       }
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_10), 4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_10), 4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __pyx_t_5 = NULL;
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       goto __pyx_L8_unpacking_done;
@@ -3406,7 +3429,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __pyx_t_5 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __pyx_L8_unpacking_done:;
     }
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_1);
@@ -3418,16 +3441,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_XDECREF_SET(__pyx_v_iz, __pyx_t_9);
     __pyx_t_9 = 0;
 
-    /* "viscid/cython/null_tools.pyx":59
+    /* "viscid/cython/null_tools.pyx":60
  *     ixs, iys, izs = null_inds
  *     for i, ix, iy, iz in zip(count(), ixs, iys, izs):
  *         e_vals, e_vecs = viscid.jacobian_eig_at_ind(b, ix, iy, iz)             # <<<<<<<<<<<<<<
  *         # categorize e-vals as 0, real, or complex
  *         real_evals, complex_evals, zero_evals = [], [], []
  */
-    __pyx_t_9 = __Pyx_GetModuleGlobalName(__pyx_n_s_viscid); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = __Pyx_GetModuleGlobalName(__pyx_n_s_viscid); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_jacobian_eig_at_ind); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_jacobian_eig_at_ind); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __pyx_t_9 = NULL;
@@ -3442,7 +3465,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
         __pyx_t_11 = 1;
       }
     }
-    __pyx_t_4 = PyTuple_New(4+__pyx_t_11); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyTuple_New(4+__pyx_t_11); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     if (__pyx_t_9) {
       __Pyx_GIVEREF(__pyx_t_9); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_9); __pyx_t_9 = NULL;
@@ -3459,7 +3482,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_INCREF(__pyx_v_iz);
     __Pyx_GIVEREF(__pyx_v_iz);
     PyTuple_SET_ITEM(__pyx_t_4, 3+__pyx_t_11, __pyx_v_iz);
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_4, NULL); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -3473,7 +3496,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
       #if CYTHON_COMPILING_IN_CPYTHON
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -3486,15 +3509,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       __Pyx_INCREF(__pyx_t_8);
       __Pyx_INCREF(__pyx_t_4);
       #else
-      __pyx_t_8 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_8 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       #endif
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_9 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = PyObject_GetIter(__pyx_t_3); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_5 = Py_TYPE(__pyx_t_9)->tp_iternext;
@@ -3502,7 +3525,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       __Pyx_GOTREF(__pyx_t_8);
       index = 1; __pyx_t_4 = __pyx_t_5(__pyx_t_9); if (unlikely(!__pyx_t_4)) goto __pyx_L9_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_4);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_9), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_5(__pyx_t_9), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __pyx_t_5 = NULL;
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       goto __pyx_L10_unpacking_done;
@@ -3510,7 +3533,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_t_5 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 60; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __pyx_L10_unpacking_done:;
     }
     __Pyx_XDECREF_SET(__pyx_v_e_vals, __pyx_t_8);
@@ -3518,18 +3541,18 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_XDECREF_SET(__pyx_v_e_vecs, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "viscid/cython/null_tools.pyx":61
+    /* "viscid/cython/null_tools.pyx":62
  *         e_vals, e_vecs = viscid.jacobian_eig_at_ind(b, ix, iy, iz)
  *         # categorize e-vals as 0, real, or complex
  *         real_evals, complex_evals, zero_evals = [], [], []             # <<<<<<<<<<<<<<
  *         real_evecs, complex_evecs, zero_evecs = [], [], []
  *         for j, e_val in enumerate(e_vals):
  */
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 61; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_XDECREF_SET(__pyx_v_real_evals, ((PyObject*)__pyx_t_3));
     __pyx_t_3 = 0;
@@ -3538,18 +3561,18 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_XDECREF_SET(__pyx_v_zero_evals, ((PyObject*)__pyx_t_8));
     __pyx_t_8 = 0;
 
-    /* "viscid/cython/null_tools.pyx":62
+    /* "viscid/cython/null_tools.pyx":63
  *         # categorize e-vals as 0, real, or complex
  *         real_evals, complex_evals, zero_evals = [], [], []
  *         real_evecs, complex_evecs, zero_evecs = [], [], []             # <<<<<<<<<<<<<<
  *         for j, e_val in enumerate(e_vals):
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):
  */
-    __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 62; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_XDECREF_SET(__pyx_v_real_evecs, ((PyObject*)__pyx_t_8));
     __pyx_t_8 = 0;
@@ -3558,11 +3581,11 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
     __Pyx_XDECREF_SET(__pyx_v_zero_evecs, ((PyObject*)__pyx_t_3));
     __pyx_t_3 = 0;
 
-    /* "viscid/cython/null_tools.pyx":63
+    /* "viscid/cython/null_tools.pyx":64
  *         real_evals, complex_evals, zero_evals = [], [], []
  *         real_evecs, complex_evecs, zero_evecs = [], [], []
  *         for j, e_val in enumerate(e_vals):             # <<<<<<<<<<<<<<
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):
  *                 zero_evals.append(0.0)
  */
     __Pyx_INCREF(__pyx_int_0);
@@ -3571,26 +3594,26 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       __pyx_t_4 = __pyx_v_e_vals; __Pyx_INCREF(__pyx_t_4); __pyx_t_11 = 0;
       __pyx_t_12 = NULL;
     } else {
-      __pyx_t_11 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_e_vals); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_11 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_v_e_vals); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_12 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_12 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     for (;;) {
       if (likely(!__pyx_t_12)) {
         if (likely(PyList_CheckExact(__pyx_t_4))) {
           if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_4)) break;
           #if CYTHON_COMPILING_IN_CPYTHON
-          __pyx_t_8 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_11); __Pyx_INCREF(__pyx_t_8); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_11); __Pyx_INCREF(__pyx_t_8); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           #else
-          __pyx_t_8 = PySequence_ITEM(__pyx_t_4, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = PySequence_ITEM(__pyx_t_4, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
           #endif
         } else {
           if (__pyx_t_11 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
           #if CYTHON_COMPILING_IN_CPYTHON
-          __pyx_t_8 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_11); __Pyx_INCREF(__pyx_t_8); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_11); __Pyx_INCREF(__pyx_t_8); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           #else
-          __pyx_t_8 = PySequence_ITEM(__pyx_t_4, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = PySequence_ITEM(__pyx_t_4, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
           #endif
         }
@@ -3600,7 +3623,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           }
           break;
         }
@@ -3610,232 +3633,164 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       __pyx_t_8 = 0;
       __Pyx_INCREF(__pyx_t_3);
       __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_3);
-      __pyx_t_8 = __Pyx_PyInt_AddObjC(__pyx_t_3, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_8 = __Pyx_PyInt_AddObjC(__pyx_t_3, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_3);
       __pyx_t_3 = __pyx_t_8;
       __pyx_t_8 = 0;
 
-      /* "viscid/cython/null_tools.pyx":64
+      /* "viscid/cython/null_tools.pyx":65
  *         real_evecs, complex_evecs, zero_evecs = [], [], []
  *         for j, e_val in enumerate(e_vals):
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:             # <<<<<<<<<<<<<<
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):             # <<<<<<<<<<<<<<
  *                 zero_evals.append(0.0)
  *                 zero_evecs.append(e_vecs[:, j])
  */
-      __pyx_t_9 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_8 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_8);
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_isclose); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_abs); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_INCREF(__pyx_v_e_val);
+      __Pyx_GIVEREF(__pyx_v_e_val);
+      PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_e_val);
+      __Pyx_INCREF(__pyx_float_0_0);
+      __Pyx_GIVEREF(__pyx_float_0_0);
+      PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_float_0_0);
+      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_1);
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_rtol, __pyx_v_rtol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_atol, __pyx_v_atol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_8, __pyx_t_1); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_e_val, __pyx_n_s_real); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_10 = NULL;
-      if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_1))) {
-        __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_1);
-        if (likely(__pyx_t_10)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-          __Pyx_INCREF(__pyx_t_10);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_1, function);
-        }
-      }
-      if (!__pyx_t_10) {
-        __pyx_t_8 = __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_9); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-        __Pyx_GOTREF(__pyx_t_8);
-      } else {
-        __pyx_t_14 = PyTuple_New(1+1); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_14);
-        __Pyx_GIVEREF(__pyx_t_10); PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_10); __pyx_t_10 = NULL;
-        __Pyx_GIVEREF(__pyx_t_9);
-        PyTuple_SET_ITEM(__pyx_t_14, 0+1, __pyx_t_9);
-        __pyx_t_9 = 0;
-        __pyx_t_8 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_14, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_8);
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      }
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyObject_RichCompare(__pyx_t_8, __pyx_v_eps, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_15 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_15 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (__pyx_t_15) {
-      } else {
-        __pyx_t_13 = __pyx_t_15;
-        goto __pyx_L14_bool_binop_done;
-      }
-      __pyx_t_8 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_abs); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_14);
-      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_e_val, __pyx_n_s_imag); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_8);
-      __pyx_t_9 = NULL;
-      if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_14))) {
-        __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_14);
-        if (likely(__pyx_t_9)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
-          __Pyx_INCREF(__pyx_t_9);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_14, function);
-        }
-      }
-      if (!__pyx_t_9) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_8); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
-      } else {
-        __pyx_t_10 = PyTuple_New(1+1); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_10);
-        __Pyx_GIVEREF(__pyx_t_9); PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_9); __pyx_t_9 = NULL;
-        __Pyx_GIVEREF(__pyx_t_8);
-        PyTuple_SET_ITEM(__pyx_t_10, 0+1, __pyx_t_8);
-        __pyx_t_8 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_10, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      }
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_14 = PyObject_RichCompare(__pyx_t_1, __pyx_v_eps, Py_LT); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_15 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_15 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_13 = __pyx_t_15;
-      __pyx_L14_bool_binop_done:;
+      __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_10); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       if (__pyx_t_13) {
 
-        /* "viscid/cython/null_tools.pyx":65
+        /* "viscid/cython/null_tools.pyx":66
  *         for j, e_val in enumerate(e_vals):
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):
  *                 zero_evals.append(0.0)             # <<<<<<<<<<<<<<
  *                 zero_evecs.append(e_vecs[:, j])
- *             elif np.abs(e_val.imag) < eps:
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):
  */
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_zero_evals, __pyx_float_0_0); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 65; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_zero_evals, __pyx_float_0_0); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-        /* "viscid/cython/null_tools.pyx":66
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:
+        /* "viscid/cython/null_tools.pyx":67
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):
  *                 zero_evals.append(0.0)
  *                 zero_evecs.append(e_vecs[:, j])             # <<<<<<<<<<<<<<
- *             elif np.abs(e_val.imag) < eps:
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):
  *                 real_evals.append(e_val.real)
  */
-        __pyx_t_14 = PyTuple_New(2); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_14);
+        __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_10);
         __Pyx_INCREF(__pyx_slice__7);
         __Pyx_GIVEREF(__pyx_slice__7);
-        PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_slice__7);
+        PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_slice__7);
         __Pyx_INCREF(__pyx_v_j);
         __Pyx_GIVEREF(__pyx_v_j);
-        PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_v_j);
-        __pyx_t_1 = PyObject_GetItem(__pyx_v_e_vecs, __pyx_t_14); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_v_j);
+        __pyx_t_1 = PyObject_GetItem(__pyx_v_e_vecs, __pyx_t_10); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_zero_evecs, __pyx_t_1); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_zero_evecs, __pyx_t_1); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "viscid/cython/null_tools.pyx":64
+        /* "viscid/cython/null_tools.pyx":65
  *         real_evecs, complex_evecs, zero_evecs = [], [], []
  *         for j, e_val in enumerate(e_vals):
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:             # <<<<<<<<<<<<<<
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):             # <<<<<<<<<<<<<<
  *                 zero_evals.append(0.0)
  *                 zero_evecs.append(e_vecs[:, j])
  */
         goto __pyx_L13;
       }
 
-      /* "viscid/cython/null_tools.pyx":67
+      /* "viscid/cython/null_tools.pyx":68
  *                 zero_evals.append(0.0)
  *                 zero_evecs.append(e_vecs[:, j])
- *             elif np.abs(e_val.imag) < eps:             # <<<<<<<<<<<<<<
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):             # <<<<<<<<<<<<<<
  *                 real_evals.append(e_val.real)
  *                 real_evecs.append(e_vecs[:, j])
  */
-      __pyx_t_14 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_14);
-      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_abs); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_isclose); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_10);
-      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_e_val, __pyx_n_s_imag); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_14);
-      __pyx_t_8 = NULL;
-      if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_10))) {
-        __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_10);
-        if (likely(__pyx_t_8)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
-          __Pyx_INCREF(__pyx_t_8);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_10, function);
-        }
-      }
-      if (!__pyx_t_8) {
-        __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_t_14); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-        __Pyx_GOTREF(__pyx_t_1);
-      } else {
-        __pyx_t_9 = PyTuple_New(1+1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_9);
-        __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_8); __pyx_t_8 = NULL;
-        __Pyx_GIVEREF(__pyx_t_14);
-        PyTuple_SET_ITEM(__pyx_t_9, 0+1, __pyx_t_14);
-        __pyx_t_14 = 0;
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      }
-      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_10 = PyObject_RichCompare(__pyx_t_1, __pyx_v_eps, Py_LT); __Pyx_XGOTREF(__pyx_t_10); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_10); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_e_val, __pyx_n_s_imag); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_GIVEREF(__pyx_t_1);
+      PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_1);
+      __Pyx_INCREF(__pyx_float_0_0);
+      __Pyx_GIVEREF(__pyx_float_0_0);
+      PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_float_0_0);
+      __pyx_t_1 = 0;
+      __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_1);
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_rtol, __pyx_v_rtol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_atol, __pyx_v_atol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_8, __pyx_t_1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+      __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       if (__pyx_t_13) {
 
-        /* "viscid/cython/null_tools.pyx":68
+        /* "viscid/cython/null_tools.pyx":69
  *                 zero_evecs.append(e_vecs[:, j])
- *             elif np.abs(e_val.imag) < eps:
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):
  *                 real_evals.append(e_val.real)             # <<<<<<<<<<<<<<
  *                 real_evecs.append(e_vecs[:, j])
  *             else:
  */
-        __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_e_val, __pyx_n_s_real); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_real_evals, __pyx_t_10); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 68; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_e_val, __pyx_n_s_real); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_9);
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_real_evals, __pyx_t_9); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-        /* "viscid/cython/null_tools.pyx":69
- *             elif np.abs(e_val.imag) < eps:
+        /* "viscid/cython/null_tools.pyx":70
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):
  *                 real_evals.append(e_val.real)
  *                 real_evecs.append(e_vecs[:, j])             # <<<<<<<<<<<<<<
  *             else:
  *                 complex_evals.append(e_val)
  */
-        __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 70; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_9);
         __Pyx_INCREF(__pyx_slice__8);
         __Pyx_GIVEREF(__pyx_slice__8);
-        PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_slice__8);
+        PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_slice__8);
         __Pyx_INCREF(__pyx_v_j);
         __Pyx_GIVEREF(__pyx_v_j);
-        PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_v_j);
-        __pyx_t_1 = PyObject_GetItem(__pyx_v_e_vecs, __pyx_t_10); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_v_j);
+        __pyx_t_1 = PyObject_GetItem(__pyx_v_e_vecs, __pyx_t_9); if (unlikely(__pyx_t_1 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 70; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
         __Pyx_GOTREF(__pyx_t_1);
-        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_real_evecs, __pyx_t_1); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_real_evecs, __pyx_t_1); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 70; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "viscid/cython/null_tools.pyx":67
+        /* "viscid/cython/null_tools.pyx":68
  *                 zero_evals.append(0.0)
  *                 zero_evecs.append(e_vecs[:, j])
- *             elif np.abs(e_val.imag) < eps:             # <<<<<<<<<<<<<<
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):             # <<<<<<<<<<<<<<
  *                 real_evals.append(e_val.real)
  *                 real_evecs.append(e_vecs[:, j])
  */
         goto __pyx_L13;
       }
 
-      /* "viscid/cython/null_tools.pyx":71
+      /* "viscid/cython/null_tools.pyx":72
  *                 real_evecs.append(e_vecs[:, j])
  *             else:
  *                 complex_evals.append(e_val)             # <<<<<<<<<<<<<<
@@ -3843,16 +3798,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
  * 
  */
       /*else*/ {
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_complex_evals, __pyx_v_e_val); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 71; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_complex_evals, __pyx_v_e_val); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-        /* "viscid/cython/null_tools.pyx":72
+        /* "viscid/cython/null_tools.pyx":73
  *             else:
  *                 complex_evals.append(e_val)
  *                 complex_evecs.append(e_vecs[:, j])             # <<<<<<<<<<<<<<
  * 
  *         if len(zero_evals) == 1:
  */
-        __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_INCREF(__pyx_slice__9);
         __Pyx_GIVEREF(__pyx_slice__9);
@@ -3860,93 +3815,129 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
         __Pyx_INCREF(__pyx_v_j);
         __Pyx_GIVEREF(__pyx_v_j);
         PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_j);
-        __pyx_t_10 = PyObject_GetItem(__pyx_v_e_vecs, __pyx_t_1); if (unlikely(__pyx_t_10 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
-        __Pyx_GOTREF(__pyx_t_10);
+        __pyx_t_9 = PyObject_GetItem(__pyx_v_e_vecs, __pyx_t_1); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+        __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_complex_evecs, __pyx_t_10); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_complex_evecs, __pyx_t_9); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
       __pyx_L13:;
 
-      /* "viscid/cython/null_tools.pyx":63
+      /* "viscid/cython/null_tools.pyx":64
  *         real_evals, complex_evals, zero_evals = [], [], []
  *         real_evecs, complex_evecs, zero_evecs = [], [], []
  *         for j, e_val in enumerate(e_vals):             # <<<<<<<<<<<<<<
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):
  *                 zero_evals.append(0.0)
  */
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "viscid/cython/null_tools.pyx":74
+    /* "viscid/cython/null_tools.pyx":75
  *                 complex_evecs.append(e_vecs[:, j])
  * 
  *         if len(zero_evals) == 1:             # <<<<<<<<<<<<<<
- *             # O_type.append((ix, iy, iz))
  *             O_type.append(i)
+ *         elif len(real_evals) == 1 and len(zero_evals) == 0:
  */
-    __pyx_t_11 = PyList_GET_SIZE(__pyx_v_zero_evals); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 74; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_11 = PyList_GET_SIZE(__pyx_v_zero_evals); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 75; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_13 = ((__pyx_t_11 == 1) != 0);
     if (__pyx_t_13) {
 
       /* "viscid/cython/null_tools.pyx":76
+ * 
  *         if len(zero_evals) == 1:
- *             # O_type.append((ix, iy, iz))
  *             O_type.append(i)             # <<<<<<<<<<<<<<
  *         elif len(real_evals) == 1 and len(zero_evals) == 0:
- *             assert (complex_evals[0] + complex_evals[1]).imag < eps
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,
  */
-      __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_O_type, __pyx_v_i); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_O_type, __pyx_v_i); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 76; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-      /* "viscid/cython/null_tools.pyx":74
+      /* "viscid/cython/null_tools.pyx":75
  *                 complex_evecs.append(e_vecs[:, j])
  * 
  *         if len(zero_evals) == 1:             # <<<<<<<<<<<<<<
- *             # O_type.append((ix, iy, iz))
  *             O_type.append(i)
+ *         elif len(real_evals) == 1 and len(zero_evals) == 0:
  */
-      goto __pyx_L16;
+      goto __pyx_L14;
     }
 
     /* "viscid/cython/null_tools.pyx":77
- *             # O_type.append((ix, iy, iz))
+ *         if len(zero_evals) == 1:
  *             O_type.append(i)
  *         elif len(real_evals) == 1 and len(zero_evals) == 0:             # <<<<<<<<<<<<<<
- *             assert (complex_evals[0] + complex_evals[1]).imag < eps
- *             if real_evals[0] > 0.0:
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,
+ *                               rtol=rtol, atol=atol)
  */
     __pyx_t_11 = PyList_GET_SIZE(__pyx_v_real_evals); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_15 = ((__pyx_t_11 == 1) != 0);
     if (__pyx_t_15) {
     } else {
       __pyx_t_13 = __pyx_t_15;
-      goto __pyx_L17_bool_binop_done;
+      goto __pyx_L15_bool_binop_done;
     }
     __pyx_t_11 = PyList_GET_SIZE(__pyx_v_zero_evals); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 77; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_15 = ((__pyx_t_11 == 0) != 0);
     __pyx_t_13 = __pyx_t_15;
-    __pyx_L17_bool_binop_done:;
+    __pyx_L15_bool_binop_done:;
     if (__pyx_t_13) {
 
       /* "viscid/cython/null_tools.pyx":78
  *             O_type.append(i)
  *         elif len(real_evals) == 1 and len(zero_evals) == 0:
- *             assert (complex_evals[0] + complex_evals[1]).imag < eps             # <<<<<<<<<<<<<<
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,             # <<<<<<<<<<<<<<
+ *                               rtol=rtol, atol=atol)
  *             if real_evals[0] > 0.0:
- *                 # A_type.append((ix, iy, iz))
  */
       #ifndef CYTHON_WITHOUT_ASSERTIONS
       if (unlikely(!Py_OptimizeFlag)) {
-        __pyx_t_3 = PyNumber_Add(PyList_GET_ITEM(__pyx_v_complex_evals, 0), PyList_GET_ITEM(__pyx_v_complex_evals, 1)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_imag); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_isclose); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = PyObject_RichCompare(__pyx_t_4, __pyx_v_eps, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyNumber_Add(PyList_GET_ITEM(__pyx_v_complex_evals, 0), PyList_GET_ITEM(__pyx_v_complex_evals, 1)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_3);
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_imag); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_3);
+        __Pyx_GIVEREF(__pyx_t_9);
+        PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_9);
+        __Pyx_INCREF(__pyx_float_0_0);
+        __Pyx_GIVEREF(__pyx_float_0_0);
+        PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_float_0_0);
+        __pyx_t_9 = 0;
+
+        /* "viscid/cython/null_tools.pyx":79
+ *         elif len(real_evals) == 1 and len(zero_evals) == 0:
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,
+ *                               rtol=rtol, atol=atol)             # <<<<<<<<<<<<<<
+ *             if real_evals[0] > 0.0:
+ *                 A_type.append(i)
+ */
+        __pyx_t_9 = PyDict_New(); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_9);
+        if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_rtol, __pyx_v_rtol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_atol, __pyx_v_atol) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+
+        /* "viscid/cython/null_tools.pyx":78
+ *             O_type.append(i)
+ *         elif len(real_evals) == 1 and len(zero_evals) == 0:
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,             # <<<<<<<<<<<<<<
+ *                               rtol=rtol, atol=atol)
+ *             if real_evals[0] > 0.0:
+ */
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_1);
+        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         if (unlikely(!__pyx_t_13)) {
           PyErr_SetNone(PyExc_AssertionError);
           {__pyx_filename = __pyx_f[0]; __pyx_lineno = 78; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -3954,71 +3945,71 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       }
       #endif
 
-      /* "viscid/cython/null_tools.pyx":79
- *         elif len(real_evals) == 1 and len(zero_evals) == 0:
- *             assert (complex_evals[0] + complex_evals[1]).imag < eps
+      /* "viscid/cython/null_tools.pyx":80
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,
+ *                               rtol=rtol, atol=atol)
  *             if real_evals[0] > 0.0:             # <<<<<<<<<<<<<<
- *                 # A_type.append((ix, iy, iz))
  *                 A_type.append(i)
+ *             else:
  */
-      __pyx_t_3 = PyObject_RichCompare(PyList_GET_ITEM(__pyx_v_real_evals, 0), __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 79; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_1 = PyObject_RichCompare(PyList_GET_ITEM(__pyx_v_real_evals, 0), __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 80; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 80; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       if (__pyx_t_13) {
 
         /* "viscid/cython/null_tools.pyx":81
+ *                               rtol=rtol, atol=atol)
  *             if real_evals[0] > 0.0:
- *                 # A_type.append((ix, iy, iz))
  *                 A_type.append(i)             # <<<<<<<<<<<<<<
  *             else:
- *                 # B_type.append((ix, iy, iz))
+ *                 B_type.append(i)
  */
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_A_type, __pyx_v_i); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 81; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_A_type, __pyx_v_i); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 81; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-        /* "viscid/cython/null_tools.pyx":79
- *         elif len(real_evals) == 1 and len(zero_evals) == 0:
- *             assert (complex_evals[0] + complex_evals[1]).imag < eps
+        /* "viscid/cython/null_tools.pyx":80
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,
+ *                               rtol=rtol, atol=atol)
  *             if real_evals[0] > 0.0:             # <<<<<<<<<<<<<<
- *                 # A_type.append((ix, iy, iz))
  *                 A_type.append(i)
+ *             else:
  */
-        goto __pyx_L19;
+        goto __pyx_L17;
       }
 
-      /* "viscid/cython/null_tools.pyx":84
+      /* "viscid/cython/null_tools.pyx":83
+ *                 A_type.append(i)
  *             else:
- *                 # B_type.append((ix, iy, iz))
  *                 B_type.append(i)             # <<<<<<<<<<<<<<
  *         elif len(real_evals) == 3:
  *             positive = 0
  */
       /*else*/ {
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_B_type, __pyx_v_i); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 84; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_B_type, __pyx_v_i); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 83; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
-      __pyx_L19:;
+      __pyx_L17:;
 
       /* "viscid/cython/null_tools.pyx":77
- *             # O_type.append((ix, iy, iz))
+ *         if len(zero_evals) == 1:
  *             O_type.append(i)
  *         elif len(real_evals) == 1 and len(zero_evals) == 0:             # <<<<<<<<<<<<<<
- *             assert (complex_evals[0] + complex_evals[1]).imag < eps
- *             if real_evals[0] > 0.0:
+ *             assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,
+ *                               rtol=rtol, atol=atol)
  */
-      goto __pyx_L16;
+      goto __pyx_L14;
     }
 
-    /* "viscid/cython/null_tools.pyx":85
- *                 # B_type.append((ix, iy, iz))
+    /* "viscid/cython/null_tools.pyx":84
+ *             else:
  *                 B_type.append(i)
  *         elif len(real_evals) == 3:             # <<<<<<<<<<<<<<
  *             positive = 0
  *             for e_val in real_evals:
  */
-    __pyx_t_11 = PyList_GET_SIZE(__pyx_v_real_evals); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 85; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_11 = PyList_GET_SIZE(__pyx_v_real_evals); if (unlikely(__pyx_t_11 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 84; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_13 = ((__pyx_t_11 == 3) != 0);
     if (__pyx_t_13) {
 
-      /* "viscid/cython/null_tools.pyx":86
+      /* "viscid/cython/null_tools.pyx":85
  *                 B_type.append(i)
  *         elif len(real_evals) == 3:
  *             positive = 0             # <<<<<<<<<<<<<<
@@ -4028,50 +4019,50 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
       __Pyx_INCREF(__pyx_int_0);
       __Pyx_XDECREF_SET(__pyx_v_positive, __pyx_int_0);
 
-      /* "viscid/cython/null_tools.pyx":87
+      /* "viscid/cython/null_tools.pyx":86
  *         elif len(real_evals) == 3:
  *             positive = 0
  *             for e_val in real_evals:             # <<<<<<<<<<<<<<
  *                 if e_val > 0.0:
  *                     positive += 1
  */
-      __pyx_t_3 = __pyx_v_real_evals; __Pyx_INCREF(__pyx_t_3); __pyx_t_11 = 0;
+      __pyx_t_1 = __pyx_v_real_evals; __Pyx_INCREF(__pyx_t_1); __pyx_t_11 = 0;
       for (;;) {
-        if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_3)) break;
+        if (__pyx_t_11 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_COMPILING_IN_CPYTHON
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_11); __Pyx_INCREF(__pyx_t_4); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_11); __Pyx_INCREF(__pyx_t_9); __pyx_t_11++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 86; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_GOTREF(__pyx_t_4);
+        __pyx_t_9 = PySequence_ITEM(__pyx_t_1, __pyx_t_11); __pyx_t_11++; if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 86; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_GOTREF(__pyx_t_9);
         #endif
-        __Pyx_XDECREF_SET(__pyx_v_e_val, __pyx_t_4);
-        __pyx_t_4 = 0;
+        __Pyx_XDECREF_SET(__pyx_v_e_val, __pyx_t_9);
+        __pyx_t_9 = 0;
 
-        /* "viscid/cython/null_tools.pyx":88
+        /* "viscid/cython/null_tools.pyx":87
  *             positive = 0
  *             for e_val in real_evals:
  *                 if e_val > 0.0:             # <<<<<<<<<<<<<<
  *                     positive += 1
  *             if positive == 1:
  */
-        __pyx_t_4 = PyObject_RichCompare(__pyx_v_e_val, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 88; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 88; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+        __pyx_t_9 = PyObject_RichCompare(__pyx_v_e_val, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_9); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 87; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         if (__pyx_t_13) {
 
-          /* "viscid/cython/null_tools.pyx":89
+          /* "viscid/cython/null_tools.pyx":88
  *             for e_val in real_evals:
  *                 if e_val > 0.0:
  *                     positive += 1             # <<<<<<<<<<<<<<
  *             if positive == 1:
- *                 # A_type.append((ix, iy, iz))
+ *                 A_type.append(i)
  */
-          __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_positive, __pyx_int_1, 1, 1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 89; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-          __Pyx_GOTREF(__pyx_t_4);
-          __Pyx_DECREF_SET(__pyx_v_positive, __pyx_t_4);
-          __pyx_t_4 = 0;
+          __pyx_t_9 = __Pyx_PyInt_AddObjC(__pyx_v_positive, __pyx_int_1, 1, 1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 88; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __Pyx_GOTREF(__pyx_t_9);
+          __Pyx_DECREF_SET(__pyx_v_positive, __pyx_t_9);
+          __pyx_t_9 = 0;
 
-          /* "viscid/cython/null_tools.pyx":88
+          /* "viscid/cython/null_tools.pyx":87
  *             positive = 0
  *             for e_val in real_evals:
  *                 if e_val > 0.0:             # <<<<<<<<<<<<<<
@@ -4080,7 +4071,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
  */
         }
 
-        /* "viscid/cython/null_tools.pyx":87
+        /* "viscid/cython/null_tools.pyx":86
  *         elif len(real_evals) == 3:
  *             positive = 0
  *             for e_val in real_evals:             # <<<<<<<<<<<<<<
@@ -4088,84 +4079,84 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
  *                     positive += 1
  */
       }
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "viscid/cython/null_tools.pyx":90
+      /* "viscid/cython/null_tools.pyx":89
  *                 if e_val > 0.0:
  *                     positive += 1
  *             if positive == 1:             # <<<<<<<<<<<<<<
- *                 # A_type.append((ix, iy, iz))
  *                 A_type.append(i)
+ *             else:
  */
-      __pyx_t_3 = __Pyx_PyInt_EqObjC(__pyx_v_positive, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 90; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 90; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_v_positive, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 89; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_13 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 89; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       if (__pyx_t_13) {
 
-        /* "viscid/cython/null_tools.pyx":92
+        /* "viscid/cython/null_tools.pyx":90
+ *                     positive += 1
  *             if positive == 1:
- *                 # A_type.append((ix, iy, iz))
  *                 A_type.append(i)             # <<<<<<<<<<<<<<
  *             else:
- *                 # B_type.append((ix, iy, iz))
+ *                 B_type.append(i)
  */
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_A_type, __pyx_v_i); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_A_type, __pyx_v_i); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 90; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-        /* "viscid/cython/null_tools.pyx":90
+        /* "viscid/cython/null_tools.pyx":89
  *                 if e_val > 0.0:
  *                     positive += 1
  *             if positive == 1:             # <<<<<<<<<<<<<<
- *                 # A_type.append((ix, iy, iz))
  *                 A_type.append(i)
+ *             else:
  */
-        goto __pyx_L23;
+        goto __pyx_L21;
       }
 
-      /* "viscid/cython/null_tools.pyx":95
+      /* "viscid/cython/null_tools.pyx":92
+ *                 A_type.append(i)
  *             else:
- *                 # B_type.append((ix, iy, iz))
  *                 B_type.append(i)             # <<<<<<<<<<<<<<
  *         else:
  *             print("unknown type of null:", e_vals)
  */
       /*else*/ {
-        __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_B_type, __pyx_v_i); if (unlikely(__pyx_t_16 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 95; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_14 = __Pyx_PyList_Append(__pyx_v_B_type, __pyx_v_i); if (unlikely(__pyx_t_14 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 92; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       }
-      __pyx_L23:;
+      __pyx_L21:;
 
-      /* "viscid/cython/null_tools.pyx":85
- *                 # B_type.append((ix, iy, iz))
+      /* "viscid/cython/null_tools.pyx":84
+ *             else:
  *                 B_type.append(i)
  *         elif len(real_evals) == 3:             # <<<<<<<<<<<<<<
  *             positive = 0
  *             for e_val in real_evals:
  */
-      goto __pyx_L16;
+      goto __pyx_L14;
     }
 
-    /* "viscid/cython/null_tools.pyx":97
+    /* "viscid/cython/null_tools.pyx":94
  *                 B_type.append(i)
  *         else:
  *             print("unknown type of null:", e_vals)             # <<<<<<<<<<<<<<
  * 
- *     # return np.array(O_type).T, np.array(A_type).T, np.array(B_type).T
+ *     return (np.array(O_type, dtype='i'),
  */
     /*else*/ {
-      __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_GOTREF(__pyx_t_1);
       __Pyx_INCREF(__pyx_kp_s_unknown_type_of_null);
       __Pyx_GIVEREF(__pyx_kp_s_unknown_type_of_null);
-      PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_s_unknown_type_of_null);
+      PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_kp_s_unknown_type_of_null);
       __Pyx_INCREF(__pyx_v_e_vals);
       __Pyx_GIVEREF(__pyx_v_e_vals);
-      PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_v_e_vals);
-      if (__Pyx_PrintOne(0, __pyx_t_3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_e_vals);
+      if (__Pyx_PrintOne(0, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 94; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     }
-    __pyx_L16:;
+    __pyx_L14:;
 
-    /* "viscid/cython/null_tools.pyx":58
+    /* "viscid/cython/null_tools.pyx":59
  * 
  *     ixs, iys, izs = null_inds
  *     for i, ix, iy, iz in zip(count(), ixs, iys, izs):             # <<<<<<<<<<<<<<
@@ -4175,112 +4166,112 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":100
+  /* "viscid/cython/null_tools.pyx":96
+ *             print("unknown type of null:", e_vals)
  * 
- *     # return np.array(O_type).T, np.array(A_type).T, np.array(B_type).T
  *     return (np.array(O_type, dtype='i'),             # <<<<<<<<<<<<<<
  *             np.array(A_type, dtype='i'),
  *             np.array(B_type, dtype='i'))
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_array); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_array); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_O_type);
   __Pyx_GIVEREF(__pyx_v_O_type);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_O_type);
-  __pyx_t_4 = PyDict_New(); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, __pyx_n_s_i) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_9 = PyDict_New(); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_9);
+  if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_dtype, __pyx_n_s_i) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_2, __pyx_t_9); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "viscid/cython/null_tools.pyx":101
- *     # return np.array(O_type).T, np.array(A_type).T, np.array(B_type).T
+  /* "viscid/cython/null_tools.pyx":97
+ * 
  *     return (np.array(O_type, dtype='i'),
  *             np.array(A_type, dtype='i'),             # <<<<<<<<<<<<<<
  *             np.array(B_type, dtype='i'))
  * 
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_array); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_INCREF(__pyx_v_A_type);
   __Pyx_GIVEREF(__pyx_v_A_type);
-  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_A_type);
-  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_dtype, __pyx_n_s_i) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_v_A_type);
+  __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_n_s_i) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_9, __pyx_t_1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 97; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":102
+  /* "viscid/cython/null_tools.pyx":98
  *     return (np.array(O_type, dtype='i'),
  *             np.array(A_type, dtype='i'),
  *             np.array(B_type, dtype='i'))             # <<<<<<<<<<<<<<
  * 
  * @cython.wraparound(True)
  */
-  __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_array); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_B_type);
   __Pyx_GIVEREF(__pyx_v_B_type);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_B_type);
-  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_B_type);
+  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_n_s_i) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 102; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __Pyx_GOTREF(__pyx_t_9);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_n_s_i) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_8 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 98; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":100
+  /* "viscid/cython/null_tools.pyx":96
+ *             print("unknown type of null:", e_vals)
  * 
- *     # return np.array(O_type).T, np.array(A_type).T, np.array(B_type).T
  *     return (np.array(O_type, dtype='i'),             # <<<<<<<<<<<<<<
  *             np.array(A_type, dtype='i'),
  *             np.array(B_type, dtype='i'))
  */
-  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 100; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 96; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_10);
-  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_10);
-  __Pyx_GIVEREF(__pyx_t_1);
-  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_1);
-  __Pyx_GIVEREF(__pyx_t_9);
-  PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_t_9);
-  __pyx_t_10 = 0;
-  __pyx_t_1 = 0;
-  __pyx_t_9 = 0;
+  __Pyx_GIVEREF(__pyx_t_3);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_4);
+  __Pyx_GIVEREF(__pyx_t_8);
+  PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_t_8);
+  __pyx_t_3 = 0;
+  __pyx_t_4 = 0;
+  __pyx_t_8 = 0;
   __pyx_r = __pyx_t_2;
   __pyx_t_2 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":50
+  /* "viscid/cython/null_tools.pyx":51
  *     return null_inds, null_pts
  * 
- * def _classify_nulls(b, null_inds, eps=1e-5):             # <<<<<<<<<<<<<<
- *     """ eps is the threshold for saying an eigenvalue is 0 or real """
+ * def _classify_nulls(b, null_inds, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
+ *     """rtol and atol used te determine what is close to 0"""
  *     # using terminology from Cowley 1973
  */
 
@@ -4293,7 +4284,6 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_14);
   __Pyx_AddTraceback("viscid.cython.null_tools._classify_nulls", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -4323,7 +4313,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_4_classify_nulls(CYTHON_U
   return __pyx_r;
 }
 
-/* "viscid/cython/null_tools.pyx":105
+/* "viscid/cython/null_tools.pyx":101
  * 
  * @cython.wraparound(True)
  * def _reduce_candidates(fld, ibound=0.0):             # <<<<<<<<<<<<<<
@@ -4368,7 +4358,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_7_reduce_candidates(PyObj
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_reduce_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_reduce_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -4383,7 +4373,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_7_reduce_candidates(PyObj
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_reduce_candidates", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("_reduce_candidates", 0, 1, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools._reduce_candidates", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -4416,14 +4406,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_reduce_candidates", 0);
 
-  /* "viscid/cython/null_tools.pyx":107
+  /* "viscid/cython/null_tools.pyx":103
  * def _reduce_candidates(fld, ibound=0.0):
  *     # these crds are same centering as fld
  *     dat = fld.as_interlaced().data             # <<<<<<<<<<<<<<
  *     x, y, z = fld.get_crds("xyz")
  *     candidate_inds = _py_reduce_candidates(dat, x, y, z, ibound)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_as_interlaced); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_as_interlaced); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4436,29 +4426,29 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
     }
   }
   if (__pyx_t_3) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_data); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 107; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_data); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 103; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dat = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":108
+  /* "viscid/cython/null_tools.pyx":104
  *     # these crds are same centering as fld
  *     dat = fld.as_interlaced().data
  *     x, y, z = fld.get_crds("xyz")             # <<<<<<<<<<<<<<
  *     candidate_inds = _py_reduce_candidates(dat, x, y, z, ibound)
  *     return np.array(candidate_inds)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_get_crds); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_get_crds); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if ((likely(PyTuple_CheckExact(__pyx_t_1))) || (PyList_CheckExact(__pyx_t_1))) {
@@ -4471,7 +4461,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
     if (unlikely(size != 3)) {
       if (size > 3) __Pyx_RaiseTooManyValuesError(3);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -4487,17 +4477,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
     __Pyx_INCREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_t_4);
     #else
-    __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
     #endif
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   } else {
     Py_ssize_t index = -1;
-    __pyx_t_5 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_6 = Py_TYPE(__pyx_t_5)->tp_iternext;
@@ -4507,7 +4497,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
     __Pyx_GOTREF(__pyx_t_3);
     index = 2; __pyx_t_4 = __pyx_t_6(__pyx_t_5); if (unlikely(!__pyx_t_4)) goto __pyx_L3_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_4);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_5), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_5), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_6 = NULL;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L4_unpacking_done;
@@ -4515,7 +4505,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_x = __pyx_t_2;
@@ -4525,14 +4515,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
   __pyx_v_z = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/cython/null_tools.pyx":109
+  /* "viscid/cython/null_tools.pyx":105
  *     dat = fld.as_interlaced().data
  *     x, y, z = fld.get_crds("xyz")
  *     candidate_inds = _py_reduce_candidates(dat, x, y, z, ibound)             # <<<<<<<<<<<<<<
  *     return np.array(candidate_inds)
  * 
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_py_reduce_candidates); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_py_reduce_candidates); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_3 = NULL;
   __pyx_t_7 = 0;
@@ -4546,7 +4536,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
       __pyx_t_7 = 1;
     }
   }
-  __pyx_t_2 = PyTuple_New(5+__pyx_t_7); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyTuple_New(5+__pyx_t_7); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   if (__pyx_t_3) {
     __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_3); __pyx_t_3 = NULL;
@@ -4566,14 +4556,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
   __Pyx_INCREF(__pyx_v_ibound);
   __Pyx_GIVEREF(__pyx_v_ibound);
   PyTuple_SET_ITEM(__pyx_t_2, 4+__pyx_t_7, __pyx_v_ibound);
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_candidate_inds = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":110
+  /* "viscid/cython/null_tools.pyx":106
  *     x, y, z = fld.get_crds("xyz")
  *     candidate_inds = _py_reduce_candidates(dat, x, y, z, ibound)
  *     return np.array(candidate_inds)             # <<<<<<<<<<<<<<
@@ -4581,9 +4571,9 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
  * def _find_null_cells_from_candidates(fld, inds):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -4597,16 +4587,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
     }
   }
   if (!__pyx_t_4) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_candidate_inds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_candidate_inds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
   } else {
-    __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4); __pyx_t_4 = NULL;
     __Pyx_INCREF(__pyx_v_candidate_inds);
     __Pyx_GIVEREF(__pyx_v_candidate_inds);
     PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_v_candidate_inds);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
@@ -4615,7 +4605,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":105
+  /* "viscid/cython/null_tools.pyx":101
  * 
  * @cython.wraparound(True)
  * def _reduce_candidates(fld, ibound=0.0):             # <<<<<<<<<<<<<<
@@ -4643,7 +4633,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_6_reduce_candidates(CYTHO
   return __pyx_r;
 }
 
-/* "viscid/cython/null_tools.pyx":112
+/* "viscid/cython/null_tools.pyx":108
  *     return np.array(candidate_inds)
  * 
  * def _find_null_cells_from_candidates(fld, inds):             # <<<<<<<<<<<<<<
@@ -4683,11 +4673,11 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_9_find_null_cells_from_ca
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_inds)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_find_null_cells_from_candidates", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_find_null_cells_from_candidates", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_find_null_cells_from_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_find_null_cells_from_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -4700,7 +4690,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_9_find_null_cells_from_ca
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_find_null_cells_from_candidates", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("_find_null_cells_from_candidates", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools._find_null_cells_from_candidates", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -4736,7 +4726,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_find_null_cells_from_candidates", 0);
 
-  /* "viscid/cython/null_tools.pyx":113
+  /* "viscid/cython/null_tools.pyx":109
  * 
  * def _find_null_cells_from_candidates(fld, inds):
  *     assert fld.nr_sdims == 3             # <<<<<<<<<<<<<<
@@ -4745,21 +4735,21 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_nr_sdims); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_nr_sdims); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_3, 3, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyInt_EqObjC(__pyx_t_1, __pyx_int_3, 3, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (unlikely(!__pyx_t_3)) {
       PyErr_SetNone(PyExc_AssertionError);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 113; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 109; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
 
-  /* "viscid/cython/null_tools.pyx":114
+  /* "viscid/cython/null_tools.pyx":110
  * def _find_null_cells_from_candidates(fld, inds):
  *     assert fld.nr_sdims == 3
  *     assert fld.nr_comps == 3             # <<<<<<<<<<<<<<
@@ -4768,28 +4758,28 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
  */
   #ifndef CYTHON_WITHOUT_ASSERTIONS
   if (unlikely(!Py_OptimizeFlag)) {
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_nr_comps); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_nr_comps); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_t_2, __pyx_int_3, 3, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyInt_EqObjC(__pyx_t_2, __pyx_int_3, 3, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     if (unlikely(!__pyx_t_3)) {
       PyErr_SetNone(PyExc_AssertionError);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 110; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   #endif
 
-  /* "viscid/cython/null_tools.pyx":118
+  /* "viscid/cython/null_tools.pyx":114
  *     # iys = np.array(iys, dtype='int32', copy=False)
  *     # ixs = np.array(ixs, dtype='int32', copy=False)
  *     dat = fld.as_interlaced().data             # <<<<<<<<<<<<<<
  *     null_inds = np.array(_py_find_null_cells_from_candidates(dat, inds))
  *     x, y, z = fld.get_crds()
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_as_interlaced); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_as_interlaced); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_4 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_2))) {
@@ -4802,32 +4792,32 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     }
   }
   if (__pyx_t_4) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_4); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   } else {
-    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallNoArg(__pyx_t_2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_data); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_data); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 114; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_dat = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":119
+  /* "viscid/cython/null_tools.pyx":115
  *     # ixs = np.array(ixs, dtype='int32', copy=False)
  *     dat = fld.as_interlaced().data
  *     null_inds = np.array(_py_find_null_cells_from_candidates(dat, inds))             # <<<<<<<<<<<<<<
  *     x, y, z = fld.get_crds()
  *     null_pts = np.zeros_like(null_inds).astype(dat.dtype)
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_py_find_null_cells_from_candida); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_py_find_null_cells_from_candida); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_6 = NULL;
   __pyx_t_7 = 0;
@@ -4841,7 +4831,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
       __pyx_t_7 = 1;
     }
   }
-  __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_8);
   if (__pyx_t_6) {
     __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -4852,7 +4842,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
   __Pyx_INCREF(__pyx_v_inds);
   __Pyx_GIVEREF(__pyx_v_inds);
   PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_7, __pyx_v_inds);
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_8, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -4867,17 +4857,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     }
   }
   if (!__pyx_t_5) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else {
-    __pyx_t_8 = PyTuple_New(1+1); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = PyTuple_New(1+1); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_5); __pyx_t_5 = NULL;
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_8, 0+1, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 115; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
@@ -4885,14 +4875,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
   __pyx_v_null_inds = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":120
+  /* "viscid/cython/null_tools.pyx":116
  *     dat = fld.as_interlaced().data
  *     null_inds = np.array(_py_find_null_cells_from_candidates(dat, inds))
  *     x, y, z = fld.get_crds()             # <<<<<<<<<<<<<<
  *     null_pts = np.zeros_like(null_inds).astype(dat.dtype)
  *     null_pts[0, :] = x[null_inds[0, :]]
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_get_crds); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_fld, __pyx_n_s_get_crds); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_8 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_4))) {
@@ -4905,10 +4895,10 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     }
   }
   if (__pyx_t_8) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_8); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   } else {
-    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_CallNoArg(__pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -4922,7 +4912,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     if (unlikely(size != 3)) {
       if (size > 3) __Pyx_RaiseTooManyValuesError(3);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     #if CYTHON_COMPILING_IN_CPYTHON
     if (likely(PyTuple_CheckExact(sequence))) {
@@ -4938,17 +4928,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     __Pyx_INCREF(__pyx_t_8);
     __Pyx_INCREF(__pyx_t_1);
     #else
-    __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_4 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_8 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_1 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     #endif
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   } else {
     Py_ssize_t index = -1;
-    __pyx_t_5 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_9 = Py_TYPE(__pyx_t_5)->tp_iternext;
@@ -4958,7 +4948,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     __Pyx_GOTREF(__pyx_t_8);
     index = 2; __pyx_t_1 = __pyx_t_9(__pyx_t_5); if (unlikely(!__pyx_t_1)) goto __pyx_L3_unpacking_failed;
     __Pyx_GOTREF(__pyx_t_1);
-    if (__Pyx_IternextUnpackEndCheck(__pyx_t_9(__pyx_t_5), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (__Pyx_IternextUnpackEndCheck(__pyx_t_9(__pyx_t_5), 3) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_t_9 = NULL;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L4_unpacking_done;
@@ -4966,7 +4956,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_t_9 = NULL;
     if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 116; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __pyx_L4_unpacking_done:;
   }
   __pyx_v_x = __pyx_t_4;
@@ -4976,16 +4966,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
   __pyx_v_z = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":121
+  /* "viscid/cython/null_tools.pyx":117
  *     null_inds = np.array(_py_find_null_cells_from_candidates(dat, inds))
  *     x, y, z = fld.get_crds()
  *     null_pts = np.zeros_like(null_inds).astype(dat.dtype)             # <<<<<<<<<<<<<<
  *     null_pts[0, :] = x[null_inds[0, :]]
  *     null_pts[1, :] = y[null_inds[1, :]]
  */
-  __pyx_t_8 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_8 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_zeros_like); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __pyx_t_8 = NULL;
@@ -4999,24 +4989,24 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     }
   }
   if (!__pyx_t_8) {
-    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_null_inds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_null_inds); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
   } else {
-    __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_8); __pyx_t_8 = NULL;
     __Pyx_INCREF(__pyx_v_null_inds);
     __Pyx_GIVEREF(__pyx_v_null_inds);
     PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_null_inds);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dat, __pyx_n_s_dtype); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_dat, __pyx_n_s_dtype); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_5 = NULL;
   if (CYTHON_COMPILING_IN_CPYTHON && likely(PyMethod_Check(__pyx_t_4))) {
@@ -5029,17 +5019,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
     }
   }
   if (!__pyx_t_5) {
-    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_GOTREF(__pyx_t_2);
   } else {
-    __pyx_t_8 = PyTuple_New(1+1); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = PyTuple_New(1+1); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_5); __pyx_t_5 = NULL;
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_8, 0+1, __pyx_t_1);
     __pyx_t_1 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 117; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   }
@@ -5047,52 +5037,52 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
   __pyx_v_null_pts = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":122
+  /* "viscid/cython/null_tools.pyx":118
  *     x, y, z = fld.get_crds()
  *     null_pts = np.zeros_like(null_inds).astype(dat.dtype)
  *     null_pts[0, :] = x[null_inds[0, :]]             # <<<<<<<<<<<<<<
  *     null_pts[1, :] = y[null_inds[1, :]]
  *     null_pts[2, :] = z[null_inds[2, :]]
  */
-  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_inds, __pyx_tuple__12); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 122; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_inds, __pyx_tuple__12); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_x, __pyx_t_2); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 122; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_x, __pyx_t_2); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(PyObject_SetItem(__pyx_v_null_pts, __pyx_tuple__14, __pyx_t_4) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 122; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(PyObject_SetItem(__pyx_v_null_pts, __pyx_tuple__14, __pyx_t_4) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "viscid/cython/null_tools.pyx":123
+  /* "viscid/cython/null_tools.pyx":119
  *     null_pts = np.zeros_like(null_inds).astype(dat.dtype)
  *     null_pts[0, :] = x[null_inds[0, :]]
  *     null_pts[1, :] = y[null_inds[1, :]]             # <<<<<<<<<<<<<<
  *     null_pts[2, :] = z[null_inds[2, :]]
  *     return null_inds, null_pts
  */
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_null_inds, __pyx_tuple__16); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_null_inds, __pyx_tuple__16); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyObject_GetItem(__pyx_v_y, __pyx_t_4); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = PyObject_GetItem(__pyx_v_y, __pyx_t_4); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(PyObject_SetItem(__pyx_v_null_pts, __pyx_tuple__18, __pyx_t_2) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(PyObject_SetItem(__pyx_v_null_pts, __pyx_tuple__18, __pyx_t_2) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":124
+  /* "viscid/cython/null_tools.pyx":120
  *     null_pts[0, :] = x[null_inds[0, :]]
  *     null_pts[1, :] = y[null_inds[1, :]]
  *     null_pts[2, :] = z[null_inds[2, :]]             # <<<<<<<<<<<<<<
  *     return null_inds, null_pts
  * 
  */
-  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_inds, __pyx_tuple__20); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_2 = PyObject_GetItem(__pyx_v_null_inds, __pyx_tuple__20); if (unlikely(__pyx_t_2 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyObject_GetItem(__pyx_v_z, __pyx_t_2); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_4 = PyObject_GetItem(__pyx_v_z, __pyx_t_2); if (unlikely(__pyx_t_4 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(PyObject_SetItem(__pyx_v_null_pts, __pyx_tuple__22, __pyx_t_4) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(PyObject_SetItem(__pyx_v_null_pts, __pyx_tuple__22, __pyx_t_4) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "viscid/cython/null_tools.pyx":125
+  /* "viscid/cython/null_tools.pyx":121
  *     null_pts[1, :] = y[null_inds[1, :]]
  *     null_pts[2, :] = z[null_inds[2, :]]
  *     return null_inds, null_pts             # <<<<<<<<<<<<<<
@@ -5100,7 +5090,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
  * def _py_reduce_candidates(real_t[:, :, :, ::1] b,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 125; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 121; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_v_null_inds);
   __Pyx_GIVEREF(__pyx_v_null_inds);
@@ -5112,7 +5102,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
   __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":112
+  /* "viscid/cython/null_tools.pyx":108
  *     return np.array(candidate_inds)
  * 
  * def _find_null_cells_from_candidates(fld, inds):             # <<<<<<<<<<<<<<
@@ -5142,7 +5132,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_8_find_null_cells_from_ca
   return __pyx_r;
 }
 
-/* "viscid/cython/null_tools.pyx":127
+/* "viscid/cython/null_tools.pyx":123
  *     return null_inds, null_pts
  * 
  * def _py_reduce_candidates(real_t[:, :, :, ::1] b,             # <<<<<<<<<<<<<<
@@ -5187,21 +5177,21 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_11_py_reduce_candidates(P
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_args)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_kwargs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_defaults)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -5218,7 +5208,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_11_py_reduce_candidates(P
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -5274,7 +5264,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_py_reduce_candidates", 0);
   __Pyx_INCREF(__pyx_v_kwargs);
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(Py_None);
   __Pyx_GIVEREF(Py_None);
@@ -5284,7 +5274,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
   __pyx_t_2 = (__pyx_v_kwargs == Py_None);
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
-    __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF_SET(__pyx_v_kwargs, __pyx_t_1);
     __pyx_t_1 = 0;
@@ -5295,13 +5285,13 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
     __Pyx_XGOTREF(__pyx_t_5);
     __Pyx_XGOTREF(__pyx_t_6);
     /*try:*/ {
-      __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+      __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_v_numpy = __pyx_t_1;
       __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_numpy, __pyx_n_s_ndarray); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_numpy, __pyx_n_s_ndarray); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
       __Pyx_GOTREF(__pyx_t_1);
-      if (!(likely(PyType_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "type", Py_TYPE(__pyx_t_1)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+      if (!(likely(PyType_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "type", Py_TYPE(__pyx_t_1)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
       __pyx_v_ndarray = ((PyTypeObject*)__pyx_t_1);
       __pyx_t_1 = 0;
     }
@@ -5314,7 +5304,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
     __pyx_t_7 = PyErr_ExceptionMatches(__pyx_builtin_ImportError) || PyErr_ExceptionMatches(__pyx_builtin_AttributeError) || PyErr_ExceptionMatches(__pyx_builtin_TypeError);
     if (__pyx_t_7) {
       __Pyx_AddTraceback("viscid.cython.null_tools.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_8, &__pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L6_except_error;}
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_8, &__pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L6_except_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_GOTREF(__pyx_t_9);
@@ -5342,14 +5332,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
   __pyx_v_itemsize = -1L;
   if (unlikely(__pyx_v_args == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_3 = ((0 < __pyx_t_10) != 0);
   if (__pyx_t_3) {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __pyx_t_9 = PyTuple_GET_ITEM(((PyObject*)__pyx_v_args), 0);
     __Pyx_INCREF(__pyx_t_9);
@@ -5359,16 +5349,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
   }
   if (unlikely(__pyx_v_kwargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_b, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_b, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_2 = (__pyx_t_3 != 0);
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_kwargs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_9 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_b); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_9 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_b); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_v_arg = __pyx_t_9;
     __pyx_t_9 = 0;
@@ -5377,25 +5367,25 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
   /*else*/ {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_t_9 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_arguments, __pyx_t_9); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_arguments, __pyx_t_9); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_GIVEREF(__pyx_t_8);
     PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_8);
     __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_t_9, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_t_9, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_Raise(__pyx_t_8, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_L14:;
   while (1) {
@@ -5405,7 +5395,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
       __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg, __pyx_v_ndarray); 
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_v_dtype = __pyx_t_8;
         __pyx_t_8 = 0;
@@ -5413,14 +5403,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
       }
       __pyx_t_2 = (__pyx_memoryview_check(__pyx_v_arg) != 0);
       if (__pyx_t_2) {
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_v_arg_base = __pyx_t_8;
         __pyx_t_8 = 0;
         __pyx_t_2 = __Pyx_TypeCheck(__pyx_v_arg_base, __pyx_v_ndarray); 
         __pyx_t_3 = (__pyx_t_2 != 0);
         if (__pyx_t_3) {
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
           __pyx_v_dtype = __pyx_t_8;
           __pyx_t_8 = 0;
@@ -5442,14 +5432,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
       __pyx_t_3 = (__pyx_v_dtype != Py_None);
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __pyx_v_itemsize = __pyx_t_10;
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_11 = __Pyx_PyObject_Ord(__pyx_t_8); if (unlikely(__pyx_t_11 == (long)(Py_UCS4)-1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_11 = __Pyx_PyObject_Ord(__pyx_t_8); if (unlikely(__pyx_t_11 == (long)(Py_UCS4)-1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __pyx_v_kind = __pyx_t_11;
         __pyx_v_dtype_signed = (__pyx_v_kind == 'i');
@@ -5464,15 +5454,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
             __pyx_t_2 = __pyx_t_3;
             goto __pyx_L22_bool_binop_done;
           }
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __pyx_t_3 = ((((Py_ssize_t)__pyx_t_10) == 4) != 0);
           __pyx_t_2 = __pyx_t_3;
           __pyx_L22_bool_binop_done:;
           if (__pyx_t_2) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             goto __pyx_L16_break;
           }
           __pyx_t_3 = (((sizeof(__pyx_t_5numpy_float64_t)) == __pyx_v_itemsize) != 0);
@@ -5481,15 +5471,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
             __pyx_t_2 = __pyx_t_3;
             goto __pyx_L25_bool_binop_done;
           }
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __pyx_t_3 = ((((Py_ssize_t)__pyx_t_10) == 4) != 0);
           __pyx_t_2 = __pyx_t_3;
           __pyx_L25_bool_binop_done:;
           if (__pyx_t_2) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             goto __pyx_L16_break;
           }
           break;
@@ -5515,7 +5505,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
       __pyx_t_2 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_2) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1);
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         goto __pyx_L16_break;
       }
       /*else*/ {
@@ -5536,27 +5526,27 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
       __pyx_t_2 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_2) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1);
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         goto __pyx_L16_break;
       }
       /*else*/ {
         PyErr_Clear();
       }
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     goto __pyx_L16_break;
   }
   __pyx_L16_break:;
-  __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_v_candidates = ((PyObject*)__pyx_t_8);
   __pyx_t_8 = 0;
   __pyx_t_10 = 0;
   if (unlikely(__pyx_v_signatures == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_9 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_12), (&__pyx_t_7)); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_12), (&__pyx_t_7)); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_8);
   __pyx_t_8 = __pyx_t_9;
@@ -5564,23 +5554,23 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
   while (1) {
     __pyx_t_13 = __Pyx_dict_iter_next(__pyx_t_8, __pyx_t_12, &__pyx_t_10, &__pyx_t_9, NULL, NULL, __pyx_t_7);
     if (unlikely(__pyx_t_13 == 0)) break;
-    if (unlikely(__pyx_t_13 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__pyx_t_13 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_XDECREF_SET(__pyx_v_sig, __pyx_t_9);
     __pyx_t_9 = 0;
     __pyx_v_match_found = 0;
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_split); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_split); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_1);
@@ -5588,16 +5578,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
     __Pyx_GIVEREF(__pyx_v_dest_sig);
     PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_v_dest_sig);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
       __pyx_t_9 = __pyx_t_1; __Pyx_INCREF(__pyx_t_9); __pyx_t_14 = 0;
       __pyx_t_15 = NULL;
     } else {
-      __pyx_t_14 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_14 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_15 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_15 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     for (;;) {
@@ -5605,17 +5595,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
         if (likely(PyList_CheckExact(__pyx_t_9))) {
           if (__pyx_t_14 >= PyList_GET_SIZE(__pyx_t_9)) break;
           #if CYTHON_COMPILING_IN_CPYTHON
-          __pyx_t_1 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           #else
-          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_1);
           #endif
         } else {
           if (__pyx_t_14 >= PyTuple_GET_SIZE(__pyx_t_9)) break;
           #if CYTHON_COMPILING_IN_CPYTHON
-          __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           #else
-          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_1);
           #endif
         }
@@ -5625,7 +5615,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           }
           break;
         }
@@ -5641,7 +5631,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
         if (unlikely(size != 2)) {
           if (size > 2) __Pyx_RaiseTooManyValuesError(2);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         #if CYTHON_COMPILING_IN_CPYTHON
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -5654,15 +5644,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
         __Pyx_INCREF(__pyx_t_16);
         __Pyx_INCREF(__pyx_t_17);
         #else
-        __pyx_t_16 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_16 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_17 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_17 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_17);
         #endif
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_18 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_18 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_18);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_t_19 = Py_TYPE(__pyx_t_18)->tp_iternext;
@@ -5670,7 +5660,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
         __Pyx_GOTREF(__pyx_t_16);
         index = 1; __pyx_t_17 = __pyx_t_19(__pyx_t_18); if (unlikely(!__pyx_t_17)) goto __pyx_L39_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_17);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_19(__pyx_t_18), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_19(__pyx_t_18), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __pyx_t_19 = NULL;
         __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
         goto __pyx_L40_unpacking_done;
@@ -5678,7 +5668,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
         __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
         __pyx_t_19 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __pyx_L40_unpacking_done:;
       }
       __Pyx_XDECREF_SET(__pyx_v_src_type, __pyx_t_16);
@@ -5688,8 +5678,8 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
       __pyx_t_2 = (__pyx_v_dst_type != Py_None);
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_1 = PyObject_RichCompare(__pyx_v_src_type, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_1 = PyObject_RichCompare(__pyx_v_src_type, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         if (__pyx_t_3) {
           __pyx_v_match_found = 1;
@@ -5706,35 +5696,35 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_10_py_reduce_candidates(C
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __pyx_t_3 = (__pyx_v_match_found != 0);
     if (__pyx_t_3) {
-      __pyx_t_20 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_20 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_20 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_20 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __pyx_t_3 = (__pyx_v_candidates != Py_None) && (PyList_GET_SIZE(__pyx_v_candidates) != 0);
   __pyx_t_2 = ((!__pyx_t_3) != 0);
   if (__pyx_t_2) {
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_Raise(__pyx_t_8, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_12 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_12 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_12 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_2 = ((__pyx_t_12 > 1) != 0);
   if (__pyx_t_2) {
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_Raise(__pyx_t_8, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
     if (unlikely(__pyx_v_signatures == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), PyList_GET_ITEM(__pyx_v_candidates, 0)); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), PyList_GET_ITEM(__pyx_v_candidates, 0)); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_r = __pyx_t_8;
     __pyx_t_8 = 0;
@@ -5806,26 +5796,26 @@ static PyObject *__pyx_fuse_0__pyx_pw_6viscid_6cython_10null_tools_15_py_reduce_
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_x)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_z)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_ibound)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 4); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 4); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_reduce_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_reduce_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -5836,15 +5826,15 @@ static PyObject *__pyx_fuse_0__pyx_pw_6viscid_6cython_10null_tools_15_py_reduce_
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_b = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float32_t(values[0]); if (unlikely(!__pyx_v_b.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_x = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(values[1]); if (unlikely(!__pyx_v_x.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_y = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(values[2]); if (unlikely(!__pyx_v_y.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_z = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(values[3]); if (unlikely(!__pyx_v_z.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_b = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float32_t(values[0]); if (unlikely(!__pyx_v_b.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_x = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(values[1]); if (unlikely(!__pyx_v_x.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_y = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(values[2]); if (unlikely(!__pyx_v_y.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_z = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float32_t(values[3]); if (unlikely(!__pyx_v_z.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     __pyx_v_ibound = values[4];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools._py_reduce_candidates", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -5972,20 +5962,20 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_py_reduce_candidates", 0);
 
-  /* "viscid/cython/null_tools.pyx":140
+  /* "viscid/cython/null_tools.pyx":136
  *     cdef int nz, ny, nx, nc
  * 
  *     cdef real_t ibound_sq = ibound**2             # <<<<<<<<<<<<<<
  *     cdef real_t r_sq
  * 
  */
-  __pyx_t_1 = PyNumber_Power(__pyx_v_ibound, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyNumber_Power(__pyx_v_ibound, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 136; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (npy_float32)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __pyx_PyFloat_AsFloat(__pyx_t_1); if (unlikely((__pyx_t_2 == (npy_float32)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 136; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_ibound_sq = __pyx_t_2;
 
-  /* "viscid/cython/null_tools.pyx":143
+  /* "viscid/cython/null_tools.pyx":139
  *     cdef real_t r_sq
  * 
  *     nx, ny, nz, nc = b.shape[:4]             # <<<<<<<<<<<<<<
@@ -6002,27 +5992,27 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
   __pyx_v_nz = __pyx_t_6;
   __pyx_v_nc = __pyx_t_7;
 
-  /* "viscid/cython/null_tools.pyx":145
+  /* "viscid/cython/null_tools.pyx":141
  *     nx, ny, nz, nc = b.shape[:4]
  * 
  *     sign = np.empty((nx, ny, nz, nc), dtype=np.int8)             # <<<<<<<<<<<<<<
  *     ixs, iys, izs = [], [], []
  * 
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_nx); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_nx); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_ny); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_ny); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_nz); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_nz); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_nc); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_nc); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_1);
@@ -6036,44 +6026,44 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
   __pyx_t_9 = 0;
   __pyx_t_10 = 0;
   __pyx_t_11 = 0;
-  __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_GIVEREF(__pyx_t_12);
   PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_12);
   __pyx_t_12 = 0;
-  __pyx_t_12 = PyDict_New(); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyDict_New(); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_10 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_10 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_int8); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_int8); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_dtype, __pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_dtype, __pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
   __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_int8_t(__pyx_t_9);
-  if (unlikely(!__pyx_t_13.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_13.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_sign = __pyx_t_13;
   __pyx_t_13.memview = NULL;
   __pyx_t_13.data = NULL;
 
-  /* "viscid/cython/null_tools.pyx":146
+  /* "viscid/cython/null_tools.pyx":142
  * 
  *     sign = np.empty((nx, ny, nz, nc), dtype=np.int8)
  *     ixs, iys, izs = [], [], []             # <<<<<<<<<<<<<<
  * 
  *     for i in range(nx):
  */
-  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 146; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_12 = PyList_New(0); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 146; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyList_New(0); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 146; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
   __pyx_v_ixs = ((PyObject*)__pyx_t_9);
   __pyx_t_9 = 0;
@@ -6082,7 +6072,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
   __pyx_v_izs = ((PyObject*)__pyx_t_11);
   __pyx_t_11 = 0;
 
-  /* "viscid/cython/null_tools.pyx":148
+  /* "viscid/cython/null_tools.pyx":144
  *     ixs, iys, izs = [], [], []
  * 
  *     for i in range(nx):             # <<<<<<<<<<<<<<
@@ -6093,7 +6083,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
   for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
     __pyx_v_i = __pyx_t_15;
 
-    /* "viscid/cython/null_tools.pyx":149
+    /* "viscid/cython/null_tools.pyx":145
  * 
  *     for i in range(nx):
  *         for j in range(ny):             # <<<<<<<<<<<<<<
@@ -6104,7 +6094,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_j = __pyx_t_17;
 
-      /* "viscid/cython/null_tools.pyx":150
+      /* "viscid/cython/null_tools.pyx":146
  *     for i in range(nx):
  *         for j in range(ny):
  *             for k in range(nz):             # <<<<<<<<<<<<<<
@@ -6115,7 +6105,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_k = __pyx_t_19;
 
-        /* "viscid/cython/null_tools.pyx":151
+        /* "viscid/cython/null_tools.pyx":147
  *         for j in range(ny):
  *             for k in range(nz):
  *                 sign[i, j, k, 0] = b[i, j, k, 0] > 0.0             # <<<<<<<<<<<<<<
@@ -6132,7 +6122,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
         __pyx_t_27 = 0;
         *((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_24 * __pyx_v_sign.strides[0]) ) + __pyx_t_25 * __pyx_v_sign.strides[1]) ) + __pyx_t_26 * __pyx_v_sign.strides[2]) )) + __pyx_t_27)) )) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_20 * __pyx_v_b.strides[0]) ) + __pyx_t_21 * __pyx_v_b.strides[1]) ) + __pyx_t_22 * __pyx_v_b.strides[2]) )) + __pyx_t_23)) ))) > 0.0);
 
-        /* "viscid/cython/null_tools.pyx":152
+        /* "viscid/cython/null_tools.pyx":148
  *             for k in range(nz):
  *                 sign[i, j, k, 0] = b[i, j, k, 0] > 0.0
  *                 sign[i, j, k, 1] = b[i, j, k, 1] > 0.0             # <<<<<<<<<<<<<<
@@ -6149,7 +6139,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
         __pyx_t_35 = 1;
         *((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_32 * __pyx_v_sign.strides[0]) ) + __pyx_t_33 * __pyx_v_sign.strides[1]) ) + __pyx_t_34 * __pyx_v_sign.strides[2]) )) + __pyx_t_35)) )) = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) ) + __pyx_t_29 * __pyx_v_b.strides[1]) ) + __pyx_t_30 * __pyx_v_b.strides[2]) )) + __pyx_t_31)) ))) > 0.0);
 
-        /* "viscid/cython/null_tools.pyx":153
+        /* "viscid/cython/null_tools.pyx":149
  *                 sign[i, j, k, 0] = b[i, j, k, 0] > 0.0
  *                 sign[i, j, k, 1] = b[i, j, k, 1] > 0.0
  *                 sign[i, j, k, 2] = b[i, j, k, 2] > 0.0             # <<<<<<<<<<<<<<
@@ -6169,7 +6159,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
     }
   }
 
-  /* "viscid/cython/null_tools.pyx":155
+  /* "viscid/cython/null_tools.pyx":151
  *                 sign[i, j, k, 2] = b[i, j, k, 2] > 0.0
  * 
  *     for i in range(nx - 1):             # <<<<<<<<<<<<<<
@@ -6180,7 +6170,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_44; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
-    /* "viscid/cython/null_tools.pyx":156
+    /* "viscid/cython/null_tools.pyx":152
  * 
  *     for i in range(nx - 1):
  *         for j in range(ny - 1):             # <<<<<<<<<<<<<<
@@ -6191,7 +6181,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
     for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_45; __pyx_t_15+=1) {
       __pyx_v_j = __pyx_t_15;
 
-      /* "viscid/cython/null_tools.pyx":157
+      /* "viscid/cython/null_tools.pyx":153
  *     for i in range(nx - 1):
  *         for j in range(ny - 1):
  *             for k in range(nz - 1):             # <<<<<<<<<<<<<<
@@ -6202,7 +6192,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
       for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_46; __pyx_t_16+=1) {
         __pyx_v_k = __pyx_t_16;
 
-        /* "viscid/cython/null_tools.pyx":158
+        /* "viscid/cython/null_tools.pyx":154
  *         for j in range(ny - 1):
  *             for k in range(nz - 1):
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2             # <<<<<<<<<<<<<<
@@ -6214,7 +6204,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
         __pyx_t_49 = __pyx_v_k;
         __pyx_v_r_sq = ((powf((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_47 * __pyx_v_x.strides[0]) ))), 2.0) + powf((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_y.data + __pyx_t_48 * __pyx_v_y.strides[0]) ))), 2.0)) + powf((*((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_z.data + __pyx_t_49 * __pyx_v_z.strides[0]) ))), 2.0));
 
-        /* "viscid/cython/null_tools.pyx":159
+        /* "viscid/cython/null_tools.pyx":155
  *             for k in range(nz - 1):
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2
  *                 if r_sq < ibound_sq:             # <<<<<<<<<<<<<<
@@ -6224,7 +6214,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
         __pyx_t_50 = ((__pyx_v_r_sq < __pyx_v_ibound_sq) != 0);
         if (__pyx_t_50) {
 
-          /* "viscid/cython/null_tools.pyx":160
+          /* "viscid/cython/null_tools.pyx":156
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2
  *                 if r_sq < ibound_sq:
  *                     continue             # <<<<<<<<<<<<<<
@@ -6233,7 +6223,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
  */
           goto __pyx_L13_continue;
 
-          /* "viscid/cython/null_tools.pyx":159
+          /* "viscid/cython/null_tools.pyx":155
  *             for k in range(nz - 1):
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2
  *                 if r_sq < ibound_sq:             # <<<<<<<<<<<<<<
@@ -6242,7 +6232,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
  */
         }
 
-        /* "viscid/cython/null_tools.pyx":162
+        /* "viscid/cython/null_tools.pyx":158
  *                     continue
  * 
  *                 for d in range(nc):             # <<<<<<<<<<<<<<
@@ -6253,7 +6243,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
         for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
           __pyx_v_d = __pyx_t_18;
 
-          /* "viscid/cython/null_tools.pyx":163
+          /* "viscid/cython/null_tools.pyx":159
  * 
  *                 for d in range(nc):
  *                     s000 = sign[i    , j    , k    , d]             # <<<<<<<<<<<<<<
@@ -6266,7 +6256,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_54 = __pyx_v_d;
           __pyx_v_s000 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_51 * __pyx_v_sign.strides[0]) ) + __pyx_t_52 * __pyx_v_sign.strides[1]) ) + __pyx_t_53 * __pyx_v_sign.strides[2]) )) + __pyx_t_54)) )));
 
-          /* "viscid/cython/null_tools.pyx":164
+          /* "viscid/cython/null_tools.pyx":160
  *                 for d in range(nc):
  *                     s000 = sign[i    , j    , k    , d]
  *                     s001 = sign[i    , j    , k + 1, d]             # <<<<<<<<<<<<<<
@@ -6279,7 +6269,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_58 = __pyx_v_d;
           __pyx_v_s001 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_55 * __pyx_v_sign.strides[0]) ) + __pyx_t_56 * __pyx_v_sign.strides[1]) ) + __pyx_t_57 * __pyx_v_sign.strides[2]) )) + __pyx_t_58)) )));
 
-          /* "viscid/cython/null_tools.pyx":165
+          /* "viscid/cython/null_tools.pyx":161
  *                     s000 = sign[i    , j    , k    , d]
  *                     s001 = sign[i    , j    , k + 1, d]
  *                     s010 = sign[i    , j + 1, k    , d]             # <<<<<<<<<<<<<<
@@ -6292,7 +6282,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_62 = __pyx_v_d;
           __pyx_v_s010 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_59 * __pyx_v_sign.strides[0]) ) + __pyx_t_60 * __pyx_v_sign.strides[1]) ) + __pyx_t_61 * __pyx_v_sign.strides[2]) )) + __pyx_t_62)) )));
 
-          /* "viscid/cython/null_tools.pyx":166
+          /* "viscid/cython/null_tools.pyx":162
  *                     s001 = sign[i    , j    , k + 1, d]
  *                     s010 = sign[i    , j + 1, k    , d]
  *                     s011 = sign[i    , j + 1, k + 1, d]             # <<<<<<<<<<<<<<
@@ -6305,7 +6295,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_66 = __pyx_v_d;
           __pyx_v_s011 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_63 * __pyx_v_sign.strides[0]) ) + __pyx_t_64 * __pyx_v_sign.strides[1]) ) + __pyx_t_65 * __pyx_v_sign.strides[2]) )) + __pyx_t_66)) )));
 
-          /* "viscid/cython/null_tools.pyx":167
+          /* "viscid/cython/null_tools.pyx":163
  *                     s010 = sign[i    , j + 1, k    , d]
  *                     s011 = sign[i    , j + 1, k + 1, d]
  *                     s100 = sign[i + 1, j    , k    , d]             # <<<<<<<<<<<<<<
@@ -6318,7 +6308,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_70 = __pyx_v_d;
           __pyx_v_s100 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_67 * __pyx_v_sign.strides[0]) ) + __pyx_t_68 * __pyx_v_sign.strides[1]) ) + __pyx_t_69 * __pyx_v_sign.strides[2]) )) + __pyx_t_70)) )));
 
-          /* "viscid/cython/null_tools.pyx":168
+          /* "viscid/cython/null_tools.pyx":164
  *                     s011 = sign[i    , j + 1, k + 1, d]
  *                     s100 = sign[i + 1, j    , k    , d]
  *                     s101 = sign[i + 1, j    , k + 1, d]             # <<<<<<<<<<<<<<
@@ -6331,7 +6321,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_74 = __pyx_v_d;
           __pyx_v_s101 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_71 * __pyx_v_sign.strides[0]) ) + __pyx_t_72 * __pyx_v_sign.strides[1]) ) + __pyx_t_73 * __pyx_v_sign.strides[2]) )) + __pyx_t_74)) )));
 
-          /* "viscid/cython/null_tools.pyx":169
+          /* "viscid/cython/null_tools.pyx":165
  *                     s100 = sign[i + 1, j    , k    , d]
  *                     s101 = sign[i + 1, j    , k + 1, d]
  *                     s110 = sign[i + 1, j + 1, k    , d]             # <<<<<<<<<<<<<<
@@ -6344,7 +6334,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_78 = __pyx_v_d;
           __pyx_v_s110 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_75 * __pyx_v_sign.strides[0]) ) + __pyx_t_76 * __pyx_v_sign.strides[1]) ) + __pyx_t_77 * __pyx_v_sign.strides[2]) )) + __pyx_t_78)) )));
 
-          /* "viscid/cython/null_tools.pyx":170
+          /* "viscid/cython/null_tools.pyx":166
  *                     s101 = sign[i + 1, j    , k + 1, d]
  *                     s110 = sign[i + 1, j + 1, k    , d]
  *                     s111 = sign[i + 1, j + 1, k + 1, d]             # <<<<<<<<<<<<<<
@@ -6357,7 +6347,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_t_82 = __pyx_v_d;
           __pyx_v_s111 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_79 * __pyx_v_sign.strides[0]) ) + __pyx_t_80 * __pyx_v_sign.strides[1]) ) + __pyx_t_81 * __pyx_v_sign.strides[2]) )) + __pyx_t_82)) )));
 
-          /* "viscid/cython/null_tools.pyx":178
+          /* "viscid/cython/null_tools.pyx":174
  *                     if ((s000 ^ s001) | (s001 ^ s010) |
  *                         (s010 ^ s011) | (s011 ^ s100) |
  *                         (s100 ^ s101) | (s101 ^ s110) |             # <<<<<<<<<<<<<<
@@ -6366,7 +6356,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
  */
           __pyx_t_50 = ((((((((__pyx_v_s000 ^ __pyx_v_s001) | (__pyx_v_s001 ^ __pyx_v_s010)) | (__pyx_v_s010 ^ __pyx_v_s011)) | (__pyx_v_s011 ^ __pyx_v_s100)) | (__pyx_v_s100 ^ __pyx_v_s101)) | (__pyx_v_s101 ^ __pyx_v_s110)) | (__pyx_v_s110 ^ __pyx_v_s111)) != 0);
 
-          /* "viscid/cython/null_tools.pyx":176
+          /* "viscid/cython/null_tools.pyx":172
  *                     #             " ~(s000 | s001 | s010 | s011 | "
  *                     #             "   s100 | s101 | s110 | s111))")
  *                     if ((s000 ^ s001) | (s001 ^ s010) |             # <<<<<<<<<<<<<<
@@ -6375,7 +6365,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
  */
           if (__pyx_t_50) {
 
-            /* "viscid/cython/null_tools.pyx":180
+            /* "viscid/cython/null_tools.pyx":176
  *                         (s100 ^ s101) | (s101 ^ s110) |
  *                         (s110 ^ s111)):
  *                         different[d] = 1  # True             # <<<<<<<<<<<<<<
@@ -6384,7 +6374,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
  */
             (__pyx_v_different[__pyx_v_d]) = 1;
 
-            /* "viscid/cython/null_tools.pyx":176
+            /* "viscid/cython/null_tools.pyx":172
  *                     #             " ~(s000 | s001 | s010 | s011 | "
  *                     #             "   s100 | s101 | s110 | s111))")
  *                     if ((s000 ^ s001) | (s001 ^ s010) |             # <<<<<<<<<<<<<<
@@ -6394,7 +6384,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
             goto __pyx_L18;
           }
 
-          /* "viscid/cython/null_tools.pyx":182
+          /* "viscid/cython/null_tools.pyx":178
  *                         different[d] = 1  # True
  *                     else:
  *                         different[d] = 0  # False             # <<<<<<<<<<<<<<
@@ -6407,7 +6397,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
           __pyx_L18:;
         }
 
-        /* "viscid/cython/null_tools.pyx":183
+        /* "viscid/cython/null_tools.pyx":179
  *                     else:
  *                         different[d] = 0  # False
  *                 if different[0] and different[1] and different[2]:             # <<<<<<<<<<<<<<
@@ -6431,43 +6421,43 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
         __pyx_L20_bool_binop_done:;
         if (__pyx_t_50) {
 
-          /* "viscid/cython/null_tools.pyx":184
+          /* "viscid/cython/null_tools.pyx":180
  *                         different[d] = 0  # False
  *                 if different[0] and different[1] and different[2]:
  *                     ixs.append(i)             # <<<<<<<<<<<<<<
  *                     iys.append(j)
  *                     izs.append(k)
  */
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 184; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 180; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_ixs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 184; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_ixs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 180; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "viscid/cython/null_tools.pyx":185
+          /* "viscid/cython/null_tools.pyx":181
  *                 if different[0] and different[1] and different[2]:
  *                     ixs.append(i)
  *                     iys.append(j)             # <<<<<<<<<<<<<<
  *                     izs.append(k)
  *     return ixs, iys, izs
  */
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_j); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_j); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_iys, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_iys, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "viscid/cython/null_tools.pyx":186
+          /* "viscid/cython/null_tools.pyx":182
  *                     ixs.append(i)
  *                     iys.append(j)
  *                     izs.append(k)             # <<<<<<<<<<<<<<
  *     return ixs, iys, izs
  * 
  */
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_k); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_k); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 182; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_izs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_izs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 182; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "viscid/cython/null_tools.pyx":183
+          /* "viscid/cython/null_tools.pyx":179
  *                     else:
  *                         different[d] = 0  # False
  *                 if different[0] and different[1] and different[2]:             # <<<<<<<<<<<<<<
@@ -6480,7 +6470,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
     }
   }
 
-  /* "viscid/cython/null_tools.pyx":187
+  /* "viscid/cython/null_tools.pyx":183
  *                     iys.append(j)
  *                     izs.append(k)
  *     return ixs, iys, izs             # <<<<<<<<<<<<<<
@@ -6488,7 +6478,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 187; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 183; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_INCREF(__pyx_v_ixs);
   __Pyx_GIVEREF(__pyx_v_ixs);
@@ -6503,7 +6493,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_14_py_reduce_candidates(C
   __pyx_t_11 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":127
+  /* "viscid/cython/null_tools.pyx":123
  *     return null_inds, null_pts
  * 
  * def _py_reduce_candidates(real_t[:, :, :, ::1] b,             # <<<<<<<<<<<<<<
@@ -6574,26 +6564,26 @@ static PyObject *__pyx_fuse_1__pyx_pw_6viscid_6cython_10null_tools_17_py_reduce_
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_x)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_z)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_ibound)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 4); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, 4); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_reduce_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_reduce_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -6604,15 +6594,15 @@ static PyObject *__pyx_fuse_1__pyx_pw_6viscid_6cython_10null_tools_17_py_reduce_
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_b = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float64_t(values[0]); if (unlikely(!__pyx_v_b.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_x = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(values[1]); if (unlikely(!__pyx_v_x.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_y = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(values[2]); if (unlikely(!__pyx_v_y.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_z = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(values[3]); if (unlikely(!__pyx_v_z.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 128; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_b = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float64_t(values[0]); if (unlikely(!__pyx_v_b.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_x = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(values[1]); if (unlikely(!__pyx_v_x.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_y = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(values[2]); if (unlikely(!__pyx_v_y.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_z = __Pyx_PyObject_to_MemoryviewSlice_ds_nn___pyx_t_5numpy_float64_t(values[3]); if (unlikely(!__pyx_v_z.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
     __pyx_v_ibound = values[4];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("_py_reduce_candidates", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools._py_reduce_candidates", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -6740,20 +6730,20 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_py_reduce_candidates", 0);
 
-  /* "viscid/cython/null_tools.pyx":140
+  /* "viscid/cython/null_tools.pyx":136
  *     cdef int nz, ny, nx, nc
  * 
  *     cdef real_t ibound_sq = ibound**2             # <<<<<<<<<<<<<<
  *     cdef real_t r_sq
  * 
  */
-  __pyx_t_1 = PyNumber_Power(__pyx_v_ibound, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyNumber_Power(__pyx_v_ibound, __pyx_int_2, Py_None); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 136; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_2 == (npy_float64)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 140; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_t_1); if (unlikely((__pyx_t_2 == (npy_float64)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 136; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_ibound_sq = __pyx_t_2;
 
-  /* "viscid/cython/null_tools.pyx":143
+  /* "viscid/cython/null_tools.pyx":139
  *     cdef real_t r_sq
  * 
  *     nx, ny, nz, nc = b.shape[:4]             # <<<<<<<<<<<<<<
@@ -6770,27 +6760,27 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   __pyx_v_nz = __pyx_t_6;
   __pyx_v_nc = __pyx_t_7;
 
-  /* "viscid/cython/null_tools.pyx":145
+  /* "viscid/cython/null_tools.pyx":141
  *     nx, ny, nz, nc = b.shape[:4]
  * 
  *     sign = np.empty((nx, ny, nz, nc), dtype=np.int8)             # <<<<<<<<<<<<<<
  *     ixs, iys, izs = [], [], []
  * 
  */
-  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_empty); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_nx); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_nx); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_ny); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_ny); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_nz); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_nz); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_nc); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_nc); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_1);
@@ -6804,44 +6794,44 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   __pyx_t_9 = 0;
   __pyx_t_10 = 0;
   __pyx_t_11 = 0;
-  __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_GIVEREF(__pyx_t_12);
   PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_12);
   __pyx_t_12 = 0;
-  __pyx_t_12 = PyDict_New(); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyDict_New(); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_10 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_10 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_int8); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_int8); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_dtype, __pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_dtype, __pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
   __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_int8_t(__pyx_t_9);
-  if (unlikely(!__pyx_t_13.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 145; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_13.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 141; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_sign = __pyx_t_13;
   __pyx_t_13.memview = NULL;
   __pyx_t_13.data = NULL;
 
-  /* "viscid/cython/null_tools.pyx":146
+  /* "viscid/cython/null_tools.pyx":142
  * 
  *     sign = np.empty((nx, ny, nz, nc), dtype=np.int8)
  *     ixs, iys, izs = [], [], []             # <<<<<<<<<<<<<<
  * 
  *     for i in range(nx):
  */
-  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 146; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = PyList_New(0); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_12 = PyList_New(0); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 146; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyList_New(0); if (unlikely(!__pyx_t_12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 146; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = PyList_New(0); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 142; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
   __pyx_v_ixs = ((PyObject*)__pyx_t_9);
   __pyx_t_9 = 0;
@@ -6850,7 +6840,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   __pyx_v_izs = ((PyObject*)__pyx_t_11);
   __pyx_t_11 = 0;
 
-  /* "viscid/cython/null_tools.pyx":148
+  /* "viscid/cython/null_tools.pyx":144
  *     ixs, iys, izs = [], [], []
  * 
  *     for i in range(nx):             # <<<<<<<<<<<<<<
@@ -6861,7 +6851,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
     __pyx_v_i = __pyx_t_15;
 
-    /* "viscid/cython/null_tools.pyx":149
+    /* "viscid/cython/null_tools.pyx":145
  * 
  *     for i in range(nx):
  *         for j in range(ny):             # <<<<<<<<<<<<<<
@@ -6872,7 +6862,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_j = __pyx_t_17;
 
-      /* "viscid/cython/null_tools.pyx":150
+      /* "viscid/cython/null_tools.pyx":146
  *     for i in range(nx):
  *         for j in range(ny):
  *             for k in range(nz):             # <<<<<<<<<<<<<<
@@ -6883,7 +6873,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
       for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
         __pyx_v_k = __pyx_t_19;
 
-        /* "viscid/cython/null_tools.pyx":151
+        /* "viscid/cython/null_tools.pyx":147
  *         for j in range(ny):
  *             for k in range(nz):
  *                 sign[i, j, k, 0] = b[i, j, k, 0] > 0.0             # <<<<<<<<<<<<<<
@@ -6900,7 +6890,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
         __pyx_t_27 = 0;
         *((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_24 * __pyx_v_sign.strides[0]) ) + __pyx_t_25 * __pyx_v_sign.strides[1]) ) + __pyx_t_26 * __pyx_v_sign.strides[2]) )) + __pyx_t_27)) )) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_20 * __pyx_v_b.strides[0]) ) + __pyx_t_21 * __pyx_v_b.strides[1]) ) + __pyx_t_22 * __pyx_v_b.strides[2]) )) + __pyx_t_23)) ))) > 0.0);
 
-        /* "viscid/cython/null_tools.pyx":152
+        /* "viscid/cython/null_tools.pyx":148
  *             for k in range(nz):
  *                 sign[i, j, k, 0] = b[i, j, k, 0] > 0.0
  *                 sign[i, j, k, 1] = b[i, j, k, 1] > 0.0             # <<<<<<<<<<<<<<
@@ -6917,7 +6907,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
         __pyx_t_35 = 1;
         *((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_32 * __pyx_v_sign.strides[0]) ) + __pyx_t_33 * __pyx_v_sign.strides[1]) ) + __pyx_t_34 * __pyx_v_sign.strides[2]) )) + __pyx_t_35)) )) = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_28 * __pyx_v_b.strides[0]) ) + __pyx_t_29 * __pyx_v_b.strides[1]) ) + __pyx_t_30 * __pyx_v_b.strides[2]) )) + __pyx_t_31)) ))) > 0.0);
 
-        /* "viscid/cython/null_tools.pyx":153
+        /* "viscid/cython/null_tools.pyx":149
  *                 sign[i, j, k, 0] = b[i, j, k, 0] > 0.0
  *                 sign[i, j, k, 1] = b[i, j, k, 1] > 0.0
  *                 sign[i, j, k, 2] = b[i, j, k, 2] > 0.0             # <<<<<<<<<<<<<<
@@ -6937,7 +6927,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
     }
   }
 
-  /* "viscid/cython/null_tools.pyx":155
+  /* "viscid/cython/null_tools.pyx":151
  *                 sign[i, j, k, 2] = b[i, j, k, 2] > 0.0
  * 
  *     for i in range(nx - 1):             # <<<<<<<<<<<<<<
@@ -6948,7 +6938,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_44; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
-    /* "viscid/cython/null_tools.pyx":156
+    /* "viscid/cython/null_tools.pyx":152
  * 
  *     for i in range(nx - 1):
  *         for j in range(ny - 1):             # <<<<<<<<<<<<<<
@@ -6959,7 +6949,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
     for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_45; __pyx_t_15+=1) {
       __pyx_v_j = __pyx_t_15;
 
-      /* "viscid/cython/null_tools.pyx":157
+      /* "viscid/cython/null_tools.pyx":153
  *     for i in range(nx - 1):
  *         for j in range(ny - 1):
  *             for k in range(nz - 1):             # <<<<<<<<<<<<<<
@@ -6970,7 +6960,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
       for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_46; __pyx_t_16+=1) {
         __pyx_v_k = __pyx_t_16;
 
-        /* "viscid/cython/null_tools.pyx":158
+        /* "viscid/cython/null_tools.pyx":154
  *         for j in range(ny - 1):
  *             for k in range(nz - 1):
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2             # <<<<<<<<<<<<<<
@@ -6982,7 +6972,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
         __pyx_t_49 = __pyx_v_k;
         __pyx_v_r_sq = ((pow((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_x.data + __pyx_t_47 * __pyx_v_x.strides[0]) ))), 2.0) + pow((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_y.data + __pyx_t_48 * __pyx_v_y.strides[0]) ))), 2.0)) + pow((*((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_z.data + __pyx_t_49 * __pyx_v_z.strides[0]) ))), 2.0));
 
-        /* "viscid/cython/null_tools.pyx":159
+        /* "viscid/cython/null_tools.pyx":155
  *             for k in range(nz - 1):
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2
  *                 if r_sq < ibound_sq:             # <<<<<<<<<<<<<<
@@ -6992,7 +6982,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
         __pyx_t_50 = ((__pyx_v_r_sq < __pyx_v_ibound_sq) != 0);
         if (__pyx_t_50) {
 
-          /* "viscid/cython/null_tools.pyx":160
+          /* "viscid/cython/null_tools.pyx":156
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2
  *                 if r_sq < ibound_sq:
  *                     continue             # <<<<<<<<<<<<<<
@@ -7001,7 +6991,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
  */
           goto __pyx_L13_continue;
 
-          /* "viscid/cython/null_tools.pyx":159
+          /* "viscid/cython/null_tools.pyx":155
  *             for k in range(nz - 1):
  *                 r_sq = x[i]**2 + y[j]**2 + z[k]**2
  *                 if r_sq < ibound_sq:             # <<<<<<<<<<<<<<
@@ -7010,7 +7000,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
  */
         }
 
-        /* "viscid/cython/null_tools.pyx":162
+        /* "viscid/cython/null_tools.pyx":158
  *                     continue
  * 
  *                 for d in range(nc):             # <<<<<<<<<<<<<<
@@ -7021,7 +7011,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
         for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
           __pyx_v_d = __pyx_t_18;
 
-          /* "viscid/cython/null_tools.pyx":163
+          /* "viscid/cython/null_tools.pyx":159
  * 
  *                 for d in range(nc):
  *                     s000 = sign[i    , j    , k    , d]             # <<<<<<<<<<<<<<
@@ -7034,7 +7024,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_54 = __pyx_v_d;
           __pyx_v_s000 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_51 * __pyx_v_sign.strides[0]) ) + __pyx_t_52 * __pyx_v_sign.strides[1]) ) + __pyx_t_53 * __pyx_v_sign.strides[2]) )) + __pyx_t_54)) )));
 
-          /* "viscid/cython/null_tools.pyx":164
+          /* "viscid/cython/null_tools.pyx":160
  *                 for d in range(nc):
  *                     s000 = sign[i    , j    , k    , d]
  *                     s001 = sign[i    , j    , k + 1, d]             # <<<<<<<<<<<<<<
@@ -7047,7 +7037,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_58 = __pyx_v_d;
           __pyx_v_s001 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_55 * __pyx_v_sign.strides[0]) ) + __pyx_t_56 * __pyx_v_sign.strides[1]) ) + __pyx_t_57 * __pyx_v_sign.strides[2]) )) + __pyx_t_58)) )));
 
-          /* "viscid/cython/null_tools.pyx":165
+          /* "viscid/cython/null_tools.pyx":161
  *                     s000 = sign[i    , j    , k    , d]
  *                     s001 = sign[i    , j    , k + 1, d]
  *                     s010 = sign[i    , j + 1, k    , d]             # <<<<<<<<<<<<<<
@@ -7060,7 +7050,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_62 = __pyx_v_d;
           __pyx_v_s010 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_59 * __pyx_v_sign.strides[0]) ) + __pyx_t_60 * __pyx_v_sign.strides[1]) ) + __pyx_t_61 * __pyx_v_sign.strides[2]) )) + __pyx_t_62)) )));
 
-          /* "viscid/cython/null_tools.pyx":166
+          /* "viscid/cython/null_tools.pyx":162
  *                     s001 = sign[i    , j    , k + 1, d]
  *                     s010 = sign[i    , j + 1, k    , d]
  *                     s011 = sign[i    , j + 1, k + 1, d]             # <<<<<<<<<<<<<<
@@ -7073,7 +7063,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_66 = __pyx_v_d;
           __pyx_v_s011 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_63 * __pyx_v_sign.strides[0]) ) + __pyx_t_64 * __pyx_v_sign.strides[1]) ) + __pyx_t_65 * __pyx_v_sign.strides[2]) )) + __pyx_t_66)) )));
 
-          /* "viscid/cython/null_tools.pyx":167
+          /* "viscid/cython/null_tools.pyx":163
  *                     s010 = sign[i    , j + 1, k    , d]
  *                     s011 = sign[i    , j + 1, k + 1, d]
  *                     s100 = sign[i + 1, j    , k    , d]             # <<<<<<<<<<<<<<
@@ -7086,7 +7076,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_70 = __pyx_v_d;
           __pyx_v_s100 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_67 * __pyx_v_sign.strides[0]) ) + __pyx_t_68 * __pyx_v_sign.strides[1]) ) + __pyx_t_69 * __pyx_v_sign.strides[2]) )) + __pyx_t_70)) )));
 
-          /* "viscid/cython/null_tools.pyx":168
+          /* "viscid/cython/null_tools.pyx":164
  *                     s011 = sign[i    , j + 1, k + 1, d]
  *                     s100 = sign[i + 1, j    , k    , d]
  *                     s101 = sign[i + 1, j    , k + 1, d]             # <<<<<<<<<<<<<<
@@ -7099,7 +7089,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_74 = __pyx_v_d;
           __pyx_v_s101 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_71 * __pyx_v_sign.strides[0]) ) + __pyx_t_72 * __pyx_v_sign.strides[1]) ) + __pyx_t_73 * __pyx_v_sign.strides[2]) )) + __pyx_t_74)) )));
 
-          /* "viscid/cython/null_tools.pyx":169
+          /* "viscid/cython/null_tools.pyx":165
  *                     s100 = sign[i + 1, j    , k    , d]
  *                     s101 = sign[i + 1, j    , k + 1, d]
  *                     s110 = sign[i + 1, j + 1, k    , d]             # <<<<<<<<<<<<<<
@@ -7112,7 +7102,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_78 = __pyx_v_d;
           __pyx_v_s110 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_75 * __pyx_v_sign.strides[0]) ) + __pyx_t_76 * __pyx_v_sign.strides[1]) ) + __pyx_t_77 * __pyx_v_sign.strides[2]) )) + __pyx_t_78)) )));
 
-          /* "viscid/cython/null_tools.pyx":170
+          /* "viscid/cython/null_tools.pyx":166
  *                     s101 = sign[i + 1, j    , k + 1, d]
  *                     s110 = sign[i + 1, j + 1, k    , d]
  *                     s111 = sign[i + 1, j + 1, k + 1, d]             # <<<<<<<<<<<<<<
@@ -7125,7 +7115,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_t_82 = __pyx_v_d;
           __pyx_v_s111 = (*((__pyx_t_5numpy_int8_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_sign.data + __pyx_t_79 * __pyx_v_sign.strides[0]) ) + __pyx_t_80 * __pyx_v_sign.strides[1]) ) + __pyx_t_81 * __pyx_v_sign.strides[2]) )) + __pyx_t_82)) )));
 
-          /* "viscid/cython/null_tools.pyx":178
+          /* "viscid/cython/null_tools.pyx":174
  *                     if ((s000 ^ s001) | (s001 ^ s010) |
  *                         (s010 ^ s011) | (s011 ^ s100) |
  *                         (s100 ^ s101) | (s101 ^ s110) |             # <<<<<<<<<<<<<<
@@ -7134,7 +7124,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
  */
           __pyx_t_50 = ((((((((__pyx_v_s000 ^ __pyx_v_s001) | (__pyx_v_s001 ^ __pyx_v_s010)) | (__pyx_v_s010 ^ __pyx_v_s011)) | (__pyx_v_s011 ^ __pyx_v_s100)) | (__pyx_v_s100 ^ __pyx_v_s101)) | (__pyx_v_s101 ^ __pyx_v_s110)) | (__pyx_v_s110 ^ __pyx_v_s111)) != 0);
 
-          /* "viscid/cython/null_tools.pyx":176
+          /* "viscid/cython/null_tools.pyx":172
  *                     #             " ~(s000 | s001 | s010 | s011 | "
  *                     #             "   s100 | s101 | s110 | s111))")
  *                     if ((s000 ^ s001) | (s001 ^ s010) |             # <<<<<<<<<<<<<<
@@ -7143,7 +7133,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
  */
           if (__pyx_t_50) {
 
-            /* "viscid/cython/null_tools.pyx":180
+            /* "viscid/cython/null_tools.pyx":176
  *                         (s100 ^ s101) | (s101 ^ s110) |
  *                         (s110 ^ s111)):
  *                         different[d] = 1  # True             # <<<<<<<<<<<<<<
@@ -7152,7 +7142,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
  */
             (__pyx_v_different[__pyx_v_d]) = 1;
 
-            /* "viscid/cython/null_tools.pyx":176
+            /* "viscid/cython/null_tools.pyx":172
  *                     #             " ~(s000 | s001 | s010 | s011 | "
  *                     #             "   s100 | s101 | s110 | s111))")
  *                     if ((s000 ^ s001) | (s001 ^ s010) |             # <<<<<<<<<<<<<<
@@ -7162,7 +7152,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
             goto __pyx_L18;
           }
 
-          /* "viscid/cython/null_tools.pyx":182
+          /* "viscid/cython/null_tools.pyx":178
  *                         different[d] = 1  # True
  *                     else:
  *                         different[d] = 0  # False             # <<<<<<<<<<<<<<
@@ -7175,7 +7165,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
           __pyx_L18:;
         }
 
-        /* "viscid/cython/null_tools.pyx":183
+        /* "viscid/cython/null_tools.pyx":179
  *                     else:
  *                         different[d] = 0  # False
  *                 if different[0] and different[1] and different[2]:             # <<<<<<<<<<<<<<
@@ -7199,43 +7189,43 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
         __pyx_L20_bool_binop_done:;
         if (__pyx_t_50) {
 
-          /* "viscid/cython/null_tools.pyx":184
+          /* "viscid/cython/null_tools.pyx":180
  *                         different[d] = 0  # False
  *                 if different[0] and different[1] and different[2]:
  *                     ixs.append(i)             # <<<<<<<<<<<<<<
  *                     iys.append(j)
  *                     izs.append(k)
  */
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 184; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 180; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_ixs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 184; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_ixs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 180; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "viscid/cython/null_tools.pyx":185
+          /* "viscid/cython/null_tools.pyx":181
  *                 if different[0] and different[1] and different[2]:
  *                     ixs.append(i)
  *                     iys.append(j)             # <<<<<<<<<<<<<<
  *                     izs.append(k)
  *     return ixs, iys, izs
  */
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_j); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_j); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_iys, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_iys, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 181; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "viscid/cython/null_tools.pyx":186
+          /* "viscid/cython/null_tools.pyx":182
  *                     ixs.append(i)
  *                     iys.append(j)
  *                     izs.append(k)             # <<<<<<<<<<<<<<
  *     return ixs, iys, izs
  * 
  */
-          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_k); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_k); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 182; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_11);
-          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_izs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_84 = __Pyx_PyList_Append(__pyx_v_izs, __pyx_t_11); if (unlikely(__pyx_t_84 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 182; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-          /* "viscid/cython/null_tools.pyx":183
+          /* "viscid/cython/null_tools.pyx":179
  *                     else:
  *                         different[d] = 0  # False
  *                 if different[0] and different[1] and different[2]:             # <<<<<<<<<<<<<<
@@ -7248,7 +7238,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
     }
   }
 
-  /* "viscid/cython/null_tools.pyx":187
+  /* "viscid/cython/null_tools.pyx":183
  *                     iys.append(j)
  *                     izs.append(k)
  *     return ixs, iys, izs             # <<<<<<<<<<<<<<
@@ -7256,7 +7246,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 187; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 183; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_INCREF(__pyx_v_ixs);
   __Pyx_GIVEREF(__pyx_v_ixs);
@@ -7271,7 +7261,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   __pyx_t_11 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":127
+  /* "viscid/cython/null_tools.pyx":123
  *     return null_inds, null_pts
  * 
  * def _py_reduce_candidates(real_t[:, :, :, ::1] b,             # <<<<<<<<<<<<<<
@@ -7304,7 +7294,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_16_py_reduce_candidates(C
   return __pyx_r;
 }
 
-/* "viscid/cython/null_tools.pyx":189
+/* "viscid/cython/null_tools.pyx":185
  *     return ixs, iys, izs
  * 
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,             # <<<<<<<<<<<<<<
@@ -7349,21 +7339,21 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_13_py_find_null_cells_fro
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_args)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_kwargs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 2); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_defaults)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, 3); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "__pyx_fused_cpdef") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -7380,7 +7370,7 @@ static PyObject *__pyx_pw_6viscid_6cython_10null_tools_13_py_find_null_cells_fro
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("__pyx_fused_cpdef", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -7436,7 +7426,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_py_find_null_cells_from_candidates", 0);
   __Pyx_INCREF(__pyx_v_kwargs);
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(Py_None);
   __Pyx_GIVEREF(Py_None);
@@ -7446,7 +7436,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
   __pyx_t_2 = (__pyx_v_kwargs == Py_None);
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
-    __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = PyDict_New(); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF_SET(__pyx_v_kwargs, __pyx_t_1);
     __pyx_t_1 = 0;
@@ -7457,13 +7447,13 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
     __Pyx_XGOTREF(__pyx_t_5);
     __Pyx_XGOTREF(__pyx_t_6);
     /*try:*/ {
-      __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+      __pyx_t_1 = __Pyx_Import(__pyx_n_s_numpy, 0, 0); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_v_numpy = __pyx_t_1;
       __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_numpy, __pyx_n_s_ndarray); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_numpy, __pyx_n_s_ndarray); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
       __Pyx_GOTREF(__pyx_t_1);
-      if (!(likely(PyType_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "type", Py_TYPE(__pyx_t_1)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
+      if (!(likely(PyType_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "type", Py_TYPE(__pyx_t_1)->tp_name), 0))) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L4_error;}
       __pyx_v_ndarray = ((PyTypeObject*)__pyx_t_1);
       __pyx_t_1 = 0;
     }
@@ -7476,7 +7466,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
     __pyx_t_7 = PyErr_ExceptionMatches(__pyx_builtin_ImportError) || PyErr_ExceptionMatches(__pyx_builtin_AttributeError) || PyErr_ExceptionMatches(__pyx_builtin_TypeError);
     if (__pyx_t_7) {
       __Pyx_AddTraceback("viscid.cython.null_tools.__pyx_fused_cpdef", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_8, &__pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L6_except_error;}
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_8, &__pyx_t_9) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L6_except_error;}
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_GOTREF(__pyx_t_9);
@@ -7504,14 +7494,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
   __pyx_v_itemsize = -1L;
   if (unlikely(__pyx_v_args == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_3 = ((0 < __pyx_t_10) != 0);
   if (__pyx_t_3) {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __pyx_t_9 = PyTuple_GET_ITEM(((PyObject*)__pyx_v_args), 0);
     __Pyx_INCREF(__pyx_t_9);
@@ -7521,16 +7511,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
   }
   if (unlikely(__pyx_v_kwargs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_f, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = (__Pyx_PyDict_ContainsTF(__pyx_n_s_f, ((PyObject*)__pyx_v_kwargs), Py_EQ)); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_2 = (__pyx_t_3 != 0);
   if (__pyx_t_2) {
     if (unlikely(__pyx_v_kwargs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_9 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_f); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_9 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_kwargs), __pyx_n_s_f); if (unlikely(__pyx_t_9 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_v_arg = __pyx_t_9;
     __pyx_t_9 = 0;
@@ -7539,25 +7529,25 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
   /*else*/ {
     if (unlikely(__pyx_v_args == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_t_9 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_10 = PyTuple_GET_SIZE(((PyObject*)__pyx_v_args)); if (unlikely(__pyx_t_10 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = PyInt_FromSsize_t(__pyx_t_10); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_8 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_arguments, __pyx_t_9); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyString_Format(__pyx_kp_s_Expected_at_least_d_arguments, __pyx_t_9); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_GIVEREF(__pyx_t_8);
     PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_8);
     __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_t_9, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_t_9, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_Raise(__pyx_t_8, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   __pyx_L14:;
   while (1) {
@@ -7567,7 +7557,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
       __pyx_t_3 = __Pyx_TypeCheck(__pyx_v_arg, __pyx_v_ndarray); 
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_v_dtype = __pyx_t_8;
         __pyx_t_8 = 0;
@@ -7575,14 +7565,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
       }
       __pyx_t_2 = (__pyx_memoryview_check(__pyx_v_arg) != 0);
       if (__pyx_t_2) {
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_base); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
         __pyx_v_arg_base = __pyx_t_8;
         __pyx_t_8 = 0;
         __pyx_t_2 = __Pyx_TypeCheck(__pyx_v_arg_base, __pyx_v_ndarray); 
         __pyx_t_3 = (__pyx_t_2 != 0);
         if (__pyx_t_3) {
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg_base, __pyx_n_s_dtype); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
           __pyx_v_dtype = __pyx_t_8;
           __pyx_t_8 = 0;
@@ -7604,14 +7594,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
       __pyx_t_3 = (__pyx_v_dtype != Py_None);
       __pyx_t_2 = (__pyx_t_3 != 0);
       if (__pyx_t_2) {
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_itemsize); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __pyx_v_itemsize = __pyx_t_10;
-        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_dtype, __pyx_n_s_kind); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_8);
-        __pyx_t_11 = __Pyx_PyObject_Ord(__pyx_t_8); if (unlikely(__pyx_t_11 == (long)(Py_UCS4)-1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_11 = __Pyx_PyObject_Ord(__pyx_t_8); if (unlikely(__pyx_t_11 == (long)(Py_UCS4)-1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
         __pyx_v_kind = __pyx_t_11;
         __pyx_v_dtype_signed = (__pyx_v_kind == 'i');
@@ -7626,15 +7616,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
             __pyx_t_2 = __pyx_t_3;
             goto __pyx_L22_bool_binop_done;
           }
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __pyx_t_3 = ((((Py_ssize_t)__pyx_t_10) == 4) != 0);
           __pyx_t_2 = __pyx_t_3;
           __pyx_L22_bool_binop_done:;
           if (__pyx_t_2) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             goto __pyx_L16_break;
           }
           __pyx_t_3 = (((sizeof(__pyx_t_5numpy_float64_t)) == __pyx_v_itemsize) != 0);
@@ -7643,15 +7633,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
             __pyx_t_2 = __pyx_t_3;
             goto __pyx_L25_bool_binop_done;
           }
-          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_arg, __pyx_n_s_ndim); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_8);
-          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
           __pyx_t_3 = ((((Py_ssize_t)__pyx_t_10) == 4) != 0);
           __pyx_t_2 = __pyx_t_3;
           __pyx_L25_bool_binop_done:;
           if (__pyx_t_2) {
-            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             goto __pyx_L16_break;
           }
           break;
@@ -7677,7 +7667,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
       __pyx_t_2 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_2) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1);
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float32_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         goto __pyx_L16_break;
       }
       /*else*/ {
@@ -7698,27 +7688,27 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
       __pyx_t_2 = (__pyx_v_memslice.memview != 0);
       if (__pyx_t_2) {
         __PYX_XDEC_MEMVIEW((&__pyx_v_memslice), 1);
-        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, __pyx_n_s_float64_t, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         goto __pyx_L16_break;
       }
       /*else*/ {
         PyErr_Clear();
       }
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_dest_sig, 0, Py_None, long, 1, __Pyx_PyInt_From_long, 1, 0, 0) < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     goto __pyx_L16_break;
   }
   __pyx_L16_break:;
-  __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_8 = PyList_New(0); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_8);
   __pyx_v_candidates = ((PyObject*)__pyx_t_8);
   __pyx_t_8 = 0;
   __pyx_t_10 = 0;
   if (unlikely(__pyx_v_signatures == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_9 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_12), (&__pyx_t_7)); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_9 = __Pyx_dict_iterator(((PyObject*)__pyx_v_signatures), 1, ((PyObject *)NULL), (&__pyx_t_12), (&__pyx_t_7)); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_8);
   __pyx_t_8 = __pyx_t_9;
@@ -7726,23 +7716,23 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
   while (1) {
     __pyx_t_13 = __Pyx_dict_iter_next(__pyx_t_8, __pyx_t_12, &__pyx_t_10, &__pyx_t_9, NULL, NULL, __pyx_t_7);
     if (unlikely(__pyx_t_13 == 0)) break;
-    if (unlikely(__pyx_t_13 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    if (unlikely(__pyx_t_13 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_XDECREF_SET(__pyx_v_sig, __pyx_t_9);
     __pyx_t_9 = 0;
     __pyx_v_match_found = 0;
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_sig, __pyx_n_s_strip); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_split); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_split); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_1);
@@ -7750,16 +7740,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
     __Pyx_GIVEREF(__pyx_v_dest_sig);
     PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_v_dest_sig);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_9, NULL); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     if (likely(PyList_CheckExact(__pyx_t_1)) || PyTuple_CheckExact(__pyx_t_1)) {
       __pyx_t_9 = __pyx_t_1; __Pyx_INCREF(__pyx_t_9); __pyx_t_14 = 0;
       __pyx_t_15 = NULL;
     } else {
-      __pyx_t_14 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_14 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_15 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_15 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     for (;;) {
@@ -7767,17 +7757,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
         if (likely(PyList_CheckExact(__pyx_t_9))) {
           if (__pyx_t_14 >= PyList_GET_SIZE(__pyx_t_9)) break;
           #if CYTHON_COMPILING_IN_CPYTHON
-          __pyx_t_1 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           #else
-          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_1);
           #endif
         } else {
           if (__pyx_t_14 >= PyTuple_GET_SIZE(__pyx_t_9)) break;
           #if CYTHON_COMPILING_IN_CPYTHON
-          __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_14); __Pyx_INCREF(__pyx_t_1); __pyx_t_14++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           #else
-          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_1 = PySequence_ITEM(__pyx_t_9, __pyx_t_14); __pyx_t_14++; if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_1);
           #endif
         }
@@ -7787,7 +7777,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           }
           break;
         }
@@ -7803,7 +7793,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
         if (unlikely(size != 2)) {
           if (size > 2) __Pyx_RaiseTooManyValuesError(2);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         #if CYTHON_COMPILING_IN_CPYTHON
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -7816,15 +7806,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
         __Pyx_INCREF(__pyx_t_16);
         __Pyx_INCREF(__pyx_t_17);
         #else
-        __pyx_t_16 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_16 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_17 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_17 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_17);
         #endif
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       } else {
         Py_ssize_t index = -1;
-        __pyx_t_18 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_18 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_18);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __pyx_t_19 = Py_TYPE(__pyx_t_18)->tp_iternext;
@@ -7832,7 +7822,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
         __Pyx_GOTREF(__pyx_t_16);
         index = 1; __pyx_t_17 = __pyx_t_19(__pyx_t_18); if (unlikely(!__pyx_t_17)) goto __pyx_L39_unpacking_failed;
         __Pyx_GOTREF(__pyx_t_17);
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_19(__pyx_t_18), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_19(__pyx_t_18), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __pyx_t_19 = NULL;
         __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
         goto __pyx_L40_unpacking_done;
@@ -7840,7 +7830,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
         __Pyx_DECREF(__pyx_t_18); __pyx_t_18 = 0;
         __pyx_t_19 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __pyx_L40_unpacking_done:;
       }
       __Pyx_XDECREF_SET(__pyx_v_src_type, __pyx_t_16);
@@ -7850,8 +7840,8 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
       __pyx_t_2 = (__pyx_v_dst_type != Py_None);
       __pyx_t_3 = (__pyx_t_2 != 0);
       if (__pyx_t_3) {
-        __pyx_t_1 = PyObject_RichCompare(__pyx_v_src_type, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-        __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_1 = PyObject_RichCompare(__pyx_v_src_type, __pyx_v_dst_type, Py_EQ); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         if (__pyx_t_3) {
           __pyx_v_match_found = 1;
@@ -7868,35 +7858,35 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_12_py_find_null_cells_fro
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __pyx_t_3 = (__pyx_v_match_found != 0);
     if (__pyx_t_3) {
-      __pyx_t_20 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_20 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_20 = __Pyx_PyList_Append(__pyx_v_candidates, __pyx_v_sig); if (unlikely(__pyx_t_20 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
   }
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __pyx_t_3 = (__pyx_v_candidates != Py_None) && (PyList_GET_SIZE(__pyx_v_candidates) != 0);
   __pyx_t_2 = ((!__pyx_t_3) != 0);
   if (__pyx_t_2) {
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__31, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__31, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_Raise(__pyx_t_8, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
-  __pyx_t_12 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_12 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_12 = PyList_GET_SIZE(__pyx_v_candidates); if (unlikely(__pyx_t_12 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_t_2 = ((__pyx_t_12 > 1) != 0);
   if (__pyx_t_2) {
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__32, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__32, NULL); if (unlikely(!__pyx_t_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_Raise(__pyx_t_8, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   }
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
     if (unlikely(__pyx_v_signatures == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     }
-    __pyx_t_8 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), PyList_GET_ITEM(__pyx_v_candidates, 0)); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+    __pyx_t_8 = __Pyx_PyDict_GetItem(((PyObject*)__pyx_v_signatures), PyList_GET_ITEM(__pyx_v_candidates, 0)); if (unlikely(__pyx_t_8 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
     __Pyx_GOTREF(__pyx_t_8);
     __pyx_r = __pyx_t_8;
     __pyx_t_8 = 0;
@@ -7962,11 +7952,11 @@ static PyObject *__pyx_fuse_0__pyx_pw_6viscid_6cython_10null_tools_21_py_find_nu
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_inds)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_find_null_cells_from_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_find_null_cells_from_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -7974,12 +7964,12 @@ static PyObject *__pyx_fuse_0__pyx_pw_6viscid_6cython_10null_tools_21_py_find_nu
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_f = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float32_t(values[0]); if (unlikely(!__pyx_v_f.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_inds = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[1]); if (unlikely(!__pyx_v_inds.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_f = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float32_t(values[0]); if (unlikely(!__pyx_v_f.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_inds = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[1]); if (unlikely(!__pyx_v_inds.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools._py_find_null_cells_from_candidates", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -8136,7 +8126,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_0_py_find_null_cells_from_candidates", 0);
 
-  /* "viscid/cython/null_tools.pyx":201
+  /* "viscid/cython/null_tools.pyx":197
  *     # setup x,y,z offsets for all 4 coefficients for all 6 faces
  *     #Face:           XY    YZ    ZX
  *     cdef int* oxa = [0, 0, 0, 1, 0, 0]             # <<<<<<<<<<<<<<
@@ -8151,7 +8141,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_1[5] = 0;
   __pyx_v_oxa = __pyx_t_1;
 
-  /* "viscid/cython/null_tools.pyx":202
+  /* "viscid/cython/null_tools.pyx":198
  *     #Face:           XY    YZ    ZX
  *     cdef int* oxa = [0, 0, 0, 1, 0, 0]
  *     cdef int* oya = [0, 0, 0, 0, 0, 1]             # <<<<<<<<<<<<<<
@@ -8166,7 +8156,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_2[5] = 1;
   __pyx_v_oya = __pyx_t_2;
 
-  /* "viscid/cython/null_tools.pyx":203
+  /* "viscid/cython/null_tools.pyx":199
  *     cdef int* oxa = [0, 0, 0, 1, 0, 0]
  *     cdef int* oya = [0, 0, 0, 0, 0, 1]
  *     cdef int* oza = [0, 1, 0, 0, 0, 0]             # <<<<<<<<<<<<<<
@@ -8181,7 +8171,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_3[5] = 0;
   __pyx_v_oza = __pyx_t_3;
 
-  /* "viscid/cython/null_tools.pyx":205
+  /* "viscid/cython/null_tools.pyx":201
  *     cdef int* oza = [0, 1, 0, 0, 0, 0]
  * 
  *     cdef int* oxb = [1, 1, 0, 1, 0, 0]             # <<<<<<<<<<<<<<
@@ -8196,7 +8186,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_4[5] = 0;
   __pyx_v_oxb = __pyx_t_4;
 
-  /* "viscid/cython/null_tools.pyx":206
+  /* "viscid/cython/null_tools.pyx":202
  * 
  *     cdef int* oxb = [1, 1, 0, 1, 0, 0]
  *     cdef int* oyb = [0, 0, 1, 1, 0, 1]             # <<<<<<<<<<<<<<
@@ -8211,7 +8201,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_5[5] = 1;
   __pyx_v_oyb = __pyx_t_5;
 
-  /* "viscid/cython/null_tools.pyx":207
+  /* "viscid/cython/null_tools.pyx":203
  *     cdef int* oxb = [1, 1, 0, 1, 0, 0]
  *     cdef int* oyb = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozb = [0, 1, 0, 0, 1, 1]             # <<<<<<<<<<<<<<
@@ -8226,7 +8216,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_6[5] = 1;
   __pyx_v_ozb = __pyx_t_6;
 
-  /* "viscid/cython/null_tools.pyx":209
+  /* "viscid/cython/null_tools.pyx":205
  *     cdef int* ozb = [0, 1, 0, 0, 1, 1]
  * 
  *     cdef int* oxc = [0, 0, 0, 1, 1, 1]             # <<<<<<<<<<<<<<
@@ -8241,7 +8231,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_7[5] = 1;
   __pyx_v_oxc = __pyx_t_7;
 
-  /* "viscid/cython/null_tools.pyx":210
+  /* "viscid/cython/null_tools.pyx":206
  * 
  *     cdef int* oxc = [0, 0, 0, 1, 1, 1]
  *     cdef int* oyc = [1, 1, 0, 0, 0, 1]             # <<<<<<<<<<<<<<
@@ -8256,7 +8246,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_8[5] = 1;
   __pyx_v_oyc = __pyx_t_8;
 
-  /* "viscid/cython/null_tools.pyx":211
+  /* "viscid/cython/null_tools.pyx":207
  *     cdef int* oxc = [0, 0, 0, 1, 1, 1]
  *     cdef int* oyc = [1, 1, 0, 0, 0, 1]
  *     cdef int* ozc = [0, 1, 1, 1, 0, 0]             # <<<<<<<<<<<<<<
@@ -8271,7 +8261,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_9[5] = 0;
   __pyx_v_ozc = __pyx_t_9;
 
-  /* "viscid/cython/null_tools.pyx":213
+  /* "viscid/cython/null_tools.pyx":209
  *     cdef int* ozc = [0, 1, 1, 1, 0, 0]
  * 
  *     cdef int* oxd = [1, 1, 0, 1, 1, 1]             # <<<<<<<<<<<<<<
@@ -8286,7 +8276,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_10[5] = 1;
   __pyx_v_oxd = __pyx_t_10;
 
-  /* "viscid/cython/null_tools.pyx":214
+  /* "viscid/cython/null_tools.pyx":210
  * 
  *     cdef int* oxd = [1, 1, 0, 1, 1, 1]
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]             # <<<<<<<<<<<<<<
@@ -8301,7 +8291,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_11[5] = 1;
   __pyx_v_oyd = __pyx_t_11;
 
-  /* "viscid/cython/null_tools.pyx":215
+  /* "viscid/cython/null_tools.pyx":211
  *     cdef int* oxd = [1, 1, 0, 1, 1, 1]
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]             # <<<<<<<<<<<<<<
@@ -8316,19 +8306,19 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_12[5] = 1;
   __pyx_v_ozd = __pyx_t_12;
 
-  /* "viscid/cython/null_tools.pyx":216
+  /* "viscid/cython/null_tools.pyx":212
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]
  *     cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2], [1, 2, 0], [2, 0, 1]],             # <<<<<<<<<<<<<<
  *                                                dtype="int32")
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  */
-  __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_array); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_array); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyList_New(3); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_13 = PyList_New(3); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
@@ -8339,7 +8329,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_13, 2, __pyx_int_2);
-  __pyx_t_15 = PyList_New(3); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_15 = PyList_New(3); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -8350,7 +8340,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_15, 2, __pyx_int_0);
-  __pyx_t_16 = PyList_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyList_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
@@ -8361,7 +8351,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
   PyList_SET_ITEM(__pyx_t_16, 2, __pyx_int_1);
-  __pyx_t_17 = PyList_New(3); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_17 = PyList_New(3); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_17);
   __Pyx_GIVEREF(__pyx_t_13);
   PyList_SET_ITEM(__pyx_t_17, 0, __pyx_t_13);
@@ -8372,54 +8362,54 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_13 = 0;
   __pyx_t_15 = 0;
   __pyx_t_16 = 0;
-  __pyx_t_16 = PyTuple_New(1); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyTuple_New(1); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __Pyx_GIVEREF(__pyx_t_17);
   PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_17);
   __pyx_t_17 = 0;
 
-  /* "viscid/cython/null_tools.pyx":217
+  /* "viscid/cython/null_tools.pyx":213
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]
  *     cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2], [1, 2, 0], [2, 0, 1]],
  *                                                dtype="int32")             # <<<<<<<<<<<<<<
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  * 
  */
-  __pyx_t_17 = PyDict_New(); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_17 = PyDict_New(); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_17);
-  if (PyDict_SetItem(__pyx_t_17, __pyx_n_s_dtype, __pyx_n_s_int32) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_17, __pyx_n_s_dtype, __pyx_n_s_int32) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":216
+  /* "viscid/cython/null_tools.pyx":212
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]
  *     cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2], [1, 2, 0], [2, 0, 1]],             # <<<<<<<<<<<<<<
  *                                                dtype="int32")
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  */
-  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_16, __pyx_t_17); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_16, __pyx_t_17); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
   __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
   __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(__pyx_t_15);
-  if (unlikely(!__pyx_t_18.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_18.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
   __pyx_v_permuted_comps = __pyx_t_18;
   __pyx_t_18.memview = NULL;
   __pyx_t_18.data = NULL;
 
-  /* "viscid/cython/null_tools.pyx":220
+  /* "viscid/cython/null_tools.pyx":216
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  * 
  *     null_ixs, null_iys, null_izs = [], [], []             # <<<<<<<<<<<<<<
  * 
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):
  */
-  __pyx_t_15 = PyList_New(0); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_15 = PyList_New(0); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_15);
-  __pyx_t_17 = PyList_New(0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_17 = PyList_New(0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_17);
-  __pyx_t_16 = PyList_New(0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyList_New(0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __pyx_v_null_ixs = ((PyObject*)__pyx_t_15);
   __pyx_t_15 = 0;
@@ -8428,7 +8418,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_v_null_izs = ((PyObject*)__pyx_t_16);
   __pyx_t_16 = 0;
 
-  /* "viscid/cython/null_tools.pyx":222
+  /* "viscid/cython/null_tools.pyx":218
  *     null_ixs, null_iys, null_izs = [], [], []
  * 
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):             # <<<<<<<<<<<<<<
@@ -8439,7 +8429,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
     __pyx_v_icandidate = __pyx_t_20;
 
-    /* "viscid/cython/null_tools.pyx":223
+    /* "viscid/cython/null_tools.pyx":219
  * 
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):
  *         ix = inds[0, icandidate]             # <<<<<<<<<<<<<<
@@ -8450,7 +8440,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
     __pyx_t_22 = __pyx_v_icandidate;
     __pyx_v_ix = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_inds.data + __pyx_t_21 * __pyx_v_inds.strides[0]) )) + __pyx_t_22)) )));
 
-    /* "viscid/cython/null_tools.pyx":224
+    /* "viscid/cython/null_tools.pyx":220
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):
  *         ix = inds[0, icandidate]
  *         iy = inds[1, icandidate]             # <<<<<<<<<<<<<<
@@ -8461,7 +8451,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
     __pyx_t_24 = __pyx_v_icandidate;
     __pyx_v_iy = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_inds.data + __pyx_t_23 * __pyx_v_inds.strides[0]) )) + __pyx_t_24)) )));
 
-    /* "viscid/cython/null_tools.pyx":225
+    /* "viscid/cython/null_tools.pyx":221
  *         ix = inds[0, icandidate]
  *         iy = inds[1, icandidate]
  *         iz = inds[2, icandidate]             # <<<<<<<<<<<<<<
@@ -8472,7 +8462,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
     __pyx_t_26 = __pyx_v_icandidate;
     __pyx_v_iz = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_inds.data + __pyx_t_25 * __pyx_v_inds.strides[0]) )) + __pyx_t_26)) )));
 
-    /* "viscid/cython/null_tools.pyx":227
+    /* "viscid/cython/null_tools.pyx":223
  *         iz = inds[2, icandidate]
  * 
  *         have_null = 0             # <<<<<<<<<<<<<<
@@ -8481,7 +8471,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
     __pyx_v_have_null = 0;
 
-    /* "viscid/cython/null_tools.pyx":231
+    /* "viscid/cython/null_tools.pyx":227
  *         # this is to check different fields on the faces since sometimes a
  *         # field is 0 on a whole face, and it wouldn't be picked up
  *         for ic in range(permuted_comps.shape[0]):             # <<<<<<<<<<<<<<
@@ -8492,7 +8482,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
     for (__pyx_t_28 = 0; __pyx_t_28 < __pyx_t_27; __pyx_t_28+=1) {
       __pyx_v_ic = __pyx_t_28;
 
-      /* "viscid/cython/null_tools.pyx":232
+      /* "viscid/cython/null_tools.pyx":228
  *         # field is 0 on a whole face, and it wouldn't be picked up
  *         for ic in range(permuted_comps.shape[0]):
  *             ic1 = permuted_comps[ic, 0]             # <<<<<<<<<<<<<<
@@ -8503,7 +8493,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
       __pyx_t_30 = 0;
       __pyx_v_ic1 = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_permuted_comps.data + __pyx_t_29 * __pyx_v_permuted_comps.strides[0]) )) + __pyx_t_30)) )));
 
-      /* "viscid/cython/null_tools.pyx":233
+      /* "viscid/cython/null_tools.pyx":229
  *         for ic in range(permuted_comps.shape[0]):
  *             ic1 = permuted_comps[ic, 0]
  *             ic2 = permuted_comps[ic, 1]             # <<<<<<<<<<<<<<
@@ -8514,7 +8504,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
       __pyx_t_32 = 1;
       __pyx_v_ic2 = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_permuted_comps.data + __pyx_t_31 * __pyx_v_permuted_comps.strides[0]) )) + __pyx_t_32)) )));
 
-      /* "viscid/cython/null_tools.pyx":234
+      /* "viscid/cython/null_tools.pyx":230
  *             ic1 = permuted_comps[ic, 0]
  *             ic2 = permuted_comps[ic, 1]
  *             ic3 = permuted_comps[ic, 2]             # <<<<<<<<<<<<<<
@@ -8525,7 +8515,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
       __pyx_t_34 = 2;
       __pyx_v_ic3 = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_permuted_comps.data + __pyx_t_33 * __pyx_v_permuted_comps.strides[0]) )) + __pyx_t_34)) )));
 
-      /* "viscid/cython/null_tools.pyx":235
+      /* "viscid/cython/null_tools.pyx":231
  *             ic2 = permuted_comps[ic, 1]
  *             ic3 = permuted_comps[ic, 2]
  *             positive_roots = 0             # <<<<<<<<<<<<<<
@@ -8534,7 +8524,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
       __pyx_v_positive_roots = 0;
 
-      /* "viscid/cython/null_tools.pyx":236
+      /* "viscid/cython/null_tools.pyx":232
  *             ic3 = permuted_comps[ic, 2]
  *             positive_roots = 0
  *             all_roots = 0             # <<<<<<<<<<<<<<
@@ -8543,7 +8533,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
       __pyx_v_all_roots = 0;
 
-      /* "viscid/cython/null_tools.pyx":239
+      /* "viscid/cython/null_tools.pyx":235
  * 
  *             # loop over each cube face
  *             for i in range(6):             # <<<<<<<<<<<<<<
@@ -8553,7 +8543,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
       for (__pyx_t_35 = 0; __pyx_t_35 < 6; __pyx_t_35+=1) {
         __pyx_v_i = __pyx_t_35;
 
-        /* "viscid/cython/null_tools.pyx":240
+        /* "viscid/cython/null_tools.pyx":236
  *             # loop over each cube face
  *             for i in range(6):
  *                 a1 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic1]             # <<<<<<<<<<<<<<
@@ -8566,7 +8556,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_39 = __pyx_v_ic1;
         __pyx_v_a1 = (*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_36 * __pyx_v_f.strides[0]) ) + __pyx_t_37 * __pyx_v_f.strides[1]) ) + __pyx_t_38 * __pyx_v_f.strides[2]) )) + __pyx_t_39)) )));
 
-        /* "viscid/cython/null_tools.pyx":241
+        /* "viscid/cython/null_tools.pyx":237
  *             for i in range(6):
  *                 a1 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic1]
  *                 b1 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic1] - a1             # <<<<<<<<<<<<<<
@@ -8579,7 +8569,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_43 = __pyx_v_ic1;
         __pyx_v_b1 = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_40 * __pyx_v_f.strides[0]) ) + __pyx_t_41 * __pyx_v_f.strides[1]) ) + __pyx_t_42 * __pyx_v_f.strides[2]) )) + __pyx_t_43)) ))) - __pyx_v_a1);
 
-        /* "viscid/cython/null_tools.pyx":242
+        /* "viscid/cython/null_tools.pyx":238
  *                 a1 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic1]
  *                 b1 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic1] - a1
  *                 c1 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic1] - a1             # <<<<<<<<<<<<<<
@@ -8592,7 +8582,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_47 = __pyx_v_ic1;
         __pyx_v_c1 = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_44 * __pyx_v_f.strides[0]) ) + __pyx_t_45 * __pyx_v_f.strides[1]) ) + __pyx_t_46 * __pyx_v_f.strides[2]) )) + __pyx_t_47)) ))) - __pyx_v_a1);
 
-        /* "viscid/cython/null_tools.pyx":243
+        /* "viscid/cython/null_tools.pyx":239
  *                 b1 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic1] - a1
  *                 c1 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic1] - a1
  *                 d1 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic1] - c1 - b1 - a1             # <<<<<<<<<<<<<<
@@ -8605,7 +8595,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_51 = __pyx_v_ic1;
         __pyx_v_d1 = ((((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_48 * __pyx_v_f.strides[0]) ) + __pyx_t_49 * __pyx_v_f.strides[1]) ) + __pyx_t_50 * __pyx_v_f.strides[2]) )) + __pyx_t_51)) ))) - __pyx_v_c1) - __pyx_v_b1) - __pyx_v_a1);
 
-        /* "viscid/cython/null_tools.pyx":245
+        /* "viscid/cython/null_tools.pyx":241
  *                 d1 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic1] - c1 - b1 - a1
  * 
  *                 a2 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic2]             # <<<<<<<<<<<<<<
@@ -8618,7 +8608,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_55 = __pyx_v_ic2;
         __pyx_v_a2 = (*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_52 * __pyx_v_f.strides[0]) ) + __pyx_t_53 * __pyx_v_f.strides[1]) ) + __pyx_t_54 * __pyx_v_f.strides[2]) )) + __pyx_t_55)) )));
 
-        /* "viscid/cython/null_tools.pyx":246
+        /* "viscid/cython/null_tools.pyx":242
  * 
  *                 a2 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic2]
  *                 b2 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic2] - a2             # <<<<<<<<<<<<<<
@@ -8631,7 +8621,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_59 = __pyx_v_ic2;
         __pyx_v_b2 = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_56 * __pyx_v_f.strides[0]) ) + __pyx_t_57 * __pyx_v_f.strides[1]) ) + __pyx_t_58 * __pyx_v_f.strides[2]) )) + __pyx_t_59)) ))) - __pyx_v_a2);
 
-        /* "viscid/cython/null_tools.pyx":247
+        /* "viscid/cython/null_tools.pyx":243
  *                 a2 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic2]
  *                 b2 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic2] - a2
  *                 c2 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic2] - a2             # <<<<<<<<<<<<<<
@@ -8644,7 +8634,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_63 = __pyx_v_ic2;
         __pyx_v_c2 = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_60 * __pyx_v_f.strides[0]) ) + __pyx_t_61 * __pyx_v_f.strides[1]) ) + __pyx_t_62 * __pyx_v_f.strides[2]) )) + __pyx_t_63)) ))) - __pyx_v_a2);
 
-        /* "viscid/cython/null_tools.pyx":248
+        /* "viscid/cython/null_tools.pyx":244
  *                 b2 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic2] - a2
  *                 c2 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic2] - a2
  *                 d2 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic2] - c2 - b2 - a2             # <<<<<<<<<<<<<<
@@ -8657,7 +8647,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_67 = __pyx_v_ic2;
         __pyx_v_d2 = ((((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_64 * __pyx_v_f.strides[0]) ) + __pyx_t_65 * __pyx_v_f.strides[1]) ) + __pyx_t_66 * __pyx_v_f.strides[2]) )) + __pyx_t_67)) ))) - __pyx_v_c2) - __pyx_v_b2) - __pyx_v_a2);
 
-        /* "viscid/cython/null_tools.pyx":250
+        /* "viscid/cython/null_tools.pyx":246
  *                 d2 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic2] - c2 - b2 - a2
  * 
  *                 a3 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic3]             # <<<<<<<<<<<<<<
@@ -8670,7 +8660,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_71 = __pyx_v_ic3;
         __pyx_v_a3 = (*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_68 * __pyx_v_f.strides[0]) ) + __pyx_t_69 * __pyx_v_f.strides[1]) ) + __pyx_t_70 * __pyx_v_f.strides[2]) )) + __pyx_t_71)) )));
 
-        /* "viscid/cython/null_tools.pyx":251
+        /* "viscid/cython/null_tools.pyx":247
  * 
  *                 a3 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic3]
  *                 b3 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic3] - a3             # <<<<<<<<<<<<<<
@@ -8683,7 +8673,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_75 = __pyx_v_ic3;
         __pyx_v_b3 = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_72 * __pyx_v_f.strides[0]) ) + __pyx_t_73 * __pyx_v_f.strides[1]) ) + __pyx_t_74 * __pyx_v_f.strides[2]) )) + __pyx_t_75)) ))) - __pyx_v_a3);
 
-        /* "viscid/cython/null_tools.pyx":252
+        /* "viscid/cython/null_tools.pyx":248
  *                 a3 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic3]
  *                 b3 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic3] - a3
  *                 c3 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic3] - a3             # <<<<<<<<<<<<<<
@@ -8696,7 +8686,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_79 = __pyx_v_ic3;
         __pyx_v_c3 = ((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_76 * __pyx_v_f.strides[0]) ) + __pyx_t_77 * __pyx_v_f.strides[1]) ) + __pyx_t_78 * __pyx_v_f.strides[2]) )) + __pyx_t_79)) ))) - __pyx_v_a3);
 
-        /* "viscid/cython/null_tools.pyx":253
+        /* "viscid/cython/null_tools.pyx":249
  *                 b3 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic3] - a3
  *                 c3 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic3] - a3
  *                 d3 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic3] - c3 - b3 - a3             # <<<<<<<<<<<<<<
@@ -8709,14 +8699,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __pyx_t_83 = __pyx_v_ic3;
         __pyx_v_d3 = ((((*((__pyx_t_5numpy_float32_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_80 * __pyx_v_f.strides[0]) ) + __pyx_t_81 * __pyx_v_f.strides[1]) ) + __pyx_t_82 * __pyx_v_f.strides[2]) )) + __pyx_t_83)) ))) - __pyx_v_c3) - __pyx_v_b3) - __pyx_v_a3);
 
-        /* "viscid/cython/null_tools.pyx":255
+        /* "viscid/cython/null_tools.pyx":251
  *                 d3 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic3] - c3 - b3 - a3
  * 
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)             # <<<<<<<<<<<<<<
  *                 for rt1, rt2 in zip(roots1, roots2):
  *                     all_roots += 1
  */
-        __pyx_t_16 = __pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_find_roots_face(__pyx_v_a1, __pyx_v_b1, __pyx_v_c1, __pyx_v_d1, __pyx_v_a2, __pyx_v_b2, __pyx_v_c2, __pyx_v_d2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_16 = __pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_find_roots_face(__pyx_v_a1, __pyx_v_b1, __pyx_v_c1, __pyx_v_d1, __pyx_v_a2, __pyx_v_b2, __pyx_v_c2, __pyx_v_d2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_16);
         if ((likely(PyTuple_CheckExact(__pyx_t_16))) || (PyList_CheckExact(__pyx_t_16))) {
           PyObject* sequence = __pyx_t_16;
@@ -8728,7 +8718,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
           if (unlikely(size != 2)) {
             if (size > 2) __Pyx_RaiseTooManyValuesError(2);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           }
           #if CYTHON_COMPILING_IN_CPYTHON
           if (likely(PyTuple_CheckExact(sequence))) {
@@ -8741,15 +8731,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
           __Pyx_INCREF(__pyx_t_17);
           __Pyx_INCREF(__pyx_t_15);
           #else
-          __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_17);
-          __pyx_t_15 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_15 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_15);
           #endif
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         } else {
           Py_ssize_t index = -1;
-          __pyx_t_14 = PyObject_GetIter(__pyx_t_16); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_14 = PyObject_GetIter(__pyx_t_16); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_14);
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           __pyx_t_84 = Py_TYPE(__pyx_t_14)->tp_iternext;
@@ -8757,7 +8747,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
           __Pyx_GOTREF(__pyx_t_17);
           index = 1; __pyx_t_15 = __pyx_t_84(__pyx_t_14); if (unlikely(!__pyx_t_15)) goto __pyx_L9_unpacking_failed;
           __Pyx_GOTREF(__pyx_t_15);
-          if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_14), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_14), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __pyx_t_84 = NULL;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           goto __pyx_L10_unpacking_done;
@@ -8765,7 +8755,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           __pyx_t_84 = NULL;
           if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __pyx_L10_unpacking_done:;
         }
         __Pyx_XDECREF_SET(__pyx_v_roots1, __pyx_t_17);
@@ -8773,14 +8763,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __Pyx_XDECREF_SET(__pyx_v_roots2, __pyx_t_15);
         __pyx_t_15 = 0;
 
-        /* "viscid/cython/null_tools.pyx":256
+        /* "viscid/cython/null_tools.pyx":252
  * 
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
  *                 for rt1, rt2 in zip(roots1, roots2):             # <<<<<<<<<<<<<<
  *                     all_roots += 1
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
  */
-        __pyx_t_16 = PyTuple_New(2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_16 = PyTuple_New(2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_INCREF(__pyx_v_roots1);
         __Pyx_GIVEREF(__pyx_v_roots1);
@@ -8788,16 +8778,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __Pyx_INCREF(__pyx_v_roots2);
         __Pyx_GIVEREF(__pyx_v_roots2);
         PyTuple_SET_ITEM(__pyx_t_16, 1, __pyx_v_roots2);
-        __pyx_t_15 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_16, NULL); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_15 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_16, NULL); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         if (likely(PyList_CheckExact(__pyx_t_15)) || PyTuple_CheckExact(__pyx_t_15)) {
           __pyx_t_16 = __pyx_t_15; __Pyx_INCREF(__pyx_t_16); __pyx_t_85 = 0;
           __pyx_t_86 = NULL;
         } else {
-          __pyx_t_85 = -1; __pyx_t_16 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_85 = -1; __pyx_t_16 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_16);
-          __pyx_t_86 = Py_TYPE(__pyx_t_16)->tp_iternext; if (unlikely(!__pyx_t_86)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_86 = Py_TYPE(__pyx_t_16)->tp_iternext; if (unlikely(!__pyx_t_86)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
         for (;;) {
@@ -8805,17 +8795,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
             if (likely(PyList_CheckExact(__pyx_t_16))) {
               if (__pyx_t_85 >= PyList_GET_SIZE(__pyx_t_16)) break;
               #if CYTHON_COMPILING_IN_CPYTHON
-              __pyx_t_15 = PyList_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PyList_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               #else
-              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               __Pyx_GOTREF(__pyx_t_15);
               #endif
             } else {
               if (__pyx_t_85 >= PyTuple_GET_SIZE(__pyx_t_16)) break;
               #if CYTHON_COMPILING_IN_CPYTHON
-              __pyx_t_15 = PyTuple_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PyTuple_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               #else
-              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               __Pyx_GOTREF(__pyx_t_15);
               #endif
             }
@@ -8825,7 +8815,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
               PyObject* exc_type = PyErr_Occurred();
               if (exc_type) {
                 if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+                else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               }
               break;
             }
@@ -8841,7 +8831,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
             if (unlikely(size != 2)) {
               if (size > 2) __Pyx_RaiseTooManyValuesError(2);
               else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-              {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             }
             #if CYTHON_COMPILING_IN_CPYTHON
             if (likely(PyTuple_CheckExact(sequence))) {
@@ -8854,15 +8844,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
             __Pyx_INCREF(__pyx_t_17);
             __Pyx_INCREF(__pyx_t_14);
             #else
-            __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_17);
-            __pyx_t_14 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_14 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_14);
             #endif
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
           } else {
             Py_ssize_t index = -1;
-            __pyx_t_13 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_13 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_13);
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
             __pyx_t_84 = Py_TYPE(__pyx_t_13)->tp_iternext;
@@ -8870,7 +8860,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
             __Pyx_GOTREF(__pyx_t_17);
             index = 1; __pyx_t_14 = __pyx_t_84(__pyx_t_13); if (unlikely(!__pyx_t_14)) goto __pyx_L13_unpacking_failed;
             __Pyx_GOTREF(__pyx_t_14);
-            if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_13), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_13), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __pyx_t_84 = NULL;
             __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
             goto __pyx_L14_unpacking_done;
@@ -8878,17 +8868,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
             __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
             __pyx_t_84 = NULL;
             if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __pyx_L14_unpacking_done:;
           }
-          __pyx_t_87 = __pyx_PyFloat_AsFloat(__pyx_t_17); if (unlikely((__pyx_t_87 == (npy_float32)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_87 = __pyx_PyFloat_AsFloat(__pyx_t_17); if (unlikely((__pyx_t_87 == (npy_float32)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-          __pyx_t_88 = __pyx_PyFloat_AsFloat(__pyx_t_14); if (unlikely((__pyx_t_88 == (npy_float32)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_88 = __pyx_PyFloat_AsFloat(__pyx_t_14); if (unlikely((__pyx_t_88 == (npy_float32)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           __pyx_v_rt1 = __pyx_t_87;
           __pyx_v_rt2 = __pyx_t_88;
 
-          /* "viscid/cython/null_tools.pyx":257
+          /* "viscid/cython/null_tools.pyx":253
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
  *                 for rt1, rt2 in zip(roots1, roots2):
  *                     all_roots += 1             # <<<<<<<<<<<<<<
@@ -8897,7 +8887,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
           __pyx_v_all_roots = (__pyx_v_all_roots + 1);
 
-          /* "viscid/cython/null_tools.pyx":258
+          /* "viscid/cython/null_tools.pyx":254
  *                 for rt1, rt2 in zip(roots1, roots2):
  *                     all_roots += 1
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2             # <<<<<<<<<<<<<<
@@ -8906,7 +8896,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
           __pyx_v_ff3 = (((__pyx_v_a3 + (__pyx_v_b3 * __pyx_v_rt1)) + (__pyx_v_c3 * __pyx_v_rt2)) + ((__pyx_v_d3 * __pyx_v_rt1) * __pyx_v_rt2));
 
-          /* "viscid/cython/null_tools.pyx":260
+          /* "viscid/cython/null_tools.pyx":256
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
  *                     # print("!!! face root:", rt1, rt2, f3)
  *                     if ff3 > 0.0:             # <<<<<<<<<<<<<<
@@ -8916,7 +8906,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
           __pyx_t_89 = ((__pyx_v_ff3 > 0.0) != 0);
           if (__pyx_t_89) {
 
-            /* "viscid/cython/null_tools.pyx":261
+            /* "viscid/cython/null_tools.pyx":257
  *                     # print("!!! face root:", rt1, rt2, f3)
  *                     if ff3 > 0.0:
  *                         positive_roots += 1             # <<<<<<<<<<<<<<
@@ -8925,7 +8915,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
             __pyx_v_positive_roots = (__pyx_v_positive_roots + 1);
 
-            /* "viscid/cython/null_tools.pyx":260
+            /* "viscid/cython/null_tools.pyx":256
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
  *                     # print("!!! face root:", rt1, rt2, f3)
  *                     if ff3 > 0.0:             # <<<<<<<<<<<<<<
@@ -8935,7 +8925,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
             goto __pyx_L15;
           }
 
-          /* "viscid/cython/null_tools.pyx":262
+          /* "viscid/cython/null_tools.pyx":258
  *                     if ff3 > 0.0:
  *                         positive_roots += 1
  *                     elif ff3 == 0.0 and i % 2 == 0: # to only check 3 faces             # <<<<<<<<<<<<<<
@@ -8953,7 +8943,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
           __pyx_L16_bool_binop_done:;
           if (__pyx_t_89) {
 
-            /* "viscid/cython/null_tools.pyx":264
+            /* "viscid/cython/null_tools.pyx":260
  *                     elif ff3 == 0.0 and i % 2 == 0: # to only check 3 faces
  *                         # print("!!! null on face")
  *                         have_null = 1             # <<<<<<<<<<<<<<
@@ -8962,7 +8952,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
             __pyx_v_have_null = 1;
 
-            /* "viscid/cython/null_tools.pyx":262
+            /* "viscid/cython/null_tools.pyx":258
  *                     if ff3 > 0.0:
  *                         positive_roots += 1
  *                     elif ff3 == 0.0 and i % 2 == 0: # to only check 3 faces             # <<<<<<<<<<<<<<
@@ -8972,7 +8962,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
           }
           __pyx_L15:;
 
-          /* "viscid/cython/null_tools.pyx":256
+          /* "viscid/cython/null_tools.pyx":252
  * 
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
  *                 for rt1, rt2 in zip(roots1, roots2):             # <<<<<<<<<<<<<<
@@ -8983,7 +8973,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
       }
 
-      /* "viscid/cython/null_tools.pyx":272
+      /* "viscid/cython/null_tools.pyx":268
  *             # if even number of total roots, and odd number of positive roots
  *             # OR, if there is a null on a face (have_null == True)
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:             # <<<<<<<<<<<<<<
@@ -9007,7 +8997,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
       __pyx_L19_bool_binop_done:;
       if (__pyx_t_89) {
 
-        /* "viscid/cython/null_tools.pyx":273
+        /* "viscid/cython/null_tools.pyx":269
  *             # OR, if there is a null on a face (have_null == True)
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:
  *                 have_null = 1             # <<<<<<<<<<<<<<
@@ -9016,7 +9006,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
         __pyx_v_have_null = 1;
 
-        /* "viscid/cython/null_tools.pyx":274
+        /* "viscid/cython/null_tools.pyx":270
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:
  *                 have_null = 1
  *                 break             # <<<<<<<<<<<<<<
@@ -9025,7 +9015,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  */
         goto __pyx_L6_break;
 
-        /* "viscid/cython/null_tools.pyx":272
+        /* "viscid/cython/null_tools.pyx":268
  *             # if even number of total roots, and odd number of positive roots
  *             # OR, if there is a null on a face (have_null == True)
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:             # <<<<<<<<<<<<<<
@@ -9036,7 +9026,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
     }
     __pyx_L6_break:;
 
-    /* "viscid/cython/null_tools.pyx":276
+    /* "viscid/cython/null_tools.pyx":272
  *                 break
  * 
  *         if have_null:             # <<<<<<<<<<<<<<
@@ -9046,43 +9036,43 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
     __pyx_t_89 = (__pyx_v_have_null != 0);
     if (__pyx_t_89) {
 
-      /* "viscid/cython/null_tools.pyx":277
+      /* "viscid/cython/null_tools.pyx":273
  * 
  *         if have_null:
  *             null_ixs.append(ix)             # <<<<<<<<<<<<<<
  *             null_iys.append(iy)
  *             null_izs.append(iz)
  */
-      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_ix); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_ix); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 273; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_16);
-      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_ixs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_ixs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 273; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-      /* "viscid/cython/null_tools.pyx":278
+      /* "viscid/cython/null_tools.pyx":274
  *         if have_null:
  *             null_ixs.append(ix)
  *             null_iys.append(iy)             # <<<<<<<<<<<<<<
  *             null_izs.append(iz)
  *         else:
  */
-      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iy); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iy); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 274; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_16);
-      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_iys, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_iys, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 274; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-      /* "viscid/cython/null_tools.pyx":279
+      /* "viscid/cython/null_tools.pyx":275
  *             null_ixs.append(ix)
  *             null_iys.append(iy)
  *             null_izs.append(iz)             # <<<<<<<<<<<<<<
  *         else:
  *             pass
  */
-      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iz); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iz); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 275; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_16);
-      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_izs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_izs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 275; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-      /* "viscid/cython/null_tools.pyx":276
+      /* "viscid/cython/null_tools.pyx":272
  *                 break
  * 
  *         if have_null:             # <<<<<<<<<<<<<<
@@ -9092,7 +9082,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
       goto __pyx_L22;
     }
 
-    /* "viscid/cython/null_tools.pyx":281
+    /* "viscid/cython/null_tools.pyx":277
  *             null_izs.append(iz)
  *         else:
  *             pass             # <<<<<<<<<<<<<<
@@ -9104,7 +9094,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
     __pyx_L22:;
   }
 
-  /* "viscid/cython/null_tools.pyx":283
+  /* "viscid/cython/null_tools.pyx":279
  *             pass
  * 
  *     return null_ixs, null_iys, null_izs             # <<<<<<<<<<<<<<
@@ -9112,7 +9102,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
  * cdef inline find_roots_face(real_t a1, real_t b1, real_t c1, real_t d1,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_16 = PyTuple_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 283; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyTuple_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __Pyx_INCREF(__pyx_v_null_ixs);
   __Pyx_GIVEREF(__pyx_v_null_ixs);
@@ -9127,7 +9117,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_20_py_find_null_cells_fro
   __pyx_t_16 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":189
+  /* "viscid/cython/null_tools.pyx":185
  *     return ixs, iys, izs
  * 
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,             # <<<<<<<<<<<<<<
@@ -9191,11 +9181,11 @@ static PyObject *__pyx_fuse_1__pyx_pw_6viscid_6cython_10null_tools_23_py_find_nu
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_inds)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+          __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, 1); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_find_null_cells_from_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_py_find_null_cells_from_candidates") < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -9203,12 +9193,12 @@ static PyObject *__pyx_fuse_1__pyx_pw_6viscid_6cython_10null_tools_23_py_find_nu
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
     }
-    __pyx_v_f = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float64_t(values[0]); if (unlikely(!__pyx_v_f.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
-    __pyx_v_inds = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[1]); if (unlikely(!__pyx_v_inds.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 190; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_f = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_dc_nn___pyx_t_5numpy_float64_t(values[0]); if (unlikely(!__pyx_v_f.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+    __pyx_v_inds = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[1]); if (unlikely(!__pyx_v_inds.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 186; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
+  __Pyx_RaiseArgtupleInvalid("_py_find_null_cells_from_candidates", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L3_error;}
   __pyx_L3_error:;
   __Pyx_AddTraceback("viscid.cython.null_tools._py_find_null_cells_from_candidates", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -9365,7 +9355,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_1_py_find_null_cells_from_candidates", 0);
 
-  /* "viscid/cython/null_tools.pyx":201
+  /* "viscid/cython/null_tools.pyx":197
  *     # setup x,y,z offsets for all 4 coefficients for all 6 faces
  *     #Face:           XY    YZ    ZX
  *     cdef int* oxa = [0, 0, 0, 1, 0, 0]             # <<<<<<<<<<<<<<
@@ -9380,7 +9370,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_1[5] = 0;
   __pyx_v_oxa = __pyx_t_1;
 
-  /* "viscid/cython/null_tools.pyx":202
+  /* "viscid/cython/null_tools.pyx":198
  *     #Face:           XY    YZ    ZX
  *     cdef int* oxa = [0, 0, 0, 1, 0, 0]
  *     cdef int* oya = [0, 0, 0, 0, 0, 1]             # <<<<<<<<<<<<<<
@@ -9395,7 +9385,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_2[5] = 1;
   __pyx_v_oya = __pyx_t_2;
 
-  /* "viscid/cython/null_tools.pyx":203
+  /* "viscid/cython/null_tools.pyx":199
  *     cdef int* oxa = [0, 0, 0, 1, 0, 0]
  *     cdef int* oya = [0, 0, 0, 0, 0, 1]
  *     cdef int* oza = [0, 1, 0, 0, 0, 0]             # <<<<<<<<<<<<<<
@@ -9410,7 +9400,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_3[5] = 0;
   __pyx_v_oza = __pyx_t_3;
 
-  /* "viscid/cython/null_tools.pyx":205
+  /* "viscid/cython/null_tools.pyx":201
  *     cdef int* oza = [0, 1, 0, 0, 0, 0]
  * 
  *     cdef int* oxb = [1, 1, 0, 1, 0, 0]             # <<<<<<<<<<<<<<
@@ -9425,7 +9415,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_4[5] = 0;
   __pyx_v_oxb = __pyx_t_4;
 
-  /* "viscid/cython/null_tools.pyx":206
+  /* "viscid/cython/null_tools.pyx":202
  * 
  *     cdef int* oxb = [1, 1, 0, 1, 0, 0]
  *     cdef int* oyb = [0, 0, 1, 1, 0, 1]             # <<<<<<<<<<<<<<
@@ -9440,7 +9430,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_5[5] = 1;
   __pyx_v_oyb = __pyx_t_5;
 
-  /* "viscid/cython/null_tools.pyx":207
+  /* "viscid/cython/null_tools.pyx":203
  *     cdef int* oxb = [1, 1, 0, 1, 0, 0]
  *     cdef int* oyb = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozb = [0, 1, 0, 0, 1, 1]             # <<<<<<<<<<<<<<
@@ -9455,7 +9445,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_6[5] = 1;
   __pyx_v_ozb = __pyx_t_6;
 
-  /* "viscid/cython/null_tools.pyx":209
+  /* "viscid/cython/null_tools.pyx":205
  *     cdef int* ozb = [0, 1, 0, 0, 1, 1]
  * 
  *     cdef int* oxc = [0, 0, 0, 1, 1, 1]             # <<<<<<<<<<<<<<
@@ -9470,7 +9460,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_7[5] = 1;
   __pyx_v_oxc = __pyx_t_7;
 
-  /* "viscid/cython/null_tools.pyx":210
+  /* "viscid/cython/null_tools.pyx":206
  * 
  *     cdef int* oxc = [0, 0, 0, 1, 1, 1]
  *     cdef int* oyc = [1, 1, 0, 0, 0, 1]             # <<<<<<<<<<<<<<
@@ -9485,7 +9475,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_8[5] = 1;
   __pyx_v_oyc = __pyx_t_8;
 
-  /* "viscid/cython/null_tools.pyx":211
+  /* "viscid/cython/null_tools.pyx":207
  *     cdef int* oxc = [0, 0, 0, 1, 1, 1]
  *     cdef int* oyc = [1, 1, 0, 0, 0, 1]
  *     cdef int* ozc = [0, 1, 1, 1, 0, 0]             # <<<<<<<<<<<<<<
@@ -9500,7 +9490,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_9[5] = 0;
   __pyx_v_ozc = __pyx_t_9;
 
-  /* "viscid/cython/null_tools.pyx":213
+  /* "viscid/cython/null_tools.pyx":209
  *     cdef int* ozc = [0, 1, 1, 1, 0, 0]
  * 
  *     cdef int* oxd = [1, 1, 0, 1, 1, 1]             # <<<<<<<<<<<<<<
@@ -9515,7 +9505,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_10[5] = 1;
   __pyx_v_oxd = __pyx_t_10;
 
-  /* "viscid/cython/null_tools.pyx":214
+  /* "viscid/cython/null_tools.pyx":210
  * 
  *     cdef int* oxd = [1, 1, 0, 1, 1, 1]
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]             # <<<<<<<<<<<<<<
@@ -9530,7 +9520,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_11[5] = 1;
   __pyx_v_oyd = __pyx_t_11;
 
-  /* "viscid/cython/null_tools.pyx":215
+  /* "viscid/cython/null_tools.pyx":211
  *     cdef int* oxd = [1, 1, 0, 1, 1, 1]
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]             # <<<<<<<<<<<<<<
@@ -9545,19 +9535,19 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_12[5] = 1;
   __pyx_v_ozd = __pyx_t_12;
 
-  /* "viscid/cython/null_tools.pyx":216
+  /* "viscid/cython/null_tools.pyx":212
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]
  *     cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2], [1, 2, 0], [2, 0, 1]],             # <<<<<<<<<<<<<<
  *                                                dtype="int32")
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  */
-  __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_13 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_array); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_array); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyList_New(3); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_13 = PyList_New(3); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
@@ -9568,7 +9558,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
   PyList_SET_ITEM(__pyx_t_13, 2, __pyx_int_2);
-  __pyx_t_15 = PyList_New(3); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_15 = PyList_New(3); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -9579,7 +9569,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __Pyx_INCREF(__pyx_int_0);
   __Pyx_GIVEREF(__pyx_int_0);
   PyList_SET_ITEM(__pyx_t_15, 2, __pyx_int_0);
-  __pyx_t_16 = PyList_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyList_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __Pyx_INCREF(__pyx_int_2);
   __Pyx_GIVEREF(__pyx_int_2);
@@ -9590,7 +9580,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
   PyList_SET_ITEM(__pyx_t_16, 2, __pyx_int_1);
-  __pyx_t_17 = PyList_New(3); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_17 = PyList_New(3); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_17);
   __Pyx_GIVEREF(__pyx_t_13);
   PyList_SET_ITEM(__pyx_t_17, 0, __pyx_t_13);
@@ -9601,54 +9591,54 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_13 = 0;
   __pyx_t_15 = 0;
   __pyx_t_16 = 0;
-  __pyx_t_16 = PyTuple_New(1); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyTuple_New(1); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __Pyx_GIVEREF(__pyx_t_17);
   PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_17);
   __pyx_t_17 = 0;
 
-  /* "viscid/cython/null_tools.pyx":217
+  /* "viscid/cython/null_tools.pyx":213
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]
  *     cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2], [1, 2, 0], [2, 0, 1]],
  *                                                dtype="int32")             # <<<<<<<<<<<<<<
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  * 
  */
-  __pyx_t_17 = PyDict_New(); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_17 = PyDict_New(); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_17);
-  if (PyDict_SetItem(__pyx_t_17, __pyx_n_s_dtype, __pyx_n_s_int32) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 217; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_17, __pyx_n_s_dtype, __pyx_n_s_int32) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 213; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":216
+  /* "viscid/cython/null_tools.pyx":212
  *     cdef int* oyd = [0, 0, 1, 1, 0, 1]
  *     cdef int* ozd = [0, 1, 1, 1, 1, 1]
  *     cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2], [1, 2, 0], [2, 0, 1]],             # <<<<<<<<<<<<<<
  *                                                dtype="int32")
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  */
-  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_16, __pyx_t_17); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_16, __pyx_t_17); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
   __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
   __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(__pyx_t_15);
-  if (unlikely(!__pyx_t_18.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (unlikely(!__pyx_t_18.memview)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 212; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
   __pyx_v_permuted_comps = __pyx_t_18;
   __pyx_t_18.memview = NULL;
   __pyx_t_18.data = NULL;
 
-  /* "viscid/cython/null_tools.pyx":220
+  /* "viscid/cython/null_tools.pyx":216
  *     # cdef int[:, ::1] permuted_comps = np.array([[0, 1, 2]], dtype="int32")
  * 
  *     null_ixs, null_iys, null_izs = [], [], []             # <<<<<<<<<<<<<<
  * 
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):
  */
-  __pyx_t_15 = PyList_New(0); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_15 = PyList_New(0); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_15);
-  __pyx_t_17 = PyList_New(0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_17 = PyList_New(0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_17);
-  __pyx_t_16 = PyList_New(0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 220; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyList_New(0); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 216; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __pyx_v_null_ixs = ((PyObject*)__pyx_t_15);
   __pyx_t_15 = 0;
@@ -9657,7 +9647,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_v_null_izs = ((PyObject*)__pyx_t_16);
   __pyx_t_16 = 0;
 
-  /* "viscid/cython/null_tools.pyx":222
+  /* "viscid/cython/null_tools.pyx":218
  *     null_ixs, null_iys, null_izs = [], [], []
  * 
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):             # <<<<<<<<<<<<<<
@@ -9668,7 +9658,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
     __pyx_v_icandidate = __pyx_t_20;
 
-    /* "viscid/cython/null_tools.pyx":223
+    /* "viscid/cython/null_tools.pyx":219
  * 
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):
  *         ix = inds[0, icandidate]             # <<<<<<<<<<<<<<
@@ -9679,7 +9669,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
     __pyx_t_22 = __pyx_v_icandidate;
     __pyx_v_ix = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_inds.data + __pyx_t_21 * __pyx_v_inds.strides[0]) )) + __pyx_t_22)) )));
 
-    /* "viscid/cython/null_tools.pyx":224
+    /* "viscid/cython/null_tools.pyx":220
  *     for icandidate in range(inds.shape[1]): # iz, iy, ix in zip(izs, iys, ixs):
  *         ix = inds[0, icandidate]
  *         iy = inds[1, icandidate]             # <<<<<<<<<<<<<<
@@ -9690,7 +9680,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
     __pyx_t_24 = __pyx_v_icandidate;
     __pyx_v_iy = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_inds.data + __pyx_t_23 * __pyx_v_inds.strides[0]) )) + __pyx_t_24)) )));
 
-    /* "viscid/cython/null_tools.pyx":225
+    /* "viscid/cython/null_tools.pyx":221
  *         ix = inds[0, icandidate]
  *         iy = inds[1, icandidate]
  *         iz = inds[2, icandidate]             # <<<<<<<<<<<<<<
@@ -9701,7 +9691,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
     __pyx_t_26 = __pyx_v_icandidate;
     __pyx_v_iz = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_inds.data + __pyx_t_25 * __pyx_v_inds.strides[0]) )) + __pyx_t_26)) )));
 
-    /* "viscid/cython/null_tools.pyx":227
+    /* "viscid/cython/null_tools.pyx":223
  *         iz = inds[2, icandidate]
  * 
  *         have_null = 0             # <<<<<<<<<<<<<<
@@ -9710,7 +9700,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
     __pyx_v_have_null = 0;
 
-    /* "viscid/cython/null_tools.pyx":231
+    /* "viscid/cython/null_tools.pyx":227
  *         # this is to check different fields on the faces since sometimes a
  *         # field is 0 on a whole face, and it wouldn't be picked up
  *         for ic in range(permuted_comps.shape[0]):             # <<<<<<<<<<<<<<
@@ -9721,7 +9711,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
     for (__pyx_t_28 = 0; __pyx_t_28 < __pyx_t_27; __pyx_t_28+=1) {
       __pyx_v_ic = __pyx_t_28;
 
-      /* "viscid/cython/null_tools.pyx":232
+      /* "viscid/cython/null_tools.pyx":228
  *         # field is 0 on a whole face, and it wouldn't be picked up
  *         for ic in range(permuted_comps.shape[0]):
  *             ic1 = permuted_comps[ic, 0]             # <<<<<<<<<<<<<<
@@ -9732,7 +9722,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
       __pyx_t_30 = 0;
       __pyx_v_ic1 = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_permuted_comps.data + __pyx_t_29 * __pyx_v_permuted_comps.strides[0]) )) + __pyx_t_30)) )));
 
-      /* "viscid/cython/null_tools.pyx":233
+      /* "viscid/cython/null_tools.pyx":229
  *         for ic in range(permuted_comps.shape[0]):
  *             ic1 = permuted_comps[ic, 0]
  *             ic2 = permuted_comps[ic, 1]             # <<<<<<<<<<<<<<
@@ -9743,7 +9733,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
       __pyx_t_32 = 1;
       __pyx_v_ic2 = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_permuted_comps.data + __pyx_t_31 * __pyx_v_permuted_comps.strides[0]) )) + __pyx_t_32)) )));
 
-      /* "viscid/cython/null_tools.pyx":234
+      /* "viscid/cython/null_tools.pyx":230
  *             ic1 = permuted_comps[ic, 0]
  *             ic2 = permuted_comps[ic, 1]
  *             ic3 = permuted_comps[ic, 2]             # <<<<<<<<<<<<<<
@@ -9754,7 +9744,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
       __pyx_t_34 = 2;
       __pyx_v_ic3 = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_permuted_comps.data + __pyx_t_33 * __pyx_v_permuted_comps.strides[0]) )) + __pyx_t_34)) )));
 
-      /* "viscid/cython/null_tools.pyx":235
+      /* "viscid/cython/null_tools.pyx":231
  *             ic2 = permuted_comps[ic, 1]
  *             ic3 = permuted_comps[ic, 2]
  *             positive_roots = 0             # <<<<<<<<<<<<<<
@@ -9763,7 +9753,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
       __pyx_v_positive_roots = 0;
 
-      /* "viscid/cython/null_tools.pyx":236
+      /* "viscid/cython/null_tools.pyx":232
  *             ic3 = permuted_comps[ic, 2]
  *             positive_roots = 0
  *             all_roots = 0             # <<<<<<<<<<<<<<
@@ -9772,7 +9762,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
       __pyx_v_all_roots = 0;
 
-      /* "viscid/cython/null_tools.pyx":239
+      /* "viscid/cython/null_tools.pyx":235
  * 
  *             # loop over each cube face
  *             for i in range(6):             # <<<<<<<<<<<<<<
@@ -9782,7 +9772,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
       for (__pyx_t_35 = 0; __pyx_t_35 < 6; __pyx_t_35+=1) {
         __pyx_v_i = __pyx_t_35;
 
-        /* "viscid/cython/null_tools.pyx":240
+        /* "viscid/cython/null_tools.pyx":236
  *             # loop over each cube face
  *             for i in range(6):
  *                 a1 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic1]             # <<<<<<<<<<<<<<
@@ -9795,7 +9785,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_39 = __pyx_v_ic1;
         __pyx_v_a1 = (*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_36 * __pyx_v_f.strides[0]) ) + __pyx_t_37 * __pyx_v_f.strides[1]) ) + __pyx_t_38 * __pyx_v_f.strides[2]) )) + __pyx_t_39)) )));
 
-        /* "viscid/cython/null_tools.pyx":241
+        /* "viscid/cython/null_tools.pyx":237
  *             for i in range(6):
  *                 a1 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic1]
  *                 b1 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic1] - a1             # <<<<<<<<<<<<<<
@@ -9808,7 +9798,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_43 = __pyx_v_ic1;
         __pyx_v_b1 = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_40 * __pyx_v_f.strides[0]) ) + __pyx_t_41 * __pyx_v_f.strides[1]) ) + __pyx_t_42 * __pyx_v_f.strides[2]) )) + __pyx_t_43)) ))) - __pyx_v_a1);
 
-        /* "viscid/cython/null_tools.pyx":242
+        /* "viscid/cython/null_tools.pyx":238
  *                 a1 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic1]
  *                 b1 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic1] - a1
  *                 c1 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic1] - a1             # <<<<<<<<<<<<<<
@@ -9821,7 +9811,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_47 = __pyx_v_ic1;
         __pyx_v_c1 = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_44 * __pyx_v_f.strides[0]) ) + __pyx_t_45 * __pyx_v_f.strides[1]) ) + __pyx_t_46 * __pyx_v_f.strides[2]) )) + __pyx_t_47)) ))) - __pyx_v_a1);
 
-        /* "viscid/cython/null_tools.pyx":243
+        /* "viscid/cython/null_tools.pyx":239
  *                 b1 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic1] - a1
  *                 c1 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic1] - a1
  *                 d1 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic1] - c1 - b1 - a1             # <<<<<<<<<<<<<<
@@ -9834,7 +9824,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_51 = __pyx_v_ic1;
         __pyx_v_d1 = ((((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_48 * __pyx_v_f.strides[0]) ) + __pyx_t_49 * __pyx_v_f.strides[1]) ) + __pyx_t_50 * __pyx_v_f.strides[2]) )) + __pyx_t_51)) ))) - __pyx_v_c1) - __pyx_v_b1) - __pyx_v_a1);
 
-        /* "viscid/cython/null_tools.pyx":245
+        /* "viscid/cython/null_tools.pyx":241
  *                 d1 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic1] - c1 - b1 - a1
  * 
  *                 a2 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic2]             # <<<<<<<<<<<<<<
@@ -9847,7 +9837,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_55 = __pyx_v_ic2;
         __pyx_v_a2 = (*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_52 * __pyx_v_f.strides[0]) ) + __pyx_t_53 * __pyx_v_f.strides[1]) ) + __pyx_t_54 * __pyx_v_f.strides[2]) )) + __pyx_t_55)) )));
 
-        /* "viscid/cython/null_tools.pyx":246
+        /* "viscid/cython/null_tools.pyx":242
  * 
  *                 a2 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic2]
  *                 b2 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic2] - a2             # <<<<<<<<<<<<<<
@@ -9860,7 +9850,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_59 = __pyx_v_ic2;
         __pyx_v_b2 = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_56 * __pyx_v_f.strides[0]) ) + __pyx_t_57 * __pyx_v_f.strides[1]) ) + __pyx_t_58 * __pyx_v_f.strides[2]) )) + __pyx_t_59)) ))) - __pyx_v_a2);
 
-        /* "viscid/cython/null_tools.pyx":247
+        /* "viscid/cython/null_tools.pyx":243
  *                 a2 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic2]
  *                 b2 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic2] - a2
  *                 c2 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic2] - a2             # <<<<<<<<<<<<<<
@@ -9873,7 +9863,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_63 = __pyx_v_ic2;
         __pyx_v_c2 = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_60 * __pyx_v_f.strides[0]) ) + __pyx_t_61 * __pyx_v_f.strides[1]) ) + __pyx_t_62 * __pyx_v_f.strides[2]) )) + __pyx_t_63)) ))) - __pyx_v_a2);
 
-        /* "viscid/cython/null_tools.pyx":248
+        /* "viscid/cython/null_tools.pyx":244
  *                 b2 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic2] - a2
  *                 c2 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic2] - a2
  *                 d2 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic2] - c2 - b2 - a2             # <<<<<<<<<<<<<<
@@ -9886,7 +9876,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_67 = __pyx_v_ic2;
         __pyx_v_d2 = ((((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_64 * __pyx_v_f.strides[0]) ) + __pyx_t_65 * __pyx_v_f.strides[1]) ) + __pyx_t_66 * __pyx_v_f.strides[2]) )) + __pyx_t_67)) ))) - __pyx_v_c2) - __pyx_v_b2) - __pyx_v_a2);
 
-        /* "viscid/cython/null_tools.pyx":250
+        /* "viscid/cython/null_tools.pyx":246
  *                 d2 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic2] - c2 - b2 - a2
  * 
  *                 a3 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic3]             # <<<<<<<<<<<<<<
@@ -9899,7 +9889,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_71 = __pyx_v_ic3;
         __pyx_v_a3 = (*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_68 * __pyx_v_f.strides[0]) ) + __pyx_t_69 * __pyx_v_f.strides[1]) ) + __pyx_t_70 * __pyx_v_f.strides[2]) )) + __pyx_t_71)) )));
 
-        /* "viscid/cython/null_tools.pyx":251
+        /* "viscid/cython/null_tools.pyx":247
  * 
  *                 a3 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic3]
  *                 b3 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic3] - a3             # <<<<<<<<<<<<<<
@@ -9912,7 +9902,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_75 = __pyx_v_ic3;
         __pyx_v_b3 = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_72 * __pyx_v_f.strides[0]) ) + __pyx_t_73 * __pyx_v_f.strides[1]) ) + __pyx_t_74 * __pyx_v_f.strides[2]) )) + __pyx_t_75)) ))) - __pyx_v_a3);
 
-        /* "viscid/cython/null_tools.pyx":252
+        /* "viscid/cython/null_tools.pyx":248
  *                 a3 = f[ix + oxa[i], iy + oya[i], iz + oza[i], ic3]
  *                 b3 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic3] - a3
  *                 c3 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic3] - a3             # <<<<<<<<<<<<<<
@@ -9925,7 +9915,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_79 = __pyx_v_ic3;
         __pyx_v_c3 = ((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_76 * __pyx_v_f.strides[0]) ) + __pyx_t_77 * __pyx_v_f.strides[1]) ) + __pyx_t_78 * __pyx_v_f.strides[2]) )) + __pyx_t_79)) ))) - __pyx_v_a3);
 
-        /* "viscid/cython/null_tools.pyx":253
+        /* "viscid/cython/null_tools.pyx":249
  *                 b3 = f[ix + oxb[i], iy + oyb[i], iz + ozb[i], ic3] - a3
  *                 c3 = f[ix + oxc[i], iy + oyc[i], iz + ozc[i], ic3] - a3
  *                 d3 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic3] - c3 - b3 - a3             # <<<<<<<<<<<<<<
@@ -9938,14 +9928,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __pyx_t_83 = __pyx_v_ic3;
         __pyx_v_d3 = ((((*((__pyx_t_5numpy_float64_t *) ( /* dim=3 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_f.data + __pyx_t_80 * __pyx_v_f.strides[0]) ) + __pyx_t_81 * __pyx_v_f.strides[1]) ) + __pyx_t_82 * __pyx_v_f.strides[2]) )) + __pyx_t_83)) ))) - __pyx_v_c3) - __pyx_v_b3) - __pyx_v_a3);
 
-        /* "viscid/cython/null_tools.pyx":255
+        /* "viscid/cython/null_tools.pyx":251
  *                 d3 = f[ix + oxd[i], iy + oyd[i], iz + ozd[i], ic3] - c3 - b3 - a3
  * 
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)             # <<<<<<<<<<<<<<
  *                 for rt1, rt2 in zip(roots1, roots2):
  *                     all_roots += 1
  */
-        __pyx_t_16 = __pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_find_roots_face(__pyx_v_a1, __pyx_v_b1, __pyx_v_c1, __pyx_v_d1, __pyx_v_a2, __pyx_v_b2, __pyx_v_c2, __pyx_v_d2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_16 = __pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_find_roots_face(__pyx_v_a1, __pyx_v_b1, __pyx_v_c1, __pyx_v_d1, __pyx_v_a2, __pyx_v_b2, __pyx_v_c2, __pyx_v_d2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_16);
         if ((likely(PyTuple_CheckExact(__pyx_t_16))) || (PyList_CheckExact(__pyx_t_16))) {
           PyObject* sequence = __pyx_t_16;
@@ -9957,7 +9947,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
           if (unlikely(size != 2)) {
             if (size > 2) __Pyx_RaiseTooManyValuesError(2);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           }
           #if CYTHON_COMPILING_IN_CPYTHON
           if (likely(PyTuple_CheckExact(sequence))) {
@@ -9970,15 +9960,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
           __Pyx_INCREF(__pyx_t_17);
           __Pyx_INCREF(__pyx_t_15);
           #else
-          __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_17);
-          __pyx_t_15 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_15 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_15);
           #endif
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         } else {
           Py_ssize_t index = -1;
-          __pyx_t_14 = PyObject_GetIter(__pyx_t_16); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_14 = PyObject_GetIter(__pyx_t_16); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_14);
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           __pyx_t_84 = Py_TYPE(__pyx_t_14)->tp_iternext;
@@ -9986,7 +9976,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
           __Pyx_GOTREF(__pyx_t_17);
           index = 1; __pyx_t_15 = __pyx_t_84(__pyx_t_14); if (unlikely(!__pyx_t_15)) goto __pyx_L9_unpacking_failed;
           __Pyx_GOTREF(__pyx_t_15);
-          if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_14), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_14), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __pyx_t_84 = NULL;
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           goto __pyx_L10_unpacking_done;
@@ -9994,7 +9984,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           __pyx_t_84 = NULL;
           if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 255; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          {__pyx_filename = __pyx_f[0]; __pyx_lineno = 251; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __pyx_L10_unpacking_done:;
         }
         __Pyx_XDECREF_SET(__pyx_v_roots1, __pyx_t_17);
@@ -10002,14 +9992,14 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __Pyx_XDECREF_SET(__pyx_v_roots2, __pyx_t_15);
         __pyx_t_15 = 0;
 
-        /* "viscid/cython/null_tools.pyx":256
+        /* "viscid/cython/null_tools.pyx":252
  * 
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
  *                 for rt1, rt2 in zip(roots1, roots2):             # <<<<<<<<<<<<<<
  *                     all_roots += 1
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
  */
-        __pyx_t_16 = PyTuple_New(2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_16 = PyTuple_New(2); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_INCREF(__pyx_v_roots1);
         __Pyx_GIVEREF(__pyx_v_roots1);
@@ -10017,16 +10007,16 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __Pyx_INCREF(__pyx_v_roots2);
         __Pyx_GIVEREF(__pyx_v_roots2);
         PyTuple_SET_ITEM(__pyx_t_16, 1, __pyx_v_roots2);
-        __pyx_t_15 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_16, NULL); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_15 = __Pyx_PyObject_Call(__pyx_builtin_zip, __pyx_t_16, NULL); if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         if (likely(PyList_CheckExact(__pyx_t_15)) || PyTuple_CheckExact(__pyx_t_15)) {
           __pyx_t_16 = __pyx_t_15; __Pyx_INCREF(__pyx_t_16); __pyx_t_85 = 0;
           __pyx_t_86 = NULL;
         } else {
-          __pyx_t_85 = -1; __pyx_t_16 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_85 = -1; __pyx_t_16 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_GOTREF(__pyx_t_16);
-          __pyx_t_86 = Py_TYPE(__pyx_t_16)->tp_iternext; if (unlikely(!__pyx_t_86)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_86 = Py_TYPE(__pyx_t_16)->tp_iternext; if (unlikely(!__pyx_t_86)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         }
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
         for (;;) {
@@ -10034,17 +10024,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
             if (likely(PyList_CheckExact(__pyx_t_16))) {
               if (__pyx_t_85 >= PyList_GET_SIZE(__pyx_t_16)) break;
               #if CYTHON_COMPILING_IN_CPYTHON
-              __pyx_t_15 = PyList_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PyList_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               #else
-              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               __Pyx_GOTREF(__pyx_t_15);
               #endif
             } else {
               if (__pyx_t_85 >= PyTuple_GET_SIZE(__pyx_t_16)) break;
               #if CYTHON_COMPILING_IN_CPYTHON
-              __pyx_t_15 = PyTuple_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PyTuple_GET_ITEM(__pyx_t_16, __pyx_t_85); __Pyx_INCREF(__pyx_t_15); __pyx_t_85++; if (unlikely(0 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               #else
-              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              __pyx_t_15 = PySequence_ITEM(__pyx_t_16, __pyx_t_85); __pyx_t_85++; if (unlikely(!__pyx_t_15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               __Pyx_GOTREF(__pyx_t_15);
               #endif
             }
@@ -10054,7 +10044,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
               PyObject* exc_type = PyErr_Occurred();
               if (exc_type) {
                 if (likely(exc_type == PyExc_StopIteration || PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-                else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+                else {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
               }
               break;
             }
@@ -10070,7 +10060,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
             if (unlikely(size != 2)) {
               if (size > 2) __Pyx_RaiseTooManyValuesError(2);
               else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-              {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+              {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             }
             #if CYTHON_COMPILING_IN_CPYTHON
             if (likely(PyTuple_CheckExact(sequence))) {
@@ -10083,15 +10073,15 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
             __Pyx_INCREF(__pyx_t_17);
             __Pyx_INCREF(__pyx_t_14);
             #else
-            __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_17 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_17);
-            __pyx_t_14 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_14 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_14);
             #endif
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
           } else {
             Py_ssize_t index = -1;
-            __pyx_t_13 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            __pyx_t_13 = PyObject_GetIter(__pyx_t_15); if (unlikely(!__pyx_t_13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __Pyx_GOTREF(__pyx_t_13);
             __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
             __pyx_t_84 = Py_TYPE(__pyx_t_13)->tp_iternext;
@@ -10099,7 +10089,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
             __Pyx_GOTREF(__pyx_t_17);
             index = 1; __pyx_t_14 = __pyx_t_84(__pyx_t_13); if (unlikely(!__pyx_t_14)) goto __pyx_L13_unpacking_failed;
             __Pyx_GOTREF(__pyx_t_14);
-            if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_13), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            if (__Pyx_IternextUnpackEndCheck(__pyx_t_84(__pyx_t_13), 2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __pyx_t_84 = NULL;
             __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
             goto __pyx_L14_unpacking_done;
@@ -10107,17 +10097,17 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
             __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
             __pyx_t_84 = NULL;
             if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+            {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
             __pyx_L14_unpacking_done:;
           }
-          __pyx_t_87 = __pyx_PyFloat_AsDouble(__pyx_t_17); if (unlikely((__pyx_t_87 == (npy_float64)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_87 = __pyx_PyFloat_AsDouble(__pyx_t_17); if (unlikely((__pyx_t_87 == (npy_float64)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_17); __pyx_t_17 = 0;
-          __pyx_t_88 = __pyx_PyFloat_AsDouble(__pyx_t_14); if (unlikely((__pyx_t_88 == (npy_float64)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 256; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+          __pyx_t_88 = __pyx_PyFloat_AsDouble(__pyx_t_14); if (unlikely((__pyx_t_88 == (npy_float64)-1) && PyErr_Occurred())) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 252; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
           __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
           __pyx_v_rt1 = __pyx_t_87;
           __pyx_v_rt2 = __pyx_t_88;
 
-          /* "viscid/cython/null_tools.pyx":257
+          /* "viscid/cython/null_tools.pyx":253
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
  *                 for rt1, rt2 in zip(roots1, roots2):
  *                     all_roots += 1             # <<<<<<<<<<<<<<
@@ -10126,7 +10116,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
           __pyx_v_all_roots = (__pyx_v_all_roots + 1);
 
-          /* "viscid/cython/null_tools.pyx":258
+          /* "viscid/cython/null_tools.pyx":254
  *                 for rt1, rt2 in zip(roots1, roots2):
  *                     all_roots += 1
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2             # <<<<<<<<<<<<<<
@@ -10135,7 +10125,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
           __pyx_v_ff3 = (((__pyx_v_a3 + (__pyx_v_b3 * __pyx_v_rt1)) + (__pyx_v_c3 * __pyx_v_rt2)) + ((__pyx_v_d3 * __pyx_v_rt1) * __pyx_v_rt2));
 
-          /* "viscid/cython/null_tools.pyx":260
+          /* "viscid/cython/null_tools.pyx":256
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
  *                     # print("!!! face root:", rt1, rt2, f3)
  *                     if ff3 > 0.0:             # <<<<<<<<<<<<<<
@@ -10145,7 +10135,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
           __pyx_t_89 = ((__pyx_v_ff3 > 0.0) != 0);
           if (__pyx_t_89) {
 
-            /* "viscid/cython/null_tools.pyx":261
+            /* "viscid/cython/null_tools.pyx":257
  *                     # print("!!! face root:", rt1, rt2, f3)
  *                     if ff3 > 0.0:
  *                         positive_roots += 1             # <<<<<<<<<<<<<<
@@ -10154,7 +10144,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
             __pyx_v_positive_roots = (__pyx_v_positive_roots + 1);
 
-            /* "viscid/cython/null_tools.pyx":260
+            /* "viscid/cython/null_tools.pyx":256
  *                     ff3 = a3 + b3 * rt1 + c3 * rt2 + d3 * rt1 * rt2
  *                     # print("!!! face root:", rt1, rt2, f3)
  *                     if ff3 > 0.0:             # <<<<<<<<<<<<<<
@@ -10164,7 +10154,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
             goto __pyx_L15;
           }
 
-          /* "viscid/cython/null_tools.pyx":262
+          /* "viscid/cython/null_tools.pyx":258
  *                     if ff3 > 0.0:
  *                         positive_roots += 1
  *                     elif ff3 == 0.0 and i % 2 == 0: # to only check 3 faces             # <<<<<<<<<<<<<<
@@ -10182,7 +10172,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
           __pyx_L16_bool_binop_done:;
           if (__pyx_t_89) {
 
-            /* "viscid/cython/null_tools.pyx":264
+            /* "viscid/cython/null_tools.pyx":260
  *                     elif ff3 == 0.0 and i % 2 == 0: # to only check 3 faces
  *                         # print("!!! null on face")
  *                         have_null = 1             # <<<<<<<<<<<<<<
@@ -10191,7 +10181,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
             __pyx_v_have_null = 1;
 
-            /* "viscid/cython/null_tools.pyx":262
+            /* "viscid/cython/null_tools.pyx":258
  *                     if ff3 > 0.0:
  *                         positive_roots += 1
  *                     elif ff3 == 0.0 and i % 2 == 0: # to only check 3 faces             # <<<<<<<<<<<<<<
@@ -10201,7 +10191,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
           }
           __pyx_L15:;
 
-          /* "viscid/cython/null_tools.pyx":256
+          /* "viscid/cython/null_tools.pyx":252
  * 
  *                 roots1, roots2 = find_roots_face(a1, b1, c1, d1, a2, b2, c2, d2)
  *                 for rt1, rt2 in zip(roots1, roots2):             # <<<<<<<<<<<<<<
@@ -10212,7 +10202,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
       }
 
-      /* "viscid/cython/null_tools.pyx":272
+      /* "viscid/cython/null_tools.pyx":268
  *             # if even number of total roots, and odd number of positive roots
  *             # OR, if there is a null on a face (have_null == True)
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:             # <<<<<<<<<<<<<<
@@ -10236,7 +10226,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
       __pyx_L19_bool_binop_done:;
       if (__pyx_t_89) {
 
-        /* "viscid/cython/null_tools.pyx":273
+        /* "viscid/cython/null_tools.pyx":269
  *             # OR, if there is a null on a face (have_null == True)
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:
  *                 have_null = 1             # <<<<<<<<<<<<<<
@@ -10245,7 +10235,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
         __pyx_v_have_null = 1;
 
-        /* "viscid/cython/null_tools.pyx":274
+        /* "viscid/cython/null_tools.pyx":270
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:
  *                 have_null = 1
  *                 break             # <<<<<<<<<<<<<<
@@ -10254,7 +10244,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  */
         goto __pyx_L6_break;
 
-        /* "viscid/cython/null_tools.pyx":272
+        /* "viscid/cython/null_tools.pyx":268
  *             # if even number of total roots, and odd number of positive roots
  *             # OR, if there is a null on a face (have_null == True)
  *             if ((positive_roots % 2 == 1) and all_roots % 2 == 0) or have_null:             # <<<<<<<<<<<<<<
@@ -10265,7 +10255,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
     }
     __pyx_L6_break:;
 
-    /* "viscid/cython/null_tools.pyx":276
+    /* "viscid/cython/null_tools.pyx":272
  *                 break
  * 
  *         if have_null:             # <<<<<<<<<<<<<<
@@ -10275,43 +10265,43 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
     __pyx_t_89 = (__pyx_v_have_null != 0);
     if (__pyx_t_89) {
 
-      /* "viscid/cython/null_tools.pyx":277
+      /* "viscid/cython/null_tools.pyx":273
  * 
  *         if have_null:
  *             null_ixs.append(ix)             # <<<<<<<<<<<<<<
  *             null_iys.append(iy)
  *             null_izs.append(iz)
  */
-      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_ix); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_ix); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 273; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_16);
-      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_ixs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 277; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_ixs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 273; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-      /* "viscid/cython/null_tools.pyx":278
+      /* "viscid/cython/null_tools.pyx":274
  *         if have_null:
  *             null_ixs.append(ix)
  *             null_iys.append(iy)             # <<<<<<<<<<<<<<
  *             null_izs.append(iz)
  *         else:
  */
-      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iy); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iy); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 274; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_16);
-      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_iys, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 278; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_iys, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 274; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-      /* "viscid/cython/null_tools.pyx":279
+      /* "viscid/cython/null_tools.pyx":275
  *             null_ixs.append(ix)
  *             null_iys.append(iy)
  *             null_izs.append(iz)             # <<<<<<<<<<<<<<
  *         else:
  *             pass
  */
-      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iz); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_16 = __Pyx_PyInt_From_int(__pyx_v_iz); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 275; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_16);
-      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_izs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_91 = __Pyx_PyList_Append(__pyx_v_null_izs, __pyx_t_16); if (unlikely(__pyx_t_91 == -1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 275; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-      /* "viscid/cython/null_tools.pyx":276
+      /* "viscid/cython/null_tools.pyx":272
  *                 break
  * 
  *         if have_null:             # <<<<<<<<<<<<<<
@@ -10321,7 +10311,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
       goto __pyx_L22;
     }
 
-    /* "viscid/cython/null_tools.pyx":281
+    /* "viscid/cython/null_tools.pyx":277
  *             null_izs.append(iz)
  *         else:
  *             pass             # <<<<<<<<<<<<<<
@@ -10333,7 +10323,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
     __pyx_L22:;
   }
 
-  /* "viscid/cython/null_tools.pyx":283
+  /* "viscid/cython/null_tools.pyx":279
  *             pass
  * 
  *     return null_ixs, null_iys, null_izs             # <<<<<<<<<<<<<<
@@ -10341,7 +10331,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
  * cdef inline find_roots_face(real_t a1, real_t b1, real_t c1, real_t d1,
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_16 = PyTuple_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 283; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_16 = PyTuple_New(3); if (unlikely(!__pyx_t_16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 279; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_16);
   __Pyx_INCREF(__pyx_v_null_ixs);
   __Pyx_GIVEREF(__pyx_v_null_ixs);
@@ -10356,7 +10346,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   __pyx_t_16 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":189
+  /* "viscid/cython/null_tools.pyx":185
  *     return ixs, iys, izs
  * 
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,             # <<<<<<<<<<<<<<
@@ -10388,7 +10378,7 @@ static PyObject *__pyx_pf_6viscid_6cython_10null_tools_22_py_find_null_cells_fro
   return __pyx_r;
 }
 
-/* "viscid/cython/null_tools.pyx":285
+/* "viscid/cython/null_tools.pyx":281
  *     return null_ixs, null_iys, null_izs
  * 
  * cdef inline find_roots_face(real_t a1, real_t b1, real_t c1, real_t d1,             # <<<<<<<<<<<<<<
@@ -10420,7 +10410,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_0find_roots_face", 0);
 
-  /* "viscid/cython/null_tools.pyx":305
+  /* "viscid/cython/null_tools.pyx":301
  *     # substitute back into f1(xi, yi) = 0 to find yi
  *     cdef real_t a, b, c
  *     a = b1 * d2 - d1 * b2             # <<<<<<<<<<<<<<
@@ -10429,7 +10419,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
  */
   __pyx_v_a = ((__pyx_v_b1 * __pyx_v_d2) - (__pyx_v_d1 * __pyx_v_b2));
 
-  /* "viscid/cython/null_tools.pyx":306
+  /* "viscid/cython/null_tools.pyx":302
  *     cdef real_t a, b, c
  *     a = b1 * d2 - d1 * b2
  *     b = (a1 * d2 - d1 * a2) + (b1 * c2 - c1 * b2)             # <<<<<<<<<<<<<<
@@ -10438,7 +10428,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
  */
   __pyx_v_b = (((__pyx_v_a1 * __pyx_v_d2) - (__pyx_v_d1 * __pyx_v_a2)) + ((__pyx_v_b1 * __pyx_v_c2) - (__pyx_v_c1 * __pyx_v_b2)));
 
-  /* "viscid/cython/null_tools.pyx":307
+  /* "viscid/cython/null_tools.pyx":303
  *     a = b1 * d2 - d1 * b2
  *     b = (a1 * d2 - d1 * a2) + (b1 * c2 - c1 * b2)
  *     c = a1 * c2 - c1 * a2             # <<<<<<<<<<<<<<
@@ -10447,7 +10437,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
  */
   __pyx_v_c = ((__pyx_v_a1 * __pyx_v_c2) - (__pyx_v_c1 * __pyx_v_a2));
 
-  /* "viscid/cython/null_tools.pyx":309
+  /* "viscid/cython/null_tools.pyx":305
  *     c = a1 * c2 - c1 * a2
  * 
  *     if a == 0.0:             # <<<<<<<<<<<<<<
@@ -10457,7 +10447,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
   __pyx_t_1 = ((__pyx_v_a == 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "viscid/cython/null_tools.pyx":310
+    /* "viscid/cython/null_tools.pyx":306
  * 
  *     if a == 0.0:
  *         if b != 0.0:             # <<<<<<<<<<<<<<
@@ -10467,21 +10457,21 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
     __pyx_t_1 = ((__pyx_v_b != 0.0) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/cython/null_tools.pyx":311
+      /* "viscid/cython/null_tools.pyx":307
  *     if a == 0.0:
  *         if b != 0.0:
  *             roots_x = np.array([-c / b])             # <<<<<<<<<<<<<<
  *             # print("::", roots_x)
  *         else:
  */
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyFloat_FromDouble(((-__pyx_v_c) / __pyx_v_b)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyFloat_FromDouble(((-__pyx_v_c) / __pyx_v_b)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = PyList_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = PyList_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GIVEREF(__pyx_t_3);
       PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_3);
@@ -10497,17 +10487,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_3) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
         __Pyx_GIVEREF(__pyx_t_5);
         PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_5);
         __pyx_t_5 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -10515,7 +10505,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
       __pyx_v_roots_x = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":310
+      /* "viscid/cython/null_tools.pyx":306
  * 
  *     if a == 0.0:
  *         if b != 0.0:             # <<<<<<<<<<<<<<
@@ -10525,7 +10515,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
       goto __pyx_L4;
     }
 
-    /* "viscid/cython/null_tools.pyx":314
+    /* "viscid/cython/null_tools.pyx":310
  *             # print("::", roots_x)
  *         else:
  *             roots_x = np.array([])             # <<<<<<<<<<<<<<
@@ -10533,12 +10523,12 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
  *     else:
  */
     /*else*/ {
-      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_5 = NULL;
       if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -10551,17 +10541,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_5) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5); __pyx_t_5 = NULL;
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       }
@@ -10571,7 +10561,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
     }
     __pyx_L4:;
 
-    /* "viscid/cython/null_tools.pyx":309
+    /* "viscid/cython/null_tools.pyx":305
  *     c = a1 * c2 - c1 * a2
  * 
  *     if a == 0.0:             # <<<<<<<<<<<<<<
@@ -10581,7 +10571,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
     goto __pyx_L3;
   }
 
-  /* "viscid/cython/null_tools.pyx":317
+  /* "viscid/cython/null_tools.pyx":313
  *             # print("::", roots_x)
  *     else:
  *         desc = b**2 - (4.0 * a * c)             # <<<<<<<<<<<<<<
@@ -10591,7 +10581,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
   /*else*/ {
     __pyx_v_desc = (powf(__pyx_v_b, 2.0) - ((4.0 * __pyx_v_a) * __pyx_v_c));
 
-    /* "viscid/cython/null_tools.pyx":318
+    /* "viscid/cython/null_tools.pyx":314
  *     else:
  *         desc = b**2 - (4.0 * a * c)
  *         if desc > 0.0:             # <<<<<<<<<<<<<<
@@ -10601,21 +10591,21 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
     __pyx_t_1 = ((__pyx_v_desc > 0.0) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/cython/null_tools.pyx":320
+      /* "viscid/cython/null_tools.pyx":316
  *         if desc > 0.0:
  *             # il y a deux solutions
  *             rootx1 = (-b + np.sqrt(desc)) / (2.0 * a)             # <<<<<<<<<<<<<<
  *             rootx2 = (-b - np.sqrt(desc)) / (2.0 * a)
  *             roots_x = np.array([rootx1, rootx2])
  */
-      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyFloat_FromDouble(__pyx_v_desc); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyFloat_FromDouble(__pyx_v_desc); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_t_5 = NULL;
       if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -10628,49 +10618,49 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_5) {
-        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_GOTREF(__pyx_t_6);
       } else {
-        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_5); __pyx_t_5 = NULL;
         __Pyx_GIVEREF(__pyx_t_3);
         PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_3);
         __pyx_t_3 = 0;
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_7, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_v_rootx1 = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":321
+      /* "viscid/cython/null_tools.pyx":317
  *             # il y a deux solutions
  *             rootx1 = (-b + np.sqrt(desc)) / (2.0 * a)
  *             rootx2 = (-b - np.sqrt(desc)) / (2.0 * a)             # <<<<<<<<<<<<<<
  *             roots_x = np.array([rootx1, rootx2])
  *             # print("::", roots_x)
  */
-      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyFloat_FromDouble(__pyx_v_desc); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyFloat_FromDouble(__pyx_v_desc); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_3 = NULL;
       if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -10683,47 +10673,47 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_4); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_4); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_6);
       } else {
-        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_5, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_5, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       }
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = PyNumber_Subtract(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_7 = PyNumber_Subtract(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_v_rootx2 = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":322
+      /* "viscid/cython/null_tools.pyx":318
  *             rootx1 = (-b + np.sqrt(desc)) / (2.0 * a)
  *             rootx2 = (-b - np.sqrt(desc)) / (2.0 * a)
  *             roots_x = np.array([rootx1, rootx2])             # <<<<<<<<<<<<<<
  *             # print("::", roots_x)
  *         elif desc == 0.0:
  */
-      __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_array); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_array); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_v_rootx1);
       __Pyx_GIVEREF(__pyx_v_rootx1);
@@ -10742,17 +10732,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_5) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_5); __pyx_t_5 = NULL;
         __Pyx_GIVEREF(__pyx_t_6);
         PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_t_6);
         __pyx_t_6 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
@@ -10760,7 +10750,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
       __pyx_v_roots_x = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":318
+      /* "viscid/cython/null_tools.pyx":314
  *     else:
  *         desc = b**2 - (4.0 * a * c)
  *         if desc > 0.0:             # <<<<<<<<<<<<<<
@@ -10770,7 +10760,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
       goto __pyx_L5;
     }
 
-    /* "viscid/cython/null_tools.pyx":324
+    /* "viscid/cython/null_tools.pyx":320
  *             roots_x = np.array([rootx1, rootx2])
  *             # print("::", roots_x)
  *         elif desc == 0.0:             # <<<<<<<<<<<<<<
@@ -10780,21 +10770,21 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
     __pyx_t_1 = ((__pyx_v_desc == 0.0) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/cython/null_tools.pyx":326
+      /* "viscid/cython/null_tools.pyx":322
  *         elif desc == 0.0:
  *             # il y a seulment une solution
  *             roots_x = np.array([-b / (2.0 * a)])             # <<<<<<<<<<<<<<
  *             # print("::", roots_x)
  *         else:
  */
-      __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_7 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = PyFloat_FromDouble(((-__pyx_v_b) / (2.0 * __pyx_v_a))); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_7 = PyFloat_FromDouble(((-__pyx_v_b) / (2.0 * __pyx_v_a))); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_6 = PyList_New(1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyList_New(1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_7);
       PyList_SET_ITEM(__pyx_t_6, 0, __pyx_t_7);
@@ -10810,17 +10800,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_7) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_GIVEREF(__pyx_t_7); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_7); __pyx_t_7 = NULL;
         __Pyx_GIVEREF(__pyx_t_6);
         PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_6);
         __pyx_t_6 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       }
@@ -10828,7 +10818,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
       __pyx_v_roots_x = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":324
+      /* "viscid/cython/null_tools.pyx":320
  *             roots_x = np.array([rootx1, rootx2])
  *             # print("::", roots_x)
  *         elif desc == 0.0:             # <<<<<<<<<<<<<<
@@ -10838,7 +10828,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
       goto __pyx_L5;
     }
 
-    /* "viscid/cython/null_tools.pyx":329
+    /* "viscid/cython/null_tools.pyx":325
  *             # print("::", roots_x)
  *         else:
  *             roots_x = np.array([])             # <<<<<<<<<<<<<<
@@ -10846,12 +10836,12 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
  * 
  */
     /*else*/ {
-      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_6 = NULL;
       if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_5))) {
@@ -10864,17 +10854,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_6) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_6); __pyx_t_6 = NULL;
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
@@ -10886,120 +10876,120 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
   }
   __pyx_L3:;
 
-  /* "viscid/cython/null_tools.pyx":332
+  /* "viscid/cython/null_tools.pyx":328
  *             # print("::", roots_x)
  * 
  *     roots_y = - (a1 + b1 * roots_x) / (c1 + d1 * roots_x)             # <<<<<<<<<<<<<<
  * 
  *     # remove roots that are outside the box
  */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_a1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_a1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_b1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_b1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_v_roots_x); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_v_roots_x); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_t_7); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyNumber_Add(__pyx_t_2, __pyx_t_7); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = PyNumber_Negative(__pyx_t_5); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyNumber_Negative(__pyx_t_5); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_c1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyFloat_FromDouble(__pyx_v_c1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_d1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_d1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_v_roots_x); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_v_roots_x); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyNumber_Add(__pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_7, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_roots_y = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/cython/null_tools.pyx":335
+  /* "viscid/cython/null_tools.pyx":331
  * 
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &             # <<<<<<<<<<<<<<
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]
  */
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_0_0, Py_GE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_1_0, Py_LE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_7 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_0_0, Py_GE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_1_0, Py_LE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":336
+  /* "viscid/cython/null_tools.pyx":332
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &
  *             (roots_y > 0.0) & (roots_y < 1.0))             # <<<<<<<<<<<<<<
  *     roots_x = roots_x[keep]
  *     roots_y = roots_y[keep]
  */
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":335
+  /* "viscid/cython/null_tools.pyx":331
  * 
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &             # <<<<<<<<<<<<<<
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]
  */
-  __pyx_t_4 = PyNumber_And(__pyx_t_7, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyNumber_And(__pyx_t_7, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":336
+  /* "viscid/cython/null_tools.pyx":332
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &
  *             (roots_y > 0.0) & (roots_y < 1.0))             # <<<<<<<<<<<<<<
  *     roots_x = roots_x[keep]
  *     roots_y = roots_y[keep]
  */
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_1_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_7 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_1_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_keep = __pyx_t_7;
   __pyx_t_7 = 0;
 
-  /* "viscid/cython/null_tools.pyx":337
+  /* "viscid/cython/null_tools.pyx":333
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]             # <<<<<<<<<<<<<<
  *     roots_y = roots_y[keep]
  * 
  */
-  __pyx_t_7 = PyObject_GetItem(__pyx_v_roots_x, __pyx_v_keep); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 337; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_7 = PyObject_GetItem(__pyx_v_roots_x, __pyx_v_keep); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 333; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF_SET(__pyx_v_roots_x, __pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "viscid/cython/null_tools.pyx":338
+  /* "viscid/cython/null_tools.pyx":334
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]
  *     roots_y = roots_y[keep]             # <<<<<<<<<<<<<<
  * 
  *     return roots_x, roots_y
  */
-  __pyx_t_7 = PyObject_GetItem(__pyx_v_roots_y, __pyx_v_keep); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 338; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_7 = PyObject_GetItem(__pyx_v_roots_y, __pyx_v_keep); if (unlikely(__pyx_t_7 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 334; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF_SET(__pyx_v_roots_y, __pyx_t_7);
   __pyx_t_7 = 0;
 
-  /* "viscid/cython/null_tools.pyx":340
+  /* "viscid/cython/null_tools.pyx":336
  *     roots_y = roots_y[keep]
  * 
  *     return roots_x, roots_y             # <<<<<<<<<<<<<<
@@ -11007,7 +10997,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
  * ##
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 340; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_INCREF(__pyx_v_roots_x);
   __Pyx_GIVEREF(__pyx_v_roots_x);
@@ -11019,7 +11009,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_10null_tools_
   __pyx_t_7 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":285
+  /* "viscid/cython/null_tools.pyx":281
  *     return null_ixs, null_iys, null_izs
  * 
  * cdef inline find_roots_face(real_t a1, real_t b1, real_t c1, real_t d1,             # <<<<<<<<<<<<<<
@@ -11071,7 +11061,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__pyx_fuse_1find_roots_face", 0);
 
-  /* "viscid/cython/null_tools.pyx":305
+  /* "viscid/cython/null_tools.pyx":301
  *     # substitute back into f1(xi, yi) = 0 to find yi
  *     cdef real_t a, b, c
  *     a = b1 * d2 - d1 * b2             # <<<<<<<<<<<<<<
@@ -11080,7 +11070,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
  */
   __pyx_v_a = ((__pyx_v_b1 * __pyx_v_d2) - (__pyx_v_d1 * __pyx_v_b2));
 
-  /* "viscid/cython/null_tools.pyx":306
+  /* "viscid/cython/null_tools.pyx":302
  *     cdef real_t a, b, c
  *     a = b1 * d2 - d1 * b2
  *     b = (a1 * d2 - d1 * a2) + (b1 * c2 - c1 * b2)             # <<<<<<<<<<<<<<
@@ -11089,7 +11079,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
  */
   __pyx_v_b = (((__pyx_v_a1 * __pyx_v_d2) - (__pyx_v_d1 * __pyx_v_a2)) + ((__pyx_v_b1 * __pyx_v_c2) - (__pyx_v_c1 * __pyx_v_b2)));
 
-  /* "viscid/cython/null_tools.pyx":307
+  /* "viscid/cython/null_tools.pyx":303
  *     a = b1 * d2 - d1 * b2
  *     b = (a1 * d2 - d1 * a2) + (b1 * c2 - c1 * b2)
  *     c = a1 * c2 - c1 * a2             # <<<<<<<<<<<<<<
@@ -11098,7 +11088,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
  */
   __pyx_v_c = ((__pyx_v_a1 * __pyx_v_c2) - (__pyx_v_c1 * __pyx_v_a2));
 
-  /* "viscid/cython/null_tools.pyx":309
+  /* "viscid/cython/null_tools.pyx":305
  *     c = a1 * c2 - c1 * a2
  * 
  *     if a == 0.0:             # <<<<<<<<<<<<<<
@@ -11108,7 +11098,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
   __pyx_t_1 = ((__pyx_v_a == 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "viscid/cython/null_tools.pyx":310
+    /* "viscid/cython/null_tools.pyx":306
  * 
  *     if a == 0.0:
  *         if b != 0.0:             # <<<<<<<<<<<<<<
@@ -11118,21 +11108,21 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
     __pyx_t_1 = ((__pyx_v_b != 0.0) != 0);
     if (__pyx_t_1) {
 
-      /* "viscid/cython/null_tools.pyx":311
+      /* "viscid/cython/null_tools.pyx":307
  *     if a == 0.0:
  *         if b != 0.0:
  *             roots_x = np.array([-c / b])             # <<<<<<<<<<<<<<
  *             # print("::", roots_x)
  *         else:
  */
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyFloat_FromDouble(((-__pyx_v_c) / __pyx_v_b)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = PyFloat_FromDouble(((-__pyx_v_c) / __pyx_v_b)); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_5 = PyList_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = PyList_New(1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GIVEREF(__pyx_t_3);
       PyList_SET_ITEM(__pyx_t_5, 0, __pyx_t_3);
@@ -11148,17 +11138,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_3) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_5); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = PyTuple_New(1+1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3); __pyx_t_3 = NULL;
         __Pyx_GIVEREF(__pyx_t_5);
         PyTuple_SET_ITEM(__pyx_t_6, 0+1, __pyx_t_5);
         __pyx_t_5 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 311; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 307; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       }
@@ -11166,7 +11156,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
       __pyx_v_roots_x = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":310
+      /* "viscid/cython/null_tools.pyx":306
  * 
  *     if a == 0.0:
  *         if b != 0.0:             # <<<<<<<<<<<<<<
@@ -11176,7 +11166,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
       goto __pyx_L4;
     }
 
-    /* "viscid/cython/null_tools.pyx":314
+    /* "viscid/cython/null_tools.pyx":310
  *             # print("::", roots_x)
  *         else:
  *             roots_x = np.array([])             # <<<<<<<<<<<<<<
@@ -11184,12 +11174,12 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
  *     else:
  */
     /*else*/ {
-      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_5 = NULL;
       if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -11202,17 +11192,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_5) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5); __pyx_t_5 = NULL;
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 310; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       }
@@ -11222,7 +11212,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
     }
     __pyx_L4:;
 
-    /* "viscid/cython/null_tools.pyx":309
+    /* "viscid/cython/null_tools.pyx":305
  *     c = a1 * c2 - c1 * a2
  * 
  *     if a == 0.0:             # <<<<<<<<<<<<<<
@@ -11232,7 +11222,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
     goto __pyx_L3;
   }
 
-  /* "viscid/cython/null_tools.pyx":317
+  /* "viscid/cython/null_tools.pyx":313
  *             # print("::", roots_x)
  *     else:
  *         desc = b**2 - (4.0 * a * c)             # <<<<<<<<<<<<<<
@@ -11240,35 +11230,35 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
  *             # il y a deux solutions
  */
   /*else*/ {
-    __pyx_t_2 = PyFloat_FromDouble((pow(__pyx_v_b, 2.0) - ((4.0 * __pyx_v_a) * __pyx_v_c))); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyFloat_FromDouble((pow(__pyx_v_b, 2.0) - ((4.0 * __pyx_v_a) * __pyx_v_c))); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 313; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_v_desc = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "viscid/cython/null_tools.pyx":318
+    /* "viscid/cython/null_tools.pyx":314
  *     else:
  *         desc = b**2 - (4.0 * a * c)
  *         if desc > 0.0:             # <<<<<<<<<<<<<<
  *             # il y a deux solutions
  *             rootx1 = (-b + np.sqrt(desc)) / (2.0 * a)
  */
-    __pyx_t_2 = PyObject_RichCompare(__pyx_v_desc, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = PyObject_RichCompare(__pyx_v_desc, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 314; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (__pyx_t_1) {
 
-      /* "viscid/cython/null_tools.pyx":320
+      /* "viscid/cython/null_tools.pyx":316
  *         if desc > 0.0:
  *             # il y a deux solutions
  *             rootx1 = (-b + np.sqrt(desc)) / (2.0 * a)             # <<<<<<<<<<<<<<
  *             rootx2 = (-b - np.sqrt(desc)) / (2.0 * a)
  *             roots_x = np.array([rootx1, rootx2])
  */
-      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_3 = NULL;
@@ -11282,45 +11272,45 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_3) {
-        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_desc); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_desc); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
       } else {
-        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_3); __pyx_t_3 = NULL;
         __Pyx_INCREF(__pyx_v_desc);
         __Pyx_GIVEREF(__pyx_v_desc);
         PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_v_desc);
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 316; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_v_rootx1 = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":321
+      /* "viscid/cython/null_tools.pyx":317
  *             # il y a deux solutions
  *             rootx1 = (-b + np.sqrt(desc)) / (2.0 * a)
  *             rootx2 = (-b - np.sqrt(desc)) / (2.0 * a)             # <<<<<<<<<<<<<<
  *             roots_x = np.array([rootx1, rootx2])
  *             # print("::", roots_x)
  */
-      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = PyFloat_FromDouble((-__pyx_v_b)); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_sqrt); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_4 = NULL;
@@ -11334,46 +11324,46 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_4) {
-        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_desc); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_desc); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
       } else {
-        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4); __pyx_t_4 = NULL;
         __Pyx_INCREF(__pyx_v_desc);
         __Pyx_GIVEREF(__pyx_v_desc);
         PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_v_desc);
-        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_3, NULL); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       }
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Subtract(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = PyNumber_Subtract(__pyx_t_2, __pyx_t_6); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyFloat_FromDouble((2.0 * __pyx_v_a)); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 321; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 317; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_v_rootx2 = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":322
+      /* "viscid/cython/null_tools.pyx":318
  *             rootx1 = (-b + np.sqrt(desc)) / (2.0 * a)
  *             rootx2 = (-b - np.sqrt(desc)) / (2.0 * a)
  *             roots_x = np.array([rootx1, rootx2])             # <<<<<<<<<<<<<<
  *             # print("::", roots_x)
  *         elif desc == 0.0:
  */
-      __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_array); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_array); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyList_New(2); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_v_rootx1);
       __Pyx_GIVEREF(__pyx_v_rootx1);
@@ -11392,17 +11382,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_3) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_4 = PyTuple_New(1+1); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_3); PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3); __pyx_t_3 = NULL;
         __Pyx_GIVEREF(__pyx_t_6);
         PyTuple_SET_ITEM(__pyx_t_4, 0+1, __pyx_t_6);
         __pyx_t_6 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_4, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 318; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
@@ -11410,7 +11400,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
       __pyx_v_roots_x = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":318
+      /* "viscid/cython/null_tools.pyx":314
  *     else:
  *         desc = b**2 - (4.0 * a * c)
  *         if desc > 0.0:             # <<<<<<<<<<<<<<
@@ -11420,34 +11410,34 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
       goto __pyx_L5;
     }
 
-    /* "viscid/cython/null_tools.pyx":324
+    /* "viscid/cython/null_tools.pyx":320
  *             roots_x = np.array([rootx1, rootx2])
  *             # print("::", roots_x)
  *         elif desc == 0.0:             # <<<<<<<<<<<<<<
  *             # il y a seulment une solution
  *             roots_x = np.array([-b / (2.0 * a)])
  */
-    __pyx_t_2 = __Pyx_PyFloat_EqObjC(__pyx_v_desc, __pyx_float_0_0, 0.0, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 324; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_2 = __Pyx_PyFloat_EqObjC(__pyx_v_desc, __pyx_float_0_0, 0.0, 0); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 324; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_1 < 0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 320; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (__pyx_t_1) {
 
-      /* "viscid/cython/null_tools.pyx":326
+      /* "viscid/cython/null_tools.pyx":322
  *         elif desc == 0.0:
  *             # il y a seulment une solution
  *             roots_x = np.array([-b / (2.0 * a)])             # <<<<<<<<<<<<<<
  *             # print("::", roots_x)
  *         else:
  */
-      __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_array); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyFloat_FromDouble(((-__pyx_v_b) / (2.0 * __pyx_v_a))); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_5 = PyFloat_FromDouble(((-__pyx_v_b) / (2.0 * __pyx_v_a))); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = PyList_New(1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_6 = PyList_New(1); if (unlikely(!__pyx_t_6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_5);
       PyList_SET_ITEM(__pyx_t_6, 0, __pyx_t_5);
@@ -11463,17 +11453,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_5) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_3 = PyTuple_New(1+1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_5); __pyx_t_5 = NULL;
         __Pyx_GIVEREF(__pyx_t_6);
         PyTuple_SET_ITEM(__pyx_t_3, 0+1, __pyx_t_6);
         __pyx_t_6 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 326; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 322; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       }
@@ -11481,7 +11471,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
       __pyx_v_roots_x = __pyx_t_2;
       __pyx_t_2 = 0;
 
-      /* "viscid/cython/null_tools.pyx":324
+      /* "viscid/cython/null_tools.pyx":320
  *             roots_x = np.array([rootx1, rootx2])
  *             # print("::", roots_x)
  *         elif desc == 0.0:             # <<<<<<<<<<<<<<
@@ -11491,7 +11481,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
       goto __pyx_L5;
     }
 
-    /* "viscid/cython/null_tools.pyx":329
+    /* "viscid/cython/null_tools.pyx":325
  *             # print("::", roots_x)
  *         else:
  *             roots_x = np.array([])             # <<<<<<<<<<<<<<
@@ -11499,12 +11489,12 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
  * 
  */
     /*else*/ {
-      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_array); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+      __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_t_6 = NULL;
       if (CYTHON_COMPILING_IN_CPYTHON && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -11517,17 +11507,17 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
         }
       }
       if (!__pyx_t_6) {
-        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __Pyx_GOTREF(__pyx_t_2);
       } else {
-        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_5 = PyTuple_New(1+1); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_5);
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6); __pyx_t_6 = NULL;
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_5, 0+1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 329; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 325; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       }
@@ -11539,120 +11529,120 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
   }
   __pyx_L3:;
 
-  /* "viscid/cython/null_tools.pyx":332
+  /* "viscid/cython/null_tools.pyx":328
  *             # print("::", roots_x)
  * 
  *     roots_y = - (a1 + b1 * roots_x) / (c1 + d1 * roots_x)             # <<<<<<<<<<<<<<
  * 
  *     # remove roots that are outside the box
  */
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_a1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_a1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_b1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_b1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_5 = PyNumber_Multiply(__pyx_t_3, __pyx_v_roots_x); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyNumber_Multiply(__pyx_t_3, __pyx_v_roots_x); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyNumber_Add(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Negative(__pyx_t_3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyNumber_Negative(__pyx_t_3); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_c1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_c1); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_d1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyFloat_FromDouble(__pyx_v_d1); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_v_roots_x); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_v_roots_x); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyNumber_Add(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 328; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_roots_y = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "viscid/cython/null_tools.pyx":335
+  /* "viscid/cython/null_tools.pyx":331
  * 
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &             # <<<<<<<<<<<<<<
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]
  */
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_0_0, Py_GE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_1_0, Py_LE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_5 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_0_0, Py_GE); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_x, __pyx_float_1_0, Py_LE); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":336
+  /* "viscid/cython/null_tools.pyx":332
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &
  *             (roots_y > 0.0) & (roots_y < 1.0))             # <<<<<<<<<<<<<<
  *     roots_x = roots_x[keep]
  *     roots_y = roots_y[keep]
  */
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_0_0, Py_GT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":335
+  /* "viscid/cython/null_tools.pyx":331
  * 
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &             # <<<<<<<<<<<<<<
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]
  */
-  __pyx_t_4 = PyNumber_And(__pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 335; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = PyNumber_And(__pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 331; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":336
+  /* "viscid/cython/null_tools.pyx":332
  *     # remove roots that are outside the box
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &
  *             (roots_y > 0.0) & (roots_y < 1.0))             # <<<<<<<<<<<<<<
  *     roots_x = roots_x[keep]
  *     roots_y = roots_y[keep]
  */
-  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_1_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_t_5 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyObject_RichCompare(__pyx_v_roots_y, __pyx_float_1_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyNumber_And(__pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 332; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_keep = __pyx_t_5;
   __pyx_t_5 = 0;
 
-  /* "viscid/cython/null_tools.pyx":337
+  /* "viscid/cython/null_tools.pyx":333
  *     keep = ((roots_x >= 0.0) & (roots_x <= 1.0) &
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]             # <<<<<<<<<<<<<<
  *     roots_y = roots_y[keep]
  * 
  */
-  __pyx_t_5 = PyObject_GetItem(__pyx_v_roots_x, __pyx_v_keep); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 337; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_5 = PyObject_GetItem(__pyx_v_roots_x, __pyx_v_keep); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 333; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF_SET(__pyx_v_roots_x, __pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "viscid/cython/null_tools.pyx":338
+  /* "viscid/cython/null_tools.pyx":334
  *             (roots_y > 0.0) & (roots_y < 1.0))
  *     roots_x = roots_x[keep]
  *     roots_y = roots_y[keep]             # <<<<<<<<<<<<<<
  * 
  *     return roots_x, roots_y
  */
-  __pyx_t_5 = PyObject_GetItem(__pyx_v_roots_y, __pyx_v_keep); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 338; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
+  __pyx_t_5 = PyObject_GetItem(__pyx_v_roots_y, __pyx_v_keep); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 334; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF_SET(__pyx_v_roots_y, __pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "viscid/cython/null_tools.pyx":340
+  /* "viscid/cython/null_tools.pyx":336
  *     roots_y = roots_y[keep]
  * 
  *     return roots_x, roots_y             # <<<<<<<<<<<<<<
@@ -11660,7 +11650,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
  * ##
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 340; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_5 = PyTuple_New(2); if (unlikely(!__pyx_t_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 336; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_INCREF(__pyx_v_roots_x);
   __Pyx_GIVEREF(__pyx_v_roots_x);
@@ -11672,7 +11662,7 @@ static CYTHON_INLINE PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_10null_tools_
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "viscid/cython/null_tools.pyx":285
+  /* "viscid/cython/null_tools.pyx":281
  *     return null_ixs, null_iys, null_izs
  * 
  * cdef inline find_roots_face(real_t a1, real_t b1, real_t c1, real_t d1,             # <<<<<<<<<<<<<<
@@ -26095,13 +26085,13 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_a1, __pyx_k_a1, sizeof(__pyx_k_a1), 0, 0, 1, 1},
   {&__pyx_n_s_a2, __pyx_k_a2, sizeof(__pyx_k_a2), 0, 0, 1, 1},
   {&__pyx_n_s_a3, __pyx_k_a3, sizeof(__pyx_k_a3), 0, 0, 1, 1},
-  {&__pyx_n_s_abs, __pyx_k_abs, sizeof(__pyx_k_abs), 0, 0, 1, 1},
   {&__pyx_n_s_all_roots, __pyx_k_all_roots, sizeof(__pyx_k_all_roots), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_args, __pyx_k_args, sizeof(__pyx_k_args), 0, 0, 1, 1},
   {&__pyx_n_s_array, __pyx_k_array, sizeof(__pyx_k_array), 0, 0, 1, 1},
   {&__pyx_n_s_as_interlaced, __pyx_k_as_interlaced, sizeof(__pyx_k_as_interlaced), 0, 0, 1, 1},
   {&__pyx_n_s_astype, __pyx_k_astype, sizeof(__pyx_k_astype), 0, 0, 1, 1},
+  {&__pyx_n_s_atol, __pyx_k_atol, sizeof(__pyx_k_atol), 0, 0, 1, 1},
   {&__pyx_n_s_b, __pyx_k_b, sizeof(__pyx_k_b), 0, 0, 1, 1},
   {&__pyx_n_s_b1, __pyx_k_b1, sizeof(__pyx_k_b1), 0, 0, 1, 1},
   {&__pyx_n_s_b2, __pyx_k_b2, sizeof(__pyx_k_b2), 0, 0, 1, 1},
@@ -26137,7 +26127,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
   {&__pyx_n_s_end, __pyx_k_end, sizeof(__pyx_k_end), 0, 0, 1, 1},
   {&__pyx_n_s_enumerate, __pyx_k_enumerate, sizeof(__pyx_k_enumerate), 0, 0, 1, 1},
-  {&__pyx_n_s_eps, __pyx_k_eps, sizeof(__pyx_k_eps), 0, 0, 1, 1},
   {&__pyx_n_s_error, __pyx_k_error, sizeof(__pyx_k_error), 0, 0, 1, 1},
   {&__pyx_n_s_f, __pyx_k_f, sizeof(__pyx_k_f), 0, 0, 1, 1},
   {&__pyx_n_s_ff3, __pyx_k_ff3, sizeof(__pyx_k_ff3), 0, 0, 1, 1},
@@ -26169,6 +26158,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_inds, __pyx_k_inds, sizeof(__pyx_k_inds), 0, 0, 1, 1},
   {&__pyx_n_s_int32, __pyx_k_int32, sizeof(__pyx_k_int32), 0, 0, 1, 1},
   {&__pyx_n_s_int8, __pyx_k_int8, sizeof(__pyx_k_int8), 0, 0, 1, 1},
+  {&__pyx_n_s_isclose, __pyx_k_isclose, sizeof(__pyx_k_isclose), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
   {&__pyx_n_s_itertools, __pyx_k_itertools, sizeof(__pyx_k_itertools), 0, 0, 1, 1},
@@ -26238,6 +26228,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_roots2, __pyx_k_roots2, sizeof(__pyx_k_roots2), 0, 0, 1, 1},
   {&__pyx_n_s_rt1, __pyx_k_rt1, sizeof(__pyx_k_rt1), 0, 0, 1, 1},
   {&__pyx_n_s_rt2, __pyx_k_rt2, sizeof(__pyx_k_rt2), 0, 0, 1, 1},
+  {&__pyx_n_s_rtol, __pyx_k_rtol, sizeof(__pyx_k_rtol), 0, 0, 1, 1},
   {&__pyx_n_s_s000, __pyx_k_s000, sizeof(__pyx_k_s000), 0, 0, 1, 1},
   {&__pyx_n_s_s001, __pyx_k_s001, sizeof(__pyx_k_s001), 0, 0, 1, 1},
   {&__pyx_n_s_s010, __pyx_k_s010, sizeof(__pyx_k_s010), 0, 0, 1, 1},
@@ -26279,12 +26270,12 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_zip = __Pyx_GetBuiltinName(__pyx_n_s_zip); if (!__pyx_builtin_zip) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 58; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 63; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 148; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_zip = __Pyx_GetBuiltinName(__pyx_n_s_zip); if (!__pyx_builtin_zip) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 59; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 64; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 144; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 218; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_builtin_RuntimeError = __Pyx_GetBuiltinName(__pyx_n_s_RuntimeError); if (!__pyx_builtin_RuntimeError) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 799; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 144; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -26300,181 +26291,181 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "viscid/cython/null_tools.pyx":30
+  /* "viscid/cython/null_tools.pyx":31
  *     null_inds, null_pts = find_nulls(fld, ibound=ibound)
- *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, eps=eps)
+ *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, rtol=rtol, atol=atol)
  *     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]             # <<<<<<<<<<<<<<
  *     Opts, Apts, Bpts = null_pts[:, Oi], null_pts[:, Ai], null_pts[:, Bi]
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  */
-  __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
-  __pyx_slice__2 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__2 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__2);
   __Pyx_GIVEREF(__pyx_slice__2);
-  __pyx_slice__3 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 30; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__3 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__3);
   __Pyx_GIVEREF(__pyx_slice__3);
 
-  /* "viscid/cython/null_tools.pyx":31
- *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, eps=eps)
+  /* "viscid/cython/null_tools.pyx":32
+ *     Oi, Ai, Bi = _classify_nulls(fld, null_inds, rtol=rtol, atol=atol)
  *     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]
  *     Opts, Apts, Bpts = null_pts[:, Oi], null_pts[:, Ai], null_pts[:, Bi]             # <<<<<<<<<<<<<<
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  * 
  */
-  __pyx_slice__4 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__4 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__4);
   __Pyx_GIVEREF(__pyx_slice__4);
-  __pyx_slice__5 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__5 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__5);
   __Pyx_GIVEREF(__pyx_slice__5);
-  __pyx_slice__6 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 31; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__6 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__6)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 32; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__6);
   __Pyx_GIVEREF(__pyx_slice__6);
 
-  /* "viscid/cython/null_tools.pyx":66
- *             if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:
+  /* "viscid/cython/null_tools.pyx":67
+ *             if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):
  *                 zero_evals.append(0.0)
  *                 zero_evecs.append(e_vecs[:, j])             # <<<<<<<<<<<<<<
- *             elif np.abs(e_val.imag) < eps:
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):
  *                 real_evals.append(e_val.real)
  */
-  __pyx_slice__7 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 66; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__7 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__7)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 67; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__7);
   __Pyx_GIVEREF(__pyx_slice__7);
 
-  /* "viscid/cython/null_tools.pyx":69
- *             elif np.abs(e_val.imag) < eps:
+  /* "viscid/cython/null_tools.pyx":70
+ *             elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):
  *                 real_evals.append(e_val.real)
  *                 real_evecs.append(e_vecs[:, j])             # <<<<<<<<<<<<<<
  *             else:
  *                 complex_evals.append(e_val)
  */
-  __pyx_slice__8 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 69; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__8 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 70; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__8);
   __Pyx_GIVEREF(__pyx_slice__8);
 
-  /* "viscid/cython/null_tools.pyx":72
+  /* "viscid/cython/null_tools.pyx":73
  *             else:
  *                 complex_evals.append(e_val)
  *                 complex_evecs.append(e_vecs[:, j])             # <<<<<<<<<<<<<<
  * 
  *         if len(zero_evals) == 1:
  */
-  __pyx_slice__9 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 72; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__9 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__9)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 73; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__9);
   __Pyx_GIVEREF(__pyx_slice__9);
 
-  /* "viscid/cython/null_tools.pyx":108
+  /* "viscid/cython/null_tools.pyx":104
  *     # these crds are same centering as fld
  *     dat = fld.as_interlaced().data
  *     x, y, z = fld.get_crds("xyz")             # <<<<<<<<<<<<<<
  *     candidate_inds = _py_reduce_candidates(dat, x, y, z, ibound)
  *     return np.array(candidate_inds)
  */
-  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_n_s_xyz); if (unlikely(!__pyx_tuple__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_n_s_xyz); if (unlikely(!__pyx_tuple__10)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 104; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__10);
   __Pyx_GIVEREF(__pyx_tuple__10);
 
-  /* "viscid/cython/null_tools.pyx":122
+  /* "viscid/cython/null_tools.pyx":118
  *     x, y, z = fld.get_crds()
  *     null_pts = np.zeros_like(null_inds).astype(dat.dtype)
  *     null_pts[0, :] = x[null_inds[0, :]]             # <<<<<<<<<<<<<<
  *     null_pts[1, :] = y[null_inds[1, :]]
  *     null_pts[2, :] = z[null_inds[2, :]]
  */
-  __pyx_slice__11 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 122; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__11 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__11)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__11);
   __Pyx_GIVEREF(__pyx_slice__11);
-  __pyx_tuple__12 = PyTuple_Pack(2, __pyx_int_0, __pyx_slice__11); if (unlikely(!__pyx_tuple__12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 122; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__12 = PyTuple_Pack(2, __pyx_int_0, __pyx_slice__11); if (unlikely(!__pyx_tuple__12)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__12);
   __Pyx_GIVEREF(__pyx_tuple__12);
-  __pyx_slice__13 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 122; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__13 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__13)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__13);
   __Pyx_GIVEREF(__pyx_slice__13);
-  __pyx_tuple__14 = PyTuple_Pack(2, __pyx_int_0, __pyx_slice__13); if (unlikely(!__pyx_tuple__14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 122; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__14 = PyTuple_Pack(2, __pyx_int_0, __pyx_slice__13); if (unlikely(!__pyx_tuple__14)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 118; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__14);
   __Pyx_GIVEREF(__pyx_tuple__14);
 
-  /* "viscid/cython/null_tools.pyx":123
+  /* "viscid/cython/null_tools.pyx":119
  *     null_pts = np.zeros_like(null_inds).astype(dat.dtype)
  *     null_pts[0, :] = x[null_inds[0, :]]
  *     null_pts[1, :] = y[null_inds[1, :]]             # <<<<<<<<<<<<<<
  *     null_pts[2, :] = z[null_inds[2, :]]
  *     return null_inds, null_pts
  */
-  __pyx_slice__15 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__15 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__15)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__15);
   __Pyx_GIVEREF(__pyx_slice__15);
-  __pyx_tuple__16 = PyTuple_Pack(2, __pyx_int_1, __pyx_slice__15); if (unlikely(!__pyx_tuple__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__16 = PyTuple_Pack(2, __pyx_int_1, __pyx_slice__15); if (unlikely(!__pyx_tuple__16)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__16);
   __Pyx_GIVEREF(__pyx_tuple__16);
-  __pyx_slice__17 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__17 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__17)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__17);
   __Pyx_GIVEREF(__pyx_slice__17);
-  __pyx_tuple__18 = PyTuple_Pack(2, __pyx_int_1, __pyx_slice__17); if (unlikely(!__pyx_tuple__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__18 = PyTuple_Pack(2, __pyx_int_1, __pyx_slice__17); if (unlikely(!__pyx_tuple__18)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 119; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__18);
   __Pyx_GIVEREF(__pyx_tuple__18);
 
-  /* "viscid/cython/null_tools.pyx":124
+  /* "viscid/cython/null_tools.pyx":120
  *     null_pts[0, :] = x[null_inds[0, :]]
  *     null_pts[1, :] = y[null_inds[1, :]]
  *     null_pts[2, :] = z[null_inds[2, :]]             # <<<<<<<<<<<<<<
  *     return null_inds, null_pts
  * 
  */
-  __pyx_slice__19 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__19 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__19)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__19);
   __Pyx_GIVEREF(__pyx_slice__19);
-  __pyx_tuple__20 = PyTuple_Pack(2, __pyx_int_2, __pyx_slice__19); if (unlikely(!__pyx_tuple__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__20 = PyTuple_Pack(2, __pyx_int_2, __pyx_slice__19); if (unlikely(!__pyx_tuple__20)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
-  __pyx_slice__21 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__21)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_slice__21 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__21)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_slice__21);
   __Pyx_GIVEREF(__pyx_slice__21);
-  __pyx_tuple__22 = PyTuple_Pack(2, __pyx_int_2, __pyx_slice__21); if (unlikely(!__pyx_tuple__22)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 124; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__22 = PyTuple_Pack(2, __pyx_int_2, __pyx_slice__21); if (unlikely(!__pyx_tuple__22)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 120; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__22);
   __Pyx_GIVEREF(__pyx_tuple__22);
 
-  /* "viscid/cython/null_tools.pyx":127
+  /* "viscid/cython/null_tools.pyx":123
  *     return null_inds, null_pts
  * 
  * def _py_reduce_candidates(real_t[:, :, :, ::1] b,             # <<<<<<<<<<<<<<
  *                           real_t[:] x, real_t[:] y, real_t[:] z, ibound):
  *     """ find candidate cells where the Bx, By, and Bz all
  */
-  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s__23); if (unlikely(!__pyx_tuple__24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s__23); if (unlikely(!__pyx_tuple__24)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__24);
   __Pyx_GIVEREF(__pyx_tuple__24);
-  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s__25); if (unlikely(!__pyx_tuple__26)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s__25); if (unlikely(!__pyx_tuple__26)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__26);
   __Pyx_GIVEREF(__pyx_tuple__26);
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_No_matching_signature_found); if (unlikely(!__pyx_tuple__27)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_No_matching_signature_found); if (unlikely(!__pyx_tuple__27)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_Function_call_with_ambiguous_arg); if (unlikely(!__pyx_tuple__28)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_Function_call_with_ambiguous_arg); if (unlikely(!__pyx_tuple__28)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__28);
   __Pyx_GIVEREF(__pyx_tuple__28);
 
-  /* "viscid/cython/null_tools.pyx":189
+  /* "viscid/cython/null_tools.pyx":185
  *     return ixs, iys, izs
  * 
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,             # <<<<<<<<<<<<<<
  *                                         long[:, ::1] inds):
  *     """ a vector field and candidiate cell indices, find which cells actually
  */
-  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s__23); if (unlikely(!__pyx_tuple__29)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s__23); if (unlikely(!__pyx_tuple__29)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s__25); if (unlikely(!__pyx_tuple__30)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s__25); if (unlikely(!__pyx_tuple__30)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__30);
   __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_kp_s_No_matching_signature_found); if (unlikely(!__pyx_tuple__31)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_kp_s_No_matching_signature_found); if (unlikely(!__pyx_tuple__31)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__31);
   __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_tuple__32 = PyTuple_Pack(1, __pyx_kp_s_Function_call_with_ambiguous_arg); if (unlikely(!__pyx_tuple__32)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__32 = PyTuple_Pack(1, __pyx_kp_s_Function_call_with_ambiguous_arg); if (unlikely(!__pyx_tuple__32)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__32);
   __Pyx_GIVEREF(__pyx_tuple__32);
 
@@ -26693,86 +26684,86 @@ static int __Pyx_InitCachedConstants(void) {
   /* "viscid/cython/null_tools.pyx":16
  * 
  * 
- * def find_classified_nulls(fld, ibound=0.0, eps=1e-5):             # <<<<<<<<<<<<<<
+ * def find_classified_nulls(fld, ibound=0.0, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
  *     """Find nulls, and classify them as in Cowley 1973
  * 
  */
-  __pyx_tuple__52 = PyTuple_Pack(14, __pyx_n_s_fld, __pyx_n_s_ibound, __pyx_n_s_eps, __pyx_n_s_null_inds, __pyx_n_s_null_pts, __pyx_n_s_Oi, __pyx_n_s_Ai, __pyx_n_s_Bi, __pyx_n_s_Oinds, __pyx_n_s_Ainds, __pyx_n_s_Binds, __pyx_n_s_Opts, __pyx_n_s_Apts, __pyx_n_s_Bpts); if (unlikely(!__pyx_tuple__52)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__52 = PyTuple_Pack(15, __pyx_n_s_fld, __pyx_n_s_ibound, __pyx_n_s_rtol, __pyx_n_s_atol, __pyx_n_s_null_inds, __pyx_n_s_null_pts, __pyx_n_s_Oi, __pyx_n_s_Ai, __pyx_n_s_Bi, __pyx_n_s_Oinds, __pyx_n_s_Ainds, __pyx_n_s_Binds, __pyx_n_s_Opts, __pyx_n_s_Apts, __pyx_n_s_Bpts); if (unlikely(!__pyx_tuple__52)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__52);
   __Pyx_GIVEREF(__pyx_tuple__52);
-  __pyx_codeobj__53 = (PyObject*)__Pyx_PyCode_New(3, 0, 14, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__52, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_find_classified_nulls, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__53)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__53 = (PyObject*)__Pyx_PyCode_New(4, 0, 15, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__52, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_find_classified_nulls, 16, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__53)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":34
+  /* "viscid/cython/null_tools.pyx":35
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  * 
  * def find_nulls(fld, ibound=0.0):             # <<<<<<<<<<<<<<
  *     """Just find null points and closest indices in fld
  * 
  */
-  __pyx_tuple__54 = PyTuple_Pack(5, __pyx_n_s_fld, __pyx_n_s_ibound, __pyx_n_s_candidate_inds, __pyx_n_s_null_inds, __pyx_n_s_null_pts); if (unlikely(!__pyx_tuple__54)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__54 = PyTuple_Pack(5, __pyx_n_s_fld, __pyx_n_s_ibound, __pyx_n_s_candidate_inds, __pyx_n_s_null_inds, __pyx_n_s_null_pts); if (unlikely(!__pyx_tuple__54)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__54);
   __Pyx_GIVEREF(__pyx_tuple__54);
-  __pyx_codeobj__55 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__54, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_find_nulls, 34, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__55)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__55 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__54, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_find_nulls, 35, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__55)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":50
+  /* "viscid/cython/null_tools.pyx":51
  *     return null_inds, null_pts
  * 
- * def _classify_nulls(b, null_inds, eps=1e-5):             # <<<<<<<<<<<<<<
- *     """ eps is the threshold for saying an eigenvalue is 0 or real """
+ * def _classify_nulls(b, null_inds, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
+ *     """rtol and atol used te determine what is close to 0"""
  *     # using terminology from Cowley 1973
  */
-  __pyx_tuple__56 = PyTuple_Pack(24, __pyx_n_s_b, __pyx_n_s_null_inds, __pyx_n_s_eps, __pyx_n_s_O_type, __pyx_n_s_A_type, __pyx_n_s_B_type, __pyx_n_s_ixs, __pyx_n_s_iys, __pyx_n_s_izs, __pyx_n_s_i, __pyx_n_s_ix, __pyx_n_s_iy, __pyx_n_s_iz, __pyx_n_s_e_vals, __pyx_n_s_e_vecs, __pyx_n_s_real_evals, __pyx_n_s_complex_evals, __pyx_n_s_zero_evals, __pyx_n_s_real_evecs, __pyx_n_s_complex_evecs, __pyx_n_s_zero_evecs, __pyx_n_s_j, __pyx_n_s_e_val, __pyx_n_s_positive); if (unlikely(!__pyx_tuple__56)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__56 = PyTuple_Pack(25, __pyx_n_s_b, __pyx_n_s_null_inds, __pyx_n_s_rtol, __pyx_n_s_atol, __pyx_n_s_O_type, __pyx_n_s_A_type, __pyx_n_s_B_type, __pyx_n_s_ixs, __pyx_n_s_iys, __pyx_n_s_izs, __pyx_n_s_i, __pyx_n_s_ix, __pyx_n_s_iy, __pyx_n_s_iz, __pyx_n_s_e_vals, __pyx_n_s_e_vecs, __pyx_n_s_real_evals, __pyx_n_s_complex_evals, __pyx_n_s_zero_evals, __pyx_n_s_real_evecs, __pyx_n_s_complex_evecs, __pyx_n_s_zero_evecs, __pyx_n_s_j, __pyx_n_s_e_val, __pyx_n_s_positive); if (unlikely(!__pyx_tuple__56)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__56);
   __Pyx_GIVEREF(__pyx_tuple__56);
-  __pyx_codeobj__57 = (PyObject*)__Pyx_PyCode_New(3, 0, 24, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__56, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_classify_nulls, 50, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__57)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__57 = (PyObject*)__Pyx_PyCode_New(4, 0, 25, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__56, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_classify_nulls, 51, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__57)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":105
+  /* "viscid/cython/null_tools.pyx":101
  * 
  * @cython.wraparound(True)
  * def _reduce_candidates(fld, ibound=0.0):             # <<<<<<<<<<<<<<
  *     # these crds are same centering as fld
  *     dat = fld.as_interlaced().data
  */
-  __pyx_tuple__58 = PyTuple_Pack(7, __pyx_n_s_fld, __pyx_n_s_ibound, __pyx_n_s_dat, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_candidate_inds); if (unlikely(!__pyx_tuple__58)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__58 = PyTuple_Pack(7, __pyx_n_s_fld, __pyx_n_s_ibound, __pyx_n_s_dat, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_candidate_inds); if (unlikely(!__pyx_tuple__58)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__58);
   __Pyx_GIVEREF(__pyx_tuple__58);
-  __pyx_codeobj__59 = (PyObject*)__Pyx_PyCode_New(2, 0, 7, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__58, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_reduce_candidates, 105, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__59)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__59 = (PyObject*)__Pyx_PyCode_New(2, 0, 7, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__58, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_reduce_candidates, 101, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__59)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":112
+  /* "viscid/cython/null_tools.pyx":108
  *     return np.array(candidate_inds)
  * 
  * def _find_null_cells_from_candidates(fld, inds):             # <<<<<<<<<<<<<<
  *     assert fld.nr_sdims == 3
  *     assert fld.nr_comps == 3
  */
-  __pyx_tuple__60 = PyTuple_Pack(8, __pyx_n_s_fld, __pyx_n_s_inds, __pyx_n_s_dat, __pyx_n_s_null_inds, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_null_pts); if (unlikely(!__pyx_tuple__60)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__60 = PyTuple_Pack(8, __pyx_n_s_fld, __pyx_n_s_inds, __pyx_n_s_dat, __pyx_n_s_null_inds, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_null_pts); if (unlikely(!__pyx_tuple__60)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__60);
   __Pyx_GIVEREF(__pyx_tuple__60);
-  __pyx_codeobj__61 = (PyObject*)__Pyx_PyCode_New(2, 0, 8, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__60, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_find_null_cells_from_candidates, 112, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__61)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__61 = (PyObject*)__Pyx_PyCode_New(2, 0, 8, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__60, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_find_null_cells_from_candidates, 108, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__61)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":127
+  /* "viscid/cython/null_tools.pyx":123
  *     return null_inds, null_pts
  * 
  * def _py_reduce_candidates(real_t[:, :, :, ::1] b,             # <<<<<<<<<<<<<<
  *                           real_t[:] x, real_t[:] y, real_t[:] z, ibound):
  *     """ find candidate cells where the Bx, By, and Bz all
  */
-  __pyx_tuple__62 = PyTuple_Pack(29, __pyx_n_s_b, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_ibound, __pyx_n_s_sign, __pyx_n_s_mask, __pyx_n_s_s000, __pyx_n_s_s001, __pyx_n_s_s010, __pyx_n_s_s011, __pyx_n_s_s100, __pyx_n_s_s101, __pyx_n_s_s110, __pyx_n_s_s111, __pyx_n_s_different, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_d, __pyx_n_s_nz, __pyx_n_s_ny, __pyx_n_s_nx, __pyx_n_s_nc, __pyx_n_s_ibound_sq, __pyx_n_s_r_sq, __pyx_n_s_ixs, __pyx_n_s_iys, __pyx_n_s_izs); if (unlikely(!__pyx_tuple__62)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__62 = PyTuple_Pack(29, __pyx_n_s_b, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_ibound, __pyx_n_s_sign, __pyx_n_s_mask, __pyx_n_s_s000, __pyx_n_s_s001, __pyx_n_s_s010, __pyx_n_s_s011, __pyx_n_s_s100, __pyx_n_s_s101, __pyx_n_s_s110, __pyx_n_s_s111, __pyx_n_s_different, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_d, __pyx_n_s_nz, __pyx_n_s_ny, __pyx_n_s_nx, __pyx_n_s_nc, __pyx_n_s_ibound_sq, __pyx_n_s_r_sq, __pyx_n_s_ixs, __pyx_n_s_iys, __pyx_n_s_izs); if (unlikely(!__pyx_tuple__62)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__62);
   __Pyx_GIVEREF(__pyx_tuple__62);
-  __pyx_codeobj__63 = (PyObject*)__Pyx_PyCode_New(5, 0, 29, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__62, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_py_reduce_candidates, 127, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__63)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__63 = (PyObject*)__Pyx_PyCode_New(5, 0, 29, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__62, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_py_reduce_candidates, 123, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__63)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
-  /* "viscid/cython/null_tools.pyx":189
+  /* "viscid/cython/null_tools.pyx":185
  *     return ixs, iys, izs
  * 
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,             # <<<<<<<<<<<<<<
  *                                         long[:, ::1] inds):
  *     """ a vector field and candidiate cell indices, find which cells actually
  */
-  __pyx_tuple__64 = PyTuple_Pack(47, __pyx_n_s_f, __pyx_n_s_inds, __pyx_n_s_a1, __pyx_n_s_b1, __pyx_n_s_c1, __pyx_n_s_d1, __pyx_n_s_a2, __pyx_n_s_b2, __pyx_n_s_c2, __pyx_n_s_d2, __pyx_n_s_a3, __pyx_n_s_b3, __pyx_n_s_c3, __pyx_n_s_d3, __pyx_n_s_rt1, __pyx_n_s_rt2, __pyx_n_s_ff3, __pyx_n_s_ic1, __pyx_n_s_ic2, __pyx_n_s_ic3, __pyx_n_s_iz, __pyx_n_s_iy, __pyx_n_s_ix, __pyx_n_s_i, __pyx_n_s_ic, __pyx_n_s_icandidate, __pyx_n_s_all_roots, __pyx_n_s_positive_roots, __pyx_n_s_have_null, __pyx_n_s_oxa, __pyx_n_s_oya, __pyx_n_s_oza, __pyx_n_s_oxb, __pyx_n_s_oyb, __pyx_n_s_ozb, __pyx_n_s_oxc, __pyx_n_s_oyc, __pyx_n_s_ozc, __pyx_n_s_oxd, __pyx_n_s_oyd, __pyx_n_s_ozd, __pyx_n_s_permuted_comps, __pyx_n_s_null_ixs, __pyx_n_s_null_iys, __pyx_n_s_null_izs, __pyx_n_s_roots1, __pyx_n_s_roots2); if (unlikely(!__pyx_tuple__64)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_tuple__64 = PyTuple_Pack(47, __pyx_n_s_f, __pyx_n_s_inds, __pyx_n_s_a1, __pyx_n_s_b1, __pyx_n_s_c1, __pyx_n_s_d1, __pyx_n_s_a2, __pyx_n_s_b2, __pyx_n_s_c2, __pyx_n_s_d2, __pyx_n_s_a3, __pyx_n_s_b3, __pyx_n_s_c3, __pyx_n_s_d3, __pyx_n_s_rt1, __pyx_n_s_rt2, __pyx_n_s_ff3, __pyx_n_s_ic1, __pyx_n_s_ic2, __pyx_n_s_ic3, __pyx_n_s_iz, __pyx_n_s_iy, __pyx_n_s_ix, __pyx_n_s_i, __pyx_n_s_ic, __pyx_n_s_icandidate, __pyx_n_s_all_roots, __pyx_n_s_positive_roots, __pyx_n_s_have_null, __pyx_n_s_oxa, __pyx_n_s_oya, __pyx_n_s_oza, __pyx_n_s_oxb, __pyx_n_s_oyb, __pyx_n_s_ozb, __pyx_n_s_oxc, __pyx_n_s_oyc, __pyx_n_s_ozc, __pyx_n_s_oxd, __pyx_n_s_oyd, __pyx_n_s_ozd, __pyx_n_s_permuted_comps, __pyx_n_s_null_ixs, __pyx_n_s_null_iys, __pyx_n_s_null_izs, __pyx_n_s_roots1, __pyx_n_s_roots2); if (unlikely(!__pyx_tuple__64)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_tuple__64);
   __Pyx_GIVEREF(__pyx_tuple__64);
-  __pyx_codeobj__65 = (PyObject*)__Pyx_PyCode_New(2, 0, 47, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__64, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_py_find_null_cells_from_candida, 189, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__65)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_codeobj__65 = (PyObject*)__Pyx_PyCode_New(2, 0, 47, 0, 0, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__64, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_Users_kmaynard_dev_src_Viscid_v, __pyx_n_s_py_find_null_cells_from_candida, 185, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__65)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
 
   /* "View.MemoryView":278
  *         return self.name
@@ -26840,6 +26831,7 @@ static int __Pyx_InitGlobals(void) {
   __pyx_float_0_0 = PyFloat_FromDouble(0.0); if (unlikely(!__pyx_float_0_0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_float_1_0 = PyFloat_FromDouble(1.0); if (unlikely(!__pyx_float_1_0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_float_1eneg_5 = PyFloat_FromDouble(1e-5); if (unlikely(!__pyx_float_1eneg_5)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_float_1eneg_8 = PyFloat_FromDouble(1e-8); if (unlikely(!__pyx_float_1eneg_8)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_int_2 = PyInt_FromLong(2); if (unlikely(!__pyx_int_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -27040,7 +27032,7 @@ PyMODINIT_FUNC PyInit_null_tools(void)
   /* "viscid/cython/null_tools.pyx":16
  * 
  * 
- * def find_classified_nulls(fld, ibound=0.0, eps=1e-5):             # <<<<<<<<<<<<<<
+ * def find_classified_nulls(fld, ibound=0.0, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
  *     """Find nulls, and classify them as in Cowley 1973
  * 
  */
@@ -27049,106 +27041,106 @@ PyMODINIT_FUNC PyInit_null_tools(void)
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_classified_nulls, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 16; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":34
+  /* "viscid/cython/null_tools.pyx":35
  *     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
  * 
  * def find_nulls(fld, ibound=0.0):             # <<<<<<<<<<<<<<
  *     """Just find null points and closest indices in fld
  * 
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_3find_nulls, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_3find_nulls, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_nulls, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 34; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_nulls, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 35; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":50
+  /* "viscid/cython/null_tools.pyx":51
  *     return null_inds, null_pts
  * 
- * def _classify_nulls(b, null_inds, eps=1e-5):             # <<<<<<<<<<<<<<
- *     """ eps is the threshold for saying an eigenvalue is 0 or real """
+ * def _classify_nulls(b, null_inds, rtol=1e-5, atol=1e-8):             # <<<<<<<<<<<<<<
+ *     """rtol and atol used te determine what is close to 0"""
  *     # using terminology from Cowley 1973
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_5_classify_nulls, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_5_classify_nulls, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_classify_nulls, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 50; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_classify_nulls, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 51; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":105
+  /* "viscid/cython/null_tools.pyx":101
  * 
  * @cython.wraparound(True)
  * def _reduce_candidates(fld, ibound=0.0):             # <<<<<<<<<<<<<<
  *     # these crds are same centering as fld
  *     dat = fld.as_interlaced().data
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_7_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_7_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_reduce_candidates, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 105; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_reduce_candidates, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":112
+  /* "viscid/cython/null_tools.pyx":108
  *     return np.array(candidate_inds)
  * 
  * def _find_null_cells_from_candidates(fld, inds):             # <<<<<<<<<<<<<<
  *     assert fld.nr_sdims == 3
  *     assert fld.nr_comps == 3
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_9_find_null_cells_from_candidates, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_9_find_null_cells_from_candidates, NULL, __pyx_n_s_viscid_cython_null_tools); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_null_cells_from_candidates, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 112; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_find_null_cells_from_candidates, __pyx_t_2) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 108; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "viscid/cython/null_tools.pyx":127
+  /* "viscid/cython/null_tools.pyx":123
  *     return null_inds, null_pts
  * 
  * def _py_reduce_candidates(real_t[:, :, :, ::1] b,             # <<<<<<<<<<<<<<
  *                           real_t[:] x, real_t[:] y, real_t[:] z, ibound):
  *     """ find candidate cells where the Bx, By, and Bz all
  */
-  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_6viscid_6cython_10null_tools_15_py_reduce_candidates, 0, __pyx_n_s_py_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_6viscid_6cython_10null_tools_15_py_reduce_candidates, 0, __pyx_n_s_py_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_1, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_float32_t, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_float32_t, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_6viscid_6cython_10null_tools_17_py_reduce_candidates, 0, __pyx_n_s_py_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_6viscid_6cython_10null_tools_17_py_reduce_candidates, 0, __pyx_n_s_py_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_1, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_float64_t, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_float64_t, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_FusedFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_11_py_reduce_candidates, 0, __pyx_n_s_py_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __pyx_FusedFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_11_py_reduce_candidates, 0, __pyx_n_s_py_reduce_candidates, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__63)); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_1, __pyx_empty_tuple);
   ((__pyx_FusedFunctionObject *) __pyx_t_1)->__signatures__ = __pyx_t_2;
   __Pyx_GIVEREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_py_reduce_candidates, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 127; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_py_reduce_candidates, __pyx_t_1) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 123; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "viscid/cython/null_tools.pyx":189
+  /* "viscid/cython/null_tools.pyx":185
  *     return ixs, iys, izs
  * 
  * def _py_find_null_cells_from_candidates(real_t[:, :, :, ::1] f,             # <<<<<<<<<<<<<<
  *                                         long[:, ::1] inds):
  *     """ a vector field and candidiate cell indices, find which cells actually
  */
-  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_3 = PyDict_New(); if (unlikely(!__pyx_t_3)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_6viscid_6cython_10null_tools_21_py_find_null_cells_from_candidates, 0, __pyx_n_s_py_find_null_cells_from_candida, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __pyx_FusedFunction_NewEx(&__pyx_fuse_0__pyx_mdef_6viscid_6cython_10null_tools_21_py_find_null_cells_from_candidates, 0, __pyx_n_s_py_find_null_cells_from_candida, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_float32_t, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_float32_t, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_6viscid_6cython_10null_tools_23_py_find_null_cells_from_candidates, 0, __pyx_n_s_py_find_null_cells_from_candida, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __pyx_FusedFunction_NewEx(&__pyx_fuse_1__pyx_mdef_6viscid_6cython_10null_tools_23_py_find_null_cells_from_candidates, 0, __pyx_n_s_py_find_null_cells_from_candida, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_empty_tuple);
-  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_float64_t, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_t_3, __pyx_n_s_float64_t, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __pyx_FusedFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_13_py_find_null_cells_from_candidates, 0, __pyx_n_s_py_find_null_cells_from_candida, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_4 = __pyx_FusedFunction_NewEx(&__pyx_mdef_6viscid_6cython_10null_tools_13_py_find_null_cells_from_candidates, 0, __pyx_n_s_py_find_null_cells_from_candida, NULL, __pyx_n_s_viscid_cython_null_tools, __pyx_d, ((PyObject *)__pyx_codeobj__65)); if (unlikely(!__pyx_t_4)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_CyFunction_SetDefaultsTuple(__pyx_t_4, __pyx_empty_tuple);
   ((__pyx_FusedFunctionObject *) __pyx_t_4)->__signatures__ = __pyx_t_3;
   __Pyx_GIVEREF(__pyx_t_3);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_py_find_null_cells_from_candida, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 189; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_py_find_null_cells_from_candida, __pyx_t_4) < 0) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 185; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
   /* "viscid/cython/null_tools.pyx":1

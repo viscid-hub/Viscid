@@ -13,20 +13,21 @@ ctypedef fused real_t:
     cnp.float64_t
 
 
-def find_classified_nulls(fld, ibound=0.0, eps=1e-5):
+def find_classified_nulls(fld, ibound=0.0, rtol=1e-5, atol=1e-8):
     """Find nulls, and classify them as in Cowley 1973
 
     Args:
         fld (VectorField): Magnetic field with nulls
         ibound (float): ignore points within ibound of origin
-        eps (float): closest absolute tolerance to 0.0 when classifying
+        rtol (float): used in np.isclose when classifying nulls
+        atol (float): used in np.isclose when classifying nulls
 
     Returns:
         dict: {"O": [Oinds, Opts], "A": [...], "B": [...]}
             each of these are 3xN ndarrays of either ingegers of floats
     """
     null_inds, null_pts = find_nulls(fld, ibound=ibound)
-    Oi, Ai, Bi = _classify_nulls(fld, null_inds, eps=eps)
+    Oi, Ai, Bi = _classify_nulls(fld, null_inds, rtol=rtol, atol=atol)
     Oinds, Ainds, Binds = null_inds[:, Oi], null_inds[:, Ai], null_inds[:, Bi]
     Opts, Apts, Bpts = null_pts[:, Oi], null_pts[:, Ai], null_pts[:, Bi]
     return dict(O=[Oinds, Opts], A=[Ainds, Apts], B=[Binds, Bpts])
@@ -47,8 +48,8 @@ def find_nulls(fld, ibound=0.0):
     null_inds, null_pts = _find_null_cells_from_candidates(fld, candidate_inds)
     return null_inds, null_pts
 
-def _classify_nulls(b, null_inds, eps=1e-5):
-    """ eps is the threshold for saying an eigenvalue is 0 or real """
+def _classify_nulls(b, null_inds, rtol=1e-5, atol=1e-8):
+    """rtol and atol used te determine what is close to 0"""
     # using terminology from Cowley 1973
     O_type = []
     A_type = []
@@ -61,10 +62,10 @@ def _classify_nulls(b, null_inds, eps=1e-5):
         real_evals, complex_evals, zero_evals = [], [], []
         real_evecs, complex_evecs, zero_evecs = [], [], []
         for j, e_val in enumerate(e_vals):
-            if np.abs(e_val.real) < eps and np.abs(e_val.imag) < eps:
+            if np.isclose(e_val, 0.0, rtol=rtol, atol=atol):
                 zero_evals.append(0.0)
                 zero_evecs.append(e_vecs[:, j])
-            elif np.abs(e_val.imag) < eps:
+            elif np.isclose(e_val.imag, 0.0, rtol=rtol, atol=atol):
                 real_evals.append(e_val.real)
                 real_evecs.append(e_vecs[:, j])
             else:
@@ -72,15 +73,13 @@ def _classify_nulls(b, null_inds, eps=1e-5):
                 complex_evecs.append(e_vecs[:, j])
 
         if len(zero_evals) == 1:
-            # O_type.append((ix, iy, iz))
             O_type.append(i)
         elif len(real_evals) == 1 and len(zero_evals) == 0:
-            assert (complex_evals[0] + complex_evals[1]).imag < eps
+            assert np.isclose((complex_evals[0] + complex_evals[1]).imag, 0.0,
+                              rtol=rtol, atol=atol)
             if real_evals[0] > 0.0:
-                # A_type.append((ix, iy, iz))
                 A_type.append(i)
             else:
-                # B_type.append((ix, iy, iz))
                 B_type.append(i)
         elif len(real_evals) == 3:
             positive = 0
@@ -88,15 +87,12 @@ def _classify_nulls(b, null_inds, eps=1e-5):
                 if e_val > 0.0:
                     positive += 1
             if positive == 1:
-                # A_type.append((ix, iy, iz))
                 A_type.append(i)
             else:
-                # B_type.append((ix, iy, iz))
                 B_type.append(i)
         else:
             print("unknown type of null:", e_vals)
 
-    # return np.array(O_type).T, np.array(A_type).T, np.array(B_type).T
     return (np.array(O_type, dtype='i'),
             np.array(A_type, dtype='i'),
             np.array(B_type, dtype='i'))

@@ -384,17 +384,24 @@ def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
     kwargs.setdefault('scale_mode', 'none')
     kwargs.setdefault('scale_factor', 0.3)
 
+    if not isinstance(nulls, dict):
+        empty = np.ones((3, 0))
+        nulls = dict(O=[empty, nulls], A=[empty, empty], B=[empty, empty])
+
     Opts = nulls['O'][1]
     if Ocolor is not None and Opts.shape[1]:
-        mlab.points3d(Opts[0], Opts[1], Opts[2], color=Ocolor, **kwargs)
+        mlab.points3d(Opts[0], Opts[1], Opts[2], color=Ocolor, name="Onulls",
+                      **kwargs)
 
     Apts = nulls['A'][1]
     if Ocolor is not None and Opts.shape[1]:
-        mlab.points3d(Apts[0], Apts[1], Apts[2], color=Acolor, **kwargs)
+        mlab.points3d(Apts[0], Apts[1], Apts[2], color=Acolor, name="Anulls",
+                      **kwargs)
 
     Bpts = nulls['B'][1]
     if Bcolor is not None and Bpts.shape[1]:
-        mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, **kwargs)
+        mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, name="Bnulls",
+                      **kwargs)
 
 
 def insert_filter(filtr, module_manager):

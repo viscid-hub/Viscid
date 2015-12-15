@@ -134,7 +134,7 @@ def perimeter_check_bitwise_or(arr):
     """
     return bool(np.bitwise_or.reduce(arr) == streamline.TOPOLOGY_MS_SEPARATOR)
 
-def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=1, max_depth=7,
+def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
                        plot=False, perimeter_check=perimeter_check_bitwise_or,
                        make_3d=False, _base_quadrent="", _recurse0=True,
                        _uneven_mask=0):
@@ -252,14 +252,18 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=1, max_depth=7,
                                     topo[8][::-1], topo[10][::-1],
                                     topo[11][::-1], topo[3][::-1]])
         if _uneven_mask:
-            print("===== aw schucks =====")
+            if len(_base_quadrent) > min_depth:
+                print("aw shucks, but min depth reached: {0} > {1}"
+                      "".format(len(_base_quadrent), min_depth))
+                ret = [_base_quadrent]
+            else:
+                print("aw shucks, the separator ended prematurely")
         elif perimeter_check(perimeter):
             ret = get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
                                      min_depth=min_depth, max_depth=max_depth,
                                      plot=plot, _base_quadrent=_base_quadrent,
                                      _recurse0=False, _uneven_mask=UNEVEN_MASK)
-            if ret:
-                required_uneven_subquads = True
+            required_uneven_subquads = True
 
     if plot and not required_uneven_subquads:
         from viscid.plot import mpl
