@@ -13,6 +13,8 @@ Attributes:
         :py:func`viscid.vutil.common_argparse`.
 """
 
+from __future__ import print_function
+
 __version__ = """0.95.2 dev"""
 
 __all__ = ['amr_field',  # Modules
@@ -117,9 +119,11 @@ __all__ += ["cluster"]
 from viscid.calculator.topology import topology2color
 __all__ += ["topology2color"]
 
+from viscid.calculator.separator import get_sep_line
 from viscid.calculator.separator import topology_bitor_clusters
 from viscid.calculator.separator import get_sep_pts_bitor
 from viscid.calculator.separator import get_sep_pts_bisect
+__all__ += ["get_sep_line"]
 __all__ += ["topology_bitor_clusters", "get_sep_pts_bitor"]
 __all__ += ["get_sep_pts_bisect"]
 
@@ -165,3 +169,13 @@ from viscid import vutil
 # apply settings in the rc file
 from viscid import _rc
 _rc.load_rc_file("~/.viscidrc")
+
+# this block is useful for debugging, ie, immediately do a pdb.set_trace()
+# on the SIGUSR2 signal
+import signal
+def _set_trace(seg, frame):  # pylint: disable=unused-argument
+    import pdb
+    pdb.set_trace()
+# import os
+# print("Trigger pdb with: kill -SIGUSR2", os.getpid())
+signal.signal(signal.SIGUSR2, _set_trace)

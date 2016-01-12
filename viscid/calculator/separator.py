@@ -9,8 +9,111 @@ from viscid.cython import streamline
 
 
 UNEVEN_MASK = 0b1000
-UNEVEN_HALF = 0.6
+UNEVEN_HALF = 0.65
 
+
+def get_sep_line(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
+                 r=1.0, plot=False, trace_opts=None, cache=True,
+                 cache_dir=None):
+    """Summary
+
+    Args:
+        grid (Grid): A grid that has a "b" field
+        b_slcstr (str): Some valid slice for B field
+        r (float): spatial step of separator line
+        plot (bool): make debugging plots
+        trace_opts (dict): passed to streamline function
+        cache (bool, str): Save to and load from cache, if "force",
+            then don't load from cache if it exists, but do save a
+            cache at the end
+        cache_dir (str): Directory for cache, if None, same directory
+            as that file to which the grid belongs
+
+    Raises:
+        IOError: Description
+        RuntimeError: Description
+
+    Returns:
+        list: list of 3xN ndarrays that represent separator lines
+    """
+    if not cache_dir:
+        cache_dir = grid.find_info("_viscid_dirname", "./")
+    run_name = grid.find_info("run")
+    sep_fname = "{0}/{1}.sep.{2:06.0f}".format(cache_dir, run_name, grid.time)
+
+    try:
+        if cache in ("Force", "force"):
+            raise IOError()
+        with np.load(sep_fname + ".npz") as dat:
+            _it = sorted(dat.files, key=lambda s: int(s[len("arr_"):]))
+            seps = [dat[n] for n in _it]
+    except IOError:
+        _b = grid['b'][b_slcstr]
+
+        _, nulls = viscid.find_nulls(_b['x=-30f:15f'], ibound=5.0)
+
+        # get most dawnward null, nulls2 is all nulls except p0
+        nullind = np.argmin(nulls[1, :])
+        p0 = nulls[:, nullind]
+        nulls2 = np.concatenate([nulls[:, :nullind], nulls[:, (nullind + 1):]],
+                                axis=1)
+
+        if plot:
+            from viscid.plot import mvi
+            mvi.plot_earth_3d(crd_system='gse')
+            mvi.mlab.points3d(nulls2[0], nulls2[1], nulls2[2],
+                              color=(0, 0, 0), scale_factor=1.0)
+            mvi.mlab.points3d(nulls[0, nullind], nulls[1, nullind], nulls[2, nullind],
+                              color=(1, 1, 1), scale_factor=1.0)
+
+        seed = viscid.Sphere(p0=p0, r=r, ntheta=30, nphi=60,
+                             theta_endpoint=True, phi_endpoint=True)
+        p1 = viscid.get_sep_pts_bisect(_b, seed, max_depth=12, plot=plot,
+                                       trace_opts=trace_opts)
+        # print("p1 shape", p1.shape)
+
+        if p1.shape[1] > 2:
+            raise RuntimeError("Invalid B field, should be no branch @ null")
+
+        seps = []
+        sep_stubs = []
+        for i in range(p1.shape[1]):
+            sep_stubs.append([p0, p1[:, i]])
+
+        # print("??", sep_stubs)
+
+        while sep_stubs:
+            sep = sep_stubs.pop(0)
+            # print("!!! new stub")
+
+            for i in count():
+                # print("::", i)
+                seed = viscid.SphericalPatch(p0=sep[-1], p1=sep[-1] - sep[-2],
+                                             r=r, nalpha=240, nbeta=240)
+                pn = viscid.get_sep_pts_bisect(_b, seed, max_depth=8, plot=plot,
+                                               trace_opts=trace_opts)
+                if pn.shape[1] == 0:
+                    # print("END: pn.shape[1] == 0")
+                    break
+                # print("++", nulls2.shape, pn.shape)
+                closest_null_dist = np.min(np.linalg.norm(nulls2 - pn[:, :1], axis=0))
+                # print("closest_null_dist:", closest_null_dist)
+                if closest_null_dist < 1.01 * r:
+                    # print("END: within 1.01 of a null")
+                    break
+
+                # print("??", pn)
+                for j in range(1, pn.shape[1]):
+                    # print("inserting new stub")
+                    sep_stubs.insert(0, [sep[-1], pn[:, j]])
+                sep.append(pn[:, 0])
+
+            # print("sep", sep)
+            seps.append(np.stack(sep, axis=1))
+
+        if cache:
+            np.savez_compressed(sep_fname, *seps)
+    return seps
 
 def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
                             plot=False, sep_val=streamline.TOPOLOGY_MS_SEPARATOR,
