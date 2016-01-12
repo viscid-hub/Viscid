@@ -93,8 +93,7 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
         mpl.plt.plot(_x[indx], _y[indy], 'ko')
 
         mpl.plt.plot(pts[0], pts[1], 'y^')
-        if plot.strip().lower() == "show":
-            mpl.plt.show()
+        mpl.plt.show()
 
     return pts
 
@@ -104,6 +103,8 @@ def get_sep_pts_bitor(fld, seed, trace_opts=None, make_3d=False, **kwargs):
     This is kind of a janky interface since data about
     theta_phi / overlap / cap could exist in the field
     """
+    if trace_opts is None:
+        trace_opts = dict()
     trace_opts.setdefault('ibound', 5.5)
     trace_opts.setdefault('output', viscid.OUTPUT_TOPOLOGY)
     topo = viscid.calc_streamlines(fld, seed, **trace_opts)[1]
@@ -136,8 +137,31 @@ def perimeter_check_bitwise_or(arr):
 
 def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
                        plot=False, perimeter_check=perimeter_check_bitwise_or,
-                       make_3d=False, _base_quadrent="", _recurse0=True,
-                       _uneven_mask=0):
+                       make_3d=True):
+    pts_even = _get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
+                                   min_depth=0, max_depth=2, plot=False,
+                                   perimeter_check=perimeter_check,
+                                   make_3d=False)
+    pts_uneven = _get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
+                                     min_depth=0, max_depth=2, plot=False,
+                                     perimeter_check=perimeter_check,
+                                     make_3d=False, start_uneven=True)
+    if pts_uneven.shape[1] > pts_even.shape[1]:
+        start_uneven = True
+    else:
+        start_uneven = False
+
+    # start_uneven = True
+    return _get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
+                               min_depth=min_depth, max_depth=max_depth,
+                               plot=plot, start_uneven=start_uneven,
+                               perimeter_check=perimeter_check,
+                               make_3d=make_3d)
+
+def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
+                        plot=False, perimeter_check=perimeter_check_bitwise_or,
+                        make_3d=True, start_uneven=False, _base_quadrent="",
+                        _uneven_mask=0, _first_recurse=True):
     if len(_base_quadrent) == max_depth:
         return [_base_quadrent]  # causes pylint to complain
     if trace_opts is None:
@@ -146,7 +170,11 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
     nx, ny = seed.uv_shape
     (xlim, ylim) = seed.uv_extent
 
-    if _recurse0 and plot:
+    if _first_recurse and start_uneven:
+        _uneven_mask = UNEVEN_MASK
+
+    if _first_recurse and plot:
+        from viscid.plot import mvi
         from viscid.plot import mpl
         mpl.clf()
         _, all_topo = viscid.calc_streamlines(fld, seed, max_length=300.0,
@@ -154,6 +182,8 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
                                               output=viscid.OUTPUT_TOPOLOGY,
                                               **trace_opts)
         mpl.plot(np.bitwise_and(all_topo, 15), show=False)
+        verts, arr = seed.wrap_mesh(all_topo.data)
+        mvi.mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, opacity=0.75)
 
     # quadrents and lines are indexed as follows...
     # directions are counter clackwise around the quadrent with
@@ -239,11 +269,12 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
     for i in range(4):
         if perimeter_check(quad_topo[i]):
             next_quad = "{0}{1:x}".format(_base_quadrent, i | _uneven_mask)
-            subquads = get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
-                                          min_depth=min_depth,
-                                          max_depth=max_depth, plot=plot,
-                                          _base_quadrent=next_quad,
-                                          _recurse0=False, _uneven_mask=0)
+            subquads = _get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
+                                           min_depth=min_depth,
+                                           max_depth=max_depth, plot=plot,
+                                           _base_quadrent=next_quad,
+                                           _uneven_mask=0,
+                                           _first_recurse=False)
             ret += subquads
 
     if len(ret) == 0:
@@ -253,24 +284,30 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
                                     topo[11][::-1], topo[3][::-1]])
         if _uneven_mask:
             if len(_base_quadrent) > min_depth:
-                print("aw shucks, but min depth reached: {0} > {1}"
+                print("sep trace issue, but min depth reached: {0} > {1}"
                       "".format(len(_base_quadrent), min_depth))
                 ret = [_base_quadrent]
             else:
-                print("aw shucks, the separator ended prematurely")
+                print("sep trace issue, the separator ended prematurely")
         elif perimeter_check(perimeter):
-            ret = get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
-                                     min_depth=min_depth, max_depth=max_depth,
-                                     plot=plot, _base_quadrent=_base_quadrent,
-                                     _recurse0=False, _uneven_mask=UNEVEN_MASK)
+            ret = _get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
+                                      min_depth=min_depth, max_depth=max_depth,
+                                      plot=plot, _base_quadrent=_base_quadrent,
+                                      _uneven_mask=UNEVEN_MASK,
+                                      _first_recurse=False)
             required_uneven_subquads = True
 
     if plot and not required_uneven_subquads:
+        from viscid.plot import mvi
         from viscid.plot import mpl
+        _pts3d = seed.to_3d(seed.uv_to_local(np.array([allx, ally])))
+        mvi.mlab.points3d(_pts3d[0], _pts3d[1], _pts3d[2],
+                          all_topo.data.reshape(-1), scale_mode='none',
+                          scale_factor=0.02)
         mpl.plt.scatter(allx, ally, color=np.bitwise_and(all_topo, 15),
                         vmin=0, vmax=15, marker='o', edgecolor='y', s=40)
 
-    if _recurse0:
+    if _first_recurse:
         # turn quadrent strings into locations
         xc = np.empty(len(ret))
         yc = np.empty(len(ret))
@@ -278,12 +315,15 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
             xc[i], yc[i] = _quadrent_center(r, xlim, ylim)
         pts_uv = np.array([xc, yc])
         if plot:
+            from viscid.plot import mvi
             from viscid.plot import mpl
             mpl.plt.plot(pts_uv[0], pts_uv[1], "y*", ms=20,
                          markeredgecolor='k', markeredgewidth=1.0)
-            if plot.strip().lower() == "show":
-                mpl.show()
+            mpl.show(block=False)
+            mvi.show(stop=True)
         # return seed.to_3d(seed.uv_to_local(pts_uv))
+        # if pts_uv.size == 0:
+        #     return None
         if make_3d:
             return seed.uv_to_3d(pts_uv)
         else:
@@ -298,7 +338,10 @@ def _quadrent_limits(quad_str, xlim, ylim):
     yl, yh = ymin, ymax
 
     for _, quad in enumerate(quad_str):
-        quadi = int(quad, base=16)
+        try:
+            quadi = int(quad, base=16)
+        except TypeError:
+            raise
         midpt = UNEVEN_HALF if quadi & UNEVEN_MASK else 0.5
 
         xm = xl + midpt * (xh - xl)
