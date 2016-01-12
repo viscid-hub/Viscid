@@ -809,9 +809,9 @@ class Sphere(SeedGen):
     """Make seeds on the surface of a sphere"""
 
     def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), ntheta=20, nphi=20,
-                 thetalim=(0, 180.0), philim=(0, 360.0), phi_endpoint=False,
-                 pole_is_vector=True, theta_phi=False, roll=0.0,
-                 cache=False, dtype=None):
+                 thetalim=(0, 180.0), philim=(0, 360.0), theta_endpoint=False,
+                 phi_endpoint=False, pole_is_vector=True, theta_phi=False,
+                 roll=0.0, cache=False, dtype=None):
         """Make seeds on the surface of a sphere
 
         Args:
@@ -828,8 +828,8 @@ class Sphere(SeedGen):
                 value. This is false by default since 0 == 2pi.
             pole_is_vector (bool): Whether pole is a vector or a
                 vector
-            theta_phi (bool): If True, reult can be reshaped as
-                (theta, phi), otherwise it's (phi, theta)
+            theta_phi (bool): If True, the uv and local representations
+                are ordered (theta, phi), otherwise (phi, theta)
         """
         super(Sphere, self).__init__(cache=cache, dtype=dtype)
 
@@ -857,6 +857,7 @@ class Sphere(SeedGen):
         self.nphi = nphi
         self.thetalim = np.deg2rad(thetalim)
         self.philim = np.deg2rad(philim)
+        self.theta_endpoint = theta_endpoint
         self.phi_endpoint = phi_endpoint
         self.theta_phi = theta_phi
         self.roll = roll
@@ -910,7 +911,10 @@ class Sphere(SeedGen):
                          axis=0)
 
     def to_3d(self, pts_local):
-        r, T, P = pts_local[0, :], pts_local[1, :], pts_local[2, :]
+        if self.theta_phi:
+            r, T, P = pts_local[0, :], pts_local[1, :], pts_local[2, :]
+        else:
+            r, P, T = pts_local[0, :], pts_local[1, :], pts_local[2, :]
         a = np.empty((3, pts_local.shape[1]), dtype=self.dtype)
         a[0, :] = (r * np.sin(T) * np.cos(P))
         a[1, :] = (r * np.sin(T) * np.sin(P))
@@ -932,14 +936,18 @@ class Sphere(SeedGen):
             arr[1, :] = np.repeat(theta, self.nphi)
             arr[2, :] = np.tile(phi, self.ntheta)
         else:
-            arr[1, :] = np.tile(theta, self.nphi)
-            arr[2, :] = np.repeat(phi, self.ntheta)
+            arr[1, :] = np.repeat(phi, self.ntheta)
+            arr[2, :] = np.tile(theta, self.nphi)
         return arr
 
     def _make_uv_axes(self):
-        theta = np.linspace(self.thetalim[0], self.thetalim[1], self.ntheta + 1,
-                            endpoint=True).astype(self.dtype)
-        theta = 0.5 * (theta[1:] + theta[:-1])
+        if self.theta_endpoint:
+            theta = np.linspace(self.thetalim[0], self.thetalim[1],
+                                self.ntheta).astype(self.dtype)
+        else:
+            theta = np.linspace(self.thetalim[0], self.thetalim[1],
+                                self.ntheta + 1).astype(self.dtype)
+            theta = 0.5 * (theta[1:] + theta[:-1])
         phi = np.linspace(self.philim[0], self.philim[1], self.nphi,
                           endpoint=self.phi_endpoint).astype(self.dtype)
         return theta, phi
@@ -1125,10 +1133,10 @@ class SphericalPatch(SeedGen):
         if not p1_is_vector:
             p1 = p1 - p0
 
-        if not r:
-            r = np.linalg.norm(p1)
-        else:
+        if r:
             p1 = p1 * (r / np.linalg.norm(p1))
+        else:
+            r = np.linalg.norm(p1)
 
         if np.sin(max_alpha)**2 + np.sin(max_beta)**2 > 1:
             raise ValueError("Invalid alpha/beta ranges, if you want "
