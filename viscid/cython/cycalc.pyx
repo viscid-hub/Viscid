@@ -14,7 +14,7 @@ from viscid.cython.cyfield cimport real_t
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.misc_inlines cimport int_min, int_max
 
-def interp_trilin(vfield, seeds, force_amr_version=False, wrap=True):
+def interp_trilin(vfield, seeds, wrap=True):
     """Interpolate a field to points described by seeds
 
     Note:
@@ -25,7 +25,6 @@ def interp_trilin(vfield, seeds, force_amr_version=False, wrap=True):
     Parameters:
         vfield (viscid.field.Field): Some Vector or Scalar field
         seeds (viscid.claculator.seed): locations for the interpolation
-        force_amr_version (bool): used for benchmarking amr overhead
         wrap (bool): if true, then call seeds.wrap on the result
 
     Returns:
@@ -42,15 +41,9 @@ def interp_trilin(vfield, seeds, force_amr_version=False, wrap=True):
     else:
         scalar = False
 
-    if vfield.nr_patches > 1 or force_amr_version:
-        amrfld = make_cyamrfield(vfield)
-        result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
-        _py_interp_trilin_amr(amrfld, seeds.iter_points(center=vfield.center), result)
-    else:
-        # about 12% faster than the AMR version on fields w/ 1 patch
-        fld = make_cyfield(vfield)
-        result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
-        _py_interp_trilin(fld, seeds.iter_points(center=vfield.center), result)
+    amrfld = make_cyamrfield(vfield)
+    result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
+    _py_interp_trilin(amrfld, seeds.iter_points(center=vfield.center), result)
 
     if scalar:
         result = result[:, 0]
@@ -64,13 +57,12 @@ def interp_trilin(vfield, seeds, force_amr_version=False, wrap=True):
 
     return result
 
-def interp_nearest(vfield, seeds, force_amr_version=False, wrap=True):
+def interp_nearest(vfield, seeds, wrap=True):
     """Interpolate a field to points described by seeds
 
     Parameters:
         vfield (viscid.field.Field): Some Vector or Scalar field
         seeds (viscid.claculator.seed): locations for the interpolation
-        force_amr_version (bool): used for benchmarking amr overhead
         wrap (bool): if true, call seeds.wrap on the result
 
     Returns:
@@ -87,15 +79,9 @@ def interp_nearest(vfield, seeds, force_amr_version=False, wrap=True):
     else:
         scalar = False
 
-    if vfield.nr_patches > 1 or force_amr_version:
-        amrfld = make_cyamrfield(vfield)
-        result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
-        _py_interp_nearest_amr(amrfld, seeds.iter_points(center=vfield.center), result)
-    else:
-        # about 6% faster than the AMR version on fields w/ 1 patch
-        fld = make_cyfield(vfield)
-        result = np.empty((nr_points, nr_comps), dtype=fld.crd_dtype)
-        _py_interp_nearest(fld, seeds.iter_points(center=vfield.center), result)
+    amrfld = make_cyamrfield(vfield)
+    result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
+    _py_interp_nearest(amrfld, seeds.iter_points(center=vfield.center), result)
 
     if scalar:
         result = result[:, 0]
@@ -109,25 +95,7 @@ def interp_nearest(vfield, seeds, force_amr_version=False, wrap=True):
 
     return result
 
-def _py_interp_trilin(FusedField fld, points, real_t[:, ::1] result):
-    cdef int i, m
-    cdef int nr_comps = result.shape[1]
-    cdef real_t x[3]
-    cdef int cached_idx3[3]
-
-    cached_idx3[:] = [0, 0, 0]
-
-    i = 0
-    for pt in points:
-        for m in range(nr_comps):
-            assert len(pt) == 3
-            x[0] = pt[0]
-            x[1] = pt[1]
-            x[2] = pt[2]
-            result[i, m] = _c_interp_trilin(fld, m, x, cached_idx3)
-        i += 1
-
-def _py_interp_trilin_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
+def _py_interp_trilin(FusedAMRField amrfld, points, real_t[:, ::1] result):
     cdef int i, m
     cdef int nr_comps = result.shape[1]
     cdef real_t x[3]
@@ -142,7 +110,8 @@ def _py_interp_trilin_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
-            activate_patch[FusedAMRField, real_t](amrfld, x)
+            if amrfld.nr_patches > 1:
+                activate_patch[FusedAMRField, real_t](amrfld, x)
             result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x,
                                             cached_idx3)
         i += 1
@@ -208,25 +177,7 @@ cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3],
     #                   s[ix[0] + p[0], ix[1] + p[1], ix[2] + p[2], m])
     return c
 
-def _py_interp_nearest(FusedField fld, points, real_t[:, ::1] result):
-    cdef int i, m
-    cdef int nr_comps = result.shape[1]
-    cdef real_t[3] x
-    cdef int cached_idx3[3]
-
-    cached_idx3[:] = [0, 0, 0]
-
-    i = 0
-    for pt in points:
-        for m in range(nr_comps):
-            assert len(pt) == 3, "Seeds must have 3 spatial dimensions"
-            x[0] = pt[0]
-            x[1] = pt[1]
-            x[2] = pt[2]
-            result[i, m] = _c_interp_nearest(fld, m, x, cached_idx3)
-        i += 1
-
-def _py_interp_nearest_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
+def _py_interp_nearest(FusedAMRField amrfld, points, real_t[:, ::1] result):
     cdef int i, m
     cdef int nr_comps = result.shape[1]
     cdef real_t[3] x
@@ -240,7 +191,8 @@ def _py_interp_nearest_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
-            activate_patch[FusedAMRField, real_t](amrfld, x)
+            if amrfld.nr_patches > 1:
+                activate_patch[FusedAMRField, real_t](amrfld, x)
             result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x,
                                              cached_idx3)
         i += 1
