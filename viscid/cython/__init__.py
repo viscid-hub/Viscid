@@ -46,6 +46,7 @@ try:
     from viscid.cython import streamline
     from viscid.cython import null_tools
 
+    from viscid.cython.cycalc import interp
     from viscid.cython.cycalc import interp_nearest
     from viscid.cython.cycalc import interp_trilin
     from viscid.cython.null_tools import find_classified_nulls, find_nulls
@@ -72,6 +73,8 @@ except ImportError:
                   "must be built using Viscid/setup.py (Note: Cython is "
                   "not required for the build, just a c compiler)")
 
+    def interp(*args, **kwargs):  # pylint: disable=unused-argument
+        raise CythonNotBuilt(cython_msg.format("interp"))
     def interp_nearest(*args, **kwargs):  # pylint: disable=unused-argument
         raise CythonNotBuilt(cython_msg.format("interp_nearest"))
     def interp_trilin(*args, **kwargs):  # pylint: disable=unused-argument

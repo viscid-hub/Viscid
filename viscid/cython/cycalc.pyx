@@ -14,6 +14,62 @@ from viscid.cython.cyfield cimport real_t
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.misc_inlines cimport int_min, int_max
 
+
+def interp(vfield, seeds, kind="trilinear", wrap=True):
+    """Interpolate a field to points described by seeds
+
+    Note:
+        Nearest neighbor is always used between the last value and
+        `vfield.crds.xh`. This is done to keep from extrapolating and
+        introducing new maxima. As such, AMR grids may be more
+        step-like at patch boundaries.
+
+    Parameters:
+        vfield (viscid.field.Field): Some Vector or Scalar field
+        seeds (viscid.claculator.seed): locations for the interpolation
+        kind (str): either 'trilin'/'trilinear', or 'nearest'
+        wrap (bool): if true, then call seeds.wrap on the result
+
+    Returns:
+        numpy.ndarray of interpolated values. Shaped (seed.nr_points,)
+        or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
+        Vector field.
+    """
+    kind = kind.strip().lower()
+    seeds = to_seeds(seeds)
+
+    cdef int nr_points = seeds.get_nr_points(center=vfield.center)
+    cdef int nr_comps = vfield.nr_comps
+    if nr_comps == 0:
+        scalar = True
+        nr_comps = 1
+    else:
+        scalar = False
+
+    amrfld = make_cyamrfield(vfield)
+    result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
+    seed_iter = seeds.iter_points(center=vfield.center)
+
+    if kind == "nearest":
+        _py_interp_nearest(amrfld, seed_iter, result)
+    elif kind == "trilinear" or kind == "trilin":
+        _py_interp_trilin(amrfld, seed_iter, result)
+    else:
+        raise ValueError("kind '{0}' not understood. Use trilinear or nearest"
+                         "".format(kind))
+
+    if scalar:
+        result = result[:, 0]
+
+    if wrap:
+        if scalar:
+            result = seeds.wrap_field(result, name=vfield.name)
+        else:
+            result = seeds.wrap_field(result, name=vfield.name,
+                                      fldtype="vector", layout="interlaced")
+
+    return result
+
 def interp_trilin(vfield, seeds, wrap=True):
     """Interpolate a field to points described by seeds
 
@@ -32,30 +88,7 @@ def interp_trilin(vfield, seeds, wrap=True):
         or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
         Vector field.
     """
-    seeds = to_seeds(seeds)
-    cdef int nr_points = seeds.get_nr_points(center=vfield.center)
-    cdef int nr_comps = vfield.nr_comps
-    if nr_comps == 0:
-        scalar = True
-        nr_comps = 1
-    else:
-        scalar = False
-
-    amrfld = make_cyamrfield(vfield)
-    result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
-    _py_interp_trilin(amrfld, seeds.iter_points(center=vfield.center), result)
-
-    if scalar:
-        result = result[:, 0]
-
-    if wrap:
-        if scalar:
-            result = seeds.wrap_field(result, name=vfield.name)
-        else:
-            result = seeds.wrap_field(result, name=vfield.name,
-                                      fldtype="vector", layout="interlaced")
-
-    return result
+    return interp(vfield, seeds, wrap=wrap, kind="trilinear")
 
 def interp_nearest(vfield, seeds, wrap=True):
     """Interpolate a field to points described by seeds
@@ -70,30 +103,7 @@ def interp_nearest(vfield, seeds, wrap=True):
         or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
         Vector field.
     """
-    seeds = to_seeds(seeds)
-    cdef int nr_points = seeds.get_nr_points(center=vfield.center)
-    cdef int nr_comps = vfield.nr_comps
-    if nr_comps == 0:
-        scalar = True
-        nr_comps = 1
-    else:
-        scalar = False
-
-    amrfld = make_cyamrfield(vfield)
-    result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
-    _py_interp_nearest(amrfld, seeds.iter_points(center=vfield.center), result)
-
-    if scalar:
-        result = result[:, 0]
-
-    if wrap:
-        if scalar:
-            result = seeds.wrap_field(result, name=vfield.name)
-        else:
-            result = seeds.wrap_field(result, name=vfield.name,
-                                      fldtype="vector", layout="interlaced")
-
-    return result
+    return interp(vfield, seeds, wrap=wrap, kind="nearest")
 
 def _py_interp_trilin(FusedAMRField amrfld, points, real_t[:, ::1] result):
     cdef int i, m
