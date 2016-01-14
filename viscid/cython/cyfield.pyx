@@ -105,7 +105,7 @@ cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
         for j in range(sshape_cc[i]):
             fld.crds_cc[i, j] = _crd_lst_cc[i][j]
 
-        fld.cached_ind[i] = 0
+        # fld.cached_ind[i] = 0  # dangerous for threads :(
         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
         if fld.uniform_crds:
             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]

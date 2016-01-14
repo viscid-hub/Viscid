@@ -317,7 +317,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                               real_t tol_lo, real_t tol_hi,
                               real_t fac_refine, real_t fac_coarsen,
                               real_t smallest_step, real_t largest_step,
-                              real_t vscale[3]) nogil except -1
+                              real_t vscale[3], int cached_idx3[3]) nogil except -1
         int (*end_flags_to_topology)(int _end_flags) nogil
 
         int i, j, it
@@ -346,7 +346,10 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         real_t[:] dx
         real_t[:, ::1] seed_pts
 
+        int cached_idx3[3]
+
     _dir_d[:] = [-1, 1]
+    cached_idx3[:] = [0, 0, 0]
 
     lines = None
     line_ndarr = None
@@ -474,7 +477,8 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
 
                     ret = integrate_func(patch, s, &ds,
                                          tol_lo, tol_hi, fac_refine , fac_coarsen,
-                                         smallest_step, largest_step, vscale)
+                                         smallest_step, largest_step, vscale,
+                                         cached_idx3)
 
                     if fabs(ds) >= pre_ds:
                         stream_length += pre_ds

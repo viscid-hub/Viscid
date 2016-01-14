@@ -865,7 +865,6 @@ struct __pyx_obj_6viscid_6cython_7cyfield_CyField {
   int nm2[3];
   int nr_nodes[3];
   int nr_cells[3];
-  int cached_ind[3];
   __pyx_t_5numpy_float64_t min_dx;
 };
 
@@ -5380,13 +5379,13 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I4_Crd_F8 *__pyx_fuse_0_
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -5952,13 +5951,13 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_I8_Crd_F8 *__pyx_fuse_1_
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -6525,13 +6524,13 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F4_Crd_F4 *__pyx_fuse_2_
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
     __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
@@ -7097,13 +7096,13 @@ static struct __pyx_obj_6viscid_6cython_5cyamr_AMRField_F8_Crd_F8 *__pyx_fuse_3_
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
 
     /* "viscid/cython/cyamr.pyx":150
  *             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)

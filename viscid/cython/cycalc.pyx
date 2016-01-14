@@ -113,6 +113,9 @@ def _py_interp_trilin(FusedField fld, points, real_t[:, ::1] result):
     cdef int i, m
     cdef int nr_comps = result.shape[1]
     cdef real_t x[3]
+    cdef int cached_idx3[3]
+
+    cached_idx3[:] = [0, 0, 0]
 
     i = 0
     for pt in points:
@@ -121,13 +124,16 @@ def _py_interp_trilin(FusedField fld, points, real_t[:, ::1] result):
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
-            result[i, m] = _c_interp_trilin(fld, m, x)
+            result[i, m] = _c_interp_trilin(fld, m, x, cached_idx3)
         i += 1
 
 def _py_interp_trilin_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
     cdef int i, m
     cdef int nr_comps = result.shape[1]
     cdef real_t x[3]
+    cdef int cached_idx3[3]
+
+    cached_idx3[:] = [0, 0, 0]
 
     i = 0
     for pt in points:
@@ -137,10 +143,12 @@ def _py_interp_trilin_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
             x[1] = pt[1]
             x[2] = pt[2]
             activate_patch[FusedAMRField, real_t](amrfld, x)
-            result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x)
+            result[i, m] = _c_interp_trilin(amrfld.active_patch, m, x,
+                                            cached_idx3)
         i += 1
 
-cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]) nogil:
+cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3],
+                             int cached_idx3[3]) nogil:
     cdef int d, ind
     cdef int ix[3]
     cdef int p[3]  # increment, used for 2d fields
@@ -161,7 +169,7 @@ cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3]) nogil:
             p[d] = 0
             xd[d] = 0.0
         else:
-            ind = closest_preceeding_ind(fld, d, x[d])
+            ind = closest_preceeding_ind(fld, d, x[d], cached_idx3)
             p[d] = 1
             xd[d] = ((x[d] - fld.crds[d, ind]) /
                      (fld.crds[d, ind + 1] - fld.crds[d, ind]))
@@ -204,6 +212,9 @@ def _py_interp_nearest(FusedField fld, points, real_t[:, ::1] result):
     cdef int i, m
     cdef int nr_comps = result.shape[1]
     cdef real_t[3] x
+    cdef int cached_idx3[3]
+
+    cached_idx3[:] = [0, 0, 0]
 
     i = 0
     for pt in points:
@@ -212,13 +223,16 @@ def _py_interp_nearest(FusedField fld, points, real_t[:, ::1] result):
             x[0] = pt[0]
             x[1] = pt[1]
             x[2] = pt[2]
-            result[i, m] = _c_interp_nearest(fld, m, x)
+            result[i, m] = _c_interp_nearest(fld, m, x, cached_idx3)
         i += 1
 
 def _py_interp_nearest_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
     cdef int i, m
     cdef int nr_comps = result.shape[1]
     cdef real_t[3] x
+    cdef int cached_idx3[3]
+
+    cached_idx3[:] = [0, 0, 0]
 
     i = 0
     for pt in points:
@@ -227,19 +241,22 @@ def _py_interp_nearest_amr(FusedAMRField amrfld, points, real_t[:, ::1] result):
             x[1] = pt[1]
             x[2] = pt[2]
             activate_patch[FusedAMRField, real_t](amrfld, x)
-            result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x)
+            result[i, m] = _c_interp_nearest(amrfld.active_patch, m, x,
+                                             cached_idx3)
         i += 1
 
-cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3]) nogil:
+cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3],
+                              int cached_idx3[3]) nogil:
     cdef int ind[3]
     cdef int d
 
     for d in range(3):
-        ind[d] = closest_ind(fld, d, x[d])
+        ind[d] = closest_ind(fld, d, x[d], cached_idx3)
     return fld.data[ind[0], ind[1], ind[2], m]
 
 
-cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value) nogil except -1:
+cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value,
+                                       int cached_idx3[3]) nogil except -1:
     """Index of the element closest (and to the left) of x = value
 
     Note:
@@ -258,7 +275,7 @@ cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value) nogi
     cdef real_t frac
     cdef int i, ind, found_ind
     cdef int n = fld.n[d]
-    cdef int startind = fld.cached_ind[d]
+    cdef int startidx = cached_idx3[d]  # using fld.cached_ind is not threadsafe
 
     if n == 1:
         ind = 0
@@ -268,17 +285,17 @@ cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value) nogi
         ind = int_min(int_max(i, 0), fld.nm2[d])
     else:
         found_ind = 0
-        if fld.crds[d, startind] <= value:
-            i = startind
-            for i in range(startind, n - 1):
+        if fld.crds[d, startidx] <= value:
+            i = startidx
+            for i in range(startidx, n - 1):
                 if fld.crds[d, i + 1] > value:
                     found_ind = 1
                     break
             if not found_ind:
                 i = n - 1
         else:
-            i = startind - 1
-            for i in range(startind - 1, -1, -1):
+            i = startidx - 1
+            for i in range(startidx - 1, -1, -1):
                 if fld.crds[d, i] <= value:
                     found_ind = 1
                     break
@@ -286,12 +303,13 @@ cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value) nogi
                 i = 0
         ind = i
 
-    fld.cached_ind[d] = ind
+    cached_idx3[d] = ind  # using fld.cached_ind is not threadsafe
     return ind
 
-cdef inline int closest_ind(FusedField fld, int d, real_t value) nogil except -1:
+cdef inline int closest_ind(FusedField fld, int d, real_t value,
+                            int cached_idx3[3]) nogil except -1:
     cdef double d1, d2
-    cdef int preceeding_ind = closest_preceeding_ind(fld, d, value)
+    cdef int preceeding_ind = closest_preceeding_ind(fld, d, value, cached_idx3)
     if preceeding_ind == fld.n[d] - 1:
         return fld.n[d] - 1
     else:
