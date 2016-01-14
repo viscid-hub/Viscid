@@ -24,8 +24,7 @@ try:
 except ImportError:
     pass
 
-def get_dipole(m=None, l=None, h=None, n=None, twod=False):
-    dtype = 'float64'
+def get_dipole(m=None, l=None, h=None, n=None, twod=False, dtype='f8'):
     if l is None:
         l = [-5] * 3
     if h is None:
