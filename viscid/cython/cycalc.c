@@ -3238,7 +3238,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
  *         Vector field.
  *     """
  *     seeds = to_seeds(seeds)             # <<<<<<<<<<<<<<
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps
  */
   __pyx_t_2 = __Pyx_GetModuleGlobalName(__pyx_n_s_to_seeds); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 81; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
@@ -3274,11 +3274,11 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
   /* "viscid/cython/cycalc.pyx":82
  *     """
  *     seeds = to_seeds(seeds)
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)             # <<<<<<<<<<<<<<
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)             # <<<<<<<<<<<<<<
  *     cdef int nr_comps = vfield.nr_comps
  *     if nr_comps == 0:
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_seeds, __pyx_n_s_nr_points); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 82; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_seeds, __pyx_n_s_get_nr_points); if (unlikely(!__pyx_t_1)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 82; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_t_2 = PyDict_New(); if (unlikely(!__pyx_t_2)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 82; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __Pyx_GOTREF(__pyx_t_2);
@@ -3296,7 +3296,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
 
   /* "viscid/cython/cycalc.pyx":83
  *     seeds = to_seeds(seeds)
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps             # <<<<<<<<<<<<<<
  *     if nr_comps == 0:
  *         scalar = True
@@ -3308,7 +3308,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
   __pyx_v_nr_comps = __pyx_t_5;
 
   /* "viscid/cython/cycalc.pyx":84
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps
  *     if nr_comps == 0:             # <<<<<<<<<<<<<<
  *         scalar = True
@@ -3336,7 +3336,7 @@ static PyObject *__pyx_pf_6viscid_6cython_6cycalc_2interp_nearest(CYTHON_UNUSED 
     __pyx_v_nr_comps = 1;
 
     /* "viscid/cython/cycalc.pyx":84
- *     cdef int nr_points = seeds.nr_points(center=vfield.center)
+ *     cdef int nr_points = seeds.get_nr_points(center=vfield.center)
  *     cdef int nr_comps = vfield.nr_comps
  *     if nr_comps == 0:             # <<<<<<<<<<<<<<
  *         scalar = True
