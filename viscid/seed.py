@@ -1111,7 +1111,7 @@ class Circle(SphericalCap):
         """
         super(Circle, self).__init__(p0, r=r, pole=pole, angle=90.0, nphi=n,
                                      pole_is_vector=pole_is_vector, roll=roll,
-                                     cache=cache, dtype=dtype)
+                                     ntheta=1, cache=cache, dtype=dtype)
 
     def to_local(self, pts_3d):
         raise NotImplementedError()
