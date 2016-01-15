@@ -38,6 +38,7 @@ pkgs = ['viscid',
         'viscid.calculator',
         'viscid.cython',
         'viscid.compat',
+        'viscid.compat.futures',
         'viscid.plot',
         'viscid.readers'
        ]
