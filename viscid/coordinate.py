@@ -110,9 +110,16 @@ class Coordinates(object):
     def __init__(self, **kwargs):
         pass
 
-    def as_coordinates(self):
+    def as_local_coordinates(self):
         return self
 
+    def as_uv_coordinates(self):
+        # trying to get self._axes could raise an AttributeError for
+        # subclasses != StructredCrds
+        if len(self._axes) == 2:
+            return self
+        else:
+            raise NotImplementedError()
 
 class StructuredCrds(Coordinates):
     _TYPE = "structured"

@@ -13,6 +13,8 @@ Attributes:
         :py:func`viscid.vutil.common_argparse`.
 """
 
+from __future__ import print_function
+
 __version__ = """0.95.2 dev"""
 
 __all__ = ['amr_field',  # Modules
@@ -54,6 +56,8 @@ __all__ = ['amr_field',  # Modules
            'interp_nearest',  # cython helpers
            'interp_trilin',
            'calc_streamlines',
+           'find_classified_nulls',
+           'find_nulls'
            # viscid.calculator.calc.* is added below
            # viscid.seed.* is added below
           ]
@@ -115,11 +119,12 @@ __all__ += ["cluster"]
 from viscid.calculator.topology import topology2color
 __all__ += ["topology2color"]
 
+from viscid.calculator.separator import get_sep_line
+from viscid.calculator.separator import topology_bitor_clusters
 from viscid.calculator.separator import get_sep_pts_bitor
-from viscid.calculator.separator import get_sep_pts_bitor_spherical
-__all__ += ["get_sep_pts_bitor", "get_sep_pts_bitor_spherical"]
-
 from viscid.calculator.separator import get_sep_pts_bisect
+__all__ += ["get_sep_line"]
+__all__ += ["topology_bitor_clusters", "get_sep_pts_bitor"]
 __all__ += ["get_sep_pts_bisect"]
 
 from viscid.calculator.plasma import *
@@ -130,16 +135,15 @@ from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator import calc
 __all__ += calc.__all__
 
-from viscid.cython import interp_nearest
-from viscid.cython import interp_trilin
+from viscid.cython import interp_nearest, interp_trilin
 from viscid.cython import calc_streamlines
-
 from viscid.cython import streamline
 for attr in dir(streamline):
     if attr[0] != '_' and attr.isupper():
         vars()[attr] = getattr(streamline, attr)
         __all__.append(attr)
 del streamline
+from viscid.cython import find_classified_nulls, find_nulls
 
 # always bring in custom matplotlib stuff (colormaps & rc params)
 from viscid.plot import mpl_style
@@ -165,3 +169,13 @@ from viscid import vutil
 # apply settings in the rc file
 from viscid import _rc
 _rc.load_rc_file("~/.viscidrc")
+
+# this block is useful for debugging, ie, immediately do a pdb.set_trace()
+# on the SIGUSR2 signal
+import signal
+def _set_trace(seg, frame):  # pylint: disable=unused-argument
+    import pdb
+    pdb.set_trace()
+# import os
+# print("Trigger pdb with: kill -SIGUSR2", os.getpid())
+signal.signal(signal.SIGUSR2, _set_trace)

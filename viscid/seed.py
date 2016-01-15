@@ -90,8 +90,13 @@ class SeedGen(object):
             Subclasses **must** override
 
             - :py:meth:`get_nr_points`: get total number of seeds
+            - :py:meth:`get_uv_shape`: get the shape of the ndarray
+              of uv mesh coordinates IF there exists a 2D
+              representation of the seeds
             - :py:meth:`get_local_shape`: get the shape of the ndarray
               of local coordinates
+            - :py:meth:`uv_to_local`: transform 2d representation to
+              local representation
             - :py:meth:`to_3d`: transform an array in local
               coordinates to 3D space. Should return a 3xN ndarray.
             - :py:meth:`to_local`: transform a 3xN ndarray to an
@@ -99,6 +104,8 @@ class SeedGen(object):
               NotImplementedError.
             - :py:meth:`_make_local_points`: Make an ndarray that is
               used in :py:meth:`_make_3d_points`
+            - :py:meth:`_make_uv_axes`: Make axes for 2d mesh
+              representation, i.e., matches :py:attr:`uv_shape`
             - :py:meth:`_make_local_axes`: Make a tuple of arrays with
               lengths that match :py:attr:`local_shape`. It's ok to
               raise NotImplementedError if the local representation has
@@ -118,7 +125,8 @@ class SeedGen(object):
               orthonormal rotation matrix if there is some rotation
               required to go from local coordinates to 3D space.
             - :py:meth:`as_mesh`
-            - :py:meth:`as_coordinates`
+            - :py:meth:`as_uv_coordinates`
+            - :py:meth:`as_local_coordinates`
             - :py:meth:`wrap_field`
 
         - Off Limits
@@ -143,10 +151,13 @@ class SeedGen(object):
             :py:meth:`wrap_field` can be used to facilitate wrapping
             the result of :py:func:`trilin_interp` for easy plotting.
 
+            - :py:attr:`uv_shape`
             - :py:attr:`local_shape`
+            - :py:meth:`uv_to_local`
             - :py:meth:`to_local`
             - :py:meth:`as_mesh`
-            - :py:meth:`as_coordinates`
+            - :py:meth:`as_uv_coordinates`
+            - :py:meth:`as_local_coordinates`
             - :py:meth:`wrap_field`
     """
     _cache = None
@@ -162,17 +173,53 @@ class SeedGen(object):
         return self.get_nr_points()
 
     @property
+    def uv_shape(self):
+        """Shape of uv representation of seeds"""
+        return self.get_uv_shape()
+
+    @property
     def local_shape(self):
         """Shape of local representation of seeds"""
         return self.get_local_shape()
 
+    @property
+    def uv_extent(self):
+        """Try to get low and high coordnate values of uv points
+
+        Raises:
+            NotImplementedError: If subclass can't make uv mesh
+        """
+        crds = self.as_uv_coordinates()
+        return np.array([crds.get_xl(), crds.get_xh()]).T
+
+    @property
+    def local_extent(self):
+        """Try to get low and high coordnate values of local points
+
+        Raises:
+            NotImplementedError: If subclass can't make local mesh
+        """
+        crds = self.as_local_coordinates()
+        return np.array([crds.get_xl(), crds.get_xh()]).T
+
     def get_nr_points(self, **kwargs):
         raise NotImplementedError()
+
+    def get_uv_shape(self, **kwargs):
+        raise RuntimeError("{0} does not define get_uv_shape"
+                           "".format(type(self).__name__))
 
     def get_local_shape(self, **kwargs):
         raise NotImplementedError()
 
-    def to_3d(self, pts_local):
+    def uv_to_local(self, pts_uv):
+        raise RuntimeError("{0} does not define uv_to_local"
+                           "".format(type(self).__name__))
+
+    def uv_to_3d(self, pts_uv):
+        return self.to_3d(self.uv_to_local(pts_uv))
+
+    def local_to_3d(self, pts_local):
         """Transform points from the seed coordinate space to 3d
 
         Args:
@@ -194,8 +241,16 @@ class SeedGen(object):
         """
         raise NotImplementedError()
 
+    def _make_uv_points(self):
+        """Make a set of points in the uv representation"""
+        raise NotImplementedError()
+
     def _make_local_points(self):
         """Make a set of points in the local representation"""
+        raise NotImplementedError()
+
+    def _make_uv_axes(self):
+        """Make a tuple of arrays that match :py:attr:`local_shape`"""
         raise NotImplementedError()
 
     def _make_local_axes(self):
@@ -240,14 +295,19 @@ class SeedGen(object):
         raise RuntimeError("{0} does not define get_rotation"
                            "".format(type(self).__name__))
 
-    def as_coordinates(self):
+    def as_uv_coordinates(self):
+        """Make :py:class:`Coordinates` for the uv representation"""
+        raise RuntimeError("{0} does not define as_uv_coordinates"
+                           "".format(type(self).__name__))
+
+    def as_local_coordinates(self):
         """Make :py:class:`Coordinates` for the local representation"""
-        raise RuntimeError("{0} does not define as_coordinates"
+        raise RuntimeError("{0} does not define as_local_coordinates"
                            "".format(type(self).__name__))
 
     def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
         """Wrap an ndarray into a field in the local representation"""
-        crds = self.as_coordinates()
+        crds = self.as_local_coordinates()
         return viscid.wrap_field(data, crds, name=name, fldtype=fldtype,
                                  **kwargs)
 
@@ -314,7 +374,7 @@ class Point(SeedGen):
     def _make_local_axes(self):
         return np.arange(self.nr_points)
 
-    def as_coordinates(self):
+    def as_local_coordinates(self):
         x = self._make_local_axes()
         crds = viscid.wrap_crds("nonuniform_cartesian", (('x', x), ))
         return crds
@@ -342,8 +402,14 @@ class MeshPoints(SeedGen):
     def get_nr_points(self, **kwargs):
         return self.nu * self.nv
 
-    def get_local_shape(self):
+    def get_uv_shape(self, **kwargs):
         return (self.nu, self.nv)
+
+    def get_local_shape(self, **kwargs):
+        return self.get_local_shape()
+
+    def uv_to_local(self, pts_uv):
+        return pts_uv
 
     def to_3d(self, pts_local):
         return pts_local.reshape(3, -1)
@@ -354,19 +420,25 @@ class MeshPoints(SeedGen):
     def _make_local_points(self):
         return self.pts
 
-    def _make_local_axes(self):
+    def _make_uv_axes(self):
         return np.arange(self.nu), np.arange(self.nv)
 
-    def as_coordinates(self):
-        l, m = self._make_local_axes()
-        crds = viscid.wrap_crds("nonuniform_cartesian", (('x', l), ('y', m)))
+    def _make_local_axes(self):
+        return self._make_uv_axes()
+
+    def as_uv_coordinates(self):
+        l, m = self._make_uv_axes()
+        crds = viscid.wrap_crds("uniform_cartesian", (('x', l), ('y', m)))
         return crds
 
+    def as_local_coordinates(self):
+        return self.as_uv_coordinates()
+
     def as_mesh(self):
-        return self.get_points().reshape(3, self.nu, self.nv)
+        return self.get_points().reshape([3] + list(self.uv_shape))
 
     def arr2mesh(self, arr):
-        return arr.reshape(self.local_shape)
+        return arr.reshape(self.uv_shape)
 
 
 class Line(SeedGen):
@@ -388,8 +460,14 @@ class Line(SeedGen):
     def get_nr_points(self, **kwargs):
         return self.n
 
+    def get_uv_shape(self, **kwargs):
+        return (self.nr_points, 1)
+
     def get_local_shape(self, **kwargs):
         return (self.nr_points, )
+
+    def uv_to_local(self, pts_uv):
+        return pts_uv[:, :1]
 
     def to_3d(self, pts_local):
         ds = self.p1 - self.p0
@@ -404,10 +482,16 @@ class Line(SeedGen):
     def _make_local_points(self):
         return self._make_local_axes()
 
+    def _make_uv_axes(self):
+        return np.linspace(0.0, 1.0, self.n), np.array([0.0])
+
     def _make_local_axes(self):
         return np.linspace(0.0, 1.0, self.n)
 
-    def as_coordinates(self):
+    def as_uv_coordinates(self):
+        raise NotImplementedError()
+
+    def as_local_coordinates(self):
         dp = self.p1 - self.p0
         dist = np.sqrt(np.dot(dp, dp))
         x = np.linspace(0.0, dist, self.n)
@@ -415,7 +499,7 @@ class Line(SeedGen):
         return crd
 
     def as_mesh(self):
-        return self.get_points().reshape(3, self.n, 1)
+        return self.get_points().reshape([3] + list(self.uv_shape))
 
 
 class Plane(SeedGen):
@@ -494,8 +578,14 @@ class Plane(SeedGen):
     def get_nr_points(self, **kwargs):
         return self.nl * self.nm
 
-    def get_local_shape(self):
+    def get_uv_shape(self):
         return (self.nl, self.nm)
+
+    def get_local_shape(self):
+        return (3, self.nl * self.nm)
+
+    def uv_to_local(self, pts_uv):
+        return np.concatenate([pts_uv, np.zeros((1, pts_uv.shape[1]))], axis=0)
 
     def to_3d(self, pts_local):
         lmn_to_xyz = self.get_rotation()
@@ -509,17 +599,22 @@ class Plane(SeedGen):
 
     def _make_local_points(self):
         plane_lmn = np.empty((3, self.nl * self.nm), dtype=self.dtype)
-        l, m = self._make_local_axes()
+        l, m, n = self._make_local_axes()
         plane_lmn[0, :] = np.repeat(l, self.nm)
         plane_lmn[1, :] = np.tile(m, self.nl)
-        plane_lmn[2, :] = 0.0
+        plane_lmn[2, :] = n
         return plane_lmn
 
-    def _make_local_axes(self):
+    def _make_uv_axes(self):
         len_l, len_m = self.len_l, self.len_m
         l = np.linspace(len_l[0], len_l[1], self.nl).astype(self.dtype)
         m = np.linspace(len_m[0], len_m[1], self.nm).astype(self.dtype)
         return l, m
+
+    def _make_local_axes(self):
+        l, m = self._make_uv_axes()
+        n = np.array([0.0]).astype(self.dtype)
+        return l, m, n
 
     def get_rotation(self):
         """Get rotation from lmn -> xyz
@@ -597,16 +692,22 @@ class Plane(SeedGen):
         """
         return np.array([self.Ldir, self.Mdir, self.Ndir]).T
 
-    def as_coordinates(self):
-        l, m = self._make_local_axes()
+    def as_uv_coordinates(self):
+        l, m = self._make_uv_axes()
         crds = viscid.wrap_crds("nonuniform_cartesian", (('x', l), ('y', m)))
         return crds
 
+    def as_local_coordinates(self):
+        l, m, n = self._make_local_axes()
+        crds = viscid.wrap_crds("nonuniform_cartesian", (('x', l), ('y', m),
+                                                         ('z', n)))
+        return crds
+
     def as_mesh(self):
-        return self.get_points().reshape(3, self.nl, self.nm)
+        return self.get_points().reshape([3] + list(self.uv_shape))
 
     def arr2mesh(self, arr):
-        return arr.reshape(self.local_shape)
+        return arr.reshape(self.uv_shape)
 
 
 class Volume(SeedGen):
@@ -631,11 +732,29 @@ class Volume(SeedGen):
         self.n = np.empty_like(self.xl, dtype='i')
         self.n[:] = n
 
+    def _get_uv_xind(self):
+        try:
+            return self.n.tolist().index(1)
+        except ValueError:
+            raise RuntimeError("Volume has no length 1 dimension, can't map "
+                               "to uv space")
+
     def get_nr_points(self, **kwargs):
         return np.prod(self.n)
 
+    def get_uv_shape(self, **kwargs):
+        n = self.n.tolist()
+        n.pop(self._get_uv_xind())
+        return n
+
     def get_local_shape(self, **kwargs):
         return tuple(self.n)
+
+    def uv_to_local(self, pts_uv):
+        ind = self._get_uv_xind()
+        val = self.xl[ind]
+        return np.insert(pts_uv, ind, val * np.ones(ind, pts_uv.shape[1]),
+                         axis=0)
 
     def to_3d(self, pts_local):
         return pts_local
@@ -652,6 +771,11 @@ class Volume(SeedGen):
                                   np.prod(shape[i + 1:]))
         return arr
 
+    def _make_uv_axes(self):
+        axes = self._make_local_axes()
+        axes.pop(self._get_uv_xind())
+        return axes
+
     def _make_local_axes(self):
         x = np.linspace(self.xl[0], self.xh[0], self.n[0]).astype(self.dtype)
         y = np.linspace(self.xl[1], self.xh[1], self.n[1]).astype(self.dtype)
@@ -662,34 +786,32 @@ class Volume(SeedGen):
         x, y, z = self._make_local_axes()
         return itertools.product(x, y, z)
 
-    def as_coordinates(self):
+    def as_uv_coordinates(self):
+        x, y = self._make_uv_axes()
+        crd = viscid.wrap_crds("nonuniform_cartesian",
+                               (('x', x), ('y', y)))
+        return crd
+
+    def as_local_coordinates(self):
         x, y, z = self._make_local_axes()
         crd = viscid.wrap_crds("nonuniform_cartesian",
                                (('x', x), ('y', y), ('z', z)))
         return crd
 
     def as_mesh(self):
-        n = self.n.tolist()
-        try:
-            ind = n.index(1)
-            pts = self.get_points()
-            n.pop(ind)
-            return pts.reshape([3] + n)
-        except ValueError:
-            raise RuntimeError("Can't make a 2d surface from a 3d volume")
+        return self.get_points().reshape([3] + list(self.uv_shape))
 
     def arr2mesh(self, arr):
-        vertices = self.as_mesh()
-        return arr.reshape(vertices.shape[1:])
+        return arr.reshape(self.uv_shape)
 
 
 class Sphere(SeedGen):
     """Make seeds on the surface of a sphere"""
 
     def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), ntheta=20, nphi=20,
-                 thetalim=(0, 180.0), philim=(0, 360.0), phi_endpoint=False,
-                 pole_is_vector=True, theta_phi=False, roll=0.0,
-                 cache=False, dtype=None):
+                 thetalim=(0, 180.0), philim=(0, 360.0), theta_endpoint=False,
+                 phi_endpoint=False, pole_is_vector=True, theta_phi=False,
+                 roll=0.0, cache=False, dtype=None):
         """Make seeds on the surface of a sphere
 
         Args:
@@ -706,8 +828,8 @@ class Sphere(SeedGen):
                 value. This is false by default since 0 == 2pi.
             pole_is_vector (bool): Whether pole is a vector or a
                 vector
-            theta_phi (bool): If True, reult can be reshaped as
-                (theta, phi), otherwise it's (phi, theta)
+            theta_phi (bool): If True, the uv and local representations
+                are ordered (theta, phi), otherwise (phi, theta)
         """
         super(Sphere, self).__init__(cache=cache, dtype=dtype)
 
@@ -727,7 +849,7 @@ class Sphere(SeedGen):
             r = np.linalg.norm(self.pole)
         self.pole = self.pole / np.linalg.norm(self.pole)
 
-        if not (len(thetalim) == len(philim) == 2):
+        if not len(thetalim) == len(philim) == 2:
             raise ValueError("thetalim and philim must have both min and max")
 
         self.r = r
@@ -735,21 +857,64 @@ class Sphere(SeedGen):
         self.nphi = nphi
         self.thetalim = np.deg2rad(thetalim)
         self.philim = np.deg2rad(philim)
+        self.theta_endpoint = theta_endpoint
         self.phi_endpoint = phi_endpoint
         self.theta_phi = theta_phi
         self.roll = roll
 
+    @property
+    def _spans_theta(self):
+        return np.isclose(self.thetalim[1] - self.thetalim[0], np.pi)
+
+    @property
+    def _spans_phi(self):
+        return np.isclose(self.philim[1] - self.philim[0], 2 * np.pi)
+
+    @property
+    def _is_whole_sphere(self):
+        return self._spans_theta and self._spans_phi
+
+    @property
+    def pt_bnds(self):
+        which = "0" if self.theta_phi else "1"
+        pt = []
+        if np.any(np.isclose(self.thetalim[0], [0.0, np.pi])):
+            pt.append(which + "-")
+        if np.any(np.isclose(self.thetalim[1], [0.0, np.pi])):
+            pt.append(which + "+")
+        return pt
+
+    @property
+    def periodic(self):
+        if self._spans_phi:
+            if self.theta_phi:
+                return (False, "1")
+            else:
+                return ("1", False)
+        else:
+            return ()
+
     def get_nr_points(self, **kwargs):
         return self.ntheta * self.nphi
 
-    def get_local_shape(self, **kwargs):
+    def get_uv_shape(self, **kwargs):
         if self.theta_phi:
             return (self.ntheta, self.nphi)
         else:
             return (self.nphi, self.ntheta)
 
+    def get_local_shape(self, **kwargs):
+        return tuple([1] + list(self.uv_shape))
+
+    def uv_to_local(self, pts_uv):
+        return np.insert(pts_uv, 0, self.r * np.ones((1, pts_uv.shape[1])),
+                         axis=0)
+
     def to_3d(self, pts_local):
-        r, T, P = pts_local[0, :], pts_local[1, :], pts_local[2, :]
+        if self.theta_phi:
+            r, T, P = pts_local[0, :], pts_local[1, :], pts_local[2, :]
+        else:
+            r, P, T = pts_local[0, :], pts_local[1, :], pts_local[2, :]
         a = np.empty((3, pts_local.shape[1]), dtype=self.dtype)
         a[0, :] = (r * np.sin(T) * np.cos(P))
         a[1, :] = (r * np.sin(T) * np.sin(P))
@@ -763,32 +928,41 @@ class Sphere(SeedGen):
 
     def _make_local_points(self):
         arr = np.empty((3, self.ntheta * self.nphi), dtype=self.dtype)
-        theta, phi = self._make_local_axes()
-        arr[0, :] = self.r
+        r, theta, phi = self._make_local_axes()
+        arr[0, :] = r
         # Note: arr[1, :] is always theta and arr[2, :] is always phi
         # what changes is the way the points are ordered in the 2nd dimension
         if self.theta_phi:
             arr[1, :] = np.repeat(theta, self.nphi)
             arr[2, :] = np.tile(phi, self.ntheta)
         else:
-            arr[1, :] = np.tile(theta, self.nphi)
-            arr[2, :] = np.repeat(phi, self.ntheta)
+            arr[1, :] = np.repeat(phi, self.ntheta)
+            arr[2, :] = np.tile(theta, self.nphi)
         return arr
 
-    def _make_local_axes(self):
-        theta = np.linspace(self.thetalim[0], self.thetalim[1], self.ntheta + 1,
-                            endpoint=True).astype(self.dtype)
-        theta = 0.5 * (theta[1:] + theta[:-1])
+    def _make_uv_axes(self):
+        if self.theta_endpoint:
+            theta = np.linspace(self.thetalim[0], self.thetalim[1],
+                                self.ntheta).astype(self.dtype)
+        else:
+            theta = np.linspace(self.thetalim[0], self.thetalim[1],
+                                self.ntheta + 1).astype(self.dtype)
+            theta = 0.5 * (theta[1:] + theta[:-1])
         phi = np.linspace(self.philim[0], self.philim[1], self.nphi,
                           endpoint=self.phi_endpoint).astype(self.dtype)
         return theta, phi
+
+    def _make_local_axes(self):
+        theta, phi = self._make_uv_axes()
+        r = np.array([self.r], dtype=self.dtype)
+        return r, theta, phi
 
     def get_rotation(self):
         return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.pole,
                                     roll=self.roll)
 
-    def as_coordinates(self):
-        theta, phi = self._make_local_axes()
+    def as_uv_coordinates(self):
+        theta, phi = self._make_uv_axes()
         if self.theta_phi:
             crds = viscid.wrap_crds("nonuniform_cartesian",
                                     (('x', theta), ('y', phi)))
@@ -797,14 +971,11 @@ class Sphere(SeedGen):
                                     (('x', phi), ('y', theta)))
         return crds
 
-    @property
-    def _is_whole_sphere(self):
-        delta_theta = self.thetalim[1] - self.thetalim[0]
-        delta_phi = self.philim[1] - self.philim[0]
-        return np.allclose([delta_theta, delta_phi], [np.pi, 2.0 * np.pi])
+    def as_local_coordinates(self):
+        return self.as_uv_coordinates()
 
     def as_mesh(self):
-        new_shape = [3] + list(self.local_shape)
+        new_shape = [3] + list(self.uv_shape)
         pts = self.get_points().reshape(new_shape)
 
         if self._is_whole_sphere:
@@ -831,7 +1002,7 @@ class Sphere(SeedGen):
         return pts
 
     def arr2mesh(self, arr):
-        arr = arr.reshape(self.local_shape)
+        arr = arr.reshape(self.uv_shape)
 
         if self._is_whole_sphere:
             if self.theta_phi:
@@ -890,7 +1061,7 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
     def to_local(self, pts_3d):
         raise NotImplementedError()
 
-    def _make_local_axes(self):
+    def _make_uv_axes(self):
         theta = np.linspace(self.angle, 0.0, self.ntheta, endpoint=False)
         theta = np.array(theta[::-1], dtype=self.dtype)
         phi = np.linspace(0, 2.0 * np.pi, self.nphi,
@@ -962,10 +1133,10 @@ class SphericalPatch(SeedGen):
         if not p1_is_vector:
             p1 = p1 - p0
 
-        if not r:
-            r = np.linalg.norm(p1)
-        else:
+        if r:
             p1 = p1 * (r / np.linalg.norm(p1))
+        else:
+            r = np.linalg.norm(p1)
 
         if np.sin(max_alpha)**2 + np.sin(max_beta)**2 > 1:
             raise ValueError("Invalid alpha/beta ranges, if you want "
@@ -984,8 +1155,14 @@ class SphericalPatch(SeedGen):
     def get_nr_points(self, **kwargs):
         return self.nalpha * self.nbeta
 
-    def get_local_shape(self, **kwargs):
+    def get_uv_shape(self, **kwargs):
         return (self.nalpha, self.nbeta)
+
+    def get_local_shape(self, **kwargs):
+        return self.uv_shape
+
+    def uv_to_local(self, pts_uv):
+        return pts_uv
 
     def to_3d(self, pts_local):
         arr = np.zeros((3, pts_local.shape[1]), dtype=self.dtype)
@@ -1005,28 +1182,34 @@ class SphericalPatch(SeedGen):
         arr[1, :] = np.tile(beta, self.nalpha)
         return arr
 
-    def _make_local_axes(self):
+    def _make_uv_axes(self):
         alpha = np.linspace(-1.0 * self.max_alpha, 1.0 * self.max_alpha,
                             self.nalpha)
         beta = np.linspace(-1.0 * self.max_beta, 1.0 * self.max_beta,
                            self.nbeta)
         return alpha, beta
 
+    def _make_local_axes(self):
+        return self._make_uv_axes()
+
     def get_rotation(self):
         return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.p1,
                                     roll=self.roll)
 
-    def as_coordinates(self):
-        alpha, beta = self._make_local_axes()
+    def as_uv_coordinates(self):
+        alpha, beta = self._make_uv_axes()
         crds = viscid.wrap_crds("nonuniform_cartesian",
                                 (('x', alpha), ('y', beta)))
         return crds
+
+    def as_local_coordinates(self):
+        return self.as_uv_coordinates()
 
     def as_mesh(self):
         return self.get_points().reshape(3, self.nalpha, self.nbeta)
 
     def arr2mesh(self, arr):
-        return arr.reshape(self.local_shape)
+        return arr.reshape(self.uv_shape)
 
 
 class PolarIonosphere(Sphere):

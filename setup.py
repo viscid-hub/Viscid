@@ -67,6 +67,10 @@ cy_defs.append(["viscid.cython.streamline",
                 ["viscid/cython/streamline"],
                 dict()
                ])
+cy_defs.append(["viscid.cython.null_tools",
+                ["viscid/cython/null_tools"],
+                dict()
+               ])
 cy_defs.append(["viscid.cython.cyfield",
                 ["viscid/cython/cyfield"],
                 dict()

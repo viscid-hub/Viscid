@@ -148,14 +148,13 @@ class Node(object):
         else:
             return matching_parent
 
-    def find_info(self, key):
-        """Go through the parents (breadth first) and find the info
-
-        Raises:
-            KeyError
-        """
-        matching_parent = self.find_info_owner(key)
-        return matching_parent.get_info(key)
+    def find_info(self, key, default=None):
+        """Go through the parents (breadth first) and find the info"""
+        try:
+            matching_parent = self.find_info_owner(key)
+            return matching_parent.get_info(key)
+        except KeyError:
+            return default
 
     def update_info(self, key, val, fallback=True):
         """Update an existing key if found, or fall back to add_info"""

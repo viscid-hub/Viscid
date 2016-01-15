@@ -103,6 +103,7 @@ class VFile(Dataset):
         fname = os.path.expanduser(os.path.expandvars(fname))
         self.fname = os.path.abspath(fname)
         self.dirname = os.path.dirname(self.fname)
+        self.set_info("_viscid_dirname", self.dirname)
         self.load_time = time()
         self._parse()
 

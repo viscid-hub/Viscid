@@ -44,9 +44,11 @@ try:
     from viscid.cython import cyamr
     from viscid.cython import cycalc
     from viscid.cython import streamline
+    from viscid.cython import null_tools
 
     from viscid.cython.cycalc import interp_nearest
     from viscid.cython.cycalc import interp_trilin
+    from viscid.cython.null_tools import find_classified_nulls, find_nulls
     from viscid.cython.streamline import calc_streamlines
 
     streamlines = calc_streamlines
@@ -78,10 +80,15 @@ except ImportError:
         raise CythonNotBuilt(cython_msg.format("streamlines"))
     def calc_streamlines(*args, **kwargs):  # pylint: disable=unused-argument
         raise CythonNotBuilt(cython_msg.format("calc_streamlines"))
+    def find_classified_nulls(*args, **kwargs):  # pylint: disable=unused-argument
+        raise CythonNotBuilt(cython_msg.format("find_classified_nulls"))
+    def find_nulls(*args, **kwargs):  # pylint: disable=unused-argument
+        raise CythonNotBuilt(cython_msg.format("find_nulls"))
 
     cyamr = _dummy(cython_msg.format("cyamr"))
     cycalc = _dummy(cython_msg.format("cycalc"))
     streamline = _dummy(cython_msg.format("streamline"), **_streamline_attrs)
+    null_tools = _dummy(cython_msg.format("null_tools"))
 
 ##
 ## EOF
