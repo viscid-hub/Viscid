@@ -336,7 +336,7 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
 
     pts3d = seed.to_3d(seed.uv_to_local(np.array([allx, ally])))
     _, all_topo = viscid.calc_streamlines(fld, pts3d, max_length=300.0,
-                                          ibound=6.0, topo_style="msphere",
+                                          topo_style="msphere",
                                           output=viscid.OUTPUT_TOPOLOGY,
                                           **trace_opts)
 
