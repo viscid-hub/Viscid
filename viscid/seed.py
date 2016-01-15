@@ -753,8 +753,7 @@ class Volume(SeedGen):
     def uv_to_local(self, pts_uv):
         ind = self._get_uv_xind()
         val = self.xl[ind]
-        return np.insert(pts_uv, ind, val * np.ones(ind, pts_uv.shape[1]),
-                         axis=0)
+        return np.insert(pts_uv, ind, val * np.ones(pts_uv.shape[1]), axis=0)
 
     def to_3d(self, pts_local):
         return pts_local
@@ -772,7 +771,7 @@ class Volume(SeedGen):
         return arr
 
     def _make_uv_axes(self):
-        axes = self._make_local_axes()
+        axes = list(self._make_local_axes())
         axes.pop(self._get_uv_xind())
         return axes
 
