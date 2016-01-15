@@ -89,8 +89,6 @@ Function                                       Description
                                                more separators locations for a seed
 :py:func:`viscid.get_sep_pts_bitor`            Use bitwise_or to find one or more separators in a
                                                topology Field
-:py:func:`viscid.get_sep_pts_bitor_spherical`  Use bitwise_or to find one or more separators in a periodic
-                                               topology Field
 =============================================  ===========================================================
 
 Plotting

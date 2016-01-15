@@ -15,7 +15,9 @@ UNEVEN_HALF = 0.65
 def get_sep_line(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
                  r=1.0, plot=False, trace_opts=None, cache=True,
                  cache_dir=None):
-    """Summary
+    """Trace a separator line from most dawnward null
+
+    **Still in testing** Uses the bisection algorithm.
 
     Args:
         grid (Grid): A grid that has a "b" field
@@ -201,10 +203,19 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
     return pts
 
 def get_sep_pts_bitor(fld, seed, trace_opts=None, make_3d=False, **kwargs):
-    """Wrap :py:func:`find_sep_points_cartesian` for spheres and caps
+    """bitor topologies to find separator points in uv map from seed
 
-    This is kind of a janky interface since data about
-    theta_phi / overlap / cap could exist in the field
+    Args:
+        fld (VectorField): Magnetic Field
+        seed (viscid.seed.SeedGen): Any Seed generator with a 2d local
+            representation
+        trace_opts (dict): kwargs for calc_streamlines
+        make_3d (bool): convert result from uv to 3d space
+        **kwargs: passed to :py:func:`topology_bitor_clusters`
+
+    Returns:
+        3xN ndarray of N separator points in uv space or 3d space
+        depending on the `make_3d` kwarg
     """
     if trace_opts is None:
         trace_opts = dict()
@@ -241,6 +252,24 @@ def perimeter_check_bitwise_or(arr):
 def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
                        plot=False, perimeter_check=perimeter_check_bitwise_or,
                        make_3d=True):
+    """bisect uv map of seed to find separator points
+
+    Args:
+        fld (VectorField): Magnetic Field
+        seed (viscid.seed.SeedGen): Any Seed generator with a 2d local
+            representation
+        trace_opts (dict): kwargs for calc_streamlines
+        min_depth (int): Min allowable bisection depth
+        max_depth (int): Max bisection depth
+        plot (bool): Useful for debugging the algorithm
+        perimeter_check (func): Some func that returns a bool with the
+            same signature as :py:func:`perimeter_check_bitwise_or`
+        make_3d (bool): convert result from uv to 3d space
+
+    Returns:
+        3xN ndarray of N separator points in uv space or 3d space
+        depending on the `make_3d` kwarg
+    """
     pts_even = _get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
                                    min_depth=0, max_depth=2, plot=False,
                                    perimeter_check=perimeter_check,
