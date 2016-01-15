@@ -858,7 +858,6 @@ struct __pyx_obj_6viscid_6cython_7cyfield_CyField {
   int nm2[3];
   int nr_nodes[3];
   int nr_cells[3];
-  int cached_ind[3];
   __pyx_t_5numpy_float64_t min_dx;
 };
 
@@ -3934,7 +3933,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_fuse_0__
  *         for j in range(sshape_cc[i]):
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]             # <<<<<<<<<<<<<<
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  */
       __pyx_t_5 = __Pyx_GetItemInt(PyList_GET_ITEM(__pyx_v__crd_lst_cc, __pyx_v_i), __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_5);
@@ -3946,18 +3945,9 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_fuse_0__
       *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_fld->crds_cc.data + __pyx_t_21 * __pyx_v_fld->crds_cc.strides[0]) )) + __pyx_t_22)) )) = __pyx_t_13;
     }
 
-    /* "viscid/cython/cyfield.pyx":108
- *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]
- * 
- *         fld.cached_ind[i] = 0             # <<<<<<<<<<<<<<
- *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
- *         if fld.uniform_crds:
- */
-    (__pyx_v_fld->__pyx_base.cached_ind[__pyx_v_i]) = 0;
-
     /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -3978,7 +3968,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_fuse_0__
     __pyx_v_fld->__pyx_base.uniform_crds = __pyx_t_15;
 
     /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -3997,7 +3987,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_fuse_0__
       (__pyx_v_fld->dx[__pyx_v_i]) = (((__pyx_v_fld->xhnc[__pyx_v_i]) - (__pyx_v_fld->xlnc[__pyx_v_i])) / (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i]));
 
       /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -5534,7 +5524,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_fuse_1__
  *         for j in range(sshape_cc[i]):
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]             # <<<<<<<<<<<<<<
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  */
       __pyx_t_5 = __Pyx_GetItemInt(PyList_GET_ITEM(__pyx_v__crd_lst_cc, __pyx_v_i), __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_5);
@@ -5546,18 +5536,9 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_fuse_1__
       *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_fld->crds_cc.data + __pyx_t_21 * __pyx_v_fld->crds_cc.strides[0]) )) + __pyx_t_22)) )) = __pyx_t_13;
     }
 
-    /* "viscid/cython/cyfield.pyx":108
- *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]
- * 
- *         fld.cached_ind[i] = 0             # <<<<<<<<<<<<<<
- *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
- *         if fld.uniform_crds:
- */
-    (__pyx_v_fld->__pyx_base.cached_ind[__pyx_v_i]) = 0;
-
     /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -5578,7 +5559,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_fuse_1__
     __pyx_v_fld->__pyx_base.uniform_crds = __pyx_t_15;
 
     /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -5597,7 +5578,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_fuse_1__
       (__pyx_v_fld->dx[__pyx_v_i]) = (((__pyx_v_fld->xhnc[__pyx_v_i]) - (__pyx_v_fld->xlnc[__pyx_v_i])) / (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i]));
 
       /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -7135,7 +7116,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__
  *         for j in range(sshape_cc[i]):
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]             # <<<<<<<<<<<<<<
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  */
       __pyx_t_5 = __Pyx_GetItemInt(PyList_GET_ITEM(__pyx_v__crd_lst_cc, __pyx_v_i), __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_5);
@@ -7147,18 +7128,9 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__
       *((__pyx_t_5numpy_float32_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float32_t *) ( /* dim=0 */ (__pyx_v_fld->crds_cc.data + __pyx_t_22 * __pyx_v_fld->crds_cc.strides[0]) )) + __pyx_t_23)) )) = __pyx_t_15;
     }
 
-    /* "viscid/cython/cyfield.pyx":108
- *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]
- * 
- *         fld.cached_ind[i] = 0             # <<<<<<<<<<<<<<
- *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
- *         if fld.uniform_crds:
- */
-    (__pyx_v_fld->__pyx_base.cached_ind[__pyx_v_i]) = 0;
-
     /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -7179,7 +7151,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__
     __pyx_v_fld->__pyx_base.uniform_crds = __pyx_t_16;
 
     /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -7198,7 +7170,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_fuse_2__
       (__pyx_v_fld->dx[__pyx_v_i]) = (((__pyx_v_fld->xhnc[__pyx_v_i]) - (__pyx_v_fld->xlnc[__pyx_v_i])) / (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i]));
 
       /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -8735,7 +8707,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__
  *         for j in range(sshape_cc[i]):
  *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]             # <<<<<<<<<<<<<<
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  */
       __pyx_t_5 = __Pyx_GetItemInt(PyList_GET_ITEM(__pyx_v__crd_lst_cc, __pyx_v_i), __pyx_v_j, int, 1, __Pyx_PyInt_From_int, 0, 0, 0); if (unlikely(__pyx_t_5 == NULL)) {__pyx_filename = __pyx_f[0]; __pyx_lineno = 106; __pyx_clineno = __LINE__; goto __pyx_L1_error;};
       __Pyx_GOTREF(__pyx_t_5);
@@ -8747,18 +8719,9 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__
       *((__pyx_t_5numpy_float64_t *) ( /* dim=1 */ ((char *) (((__pyx_t_5numpy_float64_t *) ( /* dim=0 */ (__pyx_v_fld->crds_cc.data + __pyx_t_21 * __pyx_v_fld->crds_cc.strides[0]) )) + __pyx_t_22)) )) = __pyx_t_13;
     }
 
-    /* "viscid/cython/cyfield.pyx":108
- *             fld.crds_cc[i, j] = _crd_lst_cc[i][j]
- * 
- *         fld.cached_ind[i] = 0             # <<<<<<<<<<<<<<
- *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
- *         if fld.uniform_crds:
- */
-    (__pyx_v_fld->__pyx_base.cached_ind[__pyx_v_i]) = 0;
-
     /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -8779,7 +8742,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__
     __pyx_v_fld->__pyx_base.uniform_crds = __pyx_t_15;
 
     /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -8798,7 +8761,7 @@ static struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_fuse_3__
       (__pyx_v_fld->dx[__pyx_v_i]) = (((__pyx_v_fld->xhnc[__pyx_v_i]) - (__pyx_v_fld->xlnc[__pyx_v_i])) / (__pyx_v_fld->__pyx_base.nr_nodes[__pyx_v_i]));
 
       /* "viscid/cython/cyfield.pyx":110
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")
  *         if fld.uniform_crds:             # <<<<<<<<<<<<<<
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -24602,7 +24565,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -24624,7 +24587,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -24646,7 +24609,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]
@@ -24668,7 +24631,7 @@ static int __Pyx_InitCachedConstants(void) {
 
   /* "viscid/cython/cyfield.pyx":109
  * 
- *         fld.cached_ind[i] = 0
+ *         # fld.cached_ind[i] = 0  # dangerous for threads :(
  *         fld.uniform_crds = vfield.crds._TYPE.startswith("uniform")             # <<<<<<<<<<<<<<
  *         if fld.uniform_crds:
  *             fld.dx[i] = (fld.xhnc[i] - fld.xlnc[i]) / fld.nr_nodes[i]

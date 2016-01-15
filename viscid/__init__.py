@@ -53,7 +53,8 @@ __all__ = ['amr_field',  # Modules
            'scalar_fields_to_vector',
            'wrap_field',
            'arrays2crds',  # Crd helpers
-           'interp_nearest',  # cython helpers
+           'interp',  # cython helpers
+           'interp_nearest',
            'interp_trilin',
            'calc_streamlines',
            'find_classified_nulls',
@@ -135,7 +136,7 @@ from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator import calc
 __all__ += calc.__all__
 
-from viscid.cython import interp_nearest, interp_trilin
+from viscid.cython import interp, interp_nearest, interp_trilin
 from viscid.cython import calc_streamlines
 from viscid.cython import streamline
 for attr in dir(streamline):

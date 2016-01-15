@@ -20,7 +20,7 @@ cdef class CyField:
     cdef int nm2[3]  # fld.n - 2
     cdef int nr_nodes[3]
     cdef int nr_cells[3]
-    cdef int cached_ind[3]
+    # cdef int cached_ind[3]  # dangerous for threads :(
     cdef cnp.float64_t min_dx
 
 cdef class Field_I4_Crd_F8(CyField):
