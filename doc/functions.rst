@@ -33,8 +33,7 @@ Streamlines and Interpolation
 Class                                Description
 ===================================  =================================================
 :py:func:`viscid.calc_streamlines`   Calculate streamlines
-:py:func:`viscid.interp_trilin`      Trilinear interpolation
-:py:func:`viscid.interp_nearest`     Nearest neighbor interpolation
+:py:func:`viscid.interp`             Interpolation, use kind kwarg for trilin/nearest
 :py:class:`viscid.Point`             Collection of hand picked points
 :py:class:`viscid.Line`              A line between 2 points
 :py:class:`viscid.Plane`             A plane difined be an origin and a normal
@@ -84,7 +83,10 @@ Magnetic Topology and Separator Tools
 Function                                       Description
 =============================================  ===========================================================
 :py:func:`viscid.topology2color`               Turn topology bitmask into colors
-:py:func:`viscid.get_sep_pts_bisect`           Not Implemented
+:py:func:`viscid.get_sep_line`                 **Still in testing** Trace a separator line using bisection
+                                               algorithm
+:py:func:`viscid.get_sep_pts_bisect`           **Still in testing** Use bisection algorithm to find one or
+                                               more separators locations for a seed
 :py:func:`viscid.get_sep_pts_bitor`            Use bitwise_or to find one or more separators in a
                                                topology Field
 :py:func:`viscid.get_sep_pts_bitor_spherical`  Use bitwise_or to find one or more separators in a periodic

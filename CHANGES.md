@@ -7,6 +7,7 @@ Changes
 Changes:
   - Add developer's guide to the docs
   - Added `mpl_style` module to deprecate `mpl_extra` and `vseaborn`
+  - Use nogil for streamlines and a threads option for lighterweight parallelism
   - Added simple functions to find separators in topology Fields. Separator tracing is still left out of the Viscid repo for the time being as it is insufficiently tested.
 
 Deprecated:
