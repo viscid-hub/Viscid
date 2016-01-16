@@ -34,6 +34,9 @@ Magnetic topology can be determined by the end points of magnetic field lines. B
 
 For more info on streamlines, check out :py:func:`viscid.calc_streamlines` and subclasses of :py:class:`viscid.SeedGen`
 
+X-Point Location and Separator Tracing
+--------------------------------------
+
 Bisection algorithm
 ~~~~~~~~~~~~~~~~~~~
 

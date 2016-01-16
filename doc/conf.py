@@ -322,6 +322,13 @@ _viscid_root = os.path.realpath('../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
 
+import viscid
+
+# not sure why recalling post_rc_actions() is necessary in sphinx
+viscid.mpl_style.use_styles = ["seaborn-talk", "seaborn-ticks",
+                               "viscid-colorblind", "viscid-steve"]
+viscid.mpl_style.post_rc_actions()
+
 # some examples change this, so make sure it's off by default
 from viscid import readers
 from viscid.readers import openggcm

@@ -33,10 +33,11 @@ Streamlines and Interpolation
 Class                                Description
 ===================================  =================================================
 :py:func:`viscid.calc_streamlines`   Calculate streamlines
-:py:func:`viscid.interp`             Interpolation, use kind kwarg for trilin/nearest
+:py:func:`viscid.interp`             Interpolation, use `kind` kwarg for trilinear /
+                                     nearest neighbor
 :py:class:`viscid.Point`             Collection of hand picked points
 :py:class:`viscid.Line`              A line between 2 points
-:py:class:`viscid.Plane`             A plane difined be an origin and a normal
+:py:class:`viscid.Plane`             A plane defined by an origin and a normal vector
 :py:class:`viscid.Volume`            A Volume of points on a uniform cartesian grid
 :py:class:`viscid.Sphere`            Points on the surface of a sphere
 :py:class:`viscid.SphericalCap`      A cap of points around the pole of a sphere
@@ -79,17 +80,21 @@ Magnetic Topology and Separator Tools
 
 .. cssclass:: table-striped
 
-=============================================  ===========================================================
+For using the separator tools, you may want to refer to :doc:`../examples/calc`.
+
+=============================================  ============================================================
 Function                                       Description
-=============================================  ===========================================================
+=============================================  ============================================================
 :py:func:`viscid.topology2color`               Turn topology bitmask into colors
 :py:func:`viscid.get_sep_line`                 **Still in testing** Trace a separator line using bisection
                                                algorithm
 :py:func:`viscid.get_sep_pts_bisect`           **Still in testing** Use bisection algorithm to find one or
                                                more separators locations for a seed
-:py:func:`viscid.get_sep_pts_bitor`            Use bitwise_or to find one or more separators in a
+:py:func:`viscid.get_sep_pts_bitor`            **Still in testing** Use bitwise-or algorithm to find one or
+                                               more separators locations for a seed
+:py:func:`viscid.topology_bitor_clusters`      Use bitwise-or algorithm to find one or more separators in a
                                                topology Field
-=============================================  ===========================================================
+=============================================  ============================================================
 
 Plotting
 --------

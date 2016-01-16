@@ -9,7 +9,7 @@ Here are some basic features that all readers try to implement to the best of th
 
 - Sane Temporal Data: If there is a way to assume more than one file are in a time series, lazily consolidate everything into a :class:`viscid.dataset.DatasetTemporal`. This can be accessed like a dictionary just like Grids or Viscid Files, but they have ways to activate a specific time slice, or efficiently iterate through all time slices.
 
-- :class:`viscid.field.Field` objects should be as much like Numpy ndarrays as possible. If for whatever reason, passing a field to a Numpy ufunc doesn't work, the underlying ndarray is alwas accessible via its ``data`` attribute.
+- :class:`viscid.field.Field` objects should be as much like Numpy ndarrays as possible. If for whatever reason, passing a field to a Numpy ufunc doesn't work, the underlying ndarray is always accessible via its ``data`` attribute.
 
 The overall story goes something like this... :class:`viscid.readers.vfile.VFile` objects are :class:`viscid.dataset.Dataset` objects. Datasets contain :class:`viscid.grid.Grid` instances. Grids have :class:`viscid.field.Field` instances, :class:`viscid.coordinate.Coordinates` instances, and special methods (``_get_*``) to calculate derived quantites. At any of these levels, the object can be treated like a dictionary to get something sensible. As an example, all of the following return the same object
 
