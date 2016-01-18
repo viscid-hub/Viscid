@@ -86,7 +86,7 @@ For using the separator tools, you may want to refer to :doc:`../examples/calc`.
 Function                                       Description
 =============================================  ============================================================
 :py:func:`viscid.topology2color`               Turn topology bitmask into colors
-:py:func:`viscid.get_sep_line`                 **Still in testing** Trace a separator line using bisection
+:py:func:`viscid.trace_separator`              **Still in testing** Trace a separator line using bisection
                                                algorithm
 :py:func:`viscid.get_sep_pts_bisect`           **Still in testing** Use bisection algorithm to find one or
                                                more separators locations for a seed

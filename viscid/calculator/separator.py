@@ -12,9 +12,9 @@ UNEVEN_MASK = 0b1000
 UNEVEN_HALF = 0.65
 
 
-def get_sep_line(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
-                 r=1.0, plot=False, trace_opts=None, cache=True,
-                 cache_dir=None):
+def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
+                    r=1.0, plot=False, trace_opts=None, cache=True,
+                    cache_dir=None):
     """Trace a separator line from most dawnward null
 
     **Still in testing** Uses the bisection algorithm.
@@ -202,7 +202,18 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
 
     return pts
 
-def get_sep_pts_bitor(fld, seed, trace_opts=None, make_3d=False, **kwargs):
+def _prep_trace_opt_defaults(trace_opts):
+    if trace_opts is None:
+        trace_opts = dict()
+    else:
+        trace_opts = dict(trace_opts)
+    trace_opts.setdefault('ibound', 2.5)
+    trace_opts.setdefault('output', viscid.OUTPUT_TOPOLOGY)
+    trace_opts.setdefault('max_length', 300.0)
+    trace_opts.setdefault('topo_style', 'msphere')
+    return trace_opts
+
+def get_sep_pts_bitor(fld, seed, trace_opts=None, make_3d=True, **kwargs):
     """bitor topologies to find separator points in uv map from seed
 
     Args:
@@ -217,10 +228,7 @@ def get_sep_pts_bitor(fld, seed, trace_opts=None, make_3d=False, **kwargs):
         3xN ndarray of N separator points in uv space or 3d space
         depending on the `make_3d` kwarg
     """
-    if trace_opts is None:
-        trace_opts = dict()
-    trace_opts.setdefault('ibound', 5.5)
-    trace_opts.setdefault('output', viscid.OUTPUT_TOPOLOGY)
+    trace_opts = _prep_trace_opt_defaults(trace_opts)
     topo = viscid.calc_streamlines(fld, seed, **trace_opts)[1]
 
     try:
@@ -270,6 +278,7 @@ def get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
         3xN ndarray of N separator points in uv space or 3d space
         depending on the `make_3d` kwarg
     """
+    trace_opts = _prep_trace_opt_defaults(trace_opts)
     pts_even = _get_sep_pts_bisect(fld, seed, trace_opts=trace_opts,
                                    min_depth=0, max_depth=2, plot=False,
                                    perimeter_check=perimeter_check,
@@ -309,10 +318,7 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
         from viscid.plot import mvi
         from viscid.plot import mpl
         mpl.clf()
-        _, all_topo = viscid.calc_streamlines(fld, seed, max_length=300.0,
-                                              ibound=6.0, topo_style="msphere",
-                                              output=viscid.OUTPUT_TOPOLOGY,
-                                              **trace_opts)
+        _, all_topo = viscid.calc_streamlines(fld, seed, **trace_opts)
         mpl.plot(np.bitwise_and(all_topo, 15), show=False)
         verts, arr = seed.wrap_mesh(all_topo.data)
         mvi.mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, opacity=0.75)
@@ -364,10 +370,7 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
     # print("plot::", _base_quadrent, '|', _uneven_mask, '|', len(allx), len(ally))
 
     pts3d = seed.to_3d(seed.uv_to_local(np.array([allx, ally])))
-    _, all_topo = viscid.calc_streamlines(fld, pts3d, max_length=300.0,
-                                          topo_style="msphere",
-                                          output=viscid.OUTPUT_TOPOLOGY,
-                                          **trace_opts)
+    _, all_topo = viscid.calc_streamlines(fld, pts3d, **trace_opts)
 
     topo[0] = all_topo[:len(segsx[0])]
     cnt = len(topo[0])

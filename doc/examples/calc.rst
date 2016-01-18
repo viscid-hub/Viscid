@@ -95,6 +95,54 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
     f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
     B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
 
+    # for this method, seeds must be a SeedGen subclass, not a field subset
+    seeds = viscid.Volume(xl=(-40, 0, -20), xh=(15, 0, 20), n=(64, 1, 128))
+    seeds_dy = viscid.Volume(xl=(3, 0, -10), xh=(15, 0, 10), n=(64, 1, 128))
+    seeds_nt = viscid.Volume(xl=(-40, 0, -3), xh=(-5, 0, 3), n=(64, 1, 128))
+
+    trace_opts = dict(ibound=2.5)
+    xpts_dy = viscid.get_sep_pts_bitor(B, seeds_dy, trace_opts=trace_opts)
+    xpts_nt = viscid.get_sep_pts_bitor(B, seeds_nt, trace_opts=trace_opts)
+
+    # all done, now just make some illustration
+    log_bmag = np.log(viscid.magnitude(B))
+    lines, topo = viscid.calc_streamlines(B, seeds, **trace_opts)
+    _, topo_dy = viscid.calc_streamlines(B, seeds_dy, ibound=3.0,
+                                         output=viscid.OUTPUT_TOPOLOGY)
+    _, topo_nt = viscid.calc_streamlines(B, seeds_nt, ibound=3.0,
+                                         output=viscid.OUTPUT_TOPOLOGY)
+
+    clim = (np.min(topo), np.max(topo))
+    mpl.plot(topo, cmap='afmhot', clim=clim)
+    mpl.plot(topo_dy, cmap='afmhot', clim=clim, colorbar=None)
+    mpl.plot(topo_nt, cmap='afmhot', clim=clim, colorbar=None)
+
+    mpl.plot2d_lines(lines[::79], scalars=log_bmag, symdir='y')
+    mpl.plt.plot(xpts_dy[0], xpts_dy[2], 'y*', ms=20,
+                 markeredgecolor='k', markeredgewidth=1.0)
+    mpl.plt.plot(xpts_nt[0], xpts_nt[2], 'y*', ms=20,
+                 markeredgecolor='k', markeredgewidth=1.0)
+    mpl.plt.xlim(topo.xl[0], topo.xh[0])
+    mpl.plt.ylim(topo.xl[2], topo.xh[2])
+
+    # since seeds is a Field, we can use it to determine mhd|gse
+    mpl.plot_earth(B['y=0f'])
+
+The bit-or algorithm can has another interface that just takes a topology field. It can be used this way:
+
+.. plot::
+    :include-source:
+
+    import numpy as np
+
+    import viscid
+    from viscid.plot import mpl
+
+    viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
+
+    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+    B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
+
     # Fields can be used as seeds to get one seed per grid point
     seeds = B.slice_keep('y=0f')
     lines, topo = viscid.calc_streamlines(B, seeds, ibound=2.5,

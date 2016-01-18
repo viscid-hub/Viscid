@@ -119,7 +119,7 @@ def cluster(indx, indy, x, y, multiple=True, periodic=(False, False),
     else:
         clx = [[x[inds[0, :]], y[inds[1, :]]]]
 
-    pts = np.array([np.average(clxi, axis=1) for clxi in clx])
+    pts = np.array([np.average(clxi, axis=1) for clxi in clx]).reshape((-1, 2))
     pts -= pdL * np.floor((pts - xl) / (xh - xl))
     return pts.T
 
