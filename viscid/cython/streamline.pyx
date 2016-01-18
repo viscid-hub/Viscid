@@ -19,7 +19,6 @@ Note:
 
 from __future__ import print_function
 # from timeit import default_timer as time
-from multiprocessing import Pool, cpu_count
 from contextlib import closing
 from itertools import islice, repeat
 import os
@@ -207,9 +206,7 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
     seed = to_seeds(seed)
 
     nr_streams = seed.get_nr_points(center=vfield.center)
-
-    if nr_procs == "all" or nr_procs == "auto":
-        nr_procs = cpu_count()
+    nr_procs = parallel.sanitize_nr_procs(nr_procs)
 
     nr_chunks = max(1, min(chunk_factor * nr_procs, nr_streams))
     seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points

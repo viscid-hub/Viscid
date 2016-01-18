@@ -12,8 +12,8 @@ import sys
 import numpy as np
 
 import viscid
-from viscid.compat import izip
-from viscid.compat import futures
+from viscid.compat import izip, futures, string_types
+
 
 # Non daemonic processes are probably a really bad idea
 class NoDaemonProcess(mp.Process):
@@ -180,6 +180,15 @@ def _star_passthrough(args):
     # args[0] is function, args[1] is positional args, and args[2] is kwargs
     return args[0](*(args[1]), **(args[2]))
 
+def sanitize_nr_procs(nr_procs):
+    if isinstance(nr_procs, string_types):
+        nr_procs = nr_procs.strip().lower()
+
+    if nr_procs == "all" or nr_procs == "auto":
+        nr_procs = mp.cpu_count()
+
+    return int(nr_procs)
+
 def map(nr_procs, func, args_iter, args_kw=None, timeout=1e8,
         daemonic=True, threads=False, pool=None, force_subprocess=False):
     """Just like ``subprocessing.map``?
@@ -192,6 +201,7 @@ def map(nr_procs, func, args_iter, args_kw=None, timeout=1e8,
         map_async uses the builtin python ThreadPool. I have no idea
         why that's slower than making threads by hand.
     """
+    nr_procs = sanitize_nr_procs(nr_procs)
     if args_kw is None:
         args_kw = {}
 
@@ -246,6 +256,10 @@ def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
         1 b
         2 c
     """
+    nr_procs = sanitize_nr_procs(nr_procs)
+    if args_kw is None:
+        args_kw = {}
+
     if not threads and sys.platform == 'darwin' and ("mayavi.mlab" in sys.modules or
                                                      "mayavi" in sys.modules):
         import mayavi
@@ -255,8 +269,6 @@ def map_async(nr_procs, func, args_iter, args_kw=None, daemonic=True,
                                    "A workaround is to use the wx backend "
                                    "(`os.environ['ETS_TOOLKIT'] = 'wx'`).")
 
-    if args_kw is None:
-        args_kw = {}
     args_iter = izip(repeat(func), args_iter, repeat(args_kw))
 
     # if given a pool, don't close it when we're done delegating tasks
