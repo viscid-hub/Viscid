@@ -5,6 +5,7 @@ from itertools import count
 
 import numpy as np
 import viscid
+from viscid.compat import string_types
 from viscid.cython import streamline
 
 
@@ -36,7 +37,11 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
         RuntimeError: Description
 
     Returns:
-        list: list of 3xN ndarrays that represent separator lines
+        tuple: (separator_lines, nulls)
+
+        separator_lines (list): list of M 3xN ndarrays that represent
+            M separator lines with N points
+        nulls (ndarray): 3xN array of N null points
     """
     if not cache_dir:
         cache_dir = grid.find_info("_viscid_dirname", "./")
@@ -44,11 +49,13 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
     sep_fname = "{0}/{1}.sep.{2:06.0f}".format(cache_dir, run_name, grid.time)
 
     try:
-        if cache in ("Force", "force"):
+        if isinstance(cache, string_types) and cache.strip().lower() == "force":
             raise IOError()
         with np.load(sep_fname + ".npz") as dat:
-            _it = sorted(dat.files, key=lambda s: int(s[len("arr_"):]))
+            sep_iter = (f for f in dat.files if f.startswith("arr_"))
+            _it = sorted(sep_iter, key=lambda s: int(s[len("arr_"):]))
             seps = [dat[n] for n in _it]
+            nulls = dat['nulls']
     except IOError:
         _b = grid['b'][b_slcstr]
 
@@ -74,8 +81,8 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
                                        trace_opts=trace_opts)
         # print("p1 shape", p1.shape)
 
-        if p1.shape[1] > 2:
-            raise RuntimeError("Invalid B field, should be no branch @ null")
+        # if p1.shape[1] > 2:
+        #     raise RuntimeError("Invalid B field, should be no branch @ null")
 
         seps = []
         sep_stubs = []
@@ -114,8 +121,8 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
             seps.append(np.stack(sep, axis=1))
 
         if cache:
-            np.savez_compressed(sep_fname, *seps)
-    return seps
+            np.savez_compressed(sep_fname, *seps, nulls=nulls)
+    return seps, nulls
 
 def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
                             plot=False, sep_val=streamline.TOPOLOGY_MS_SEPARATOR,
