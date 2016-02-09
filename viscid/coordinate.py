@@ -409,7 +409,7 @@ class StructuredCrds(Coordinates):
             return self.axes.index(axis)
 
     def axis_name(self, axis):
-        if isinstance(axis, str):
+        if isinstance(axis, string_types):
             if axis in self._crds:
                 return axis
             else:
