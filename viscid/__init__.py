@@ -132,6 +132,10 @@ from viscid.calculator.plasma import *  # pylint: disable=wildcard-import
 from viscid.calculator import plasma
 __all__ += plasma.__all__
 
+from viscid.calculator.minvar_tools import *  # pylint: disable=wildcard-import
+from viscid.calculator import minvar_tools
+__all__ += minvar_tools.__all__
+
 from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator import calc
 __all__ += calc.__all__
