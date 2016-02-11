@@ -128,7 +128,7 @@ __all__ += ["trace_separator"]
 __all__ += ["topology_bitor_clusters", "get_sep_pts_bitor"]
 __all__ += ["get_sep_pts_bisect"]
 
-from viscid.calculator.plasma import *
+from viscid.calculator.plasma import *  # pylint: disable=wildcard-import
 from viscid.calculator import plasma
 __all__ += plasma.__all__
 
