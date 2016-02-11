@@ -17,13 +17,13 @@ from viscid import logger
 __all__ = ["calc_psi", "calc_beta"]
 
 
-def calc_psi(B, reversed=False):
+def calc_psi(B, rev=False):
     """Calc Flux function (only valid in 2d)
 
     Parameters:
         B (VectorField): magnetic field, should only have two
             spatial dimensions so we can infer the symmetry dimension
-        reversed (bool): since this integration doesn't like going
+        rev (bool): since this integration doesn't like going
             through undefined regions (like within 1 earth radius of
             the origin for openggcm), you can use this to start
             integrating from the opposite corner.
@@ -88,7 +88,7 @@ def calc_psi(B, reversed=False):
 
     A = np.empty((ny, nz), dtype=B.dtype)
 
-    if reversed:
+    if rev:
         A[-1, -1] = 0.0
         for i in range(ny - 2, -1, -1):
             A[i, -1] = A[i + 1, -1] - dy[i] * 0.5 * (hz[i, -1] + hz[i + 1, -1])
