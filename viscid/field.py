@@ -1762,14 +1762,15 @@ class Field(tree.Leaf):
         return self.wrap(self.data.any(**kwargs), npkwargs=kwargs)
     def all(self, **kwargs):
         return self.wrap(self.data.all(**kwargs), npkwargs=kwargs)
-    def argmax(self, axis=None, **kwargs):
-        kwargs.update(axis=axis)
+    def argmax(self, axis=None, out=None, **kwargs):
+        kwargs.update(axis=axis, out=out)
         return self.wrap(self.data.argmax(**kwargs), npkwargs=kwargs)
-    def argmin(self, axis=None, **kwargs):
-        kwargs.update(axis=axis)
+    def argmin(self, axis=None, out=None, **kwargs):
+        kwargs.update(axis=axis, out=out)
         return self.wrap(self.data.argmin(**kwargs), npkwargs=kwargs)
-    def argpartition(self, **kwargs):
-        return self.wrap(self.data.argpartition(**kwargs), npkwargs=kwargs)
+    def argpartition(self, kth, axis=-1, **kwargs):
+        kwargs.update(kth=kth, axis=axis)
+        return self.data.argpartition(**kwargs)
     def argsort(self, axis=-1, kind='quicksort', order=None, **kwargs):
         kwargs.update(axis=axis, kind=kind, order=order)
         return self.wrap(self.data.argsort(**kwargs), npkwargs=kwargs)
@@ -1785,7 +1786,8 @@ class Field(tree.Leaf):
         return self.wrap(self.data.mean(**kwargs), npkwargs=kwargs)
     def min(self, **kwargs):
         return self.wrap(self.data.min(**kwargs), npkwargs=kwargs)
-    def partition(self, **kwargs):
+    def partition(self, kth, axis=-1, **kwargs):
+        kwargs.update(kth=kth, axis=axis)
         return self.wrap(self.data.partition(**kwargs), npkwargs=kwargs)
     def prod(self, **kwargs):
         return self.wrap(self.data.prod(**kwargs), npkwargs=kwargs)
