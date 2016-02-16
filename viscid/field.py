@@ -1381,6 +1381,25 @@ class Field(tree.Leaf):
     def is_spherical(self):
         return self._src_crds.is_spherical()
 
+    def meshgrid(self, axes=None, prune=False):
+        crds = list(self.get_crds(axes=axes, shaped=True))
+        if prune:
+            poplist = []
+            for i, nxi in reversed(list(enumerate(self.shape))):
+                if nxi <= 1:
+                    poplist.append(i)
+                    crds.pop(i)
+            for pi in poplist:
+                for i in range(len(crds)):
+                    slc = [slice(None)] * len(crds[i].shape)
+                    slc[pi] = 0
+                    crds[i] = crds[i][slc]
+        return np.broadcast_arrays(*crds)
+
+    def meshgrid_flat(self, axes=None, prune=False):
+        arrs = self.meshgrid(axes=axes, prune=prune)
+        return [a.reshape(-1) for a in arrs]
+
     ######################
     def shell_copy(self, force=False, **kwargs):
         """Get a field just like this one with a new cache
