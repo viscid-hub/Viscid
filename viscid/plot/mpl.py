@@ -1182,6 +1182,8 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
         show (bool, optional): show
         kwargs: passed along to :meth:`plt.statter`
     """
+    import mpl_toolkits.mplot3d.art3d
+
     if not ax:
         ax = plt.gca(projection='3d')
 
