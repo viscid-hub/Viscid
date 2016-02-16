@@ -64,8 +64,8 @@ def fit_paraboloid(fld, p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0), tolerance=0.5):
     return parab
 
 def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
-                slc_str="x=5.5f:11.0f, y=-4.0f:4.0f, z=-3.6f:3.6f",
-                fit="mp_xloc"):
+                slc="x=5.5f:11.0f, y=-4.0f:4.0f, z=-3.6f:3.6f",
+                fit="mp_xloc", fit_p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0)):
     """Get info about m-pause as flattened fields
 
     Notes:
@@ -85,10 +85,11 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
             cache at the end
         cache_dir (str): Directory for cache, if None, same directory
             as that file to which the grid belongs
-        slc_str (str): slice that gives a box that contains the m-pause
+        slc (str): slice that gives a box that contains the m-pause
         fit (str): to which resulting field should the paraboloid be fit,
             defaults to mp_xloc, but pp_max_xloc might be useful in some
             circumstances
+        fit_p0 (tuple): Initial guess vector for paraboloid fit
 
     Returns:
         dict containing the following 2D (y-z) fields
@@ -110,6 +111,9 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
                         parameters are given in the 0th element, and
                         the 1st element contains the 1-sigma values for
                         the fit
+
+    Raises:
+        RuntimeError: if using MHD crds instead of GSE crds
     """
     if not cache_dir:
         cache_dir = pp.find_info("_viscid_dirname", "./")
@@ -145,16 +149,16 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
                                "switch to GSE please")
 
         if j.nr_patches == 1:
-            pp_block = pp[slc_str]
-            b_block = b[slc_str]
-            j_block = j[slc_str]
+            pp_block = pp[slc]
+            b_block = b[slc]
+            j_block = j[slc]
             if e is None:
                 e_block = np.nan * viscid.empty_like(j_block)
             else:
-                e_block = e[slc_str]
+                e_block = e[slc]
         else:
             # interpolate an amr grid so we can proceed
-            obnd = pp.get_slice_extent(slc_str)
+            obnd = pp.get_slice_extent(slc)
             dx = np.min(pp.skeleton.L / pp.skeleton.n, axis=0)
             nx = np.ceil((obnd[1] - obnd[0]) / dx)
             vol = viscid.seed.Volume(obnd[0], obnd[1], nx, cache=True)
@@ -266,14 +270,18 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
         if mp_fname:
             viscid.save_fields(mp_fname + ".h5", mp_info.values())
 
-    _paraboloid_params = fit_paraboloid(mp_info[fit])
-    mp_info["paraboloid"] = _paraboloid_params
+    try:
+        _paraboloid_params = fit_paraboloid(mp_info[fit], p0=fit_p0)
+        mp_info["paraboloid"] = _paraboloid_params
+    except ImportError:
+        mp_info["paraboloid"] = None
 
     return mp_info
 
 def main():
-    f = viscid.load_file("$WORK/xi_fte_001/*.3d.[5].xdmf")
-    mp = get_mp_info(f['pp'], f['b'], f['j'], None, cache=False, fit='mp_xloc')
+    f = viscid.load_file("$WORK/xi_fte_001/*.3d.[4050f].xdmf")
+    mp = get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
+                     slc="x=6.5f:10.5f, y=-4f:4f, z=-4.8f:3f", cache=False)
 
     y, z = mp['pp_max_xloc'].meshgrid_flat(prune=True)
     x = mp['pp_max_xloc'].data.reshape(-1)
