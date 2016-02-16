@@ -13,6 +13,7 @@ from viscid.calculator import calc
 from viscid.calculator import cluster
 from viscid.calculator import plasma
 from viscid.calculator import minvar_tools
+from viscid.calculator import mpause
 from viscid.calculator import separator
 from viscid.calculator import topology
 from viscid import seed
@@ -21,6 +22,7 @@ from viscid.calculator.evaluator import evaluate
 from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator.plasma import *  # pylint: disable=wildcard-import
 from viscid.calculator.minvar_tools import *  # pylint: disable=wildcard-import
+from viscid.calculator.mpause import *  # pylint: disable=wildcard-import
 from viscid.calculator.topology import *  # pylint: disable=wildcard-import
 from viscid.seed import *  # pylint: disable=wildcard-import
 

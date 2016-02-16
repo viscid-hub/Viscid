@@ -136,6 +136,10 @@ from viscid.calculator.minvar_tools import *  # pylint: disable=wildcard-import
 from viscid.calculator import minvar_tools
 __all__ += minvar_tools.__all__
 
+from viscid.calculator.mpause import *  # pylint: disable=wildcard-import
+from viscid.calculator import mpause
+__all__ += mpause.__all__
+
 from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator import calc
 __all__ += calc.__all__
