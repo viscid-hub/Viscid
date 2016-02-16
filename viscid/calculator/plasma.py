@@ -111,7 +111,7 @@ def calc_psi(B, rev=False):
     return psi
 
 def calc_beta(pp, B, scale=1.0):
-    """Calc plasma beta (2*p/B^2)
+    """Calc plasma beta (2.0 * p / B^2)
 
     Parameters:
         pp (ScalarField or ndarray): pressure
@@ -121,6 +121,9 @@ def calc_beta(pp, B, scale=1.0):
     Returns:
         ScalarField: Plasma beta
 
+    Note:
+        For OpenGGCM, where pp is in pPa and B is in nT, scale should
+        be 40.0.
     """
     two = np.array([2.0], dtype=pp.dtype)
     bx, by, bz = B.component_views()
