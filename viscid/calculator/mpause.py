@@ -29,7 +29,7 @@ def paraboloid_normal(y, z, x0, y0, z0, ax, ay, az, normalize=True):  # pylint: 
         normal = normal / np.linalg.norm(normal, axis=0)
     return normal
 
-def fit_paraboloid(fld, p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0), tolerance=0.5):
+def fit_paraboloid(fld, p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0), tolerance=0.0):
     """Fit paraboloid it GSE coordinates x ~ y**2 + z**2
 
     Args:
@@ -55,12 +55,13 @@ def fit_paraboloid(fld, p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0), tolerance=0.5):
     perr = np.sqrt(np.diag(pcov))
     parab = np.recarray([2], dtype=_paraboloid_dt)
     parab[:] = [popt, perr]
-    for n in parab.dtype.names:
-        if n not in ['ax'] and np.abs(parab[1][n] / parab[0][n]) > tolerance:
-            viscid.logger.warn("paraboloid parameter {0} didn't converge to "
-                               "within {1:g}%\n{0} = {2:g} +/- {3:g}"
-                               "".format(n, 100 * tolerance, parab[0][n],
-                                         parab[1][n]))
+    if tolerance:
+        for n in parab.dtype.names:
+            if n != "ax" and  np.abs(parab[1][n] / parab[0][n]) > tolerance:
+                viscid.logger.warn("paraboloid parameter {0} didn't converge to "
+                                   "within {1:g}%\n{0} = {2:g} +/- {3:g}"
+                                   "".format(n, 100 * tolerance, parab[0][n],
+                                             parab[1][n]))
     return parab
 
 def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
