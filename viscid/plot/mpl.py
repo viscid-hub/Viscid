@@ -18,7 +18,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from matplotlib.collections import LineCollection
-from matplotlib.colors import Normalize, LogNorm
+from matplotlib.colors import Normalize, LogNorm, ListedColormap
 try:
     from mpl_toolkits.basemap import Basemap  # pylint: disable=no-name-in-module
     _HAS_BASEMAP = True
@@ -1310,6 +1310,24 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
             axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
                                            fc=nightcol, zorder=zorder))
     return None
+
+def show_colorcycle(pal=None, size=1):
+    """Plot the values in a color palette as a horizontal array."""
+    if not pal:
+        try:
+            cycle = matplotlib.rcParams['axes.prop_cycle']
+            pal = list(c['color'] for c in cycle)
+        except KeyError:
+            pal = matplotlib.rcParams['axes.color_cycle']
+    n = len(pal)
+    _, ax = plt.subplots(1, 1, figsize=(n * size, size))
+    ax.imshow(np.arange(n).reshape(1, n), cmap=ListedColormap(list(pal)),
+              interpolation="nearest", aspect="auto")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    plt.show()
 
 def _get_projected_axis(ax=None, projection='polar',
                         check_attr='set_thetagrids'):
