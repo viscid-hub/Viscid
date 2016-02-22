@@ -708,12 +708,14 @@ class StructuredCrds(Coordinates):
         # some types of slices require the result to be nonuniform crds,
         # so resolve that here
         crds_type_name = self._TYPE
+        # for slices with a step, always make the crds nonuniform,
+        # it's just easier that way
         for i, slc in enumerate(slices):
             if isinstance(slc, slice):
                 if cc and slc.step not in [None, 1, -1]:
                     crds_type_name = "nonuniform"
                     if len(self._TYPE.split("_")) > 1:
-                        more = "_".join(crds_type_name.split('_')[1:])
+                        more = "_".join(self._TYPE.split('_')[1:])
                         crds_type_name += "_" + more
         crds_type = lookup_crds_type(crds_type_name)
 
