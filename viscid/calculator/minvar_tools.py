@@ -84,7 +84,7 @@ def minvar_around(B, p0, l=1.0, path_dir=(1, 0, 0), n=40):
     """
     p0 = np.array(p0).reshape((3,))
     path_dir = np.array(path_dir).reshape((3,))
-    path_dir /= np.linalg.norm(path_dir)
+    path_dir = path_dir / np.linalg.norm(path_dir)
     p1 = p0 - 0.5 * l * path_dir
     p2 = p0 + 0.5 * l * path_dir
     return minvar(B, p1, p2, n=n)
@@ -108,7 +108,7 @@ def _minvar_lmn_directions(evec_min, evec_max, l_basis=(0, 0, 1)):
         be used
     """
     evec_min = np.array(evec_min).reshape((3,))
-    evec_min /= np.linalg.norm(evec_min)
+    evec_min = evec_min / np.linalg.norm(evec_min)
     n_dir = evec_min
 
     try:
@@ -121,7 +121,7 @@ def _minvar_lmn_directions(evec_min, evec_max, l_basis=(0, 0, 1)):
         l_basis = np.array(evec_max).reshape((3,))
 
     l_dir = l_basis - np.dot(l_basis, n_dir) * n_dir
-    l_dir /= np.linalg.norm(l_dir)
+    l_dir = l_dir / np.linalg.norm(l_dir)
 
     m_dir = np.cross(n_dir, l_dir)
     return np.array([l_dir, m_dir, n_dir]).T
