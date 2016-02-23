@@ -34,14 +34,13 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
 
     Raises:
         IOError: Description
-        RuntimeError: Description
 
     Returns:
         tuple: (separator_lines, nulls)
 
-        separator_lines (list): list of M 3xN ndarrays that represent
-            M separator lines with N points
-        nulls (ndarray): 3xN array of N null points
+          - **separator_lines** (list): list of M 3xN ndarrays that
+            represent M separator lines with N points
+          - **nulls** (ndarray): 3xN array of N null points
     """
     if not cache_dir:
         cache_dir = grid.find_info("_viscid_dirname", "./")

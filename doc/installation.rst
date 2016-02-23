@@ -6,13 +6,14 @@ Dependencies
 
 + Required
 
-  + Python 2.6+ or 3.3+
-  + Numpy
+  + Python 2.7+ or 3.3+
+  + Python 2.6 and argparse
+  + Numpy >= 1.9
 
 + Highly Recommended
 
   + H5py (if reading hdf5 files)
-  + Matplotlib (if you want to make 2d plots using viscid.plot.mpl)
+  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.mpl)
   + Numexpr (for the calculator.necalc module)
 
 + Truly Optional
@@ -21,7 +22,7 @@ Dependencies
   + Mayavi2 (if you want to make 3d plots using viscid.plot.mvi)
   + PyYaml (rc file and plot options can parse using yaml)
 
-+ Required only for developers
++ Optional for developers
 
   + Cython > 0.17 (if you change pyx / pxd files)
   + Sphinx

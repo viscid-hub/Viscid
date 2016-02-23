@@ -44,6 +44,7 @@ Contents
   philosophy
   functions
   plot_options
+  mpl_styles
   custom_behavior
   command_line
   dev_guide

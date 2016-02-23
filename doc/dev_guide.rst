@@ -4,7 +4,7 @@ Developer's Guide
 Style
 -----
 
-Please, if you edit the code, use `PEP 8 <https://www.python.org/dev/peps/pep-0008>`_ style. Poor style is more than just aesthetic; it tends to lead to bugs that are difficult to spot. This is sorely true when it comes to whitespace (4 spaces per indent please). Here are some aspects of PEP 8 that are ok to bend:
+Please, if you edit the code, use `PEP 8 <https://www.python.org/dev/peps/pep-0008>`_ style. Poor style is more than just aesthetic; it tends to lead to bugs that are difficult to spot. Here are some aspects of PEP 8 that are ok to bend:
 
 + Lines should be less than 92 characters long, but if you're pushing over 80, then think about whether or not you're doing too much on one line.
 

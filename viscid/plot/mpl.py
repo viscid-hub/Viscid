@@ -1329,6 +1329,22 @@ def show_colorcycle(pal=None, size=1):
     ax.set_yticklabels([])
     plt.show()
 
+def show_cmap(cmap=None, size=1, aspect=8):
+    if cmap is None:
+        cmap = plt.get_cmap()
+    _, ax = plt.subplots(1, 1, figsize=(aspect * size, size))
+
+    gradient = np.linspace(0, 1, 256)
+    gradient = np.vstack((gradient, gradient))
+
+    ax.imshow(np.arange(256).reshape(1, 256), cmap=cmap,
+              interpolation="nearest", aspect='auto')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    plt.show()
+
 def _get_projected_axis(ax=None, projection='polar',
                         check_attr='set_thetagrids'):
     _new_axis = False

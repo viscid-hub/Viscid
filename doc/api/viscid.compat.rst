@@ -8,6 +8,7 @@ Submodules
 
    viscid.compat.element_tree
    viscid.compat.ordered_dict_backport
+   viscid.compat.vimportlib
 
 Module contents
 ---------------

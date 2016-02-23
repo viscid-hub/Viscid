@@ -80,7 +80,7 @@ Magnetic Topology and Separator Tools
 
 .. cssclass:: table-striped
 
-For using the separator tools, you may want to refer to :doc:`../examples/calc`.
+For using the separator tools, you may want to refer to :doc:`../examples/magnetic_topology`.
 
 =============================================  ============================================================
 Function                                       Description

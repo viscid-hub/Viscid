@@ -142,17 +142,22 @@ html_theme_options = {
                        ("Philosophy", "philosophy"),
                        ("Useful Functions", "functions"),
                        ("Plot Options", "plot_options"),
+                       ("Matplotlib Styles", "mpl_styles"),
                        ("RC file", "custom_behavior"),
                        ("Command Line Tools", "command_line"),
                        ("Developer's Guide", "dev_guide"),
                        ("Extending Readers", "extending_readers"),
                       ]
          ),
-         ("Examples", [("Plotting", "examples/plotting"),
-                       ("Slicing", "examples/slicing"),
-                       ("Calculator", "examples/calc"),
-                       ("OpenGGCM", "examples/openggcm"),
-                       ("3D Plots", "examples/mayavi_plotting"),
+         ("Examples", [("Slicing Fields", "examples/slicing"),
+                       ("Plotting Scalars", "examples/plotting_scalars"),
+                       ("Plotting Vectors", "examples/plotting_vectors"),
+                       ("Streamline and Interpolation", "examples/stream_and_interp"),
+                       ("Magnetic Topology", "examples/magnetic_topology"),
+                       ("Magnetopause", "examples/magnetopause"),
+                       ("Ionosphere", "examples/ionosphere"),
+                       ("OpenGGCM Specific", "examples/openggcm"),
+                       ("3D Plots (Mayavi)", "examples/mayavi"),
                       ]
          )
         ]

@@ -7,4 +7,6 @@ made by `test_mvi.py` along with some code
 .. image:: ../../tests/ref_plots/mvi-000.png
   :align: center
 
+|
+
 .. literalinclude:: ../../tests/test_mvi.py

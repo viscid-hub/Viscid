@@ -1,34 +1,5 @@
-Calculator Examples
-===================
-
-Streamlines
------------
-
-.. plot::
-    :include-source:
-
-    import numpy as np
-
-    import viscid
-    from viscid.plot import mpl
-
-    B = viscid.vlab.get_dipole(twod=True)
-    obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
-    obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
-    lines, topo = viscid.calc_streamlines(B,
-                                          viscid.Line((0.2, 0.0, 0.0),
-                                                      (1.0, 0.0, 0.0), 10),
-                                          ds0=0.01, ibound=0.1, maxit=10000,
-                                          obound0=obound0, obound1=obound1,
-                                          method=viscid.EULER1,
-                                          stream_dir=viscid.DIR_BOTH,
-                                          output=viscid.OUTPUT_BOTH)
-    topo_colors = viscid.topology2color(topo)
-    mpl.plot2d_lines(lines, topo_colors, symdir='y')
-    mpl.plt.ylim(-0.5, 0.5)
-
 Magnetic Topology
------------------
+=================
 
 Magnetic topology can be determined by the end points of magnetic field lines. By default, the topology output from calc_streamlines is a bitmask of closed (1), open-north (2), open-south (4), and solar wind (8). Any value larger than 8 indicates something else happened with that field line, such as reaching maxit or max_length and ending without hitting a boundary. The topology output can be switched to the raw boundary bitmask by giving ``topo_style='generic'`` as an argument to calc_streamlines.
 

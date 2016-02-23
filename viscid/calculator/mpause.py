@@ -93,25 +93,23 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
         fit_p0 (tuple): Initial guess vector for paraboloid fit
 
     Returns:
-        dict containing the following 2D (y-z) fields
-          - mp_xloc: location of minimum abs(Bz), this works better
-                     than max of J^2 for FTEs
-          - mp_sheath_edge: location where Jy > 0.1 * Jy when
-                            coming in from the sheath side
-          - mp_width: difference between m-sheath edge and msphere
-                      edge
-          - mp_shear: magnetic shear taken 6 grid points into the
-                      m-sheath / m-sphere
-          - pp_max: max pp
-          - pp_max_xloc: location of max pp
-          - epar_max: max e parallel
-          - epar_max_xloc: location of max e parallel
+        dict: Unless otherwise noted, the entiries are 2D (y-z) fields
 
-        It also contains a numpy.recarray:
-          - paraboloid: numpy.recarray of paraboloid fit. The
-                        parameters are given in the 0th element, and
-                        the 1st element contains the 1-sigma values for
-                        the fit
+          - **mp_xloc** location of minimum abs(Bz), this works
+            better than max of J^2 for FTEs
+          - **mp_sheath_edge** location where Jy > 0.1 * Jy when
+            coming in from the sheath side
+          - **mp_width** difference between m-sheath edge and
+            msphere edge
+          - **mp_shear** magnetic shear taken 6 grid points into
+            the m-sheath / m-sphere
+          - **pp_max** max pp
+          - **pp_max_xloc** location of max pp
+          - **epar_max** max e parallel
+          - **epar_max_xloc** location of max e parallel
+          - **paraboloid** numpy.recarray of paraboloid fit. The
+            parameters are given in the 0th element, and
+            the 1st element contains the 1-sigma values for the fit
 
     Raises:
         RuntimeError: if using MHD crds instead of GSE crds
@@ -291,6 +289,15 @@ def main():
     x2 = paraboloid(Y, Z, *mp['paraboloid'][0])
 
     skip = 117
+    n = paraboloid_normal(Y, Z, *mp['paraboloid'][0]).reshape(3, -1)[:, ::skip]
+
+    minvar_y = Y.reshape(-1)[::skip]
+    minvar_z = Z.reshape(-1)[::skip]
+    minvar_n = np.zeros([3, len(minvar_y)])
+    for i in range(minvar_n.shape[0]):
+        p0 = [0.0, minvar_y[i], minvar_z[i]]
+        p0[0] = mp['pp_max_xloc']['y={0[0]}f, z={0[1]}f'.format(p0)]
+        minvar_n[:, i] = viscid.find_minvar_lmn_around(f['b'], p0, l=2.0, n=64)[2, :]
 
     # 2d plots, normals don't look normal in the matplotlib projection
     if False:  # pylint: disable=using-constant-test
@@ -327,7 +334,11 @@ def main():
         mvi.mlab.quiver3d(x2.reshape(-1)[::skip],
                           Y.reshape(-1)[::skip],
                           Z.reshape(-1)[::skip],
-                          n[0], n[1], n[2])
+                          n[0], n[1], n[2], color=(1, 0, 0))
+        mvi.mlab.quiver3d(x2.reshape(-1)[::skip],
+                          Y.reshape(-1)[::skip],
+                          Z.reshape(-1)[::skip],
+                          minvar_n[0], minvar_n[1], minvar_n[2], color=(0, 0, 1))
         mvi.show()
 
 if __name__ == "__main__":

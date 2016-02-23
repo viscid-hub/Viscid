@@ -64,4 +64,4 @@ However, the standard distutils commands also work if you're so inclined::
 
 ## Development ##
 
-Please, if you edit the code, use [PEP 8](https://www.python.org/dev/peps/pep-0008/) style. Poor style is more than just aesthetic; it tends to lead to bugs that are difficult to spot. This is sorely true when it comes to whitespace (4 spaces per indent). Check out the documentation for a more complete developer's guide (inculding exceptions to PEP 8 that are ok).
+Please, if you edit the code, use [PEP 8](https://www.python.org/dev/peps/pep-0008/) style. Poor style is more than just aesthetic; it tends to lead to bugs that are difficult to spot. Check out the documentation for a more complete developer's guide (inculding exceptions to PEP 8 that are ok).
