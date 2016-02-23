@@ -52,9 +52,9 @@ def minvar(B, p1, p2, n=40):
     eval_min = eval_mags[sorted_inds[0]]
     eval_int = eval_mags[sorted_inds[1]]
     warn_thresh = 0.05
-    if eval_int - eval_min < warn_thresh:
+    if (eval_int - eval_min) / eval_min < warn_thresh:
         viscid.logger.warn("Minvar says minimum and intermediate eigenvalues "
-                           "are too close together: {0:g} - {1:g} < {2:g}"
+                           "are too close together: {0:g} - {1:g} < {2:g}%"
                            "".format(eval_int, eval_min, warn_thresh))
     return evals[sorted_inds], np.array([evec_min, evec_int, evec_max]).T
 
