@@ -5,7 +5,7 @@ export SHELL := /bin/bash
 
 # flake codes come from: http://flake8.readthedocs.org/en/latest/warnings.html
 #                        http://pep8.readthedocs.org/en/latest/intro.html#error-codes
-flake_on := E304
+flake_on := E101,E111,E112,E113,E304
 flake_off := E121,E123,E124,E126,E129,E133,E201,E202,E203,E226,E24,E266,E3,E402,E704
 flake_off := $(flake_off),F401,F403,F841,C,N
 
