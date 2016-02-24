@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.95.2 dev
-==========
+0.96.0
+======
 
 Changes:
   - Add developer's guide to the docs
