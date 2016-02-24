@@ -6,7 +6,7 @@ from __future__ import print_function
 import argparse
 import sys
 
-from viscid_test_common import sample_dir
+from viscid_test_common import sample_dir, xfail
 
 import numpy as np
 import viscid
@@ -25,8 +25,11 @@ def main():
     Y, Z = mp['pp_max_xloc'].meshgrid(prune=True)
 
     # # get normals from paraboloid surface
-    parab_n = viscid.paraboloid_normal(Y, Z, *mp['paraboloid'][0])
-    parab_n = parab_n.reshape(3, -1)
+    if isinstance(mp['paraboloid'], viscid.DeferredImportError):
+        xfail("Scipy not installed; paraboloid curve fitting not tested")
+    else:
+        parab_n = viscid.paraboloid_normal(Y, Z, *mp['paraboloid'][0])
+        parab_n = parab_n.reshape(3, -1)
 
     # get normals from minvar
     minvar_y = Y.reshape(-1)

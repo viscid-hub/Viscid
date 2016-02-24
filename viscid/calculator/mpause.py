@@ -272,8 +272,8 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
     try:
         _paraboloid_params = fit_paraboloid(mp_info[fit], p0=fit_p0)
         mp_info["paraboloid"] = _paraboloid_params
-    except ImportError:
-        mp_info["paraboloid"] = None
+    except ImportError as _exception:
+        mp_info["paraboloid"] = viscid.DeferredImportError(_exception.message)
 
     return mp_info
 

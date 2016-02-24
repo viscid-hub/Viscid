@@ -33,6 +33,7 @@ Dependencies:
 + Highly Recommended
   + H5py (if reading hdf5 files)
   + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.mpl)
+  + Scipy (gives Viscid special powers :))
   + Numexpr (for the calculator.necalc module)
 + Truly Optional
   + Seaborn

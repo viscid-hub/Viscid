@@ -171,6 +171,7 @@ from viscid import parallel
 from viscid import pyeval
 from viscid import tree
 from viscid import verror
+from viscid.verror import *
 from viscid import vjson
 from viscid import vlab
 from viscid import vutil
