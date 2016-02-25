@@ -83,12 +83,26 @@ Function                                          Description
 :py:func:`viscid.calc_beta`                       Calculate plasma beta
 ================================================  ===========================================================
 
-Magnetic Topology and Separator Tools
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Magnetosphere Tools
+~~~~~~~~~~~~~~~~~~~
+
+Some tools for dealing with magnetospheric specific things. Refer to :doc:`../examples/magnetopause` for an example
 
 .. cssclass:: table-striped
 
+=============================================  ============================================================
+Function                                       Description
+=============================================  ============================================================
+:py:func:`viscid.get_mp_info`                  Extract magnetopause info (possibly cached)
+:py:func:`viscid.find_mp_edges`                Find edges of the magnetopause current sheet
+=============================================  ============================================================
+
+Magnetic Topology and Separator Tools
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 For using the separator tools, you may want to refer to :doc:`../examples/magnetic_topology`.
+
+.. cssclass:: table-striped
 
 =============================================  ============================================================
 Function                                       Description

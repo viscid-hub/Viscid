@@ -9,7 +9,7 @@ import viscid
 
 
 __all__ = ["paraboloid", "paraboloid_normal", "fit_paraboloid",
-           "get_mp_info"]
+           "get_mp_info", "find_mp_edges"]
 
 _dtf = 'f8'
 _paraboloid_dt = np.dtype([('x0', _dtf), ('y0', _dtf), ('z0', _dtf),
@@ -99,6 +99,8 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
             better than max of J^2 for FTEs
           - **mp_sheath_edge** location where Jy > 0.1 * Jy when
             coming in from the sheath side
+          - **mp_sphere_edge** location where Jy > 0.1 * Jy when
+            coming in from the sphere side
           - **mp_width** difference between m-sheath edge and
             msphere edge
           - **mp_shear** magnetic shear taken 6 grid points into
@@ -134,8 +136,9 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
 
         mp_info = {}
         with viscid.load_file(mp_fname + ".xdmf") as dat:
-            fld_names = ["mp_xloc", "mp_sheath_edge", "mp_width", "mp_shear",
-                         "pp_max", "pp_max_xloc", "epar_max", "epar_max_xloc"]
+            fld_names = ["mp_xloc", "mp_sheath_edge", "mp_sphere_edge",
+                         "mp_width", "mp_shear", "pp_max", "pp_max_xloc",
+                         "epar_max", "epar_max_xloc"]
             for fld_name in fld_names:
                 mp_info[fld_name] = dat[fld_name]["x=0"]
 
@@ -177,9 +180,8 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
         bsq = viscid.dot(b_block, b_block)
 
         # extract ndarrays and mask out bow shock / current free regions
-        jy_mask = j_block['y'].data < 1e-4
-        masked_jy = 1.0 * j_block['y']
-        masked_jy.data = np.ma.masked_where(jy_mask, j_block['y'])
+        maskval = 1e-4
+        jy_mask = j_block['y'].data < maskval
         masked_bsq = 1.0 * bsq
         masked_bsq.data = np.ma.masked_where(jy_mask, bsq)
 
@@ -198,22 +200,8 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
         epar_max_xloc = np.argmax(epar, axis=0)  # indices
         epar_max_xloc = pp_max_xloc.wrap(xcc[epar_max_xloc.data])  # location
 
-        # FIXME: the old version had the freedom for different thresholds
-        #        on the sheath / sphere sides... is this actually needed?
-
-        jy_absmax = np.amax(np.abs(masked_jy), axis=0, keepdims=True)
-        mp_mask = (masked_jy > 0.1 * jy_absmax)
-        jy_absmax = None
-
-        sphere_ind = np.argmax(mp_mask, axis=0)
-        msp = sphere_ind.wrap(np.where(sphere_ind > 0, xcc[sphere_ind.data], np.nan))
-        # reverse it to go from the other direction
-        sheath_ind = nx - 1 - np.argmax(mp_mask['x=::-1'], axis=0)
-        mp_sheath_edge = np.where(sheath_ind < (nx - 1), xcc[sheath_ind.data], np.nan)
-        mp_sheath_edge = sheath_ind.wrap(mp_sheath_edge)
-
-        # in MHD crds, it my be sufficient to swap msp and msh at this point
-        mp_width = mp_sheath_edge - msp
+        _ret = find_mp_edges(j_block, 0.1, 0.1, maskval=maskval)
+        sheath_edge, msphere_edge, mp_width, sheath_ind, sphere_ind = _ret
 
         # extract b and b**2 at sheath + 6 grid points and sphere - 6 grid pointns
         # clipping cases where things go outside the block. clipped ponints are
@@ -248,7 +236,8 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
         # fld_kwargs = dict(center="Cell", time=b.time)
         mp_width.name = "mp_width"
         mp_xloc.name = "mp_xloc"
-        mp_sheath_edge.name = "mp_sheath_edge"
+        sheath_edge.name = "mp_sheath_edge"
+        msphere_edge.name = "mp_sphere_edge"
         mp_shear.name = "mp_shear"
         pp_max.name = "pp_max"
         pp_max_xloc.name = "pp_max_xloc"
@@ -258,7 +247,8 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
         mp_info = {}
         mp_info["mp_width"] = mp_width
         mp_info["mp_xloc"] = mp_xloc
-        mp_info["mp_sheath_edge"] = mp_sheath_edge
+        mp_info["mp_sheath_edge"] = sheath_edge
+        mp_info["mp_sphere_edge"] = msphere_edge
         mp_info["mp_shear"] = mp_shear
         mp_info["pp_max"] = pp_max
         mp_info["pp_max_xloc"] = pp_max_xloc
@@ -275,7 +265,83 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
     except ImportError as _exception:
         mp_info["paraboloid"] = viscid.DeferredImportError(_exception.message)
 
+    mp_info["mp_width"].pretty_name = "Magnetopause Width"
+    mp_info["mp_xloc"].pretty_name = "Magnetopause $X_{gse}$ Location"
+    mp_info["mp_sheath_edge"].pretty_name = "Magnetosheath Edge"
+    mp_info["mp_sphere_edge"].pretty_name = "Magnetosphere Edge"
+    mp_info["mp_shear"].pretty_name = "Magnetic Shear"
+    mp_info["pp_max"].pretty_name = "Max Pressure"
+    mp_info["pp_max_xloc"].pretty_name = "Max Pressure Location"
+    mp_info["epar_max"].pretty_name = "Max E Parallel"
+    mp_info["epar_max_xloc"].pretty_name = "Max E Parallel Location"
+
     return mp_info
+
+def find_mp_edges(j_block, msphere_thresh=0.1, sheath_thresh=0.1,
+                  maskval=1e-4):
+    """Find x location of msphere and msheath edges using current (J)
+
+    Note:
+        GSE coordinates only please
+
+    Args:
+        j_block (VectorField): Current density containing the whole
+            magnetopause
+        msphere_thresh (float): thereshold of current on the
+            magnetosphere side as a fraction of the maximum
+            current density, i.e., 0.1 is 10% of the max
+        sheath_thresh (float): thereshold of current on the
+            magnetosheath side as a fraction of the maximum
+            current density, i.e., 0.1 is 10% of the max
+        maskval (float, None): if not None, then mask out J values
+            less than maskval; useful for masking out bowshock, and
+            current free regions
+
+    Returns:
+        tuple: sheath and sphere fields / values
+
+          - **sheath_edge**: float or 2D ScalarField of x values
+          - **msphere_edge**: float or 2D ScalarField of x values
+          - **mp_width**: **sheath_edge** - **msphere_edge**
+          - **sheath_ind**: index of sheath_edge x location
+          - **sphere_ind**: index of msphere_edge x location
+
+    """
+    if maskval is not None:
+        jy_mask = j_block['y'].data < maskval
+    else:
+        jy_mask = np.zeros_like(j_block['y'].data, dtype='bool')
+
+    xcc = j_block.get_crd_cc('x')
+    nx = len(xcc)
+
+    masked_jy = 1.0 * j_block['y']
+    masked_jy.data = np.ma.masked_where(jy_mask, j_block['y'])
+
+    jy_absmax = np.amax(np.abs(masked_jy), axis=0, keepdims=True)
+
+    msphere_mask = (masked_jy > msphere_thresh * jy_absmax)
+    sheath_mask = (masked_jy > sheath_thresh * jy_absmax)
+    jy_absmax = None
+
+    sphere_ind = np.argmax(msphere_mask, axis=0)
+    if isinstance(sphere_ind, viscid.field.Field):
+        msphere_edge = np.where(sphere_ind > 0, xcc[sphere_ind.data], np.nan)
+        msphere_edge = sphere_ind.wrap(msphere_edge)
+    else:
+        msphere_edge = np.where(sphere_ind > 0, xcc[sphere_ind], np.nan)
+
+    # reverse it to go from the other direction
+    sheath_ind = nx - 1 - np.argmax(sheath_mask['x=::-1'], axis=0)
+    if isinstance(sheath_ind, viscid.field.Field):
+        sheath_edge = np.where(sheath_ind < (nx - 1), xcc[sheath_ind.data], np.nan)
+        sheath_edge = sheath_ind.wrap(sheath_edge)
+    else:
+        sheath_edge = np.where(sheath_ind < (nx - 1), xcc[sheath_ind], np.nan)
+
+    # in MHD crds, it my be sufficient to swap msp and msh at this point
+    mp_width = sheath_edge - msphere_edge
+    return sheath_edge, msphere_edge, mp_width, sheath_ind, sphere_ind
 
 def main():
     f = viscid.load_file("$WORK/xi_fte_001/*.3d.[4050f].xdmf")
