@@ -1,8 +1,7 @@
 # Viscid #
 
 Python framework to visualize scientific data on structured meshes. At the moment,
-only rectilinear meshes are supported, and support for other mesh types will be added
-as needed.
+only rectilinear meshes are supported, and support for other mesh types will be added as needed.
 
 File types:
 + XDMF + HDF5

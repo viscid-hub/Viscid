@@ -48,7 +48,7 @@ Class                                Description
 Math
 ~~~~
 
-These functions will by accelerated by Numexpr if it is installed.
+These functions will by accelerated by Numexpr if it is installed. All functions below are also available from the `viscid` namespace.
 
 .. cssclass:: table-striped
 
@@ -70,7 +70,14 @@ Function                                          Description
 :py:func:`viscid.calculator.calc.curl`            Curl of a :py:class:`viscid.field.VectorField`
 :py:func:`viscid.calculator.calc.normalize`       Divide a vector field by its magnitude
 :py:func:`viscid.calculator.calc.project`         Project one :py:class:`viscid.field.VectorField` onto
-                                                  another
+                                                  another, i.e., `a dot b / |b|`
+:py:func:`viscid.calculator.calc.project_vector`  Project VectorField a onto b in the direction of b, i.e.,
+                                                  `(a dot b / |b|) * (b / |b|)`
+:py:func:`viscid.project_along_line`              Project a Vector Field Parallel to a streamline.
+:py:func:`viscid.resample_lines`                  Resample a list of lines to either more or fewer points.
+                                                  With scipy, oversampling can be done with any type of
+                                                  interpolation that :py:func:`scipy.interpolate.interp1d`
+                                                  understands.
 :py:func:`viscid.integrate_along_lines`           Integrate a field along streamlines
 :py:func:`viscid.calc_psi`                        Calculate a 2D flux function
 :py:func:`viscid.calc_beta`                       Calculate plasma beta

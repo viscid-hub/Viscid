@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Viscid's documentation!
-==================================
+Viscid: Visualizing Plasma Simulations in Python
+================================================
 
 Viscid is a python framework to visualize scientific data on structured meshes. The following file types are understood,
 
@@ -38,7 +38,7 @@ Contents
   ChangeLog<changes>
 
 .. toctree::
-  :maxdepth: 3
+  :maxdepth: 2
 
   installation
   philosophy
@@ -52,7 +52,10 @@ Contents
 
   examples/index
 
-  api/viscid
+.. toctree::
+  :maxdepth: 1
+
+  API<api/viscid>
 
 Indices and tables
 ==================
