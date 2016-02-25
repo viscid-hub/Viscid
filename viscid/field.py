@@ -1197,7 +1197,7 @@ class Field(tree.Leaf):
 
             # if there are reduced dims, put them into the deep_meta dict
             if len(reduced) > 0:
-                ret.deep_meta["reduced"] = reduced
+                ret.meta["reduced"] = reduced
         return ret
 
     def forget_source(self):

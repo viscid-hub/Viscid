@@ -1275,7 +1275,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
         for blk in plane_spec.patches:
             # take only the 1st reduced.nr_sdims... this should just work
             try:
-                plane, _value = blk.deep_meta["reduced"][0]
+                plane, _value = blk.meta["reduced"][0]
                 values.append(_value)
             except KeyError:
                 logger.error("No reduced dims in the field, i don't know what "
