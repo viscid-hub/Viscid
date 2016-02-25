@@ -121,7 +121,7 @@ dot = BinaryOperation("dot", "dot")
 cross = BinaryOperation("cross", "x")
 """Callable, calculates a cross b"""
 project = BinaryOperation("project", "dot mag")
-"""Callable, projects a along b, i.e., (a dot b / norm(b))"""
+"""Callable, scalar projection of a onto b; a dot b / norm(b)"""
 normalize = UnaryOperation("normalize", "normalize")
 """Callable, divide a vector field by its magnitude"""
 div = UnaryOperation("div", "div")
@@ -191,12 +191,12 @@ def _magnitude_native(fld):
 magnitude.add_implementation("native", _magnitude_native)
 
 def project_vector(a, b):
-    """Returns (a dot b) * b hat"""
+    """Calculates the vector (a dot b_hat) * b_hat"""
     bnorm = normalize(b)
     # print(">>", type(bnorm), bnorm.shape, bnorm.nr_comps,
     #       "MIN", np.min(np.linalg.norm(bnorm, axis=b.nr_comp)),
     #       "MAX", np.max(np.linalg.norm(bnorm, axis=b.nr_comp)))
-    return project(a, b) * bnorm
+    return project(a, bnorm) * bnorm
 
 def resample_lines(lines, factor=1, kind="linear"):
     """Resample a bunch of lines
@@ -242,6 +242,13 @@ def resample_lines(lines, factor=1, kind="linear"):
     return lines
 
 def project_along_line(line, fld):
+    """Project a Vector Field Parallel to a streamline
+
+    Args:
+        line (ndarray): 3xN of points along the
+        fld (VectorField): Field to interpolate and project onto the
+            line
+    """
     fld_on_verts = viscid.interp_trilin(fld, line)
     dsvec = line[:, 2:] - line[:, :-2]
     dsvec = np.concatenate([dsvec[:, 0:1], dsvec, dsvec[:, -2:-1]], axis=1)
