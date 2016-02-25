@@ -99,20 +99,35 @@ class BinaryOperation(Operation):
         return ret
 
 add = BinaryOperation("add", "+")
+"""Callable, calculates a + b"""
 diff = BinaryOperation("diff", "-")
+"""Callable, calculates a - b"""
 mul = BinaryOperation("mul", "*")
+"""Callable, calculates a * b"""
 relative_diff = BinaryOperation("relative diff", "%-")
+"""Callable, calculates abs(a - b) / a"""
 abs_diff = BinaryOperation("abs diff", "|-|")
+"""Callable, calculates abs(a - b)"""
 abs_val = UnaryOperation("abs val", "absval")
+"""Callable, calculates abs(a)"""
 abs_max = Operation("abs max", "absmax")
+"""Callable, calculates max(abs(a))"""
 abs_min = Operation("abs min", "absmin")
+"""Callable, calculates min(abs(a))"""
 magnitude = UnaryOperation("magnitude", "magnitude")
+"""Callable, calculates L2 Norm of a vectors in a vector field"""
 dot = BinaryOperation("dot", "dot")
+"""Callable, calculates a dot b"""
 cross = BinaryOperation("cross", "x")
+"""Callable, calculates a cross b"""
 project = BinaryOperation("project", "dot mag")
+"""Callable, projects a along b, i.e., (a dot b / norm(b))"""
 normalize = UnaryOperation("normalize", "normalize")
+"""Callable, divide a vector field by its magnitude"""
 div = UnaryOperation("div", "div")
+"""Callable, divergence of a vector field"""
 curl = UnaryOperation("curl", "curl")
+"""Callable, curl of a vector field"""
 
 if has_numexpr:
     add.add_implementation("numexpr", necalc.add)

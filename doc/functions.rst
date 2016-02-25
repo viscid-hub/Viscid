@@ -52,28 +52,29 @@ These functions will by accelerated by Numexpr if it is installed.
 
 .. cssclass:: table-striped
 
-========================================  ===========================================================
-Function                                  Description
-========================================  ===========================================================
-:py:func:`viscid.add`                     Add two fields
-:py:func:`viscid.diff`                    Subtract a field from another
-:py:func:`viscid.mul`                     Multiply two fields
-:py:func:`viscid.relative_diff`           Divide the difference by the magnitude
-:py:func:`viscid.abs_diff`                Absolute value of the difference
-:py:func:`viscid.abs_val`                 Absolute value
-:py:func:`viscid.abs_max`                 Max of the absolute value
-:py:func:`viscid.abs_min`                 Min of the absolute value
-:py:func:`viscid.magnitude`               Magnitude of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.dot`                     Dot product of two :py:class:`viscid.field.VectorField`
-:py:func:`viscid.cross`                   Cross product of two :py:class:`viscid.field.VectorField`
-:py:func:`viscid.div`                     Divergence of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.curl`                    Curl of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.project`                 Project one :py:class:`viscid.field.VectorField` onto
-                                          another
-:py:func:`viscid.integrate_along_lines`   Integrate a field along streamlines
-:py:func:`viscid.calc_psi`                Calculate a 2D flux function
-:py:func:`viscid.calc_beta`               Calculate plasma beta
-========================================  ===========================================================
+================================================  ===========================================================
+Function                                          Description
+================================================  ===========================================================
+:py:func:`viscid.calculator.calc.add`             Add two fields
+:py:func:`viscid.calculator.calc.diff`            Subtract a field from another
+:py:func:`viscid.calculator.calc.mul`             Multiply two fields
+:py:func:`viscid.calculator.calc.relative_diff`   Divide the difference by the magnitude
+:py:func:`viscid.calculator.calc.abs_diff`        Absolute value of the difference
+:py:func:`viscid.calculator.calc.abs_val`         Absolute value
+:py:func:`viscid.calculator.calc.abs_max`         Max of the absolute value
+:py:func:`viscid.calculator.calc.abs_min`         Min of the absolute value
+:py:func:`viscid.calculator.calc.magnitude`       Magnitude of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.dot`             Dot product of two :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.cross`           Cross product of two :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.div`             Divergence of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.curl`            Curl of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.normalize`       Divide a vector field by its magnitude
+:py:func:`viscid.calculator.calc.project`         Project one :py:class:`viscid.field.VectorField` onto
+                                                  another
+:py:func:`viscid.integrate_along_lines`           Integrate a field along streamlines
+:py:func:`viscid.calc_psi`                        Calculate a 2D flux function
+:py:func:`viscid.calc_beta`                       Calculate plasma beta
+================================================  ===========================================================
 
 Magnetic Topology and Separator Tools
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
