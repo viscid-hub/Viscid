@@ -80,7 +80,7 @@ Interpolating Vectors Onto a Plane
 
     viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
-    f3d = viscid.load_file("~/dev/src/Viscid/sample/sample_xdmf.3d.xdmf")
+    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
 
     # make N and L directions for LMN magnetopause boundary normal crds
     p0 = (9.0, 0.0, 1.5)
