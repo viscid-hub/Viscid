@@ -42,7 +42,7 @@ class Operation(object):
     opname = None
     short_name = None
 
-    def __init__(self, name, short_name, implementations=[]):
+    def __init__(self, name, short_name, implementations=()):
         self.opname = name
         self.short_name = short_name
         self._imps = OrderedDict()
