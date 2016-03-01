@@ -1,0 +1,3 @@
+image.cmap: inferno
+viscid.symmetric_cmap: RdBu_r
+axes.prop_cycle: cycler('color', ['004358', 'FD7400', '3DA88E', '83522B', '00D4FD', 'E2D893'])

@@ -7,7 +7,7 @@ from __future__ import print_function
 import sys
 import os
 import re
-import glob
+from glob import glob
 from subprocess import Popen, CalledProcessError, PIPE
 from distutils.command.clean import clean
 from distutils.version import LooseVersion
@@ -43,7 +43,7 @@ pkgs = ['viscid',
         'viscid.readers'
        ]
 
-scripts = glob.glob(os.path.join('scripts', '*'))
+scripts = glob(os.path.join('scripts', '*'))
 
 # list of extension objects
 ext_mods = []
@@ -298,7 +298,8 @@ try:
           include_dirs=[np.get_include()],
           ext_modules=ext_mods,
           scripts=scripts,
-          data_files=[('viscid/plot', ['viscid/plot/blue_marble.jpg'])]
+          data_files=[('viscid/plot', ['viscid/plot/blue_marble.jpg']),
+                      ('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle'))]
          )
 except SystemExit as e:
     if os.uname()[0] == 'Darwin':

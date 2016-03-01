@@ -1,2 +1,3 @@
 include viscid/calculator/*.c
 include viscid/plot/blue_marble.jpg
+include viscid/plot/styles/*.mplstyle
