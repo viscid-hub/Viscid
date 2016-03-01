@@ -19,10 +19,9 @@
   "calculator.evaluator.enabled": true,
 
   # matplotlib (>= 1.5.0) styling
-  "mpl_style.use_styles": ["seaborn-talk", "seaborn-ticks",
+  "mpl_style.use_styles": ["seaborn-talk", "seaborn-white", "viscid-default",
                            "viscid-colorblind", "viscid-steve"],
-  # "plot.mpl_style.rc_params": {"lines.markeredgewidth": 0.01}
-  # "plot.mpl_style.rc": {"lines": {"markeredgewidth": 0.01}}
+  "plot.mpl_style.rc_params": {"image.cmap": "inferno"},
 
   # # For matplotlib < 1.5.0, you can use vseaborn as a shim to seaborn
   # # for nice styles

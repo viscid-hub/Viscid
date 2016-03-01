@@ -6,15 +6,22 @@ monotonically increases throughout the scale. These maps also guard
 against levels appearing in the data due to a local maxima in the
 lightness of that color in the color map.
 
+Note:
+    The cubehelix maps should be deprecated since they are defined in
+    CIE-LAB space, which has undesired perceptual properties. Instead,
+    one should use one of the ['magma', 'inferno', 'plasma', 'viridis']
+    cmaps. These colormaps are backported into Viscid for those still
+    using matplotlib < 1.5.0.
+
 Attributes:
-    cubeYF_rgba: My attempt to replicate the cubeYF map described at
-        `mycarta <https://mycarta.wordpress.com/2013/02/21/perceptual-
-        rainbow-palette-the-method/>`_.
-    coolhelix_rgba: From bordeax to cool white, counter-clockwise in
-        hue
     redhelix_rgba: From red to cyan, counter-clockwise in hue
     bloodhelix_rgba: Same as redhelix, but with gamma == 1, so the
         intensity ramp is more linear instead of power law
+    coolhelix_rgba: From bordeax to cool white, counter-clockwise in
+        hue
+    cubeYF_rgba: My attempt to replicate the cubeYF map described at
+        `mycarta <https://mycarta.wordpress.com/2013/02/21/perceptual-
+        rainbow-palette-the-method/>`_.
 """
 
 from __future__ import print_function
@@ -111,35 +118,34 @@ def clac_helix_rgba(hue0=420.0, hue1=150.0, sat=0.8, intensity0=0.15,
     rgba = np.hstack([rgb.T, np.ones_like(rgb[:1]).T])
     return rgba
 
-def make_cubehelix_cmap(name='cubehelix1', reverse=False, **kwargs):
-    """Shortcut for making a cubehelix matplotlib colormap
 
-    Args:
-        name (str): name of color map
-        reverse (bool): flip the lower and upper ends of the mapping
-        **kwargs: passed to :py:func:`clac_helix_rgb`
-
-    Returns:
-        :py:class:`matplotlib.colors.LinearSegmentedColormap` instance
-    """
-    try:
-        from matplotlib.colors import LinearSegmentedColormap
-        rgba = clac_helix_rgba(**kwargs)
-        if reverse:
-            rgba = rgba[::-1, :]
-        return LinearSegmentedColormap.from_list(name, rgba)
-    except ImportError:
-        raise RuntimeError("Matplotlib is not installed, ergo can not create "
-                           "a matplotlib Colormap")
-
-cubeYF_rgba = clac_helix_rgba(hue0=340, hue1=60, sat0=1.0, sat1=2.0,
-                              intensity0=0.3, intensity1=0.9, gamma=0.9)
-coolhelix_rgba = clac_helix_rgba(hue0=350, hue1=150, sat0=2.0, sat1=1.6,
-                                 gamma=0.8, intensity0=0.0, intensity1=1.0)
 redhelix_rgba = clac_helix_rgba(hue0=60, hue1=-150, sat0=1.8, sat1=1.0,
                                 gamma=0.8, intensity0=0.0, intensity1=1.0)
 bloodhelix_rgba = clac_helix_rgba(hue0=60, hue1=-150, sat0=1.8, sat1=1.0,
                                   gamma=1.0, intensity0=0.0, intensity1=1.0)
+coolhelix_rgba = clac_helix_rgba(hue0=350, hue1=150, sat0=2.0, sat1=1.6,
+                                 gamma=0.8, intensity0=0.0, intensity1=1.0)
+cubeYF_rgba = clac_helix_rgba(hue0=340, hue1=60, sat0=1.0, sat1=2.0,
+                              intensity0=0.3, intensity1=0.9, gamma=0.9)
+
+try:
+    from matplotlib.colors import ListedColormap
+    from matplotlib.cm import get_cmap, register_cmap
+
+    for (name, data) in ((u'redhelix', redhelix_rgba),
+                         (u'bloodhelix', bloodhelix_rgba),
+                         (u'coolhelix', coolhelix_rgba),
+                         (u'cubeYF', cubeYF_rgba)):
+
+        try:
+            get_cmap(name)
+        except ValueError:
+            register_cmap(cmap=ListedColormap(data, name=name),
+                          name=name)
+            register_cmap(cmap=ListedColormap(list(reversed(data)), name=name),
+                          name=name + '_r')
+except ImportError:
+    pass
 
 ##
 ## EOF

@@ -166,8 +166,7 @@ def _main():
         import seaborn  # pylint: disable=unused-variable
     except ImportError:
         pass
-    from viscid.plot.cmap_tools import plot_ab, plot_lstar, plot_rgb
-    # from viscid.plot.cmap_tools import to_linear_cmap, to_rgba
+    from viscid.plot._cm_tools import plot_ab, plot_lstar, plot_rgb
 
     names = ['cubehelix', 'cubeYF', 'coolhelix', 'redhelix', 'bloodhelix']
     gs = gridspec.GridSpec(4, len(names), height_ratios=[1, 3, 3, 3])

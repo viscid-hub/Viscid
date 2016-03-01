@@ -18,8 +18,6 @@ Style Sheets:
     sheets require matplotlib version >= 1.5.0
 
     - **viscid-default**: use afmhot
-    - **viscid-colorblind**: use colorsequences that are colorblind
-      friendly
     - **viscid-steve**: use Steve's label formatter for colorbars
 
 Rc Parameters:
@@ -45,12 +43,12 @@ import re
 import matplotlib
 from viscid import logger
 from viscid.compat import unicode  # pylint: disable=redefined-builtin
-from viscid.plot.cmap_tools import register_cmap
-from viscid.plot import cubehelix  # import clac_helix_rgba
+from viscid.plot import _cm_cubehelix  # pylint: disable=unused-import
+from viscid.plot import _cm_listed  # pylint: disable=unused-import
 
 
 # Set these in your RC file to
-use_styles = ["viscid-default"]
+use_styles = []
 rc_params = {}
 rc = {}
 
@@ -74,14 +72,12 @@ for key, default_converter in viscid_mpl_rc_params.items():
 VISCID_STYLES = {
     #######################
     u"viscid-default": u"""
+image.cmap: viridis
 viscid.symmetric_cmap: RdBu_r
 """,
-    ##########################
     u"viscid-colorblind": u"""
 axes.prop_cycle: cycler('color', ['004358', 'FD7400', '3DA88E', \
                                   '83522B', '00D4FD', 'E2D893'])
-image.cmap: redhelix
-viscid.symmetric_cmap: RdBu_r
 """,
     #####################
     u"viscid-steve": u"""
@@ -97,20 +93,6 @@ if LooseVersion(matplotlib.__version__) < LooseVersion("1.5.0"):
                    r"\1.\3_cycle: \4", v)
         v = v.replace("'", "").replace('"', "")
         VISCID_STYLES[k] = v
-
-# register Viscid's special colormaps
-# register the cubehelix color maps
-register_cmap('cubeYF', cubehelix.cubeYF_rgba, reverse=False)
-register_cmap('cubeYF_r', cubehelix.cubeYF_rgba, reverse=True)
-
-register_cmap('coolhelix', cubehelix.coolhelix_rgba, reverse=False)
-register_cmap('coolhelix_r', cubehelix.coolhelix_rgba, reverse=True)
-
-register_cmap('redhelix', cubehelix.redhelix_rgba, reverse=False)
-register_cmap('redhelix_r', cubehelix.redhelix_rgba, reverse=True)
-
-register_cmap('bloodhelix', cubehelix.bloodhelix_rgba, reverse=False)
-register_cmap('bloodhelix_r', cubehelix.bloodhelix_rgba, reverse=True)
 
 
 def inject_viscid_styles(show_warning=True):
@@ -135,6 +117,10 @@ def inject_viscid_styles(show_warning=True):
 def post_rc_actions(show_warning=True):
     try:
         from matplotlib import style
+
+        if u"viscid-default" not in use_styles:
+            use_styles.insert(0, u"viscid-default")
+
         for s in use_styles:
             try:
                 style.use(s)
