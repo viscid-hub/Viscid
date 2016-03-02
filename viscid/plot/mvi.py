@@ -265,7 +265,7 @@ def plot_line(line, scalars=None, **kwargs):
 
 def plot_lines(lines, scalars=None, style="tube", figure=None,
                name="Lines", tube_radius=0.05, tube_sides=6, cmap=None,
-               **kwargs):
+               clim=None, symmetric=False, logscale=False, **kwargs):
     """Make 3D mayavi plot of lines
 
     Scalars can be a bunch of single values, or a bunch of rgb data
@@ -322,14 +322,12 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
         raise ValueError("Unknown style for lines: {0}".format(style))
 
     surface = mlab.pipeline.surface(lines, **kwargs)
-
-    if cmap:
-        apply_cmap(surface, cmap)
-
+    apply_cmap(surface, cmap, clim=clim, symmetric=symmetric, logscale=logscale)
     return surface
 
 def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
-                    bounding_lat=0.0, cmap=None, **kwargs):
+                    bounding_lat=0.0, cmap=None, clim=None, symmetric=False,
+                    logscale=False, **kwargs):
     """Plot an ionospheric field
 
     Args:
@@ -379,15 +377,7 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         # m.module_manager.parent.filter.auto_orient_normals = True
     m.actor.mapper.interpolate_scalars_before_mapping = True
 
-    if not cmap:
-        vmin = kwargs.get('vmin', np.min(arr))
-        vmax = kwargs.get('vmax', np.max(arr))
-        if np.isclose(vmax, -1 * vmin, atol=0):
-            symmetric = True
-        else:
-            symmetric = False
-
-    apply_cmap(m, cmap, symmetric=symmetric)
+    apply_cmap(m, cmap, clim=clim, symmetric=symmetric, logscale=logscale)
 
     return m
 
@@ -433,39 +423,74 @@ def get_cmap(name=None, lut=None, symmetric=False):
     return rgba
 
 def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar',
-               symmetric=False):
+               clim=None, symmetric=False, logscale=False):
     """Apply a Matplotlib colormap to a Mayavi object
 
     Args:
         target: Some Mayavi object to apply the colormap
-        name (str): name of the Matplotlib colormap
+        name (str, None, NotImplemented): name of the Matplotlib
+            colormap, or None to use the default, or NotImplemented to
+            leave the colormap alone.
         lut (int): number of entries desired in the lookup table
-        alpha (TYPE): Description
+        alpha (TYPE): array with same length as number of colorbar
+            colors that sets the alpha (opacity) channel
         which (str): one of 'scalar', 'vector', or 'other'
+        clim (sequence): contains (vmin, vmax) for color scale
+        symmetric (bool): Force the limits on the colorbar to be
+            symmetric around 0, and if no `name` is given, then also
+            use the default symmetric colormap
+        logscale (bool): Description
 
     Raises:
         AttributeError: Description
         ValueError: Description
     """
     which = which.strip().lower()
-    rgba = get_cmap(name=name, lut=lut, symmetric=symmetric)
 
-    if alpha:
-        rgba[:, -1] = alpha
-
+    # get the mayavi lut object
     try:
         if which == "scalar":
-            target.module_manager.scalar_lut_manager.lut.table = rgba[:, ::1]
+            mvi_lut = target.module_manager.scalar_lut_manager.lut
         elif which == "vector":
-            target.module_manager.vector_lut_manager.lut.table = rgba[:, ::1]
+            mvi_lut = target.module_manager.vector_lut_manager.lut
         else:
             if which != "other":
                 raise ValueError("which should be 'scalar', 'vector', or "
                                  "'other'; not '{0}'".format(which))
             raise AttributeError()
     except AttributeError:
-        target.lut.table = rgba[:, ::1]
+        mvi_lut = target.lut
 
+    # set the limits on the colorbar
+    if isinstance(clim, (list, tuple)):
+        mvi_lut.range = [clim[0], clim[1]]
+    elif clim == 0:
+        symmetric = True
+    elif clim:
+        symmetric = clim
+
+    if logscale and symmetric:
+        viscid.logger.warn("logscale and symmetric are mutually exclusive;"
+                           "ignoring symmetric.")
+
+    if logscale:
+        mvi_lut.scale = 'log10'
+    elif symmetric:
+        # float(True) -> 1
+        val = float(symmetric) * np.max(np.abs(mvi_lut.range))
+        mvi_lut.range = [-val, val]
+
+    vmin, vmax = mvi_lut.range
+    is_symmetric = bool(np.isclose(vmax, -1 * vmin, atol=0))
+
+    # now set the colormap
+    if name is NotImplemented:
+        pass
+    else:
+        rgba = get_cmap(name=name, lut=lut, symmetric=is_symmetric)
+        if alpha is not None:
+            rgba[:, -1] = alpha
+        mvi_lut.table = rgba[:, ::1]
 
 def insert_filter(filtr, module_manager):
     """Insert a filter above an existing module_manager

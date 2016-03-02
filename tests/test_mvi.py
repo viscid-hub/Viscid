@@ -37,10 +37,8 @@ def main():
                                          view_controls=False)
     scp.implicit_plane.normal = [0, 0, -1]
     scp.implicit_plane.origin = [0, 0, 0]
-    # i don't know why this log10 doesn't seem to work
+    mvi.apply_cmap(scp, 'Reds_r', logscale=True)
     cbar = mlab.colorbar(scp, title=pp.name, orientation='vertical')
-    cbar.lut.scale = 'log10'
-    mvi.apply_cmap(cbar, 'Reds_r')
 
     # calculate B field lines && topology in viscid and plot them
     seeds = viscid.SphericalPatch([0, 0, 0], [2, 0, 1], 30, 15, r=5.0,
@@ -54,7 +52,8 @@ def main():
     # color map, just because we can
     circle = viscid.Circle([0, 0, 0], r=4.0, n=128, endpoint=True)
     scalar = np.sin(circle.as_local_coordinates().get_crd('x'))
-    mvi.plot_line(circle.get_points(), scalars=scalar, cmap='viridis')
+    surf = mvi.plot_line(circle.get_points(), scalars=scalar, clim=0.5)
+    mlab.colorbar(surf, title="circle", orientation='vertical')
 
     # Use Mayavi (VTK) to calculate field lines using an interactive seed
     # These field lines are colored by E parallel, and while the syntax used
