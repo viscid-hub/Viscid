@@ -572,7 +572,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             else:
                 colorbar["ticks"] = matplotlib.ticker.LinearLocator()
 
-        cbarfmt = colorbar.pop("format", rcParams.get('default_cbarfmt', None))
+        cbarfmt = colorbar.pop("format", rcParams.get('viscid.cbarfmt', None))
         if cbarfmt == "steve":
             cbarfmt = mpl_extra.steve_cbarfmt
         if cbarfmt:
