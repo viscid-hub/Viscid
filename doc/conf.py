@@ -334,7 +334,7 @@ import viscid
 
 # not sure why recalling post_rc_actions() is necessary in sphinx
 viscid.mpl_style.use_styles = ["seaborn-talk", "seaborn-ticks",
-                               "viscid-colorblind", "viscid-steve"]
+                               "viscid-colorblind"]
 viscid.mpl_style.post_rc_actions()
 
 # some examples change this, so make sure it's off by default
