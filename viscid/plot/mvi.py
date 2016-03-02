@@ -489,7 +489,9 @@ def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar',
     else:
         rgba = get_cmap(name=name, lut=lut, symmetric=is_symmetric)
         if alpha is not None:
-            rgba[:, -1] = alpha
+            alpha = np.asarray(alpha).reshape(-1)
+            rgba[:, -1] = np.interp(np.linspace(0, 1, rgba.shape[0]),
+                                    np.linspace(0, 1, len(alpha)), alpha)
         mvi_lut.table = rgba[:, ::1]
 
 def insert_filter(filtr, module_manager):
