@@ -1311,14 +1311,17 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
                                            fc=nightcol, zorder=zorder))
     return None
 
+def get_current_colorcycle():
+    try:
+        cycle = matplotlib.rcParams['axes.prop_cycle']
+        return list(c['color'] for c in cycle)
+    except KeyError:
+        return list(matplotlib.rcParams['axes.color_cycle'])
+
 def show_colorcycle(pal=None, size=1):
     """Plot the values in a color palette as a horizontal array."""
     if not pal:
-        try:
-            cycle = matplotlib.rcParams['axes.prop_cycle']
-            pal = list(c['color'] for c in cycle)
-        except KeyError:
-            pal = matplotlib.rcParams['axes.color_cycle']
+        pal = get_current_colorcycle()
     n = len(pal)
     _, ax = plt.subplots(1, 1, figsize=(n * size, size))
     ax.imshow(np.arange(n).reshape(1, n), cmap=ListedColormap(list(pal)),

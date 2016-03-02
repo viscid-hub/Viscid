@@ -18,6 +18,7 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
+sys.path.insert(0, os.path.abspath('sphinxext'))
 sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration -----------------------------------------------------
@@ -28,7 +29,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['matplotlib.sphinxext.plot_directive', 'matplotlib.sphinxext.mathmpl',
-              'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode']
+              'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode',
+              'style_example_generator']
 
 try:
     from sphinx.ext import napoleon
@@ -195,6 +197,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
+html_static_path = ['styles/_thumbs']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
