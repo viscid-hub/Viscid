@@ -50,10 +50,12 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
             vertices, scalars = _seeds.wrap_mesh(topo.data)
             mesh = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
                                  scalars=scalars, opacity=0.5)
+            mvi.apply_cmap(mesh)
             mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
-        mvi.plot_lines(lines, scalars=fld_mag, tube_radius=0.01)
+        mvi.plot_lines(lines, scalars=fld_mag, tube_radius=0.01,
+                       cmap='viridis')
         if title:
             mvi.mlab.title(title)
 
