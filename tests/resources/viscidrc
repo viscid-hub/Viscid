@@ -21,7 +21,8 @@
   # matplotlib (>= 1.5.0) styling
   "mpl_style.use_styles": ["seaborn-talk", "seaborn-white", "viscid-default",
                            "viscid-colorblind"],
-  "plot.mpl_style.rc_params": {"image.cmap": "inferno"},
+  # rc params can also be overridden individually
+  # "plot.mpl_style.rc_params": {"image.cmap": "inferno"},
 
   # # For matplotlib < 1.5.0, you can use vseaborn as a shim to seaborn
   # # for nice styles
