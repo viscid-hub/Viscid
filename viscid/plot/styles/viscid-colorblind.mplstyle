@@ -1,3 +1,8 @@
 image.cmap: inferno
 viscid.symmetric_cmap: RdBu_r
 axes.prop_cycle: cycler('color', ['004358', 'FD7400', '3DA88E', '83522B', '00D4FD', 'E2D893'])
+
+lines.linewidth: 2.275
+patch.linewidth: 0.39
+lines.markersize: 9.1
+lines.markeredgewidth: 0.0
