@@ -13,6 +13,7 @@ try:
 except ImportError:
     xfail("Mayavi not installed")
 
+import numpy as np
 import viscid
 from viscid import vutil
 from viscid.plot import mvi
@@ -39,8 +40,7 @@ def main():
     # i don't know why this log10 doesn't seem to work
     cbar = mlab.colorbar(scp, title=pp.name, orientation='vertical')
     cbar.lut.scale = 'log10'
-    cbar.lut_mode = 'Reds'
-    cbar.reverse_lut = True
+    mvi.apply_cmap(cbar, 'Reds_r')
 
     # calculate B field lines && topology in viscid and plot them
     seeds = viscid.SphericalPatch([0, 0, 0], [2, 0, 1], 30, 15, r=5.0,
@@ -49,6 +49,12 @@ def main():
                                             obound0=[-25, -20, -20],
                                             obound1=[15, 20, 20], wrap=True)
     mvi.plot_lines(b_lines, scalars=viscid.topology2color(topo))
+
+    # plot a random circle with scalars colored by the Matplotlib viridis
+    # color map, just because we can
+    circle = viscid.Circle([0, 0, 0], r=4.0, n=128, endpoint=True)
+    scalar = np.sin(circle.as_local_coordinates().get_crd('x'))
+    mvi.plot_line(circle.get_points(), scalars=scalar, cmap='viridis')
 
     # Use Mayavi (VTK) to calculate field lines using an interactive seed
     # These field lines are colored by E parallel, and while the syntax used
@@ -67,12 +73,8 @@ def main():
     bsl2 = mlab.pipeline.streamline(b_src, seedtype='sphere',
                                     integration_direction='both',
                                     seed_resolution=4, vmin=-0.1, vmax=0.1)
-
-    cbar = mlab.colorbar(bsl2, title=epar.name, orientation='horizontal')
-    cbar.scalar_bar_representation.position = (0.2, 0.01)
-    cbar.scalar_bar_representation.position2 = (0.6, 0.14)
-    redhelix = (viscid.plot.cubehelix.redhelix_rgba * 255).astype('i')
-    cbar.lut.table = redhelix[:, ::1]
+    # apply the default matplotlib colormap
+    mvi.apply_cmap(bsl2)
 
     bsl2.stream_tracer.maximum_propagation = 20.
     bsl2.seed.widget.center = [-11, 0, 0]
@@ -82,6 +84,10 @@ def main():
     bsl2.stop()  # this stop/start was a hack to get something to work?
     bsl2.start()
     bsl2.seed.widget.enabled = False
+
+    cbar = mlab.colorbar(bsl2, title=epar.name, orientation='horizontal')
+    cbar.scalar_bar_representation.position = (0.2, 0.01)
+    cbar.scalar_bar_representation.position2 = (0.6, 0.14)
 
     # Plot the ionosphere too
     fac_tot = 1e9 * f_iono['fac_tot']
