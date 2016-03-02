@@ -6,11 +6,12 @@ The test also fails if the two results aren't almost exactly equal """
 from __future__ import print_function
 from time import time
 import argparse
+import sys
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from viscid_test_common import next_plot_fname
+from viscid_test_common import next_plot_fname, xfail
 
 import viscid
 from viscid import logger
@@ -22,11 +23,13 @@ def run_mag_test(fld, title="", show=False):
     vx, vy, vz = fld.component_views()  # pylint: disable=W0612
     vx, vy, vz = fld.component_fields()
 
-    t0 = time()
-    mag_ne = viscid.magnitude(fld, preferred="numexpr", only=True)
-    t1 = time()
-    logger.info("numexpr mag runtime: %g", t1 - t0)
-    t0 = time()
+    try:
+        t0 = time()
+        mag_ne = viscid.magnitude(fld, preferred="numexpr", only=True)
+        t1 = time()
+        logger.info("numexpr mag runtime: %g", t1 - t0)
+    except viscid.verror.BackendNotFound:
+        xfail("Numexpr is not installed")
 
     planes = ["z=0", "y=0"]
     nrows = 4

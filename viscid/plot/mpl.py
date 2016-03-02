@@ -16,8 +16,9 @@ from itertools import count
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
 from matplotlib.collections import LineCollection
-from matplotlib.colors import Normalize, LogNorm
+from matplotlib.colors import Normalize, LogNorm, ListedColormap
 try:
     from mpl_toolkits.basemap import Basemap  # pylint: disable=no-name-in-module
     _HAS_BASEMAP = True
@@ -29,15 +30,13 @@ from viscid import pyeval
 from viscid import logger
 from viscid.compat import izip, string_types
 from viscid import coordinate
+from viscid.plot import mpl_style  # pylint: disable=unused-import
 from viscid.plot import mpl_extra
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
 has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 vseaborn.activate_from_viscid()
-
-if mpl_extra.default_cmap:
-    plt.rcParams['image.cmap'] = mpl_extra.default_cmap
 
 
 def plot(fld, selection=":", force_cartesian=False, **kwargs):
@@ -414,10 +413,10 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
-    majorfmt = plot_kwargs.pop("majorfmt", mpl_extra.default_majorfmt)
-    minorfmt = plot_kwargs.pop("minorfmt", mpl_extra.default_minorfmt)
-    majorloc = plot_kwargs.pop("majorloc", mpl_extra.default_majorloc)
-    minorloc = plot_kwargs.pop("minorloc", mpl_extra.default_minorloc)
+    majorfmt = plot_kwargs.pop("majorfmt", rcParams.get("viscid.majorfmt", None))
+    minorfmt = plot_kwargs.pop("minorfmt", rcParams.get("viscid.minorfmt", None))
+    majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
+    minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
     show = plot_kwargs.pop("show", False)
 
     # 2d plot options
@@ -519,10 +518,11 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             raise TypeError("Unrecognized norm type: {0}".format(type(norm)))
         vmin, vmax = norm.vmin, norm.vmax
 
-    if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin):
+    if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin, atol=0):
         # by default, the symmetric_cmap is seismic (blue->white->red)
-        if mpl_extra.symmetric_cmap:
-            plot_kwargs['cmap'] = plt.get_cmap(mpl_extra.symmetric_cmap)
+        symmetric_cmap = rcParams.get("viscid.symmetric_cmap", None)
+        if symmetric_cmap:
+            plot_kwargs['cmap'] = plt.get_cmap(symmetric_cmap)
         symmetric_vlims = True
     else:
         symmetric_vlims = False
@@ -572,7 +572,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             else:
                 colorbar["ticks"] = matplotlib.ticker.LinearLocator()
 
-        cbarfmt = colorbar.pop("format", mpl_extra.default_cbarfmt)
+        cbarfmt = colorbar.pop("format", rcParams.get('viscid.cbarfmt', None))
         if cbarfmt == "steve":
             cbarfmt = mpl_extra.steve_cbarfmt
         if cbarfmt:
@@ -813,10 +813,10 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
-    majorfmt = plot_kwargs.pop("majorfmt", mpl_extra.default_majorfmt)
-    minorfmt = plot_kwargs.pop("minorfmt", mpl_extra.default_minorfmt)
-    majorloc = plot_kwargs.pop("majorloc", mpl_extra.default_majorloc)
-    minorloc = plot_kwargs.pop("minorloc", mpl_extra.default_minorloc)
+    majorfmt = plot_kwargs.pop("majorfmt", rcParams.get("viscid.majorfmt", None))
+    minorfmt = plot_kwargs.pop("minorfmt", rcParams.get("viscid.minorfmt", None))
+    majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
+    minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
     show = plot_kwargs.pop("show", False)
 
     # 1d plot options
@@ -1145,8 +1145,8 @@ def streamplot(fld, **kwargs):
 
         vol = viscid.Volume([xl[0], xm[0], 0], [xl[-1], xm[-1], 0],
                             [nl, nm, 1])
-        vl = vol.wrap_field(viscid.interp_trilin(vl, vol)).slice_reduce(":")
-        vm = vol.wrap_field(viscid.interp_trilin(vm, vol)).slice_reduce(":")
+        vl = viscid.interp_trilin(vl, vol, wrap=True).slice_reduce(":")
+        vm = viscid.interp_trilin(vm, vol, wrap=True).slice_reduce(":")
 
         xl, xm = vl.get_crds()[:2]
 
@@ -1182,6 +1182,8 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
         show (bool, optional): show
         kwargs: passed along to :meth:`plt.statter`
     """
+    import mpl_toolkits.mplot3d.art3d
+
     if not ax:
         ax = plt.gca(projection='3d')
 
@@ -1273,7 +1275,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
         for blk in plane_spec.patches:
             # take only the 1st reduced.nr_sdims... this should just work
             try:
-                plane, _value = blk.deep_meta["reduced"][0]
+                plane, _value = blk.meta["reduced"][0]
                 values.append(_value)
             except KeyError:
                 logger.error("No reduced dims in the field, i don't know what "
@@ -1308,6 +1310,43 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
             axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
                                            fc=nightcol, zorder=zorder))
     return None
+
+def get_current_colorcycle():
+    try:
+        cycle = matplotlib.rcParams['axes.prop_cycle']
+        return list(c['color'] for c in cycle)
+    except KeyError:
+        return list(matplotlib.rcParams['axes.color_cycle'])
+
+def show_colorcycle(pal=None, size=1):
+    """Plot the values in a color palette as a horizontal array."""
+    if not pal:
+        pal = get_current_colorcycle()
+    n = len(pal)
+    _, ax = plt.subplots(1, 1, figsize=(n * size, size))
+    ax.imshow(np.arange(n).reshape(1, n), cmap=ListedColormap(list(pal)),
+              interpolation="nearest", aspect="auto")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    plt.show()
+
+def show_cmap(cmap=None, size=1, aspect=8):
+    if cmap is None:
+        cmap = plt.get_cmap()
+    _, ax = plt.subplots(1, 1, figsize=(aspect * size, size))
+
+    gradient = np.linspace(0, 1, 256)
+    gradient = np.vstack((gradient, gradient))
+
+    ax.imshow(np.arange(256).reshape(1, 256), cmap=cmap,
+              interpolation="nearest", aspect='auto')
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    plt.show()
 
 def _get_projected_axis(ax=None, projection='polar',
                         check_attr='set_thetagrids'):

@@ -110,9 +110,16 @@ class Coordinates(object):
     def __init__(self, **kwargs):
         pass
 
-    def as_coordinates(self):
+    def as_local_coordinates(self):
         return self
 
+    def as_uv_coordinates(self):
+        # trying to get self._axes could raise an AttributeError for
+        # subclasses != StructredCrds
+        if len(self._axes) == 2:
+            return self
+        else:
+            raise NotImplementedError()
 
 class StructuredCrds(Coordinates):
     _TYPE = "structured"
@@ -402,7 +409,7 @@ class StructuredCrds(Coordinates):
             return self.axes.index(axis)
 
     def axis_name(self, axis):
-        if isinstance(axis, str):
+        if isinstance(axis, string_types):
             if axis in self._crds:
                 return axis
             else:
@@ -701,12 +708,14 @@ class StructuredCrds(Coordinates):
         # some types of slices require the result to be nonuniform crds,
         # so resolve that here
         crds_type_name = self._TYPE
+        # for slices with a step, always make the crds nonuniform,
+        # it's just easier that way
         for i, slc in enumerate(slices):
             if isinstance(slc, slice):
                 if cc and slc.step not in [None, 1, -1]:
                     crds_type_name = "nonuniform"
                     if len(self._TYPE.split("_")) > 1:
-                        more = "_".join(crds_type_name.split('_')[1:])
+                        more = "_".join(self._TYPE.split('_')[1:])
                         crds_type_name += "_" + more
         crds_type = lookup_crds_type(crds_type_name)
 
@@ -856,7 +865,7 @@ class StructuredCrds(Coordinates):
             return self
         return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
-    def slice_reduce(self, selection, cc=False):
+    def slice_and_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
         through, and if the slice didn't touch a dim with only one crd,
         reduce it
@@ -868,13 +877,16 @@ class StructuredCrds(Coordinates):
             return self
         return wrap_crds(crds_type, crdlst, dtype=self.dtype)
 
-    def slice_keep(self, selection, cc=False):
+    def slice_and_keep(self, selection, cc=False):
         slices, crdlst, reduced, crds_type = self.make_slice_keep(selection,
                                                                   cc=cc)
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
         return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+
+    slice_reduce = slice_and_reduce
+    slice_keep = slice_and_keep
 
     def slice_interp(self, selection, cc=False):
         _, crdlst, _, crds_type = self.make_slice_keep(selection, cc=cc)
@@ -1209,9 +1221,9 @@ class UniformCrds(StructuredCrds):
 
         # node centered things
         self.xl_nc = np.array([args[0] for args in self._nc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.xh_nc = np.array([args[1] for args in self._nc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.shape_nc = np.array([args[2] for args in self._nc_linspace_args],
                                  dtype='int')
         self.L_nc = self.xh_nc - self.xl_nc
@@ -1219,9 +1231,9 @@ class UniformCrds(StructuredCrds):
 
         # cell centered things
         self.xl_cc = np.array([args[0] for args in self._cc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.xh_cc = np.array([args[1] for args in self._cc_linspace_args],
-                              dtype=dtype)
+                              dtype=self.dtype)
         self.shape_cc = np.array([args[2] for args in self._cc_linspace_args],
                                  dtype='int')
         self.L_cc = self.xh_cc - self.xl_cc
@@ -1384,8 +1396,7 @@ class UniformCrds(StructuredCrds):
         assert len(self._nc_linspace_args) == len(self._axes)
         self._src_crds_nc = {}
         for ax, p in zip(self._axes, self._nc_linspace_args):
-            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2],
-                                                dtype=self.dtype)
+            self._src_crds_nc[ax] = np.linspace(p[0], p[1], p[2]).astype(self.dtype)
         return super(UniformCrds, self)._fill_crds_dict()
 
 

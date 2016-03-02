@@ -13,7 +13,9 @@ Attributes:
         :py:func`viscid.vutil.common_argparse`.
 """
 
-__version__ = """0.95.1"""
+from __future__ import print_function
+
+__version__ = """0.96.0"""
 
 __all__ = ['amr_field',  # Modules
            'amr_grid',
@@ -51,9 +53,12 @@ __all__ = ['amr_field',  # Modules
            'scalar_fields_to_vector',
            'wrap_field',
            'arrays2crds',  # Crd helpers
-           'interp_nearest',  # cython helpers
+           'interp',  # cython helpers
+           'interp_nearest',
            'interp_trilin',
            'calc_streamlines',
+           'find_classified_nulls',
+           'find_nulls'
            # viscid.calculator.calc.* is added below
            # viscid.seed.* is added below
           ]
@@ -109,27 +114,48 @@ from viscid.seed import *  # pylint: disable=wildcard-import
 from viscid import seed
 __all__ += seed.__all__
 
+from viscid.calculator.cluster import cluster
+__all__ += ["cluster"]
+
 from viscid.calculator.topology import topology2color
 __all__ += ["topology2color"]
 
-from viscid.calculator.plasma import *
+from viscid.calculator.separator import trace_separator
+from viscid.calculator.separator import topology_bitor_clusters
+from viscid.calculator.separator import get_sep_pts_bitor
+from viscid.calculator.separator import get_sep_pts_bisect
+__all__ += ["trace_separator"]
+__all__ += ["topology_bitor_clusters", "get_sep_pts_bitor"]
+__all__ += ["get_sep_pts_bisect"]
+
+from viscid.calculator.plasma import *  # pylint: disable=wildcard-import
 from viscid.calculator import plasma
 __all__ += plasma.__all__
+
+from viscid.calculator.minvar_tools import *  # pylint: disable=wildcard-import
+from viscid.calculator import minvar_tools
+__all__ += minvar_tools.__all__
+
+from viscid.calculator.mpause import *  # pylint: disable=wildcard-import
+from viscid.calculator import mpause
+__all__ += mpause.__all__
 
 from viscid.calculator.calc import *  # pylint: disable=wildcard-import
 from viscid.calculator import calc
 __all__ += calc.__all__
 
-from viscid.cython import interp_nearest
-from viscid.cython import interp_trilin
+from viscid.cython import interp, interp_nearest, interp_trilin
 from viscid.cython import calc_streamlines
-
 from viscid.cython import streamline
 for attr in dir(streamline):
     if attr[0] != '_' and attr.isupper():
         vars()[attr] = getattr(streamline, attr)
         __all__.append(attr)
 del streamline
+from viscid.cython import find_classified_nulls, find_nulls
+
+# always bring in custom matplotlib stuff (colormaps & rc params)
+from viscid.plot import mpl_style
 
 # pull other useful modules into the namespace
 # Note: plot and calculator are intentionally left
@@ -145,6 +171,7 @@ from viscid import parallel
 from viscid import pyeval
 from viscid import tree
 from viscid import verror
+from viscid.verror import *
 from viscid import vjson
 from viscid import vlab
 from viscid import vutil
@@ -152,3 +179,13 @@ from viscid import vutil
 # apply settings in the rc file
 from viscid import _rc
 _rc.load_rc_file("~/.viscidrc")
+
+# this block is useful for debugging, ie, immediately do a pdb.set_trace()
+# on the SIGUSR2 signal
+import signal
+def _set_trace(seg, frame):  # pylint: disable=unused-argument
+    import pdb
+    pdb.set_trace()
+# import os
+# print("Trigger pdb with: kill -SIGUSR2", os.getpid())
+signal.signal(signal.SIGUSR2, _set_trace)

@@ -19,7 +19,6 @@ Note:
 
 from __future__ import print_function
 # from timeit import default_timer as time
-from multiprocessing import Pool, cpu_count
 from contextlib import closing
 from itertools import islice, repeat
 import os
@@ -78,6 +77,10 @@ END_MAXIT = 4096 | END_OTHER         # 0b001100000000000  == 6144        12
 END_MAX_LENGTH = 8192 | END_OTHER    # 0b010100000000000  == 10240       13
 END_ZERO_LENGTH = 16384 | END_OTHER  # 0b100100000000000  == 18432       14
 
+# IMPORTANT! If TOPOLOGY_MS_* values change, make sure to also change the
+# values in viscid/cython/__init__.py since those are used if the cython
+# code is not built
+
 # ok, this is over complicated, but the goal was to or the topology value
 # with its neighbors to find a separator line... To this end, or-ing two
 # _C_END_* values doesn't help, so before streamlines returns, it will
@@ -89,6 +92,9 @@ TOPOLOGY_MS_OPEN_NORTH = 2  # translated from 13 (8|5)
 TOPOLOGY_MS_OPEN_SOUTH = 4  # translated from 14 (8|6)
 TOPOLOGY_MS_SW = 8  # no translation needed
 # TOPOLOGY_MS_CYCLIC = 16  # no translation needed
+
+TOPOLOGY_MS_SEPARATOR = (TOPOLOGY_MS_CLOSED | TOPOLOGY_MS_OPEN_NORTH |
+                         TOPOLOGY_MS_OPEN_SOUTH | TOPOLOGY_MS_SW)
 
 # ok, typing these masks gives a very, very small performance boost, but I
 # guess there's no reason not to... just have to remember to add new values
@@ -133,7 +139,7 @@ _global_fld = None
 #####################
 # now the good stuff
 def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
-                     threads=False, nr_chunks_factor=1, **kwargs):
+                     threads=True, chunk_factor=1, wrap=True, **kwargs):
     r"""Trace streamlines
 
     Args:
@@ -144,8 +150,14 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
             \*nix systems)
         force_subprocess (bool): always calc streamlines in a separate
             process, even if nr_procs == 1
-        nr_chunks_factor (int): If streamlines are really unbalanced
-            in length, try bumping this up
+        chunk_factor (int): Valid range is [1, nr_seeds // nr_procs]. 1
+            indicates a single chunk per process; use this for
+            perfectly balanced streamlines. nr_seeds // nr_procs
+            indicates one chunk per seed; this solves load balancing,
+            but the overhead of assembling results makes this
+            undesirable. Start with 1 and bump this up if load
+            balancing is still an issue.
+        wrap (bool): if true, then call seed.wrap_field on topology
         **kwargs: more arguments for streamlines
 
     Keyword Arguments:
@@ -194,11 +206,9 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
     seed = to_seeds(seed)
 
     nr_streams = seed.get_nr_points(center=vfield.center)
+    nr_procs = parallel.sanitize_nr_procs(nr_procs)
 
-    if nr_procs == "all" or nr_procs == "auto":
-        nr_procs = cpu_count()
-
-    nr_chunks = nr_chunks_factor * nr_procs
+    nr_chunks = max(1, min(chunk_factor * nr_procs, nr_streams))
     seed_slices = parallel.chunk_interslices(nr_chunks)  # every nr_chunks seed points
     # seed_slices = parallel.chunk_slices(nr_streams, nr_chunks)  # contiguous chunks
     chunk_sizes = parallel.chunk_sizes(nr_streams, nr_chunks)
@@ -226,6 +236,9 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
         topo = np.empty((nr_streams,), dtype=r[0][1].dtype)
         for i in range(nr_chunks):
             topo[slice(*seed_slices[i])] = r[i][1]
+
+        if wrap:
+            topo = seed.wrap_field(topo, name="Topology")
     else:
         topo = None
 
@@ -306,7 +319,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                               real_t tol_lo, real_t tol_hi,
                               real_t fac_refine, real_t fac_coarsen,
                               real_t smallest_step, real_t largest_step,
-                              real_t vscale[3]) nogil except -1
+                              real_t vscale[3], int cached_idx3[3]) nogil except -1
         int (*end_flags_to_topology)(int _end_flags) nogil
 
         int i, j, it
@@ -335,7 +348,10 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         real_t[:] dx
         real_t[:, ::1] seed_pts
 
+        int cached_idx3[3]
+
     _dir_d[:] = [-1, 1]
+    cached_idx3[:] = [0, 0, 0]
 
     lines = None
     line_ndarr = None
@@ -393,7 +409,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
 
     # establish arrays for output
     if output & OUTPUT_STREAMLINES:
-        # 2 (0=backward, 1=forward), 3 z,y,x, maxit points in the line
+        # 2 (0=backward, 1=forward), 3 (x, y, z), maxit points in the line
         line_ndarr = np.empty((2, 3, maxit), dtype=amrfld.crd_dtype)
         line_mv = line_ndarr
         lines = [None] * nr_streams
@@ -401,9 +417,8 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         topology_ndarr = np.empty((nr_streams,), dtype="i")
         topology_mv = topology_ndarr
 
-    # first one is for timing, second for status
+    # for profiling
     # t0_all = time()
-    # t0 = time()
 
     seed_iter = islice(seed.iter_points(center=active_patch.center), *seed_slice)
     seed_pts = np.array(list(seed_iter), dtype=amrfld.crd_dtype)
@@ -411,17 +426,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     assert seed_pts.shape[1] == 3, "Seeds must have 3 spatial dimensions"
 
     with nogil:
-        # t00 = clock()
         for i_stream in range(seed_pts.shape[0]):
-            # not allowed in a nogil block, but that's ok
-            # if i_stream % nprogress == 0:
-            #     t1 = time()
-            #     viscid.logger.debug("Streamline {0} of {1}: {2}% done, {3:.03e}"
-            #                         "".format(i_stream, nr_streams,
-            #                                   int(100.0 * i_stream / nr_streams),
-            #                                   t1 - t0))
-            #     t0 = time()
-
             x0[0] = seed_pts[i_stream, 0]
             x0[1] = seed_pts[i_stream, 1]
             x0[2] = seed_pts[i_stream, 2]
@@ -436,7 +441,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
 
             for i in range(2):
                 d = _dir_d[i]
-                # i = 0, d = -1, backward ;; i = 1, d = 1, foreward
+                # i = 0, d = -1, backward ;; i = 1, d = 1, forward
                 if d < 0 and not (stream_dir & _C_DIR_BACKWARD):
                     continue
                 elif d > 0 and not (stream_dir & _C_DIR_FORWARD):
@@ -456,14 +461,20 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                     nr_segs += 1
                     pre_ds = fabs(ds)
 
-                    # if amrfld.nr_patches > 1:
-                    #     with gil:
-                    #         activate_patch[FusedAMRField, real_t](amrfld, s)
-                    #         patch = amrfld.active_patch
+                    if amrfld.nr_patches > 1:
+                        # IMPORTANT: for AMR fields, this with gil block will
+                        # absolutely destroy multithreaded performance because
+                        # it happens each integration step, but there seems
+                        # to be no gil-less way to change the active patch
+                        # in cython the way things are currently structured
+                        with gil:
+                            activate_patch[FusedAMRField, real_t](amrfld, s)
+                            patch = amrfld.active_patch
 
                     ret = integrate_func(patch, s, &ds,
                                          tol_lo, tol_hi, fac_refine , fac_coarsen,
-                                         smallest_step, largest_step, vscale)
+                                         smallest_step, largest_step, vscale,
+                                         cached_idx3)
 
                     if fabs(ds) >= pre_ds:
                         stream_length += pre_ds
@@ -500,8 +511,6 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
             # now we have forward and background traces, process this streamline
             if line_mv is not None:
                 with gil:
-                    # if i_stream == 0:
-                    #     print("myzero", line_ends[0], line_ends[1], end_flags)
                     line_cat = np.concatenate((line_mv[0, :, line_ends[0] + 1:],
                                                line_mv[1, :, :line_ends[1]]), axis=1)
                     lines[i_stream] = line_cat
@@ -509,7 +518,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
             if topology_mv is not None:
                 topology_mv[i_stream] = end_flags_to_topology(end_flags)
 
-    # for timing
+    # for profiling
     # t1_all = time()
     # t = t1_all - t0_all
     # print("=> in cython nr_segments: {0:.05e}".format(nr_segs))

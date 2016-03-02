@@ -6,6 +6,7 @@ import numpy as np
 from matplotlib.colors import Colormap, ListedColormap, LinearSegmentedColormap
 from matplotlib.cm import register_cmap as _register_cmap
 
+
 def to_rgba(colors):
     """Turn colors to an Nx4 ndarray or rgba data
 

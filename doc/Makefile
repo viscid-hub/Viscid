@@ -43,6 +43,8 @@ clean:
 	# find $(BUILDDIR)/* -maxdepth 0 ! -name 'html' -exec rm -rf {} \;
 	# find $(BUILDDIR)/html/* ! -name '.git' ! -name '.gitignore' ! -name '.nojekyll' -exec rm -rf {} \;
 	rm -rf $(BUILDDIR)/*
+	rm -rf styles
+	rm -f mpl_styles.rst
 
 #apidoc:
 #	$(SPHINXAPIDOC) -o $(SOURCEDIR)  ../viscid

@@ -1,0 +1,10 @@
+image.cmap: viridis
+viscid.symmetric_cmap: RdBu_r
+
+
+lines.linewidth: 1.75
+patch.linewidth: .3
+lines.markersize: 7
+lines.markeredgewidth: 0
+
+viscid.cbarfmt: steve

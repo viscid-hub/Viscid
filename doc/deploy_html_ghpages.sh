@@ -54,7 +54,7 @@ set -e
 # Make sure Viscid is built inplace, and make the docs with the inplace
 # build at the top of the PYTHONPATH
 make -C .. inplace
-export PYTHONPATH="#{root_dir}:${PYTHONPATH}"
+export PYTHONPATH="${root_dir}:${PYTHONPATH}"
 make clean
 make html
 

@@ -35,6 +35,7 @@ def add_source(src, figure=None):
     if src not in figure.children:
         engine = figure.parent
         engine.add_source(src, scene=figure)
+    return src
 
 def add_lines(lines, scalars=None, figure=None, name="NoName"):
     """Add list of lines to a figure
@@ -71,8 +72,9 @@ def add_field(fld, figure=None, center="", name=""):
     return src
 
 def points2source(vertices, scalars=None, name="NoName"):
-    r = viscid.vutil.prepare_vertices(vertices, scalars)
-    verts, scalars, other = r
+    # if scalars:
+    #     scalars = [scalars]
+    verts, scalars, _, other = viscid.vutil.prepare_lines([vertices], scalars)
 
     src = mlab.pipeline.scalar_scatter(verts[0], verts[1], verts[2])
     if scalars is not None:
@@ -262,7 +264,8 @@ def plot_line(line, scalars=None, **kwargs):
     return plot_lines([line], scalars=scalars, **kwargs)
 
 def plot_lines(lines, scalars=None, style="tube", figure=None,
-               name="Lines", tube_radius=0.05, tube_sides=6, **kwargs):
+               name="Lines", tube_radius=0.05, tube_sides=6, cmap=None,
+               **kwargs):
     """Make 3D mayavi plot of lines
 
     Scalars can be a bunch of single values, or a bunch of rgb data
@@ -319,10 +322,14 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
         raise ValueError("Unknown style for lines: {0}".format(style))
 
     surface = mlab.pipeline.surface(lines, **kwargs)
+
+    if cmap:
+        apply_cmap(surface, cmap)
+
     return surface
 
 def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
-                    bounding_lat=0.0, **kwargs):
+                    bounding_lat=0.0, cmap=None, **kwargs):
     """Plot an ionospheric field
 
     Args:
@@ -372,10 +379,93 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         # m.module_manager.parent.filter.auto_orient_normals = True
     m.actor.mapper.interpolate_scalars_before_mapping = True
 
-    m.module_manager.scalar_lut_manager.lut_mode = 'RdBu'
-    m.module_manager.scalar_lut_manager.reverse_lut = True
+    if not cmap:
+        vmin = kwargs.get('vmin', np.min(arr))
+        vmax = kwargs.get('vmax', np.max(arr))
+        if np.isclose(vmax, -1 * vmin, atol=0):
+            symmetric = True
+        else:
+            symmetric = False
+
+    apply_cmap(m, cmap, symmetric=symmetric)
 
     return m
+
+def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
+               Ocolor=(0.239, 0.659, 0.557), **kwargs):
+    kwargs.setdefault('scale_mode', 'none')
+    kwargs.setdefault('scale_factor', 0.3)
+
+    if not isinstance(nulls, dict):
+        empty = np.ones((3, 0))
+        nulls = dict(O=[empty, nulls], A=[empty, empty], B=[empty, empty])
+
+    Opts = nulls['O'][1]
+    if Ocolor is not None and Opts.shape[1]:
+        mlab.points3d(Opts[0], Opts[1], Opts[2], color=Ocolor, name="Onulls",
+                      **kwargs)
+
+    Apts = nulls['A'][1]
+    if Ocolor is not None and Opts.shape[1]:
+        mlab.points3d(Apts[0], Apts[1], Apts[2], color=Acolor, name="Anulls",
+                      **kwargs)
+
+    Bpts = nulls['B'][1]
+    if Bcolor is not None and Bpts.shape[1]:
+        mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, name="Bnulls",
+                      **kwargs)
+
+def get_cmap(name=None, lut=None, symmetric=False):
+    """Get a Matplotlib colormap as an rgba ndarray
+
+    Args:
+        name (str): name of colormap
+        lut (int): number of entries desired in the lookup table
+
+    Returns:
+        ndarray: Nx4 array of N rgba colors
+    """
+    import matplotlib
+    if symmetric and not name:
+        name = matplotlib.rcParams.get("viscid.symmetric_cmap", None)
+    cmap = matplotlib.cm.get_cmap(name=name, lut=lut)
+    rgba = (255 * np.asarray(cmap(np.linspace(0, 1, cmap.N)))).astype('i')
+    return rgba
+
+def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar',
+               symmetric=False):
+    """Apply a Matplotlib colormap to a Mayavi object
+
+    Args:
+        target: Some Mayavi object to apply the colormap
+        name (str): name of the Matplotlib colormap
+        lut (int): number of entries desired in the lookup table
+        alpha (TYPE): Description
+        which (str): one of 'scalar', 'vector', or 'other'
+
+    Raises:
+        AttributeError: Description
+        ValueError: Description
+    """
+    which = which.strip().lower()
+    rgba = get_cmap(name=name, lut=lut, symmetric=symmetric)
+
+    if alpha:
+        rgba[:, -1] = alpha
+
+    try:
+        if which == "scalar":
+            target.module_manager.scalar_lut_manager.lut.table = rgba[:, ::1]
+        elif which == "vector":
+            target.module_manager.vector_lut_manager.lut.table = rgba[:, ::1]
+        else:
+            if which != "other":
+                raise ValueError("which should be 'scalar', 'vector', or "
+                                 "'other'; not '{0}'".format(which))
+            raise AttributeError()
+    except AttributeError:
+        target.lut.table = rgba[:, ::1]
+
 
 def insert_filter(filtr, module_manager):
     """Insert a filter above an existing module_manager

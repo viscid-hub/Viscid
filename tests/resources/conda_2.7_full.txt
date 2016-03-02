@@ -2,9 +2,8 @@ numpy
 matplotlib
 h5py
 
+scipy
 numexpr
-
-seaborn
 
 mayavi
 

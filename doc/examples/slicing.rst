@@ -1,11 +1,12 @@
-Slicing Examples
-================
-
+Slicing Fields
+==============
 
 Spatial Slices
 --------------
 
-Fields can be sliced just like Numpy ndarrays, but you can also use an extended syntax to ask for a physical location instead of an index in the array. This example snips off the fist 50 cells and last 30 cells in x and plots the y = 0.0 plane for z = [-10.0..10.0].
+Fields can be sliced just like Numpy ndarrays, but you can also use an extended syntax to ask for a physical location instead of an index in the array. This extended syntax is to provide a string with a number followed by an 'f' in place of an integer that is usually found in slices. For even further convenience, you can specify the entire slice as a string and specify the slice dimension by component name.
+
+The best way to show the utility of this extended syntax is by example, so here goes. This example snips off the fist 5 cells and last 25 cells in x and extracts the `y = 0.0` plane. In the z-direciton, the field is sliced every other grid cell between `z = -8` and `z = 10.0`. Here, x, y, and z are coordinate names, so for example, in ionosphere grids, one would use 'lat' and 'lon'.
 
 .. plot::
     :include-source:
@@ -17,7 +18,7 @@ Fields can be sliced just like Numpy ndarrays, but you can also use an extended 
 
     # Notice that slices by location are done by appending an 'f' to the
     # slice. This means "y=0" is not the same as "y=0f".
-    pp = f3d["pp"]["x = 50:-12, y = 0.0f, z = -10.0f:10.0f"]
+    pp = f3d["pp"]["x = 5:-25, y = 0.0f, z = -8.0f:10.0f:2"]
     mpl.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
 
 Temporal Slices
@@ -46,3 +47,57 @@ Temporal Datasets can be sliced a number of ways too, here are some examples
     >>>> print([grid.time for grid in grids])
     [600.0, 1200.0]
     >>>>
+
+Single Time Slice
+~~~~~~~~~~~~~~~~~
+
+.. plot::
+    :include-source:
+
+    import viscid
+    from viscid.plot import mpl
+
+    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    ax1 = mpl.plt.subplot2grid((2, 1), (0, 0))
+    f3d.activate_time(0)
+
+    # notice y=0.0, this is different from y=0; y=0 is the 0th index in
+    # y, which is this case will be y=-50.0
+    mpl.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+             style="contourf", levels=50, plot_opts="lin_0,earth")
+    mpl.plt.title(f3d.get_grid().format_time("UT"))
+
+    # share axes so this plot pans/zooms with the first
+    mpl.plt.subplot2grid((2, 1), (1, 0), sharex=ax1, sharey=ax1)
+    f3d.activate_time(-1)
+    mpl.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+             style="contourf", levels=50, plot_opts="lin_0,earth")
+    mpl.plt.title(f3d.get_grid().format_time("hms"))
+    mpl.tighten()
+
+Iterating Over Time Slices
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Or, if you need to iterate over all time slices, you can do that too. The advantage of using the iterator here is that it's smart enough to kick the old time slice out of memory when you move to the next time.
+
+.. plot::
+    :include-source:
+
+    import numpy as np
+    from matplotlib import pyplot as plt
+
+    import viscid
+    from viscid.plot import mpl
+
+    f2d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.py_0.xdmf')
+
+    times = np.array([grid.time for grid in f2d.iter_times(":2")])
+    nr_times = len(times)
+
+    for i, grid in enumerate(f2d.iter_times(":2")):
+        plt.subplot2grid((nr_times, 1), (i, 0))
+        mpl.plot(grid["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+                 plot_opts="lin_0,earth")
+        mpl.plt.title(grid.format_time(".01f"))
+    mpl.tighten()

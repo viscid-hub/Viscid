@@ -1,6 +1,21 @@
 Changes
 -------
 
+0.96.0
+======
+
+Changes:
+  - Add developer's guide to the docs
+  - Added `mpl_style` module to deprecate `mpl_extra` and `vseaborn`
+  - Use nogil for streamlines and a threads option for lighterweight parallelism
+  - Added simple functions to find separators in topology Fields. Separator tracing is still preliminary and the interface may change in the future. Usage examples are available on the Examples/Calculator page of the docs.
+  - Added some untested minumum variance tools
+  - Added some magnetopause specific tools
+
+Deprecated:
+  - setting `mpl_extra` attributes from the rc file
+  - seaborn styling can be completely done in matplotlib >= 1.5.0
+
 0.95.1
 ======
 

@@ -18,6 +18,7 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
+sys.path.insert(0, os.path.abspath('sphinxext'))
 sys.path.insert(0, os.path.abspath('..'))
 
 # -- General configuration -----------------------------------------------------
@@ -28,7 +29,8 @@ sys.path.insert(0, os.path.abspath('..'))
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['matplotlib.sphinxext.plot_directive', 'matplotlib.sphinxext.mathmpl',
-              'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode']
+              'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode',
+              'style_example_generator']
 
 try:
     from sphinx.ext import napoleon
@@ -139,18 +141,25 @@ html_theme_options = {
     # 'navbar_links': [],
     'navbar_dropdown_links':
         [("Tutorial", [("Installation", "installation"),
-                       ("RC file", "custom_behavior"),
+                       ("Philosophy", "philosophy"),
                        ("Useful Functions", "functions"),
                        ("Plot Options", "plot_options"),
+                       ("Matplotlib Styles", "mpl_styles"),
+                       ("RC file", "custom_behavior"),
                        ("Command Line Tools", "command_line"),
+                       ("Developer's Guide", "dev_guide"),
                        ("Extending Readers", "extending_readers"),
                       ]
          ),
-         ("Examples", [("Plotting", "examples/plotting"),
-                       ("Slicing", "examples/slicing"),
-                       ("Calculator", "examples/calc"),
-                       ("OpenGGCM", "examples/openggcm"),
-                       ("3D Plots", "examples/mayavi_plotting"),
+         ("Examples", [("Slicing Fields", "examples/slicing"),
+                       ("Plotting Scalars", "examples/plotting_scalars"),
+                       ("Plotting Vectors", "examples/plotting_vectors"),
+                       ("Streamline and Interpolation", "examples/stream_and_interp"),
+                       ("Magnetic Topology", "examples/magnetic_topology"),
+                       ("Magnetopause", "examples/magnetopause"),
+                       ("Ionosphere", "examples/ionosphere"),
+                       ("OpenGGCM Specific", "examples/openggcm"),
+                       ("3D Plots (Mayavi)", "examples/mayavi"),
                       ]
          )
         ]
@@ -188,6 +197,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
+html_static_path = ['styles/_thumbs']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
@@ -319,6 +329,13 @@ import os
 _viscid_root = os.path.realpath('../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
+
+import viscid
+
+# not sure why recalling post_rc_actions() is necessary in sphinx
+viscid.mpl_style.use_styles = ["seaborn-talk", "seaborn-ticks",
+                               "viscid-colorblind"]
+viscid.mpl_style.post_rc_actions()
 
 # some examples change this, so make sure it's off by default
 from viscid import readers

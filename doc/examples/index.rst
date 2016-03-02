@@ -4,8 +4,12 @@ Examples
 .. toctree::
   :maxdepth: 2
 
-  plotting
   slicing
-  calc
+  plotting_scalars
+  plotting_vectors
+  stream_and_interp
+  magnetic_topology
+  magnetopause
+  ionosphere
   openggcm
-  mayavi_plotting
+  mayavi

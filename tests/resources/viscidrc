@@ -18,18 +18,15 @@
   # evaluator control for security
   "calculator.evaluator.enabled": true,
 
-  "plot.mpl_extra.default_cmap": "bloodhelix",
-  "plot.mpl_extra.symmetric_cmap": "RdBu_r",  # seismic
-  "plot.mpl_extra.default_cbarfmt": "steve",
-  "plot.mpl_extra.default_majorfmt": "",
+  # matplotlib (>= 1.5.0) styling
+  "mpl_style.use_styles": ["seaborn-talk", "seaborn-white", "viscid-default",
+                           "viscid-colorblind"],
+  # rc params can also be overridden individually
+  # "plot.mpl_style.rc_params": {"image.cmap": "inferno"},
 
-  # pretty plotting
-  "plot.vseaborn.enabled": true,
-  "plot.vseaborn.context": "talk",
-  "plot.vseaborn.style": "ticks",
-  "plot.vseaborn.palette": [["#004358", "#FD7400", "#3da88e", "#83522b", "#00D4FD", "#e2d893"]]
+  # # For matplotlib < 1.5.0, you can use vseaborn as a shim to seaborn
+  # # for nice styles
+  # "plot.vseaborn.enabled": true,
+  # "plot.vseaborn.context": "poster",
+  # "plot.vseaborn.style": "ticks",
 }
-
-##
-## EOF
-##

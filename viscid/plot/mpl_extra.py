@@ -6,16 +6,6 @@ Register some perceptual cubehelix colormaps with matplotlib. These
 are good for the colorblind ;)
 
 Attributes:
-    default_cmap (str): set from viscidrc to set default cmap by name
-    symmetric_cmap (str): if given, use this colormap for plots
-        symmetric about 0
-    default_cbarfmt (str, ticker.Formatter): 'steve' or something else
-    default_majorfmt (str, ticker.Formatter): 'steve' or something else
-    default_minorfmt (str, ticker.Formatter): 'steve' or something else
-    default_majorloc (ticker.Locator): default locator if given
-    default_minorloc (ticker.Locator): default locator if given
-    use_steve_cbarfmt (bool): set from viscidrc
-    use_steve_axfmt (bool): set from viscidrc
     steve_cbarfmt: Steve's colorbar tick formatter
     steve_axfmt: Steve's axis tick formatter
 
@@ -23,9 +13,9 @@ Note:
     All of the above maps should have '_r' variants as well. In addition,
     this module has an attribute cmapname_rgb with the rgba ndarray data.
 
-Note:
-    The **default_cmap**, **use_steve_cbarfmt** and **use_steve_axfmt**
-    attributes are intended to be set via the rc file.
+See Also:
+    :py:mod:`viscid.plot.mpl_style`: This is where rc file
+        customizations should now be placed
 """
 
 from __future__ import print_function
@@ -33,34 +23,20 @@ import locale
 
 import matplotlib.ticker as ticker
 
-from viscid.plot.cmap_tools import register_cmap
-from viscid.plot import cubehelix  # import clac_helix_rgba
+import viscid
+# this import is needed so that Viscid can add matplotlib rc parametrs
+from viscid.plot import mpl_style  # pylint: disable=unused-import
 
 
-# NOTE: this changes the default colormap as soon as viscid.plot.mpl is
-#       imported... Use your rc file to set this to a specific map or None
-#       if you want to use matplotlib's default
-default_cmap = "afmhot"
-symmetric_cmap = "afmhot"  # was "seismic"
-
+# NOTE: DEPRECATED, use viscid.plot.mpl_style instead
+default_cmap = None
+symmetric_cmap = None
 default_cbarfmt = None
 default_majorfmt = None
 default_minorfmt = None
 default_majorloc = None
 default_minorloc = None
 
-# register the cubehelix color maps
-register_cmap('cubeYF', cubehelix.cubeYF_rgba, reverse=False)
-register_cmap('cubeYF_r', cubehelix.cubeYF_rgba, reverse=True)
-
-register_cmap('coolhelix', cubehelix.coolhelix_rgba, reverse=False)
-register_cmap('coolhelix_r', cubehelix.coolhelix_rgba, reverse=True)
-
-register_cmap('redhelix', cubehelix.redhelix_rgba, reverse=False)
-register_cmap('redhelix_r', cubehelix.redhelix_rgba, reverse=True)
-
-register_cmap('bloodhelix', cubehelix.bloodhelix_rgba, reverse=False)
-register_cmap('bloodhelix_r', cubehelix.bloodhelix_rgba, reverse=True)
 
 class OrigSteveScalarFormatter(ticker.ScalarFormatter):
     def pprint_val(self, x):
@@ -152,6 +128,35 @@ class SteveScalarFormatter(ticker.ScalarFormatter):
         except IndexError:
             return s
 
+    def _set_orderOfMagnitude(self, range):
+        return None
+
+
+def post_rc_actions(show_warning=True):
+    # shim legacy rc file options into rcParams
+    from distutils.version import LooseVersion
+    import matplotlib
+
+    if show_warning:
+        viscid.logger.warn("Setting rc options for mpl_extra is deprecated,\n"
+                           "use viscid.plot.mpl_style interface instead.")
+
+    if default_cmap:
+        matplotlib.rcParams.update({"image.cmap": default_cmap})
+    if symmetric_cmap:
+        matplotlib.rcParams.update({"viscid.symmetric_cmap": symmetric_cmap})
+    if default_cbarfmt:
+        matplotlib.rcParams.update({"viscid.cbarfmt": default_cbarfmt})
+    if default_majorfmt:
+        matplotlib.rcParams.update({"viscid.majorfmt": default_majorfmt})
+    if default_minorfmt:
+        matplotlib.rcParams.update({"viscid.minorfmt": default_minorfmt})
+    if default_majorloc:
+        matplotlib.rcParams.update({"viscid.majorloc": default_majorloc})
+    if default_minorloc:
+        matplotlib.rcParams.update({"viscid.minorloc": default_minorloc})
+
+
 steve_cbarfmt = SteveScalarFormatter(max_sigfigs=2, useOffset=True)
 steve_axfmt = SteveScalarFormatter(max_sigfigs=2, useOffset=False)
 
@@ -164,8 +169,7 @@ def _main():
         import seaborn  # pylint: disable=unused-variable
     except ImportError:
         pass
-    from viscid.plot.cmap_tools import plot_ab, plot_lstar, plot_rgb
-    # from viscid.plot.cmap_tools import to_linear_cmap, to_rgba
+    from viscid.plot._cm_tools import plot_ab, plot_lstar, plot_rgb
 
     names = ['cubehelix', 'cubeYF', 'coolhelix', 'redhelix', 'bloodhelix']
     gs = gridspec.GridSpec(4, len(names), height_ratios=[1, 3, 3, 3])

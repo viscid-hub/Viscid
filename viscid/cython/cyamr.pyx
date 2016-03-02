@@ -148,7 +148,7 @@ cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
             amrfld.global_xh[i] = vfield.skeleton.global_xh[i]  # .astype(crd_dtype, copy=False)
 
     except AttributeError:
-        for i in range(3):
+        for i in range(len(vfield.crds.axes)):
             amrfld.global_xl[i] = vfield.crds.xl_nc[i]
             amrfld.global_xh[i] = vfield.crds.xh_nc[i]
 

@@ -39,6 +39,8 @@ def run_test_3d(f, main__file__, show=False):
     mpl.plot(f['pp'], slc, logscale=True, **plot_kwargs)
     mpl.subplot(142)
     mpl.plot(viscid.magnitude(f['bcc']), slc, logscale=True, **plot_kwargs)
+    mpl.plot2d_quiver(f['v'][slc], step=5, color='y', pivot='mid', width=0.03,
+                      scale=600)
     mpl.subplot(143)
     mpl.plot(f['jy'], slc, clim=(-0.005, 0.005), **plot_kwargs)
     mpl.streamplot(f['v'][slc], linewidth=0.3)
@@ -64,6 +66,8 @@ def run_test_2d(f, main__file__, show=False):
              x=(-20, 12))
     mpl.subplot(142)
     mpl.plot(viscid.magnitude(f['bcc']), slc, logscale=True, **plot_kwargs)
+    mpl.plot2d_quiver(f['v'][slc], step=5, color='y', pivot='mid', width=0.03,
+                      scale=600)
     mpl.subplot(143)
     mpl.plot(f['jy'], slc, clim=[-0.005, 0.005], **plot_kwargs)
     mpl.streamplot(f['v'][slc], linewidth=0.3)

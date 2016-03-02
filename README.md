@@ -1,8 +1,7 @@
 # Viscid #
 
 Python framework to visualize scientific data on structured meshes. At the moment,
-only rectilinear meshes are supported, and support for other mesh types will be added
-as needed.
+only rectilinear meshes are supported, and support for other mesh types will be added as needed.
 
 File types:
 + XDMF + HDF5
@@ -15,7 +14,7 @@ There is also preliminary support for reading and plotting AMR datasets from XDM
 
 ## Documentation ##
 
-Both the master and dev branches makes every attempt to be usable  (thanks to continuous integration), but the obvious caveats exist, i.e., the dev branch has more cool new features but it isn't _as_ tested.
+Both the master and dev branches should make every attempt to be usable (thanks to continuous integration), but the obvious caveats exist, i.e. the dev branch has more cool new features but it isn't _as_ tested.
 
 Branch        | Docs                                                                      | Test Status
 ------------- | ------------------------------------------------------------------------- | -----------------------
@@ -29,10 +28,11 @@ Dependencies:
 + Required
   + Python 2.7+ or 3.3+
   + Python 2.6 + argparse
-  + Numpy
+  + Numpy >= 1.9
 + Highly Recommended
   + H5py (if reading hdf5 files)
-  + Matplotlib (if you want to make 2d plots using viscid.plot.mpl)
+  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.mpl)
+  + Scipy (gives Viscid special powers :))
   + Numexpr (for the calculator.necalc module)
 + Truly Optional
   + Seaborn
@@ -64,4 +64,4 @@ However, the standard distutils commands also work if you're so inclined::
 
 ## Development ##
 
-Please, if you edit the code, use [PEP 8](https://www.python.org/dev/peps/pep-0008/) style. Poor style is more than just aesthetic; it tends to lead to bugs that are difficult to spot. This is sorely true when it comes to whitespace (4 spaces per indent please).
+Please, if you edit the code, use [PEP 8](https://www.python.org/dev/peps/pep-0008/) style. Poor style is more than just aesthetic; it tends to lead to bugs that are difficult to spot. Check out the documentation for a more complete developer's guide (inculding exceptions to PEP 8 that are ok).

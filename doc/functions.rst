@@ -33,11 +33,11 @@ Streamlines and Interpolation
 Class                                Description
 ===================================  =================================================
 :py:func:`viscid.calc_streamlines`   Calculate streamlines
-:py:func:`viscid.interp_trilin`      Trilinear interpolation
-:py:func:`viscid.interp_nearest`     Nearest neighbor interpolation
+:py:func:`viscid.interp`             Interpolation, use `kind` kwarg for trilinear /
+                                     nearest neighbor
 :py:class:`viscid.Point`             Collection of hand picked points
 :py:class:`viscid.Line`              A line between 2 points
-:py:class:`viscid.Plane`             A plane difined be an origin and a normal
+:py:class:`viscid.Plane`             A plane defined by an origin and a normal vector
 :py:class:`viscid.Volume`            A Volume of points on a uniform cartesian grid
 :py:class:`viscid.Sphere`            Points on the surface of a sphere
 :py:class:`viscid.SphericalCap`      A cap of points around the pole of a sphere
@@ -48,32 +48,75 @@ Class                                Description
 Math
 ~~~~
 
-These functions will by accelerated by Numexpr if it is installed.
+These functions will by accelerated by Numexpr if it is installed. All functions below are also available from the `viscid` namespace.
 
 .. cssclass:: table-striped
 
-========================================  ===========================================================
-Function                                  Description
-========================================  ===========================================================
-:py:func:`viscid.add`                     Add two fields
-:py:func:`viscid.diff`                    Subtract a field from another
-:py:func:`viscid.mul`                     Multiply two fields
-:py:func:`viscid.relative_diff`           Divide the difference by the magnitude
-:py:func:`viscid.abs_diff`                Absolute value of the difference
-:py:func:`viscid.abs_val`                 Absolute value
-:py:func:`viscid.abs_max`                 Max of the absolute value
-:py:func:`viscid.abs_min`                 Min of the absolute value
-:py:func:`viscid.magnitude`               Magnitude of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.dot`                     Dot product of two :py:class:`viscid.field.VectorField`
-:py:func:`viscid.cross`                   Cross product of two :py:class:`viscid.field.VectorField`
-:py:func:`viscid.div`                     Divergence of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.curl`                    Curl of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.project`                 Project one :py:class:`viscid.field.VectorField` onto
-                                          another
-:py:func:`viscid.integrate_along_lines`   Integrate a field along streamlines
-:py:func:`viscid.calc_psi`                Calculate a 2D flux function
-:py:func:`viscid.calc_beta`               Calculate plasma beta
-========================================  ===========================================================
+================================================  ===========================================================
+Function                                          Description
+================================================  ===========================================================
+:py:func:`viscid.calculator.calc.add`             Add two fields
+:py:func:`viscid.calculator.calc.diff`            Subtract a field from another
+:py:func:`viscid.calculator.calc.mul`             Multiply two fields
+:py:func:`viscid.calculator.calc.relative_diff`   Divide the difference by the magnitude
+:py:func:`viscid.calculator.calc.abs_diff`        Absolute value of the difference
+:py:func:`viscid.calculator.calc.abs_val`         Absolute value
+:py:func:`viscid.calculator.calc.abs_max`         Max of the absolute value
+:py:func:`viscid.calculator.calc.abs_min`         Min of the absolute value
+:py:func:`viscid.calculator.calc.magnitude`       Magnitude of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.dot`             Dot product of two :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.cross`           Cross product of two :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.div`             Divergence of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.curl`            Curl of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.normalize`       Divide a vector field by its magnitude
+:py:func:`viscid.calculator.calc.project`         Project one :py:class:`viscid.field.VectorField` onto
+                                                  another, i.e., `a dot b / |b|`
+:py:func:`viscid.calculator.calc.project_vector`  Project VectorField a onto b in the direction of b, i.e.,
+                                                  `(a dot b / |b|) * (b / |b|)`
+:py:func:`viscid.project_along_line`              Project a Vector Field Parallel to a streamline.
+:py:func:`viscid.resample_lines`                  Resample a list of lines to either more or fewer points.
+                                                  With scipy, oversampling can be done with any type of
+                                                  interpolation that :py:func:`scipy.interpolate.interp1d`
+                                                  understands.
+:py:func:`viscid.integrate_along_lines`           Integrate a field along streamlines
+:py:func:`viscid.calc_psi`                        Calculate a 2D flux function
+:py:func:`viscid.calc_beta`                       Calculate plasma beta
+================================================  ===========================================================
+
+Magnetosphere Tools
+~~~~~~~~~~~~~~~~~~~
+
+Some tools for dealing with magnetospheric specific things. Refer to :doc:`../examples/magnetopause` for an example
+
+.. cssclass:: table-striped
+
+=============================================  ============================================================
+Function                                       Description
+=============================================  ============================================================
+:py:func:`viscid.get_mp_info`                  Extract magnetopause info (possibly cached)
+:py:func:`viscid.find_mp_edges`                Find edges of the magnetopause current sheet
+=============================================  ============================================================
+
+Magnetic Topology and Separator Tools
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For using the separator tools, you may want to refer to :doc:`../examples/magnetic_topology`.
+
+.. cssclass:: table-striped
+
+=============================================  ============================================================
+Function                                       Description
+=============================================  ============================================================
+:py:func:`viscid.topology2color`               Turn topology bitmask into colors
+:py:func:`viscid.trace_separator`              **Still in testing** Trace a separator line using bisection
+                                               algorithm
+:py:func:`viscid.get_sep_pts_bisect`           **Still in testing** Use bisection algorithm to find one or
+                                               more separators locations for a seed
+:py:func:`viscid.get_sep_pts_bitor`            **Still in testing** Use bitwise-or algorithm to find one or
+                                               more separators locations for a seed
+:py:func:`viscid.topology_bitor_clusters`      Use bitwise-or algorithm to find one or more separators in a
+                                               topology Field
+=============================================  ============================================================
 
 Plotting
 --------

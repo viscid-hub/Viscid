@@ -655,6 +655,10 @@ class Field(tree.Leaf):
         # do some sort of lazy pre-setup _src_data inspection?
 
     @property
+    def flat_data(self):
+        return self.data.reshape(-1)
+
+    @property
     def patches(self):
         return [self]
 
@@ -1193,7 +1197,7 @@ class Field(tree.Leaf):
 
             # if there are reduced dims, put them into the deep_meta dict
             if len(reduced) > 0:
-                ret.deep_meta["reduced"] = reduced
+                ret.meta["reduced"] = reduced
         return ret
 
     def forget_source(self):
@@ -1215,7 +1219,7 @@ class Field(tree.Leaf):
         slices, crdlst, reduced, crd_type = self._src_crds.make_slice(selection, cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
 
-    def slice_reduce(self, selection):
+    def slice_and_reduce(self, selection):
         """ Slice the field, then go through all dims and look for dimensions
         with only one coordinate. Reduce those dimensions out of the new
         field """
@@ -1235,6 +1239,9 @@ class Field(tree.Leaf):
                                                                            cc=cc)
         # print("??", type(self._src_crds), crdlst)
         return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
+
+    slice_reduce = slice_and_reduce
+    slice_keep = slice_and_keep
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
@@ -1373,6 +1380,25 @@ class Field(tree.Leaf):
 
     def is_spherical(self):
         return self._src_crds.is_spherical()
+
+    def meshgrid(self, axes=None, prune=False):
+        crds = list(self.get_crds(axes=axes, shaped=True))
+        if prune:
+            poplist = []
+            for i, nxi in reversed(list(enumerate(self.shape))):
+                if nxi <= 1:
+                    poplist.append(i)
+                    crds.pop(i)
+            for pi in poplist:
+                for i in range(len(crds)):
+                    slc = [slice(None)] * len(crds[i].shape)
+                    slc[pi] = 0
+                    crds[i] = crds[i][slc]
+        return np.broadcast_arrays(*crds)
+
+    def meshgrid_flat(self, axes=None, prune=False):
+        arrs = self.meshgrid(axes=axes, prune=prune)
+        return [a.reshape(-1) for a in arrs]
 
     ######################
     def shell_copy(self, force=False, **kwargs):
@@ -1644,6 +1670,11 @@ class Field(tree.Leaf):
             fld = fld.component_fields()[0]
         return fld
 
+    def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
+        """Wrap an ndarray into a field in the local representation"""
+        return viscid.wrap_field(data, self.crds, name=name, fldtype=fldtype,
+                                 center=self.center, **kwargs)
+
     def __array_wrap__(self, out_arr, context=None):  # pylint: disable=W0613
         return self.wrap(out_arr)
 
@@ -1750,14 +1781,15 @@ class Field(tree.Leaf):
         return self.wrap(self.data.any(**kwargs), npkwargs=kwargs)
     def all(self, **kwargs):
         return self.wrap(self.data.all(**kwargs), npkwargs=kwargs)
-    def argmax(self, axis=None, **kwargs):
-        kwargs.update(axis=axis)
+    def argmax(self, axis=None, out=None, **kwargs):
+        kwargs.update(axis=axis, out=out)
         return self.wrap(self.data.argmax(**kwargs), npkwargs=kwargs)
-    def argmin(self, axis=None, **kwargs):
-        kwargs.update(axis=axis)
+    def argmin(self, axis=None, out=None, **kwargs):
+        kwargs.update(axis=axis, out=out)
         return self.wrap(self.data.argmin(**kwargs), npkwargs=kwargs)
-    def argpartition(self, **kwargs):
-        return self.wrap(self.data.argpartition(**kwargs), npkwargs=kwargs)
+    def argpartition(self, kth, axis=-1, **kwargs):
+        kwargs.update(kth=kth, axis=axis)
+        return self.data.argpartition(**kwargs)
     def argsort(self, axis=-1, kind='quicksort', order=None, **kwargs):
         kwargs.update(axis=axis, kind=kind, order=order)
         return self.wrap(self.data.argsort(**kwargs), npkwargs=kwargs)
@@ -1773,7 +1805,8 @@ class Field(tree.Leaf):
         return self.wrap(self.data.mean(**kwargs), npkwargs=kwargs)
     def min(self, **kwargs):
         return self.wrap(self.data.min(**kwargs), npkwargs=kwargs)
-    def partition(self, **kwargs):
+    def partition(self, kth, axis=-1, **kwargs):
+        kwargs.update(kth=kth, axis=axis)
         return self.wrap(self.data.partition(**kwargs), npkwargs=kwargs)
     def prod(self, **kwargs):
         return self.wrap(self.data.prod(**kwargs), npkwargs=kwargs)

@@ -1,7 +1,7 @@
-viscid.plot.cubehelix module
+viscid.plot.mpl_style module
 ============================
 
-.. automodule:: viscid.plot.cubehelix
+.. automodule:: viscid.plot.mpl_style
     :members:
     :undoc-members:
     :show-inheritance:

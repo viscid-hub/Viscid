@@ -11,6 +11,7 @@ Submodules
    viscid.cython.cyfield
    viscid.cython.integrate
    viscid.cython.streamline
+   viscid.cython.null_tools
 
 Module contents
 ---------------

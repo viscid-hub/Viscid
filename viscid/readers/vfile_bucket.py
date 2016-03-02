@@ -193,12 +193,12 @@ class ContainerFile(VFile):  # pylint: disable=abstract-method
     def _load_child_file(self, fname, **kwargs):
         """Add file to self.child_bucket and remember it for when I unload"""
         f = self.child_bucket.load_file(fname, _add_ref=True, **kwargs)
-        try:
-            self._child_ref_count[f.handle_name] += 1
-        except KeyError:
-            self._child_files.append(f)
-            self._child_ref_count[f.handle_name] = 1
-
+        if f is not None:
+            try:
+                self._child_ref_count[f.handle_name] += 1
+            except KeyError:
+                self._child_files.append(f)
+                self._child_ref_count[f.handle_name] = 1
         return f
 
     def reload(self):

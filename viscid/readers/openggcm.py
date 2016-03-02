@@ -384,13 +384,13 @@ class GGCMGrid(grid.Grid):
 
     def _get_beta(self):
         # caching behavior depends on self.longterm_field_caches
-        return plasma.calc_beta(self['pp'], self['b'])
+        return plasma.calc_beta(self['pp'], self['b'], scale=40.0)
 
     def _get_psi(self):
         B = self['b']
 
         rev = True if B.meta["crd_system"] == "gse" else False
-        psi = plasma.calc_psi(B, reversed=rev)
+        psi = plasma.calc_psi(B, rev=rev)
         return psi
 
 

@@ -42,7 +42,7 @@ class Operation(object):
     opname = None
     short_name = None
 
-    def __init__(self, name, short_name, implementations=[]):
+    def __init__(self, name, short_name, implementations=()):
         self.opname = name
         self.short_name = short_name
         self._imps = OrderedDict()
@@ -99,20 +99,35 @@ class BinaryOperation(Operation):
         return ret
 
 add = BinaryOperation("add", "+")
+"""Callable, calculates a + b"""
 diff = BinaryOperation("diff", "-")
+"""Callable, calculates a - b"""
 mul = BinaryOperation("mul", "*")
+"""Callable, calculates a * b"""
 relative_diff = BinaryOperation("relative diff", "%-")
+"""Callable, calculates abs(a - b) / a"""
 abs_diff = BinaryOperation("abs diff", "|-|")
+"""Callable, calculates abs(a - b)"""
 abs_val = UnaryOperation("abs val", "absval")
+"""Callable, calculates abs(a)"""
 abs_max = Operation("abs max", "absmax")
+"""Callable, calculates max(abs(a))"""
 abs_min = Operation("abs min", "absmin")
+"""Callable, calculates min(abs(a))"""
 magnitude = UnaryOperation("magnitude", "magnitude")
+"""Callable, calculates L2 Norm of a vectors in a vector field"""
 dot = BinaryOperation("dot", "dot")
+"""Callable, calculates a dot b"""
 cross = BinaryOperation("cross", "x")
+"""Callable, calculates a cross b"""
 project = BinaryOperation("project", "dot mag")
+"""Callable, scalar projection of a onto b; a dot b / norm(b)"""
 normalize = UnaryOperation("normalize", "normalize")
+"""Callable, divide a vector field by its magnitude"""
 div = UnaryOperation("div", "div")
+"""Callable, divergence of a vector field"""
 curl = UnaryOperation("curl", "curl")
+"""Callable, curl of a vector field"""
 
 if has_numexpr:
     add.add_implementation("numexpr", necalc.add)
@@ -148,8 +163,7 @@ def _dot_np(fld_a, fld_b):
 dot.add_implementation("numpy", _dot_np)
 
 def _magnitude_np(fld):
-    vx, vy, vz = fld.component_views()
-    return np.sqrt((vx**2) + (vy**2) + (vz**2))
+    return np.sqrt((np.sum(fld * fld, axis=fld.nr_comp)))
 magnitude.add_implementation("numpy", _magnitude_np)
 
 def _project_np(a, b):
@@ -177,12 +191,12 @@ def _magnitude_native(fld):
 magnitude.add_implementation("native", _magnitude_native)
 
 def project_vector(a, b):
-    """Returns (a dot b) * b hat"""
+    """Calculates the vector (a dot b_hat) * b_hat"""
     bnorm = normalize(b)
     # print(">>", type(bnorm), bnorm.shape, bnorm.nr_comps,
     #       "MIN", np.min(np.linalg.norm(bnorm, axis=b.nr_comp)),
     #       "MAX", np.max(np.linalg.norm(bnorm, axis=b.nr_comp)))
-    return project(a, b) * bnorm
+    return project(a, bnorm) * bnorm
 
 def resample_lines(lines, factor=1, kind="linear"):
     """Resample a bunch of lines
@@ -228,6 +242,13 @@ def resample_lines(lines, factor=1, kind="linear"):
     return lines
 
 def project_along_line(line, fld):
+    """Project a Vector Field Parallel to a streamline
+
+    Args:
+        line (ndarray): 3xN of points along the
+        fld (VectorField): Field to interpolate and project onto the
+            line
+    """
     fld_on_verts = viscid.interp_trilin(fld, line)
     dsvec = line[:, 2:] - line[:, :-2]
     dsvec = np.concatenate([dsvec[:, 0:1], dsvec, dsvec[:, -2:-1]], axis=1)

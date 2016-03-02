@@ -36,8 +36,13 @@ except KeyError:
     sys.path.append(viscid_root)
 
 # set default plot style
-import viscid
-viscid.plot.vseaborn.context = "notebook"
+import viscid  # pylint: disable=unused-import
+try:
+    from matplotlib import style
+    style.use("seaborn-notebook")
+except (ImportError, ValueError):
+    from viscid.plot import vseaborn
+    vseaborn.context = "notebook"
 
 # do some common string handling
 def get_test_name(main__file__):
@@ -80,6 +85,10 @@ def next_plot_fname(main__file__, series='', fmt='png'):
                                            NPLOT[series], fmt)
     NPLOT[series] += 1
     return name
+
+def xfail(msg):
+    print("XFAIL: {0}".format(msg), file=sys.stderr)
+    sys.exit(CODE_XFAIL)
 
 ##
 ## EOF

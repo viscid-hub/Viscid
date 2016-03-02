@@ -23,7 +23,7 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         from viscid.plot import mpl
         mpl.plt.clf()
         # mpl.plt.plot(seeds.get_points()[2, :], fld)
-        mpl.plot(seeds.wrap_field(interpolated_fld))
+        mpl.plot(interpolated_fld)
         mpl.plt.title(seed_name)
 
         mpl.plt.savefig(next_plot_fname(__file__, series='2d'))
@@ -39,16 +39,18 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         mvi.clf()
 
         try:
-            vertices, scalars = seeds.wrap_mesh(interpolated_fld)
+            vertices, scalars = seeds.wrap_mesh(interpolated_fld.flat_data)
             mesh = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
                                  scalars=scalars)
+            mvi.apply_cmap(mesh)
             mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
 
         pts = seeds.get_points()
-        p = mvi.mlab.points3d(pts[0], pts[1], pts[2], interpolated_fld,
+        p = mvi.mlab.points3d(pts[0], pts[1], pts[2], interpolated_fld.flat_data,
                               scale_mode='none', scale_factor=0.02)
+        mvi.apply_cmap(p)
         mvi.mlab.axes(p)
         mvi.mlab.title(seed_name)
         if view_kwargs:

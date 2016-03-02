@@ -859,7 +859,6 @@ struct __pyx_obj_6viscid_6cython_7cyfield_CyField {
   int nm2[3];
   int nr_nodes[3];
   int nr_cells[3];
-  int cached_ind[3];
   __pyx_t_5numpy_float64_t min_dx;
 };
 
@@ -1644,14 +1643,14 @@ static double *__pyx_vp_6viscid_6cython_7cyfield_MAX_DOUBLE = 0;
 /* Module declarations from 'libc.math' */
 
 /* Module declarations from 'viscid.cython.cycalc' */
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
-static __pyx_t_5numpy_float32_t (*__pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *); /*proto*/
-static __pyx_t_5numpy_float64_t (*__pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static __pyx_t_5numpy_float32_t (*__pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static __pyx_t_5numpy_float64_t (*__pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin)(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *, int *); /*proto*/
 
 /* Module declarations from 'viscid.cython.misc_inlines' */
 static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_real_min(__pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t); /*proto*/
@@ -1671,38 +1670,38 @@ static PyObject *strided = 0;
 static PyObject *indirect = 0;
 static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *); /*proto*/
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *); /*proto*/
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -1985,7 +1984,7 @@ static PyObject *__pyx_tuple__24;
  *                    real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -1996,33 +1995,33 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2030,7 +2029,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2058,7 +2057,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2119,7 +2118,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2130,33 +2129,33 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2164,7 +2163,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2192,7 +2191,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2253,7 +2252,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -2264,33 +2263,33 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2298,7 +2297,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2326,7 +2325,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2387,7 +2386,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2398,33 +2397,33 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2432,7 +2431,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2460,7 +2459,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2521,7 +2520,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -2532,33 +2531,33 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2566,7 +2565,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2594,7 +2593,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2655,7 +2654,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2666,33 +2665,33 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2700,7 +2699,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2728,7 +2727,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2789,7 +2788,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_v[3];
   __pyx_t_5numpy_float32_t __pyx_v_vmag;
   int __pyx_r;
@@ -2800,33 +2799,33 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2834,7 +2833,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((powf((__pyx_v_v[0]), 2.0) + powf((__pyx_v_v[1]), 2.0)) + powf((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2862,7 +2861,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2923,7 +2922,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_v[3];
   __pyx_t_5numpy_float64_t __pyx_v_vmag;
   int __pyx_r;
@@ -2934,33 +2933,33 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   /* "viscid/cython/integrate.pyx":23
  *     cdef real_t v[3]
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":24
  *     cdef real_t vmag
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  */
-  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":25
- *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):
  */
-  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":26
- *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)             # <<<<<<<<<<<<<<
  *     if vmag == 0.0 or isnan(vmag):
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2968,7 +2967,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
   __pyx_v_vmag = sqrt(((pow((__pyx_v_v[0]), 2.0) + pow((__pyx_v_v[1]), 2.0)) + pow((__pyx_v_v[2]), 2.0)));
 
   /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -2996,7 +2995,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
     goto __pyx_L0;
 
     /* "viscid/cython/integrate.pyx":27
- *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
  *     if vmag == 0.0 or isnan(vmag):             # <<<<<<<<<<<<<<
  *         # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
@@ -3065,7 +3064,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1(struct __p
  *                 real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -3081,41 +3080,41 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -3182,40 +3181,40 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -3312,7 +3311,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -3328,41 +3327,41 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -3429,40 +3428,40 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -3559,7 +3558,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -3575,41 +3574,41 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -3676,40 +3675,40 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -3806,7 +3805,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -3822,41 +3821,41 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -3923,40 +3922,40 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -4053,7 +4052,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -4069,41 +4068,41 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -4170,40 +4169,40 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -4300,7 +4299,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -4316,41 +4315,41 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -4417,40 +4416,40 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -4547,7 +4546,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -4563,41 +4562,41 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -4664,40 +4663,40 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -4794,7 +4793,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_lo, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_tol_hi, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_refine, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_smallest_step, CYTHON_UNUSED __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -4810,41 +4809,41 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     cdef real_t v1[3]
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)             # <<<<<<<<<<<<<<
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
  */
   __pyx_v_ds_half = (0.5 * (*__pyx_v_ds));
 
   /* "viscid/cython/integrate.pyx":47
  *     cdef real_t vmag0, vmag1
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+  (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":48
  *     cdef real_t ds_half = 0.5 * deref(ds)
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+  (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":49
- *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *     v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+  (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":50
- *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *     v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *     v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *     vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *     if vmag0 == 0.0 or isnan(vmag0):
@@ -4911,40 +4910,40 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *     x1[1] = x[1] + ds_half * v0[1] / vmag0
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0             # <<<<<<<<<<<<<<
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
  */
   (__pyx_v_x1[2]) = ((__pyx_v_x[2]) + ((__pyx_v_ds_half * (__pyx_v_v0[2])) / __pyx_v_vmag0));
 
   /* "viscid/cython/integrate.pyx":59
  *     x1[2] = x[2] + ds_half * v0[2] / vmag0
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+  (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":60
  * 
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+  (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":61
- *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *     v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+  (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
   /* "viscid/cython/integrate.pyx":62
- *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *     v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *     v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *     vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *     # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *     if vmag1 == 0.0 or isnan(vmag1):
@@ -5049,7 +5048,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2(struct __pyx_
  *                  real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -5084,33 +5083,33 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -5211,33 +5210,33 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -5485,7 +5484,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -5520,33 +5519,33 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -5647,33 +5646,33 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -5921,7 +5920,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -5956,33 +5955,33 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -6083,33 +6082,33 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -6357,7 +6356,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -6392,33 +6391,33 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -6519,33 +6518,33 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -6793,7 +6792,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -6828,33 +6827,33 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -6955,33 +6954,33 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -7229,7 +7228,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -7264,33 +7263,33 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -7391,33 +7390,33 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -7665,7 +7664,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
   __pyx_t_5numpy_float32_t __pyx_v_v1[3];
@@ -7700,33 +7699,33 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -7827,33 +7826,33 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -8101,7 +8100,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
   __pyx_t_5numpy_float64_t __pyx_v_v1[3];
@@ -8136,33 +8135,33 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":93
  * 
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":94
  *         # print("A", start_inds[0], start_inds[1], start_inds[2])
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":95
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":96
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x: {0} | v0 : | vmag0: {1}".format([x[0], x[1], x[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -8263,33 +8262,33 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
     /* "viscid/cython/integrate.pyx":111
  * 
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":112
  *         # print("B", start_inds[0], start_inds[1], start_inds[2])
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":113
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":114
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
  *         if vmag1 == 0.0 or isnan(vmag1):
@@ -8545,7 +8544,7 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12(struct __pyx
  *                     real_t fac_refine, real_t fac_coarsen,
  */
 
-static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -8562,40 +8561,40 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -8669,33 +8668,33 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -8943,7 +8942,7 @@ static int __pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
   return __pyx_r;
 }
 
-static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -8960,40 +8959,40 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -9067,33 +9066,33 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -9341,7 +9340,7 @@ static int __pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -9358,40 +9357,40 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -9465,33 +9464,33 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -9739,7 +9738,7 @@ static int __pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
   return __pyx_r;
 }
 
-static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -9756,40 +9755,40 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -9863,33 +9862,33 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -10137,7 +10136,7 @@ static int __pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -10154,40 +10153,40 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -10261,33 +10260,33 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -10535,7 +10534,7 @@ static int __pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
   return __pyx_r;
 }
 
-static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -10552,40 +10551,40 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -10659,33 +10658,33 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -10933,7 +10932,7 @@ static int __pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float32_t *__pyx_v_x, __pyx_t_5numpy_float32_t *__pyx_v_ds, __pyx_t_5numpy_float32_t __pyx_v_tol_lo, __pyx_t_5numpy_float32_t __pyx_v_tol_hi, __pyx_t_5numpy_float32_t __pyx_v_fac_refine, __pyx_t_5numpy_float32_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float32_t __pyx_v_smallest_step, __pyx_t_5numpy_float32_t __pyx_v_largest_step, __pyx_t_5numpy_float32_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float32_t __pyx_v_x1[3];
   __pyx_t_5numpy_float32_t __pyx_v_x2[3];
   __pyx_t_5numpy_float32_t __pyx_v_v0[3];
@@ -10950,40 +10949,40 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -11057,33 +11056,33 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -11331,7 +11330,7 @@ static int __pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
   return __pyx_r;
 }
 
-static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale) {
+static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *__pyx_v_fld, __pyx_t_5numpy_float64_t *__pyx_v_x, __pyx_t_5numpy_float64_t *__pyx_v_ds, __pyx_t_5numpy_float64_t __pyx_v_tol_lo, __pyx_t_5numpy_float64_t __pyx_v_tol_hi, __pyx_t_5numpy_float64_t __pyx_v_fac_refine, __pyx_t_5numpy_float64_t __pyx_v_fac_coarsen, __pyx_t_5numpy_float64_t __pyx_v_smallest_step, __pyx_t_5numpy_float64_t __pyx_v_largest_step, __pyx_t_5numpy_float64_t *__pyx_v_vscale, int *__pyx_v_cached_idx3) {
   __pyx_t_5numpy_float64_t __pyx_v_x1[3];
   __pyx_t_5numpy_float64_t __pyx_v_x2[3];
   __pyx_t_5numpy_float64_t __pyx_v_v0[3];
@@ -11348,40 +11347,40 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
  * 
  *     while True:             # <<<<<<<<<<<<<<
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
  */
   while (1) {
 
     /* "viscid/cython/integrate.pyx":165
  *     while True:
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)             # <<<<<<<<<<<<<<
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  */
-    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x));
+    (__pyx_v_v0[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":166
  *         # go forward
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)             # <<<<<<<<<<<<<<
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  */
-    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x));
+    (__pyx_v_v0[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":167
- *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x)
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)             # <<<<<<<<<<<<<<
+ *         v0[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x, cached_idx3)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  */
-    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x));
+    (__pyx_v_v0[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":168
- *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x)
- *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x)
+ *         v0[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x, cached_idx3)
+ *         v0[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
  *         vmag0 = sqrt(v0[0]**2 + v0[1]**2 + v0[2]**2)             # <<<<<<<<<<<<<<
  *         # logger.info("x0: {0} | v0 : | vmag0: {1}".format([x0[0], x0[1], x0[2]], vmag0))
  *         if vmag0 == 0.0 or isnan(vmag0):
@@ -11455,33 +11454,33 @@ static int __pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a(struct __
     /* "viscid/cython/integrate.pyx":179
  * 
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)             # <<<<<<<<<<<<<<
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  */
-    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1));
+    (__pyx_v_v1[0]) = ((__pyx_v_vscale[0]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 0, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":180
  *         # now go backward
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)             # <<<<<<<<<<<<<<
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)             # <<<<<<<<<<<<<<
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  */
-    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1));
+    (__pyx_v_v1[1]) = ((__pyx_v_vscale[1]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 1, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":181
- *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1)
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)             # <<<<<<<<<<<<<<
+ *         v1[0] = vscale[0] * _c_interp_trilin[FusedField, real_t](fld, 0, x1, cached_idx3)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)             # <<<<<<<<<<<<<<
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)
  * 
  */
-    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1));
+    (__pyx_v_v1[2]) = ((__pyx_v_vscale[2]) * __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin(__pyx_v_fld, 2, __pyx_v_x1, __pyx_v_cached_idx3));
 
     /* "viscid/cython/integrate.pyx":182
- *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1)
- *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1)
+ *         v1[1] = vscale[1] * _c_interp_trilin[FusedField, real_t](fld, 1, x1, cached_idx3)
+ *         v1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
  *         vmag1 = sqrt(v1[0]**2 + v1[1]**2 + v1[2]**2)             # <<<<<<<<<<<<<<
  * 
  *         # logger.info("x1: {0} | v0 : | vmag1: {1}".format([x1[0], x1[1], x1[2]], vmag1))
@@ -27199,38 +27198,38 @@ PyMODINIT_FUNC PyInit_integrate(void)
   indirect_contiguous = Py_None; Py_INCREF(Py_None);
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk2", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk2", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk2", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk2", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk2", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk2", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk2", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk2", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk12", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk12", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk12", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk12", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk12", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk12", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk12", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk12", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1a", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1a", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1a", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1a", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1a", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1a", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1a", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1a", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk2", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk2", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk2", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk2", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk2", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk2", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk2", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk2", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk2, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_rk12", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_rk12", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_rk12", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_rk12", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_rk12", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_rk12", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_rk12", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_rk12", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_rk12, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_0_c_euler1a", (void (*)(void))__pyx_fuse_0_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_0_1_c_euler1a", (void (*)(void))__pyx_fuse_0_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_0_c_euler1a", (void (*)(void))__pyx_fuse_1_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_1_1_c_euler1a", (void (*)(void))__pyx_fuse_1_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_0_c_euler1a", (void (*)(void))__pyx_fuse_2_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_2_1_c_euler1a", (void (*)(void))__pyx_fuse_2_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_0_c_euler1a", (void (*)(void))__pyx_fuse_3_0__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t *, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ExportFunction("__pyx_fuse_3_1_c_euler1a", (void (*)(void))__pyx_fuse_3_1__pyx_f_6viscid_6cython_9integrate__c_euler1a, "int (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t *, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   /*--- Type init code ---*/
   if (PyType_Ready(&__pyx_type___pyx_array) < 0) {__pyx_filename = __pyx_f[1]; __pyx_lineno = 101; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   __pyx_type___pyx_array.tp_print = 0;
@@ -27284,14 +27283,14 @@ PyMODINIT_FUNC PyInit_integrate(void)
   Py_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   /*--- Function import code ---*/
   __pyx_t_2 = __Pyx_ImportModule("viscid.cython.cycalc"); if (!__pyx_t_2) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
-  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_0_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_0_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I4_Crd_F8 *, int, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_1_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_1_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_I8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_2_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_2_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F4_Crd_F4 *, int, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_0_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_0__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float32_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float32_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
+  if (__Pyx_ImportFunction(__pyx_t_2, "__pyx_fuse_3_1_c_interp_trilin", (void (**)(void))&__pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc__c_interp_trilin, "__pyx_t_5numpy_float64_t (struct __pyx_obj_6viscid_6cython_7cyfield_Field_F8_Crd_F8 *, int, __pyx_t_5numpy_float64_t *, int *)") < 0) {__pyx_filename = __pyx_f[2]; __pyx_lineno = 1; __pyx_clineno = __LINE__; goto __pyx_L1_error;}
   Py_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   /*--- Execution code ---*/
   #if defined(__Pyx_Generator_USED) || defined(__Pyx_Coroutine_USED)
