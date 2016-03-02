@@ -1032,8 +1032,8 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
     cone, and the half angle of the cone.
     """
     def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), angle=90.0,
-                 ntheta=20, nphi=20, pole_is_vector=True, theta_phi=False,
-                 roll=0.0, cache=False, dtype=None):
+                 ntheta=20, nphi=20, phi_endpoint=False, pole_is_vector=True,
+                 theta_phi=False, roll=0.0, cache=False, dtype=None):
         """Summary
 
         Args:
@@ -1045,13 +1045,15 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
             angle (float): cone angle of the cap in degrees
             ntheta (int): Number of points in theta
             nphi (int): Number of points in phi
+            phi_endpoint (bool): if true, then let phi inclue upper
+                value. This is false by default since 0 == 2pi.
             pole_is_vector (bool): Whether pole is a vector or a
                 vector
             theta_phi (bool): If True, reult can be reshaped as
                 (theta, phi), otherwise it's (phi, theta)
         """
         super(SphericalCap, self).__init__(p0, r=r, pole=pole, ntheta=ntheta,
-                                           nphi=nphi,
+                                           nphi=nphi, phi_endpoint=phi_endpoint,
                                            pole_is_vector=pole_is_vector,
                                            theta_phi=theta_phi, roll=roll,
                                            cache=cache, dtype=dtype)
@@ -1064,7 +1066,7 @@ class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
         theta = np.linspace(self.angle, 0.0, self.ntheta, endpoint=False)
         theta = np.array(theta[::-1], dtype=self.dtype)
         phi = np.linspace(0, 2.0 * np.pi, self.nphi,
-                          endpoint=False).astype(self.dtype)
+                          endpoint=self.phi_endpoint).astype(self.dtype)
         return theta, phi
 
     def as_mesh(self):
@@ -1095,7 +1097,8 @@ class Circle(SphericalCap):
     Defined by a center and a point normal to the plane of the circle
     """
     def __init__(self, p0=(0, 0, 0), pole=(0, 0, 1), n=20, r=None,
-                 pole_is_vector=True, roll=0.0, cache=False, dtype=None):
+                 endpoint=False, pole_is_vector=True, roll=0.0, cache=False,
+                 dtype=None):
         """Summary
 
         Args:
@@ -1105,12 +1108,16 @@ class Circle(SphericalCap):
                 (0, 0, 1).
             n (int): Number of points around the circle
             r (float): Radius of circle; or calculated from pole if 0
+            endpoint (bool): if true, then let phi inclue upper value.
+                This is false by default since 0 == 2pi.
             pole_is_vector (bool): Whether pole is a vector or a
                 vector
         """
         super(Circle, self).__init__(p0, r=r, pole=pole, angle=90.0, nphi=n,
+                                     phi_endpoint=endpoint,
                                      pole_is_vector=pole_is_vector, roll=roll,
                                      ntheta=1, cache=cache, dtype=dtype)
+        self.n = self.nphi
 
     def to_local(self, pts_3d):
         raise NotImplementedError()
