@@ -128,6 +128,9 @@ class SteveScalarFormatter(ticker.ScalarFormatter):
         except IndexError:
             return s
 
+    def _set_orderOfMagnitude(self, range):
+        return None
+
 
 def post_rc_actions(show_warning=True):
     # shim legacy rc file options into rcParams
