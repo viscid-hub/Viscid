@@ -518,7 +518,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             raise TypeError("Unrecognized norm type: {0}".format(type(norm)))
         vmin, vmax = norm.vmin, norm.vmax
 
-    if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin):
+    if "cmap" not in plot_kwargs and np.isclose(vmax, -1 * vmin, atol=0):
         # by default, the symmetric_cmap is seismic (blue->white->red)
         symmetric_cmap = rcParams.get("viscid.symmetric_cmap", None)
         if symmetric_cmap:

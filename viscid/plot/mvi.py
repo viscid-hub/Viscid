@@ -329,7 +329,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     return surface
 
 def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
-                    bounding_lat=0.0, cmap="RdBu_r", **kwargs):
+                    bounding_lat=0.0, cmap=None, **kwargs):
     """Plot an ionospheric field
 
     Args:
@@ -379,8 +379,15 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         # m.module_manager.parent.filter.auto_orient_normals = True
     m.actor.mapper.interpolate_scalars_before_mapping = True
 
-    if cmap:
-        apply_cmap(m, cmap)
+    if not cmap:
+        vmin = kwargs.get('vmin', np.min(arr))
+        vmax = kwargs.get('vmax', np.max(arr))
+        if np.isclose(vmax, -1 * vmin, atol=0):
+            symmetric = True
+        else:
+            symmetric = False
+
+    apply_cmap(m, cmap, symmetric=symmetric)
 
     return m
 
@@ -408,7 +415,7 @@ def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
         mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, name="Bnulls",
                       **kwargs)
 
-def get_cmap(name=None, lut=None):
+def get_cmap(name=None, lut=None, symmetric=False):
     """Get a Matplotlib colormap as an rgba ndarray
 
     Args:
@@ -419,11 +426,14 @@ def get_cmap(name=None, lut=None):
         ndarray: Nx4 array of N rgba colors
     """
     import matplotlib
+    if symmetric and not name:
+        name = matplotlib.rcParams.get("viscid.symmetric_cmap", None)
     cmap = matplotlib.cm.get_cmap(name=name, lut=lut)
     rgba = (255 * np.asarray(cmap(np.linspace(0, 1, cmap.N)))).astype('i')
     return rgba
 
-def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar'):
+def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar',
+               symmetric=False):
     """Apply a Matplotlib colormap to a Mayavi object
 
     Args:
@@ -438,7 +448,7 @@ def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar'):
         ValueError: Description
     """
     which = which.strip().lower()
-    rgba = get_cmap(name=name, lut=lut)
+    rgba = get_cmap(name=name, lut=lut, symmetric=symmetric)
 
     if alpha:
         rgba[:, -1] = alpha

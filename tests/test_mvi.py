@@ -95,8 +95,6 @@ def main():
     crd_system = 'gse'
     m = mvi.plot_ionosphere(fac_tot, crd_system=crd_system, bounding_lat=30.0,
                             vmin=-300, vmax=300, opacity=0.75)
-    m.module_manager.scalar_lut_manager.lut_mode = 'RdBu'
-    m.module_manager.scalar_lut_manager.reverse_lut = True
 
     mvi.plot_blue_marble(r=1.0, orientation=(0, 21.5, -45.0))
     # now shade the night side with a transparent black hemisphere
