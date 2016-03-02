@@ -265,7 +265,7 @@ def plot_line(line, scalars=None, **kwargs):
 
 def plot_lines(lines, scalars=None, style="tube", figure=None,
                name="Lines", tube_radius=0.05, tube_sides=6, cmap=None,
-               clim=None, symmetric=False, logscale=False, **kwargs):
+               alpha=None, clim=None, symmetric=False, logscale=False, **kwargs):
     """Make 3D mayavi plot of lines
 
     Scalars can be a bunch of single values, or a bunch of rgb data
@@ -322,12 +322,13 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
         raise ValueError("Unknown style for lines: {0}".format(style))
 
     surface = mlab.pipeline.surface(lines, **kwargs)
-    apply_cmap(surface, cmap, clim=clim, symmetric=symmetric, logscale=logscale)
+    apply_cmap(surface, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
+               logscale=logscale)
     return surface
 
 def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
-                    bounding_lat=0.0, cmap=None, clim=None, symmetric=False,
-                    logscale=False, **kwargs):
+                    bounding_lat=0.0, cmap=None, alpha=None, clim=None,
+                    symmetric=False, logscale=False, **kwargs):
     """Plot an ionospheric field
 
     Args:
@@ -377,7 +378,8 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         # m.module_manager.parent.filter.auto_orient_normals = True
     m.actor.mapper.interpolate_scalars_before_mapping = True
 
-    apply_cmap(m, cmap, clim=clim, symmetric=symmetric, logscale=logscale)
+    apply_cmap(m, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
+               logscale=logscale)
 
     return m
 
@@ -428,12 +430,15 @@ def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar',
 
     Args:
         target: Some Mayavi object to apply the colormap
-        name (str, None, NotImplemented): name of the Matplotlib
-            colormap, or None to use the default, or NotImplemented to
-            leave the colormap alone.
+        name (str, None, False): name of the Matplotlib colormap, or
+            None to use the default, or False to leave the colormap
+            alone.
         lut (int): number of entries desired in the lookup table
-        alpha (TYPE): array with same length as number of colorbar
-            colors that sets the alpha (opacity) channel
+        alpha (TYPE): scalar or array that sets the alpha (opacity)
+            channel in the range [0..255]. This is expanded to both
+            ends of the colormap using linear interpolation, i.e.,
+            [0, 255] will be a linear ramp from transparent to opaque
+            over the whole colormap.
         which (str): one of 'scalar', 'vector', or 'other'
         clim (sequence): contains (vmin, vmax) for color scale
         symmetric (bool): Force the limits on the colorbar to be
@@ -484,15 +489,21 @@ def apply_cmap(target, name=None, lut=None, alpha=None, which='scalar',
     is_symmetric = bool(np.isclose(vmax, -1 * vmin, atol=0))
 
     # now set the colormap
-    if name is NotImplemented:
-        pass
+    changed = False
+    if name is False and alpha is not None:
+        rgba = mvi_lut.table.to_array()
     else:
         rgba = get_cmap(name=name, lut=lut, symmetric=is_symmetric)
-        if alpha is not None:
-            alpha = np.asarray(alpha).reshape(-1)
-            rgba[:, -1] = np.interp(np.linspace(0, 1, rgba.shape[0]),
-                                    np.linspace(0, 1, len(alpha)), alpha)
-        mvi_lut.table = rgba[:, ::1]
+        changed = True
+
+    if alpha is not None:
+        alpha = np.asarray(alpha).reshape(-1)
+        rgba[:, -1] = np.interp(np.linspace(0, 1, len(rgba)),
+                                np.linspace(0, 1, len(alpha)), alpha)
+        changed = True
+
+    if changed:
+        mvi_lut.table = rgba
 
 def insert_filter(filtr, module_manager):
     """Insert a filter above an existing module_manager
