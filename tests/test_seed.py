@@ -39,18 +39,14 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         mvi.clf()
 
         try:
-            vertices, scalars = seeds.wrap_mesh(interpolated_fld.flat_data)
-            mesh = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
-                                 scalars=scalars)
-            mvi.apply_cmap(mesh)
+            mesh = mvi.mesh_from_seeds(seeds, scalars=interpolated_fld)
             mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
 
         pts = seeds.get_points()
-        p = mvi.mlab.points3d(pts[0], pts[1], pts[2], interpolated_fld.flat_data,
-                              scale_mode='none', scale_factor=0.02)
-        mvi.apply_cmap(p)
+        p = mvi.points3d(pts[0], pts[1], pts[2], interpolated_fld.flat_data,
+                         scale_mode='none', scale_factor=0.02)
         mvi.mlab.axes(p)
         mvi.mlab.title(seed_name)
         if view_kwargs:

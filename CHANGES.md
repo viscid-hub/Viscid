@@ -4,7 +4,9 @@ Changes
 0.96.1 dev
 ==========
 
-
+Changes:
+  - A lot of new Mayavi convenience wrappers in viscid.plot.mvi. Most things can now be done using viscid objects without much effort. See the improved Viscid/tests/test_mvi.py for examples of using the new wrappers.
+  - When using the viscid.plot.mvi convenience wrappers, the colormaps automatically pick up the matplotlib defaults, including the `viscid.symmetric_cmap` default.
 
 0.96.0
 ======

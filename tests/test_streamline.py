@@ -47,10 +47,7 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
             #       so one can't use topo_color on a mesh surface. This
             #       is a limitation of mayavi. To actually plot a specific
             #       set of colors on a mesh, one must use a texture
-            vertices, scalars = _seeds.wrap_mesh(topo.data)
-            mesh = mvi.mlab.mesh(vertices[0], vertices[1], vertices[2],
-                                 scalars=scalars, opacity=0.5)
-            mvi.apply_cmap(mesh)
+            mesh = mvi.mesh_from_seeds(_seeds, scalars=topo, opacity=0.6)
             mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
