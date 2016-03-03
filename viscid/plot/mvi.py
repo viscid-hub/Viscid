@@ -250,7 +250,7 @@ def scalar_cut_plane(src, center=None, cmap=None, alpha=None, clim=None,
                      symmetric=False, logscale=False, **kwargs):
     """Wraps `mayavi.mlab.pipeline.scalar_cut_plane`
 
-    Notes:
+    Note:
         This function will automatically switch to the default
         Matplotlib colormap (or the one from your viscidrc file)
 
@@ -287,7 +287,7 @@ def vector_cut_plane(v_src, scalars=None, color_mode='vector', cmap=None,
                      **kwargs):
     """Wraps `mayavi.mlab.pipeline.vector_cut_plane`
 
-    Notes:
+    Note:
         This function will automatically switch to the default
         Matplotlib colormap (or the one from your viscidrc file)
 
@@ -457,7 +457,7 @@ def streamline(v_src, scalars=None, cmap=None, alpha=None, clim=None,
                symmetric=False, logscale=False, **kwargs):
     """Wraps `mayavi.mlab.pipeline.streamline`; mind the caveats
 
-    Notes:
+    Note:
         This function will automatically switch to the default
         Matplotlib colormap (or the one from your viscidrc file)
 
@@ -506,7 +506,7 @@ def iso_surface(src, cmap=None, alpha=None, clim=None, symmetric=False,
 
         >>> iso.actor.property.backface_culling = False
 
-    Notes:
+    Note:
         This function will automatically switch to the default
         Matplotlib colormap (or the one from your viscidrc file)
 

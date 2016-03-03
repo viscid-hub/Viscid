@@ -118,8 +118,8 @@ Function                                       Description
                                                topology Field
 =============================================  ============================================================
 
-Plotting
---------
+Matplotlib
+----------
 
 General Matplotlib Functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -174,10 +174,74 @@ Function                                         Description
 :py:func:`viscid.plot.mpl.scatter_3d`            Plot a glyphs on 3D axes
 ===============================================  =============================================================
 
-3D Mayavi Plots
+Mayavi
+------
+
+Mayavi is the preferred library for making 3D plots with Viscid. It's a little unwieldy, but for the moment, it's still the best Python interface to VTK. Mayavi has two ways to learn how to change details about the objects in a given scene (the documentation reads like somebody was shooting buckshot). The first is to make the change interactively while using the record feature. The other is to throw `import IPython; IPython.embed()` into your script and go splunking. Most Mayavi objects come from Traited VTK, which means they have a `print_traits()` method. This method will print out all the attributes that you may want to tweak, and then some.
+
+Between the :doc:`examples/mayavi`, and the functions you see below, you should be able figure out most things without too much hastle.
+
+Mayavi Wrappers
 ~~~~~~~~~~~~~~~
 
-These functions wrap Mayavi with useful boilerplate type hacks.
+Chances are that you want to use these functions. They let you make most Mayavi objects from Viscid data structures (i.e., Fields and SeedGens). In addition, all of these functions allow you to specify a Matplotlib colormap for the data, and it picks up the default colormaps from Matplotlib's rcParams and viscidrc files. How cool is that?
+
+.. cssclass:: table-striped
+
+===============================================  =================================================================
+Function                                         Description
+===============================================  =================================================================
+:py:func:`viscid.plot.mvi.plot_lines`            Plot colored lines in 3D
+:py:func:`viscid.plot.mvi.scalar_cut_plane`      Make a scalar cut plane of a Field or existing Mayavi source
+:py:func:`viscid.plot.mvi.vector_cut_plane`      Make a vector cut plane of a Field or existing Mayavi source
+                                                 with optional scalar data.
+:py:func:`viscid.plot.mvi.mesh`                  Make a mesh from a 2D array of vertices with optional scalar
+                                                 data
+:py:func:`viscid.plot.mvi.mesh_from_seeds`       Make a mesh from a Viscid SeedGen object with optional scalar
+                                                 data. Useful for displaying the result of interpolating a field
+                                                 onto a plane or sphere.
+:py:func:`viscid.plot.mvi.streamline`            Use the interactive Mayavi (VTK) streamline tracer with optional
+                                                 scalar data
+:py:func:`viscid.plot.mvi.iso_surface`           Make volumetric contours of a Field or existing Mayavi source
+:py:func:`viscid.plot.mvi.points3d`              Plot a list of points
+:py:func:`viscid.plot.mvi.quiver3d`              Plot a list of vector arrows with optional scalar data
+===============================================  =================================================================
+
+Mayavi Plots
+~~~~~~~~~~~~
+
+These functions make some commonly used objects.
+
+.. cssclass:: table-striped
+
+===============================================  =================================================================
+Function                                         Description
+===============================================  =================================================================
+:py:func:`viscid.plot.mvi.plot_ionosphere`       Plot an ionospheric Field in 3D on the surface of a sphere
+:py:func:`viscid.plot.mvi.plot_blue_marble`      Plot an Earth using the blue marble NASA image
+:py:func:`viscid.plot.mvi.plot_earth_3d`         Plot an Earth with black for nightside and white for dayside
+===============================================  =================================================================
+
+Mayavi Workarounds
+~~~~~~~~~~~~~~~~~~
+
+Mayavi has various platform specific bugs. These will try to apply workarounds so that they always give the expected result.
+
+.. cssclass:: table-striped
+
+===============================================  =================================================================
+Function                                         Description
+===============================================  =================================================================
+:py:func:`viscid.plot.mvi.clf`                   Uses some hacks to clear a figure and make sure memory is freed
+:py:func:`viscid.plot.mvi.remove_source`         Safely remove a specific vtk source (and its memory)
+:py:func:`viscid.plot.mvi.resize`                default resize is unreliable on OS X / Linux
+:py:func:`viscid.plot.mvi.savefig`               offscreen rendering hack
+===============================================  =================================================================
+
+Mayavi Pipeline
+~~~~~~~~~~~~~~~
+
+Here are some functions to quickly bring Viscid datastructures into the Mayavi pipeline.
 
 .. cssclass:: table-striped
 
@@ -186,13 +250,10 @@ Function                                         Description
 ===============================================  =================================================================
 :py:func:`viscid.plot.mvi.add_source`            Given a VTKDataSource, add it to a figure
 :py:func:`viscid.plot.mvi.add_lines`             Given a list of lines, add them to a figure as a data source
-:py:func:`viscid.plot.mvi.add_lines`             Given a :py:class:`viscid.field.Field`, add it to a figure as
+:py:func:`viscid.plot.mvi.add_field`             Given a :py:class:`viscid.field.Field`, add it to a figure as
                                                  a data source
-:py:func:`viscid.plot.mvi.plot_lines`            Plot colored lines in 3D
-:py:func:`viscid.plot.mvi.plot_ionosphere`       Plot an ionospheric Field in 3D
 :py:func:`viscid.plot.mvi.insert_filter`         Insert a filter above a module_manager.
-:py:func:`viscid.plot.mvi.plot_blue_marble`      Plot an Earth using the blue marble NASA image
-:py:func:`viscid.plot.mvi.plot_earth_3d`         Plot an Earth with black for nightside and white for dayside
-:py:func:`viscid.plot.mvi.clf`                   Uses some hacks to clear a figure and make sure memory is freed
-:py:func:`viscid.plot.mvi.resize`                Uses some hacks to resize a figure
+:py:func:`viscid.plot.mvi.apply_cmap`            Apply a colormap to an existing Mayavi object. This also lets
+                                                 you quickly rescale the limits on the colorbar, or switch to a
+                                                 log scale.
 ===============================================  =================================================================
