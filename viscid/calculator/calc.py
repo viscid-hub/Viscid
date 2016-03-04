@@ -288,7 +288,7 @@ def integrate_along_lines(lines, fld, reduction="dot"):
 
     cum_n = np.cumsum([0] + [line.shape[1] for line in lines])
     all_verts = np.concatenate(lines, axis=1)
-    fld_on_verts = viscid.interp_trilin(fld, all_verts)
+    fld_on_verts = viscid.interp_trilin(fld, all_verts).data
 
     for i, start, stop in izip(count(), cum_n[:-1], cum_n[1:]):
         ds = np.linalg.norm(lines[i][:, 1:] - lines[i][:, :-1], axis=0)
