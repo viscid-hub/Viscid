@@ -263,7 +263,11 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
         _paraboloid_params = fit_paraboloid(mp_info[fit], p0=fit_p0)
         mp_info["paraboloid"] = _paraboloid_params
     except ImportError as _exception:
-        mp_info["paraboloid"] = viscid.DeferredImportError(_exception.message)
+        try:
+            msg = _exception.message
+        except AttributeError:
+            msg = _exception.msg
+        mp_info["paraboloid"] = viscid.DeferredImportError(msg)
 
     mp_info["mp_width"].pretty_name = "Magnetopause Width"
     mp_info["mp_xloc"].pretty_name = "Magnetopause $X_{gse}$ Location"

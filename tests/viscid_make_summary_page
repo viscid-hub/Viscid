@@ -170,14 +170,14 @@ def main():
 
     try:
         git_version = Popen(["git", "--version"], stdout=PIPE,
-                            stderr=PIPE).communicate()[0]
+                            stderr=PIPE).communicate()[0].decode()
         info["Commit"] = Popen(['git', 'rev-parse', 'HEAD'],
-                               stdout=PIPE, stderr=PIPE).communicate()[0]
+                               stdout=PIPE, stderr=PIPE).communicate()[0].decode()
         info["Branch"] = Popen(['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
-                               stdout=PIPE, stderr=PIPE).communicate()[0]
+                               stdout=PIPE, stderr=PIPE).communicate()[0].decode()
         p0 = Popen(['git', 'tag', '-l', '--contains', 'HEAD'], stdout=PIPE)
         p1 = Popen(['tr', '-s', ' ', ':'], stdin=p0.stdout, stdout=PIPE)
-        info["Tag"] = p1.communicate()[0].strip()
+        info["Tag"] = p1.communicate()[0].decode().strip()
     except CalledProcessError:
         pass
 
@@ -200,7 +200,7 @@ def main():
         pass
 
     try:
-        info["Commit"] = info["Commit"][:16] + "..."
+        info["Commit"] = info["Commit"].strip()[:16] + "..."
     except KeyError:
         pass
 

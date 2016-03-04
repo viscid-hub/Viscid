@@ -4,6 +4,48 @@
 # Give "pylab" on the command line to load matplotlib's pylab.
 # Give "mlab"  on the command line to load mayavi's mlab
 
+function abspath() {
+    # generate absolute path from relative path
+    # $1     : relative filename
+    # return : absolute path
+    if [ -d "$1" ]; then
+        # dir
+        (cd "$1"; pwd)
+    elif [ -f "$1" ]; then
+        # file
+        if [[ $1 == */* ]]; then
+            echo "$(cd "${1%/*}"; pwd)/${1##*/}"
+        else
+            echo "$(pwd)/$1"
+        fi
+    fi
+}
+
+remove_from_path ()
+{
+  # Remove entries from PATH that contain a given string
+  # $1     : current PATH or PYTHONPATH etc.
+  # $2     : remove entries that contain this string
+  # return : edited PATH
+  if [ ! "${2}" ]; then
+    return
+  fi
+  OIFS="${IFS}"
+  IFS=':'
+  ret=""
+  for d in ${1}; do
+    echo "${d}" | grep "${2}" &>/dev/null
+    [ "${?}" -ne 0 ] || continue
+    if [ "${ret}" ]; then
+      ret="${ret}:"
+    fi
+    ret="${ret}${d}"
+  done
+  IFS=${OIFS}
+  echo "${ret}"
+}
+
+
 viscid_python=${viscid_python:-$(which ipython)}
 viscid_python=${viscid_python:-$(which python)}
 
@@ -17,6 +59,32 @@ if [[ ${args} == *" --help "* || ${args} == *" -h"* ]]; then
   echo "  mode    'pylab' or 'mlab' if you want that library imported too" >&2
   echo "" >&2
   exit 0
+fi
+
+# if running inplace, make sure that directory is 1st in PYTHONPATH,
+# and if running from installed distro, make sure no Viscid directories
+# are in the PYTHONPATH
+sdir="$(abspath "$(dirname "${0}")")"
+udir="$(abspath ${sdir}/..)"
+if [ "$(basename "${udir}")" == "Viscid" ]; then
+  PYTHONPATH="${udir}:${PYTHONPATH}"
+else
+  PYTHONPATH="$(remove_from_path "$PYTHONPATH" "Viscid")"
+  if [ -f "$(pwd)/viscid/__main__.py" ]; then
+    echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!! WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!' >&2
+    echo '!! You are using the installed version of the `viscid` script, !!' >&2
+    echo '!! but `./viscid/__main__.py` exists, so you will be using     !!' >&2
+    echo '!! the inplace version of Viscid.                              !!' >&2
+    echo '!!                                                             !!' >&2
+    echo '!! If you want to use the installed version of the library,    !!' >&2
+    echo '!! switch to a different directory.                            !!' >&2
+    echo '!!                                                             !!' >&2
+    echo '!! To use the inplace `viscid` script from this directory, run !!' >&2
+    echo '!! the command like:                                           !!' >&2
+    echo '!!                                                             !!' >&2
+    echo '!!     ./scripts/viscid <args>                                 !!' >&2
+    echo '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!' >&2
+  fi
 fi
 
 ${viscid_python} -im viscid.__main__ ${args}
