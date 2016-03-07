@@ -9,6 +9,7 @@ numexpr
 
 mayavi
 pyqt
+pyside
 
 flake8
 
