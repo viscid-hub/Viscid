@@ -953,10 +953,11 @@ def clear_data(figures=None):
         return
 
     for fig in figures:
-        fig.stop()
+        # # fig stop / start kills mayavi now, not sure why
+        # fig.stop()
         for child in list(fig.children):
             remove_source(child)
-        fig.start()
+        # fig.start()
     return
 
 def resize(size, figure=None):
