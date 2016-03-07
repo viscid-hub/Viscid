@@ -130,7 +130,11 @@ before_script:
   - 'if [ "${FLAKE}" == "1" ]; then make flake8; fi'
 
 script:
-  - make instcheck
+  - 'if [ "${DEPLOY_DOCS}" == "1" ]; then
+       make check;
+     else
+       make instcheck;
+     fi'
   - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ ]]; then
        make deploy-summary;
      fi'
