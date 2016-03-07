@@ -47,7 +47,7 @@ table.info td.leftmost {
 
 table.plots {
     border-collapse: collapse;
-    float: center;
+    width: 100%;
 }
 
 table.plots td {
