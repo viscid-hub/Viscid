@@ -13,6 +13,52 @@ if [[ ${args} == *" --help "* || ${args} == *" -h"* ]]; then
   exit 0
 fi
 
+function abspath() {
+    # generate absolute path from relative path
+    # $1     : relative filename
+    # return : absolute path
+    if [ -d "$1" ]; then
+        # dir
+        (cd "$1"; pwd)
+    elif [ -f "$1" ]; then
+        # file
+        if [[ $1 == */* ]]; then
+            echo "$(cd "${1%/*}"; pwd)/${1##*/}"
+        else
+            echo "$(pwd)/$1"
+        fi
+    fi
+}
+
+remove_from_path ()
+{
+  # Remove entries from PATH that contain a given string
+  # $1     : current PATH or PYTHONPATH etc.
+  # $2     : remove entries that contain this string
+  # return : edited PATH
+  if [ ! "${2}" ]; then
+    return
+  fi
+  OIFS="${IFS}"
+  IFS=':'
+  ret=""
+  for d in ${1}; do
+    echo "${d}" | grep "${2}" &>/dev/null
+    [ "${?}" -ne 0 ] || continue
+    if [ "${ret}" ]; then
+      ret="${ret}:"
+    fi
+    ret="${ret}${d}"
+  done
+  IFS=${OIFS}
+  echo "${ret}"
+}
+
+if [ ${VISCID_TEST_INPLACE:-1} -eq 0 ]; then
+  echo "Removing Viscid from PYTHONPATH"
+  export PYTHONPATH="$(remove_from_path "$PYTHONPATH" "Viscid")"
+fi
+
 GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 RED='\033[0;31m'
@@ -38,6 +84,7 @@ xfailed=0
 failed=0
 
 for test in ${tests}; do
+  test="$(abspath "${test}")"
 
   if [[ $test == *.py ]]; then
     cmd="python ${test} $@"
@@ -52,8 +99,7 @@ for test in ${tests}; do
   flog="${test}.log"
 
   # ${cmd} > >(tee ${fstdout}) 2> >(tee ${fstderr} >&2)
-  ${cmd} 1>${fstdout} 2>${fstderr}
-  status=$?
+  status="$(cd ${sdir} && ${cmd} 1>${fstdout} 2>${fstderr}; echo "$?")"
   cat ${fstderr} | grep -qE "^XFAIL:"
   xfail_status=$?
 
