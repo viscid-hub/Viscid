@@ -52,3 +52,20 @@ However, the standard distutils commands also work if you're so inclined::
 
     ./setup.py build
     ./setup.py install
+
+Known Workarounds
+-----------------
+
+Ubuntu
+~~~~~~
+
+If you see an error that contains `GFORTRAN_1.4 not found`, you may need to preempt libgfortran with the system version. The solution is an environment variable that looks something like::
+
+    export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+
+OS X
+~~~~
+
+If you see a link error that says `-lgcc_s.10.5` can't be found, try running::
+
+    sudo su root -c "mkdir -p /usr/local/lib && ln -s /usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"
