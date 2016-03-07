@@ -71,7 +71,8 @@ before_install:
 
   ## Now setup some Viscid specific things, like rc files and make sure
   ## we have a virtual frame buffer
-  - cp tests/resources/matplotlibrc .
+  - mkdir -p ~/.config/matplotlib
+  - cp tests/resources/matplotlibrc ~/.config/matplotlib/
   - cp tests/resources/viscidrc ~/.viscidrc
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
