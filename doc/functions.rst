@@ -225,7 +225,9 @@ Function                                         Description
 Mayavi Workarounds
 ~~~~~~~~~~~~~~~~~~
 
-Mayavi has various platform specific bugs. These will try to apply workarounds so that they always give the expected result.
+Mayavi has various platform specific bugs. These will try to apply workarounds so that they always give the expected result. If you see an error at runtime about QT API versions, you may need to set an environment variable::
+
+    export QT_API="pyside"
 
 .. cssclass:: table-striped
 
