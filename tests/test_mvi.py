@@ -19,6 +19,7 @@ except ImportError:
 def main():
     parser = argparse.ArgumentParser(description="Test calc")
     parser.add_argument("--show", "--plot", action="store_true")
+    parser.add_argument("--interact", "-i", action="store_true")
     args = vutil.common_argparse(parser)
 
     f3d = viscid.load_file(sample_dir + '/sample_xdmf.3d.[0].xdmf')
@@ -130,6 +131,14 @@ def main():
     # print("done")
 
     mvi.savefig(next_plot_fname(__file__))
+
+    ###########################
+    # Interact Programatically
+    if args.interact:
+        mvi.interact()
+
+    #######################
+    # Interact Graphically
     if args.show:
         mvi.show()
 

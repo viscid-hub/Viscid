@@ -4,7 +4,6 @@ Note:
     You can't set rc parameters for this module!
 """
 from __future__ import print_function
-import code
 import os
 import sys
 
@@ -1060,23 +1059,40 @@ def savefig(*args, **kwargs):
     if fig.scene.off_screen_rendering != prev_offscreen_state:
         fig.scene.off_screen_rendering = prev_offscreen_state
 
-def interact(local=None):
-    """Switch to interactive interpreter
-
-    This can be handy if you want to interact with a 3d plot using
-    python.
-
-    Parameters:
-        local (dict, optional): Local namespace for the interactive
-            session. Usually you want ``interact(local=locals())``
-    """
+def interact(ipython=True, stack_depth=0, global_ns=None, local_ns=None,
+             include_mvi_ns=True, include_viscid_ns=True):
+    """Start an interactive interpreter"""
     banner = """Have some fun with mayavi :)
-    hints:
-        - use locals() to explore the namespace
-        - mlab.show(stop=True) or mvi.show() to interact with the plot/gui
-        - mayavi objects all have a trait_names() method
-        - Use Ctrl-D (eof) to end interaction """
-    code.interact(banner, local=local)
+    - use locals() to explore the namespace
+    - show(stop=True) or show() to interact with the plot/gui
+    - mayavi objects all have a trait_names() method
+    - Use Ctrl-D (eof) to end interaction"""
+
+    ns = dict()
+    if include_viscid_ns:
+        ns.update(dict([(name, getattr(viscid, name)) for name in dir(viscid)]))
+    if include_mvi_ns:
+        ns.update(globals())
+
+    call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
+
+    if global_ns is None:
+        global_ns = call_frame.f_globals
+    ns.update(global_ns)
+
+    if local_ns is None:
+        local_ns = call_frame.f_locals
+    ns.update(local_ns)
+
+    try:
+        if not ipython:
+            raise ImportError
+        from IPython import embed
+        embed(user_ns=ns, banner1=banner)
+    except ImportError:
+        import code
+        code.interact(banner, local=ns)
+    print("Resuming Script")
 
 ##
 ## EOF
