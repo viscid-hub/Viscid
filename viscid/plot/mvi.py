@@ -498,13 +498,11 @@ def streamline(v_src, scalars=None, cmap=None, alpha=None, clim=None,
                logscale=logscale, mode='scalar')
     return sl
 
-def iso_surface(src, cmap=None, alpha=None, clim=None, symmetric=False,
-                logscale=False, **kwargs):
+def iso_surface(src, backface_culling=True, cmap=None, alpha=None,
+                clim=None, symmetric=False, logscale=False, **kwargs):
     """Wraps `mayavi.mlab.pipeline.iso_surface`; mind the caveats
 
-    Culls backfaces by default. To turn them back on, use
-
-        >>> iso.actor.property.backface_culling = False
+    Note that backfaces are culled by default.
 
     Note:
         This function will automatically switch to the default
@@ -521,6 +519,8 @@ def iso_surface(src, cmap=None, alpha=None, clim=None, symmetric=False,
             then the field is wrapped into a Mayavi Source and added
             to the figure. If a Mayavi Source, then it must be node
             centered.
+        backface_culling (bool): Cull backfaces by default. Useful for
+            translucent surfaces.
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
@@ -536,7 +536,7 @@ def iso_surface(src, cmap=None, alpha=None, clim=None, symmetric=False,
     iso = mlab.pipeline.iso_surface(src, **kwargs)
     apply_cmap(iso, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
                logscale=logscale)
-    iso.actor.property.backface_culling = True
+    iso.actor.property.backface_culling = backface_culling
     return iso
 
 def plot_line(line, scalars=None, **kwargs):
