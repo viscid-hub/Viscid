@@ -53,7 +53,7 @@ Quick Start
 
 I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable. Check :doc:`installation` for the list of dependancies. To build Viscid, I recommend running::
 
-  ./setup.py build_ext -i
+  make inplace  # (this is an alias for ./setup.py build_ext -i)
   viscid_dir=$(pwd)
   export PYTHONPATH=$PYTHONPATH:${viscid_dir}
   export PATH=$PATH:${viscid_dir}/scripts

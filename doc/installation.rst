@@ -41,7 +41,7 @@ Standard Setup
 
 The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code. To build Viscid, I recommend running::
 
-    ./setup.py build_ext -i
+    make inplace  # (this is an alias for ./setup.py build_ext -i)
     viscid_dir=$(pwd)
     export PYTHONPATH=$PYTHONPATH:${viscid_dir}
     export PATH=$PATH:${viscid_dir}/scripts
@@ -50,8 +50,8 @@ and adding the `Viscid` directory to your `PYTHONPATH` and `Viscid/scripts` to y
 
 However, the standard distutils commands also work if you're so inclined::
 
-    ./setup.py build
-    ./setup.py install
+    make  # (this is an alias for ./setup.py build_ext)
+    make install  # (this is an alias for ./setup.py install)
 
 Known Workarounds
 -----------------
