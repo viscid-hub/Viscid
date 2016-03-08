@@ -16,7 +16,7 @@ Attributes:
 from __future__ import print_function
 import sys
 
-__version__ = """0.96.1"""
+__version__ = """0.96.2 dev"""
 
 __all__ = ['amr_field',  # Modules
            'amr_grid',
