@@ -205,6 +205,21 @@ Function                                         Description
 :py:func:`viscid.plot.mvi.iso_surface`           Make volumetric contours of a Field or existing Mayavi source
 :py:func:`viscid.plot.mvi.points3d`              Plot a list of points
 :py:func:`viscid.plot.mvi.quiver3d`              Plot a list of vector arrows with optional scalar data
+:py:func:`viscid.plot.mvi.colorbar`              Wrap `mayavi.mlab.colorbar`, then change the colormap if any
+                                                 `viscid.plot.mvi.apply_cmap` kwargs are provided
+:py:func:`viscid.plot.mvi.scalarbar`             Wrap `mayavi.mlab.scalarbar`, then change the colormap if any
+                                                 `viscid.plot.mvi.apply_cmap` kwargs are provided
+:py:func:`viscid.plot.mvi.vectorbar`             Wrap `mayavi.mlab.vectorbar`, then change the colormap if any
+                                                 `viscid.plot.mvi.apply_cmap` kwargs are provided
+:py:func:`viscid.plot.mvi.axes`                  Wrap `mayavi.mlab.axes`
+:py:func:`viscid.plot.mvi.xlabel`                Wrap `mayavi.mlab.xlabel`
+:py:func:`viscid.plot.mvi.ylabel`                Wrap `mayavi.mlab.ylabel`
+:py:func:`viscid.plot.mvi.zlabel`                Wrap `mayavi.mlab.zlabel`
+:py:func:`viscid.plot.mvi.title`                 Wrap `mayavi.mlab.title`
+:py:func:`viscid.plot.mvi.outline`               Wrap `mayavi.mlab.outline`
+:py:func:`viscid.plot.mvi.orientation_axes`      Wrap `mayavi.mlab.orientation_axes`, adds the little xyz arrows
+:py:func:`viscid.plot.mvi.view`                  Wrap `mayavi.mlab.view`, adjusts the focal point, distance, and
+                                                 various angles of the camera
 ===============================================  =================================================================
 
 Mayavi Plots

@@ -246,8 +246,7 @@ def _prep_vector_source(v_src, scalars):
         v_src.point_scalars_name = scalars.name
     return v_src, scalars
 
-def scalar_cut_plane(src, center=None, cmap=None, alpha=None, clim=None,
-                     symmetric=False, logscale=False, **kwargs):
+def scalar_cut_plane(src, center=None, **kwargs):
     """Wraps `mayavi.mlab.pipeline.scalar_cut_plane`
 
     Note:
@@ -265,26 +264,26 @@ def scalar_cut_plane(src, center=None, cmap=None, alpha=None, clim=None,
         center (str): centering for the Mayavi source, 'cell' will
             make the grid visible, while 'node' will interpolate
             between points
+        **kwargs: Passed to `mayavi.mlab.pipeline.scalar_cut_plane`
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: Passed to `mayavi.mlab.pipeline.scalar_cut_plane`
 
     Returns:
         `mayavi.modules.scalar_cut_plane.ScalarCutPlane`
     """
     if isinstance(src, viscid.field.Field):
         src = field2source(src, center=center)
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     scp = mlab.pipeline.scalar_cut_plane(src, **kwargs)
-    apply_cmap(scp, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale)
+    apply_cmap(scp, **cmap_kwargs)
     return scp
 
-def vector_cut_plane(v_src, scalars=None, color_mode='vector', cmap=None,
-                     alpha=None, clim=None, symmetric=False, logscale=False,
-                     **kwargs):
+def vector_cut_plane(v_src, scalars=None, color_mode='vector', **kwargs):
     """Wraps `mayavi.mlab.pipeline.vector_cut_plane`
 
     Note:
@@ -302,30 +301,30 @@ def vector_cut_plane(v_src, scalars=None, color_mode='vector', cmap=None,
             If a Mayavi Source, then it must be node centered. This
             will enable scale_mode and color_mode by 'scalar'
         color_mode (str): Color by 'vector', 'scalar', or 'none'
+        **kwargs: Passed to `mayavi.mlab.pipeline.vector_cut_plane`
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: Passed to `mayavi.mlab.pipeline.vector_cut_plane`
 
     Returns:
         `mayavi.modules.vector_cut_plane.VectorCutPlane`
     """
     v_src, scalars = _prep_vector_source(v_src, scalars)
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     vcp = mlab.pipeline.vector_cut_plane(v_src, **kwargs)
 
-    apply_cmap(vcp, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale, mode='vector')
-    apply_cmap(vcp, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale, mode='scalar')
+    apply_cmap(vcp, mode='vector', **cmap_kwargs)
+    apply_cmap(vcp, mode='scalar', **cmap_kwargs)
 
     vcp.glyph.color_mode = 'color_by_{0}'.format(color_mode.strip().lower())
 
     return vcp
 
-def mesh_from_seeds(seeds, scalars=None, cmap=None, alpha=None, clim=None,
-                    symmetric=False, logscale=False, **kwargs):
+def mesh_from_seeds(seeds, scalars=None, **kwargs):
     """Wraps `mayavi.mlab.mesh` for Viscid seed generators
 
     Note:
@@ -337,12 +336,14 @@ def mesh_from_seeds(seeds, scalars=None, cmap=None, alpha=None, clim=None,
             representation
         scalars (ndarray, ScalarField): data mapped onto the mesh,
             i.e., the result of viscid.interp_trilin(seeds, ...)
+        **kwargs: Passed to `mayavi.mlab.mesh`
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: Passed to `mayavi.mlab.mesh`
 
     Returns:
         `mayavi.modules.surface.Surface`
@@ -353,11 +354,9 @@ def mesh_from_seeds(seeds, scalars=None, cmap=None, alpha=None, clim=None,
         vertices, = seeds.wrap_mesh()
 
     return mesh(vertices[0], vertices[1], vertices[2], scalars=scalars,
-                cmap=cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-                logscale=logscale, **kwargs)
+                **kwargs)
 
-def mesh(x, y, z, scalars=None, cmap=None, alpha=None, clim=None,
-         symmetric=False, logscale=False, **kwargs):
+def mesh(x, y, z, scalars=None, **kwargs):
     """Wraps `mayavi.mlab.mesh`
 
     Note:
@@ -369,12 +368,14 @@ def mesh(x, y, z, scalars=None, cmap=None, alpha=None, clim=None,
         y (TYPE): 2D array of vertices' y-values
         z (TYPE): 2D array of vertices' z-values
         scalars (ndarray, ScalarField): optional scalar data
+        **kwargs: Passed to `mayavi.mlab.mesh`
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: Passed to `mayavi.mlab.mesh`
 
     Returns:
         `mayavi.modules.surface.Surface`
@@ -384,11 +385,11 @@ def mesh(x, y, z, scalars=None, cmap=None, alpha=None, clim=None,
             scalars = scalars.data
         scalars = scalars.reshape(x.shape)
 
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     m = mlab.mesh(x, y, z, scalars=scalars, **kwargs)
 
     if scalars is not None:
-        apply_cmap(m, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-                   logscale=logscale)
+        apply_cmap(m, **cmap_kwargs)
     return m
 
 def quiver3d(*args, **kwargs):
@@ -409,18 +410,10 @@ def quiver3d(*args, **kwargs):
     Returns:
         TYPE: Description
     """
-    cmap = kwargs.pop("cmap", None)
-    alpha = kwargs.pop("alpha", None)
-    clim = kwargs.pop("clim", None)
-    symmetric = kwargs.pop("symmetric", False)
-    logscale = kwargs.pop("logscale", False)
-
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     quivers = mlab.quiver3d(*args, **kwargs)
-
-    apply_cmap(quivers, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale)
-    apply_cmap(quivers, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale, mode='vector')
+    apply_cmap(quivers, mode='scalar', **cmap_kwargs)
+    apply_cmap(quivers, mode='vector', **cmap_kwargs)
     return quivers
 
 def points3d(*args, **kwargs):
@@ -441,20 +434,12 @@ def points3d(*args, **kwargs):
     Returns:
         TYPE: Description
     """
-    cmap = kwargs.pop("cmap", None)
-    alpha = kwargs.pop("alpha", None)
-    clim = kwargs.pop("clim", None)
-    symmetric = kwargs.pop("symmetric", False)
-    logscale = kwargs.pop("logscale", False)
-
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     points = mlab.points3d(*args, **kwargs)
-
-    apply_cmap(points, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale)
+    apply_cmap(points, **cmap_kwargs)
     return points
 
-def streamline(v_src, scalars=None, cmap=None, alpha=None, clim=None,
-               symmetric=False, logscale=False, **kwargs):
+def streamline(v_src, scalars=None, **kwargs):
     """Wraps `mayavi.mlab.pipeline.streamline`; mind the caveats
 
     Note:
@@ -478,28 +463,27 @@ def streamline(v_src, scalars=None, cmap=None, alpha=None, clim=None,
             a Mayavi Source, then it must be node centered.
         scalars (Mayavi Source, or ScalarField): Optional scalar data.
             If a Mayavi Source, then it must be node centered.
+        **kwargs: Passed to `mayavi.mlab.mesh`
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: Passed to `mayavi.mlab.mesh`
 
     Returns:
         `mayavi.modules.streamline.Streamline`
     """
     v_src, scalars = _prep_vector_source(v_src, scalars)
-    sl = mlab.pipeline.streamline(v_src, **kwargs)
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
 
-    # always set cmap on vectors, and only on scalars if they are given
-    apply_cmap(sl, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale, mode='vector')
-    apply_cmap(sl, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale, mode='scalar')
+    sl = mlab.pipeline.streamline(v_src, **kwargs)
+    apply_cmap(sl, mode='vector', **cmap_kwargs)
+    apply_cmap(sl, mode='scalar', **cmap_kwargs)
     return sl
 
-def iso_surface(src, backface_culling=True, cmap=None, alpha=None,
-                clim=None, symmetric=False, logscale=False, **kwargs):
+def iso_surface(src, backface_culling=True, **kwargs):
     """Wraps `mayavi.mlab.pipeline.iso_surface`; mind the caveats
 
     Note that backfaces are culled by default.
@@ -521,30 +505,32 @@ def iso_surface(src, backface_culling=True, cmap=None, alpha=None,
             centered.
         backface_culling (bool): Cull backfaces by default. Useful for
             translucent surfaces.
+        **kwargs: Passed to `mayavi.mlab.pipeline.scalar_cut_plane`
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: Passed to `mayavi.mlab.pipeline.scalar_cut_plane`
 
     Returns:
         `mayavi.modules.iso_surface.IsoSurface`
     """
     if isinstance(src, viscid.field.Field):
         src = field2source(src, center='node')
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     iso = mlab.pipeline.iso_surface(src, **kwargs)
-    apply_cmap(iso, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale)
+    apply_cmap(iso, **cmap_kwargs)
     iso.actor.property.backface_culling = backface_culling
     return iso
 
 def plot_line(line, scalars=None, **kwargs):
+    """Wrap :py:func:`plot_lines` for a single line"""
     return plot_lines([line], scalars=scalars, **kwargs)
 
 def plot_lines(lines, scalars=None, style="tube", figure=None,
-               name="Lines", tube_radius=0.05, tube_sides=6, cmap=None,
-               alpha=None, clim=None, symmetric=False, logscale=False, **kwargs):
+               name="Lines", tube_radius=0.05, tube_sides=6, **kwargs):
     """Make 3D mayavi plot of lines
 
     Scalars can be a bunch of single values, or a bunch of rgb data
@@ -564,35 +550,34 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
             >>>                                           ibound=0.05)
             >>> scalars = viscid.topology2color(topology)
             >>> mvi.plot_lines(lines, scalars, tube_radius=0.02)
-            >>> mvi.mlab.savefig("dipole.x3d")
+            >>> mvi.savefig("dipole.x3d")
             >>> viscid.vutil.meshlab_convert("dipole.x3d", "dae")
             >>> mvi.show()
 
     Parameters:
         lines (list): See :py:func:`lines2source`
-        scalars (TYPE): Description
+        scalars (TYPE): See :py:func:`lines2source`
         style (str): 'strip' or 'tube'
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         name (str): Description
         tube_radius (float): Radius if style == 'tube'
         tube_sides (int): Angular resolution if style == 'tube'
+        **kwargs: passed to :meth:`mayavi.mlab.pipeline.surface`. This
+            is useful for setting a colormap among other things.
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: passed to :meth:`mayavi.mlab.pipeline.surface`. This
-            is useful for setting a colormap among other things.
 
     Returns:
         Mayavi surface module
 
     Raises:
         ValueError: if style is neither tube nor strip
-
-    Deleted Parameters:
-        scalar (ndarray): See :py:func:`lines2source`
     """
     style = style.lower()
     if not figure:
@@ -608,14 +593,13 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     else:
         raise ValueError("Unknown style for lines: {0}".format(style))
 
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     surface = mlab.pipeline.surface(lines, **kwargs)
-    apply_cmap(surface, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale)
+    apply_cmap(surface, **cmap_kwargs)
     return surface
 
 def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
-                    bounding_lat=0.0, cmap=None, alpha=None, clim=None,
-                    symmetric=False, logscale=False, **kwargs):
+                    bounding_lat=0.0, **kwargs):
     """Plot an ionospheric field
 
     Args:
@@ -625,12 +609,14 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         bounding_lat (float): Description
+        **kwargs: passed to :py:func:`mayavi.mlab.mesh`
+
+    Keyword Arguments:
         cmap (str, None, False): see :py:func:`apply_cmap`
         alpha (number, sequence): see :py:func:`apply_cmap`
         clim (sequence): see :py:func:`apply_cmap`
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
-        **kwargs: passed to :py:func:`mayavi.mlab.mesh`
 
     Raises:
         ValueError: Description
@@ -651,6 +637,7 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
                            theta_phi=False, roll=roll)
     verts, arr = sphere.wrap_mesh(fld.data)
 
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     if 'name' not in kwargs:
         kwargs['name'] = fld.name
     m = mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, figure=figure,
@@ -670,8 +657,7 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         # m.module_manager.parent.filter.auto_orient_normals = True
     m.actor.mapper.interpolate_scalars_before_mapping = True
 
-    apply_cmap(m, cmap, alpha=alpha, clim=clim, symmetric=symmetric,
-               logscale=logscale)
+    apply_cmap(m, **cmap_kwargs)
 
     return m
 
@@ -699,11 +685,56 @@ def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
         mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, name="Bnulls",
                       **kwargs)
 
+axes = mlab.axes
+xlabel = mlab.xlabel
+ylabel = mlab.ylabel
+zlabel = mlab.zlabel
+title = mlab.title
+outline = mlab.outline
+orientation_axes = mlab.orientation_axes
+view = mlab.view
+
+def _extract_cmap_kwargs(kwargs):
+    cmap_kwargs = dict()
+    cmap_kwargs["cmap"] = kwargs.pop("cmap", None)
+    cmap_kwargs["alpha"] = kwargs.pop("alpha", None)
+    cmap_kwargs["clim"] = kwargs.pop("clim", None)
+    cmap_kwargs["symmetric"] = kwargs.pop("symmetric", False)
+    cmap_kwargs["logscale"] = kwargs.pop("logscale", False)
+    return kwargs, cmap_kwargs
+
+def colorbar(*args, **kwargs):
+    """Wraps mayavi.mlab.colorbar and adjusts cmap if you so choose"""
+    cmap = kwargs.pop("cmap", False)
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
+    cmap_kwargs.pop("cmap")
+    ret = mlab.colorbar(*args, **kwargs)
+    apply_cmap(ret, cmap=cmap, **cmap_kwargs)
+    return ret
+
+def scalarbar(*args, **kwargs):
+    """Wraps mayavi.mlab.scalarbar and adjusts cmap if you so choose"""
+    cmap = kwargs.pop("cmap", False)
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
+    cmap_kwargs.pop("cmap")
+    ret = mlab.scalarbar(*args, **kwargs)
+    apply_cmap(ret, cmap=cmap, **cmap_kwargs)
+    return ret
+
+def vectorbar(*args, **kwargs):
+    """Wraps mayavi.mlab.vectorbar and adjusts cmap if you so choose"""
+    cmap = kwargs.pop("cmap", False)
+    kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
+    cmap_kwargs.pop("cmap")
+    ret = mlab.vectorbar(*args, **kwargs)
+    apply_cmap(ret, cmap=cmap, **cmap_kwargs)
+    return ret
+
 def get_cmap(cmap=None, lut=None, symmetric=False):
     """Get a Matplotlib colormap as an rgba ndarray
 
     Args:
-        cmap (str): name of colormap
+        cmap (str): name of colormap, or an ndarray of rgb(a) colors
         lut (int): number of entries desired in the lookup table
 
     Returns:
@@ -712,8 +743,25 @@ def get_cmap(cmap=None, lut=None, symmetric=False):
     import matplotlib
     if symmetric and not cmap:
         cmap = matplotlib.rcParams.get("viscid.symmetric_cmap", None)
-    cm = matplotlib.cm.get_cmap(name=cmap, lut=lut)
-    rgba = (255 * np.asarray(cm(np.linspace(0, 1, cm.N)))).astype('i')
+    try:
+        cm = matplotlib.cm.get_cmap(name=cmap, lut=lut)
+        rgba = (255 * np.asarray(cm(np.linspace(0, 1, cm.N)))).astype('i')
+    except TypeError:
+        rgba = np.asarray(cmap)
+        if np.all(rgba >= 0.0) and np.all(rgba <= 1.0):
+            rgba = (255 * rgba).astype('i')
+        else:
+            rgba = rgba.astype('i')
+            if np.any(rgba < 0) or np.any(rgba > 255):
+                raise ValueError("cmap ndarray must have color values between "
+                                 "0 and 255 or 0.0 and 1.0")
+
+    if rgba.shape[1] not in (3, 4) and rgba.shape[0] in (3, 4):
+        rgba = np.array(rgba.T)
+
+    if rgba.shape[1] == 3:
+        rgba = np.hstack([rgba, 255 * np.ones_like(rgba[:, :1])])
+
     return rgba
 
 def apply_cmap(target, cmap=None, lut=None, alpha=None, mode='scalar',
@@ -722,9 +770,9 @@ def apply_cmap(target, cmap=None, lut=None, alpha=None, mode='scalar',
 
     Args:
         target: Some Mayavi object on mode to apply the colormap
-        cmap (str, None, False): name of the Matplotlib colormap, or
-            None to use the default, or False to leave the colormap
-            alone.
+        cmap (sequence, None, False): name of a Matplotlib colormap, or
+            a sequence of rgb(a) colors, or None to use the default,
+            or False to leave the colormap alone.
         lut (int): number of entries desired in the lookup table
         alpha (number, sequence): scalar or array that sets the alpha
             (opacity) channel in the range [0..255]. This is expanded
