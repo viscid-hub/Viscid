@@ -9,16 +9,14 @@ import sys
 
 from viscid_test_common import sample_dir, next_plot_fname, xfail
 
-try:
-    from mayavi import mlab
-except ImportError:
-    xfail("Mayavi not installed")
-
 import numpy as np
 import viscid
 from viscid import vutil
 from viscid.plot import mpl
-from viscid.plot import mvi
+try:
+    from viscid.plot import mvi
+except ImportError:
+    xfail("Mayavi not installed")
 
 
 def make_arcade(eps, xl=(-10.0, 0.0, -10.0), xh=(10.0, 20.0, 10.0),
@@ -77,19 +75,19 @@ def main():
     inds = np.concatenate([inds, np.arange(len(xi_dat))[::71]])
     s = mvi.plot_lines(b_lines[inds], scalars=epar, cmap='viridis')
     mvi.mesh_from_seeds(seeds, scalars=xi, cmap='inferno')
-    mvi.mlab.colorbar(s, orientation='horizontal', title=epar.pretty_name)
+    mvi.colorbar(s, orientation='horizontal', title=epar.pretty_name)
     # mvi.streamline(b, scalars=e, seedtype='sphere', seed_resolution=4,
     #                integration_direction='both')
 
-    oa = mlab.orientation_axes()
+    oa = mvi.orientation_axes()
     oa.marker.set_viewport(0.75, 0.75, 1.0, 1.0)
     mvi.resize([1200, 800])
-    mlab.view(roll=0, azimuth=90, elevation=25, distance=30.0,
-              focalpoint=[0, 2, 0])
+    mvi.view(roll=0, azimuth=90, elevation=25, distance=30.0,
+             focalpoint=[0, 2, 0])
 
     mvi.savefig(next_plot_fname(__file__))
     if args.show:
-        mlab.show()
+        mvi.show()
 
 if __name__ == "__main__":
     main()

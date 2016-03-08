@@ -206,11 +206,11 @@ Function                                         Description
 :py:func:`viscid.plot.mvi.points3d`              Plot a list of points
 :py:func:`viscid.plot.mvi.quiver3d`              Plot a list of vector arrows with optional scalar data
 :py:func:`viscid.plot.mvi.colorbar`              Wrap `mayavi.mlab.colorbar`, then change the colormap if any
-                                                 `viscid.plot.mvi.apply_cmap` kwargs are provided
+                                                 :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
 :py:func:`viscid.plot.mvi.scalarbar`             Wrap `mayavi.mlab.scalarbar`, then change the colormap if any
-                                                 `viscid.plot.mvi.apply_cmap` kwargs are provided
+                                                 :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
 :py:func:`viscid.plot.mvi.vectorbar`             Wrap `mayavi.mlab.vectorbar`, then change the colormap if any
-                                                 `viscid.plot.mvi.apply_cmap` kwargs are provided
+                                                 :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
 :py:func:`viscid.plot.mvi.axes`                  Wrap `mayavi.mlab.axes`
 :py:func:`viscid.plot.mvi.xlabel`                Wrap `mayavi.mlab.xlabel`
 :py:func:`viscid.plot.mvi.ylabel`                Wrap `mayavi.mlab.ylabel`

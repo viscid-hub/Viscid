@@ -69,10 +69,10 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
         if plot:
             from viscid.plot import mvi
             mvi.plot_earth_3d(crd_system='gse')
-            mvi.mlab.points3d(nulls2[0], nulls2[1], nulls2[2],
-                              color=(0, 0, 0), scale_factor=1.0)
-            mvi.mlab.points3d(nulls[0, nullind], nulls[1, nullind], nulls[2, nullind],
-                              color=(1, 1, 1), scale_factor=1.0)
+            mvi.points3d(nulls2[0], nulls2[1], nulls2[2],
+                         color=(0, 0, 0), scale_factor=1.0)
+            mvi.points3d(nulls[0, nullind], nulls[1, nullind], nulls[2, nullind],
+                         color=(1, 1, 1), scale_factor=1.0)
 
         seed = viscid.Sphere(p0=p0, r=r, ntheta=30, nphi=60,
                              theta_endpoint=True, phi_endpoint=True)
@@ -327,7 +327,7 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
         _, all_topo = viscid.calc_streamlines(fld, seed, **trace_opts)
         mpl.plot(np.bitwise_and(all_topo, 15), show=False)
         verts, arr = seed.wrap_mesh(all_topo.data)
-        mvi.mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, opacity=0.75)
+        mvi.mesh(verts[0], verts[1], verts[2], scalars=arr, opacity=0.75)
 
     # quadrents and lines are indexed as follows...
     # directions are counter clackwise around the quadrent with
@@ -442,9 +442,9 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
         from viscid.plot import mvi
         from viscid.plot import mpl
         _pts3d = seed.to_3d(seed.uv_to_local(np.array([allx, ally])))
-        mvi.mlab.points3d(_pts3d[0], _pts3d[1], _pts3d[2],
-                          all_topo.data.reshape(-1), scale_mode='none',
-                          scale_factor=0.02)
+        mvi.points3d(_pts3d[0], _pts3d[1], _pts3d[2],
+                      all_topo.data.reshape(-1), scale_mode='none',
+                      scale_factor=0.02)
         mpl.plt.scatter(allx, ally, color=np.bitwise_and(all_topo, 15),
                         vmin=0, vmax=15, marker='o', edgecolor='y', s=40)
 

@@ -47,10 +47,10 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         pts = seeds.get_points()
         p = mvi.points3d(pts[0], pts[1], pts[2], interpolated_fld.flat_data,
                          scale_mode='none', scale_factor=0.02)
-        mvi.mlab.axes(p)
-        mvi.mlab.title(seed_name)
+        mvi.axes(p)
+        mvi.title(seed_name)
         if view_kwargs:
-            mvi.mlab.view(**view_kwargs)
+            mvi.view(**view_kwargs)
 
         mvi.savefig(next_plot_fname(__file__, series='3d'))
         if show:

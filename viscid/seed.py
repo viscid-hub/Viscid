@@ -647,9 +647,8 @@ class Plane(SeedGen):
             >>> xyz = p0 + np.dot(lmn_to_xyz, lmn)
             >>>
             >>> from viscid.plot import mvi
-            >>> verts = plane.as_mesh()
-            >>> mvi.mlab.mesh(verts[0], verts[1], verts[2])
-            >>> mvi.mlab.points3d(xyz[0], xyz[1], xyz[2])
+            >>> mvi.mesh_from_seeds(plane)
+            >>> mvi.points3d(xyz[0], xyz[1], xyz[2])
             >>> mvi.show()
 
             >>> # Transform vector compenents from xyz to lmn
@@ -676,12 +675,11 @@ class Plane(SeedGen):
             >>> # use xyz to show in 3d via mayavi
             >>> from viscid.plot import mvi
             >>> verts, s = plane.wrap_mesh(Blmn['z'].data)
-            >>> mvi.mlab.mesh(verts[0], verts[1], verts[2], scalars=s)
+            >>> mvi.mesh(verts[0], verts[1], verts[2], scalars=s)
             >>> verts, vx, vy, vz = plane.wrap_mesh(B_interp['x'].data,
             >>>                                     B_interp['y'].data,
             >>>                                     B_interp['z'].data)
-            >>> mvi.mlab.quiver3d(verts[0], verts[1], verts[2],
-            >>>                   vx, vy, vz)
+            >>> mvi.quiver3d(verts[0], verts[1], verts[2], vx, vy, vz)
             >>> mvi.show()
             >>>
             >>> # use lmn to show in-plane / out-of-plane

@@ -48,42 +48,40 @@ Viscid has the ability to extract magnetopause information using :py:func:`visci
       lmn = viscid.find_minvar_lmn_around(f['b'], p0, l=2.0, n=64)
       minvar_n[:, i] = lmn[2, :]
 
-  fig = mvi.mlab.gcf()
-  fig.scene.background = (1.0, 1.0, 1.0)
-  fig.scene.foreground = (0.05, 0.05, 0.05)
+  fig = mvi.mlab.figure(bgcolor=(1.0, 1.0, 1.0), fgcolor=(0.05, 0.05, 0.05),
+                        size=(600, 400))
 
-  grey = (0.75, ) * 3
+  grey = (0.80, ) * 3
   red = (1, 0, 0)
   blue = (0, 0, 1)
 
-  mvi.mlab.points3d(x[::skip], y[::skip], z[::skip], scale_factor=0.25,
-                    color=blue)
+  mvi.points3d(x[::skip], y[::skip], z[::skip], scale_factor=0.25, color=blue)
 
   mp_width = mp['mp_width']['x=0']
   mp_sheath_edge = mp['mp_sheath_edge']['x=0']
   mp_sphere_edge = mp_sheath_edge - mp_width
 
-  mvi.mlab.mesh(x2, Y, Z, scalars=mp_width.data)
-  mvi.mlab.mesh(mp_sheath_edge.data, Y, Z, opacity=0.75, color=grey)
-  mvi.mlab.mesh(mp_sphere_edge.data, Y, Z, opacity=0.75, color=grey)
+  mvi.mesh(x2, Y, Z, scalars=mp_width.data, clim=(0.2, 0.8), cmap='plasma')
+  mvi.mesh(mp_sheath_edge.data, Y, Z, opacity=0.75, color=grey)
+  mvi.mesh(mp_sphere_edge.data, Y, Z, opacity=0.75, color=grey)
 
-  mvi.mlab.quiver3d(x2.reshape(-1)[::skip],
-                    Y.reshape(-1)[::skip],
-                    Z.reshape(-1)[::skip],
-                    parab_n[0], parab_n[1], parab_n[2], color=red,
-                    mode='arrow')
-  mvi.mlab.quiver3d(x2.reshape(-1)[::skip],
-                    Y.reshape(-1)[::skip],
-                    Z.reshape(-1)[::skip],
-                    minvar_n[0], minvar_n[1], minvar_n[2], color=blue,
-                    mode='arrow')
+  mvi.quiver3d(x2.reshape(-1)[::skip],
+               Y.reshape(-1)[::skip],
+               Z.reshape(-1)[::skip],
+               parab_n[0], parab_n[1], parab_n[2], color=red,
+               mode='arrow')
+  mvi.quiver3d(x2.reshape(-1)[::skip],
+               Y.reshape(-1)[::skip],
+               Z.reshape(-1)[::skip],
+               minvar_n[0], minvar_n[1], minvar_n[2], color=blue,
+               mode='arrow')
 
   mvi.plot_earth_3d(crd_system="gse")
+  mvi.colorbar(title="Magnetopause Width")
 
-  mvi.resize([600, 400])
-  mvi.mlab.view(azimuth=+90.0, elevation=90.0,
-                distance=20.0, focalpoint=(5.0, 0.0, -1.0))
+  mvi.view(azimuth=+90.0, elevation=90.0,
+           distance=22.0, focalpoint=(5.0, 0.0, -2.0))
   mvi.savefig("mpause-000.png")
-  mvi.mlab.view(azimuth=+90.0 - 45.0, elevation=90.0 - 25.0,
-                distance=20.0, focalpoint=(6.0, 0.0, -1.0))
+  mvi.view(azimuth=+90.0 - 45.0, elevation=90.0 - 25.0,
+           distance=25.0, focalpoint=(6.0, 0.0, -3.0))
   mvi.savefig("mpause-001.png")

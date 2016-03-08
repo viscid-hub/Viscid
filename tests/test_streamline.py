@@ -54,7 +54,7 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
         mvi.plot_lines(lines, scalars=fld_mag, tube_radius=0.01,
                        cmap='viridis')
         if title:
-            mvi.mlab.title(title)
+            mvi.title(title)
 
         mvi.savefig(next_plot_fname(__file__, series='3d'))
         if show:

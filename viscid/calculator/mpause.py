@@ -389,26 +389,26 @@ def main():
     # mayavi 3d plots, normals look better here
     if True:  # pylint: disable=using-constant-test
         from viscid.plot import mvi
-        mvi.mlab.points3d(x[::skip], y[::skip], z[::skip], scale_factor=0.25,
-                          color=(0.0, 0.0, 1.0))
+        mvi.points3d(x[::skip], y[::skip], z[::skip], scale_factor=0.25,
+                     color=(0.0, 0.0, 1.0))
 
         mp_width = mp['mp_width']['x=0']
         mp_sheath_edge = mp['mp_sheath_edge']['x=0']
         mp_sphere_edge = mp_sheath_edge - mp_width
 
-        mvi.mlab.mesh(x2, Y, Z, scalars=mp_width.data)
-        mvi.mlab.mesh(mp_sheath_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
-        mvi.mlab.mesh(mp_sphere_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
+        mvi.mesh(x2, Y, Z, scalars=mp_width.data)
+        mvi.mesh(mp_sheath_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
+        mvi.mesh(mp_sphere_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
 
         n = paraboloid_normal(Y, Z, *mp['paraboloid'][0]).reshape(3, -1)[:, ::skip]
-        mvi.mlab.quiver3d(x2.reshape(-1)[::skip],
-                          Y.reshape(-1)[::skip],
-                          Z.reshape(-1)[::skip],
-                          n[0], n[1], n[2], color=(1, 0, 0))
-        mvi.mlab.quiver3d(x2.reshape(-1)[::skip],
-                          Y.reshape(-1)[::skip],
-                          Z.reshape(-1)[::skip],
-                          minvar_n[0], minvar_n[1], minvar_n[2], color=(0, 0, 1))
+        mvi.quiver3d(x2.reshape(-1)[::skip],
+                     Y.reshape(-1)[::skip],
+                     Z.reshape(-1)[::skip],
+                     n[0], n[1], n[2], color=(1, 0, 0))
+        mvi.quiver3d(x2.reshape(-1)[::skip],
+                     Y.reshape(-1)[::skip],
+                     Z.reshape(-1)[::skip],
+                     minvar_n[0], minvar_n[1], minvar_n[2], color=(0, 0, 1))
         mvi.show()
 
 if __name__ == "__main__":

@@ -4,19 +4,17 @@ streamlines or something """
 
 from __future__ import print_function
 import argparse
-import sys
 
 from viscid_test_common import sample_dir, next_plot_fname, xfail
-
-try:
-    from mayavi import mlab
-except ImportError:
-    xfail("Mayavi not installed")
 
 import numpy as np
 import viscid
 from viscid import vutil
-from viscid.plot import mvi
+try:
+    from viscid.plot import mvi
+except ImportError:
+    xfail("Mayavi not installed")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Test calc")
@@ -39,7 +37,7 @@ def main():
                                cmap="inferno", logscale=True)
     scp.implicit_plane.normal = [0, 0, -1]
     scp.implicit_plane.origin = [0, 0, 0]
-    cbar = mlab.colorbar(scp, title=pp.name, orientation='vertical')
+    cbar = mvi.colorbar(scp, title=pp.name, orientation='vertical')
 
     ######################################
     # plot a vector cut plane of the flow
@@ -87,7 +85,7 @@ def main():
     bsl2.start()
     bsl2.seed.widget.enabled = False
 
-    cbar = mlab.colorbar(bsl2, title=epar.name, orientation='horizontal')
+    cbar = mvi.colorbar(bsl2, title=epar.name, orientation='horizontal')
     cbar.scalar_bar_representation.position = (0.2, 0.01)
     cbar.scalar_bar_representation.position2 = (0.6, 0.14)
 
@@ -109,18 +107,18 @@ def main():
 
     ####################
     # Finishing Touches
-    # mlab.axes(pp_src, nb_labels=5)
-    oa = mlab.orientation_axes()
+    # mvi.axes(pp_src, nb_labels=5)
+    oa = mvi.orientation_axes()
     oa.marker.set_viewport(0.75, 0.75, 1.0, 1.0)
 
     mvi.resize([1200, 800])
-    mlab.view(azimuth=45, elevation=70, distance=35.0, focalpoint=[-2, 0, 0])
+    mvi.view(azimuth=45, elevation=70, distance=35.0, focalpoint=[-2, 0, 0])
 
     ##############
     # Save Figure
 
     # print("saving png")
-    # mvi.mlab.savefig('mayavi_msphere_sample.png')
+    # mvi.savefig('mayavi_msphere_sample.png')
     # print("saving x3d")
     # # x3d files can be turned into COLLADA files with meshlab, and
     # # COLLADA (.dae) files can be opened in OS X's preview
@@ -128,12 +126,12 @@ def main():
     # # IMPORTANT: for some reason, using bounding_lat in mvi.plot_ionosphere
     # #            causes a segfault when saving x3d files
     # #
-    # mvi.mlab.savefig('mayavi_msphere_sample.x3d')
+    # mvi.savefig('mayavi_msphere_sample.x3d')
     # print("done")
 
     mvi.savefig(next_plot_fname(__file__))
     if args.show:
-        mlab.show()
+        mvi.show()
 
 if __name__ == "__main__":
     main()
