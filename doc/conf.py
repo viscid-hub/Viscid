@@ -156,6 +156,7 @@ html_theme_options = {
                        ("Plotting Vectors", "examples/plotting_vectors"),
                        ("Streamline and Interpolation", "examples/stream_and_interp"),
                        ("Magnetic Topology", "examples/magnetic_topology"),
+                       ("Quasi Potential", "examples/quasi_potential"),
                        ("Magnetopause", "examples/magnetopause"),
                        ("Ionosphere", "examples/ionosphere"),
                        ("OpenGGCM Specific", "examples/openggcm"),

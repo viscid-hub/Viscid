@@ -9,6 +9,7 @@ Examples
   plotting_vectors
   stream_and_interp
   magnetic_topology
+  quasi_potential
   magnetopause
   ionosphere
   openggcm

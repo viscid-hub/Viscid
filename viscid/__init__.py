@@ -14,8 +14,9 @@ Attributes:
 """
 
 from __future__ import print_function
+import sys
 
-__version__ = """0.96.0"""
+__version__ = """0.96.1"""
 
 __all__ = ['amr_field',  # Modules
            'amr_grid',
@@ -179,6 +180,35 @@ from viscid import vutil
 # apply settings in the rc file
 from viscid import _rc
 _rc.load_rc_file("~/.viscidrc")
+
+def interact(ipython=True, stack_depth=0, global_ns=None, local_ns=None,
+             include_viscid_ns=True):
+    """Start an interactive interpreter"""
+    banner = "Interactive Viscid, use Ctrl-D (eof) to end interaction."
+
+    ns = dict()
+    if include_viscid_ns:
+        ns.update(globals())
+
+    call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
+
+    if global_ns is None:
+        global_ns = call_frame.f_globals
+    ns.update(global_ns)
+
+    if local_ns is None:
+        local_ns = call_frame.f_locals
+    ns.update(local_ns)
+
+    try:
+        if not ipython:
+            raise ImportError
+        from IPython import embed
+        embed(user_ns=ns, banner1=banner)
+    except ImportError:
+        import code
+        code.interact(banner, local=ns)
+    print("Resuming Script")
 
 # this block is useful for debugging, ie, immediately do a pdb.set_trace()
 # on the SIGUSR2 signal

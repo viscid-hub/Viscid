@@ -1,3 +1,5 @@
+nomkl
+
 numpy
 matplotlib
 h5py
@@ -6,6 +8,8 @@ scipy
 numexpr
 
 mayavi
+pyqt
+pyside
 
 flake8
 
