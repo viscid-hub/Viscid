@@ -13,10 +13,6 @@ import numpy as np
 import viscid
 from viscid import vutil
 from viscid.plot import mpl
-try:
-    from viscid.plot import mvi
-except ImportError:
-    xfail("Mayavi not installed")
 
 
 def make_arcade(eps, xl=(-10.0, 0.0, -10.0), xh=(10.0, 20.0, 10.0),
@@ -71,6 +67,11 @@ def main():
     ############################################################
     # Make 3D mayavi plot of Xi and the 'brightest' field lines
     # as well as some other field lines for context
+    try:
+        from viscid.plot import mvi
+    except ImportError:
+        xfail("Mayavi not installed")
+
     inds = np.argsort(xi_dat)[-64:]
     inds = np.concatenate([inds, np.arange(len(xi_dat))[::71]])
     s = mvi.plot_lines(b_lines[inds], scalars=epar, cmap='viridis')
