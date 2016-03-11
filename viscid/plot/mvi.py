@@ -876,6 +876,7 @@ def plot_blue_marble(r=1.0, orientation=None, figure=None):
     texture.input = img.output
     surf.actor.enable_texture = True
     surf.actor.texture = texture
+    surf.actor.property.color = (1.0, 1.0, 1.0)
 
     if orientation:
         surf.actor.actor.orientation = orientation
