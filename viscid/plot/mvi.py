@@ -3,13 +3,14 @@
 Note:
     You can't set rc parameters for this module!
 """
-from __future__ import print_function
+from __future__ import print_function, division
 import os
 import sys
 
 import numpy as np
 import mayavi
 from mayavi import mlab
+from mayavi.modules.axes import Axes
 from mayavi.sources.builtin_surface import BuiltinSurface
 from mayavi.sources.vtk_data_source import VTKDataSource
 from tvtk.api import tvtk
@@ -683,6 +684,121 @@ def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
     if Bcolor is not None and Bpts.shape[1]:
         mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, name="Bnulls",
                       **kwargs)
+
+def fancy_axes(figure=None, target=None, nb_labels=5, xl=None, xh=None,
+               tight=False, symmetric=False, padding=0.05, opacity=0.7,
+               face_color=None, line_width=2.0, grid_color=None,
+               labels=True, label_color=None, label_shadow=True):
+    """Make axes with 3 shaded walls and a grid similar to matplotlib
+
+    Args:
+        figure (mayavi.core.scene.Scene): specific figure, or None for
+            :py:func:`mayavi.mlab.gcf`
+        target (Mayavi Element): If either xl or xh are not given, then
+            get that limit from a bounding box around `target`
+        nb_labels (int, sequence): number of labels in all, or each
+            (x, y, z) directions
+        xl (float, sequence): lower corner of axes
+        xh (float, sequence): upper corner of axes
+        tight (bool): If False, then let xl and xh expand to make nicer
+            labels. This uses matplotlib to determine new extrema
+        symmetric (bool): If True, then xl + xh = 0
+        padding (float): add padding as a fraction of the total length
+        opacity (float): opacity of faces
+        face_color (sequence): color (r, g, b) of faces
+        line_width (float): Width of grid lines
+        grid_color (sequence): Color of grid lines
+        labels (bool): Whether or not to put axis labels on
+        label_color (sequence): color of axis labels
+        label_shadow (bool): Add shadows to all labels
+
+    Returns:
+        VTKDataSource: source to which 2 surfaces and 3 axes belong
+    """
+    if figure is None:
+        figure = mlab.gcf()
+
+    # setup xl and xh
+    if xl is None or xh is None:
+        _outline = mlab.outline(target, figure=figure)
+
+        if xl is None:
+            xl = _outline.bounds[0::2]
+        if xh is None:
+            xh = _outline.bounds[1::2]
+        _outline.remove()
+
+    nb_labels = np.broadcast_to(nb_labels, (3,))
+    xl = np.array(np.broadcast_to(xl, (3,)))
+    xh = np.array(np.broadcast_to(xh, (3,)))
+    L = xh - xl
+
+    xl -= padding * L
+    xh += padding * L
+
+    # now adjust xl and xh to be prettier
+    if symmetric:
+        tight = False
+    if not tight:
+        from matplotlib.ticker import AutoLocator
+        for i in range(len(xl)):  # pylint: disable=consider-using-enumerate
+            l = AutoLocator()
+            l.create_dummy_axis()
+            l.set_view_interval(xl[i], xh[i])
+            locs = l()
+            xl[i] = locs[0]
+            xh[i] = locs[-1]
+
+    dx = (xh - xl) / (nb_labels - 1)
+    grid = tvtk.ImageData(dimensions=nb_labels, origin=xl, spacing=dx)
+    src = VTKDataSource(data=grid)
+    src.name = "fancy_axes"
+
+    if face_color is None:
+        face_color = figure.scene.background
+    if grid_color is None:
+        grid_color = figure.scene.foreground
+    if label_color is None:
+        label_color = grid_color
+
+    face = mlab.pipeline.surface(src, figure=figure, opacity=opacity,
+                                 color=face_color)
+    face.actor.property.frontface_culling = True
+
+    if line_width:
+        grid = mlab.pipeline.surface(src, figure=figure, opacity=1.0,
+                                     color=grid_color, line_width=line_width,
+                                     representation='wireframe')
+        grid.actor.property.frontface_culling = True
+
+    if labels:
+        # making 3 separate axes so that each can have a different nb_labels
+        # is awful
+        ax_x = Axes(name='x-axis')
+        ax_x.axes.y_axis_visibility = False
+        ax_x.axes.z_axis_visibility = False
+
+        ax_y = Axes(name='y-axis')
+        ax_y.axes.x_axis_visibility = False
+        ax_y.axes.z_axis_visibility = False
+
+        ax_z = Axes(name='z-axis')
+        ax_z.axes.x_axis_visibility = False
+        ax_z.axes.y_axis_visibility = False
+
+        for i, ax in enumerate([ax_x, ax_y, ax_z]):
+            # # hide axes ticks b/c they float relative to the grid due to
+            # perspective
+            ax.property.opacity = 0.0
+            ax.axes.number_of_labels = nb_labels[i]
+            # import IPython; IPython.embed()
+            ax.title_text_property.color = label_color
+            ax.title_text_property.shadow = label_shadow
+            ax.label_text_property.color = label_color
+            ax.label_text_property.shadow = label_shadow
+            src.add_module(ax)
+
+    return src
 
 axes = mlab.axes
 xlabel = mlab.xlabel
