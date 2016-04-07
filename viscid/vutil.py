@@ -758,6 +758,16 @@ def slice_globbed_filenames(glob_pattern):
     if n_slices:
         if not fnames:
             raise IOError("the glob {0} matched no files".format(edited_glob))
+
+        times = []
+        _newfn = []
+        for fn in fnames:
+            try:
+                times.append(float(re.match(res_re, fn).group('TSLICE')))
+                _newfn.append(fn)
+            except ValueError:
+                pass
+        fnames = _newfn
         times = [float(re.match(res_re, fn).group('TSLICE')) for fn in fnames]
         fnames = [fn for fn, t in sorted(zip(fnames, times), key=itemgetter(1))]
         times.sort()
