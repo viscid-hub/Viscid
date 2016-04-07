@@ -688,7 +688,8 @@ def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
 def fancy_axes(figure=None, target=None, nb_labels=5, xl=None, xh=None,
                tight=False, symmetric=False, padding=0.05, opacity=0.7,
                face_color=None, line_width=2.0, grid_color=None,
-               labels=True, label_color=None, label_shadow=True):
+               labels=True, label_color=None, label_shadow=True,
+               consolidate_labels=True):
     """Make axes with 3 shaded walls and a grid similar to matplotlib
 
     Args:
@@ -711,6 +712,8 @@ def fancy_axes(figure=None, target=None, nb_labels=5, xl=None, xh=None,
         labels (bool): Whether or not to put axis labels on
         label_color (sequence): color of axis labels
         label_shadow (bool): Add shadows to all labels
+        consolidate_labels (bool): if all nb_labels are the same, then
+            only make one axis for the labels
 
     Returns:
         VTKDataSource: source to which 2 surfaces and 3 axes belong
@@ -772,31 +775,42 @@ def fancy_axes(figure=None, target=None, nb_labels=5, xl=None, xh=None,
         grid.actor.property.frontface_culling = True
 
     if labels:
-        # making 3 separate axes so that each can have a different nb_labels
-        # is awful
-        ax_x = Axes(name='x-axis')
-        ax_x.axes.y_axis_visibility = False
-        ax_x.axes.z_axis_visibility = False
-
-        ax_y = Axes(name='y-axis')
-        ax_y.axes.x_axis_visibility = False
-        ax_y.axes.z_axis_visibility = False
-
-        ax_z = Axes(name='z-axis')
-        ax_z.axes.x_axis_visibility = False
-        ax_z.axes.y_axis_visibility = False
-
-        for i, ax in enumerate([ax_x, ax_y, ax_z]):
-            # # hide axes ticks b/c they float relative to the grid due to
-            # perspective
-            ax.property.opacity = 0.0
-            ax.axes.number_of_labels = nb_labels[i]
+        def _make_ax_for_labels(_i, all_axes=False):
+            if all_axes:
+                _ax = Axes(name='axes-labels')
+            else:
+                _ax = Axes(name='{0}-axis-labels'.format('xyz'[_i]))
+                # VTK bug... y_axis and z_axis are flipped... how is VTK still
+                # the de-facto 3d plotting library?
+                if _i == 0:
+                    _ax.axes.x_axis_visibility = True
+                    _ax.axes.y_axis_visibility = False
+                    _ax.axes.z_axis_visibility = False
+                elif _i == 1:
+                    _ax.axes.x_axis_visibility = False
+                    _ax.axes.y_axis_visibility = False
+                    _ax.axes.z_axis_visibility = True  # VTK bug
+                elif _i == 2:
+                    _ax.axes.x_axis_visibility = False
+                    _ax.axes.y_axis_visibility = True  # VTK bug
+                    _ax.axes.z_axis_visibility = False
+                else:
+                    raise ValueError()
+            _ax.property.opacity = 0.0
+            _ax.axes.number_of_labels = nb_labels[_i]
             # import IPython; IPython.embed()
-            ax.title_text_property.color = label_color
-            ax.title_text_property.shadow = label_shadow
-            ax.label_text_property.color = label_color
-            ax.label_text_property.shadow = label_shadow
-            src.add_module(ax)
+            _ax.title_text_property.color = label_color
+            _ax.title_text_property.shadow = label_shadow
+            _ax.label_text_property.color = label_color
+            _ax.label_text_property.shadow = label_shadow
+            src.add_module(_ax)
+
+        if consolidate_labels and np.all(nb_labels[:] == nb_labels[0]):
+            _make_ax_for_labels(0, all_axes=True)
+        else:
+            _make_ax_for_labels(0, all_axes=False)
+            _make_ax_for_labels(1, all_axes=False)
+            _make_ax_for_labels(2, all_axes=False)
 
     return src
 
