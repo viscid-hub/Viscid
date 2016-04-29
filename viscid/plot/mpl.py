@@ -10,6 +10,7 @@ Note:
 # FIXME: this module is way too long
 
 from __future__ import print_function
+from datetime import datetime
 from distutils.version import LooseVersion
 from itertools import count
 
@@ -19,6 +20,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize, LogNorm, ListedColormap
+import matplotlib.dates as mdates
 try:
     from mpl_toolkits.basemap import Basemap  # pylint: disable=no-name-in-module
     _HAS_BASEMAP = True
@@ -30,6 +32,7 @@ from viscid import pyeval
 from viscid import logger
 from viscid.compat import izip, string_types
 from viscid import coordinate
+from viscid import vutil
 from viscid.plot import mpl_style  # pylint: disable=unused-import
 from viscid.plot import mpl_extra
 from viscid.plot import vseaborn
@@ -292,7 +295,7 @@ def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
 
 def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
                    masknan, latlon, flip_plot, patchec, patchlw, patchaa,
-                   all_masked, extra_args, **kwargs):
+                   datefmt, autofmt_xdate, all_masked, extra_args, **kwargs):
     """Make a 2d plot of a single patch
 
     Returns:
@@ -340,6 +343,14 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         dat = dat.T
         namex, namey = namey, namex
 
+    datetime_mask = [False, False]
+    if vutil.isdatetime(X):
+        X = mdates.date2num(X.astype(datetime))
+        datetime_mask[0] = True
+    if vutil.isdatetime(Y):
+        Y = mdates.date2num(Y.astype(datetime))
+        datetime_mask[1] = True
+
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, *extra_args, **kwargs)
     elif style == "contour":
@@ -350,6 +361,13 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         p = ax.pcolor(X, Y, dat, *extra_args, **kwargs)
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
+
+    for isdt_i, axis_i in zip(datetime_mask, (ax.xaxis, ax.yaxis)):
+        if isdt_i:
+            date_format = mdates.DateFormatter(datefmt)
+            axis_i.set_major_formatter(date_format)
+            if axis_i is ax.xaxis and autofmt_xdate:
+                plt.gcf().autofmt_xdate()
 
     try:
         if masknan:
@@ -417,6 +435,9 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     minorfmt = plot_kwargs.pop("minorfmt", rcParams.get("viscid.minorfmt", None))
     majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
+    datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
+    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
+    autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
 
     # 2d plot options
@@ -545,8 +566,9 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         p, all_masked = _plot2d_single(action_ax, patch, style,
                                        namex, namey, mod, scale, masknan,
                                        latlon, flip_plot,
-                                       patchec, patchlw, patchaa,
-                                       all_masked, extra_args, **plot_kwargs)
+                                       patchec, patchlw, patchaa, datefmt,
+                                       autofmt_xdate, all_masked, extra_args,
+                                       **plot_kwargs)
 
     # apply option actions... this is for setting xlim / xscale / etc.
     _apply_actions(actions)
@@ -817,6 +839,9 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     minorfmt = plot_kwargs.pop("minorfmt", rcParams.get("viscid.minorfmt", None))
     majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
+    datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
+    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
+    autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
 
     # 1d plot options
@@ -836,6 +861,11 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     dat = np.concatenate([blk.data for blk in fld.patches])
 
+    datetime_mask = [False]
+    if vutil.isdatetime(x):
+        x = mdates.date2num(x.astype(datetime))
+        datetime_mask[0] = True
+
     if mod:
         x *= mod
     if scale:
@@ -843,6 +873,13 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
     p = ax.plot(x, dat, **plot_kwargs)
+
+    for isdt_i, axis_i in zip(datetime_mask, (ax.xaxis, ax.yaxis)):
+        if isdt_i:
+            date_format = mdates.DateFormatter(datefmt)
+            axis_i.set_major_formatter(date_format)
+            if axis_i is ax.xaxis and autofmt_xdate:
+                plt.gcf().autofmt_xdate()
 
     _apply_actions(actions)
 

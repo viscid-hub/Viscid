@@ -4,7 +4,7 @@
 
 from __future__ import print_function, division
 
-from datetime import datetime
+import datetime
 import fnmatch
 from glob import glob
 from itertools import count
@@ -184,7 +184,7 @@ def format_datetime(dt, fmt):
         msec_fmt = re.findall(r"%\.?([0-9]*)f", fmt)
         fmt = re.sub(r"%\.?([0-9]*)f", "%f", fmt)
 
-    tstr = datetime.strftime(dt, fmt)
+    tstr = datetime.datetime.strftime(dt, fmt)
 
     # now go back and for any %f -> [0-9]{6}, reformat the precision
     it = list(izip(msec_fmt, re.finditer("[0-9]{6}", tstr)))
@@ -221,7 +221,7 @@ def format_time(t, style='.02f'):
     lstyle = style.lower()
     if t is None:
         return ""
-    elif isinstance(t, datetime):
+    elif isinstance(t, datetime.datetime):
         return format_datetime(t, style)
     elif "hms" in lstyle:
         days = int(t // (24 * 3600))
@@ -246,6 +246,40 @@ def format_time(t, style='.02f'):
     else:
         return "{0:{1}}".format(t, style)
     raise NotImplementedError("should never be here")
+
+def isdatetime(arr, check_objects=True, check_datetime=True, check_timedelta=True):
+    """check if an array is datetime-like
+
+    Args:
+        arr (sequence): some sequence
+        check_objects (bool): do checks on np.object dtypes
+        check_datetime (bool): check for datetime
+        check_timedelta (bool): check for timedelta
+
+    Returns:
+        bool
+    """
+    arr = np.asarray(arr)
+    ret = False
+    if check_objects and arr.dtype == np.object:
+        ret = ret or (check_datetime and isinstance(arr[0], datetime.datetime))
+        ret = ret or (check_timedelta and isinstance(arr[0], datetime.timedelta))
+    ret = ret or (check_datetime and 'datetime' in str(arr.dtype))
+    ret = ret or (check_timedelta and 'timedelta' in str(arr.dtype))
+    return ret
+
+def asarray_dt(arr, dtype=None, date_type="datetime64[us]",
+               time_type="timedelta64[us]"):
+    if isdatetime(arr, check_timedelta=False):
+        arr = np.asarray(arr, dtype=date_type)
+    elif isdatetime(arr, check_datetime=False):
+        arr = np.asarray(arr, dtype=time_type)
+    else:
+        try:
+            arr = np.asarray(arr, dtype=dtype)
+        except TypeError:
+            arr = np.asarray(arr, dtype=np.object)
+    return arr
 
 def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     """Make sure slices go forward

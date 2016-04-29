@@ -35,38 +35,41 @@ Here are some options that should work for all functions:
 
 .. cssclass:: table-striped
 
-==========  ================  ==================================================
-Option      Arguments         Description
-==========  ================  ==================================================
-clim        vmin, [vmax]      Set min and max values for the data scale
-vmin        int               Minimum value for the data range
-vmax        int               Maximum value for the data range
-lin         [vmin, [vmax]]    Shorthand for clim and logscale=0. Min/Max values
-                              that aren't given are found from the data.
-log         [vmin, [vmax]]    Shorthand for clim and logscale=1. Min/Max values
-                              that aren't given are found from the data.
-loglog      [vmin, [vmax]]    Same as log, but also use a logscale for the
-                              coordinates
-logscale    [bool]            Use a logarithmic scale for the data
-symmetric   [bool]            Make the data scale symmetric around 0
-norescale   [bool]            Do not set limit of the data axis explicitly
-x           min, max          Set axis limits using :py:func:`pyplot.set_xlim`
-y           min, max          Set axis limits using :py:func:`pyplot.set_ylim`
-equalaxis   [bool]            Force 1:1 aspect ratio
-scale       float             Scale data by some scalar value
-masknan     [bool or color]   Mask out NaN values in data with a given color
-                              (default: 'y' for yellow)
-flipplot    [bool]            Alias for flip_plot
-flip_plot   [bool]            Flip the horizontal and vertical axes
-nolabels    [bool]            Skip applying labels to x/y/cbar axes
-xlabel      str               Specific label for the x axis
-ylabel      str               Specific label for the y axis
-majorfmt    ticker.Formatter  Formatter for major axes (x and y)
-minorfmt    ticker.Formatter  Formatter for minor axes (x and y)
-majorloc    ticker.Locator    Locator for major axes (x and y)
-minorloc    ticker.Locator    Locator for minor axes (x and y)
-show        [bool]            Call :py:func:`pyplot.show` before returning
-==========  ================  ==================================================
+=============  ================  ==================================================
+Option         Arguments         Description
+=============  ================  ==================================================
+clim           vmin, [vmax]      Set min and max values for the data scale
+vmin           int               Minimum value for the data range
+vmax           int               Maximum value for the data range
+lin            [vmin, [vmax]]    Shorthand for clim and logscale=0. Min/Max values
+                                 that aren't given are found from the data.
+log            [vmin, [vmax]]    Shorthand for clim and logscale=1. Min/Max values
+                                 that aren't given are found from the data.
+loglog         [vmin, [vmax]]    Same as log, but also use a logscale for the
+                                 coordinates
+logscale       [bool]            Use a logarithmic scale for the data
+symmetric      [bool]            Make the data scale symmetric around 0
+norescale      [bool]            Do not set limit of the data axis explicitly
+x              min, max          Set axis limits using :py:func:`pyplot.set_xlim`
+y              min, max          Set axis limits using :py:func:`pyplot.set_ylim`
+equalaxis      [bool]            Force 1:1 aspect ratio
+scale          float             Scale data by some scalar value
+masknan        [bool or color]   Mask out NaN values in data with a given color
+                                 (default: 'y' for yellow)
+flipplot       [bool]            Alias for flip_plot
+flip_plot      [bool]            Flip the horizontal and vertical axes
+nolabels       [bool]            Skip applying labels to x/y/cbar axes
+xlabel         str               Specific label for the x axis
+ylabel         str               Specific label for the y axis
+majorfmt       ticker.Formatter  Formatter for major axes (x and y)
+minorfmt       ticker.Formatter  Formatter for minor axes (x and y)
+majorloc       ticker.Locator    Locator for major axes (x and y)
+minorloc       ticker.Locator    Locator for minor axes (x and y)
+datefmt        str               date format string in the datetime.strftime format
+autofmt_xdate  [bool]            auto-rotate date labels on the x-axis
+autofmtxdate   [bool]            alias for autofmt_xdate
+show           [bool]            Call :py:func:`pyplot.show` before returning
+=============  ================  ==================================================
 
 .. note::
   When using lin, if vmin == 0 and vmax is not given, the scale will be symmetric

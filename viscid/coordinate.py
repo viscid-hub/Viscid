@@ -20,7 +20,7 @@ FIXME: uniform coordinates are generally unsupported, but they're just
        with uniform coordinates
 """
 
-from __future__ import print_function
+from __future__ import print_function, division
 # from timeit import default_timer as time
 import itertools
 import sys
@@ -50,7 +50,8 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw"):
         crd_arrs = [crd_arrs]
 
     for crd_name, arr in zip(crd_names, crd_arrs):
-        arr = np.array(arr)
+        arr = vutil.asarray_dt(arr)
+
         clist.append((crd_name, arr))
         try:
             atol = 100 * np.finfo(arr.dtype).eps
@@ -62,10 +63,17 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw"):
         else:
             diff = [1, 1]
 
+        if vutil.isdatetime(diff):
+            diff = diff / np.ones((1,), dtype=diff.dtype)
+
         if np.allclose(diff[0], diff[1:], atol=atol):
             uniform_clist.append((crd_name, [arr[0], arr[-1], len(arr)]))
         else:
             is_uniform = False
+
+    # uniform crds don't play nice with datetime axes
+    if any(vutil.isdatetime(arr) for arr in crd_arrs):
+        is_uniform = False
 
     if is_uniform:
         crds = wrap_crds("uniform", uniform_clist)
@@ -90,6 +98,24 @@ def wrap_crds(crdtype, clist, **kwargs):
         return crdtype(clist, **kwargs)
     except TypeError:
         raise NotImplementedError("can not decipher crds: {0}".format(crdtype))
+
+def extend_arr_by_half(x, full_arr=True):
+    x = vutil.asarray_dt(x)
+
+    if full_arr:
+        dxl = x[1] - x[0]
+        dxh = x[-1] - x[-2]
+        ret = np.concatenate([[x[0] - dxl], x, [x[-1] + dxh]])
+    else:
+        xl, xh, nx = x
+        nx = int(nx)
+        dx = (xh - xl) / nx
+        xl -= 0.5 * dx
+        xh += 0.5 * dx
+        nx += 1
+        ret = np.array([xl, xh, nx], dtype=x.dtype)
+    return ret
+
 
 class Coordinates(object):
     _TYPE = "none"
@@ -345,7 +371,9 @@ class StructuredCrds(Coordinates):
             elif self.shape[i] == 1:
                 ccarr = self.__crds[a]
             else:
-                ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
+                # doing the cc math this way also works for datetime objects
+                ccarr = self.__crds[a][:-1] + 0.5 * (self.__crds[a][1:] -
+                                                     self.__crds[a][:-1])
             flatarr, openarr = self._ogrid_single(a, ccarr)
             self.__crds[a + sfx] = flatarr
             self.__crds[a.upper() + sfx] = openarr
@@ -595,7 +623,8 @@ class StructuredCrds(Coordinates):
         if axis:
             crd_arr = crd_arr.get_crd(axis, center=center)
 
-        crd_arr = np.asarray(crd_arr)
+        crd_arr = vutil.asarray_dt(crd_arr)
+
         if slc is not None:
             crd_arr = crd_arr[slc]
         return crd_arr.reshape(-1)
@@ -629,11 +658,7 @@ class StructuredCrds(Coordinates):
         axes = self.axes
         crds_cc = self.get_crds_cc()
         for i, x in enumerate(crds_cc):
-            dxl = x[1] - x[0]
-            dxh = x[-1] - x[-2]
-            crds_cc[i] = np.concatenate([[x[0] - dxl],
-                                         x,
-                                         [x[-1] + dxh]])
+            crds_cc[i] = extend_arr_by_half(x, full_arr=True)
         new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
         return type(self)(new_clist)
 
@@ -1192,6 +1217,9 @@ class UniformCrds(StructuredCrds):
             viscid.logger.warn(s)
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
+                if vutil.isdatetime(arr):
+                    raise NotImplementedError("Datetime arrays can't be in "
+                                              "uniform crds yet")
                 arr = np.asarray(arr)
                 if len(arr) > 1:
                     diff = arr[1:] - arr[:-1]
@@ -1204,10 +1232,13 @@ class UniformCrds(StructuredCrds):
                     raise ValueError("Crds are not uniform")
                 _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
         else:
-            for d in init_clist:
-                if len(d[1]) != 3:
+            for _, arr in init_clist:
+                if len(arr) != 3:
                     raise ValueError("is this a full_array?")
-            _nc_linspace_args = [d[1] for d in init_clist]
+                if vutil.isdatetime([arr[0], arr[1]]):
+                    raise NotImplementedError("Datetime arrays can't be in "
+                                              "uniform crds yet")
+            _nc_linspace_args = [arr for _, arr in init_clist]
 
         self._nc_linspace_args = _nc_linspace_args
         self._cc_linspace_args = []
