@@ -28,10 +28,10 @@ except ImportError:
     _HAS_BASEMAP = False
 
 import viscid
-from viscid import pyeval
-from viscid import logger
-from viscid.compat import izip, string_types
 from viscid import coordinate
+from viscid.compat import izip, string_types
+from viscid import logger
+from viscid import pyeval
 from viscid import vutil
 from viscid.plot import mpl_style  # pylint: disable=unused-import
 from viscid.plot import mpl_extra
