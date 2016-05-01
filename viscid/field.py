@@ -651,6 +651,8 @@ class Field(tree.Leaf):
         self._nr_comps = None
         self._dtype = None
         self._src_data = dat
+        if self.meta and self.meta.get('zyx_native', False):
+            self.meta['zyx_native'] = False
         # self._translate_src_data()  # um, what's this for? looks dangerous
         # do some sort of lazy pre-setup _src_data inspection?
 
