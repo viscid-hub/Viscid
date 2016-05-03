@@ -175,7 +175,7 @@ class StructuredCrds(Coordinates):
             self._axes = [d[0].lower() for d in init_clist]
         self.clear_crds()
         if init_clist is not None:
-            self.set_crds(init_clist)
+            self._set_crds(init_clist)
 
     @property
     def xl_nc(self):
@@ -269,7 +269,7 @@ class StructuredCrds(Coordinates):
     def clear_cache(self):
         self.__crds = None
 
-    def set_crds(self, clist):
+    def _set_crds(self, clist):
         """ called with a list of lists:
         (('x', ndarray), ('y',ndarray), ('z',ndarray))
         Note: input crds are assumed to be node centered
@@ -1163,7 +1163,10 @@ class StructuredCrds(Coordinates):
         """I recommend against doing this since there may be unintended
         side effects
         """
-        return self.set_crds((axis, arr))
+        raise RuntimeError("setting crds is deprecated - the constructor "
+                           "does far too much transforming of the input "
+                           "to assume that arr will be in the right form")
+        # return self._set_crds((axis, arr))
 
     def __delitem__(self, item):
         raise ValueError("can not delete crd this way")
