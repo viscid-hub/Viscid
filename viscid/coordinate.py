@@ -1487,7 +1487,7 @@ class UniformSphericalCrds(UniformCrds):
     _axes = ["phi", "theta", "r"]
 
 
-class NonuniformSphericalCrds(UniformCrds):
+class NonuniformSphericalCrds(NonuniformCrds):
     _TYPE = "nonuniform_spherical"
     _axes = ["phi", "theta", "r"]
 
