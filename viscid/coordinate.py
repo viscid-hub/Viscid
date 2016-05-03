@@ -121,6 +121,7 @@ class Coordinates(object):
     _TYPE = "none"
 
     __crds = None
+    meta = None
 
     @property
     def crdtype(self):
@@ -134,7 +135,7 @@ class Coordinates(object):
         return "spherical" in self._TYPE
 
     def __init__(self, **kwargs):
-        pass
+        self.meta = dict(kwargs)
 
     def as_local_coordinates(self):
         return self
