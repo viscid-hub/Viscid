@@ -134,6 +134,9 @@ class Coordinates(object):
     def is_spherical(self):
         return "spherical" in self._TYPE
 
+    def is_uniform(self):
+        return self._TYPE.startswith('uniform')
+
     def __init__(self, **kwargs):
         self.meta = dict(kwargs)
 

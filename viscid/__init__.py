@@ -169,6 +169,9 @@ from viscid import amr_grid
 from viscid import bucket
 from viscid import dataset
 from viscid import grid
+from viscid import mapfield
+from viscid.mapfield import *
+__all__ += mapfield.__all__
 from viscid import parallel
 from viscid import pyeval
 from viscid import tree
