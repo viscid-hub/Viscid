@@ -613,9 +613,9 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
     def make_crds(self):
         if self.get_info('fieldtype') == 'iof':
             # 181, 61
-            nlon, nlat = self._shape_discovery_hack(self._collection[0])
-            crdlst = [['lon', [0.0, 360.0, nlon]],
-                      ['lat', [0.0, 180.0, nlat]]]
+            nphi, ntheta = self._shape_discovery_hack(self._collection[0])
+            crdlst = [['phi', [0.0, 360.0, nphi]],
+                      ['theta', [0.0, 180.0, ntheta]]]
             return wrap_crds("uniform_spherical", crdlst)
 
         else:
