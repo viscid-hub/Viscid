@@ -1024,12 +1024,12 @@ class StructuredCrds(Coordinates):
         if axes is None:
             axes = self.axes
 
-        ret = [[axis, self.get_crd(axis, center=center)[slc]] for axis in axes]
+        ret = [[axis, self.get_crd(axis, center=center)[slc].copy()] for axis in axes]
 
         if slc is None and full_arrays and center == 'node' and self._src_crds_cc:
             for i, axis in enumerate(axes):
                 if axis in self._src_crds_cc:
-                    ret[i].append(self._src_crds_cc[axis])
+                    ret[i].append(self._src_crds_cc[axis].copy())
         return ret
 
     ## These methods just return one crd axis
@@ -1424,7 +1424,7 @@ class UniformCrds(StructuredCrds):
             if ax in self.reflect_axes:
                 lst.append([ax, [-ls_args[1], -ls_args[0], ls_args[2]]])
             else:
-                lst.append([ax, ls_args])
+                lst.append([ax, list(ls_args)])
         return lst
 
     def _fill_crds_dict(self):
