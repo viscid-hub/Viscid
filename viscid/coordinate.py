@@ -32,7 +32,7 @@ from viscid.compat import string_types, izip
 from viscid import vutil
 
 
-def arrays2crds(crd_arrs, crd_names="xyzuvw"):
+def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
     """make either uniform or nonuniform coordnates given full arrays
 
     Args:
@@ -76,9 +76,9 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw"):
         is_uniform = False
 
     if is_uniform:
-        crds = wrap_crds("uniform", uniform_clist)
+        crds = wrap_crds("uniform", uniform_clist, **kwargs)
     else:
-        crds = wrap_crds("nonuniform", clist)
+        crds = wrap_crds("nonuniform", clist, **kwargs)
     return crds
 
 def lookup_crds_type(type_name):
@@ -118,10 +118,45 @@ def extend_arr_by_half(x, full_arr=True):
 
 
 class Coordinates(object):
+    """Base class for all coordinate types
+
+    Note:
+        Subclasses should only call super(...).__init__ after setting
+        up the axes
+    """
     _TYPE = "none"
+
+    _axes = ["x", "y", "z"]
 
     __crds = None
     meta = None
+    _units_validated = False
+    _units = None
+
+    def __init__(self, units=None, **kwargs):
+        self.units = units
+        self.meta = kwargs
+
+    @property
+    def axes(self):
+        return self._axes
+
+    @property
+    def units(self):
+        if not self._units_validated:
+            units = self._units
+            if not isinstance(units, (list, tuple)):
+                units = [units] * self.nr_dims
+            units += [None] * (len(units) - self.nr_dims)
+            units = ["" if u is None else u.strip() for u in units]
+            self._units = units
+            self._units_validated = True
+        return self._units
+
+    @units.setter
+    def units(self, val):
+        self._units_validated = False
+        self._units = val
 
     @property
     def crdtype(self):
@@ -137,8 +172,29 @@ class Coordinates(object):
     def is_uniform(self):
         return self._TYPE.startswith('uniform')
 
-    def __init__(self, **kwargs):
-        self.meta = dict(kwargs)
+    def ind(self, axis):
+        if isinstance(axis, int):
+            if axis < len(self.axes):
+                return axis
+            else:
+                raise ValueError()
+        else:
+            return self.axes.index(axis)
+
+    def get_units(self, axes):
+        return [self.units[self.ind(ax)] for ax in axes]
+
+    def get_unit(self, axis):
+        return self.get_units([axis])[0]
+
+    def axis_name(self, axis):
+        if isinstance(axis, string_types):
+            if axis in self._crds:
+                return axis
+            else:
+                raise KeyError(axis)
+        else:
+            return self.axes[axis]
 
     def as_local_coordinates(self):
         return self
@@ -150,6 +206,7 @@ class Coordinates(object):
             return self
         else:
             raise NotImplementedError()
+
 
 class StructuredCrds(Coordinates):
     _TYPE = "structured"
@@ -170,7 +227,6 @@ class StructuredCrds(Coordinates):
                  **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
-        super(StructuredCrds, self).__init__(**kwargs)
         self.has_cc = has_cc
 
         self.reflect_axes = reflect_axes
@@ -180,6 +236,7 @@ class StructuredCrds(Coordinates):
         self.clear_crds()
         if init_clist is not None:
             self._set_crds(init_clist)
+        super(StructuredCrds, self).__init__(**kwargs)
 
     @property
     def xl_nc(self):
@@ -211,10 +268,6 @@ class StructuredCrds(Coordinates):
     def nr_dims(self):
         """ number of spatial dimensions """
         return len(self._axes)
-
-    @property
-    def axes(self):
-        return self._axes
 
     @property
     def dtype(self):
@@ -430,24 +483,6 @@ class StructuredCrds(Coordinates):
             return np.ravel(arr), arr
         else:
             raise ValueError()
-
-    def ind(self, axis):
-        if isinstance(axis, int):
-            if axis < len(self.axes):
-                return axis
-            else:
-                raise ValueError()
-        else:
-            return self.axes.index(axis)
-
-    def axis_name(self, axis):
-        if isinstance(axis, string_types):
-            if axis in self._crds:
-                return axis
-            else:
-                raise KeyError(axis)
-        else:
-            return self.axes[axis]
 
     def get_slice_extent(self, selection):
         """work in progress"""
@@ -892,7 +927,9 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     def slice_and_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
@@ -904,7 +941,9 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     def slice_and_keep(self, selection, cc=False):
         slices, crdlst, reduced, crds_type = self.make_slice_keep(selection,
@@ -912,7 +951,9 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     slice_reduce = slice_and_reduce
     slice_keep = slice_and_keep
@@ -940,7 +981,9 @@ class StructuredCrds(Coordinates):
                 else:
                     # FIXME: I don't think this is right
                     crdlst[i][1][0] = val
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,

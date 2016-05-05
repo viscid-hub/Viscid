@@ -386,6 +386,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             crdlist = [['phi', [0.0, 360.0, nphi]],
                        ['theta', [0.0, 180.0, ntheta]]]
             crdkwargs["full_arrays"] = False
+            crdkwargs["units"] = 'deg'
 
         elif topotype in ['3DSMesh']:
             raise NotImplementedError("3D spherical grids not yet supported")

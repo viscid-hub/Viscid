@@ -1067,7 +1067,9 @@ class Field(tree.Leaf):
         # the slice will have to load the data
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(crd_type, crdlst)
+        cunits = self._src_crds.get_units(c[0] for c in crdlst)
+        crds = coordinate.wrap_crds(crd_type, crdlst, units=cunits,
+                                    **self._src_crds.meta)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -1928,7 +1930,9 @@ class ScalarField(Field):
                                dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
 
         downclist = self._src_crds.get_clist(np.s_[::2])
-        downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist)
+        cunits = self._src_crds.get_units(c[0] for c in downclist)
+        downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist,
+                                        units=cunits, **self._src_crds.meta)
         return self.wrap(downdat, {"crds": downcrds})
 
     def transpose(self, *axes):
@@ -1940,14 +1944,18 @@ class ScalarField(Field):
             raise ValueError("transpose can not change number of axes")
         clist = self._src_crds.get_clist()
         new_clist = [clist[ax] for ax in axes]
-        t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist)
+        cunits = self._src_crds.get_units(c[0] for c in new_clist)
+        t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist,
+                                      units=cunits, **self._src_crds.meta)
         t_data = self.data.transpose(axes)
         return self.wrap(t_data, {"crds": t_crds})
 
     def swap_axes(self, a, b):
         new_clist = self._src_crds.get_clist()
         new_clist[a], new_clist[b] = new_clist[b], new_clist[a]
-        new_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist)
+        cunits = self._src_crds.get_units(c[0] for c in new_clist)
+        new_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist,
+                                        units=cunits, **self._src_crds.meta)
         new_data = self.data.swap_axes(a, b)
         return self.wrap(new_data, {"crds": new_crds})
 

@@ -265,6 +265,8 @@ class GGCMGrid(grid.Grid):
             # crds_object.transform_funcs = transform_dict
             # crds_object.transform_kwargs = dict(copy_on_transform=self.copy_on_transform)
             crds_object.reflect_axes = "xy"
+        if not 'units' in crds_object.meta:
+            crds_object.units = 'Re'
         super(GGCMGrid, self).set_crds(crds_object)
 
     def add_field(self, *fields):
@@ -616,7 +618,7 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
             nphi, ntheta = self._shape_discovery_hack(self._collection[0])
             crdlst = [['phi', [0.0, 360.0, nphi]],
                       ['theta', [0.0, 180.0, ntheta]]]
-            return wrap_crds("uniform_spherical", crdlst)
+            return wrap_crds("uniform_spherical", crdlst, units='deg')
 
         else:
             return self.read_grid2()
@@ -687,7 +689,7 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
                     nc = nc[ccind:ccind + 2]
             crdlst.append([dim, nc])
 
-        return wrap_crds("nonuniform_cartesian", crdlst)
+        return wrap_crds("nonuniform_cartesian", crdlst, units='Re')
 
     # def _parse_many(fnames):
     #     pass
