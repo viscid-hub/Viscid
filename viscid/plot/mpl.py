@@ -714,34 +714,15 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                "version 1.1. Update your matplotlib and "
                                "profit.")
 
-        absboundinglat = np.abs(bounding_lat)
-
         ax = _get_polar_axis(ax=ax)
 
-        if hemisphere == "north":
-            sl_fld = fld["lat=:{0}f".format(absboundinglat)]
-            maxlat = sl_fld.get_crd_nc('lat')[-1]
-        elif hemisphere == "south":
-            sl_fld = fld["lat={0}f:".format(180.0 - absboundinglat)]["lat=::-1"]
-            maxlat = 180.0 - sl_fld.get_crd_nc('lat')[-1]
-
-        lat, lon = sl_fld.get_crds_nc(['lat', 'lon'])
-        new_lat = (np.pi / 180.0) * np.linspace(0.0, maxlat, len(lat))
-        # FIXME: Matt's code had a - 0.5 * (lon[1] - lon[0]) here...
-        # I'm omiting it
-        ax.set_theta_offset(-90 * np.pi / 180.0)
-        # new_lon = (lon - 90.0) * np.pi / 180.0
-        new_lon = lon * np.pi / 180.0
-        new_crds = coordinate.wrap_crds("uniform_spherical",
-                                        [('lon', [new_lon[0], new_lon[-1],
-                                                  len(new_lon)]),
-                                         ('lat', [new_lat[0], new_lat[-1],
-                                                  len(new_lat)])])
-        new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
+        new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
+                                           hemisphere=hemisphere)
 
         plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
+        ax.set_theta_offset(-90 * np.pi / 180.0)
 
         if title:
             if not isinstance(title, string_types):
@@ -755,11 +736,12 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             mlt_grid_pos = (0, 45, 90, 135, 180, 225, 270, 315)
             mlt_labels = (24, 3, 6, 9, 12, 15, 18, 21)
             if not label_mlt:
-                mlt_labels = []
+                mlt_labels = ()
             ax.set_thetagrids(mlt_grid_pos, mlt_labels)
 
             abs_grid_dr = 10
             # grid_dr = abs_grid_dr * np.sign(bounding_lat)
+            absboundinglat = np.abs(bounding_lat)
             lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
             lat_labels = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
             if label_lat == "from_pole":

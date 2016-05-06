@@ -8,7 +8,7 @@ import viscid
 from viscid.coordinate import wrap_crds
 
 
-__all__ = ["as_mapfield", "as_spherefield", "pass_through",
+__all__ = ["as_mapfield", "as_spherefield", "as_polar_mapfield", "pass_through",
            "convert_coordinates", "lat2theta", "lon2phi", "mlt2phi",
            "phi2lon", "phi2mlt", "theta2lat"]
 
@@ -220,6 +220,39 @@ def as_spherefield(fld, order=('phi', 'theta'), units='none'):
     ret = convert_coordinates(fld, order, mapping)
     ret.crds.meta['units'] = units
     return ret
+
+def _polar_scale_and_offset(fld, hemisphere='north'):
+    scale = -1 if hemisphere == 'north' else 1
+    offset = np.pi / 2
+    return scale, offset
+
+def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north'):
+    hemisphere = hemisphere.strip().lower()
+    bounding_lat = (np.pi / 180.0) * bounding_lat
+    abs_bounding_lat = abs(bounding_lat)
+
+    mfld = as_mapfield(fld, order=('lon', 'lat'), units='rad')
+
+    if hemisphere == "north":
+        # mfld = mfld["lat=:{0}f:-1".format(abs_bounding_lat)]
+        mfld = mfld.loc[:, :np.pi / 2 - abs_bounding_lat:-1]
+    elif hemisphere == "south":
+        # mfld = mfld["lat=:{0}f".format(-abs_bounding_lat)]
+        mfld = mfld.loc[:, :-np.pi / 2 + abs_bounding_lat]
+
+    clist = mfld.get_clist()
+    offset = np.pi / 2
+    scale = -1 if hemisphere == 'north' else 1
+
+    if mfld.crds.is_uniform():
+        for i in range(2):
+            clist[1][1][i] = scale * clist[1][1][i] + offset
+    else:
+        clist[1][1] = scale * clist[1][1] + offset
+
+    crds = wrap_crds(mfld.crds.crdtype, clist, dtype=mfld.crds.dtype)
+    ctx = dict(crds=crds)
+    return mfld.wrap(mfld.data, context=ctx)
 
 ##
 ## EOF
