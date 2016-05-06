@@ -1245,6 +1245,56 @@ class Field(tree.Leaf):
     slice_reduce = slice_and_reduce
     slice_keep = slice_and_keep
 
+    @property
+    def loc(self):
+        """Easily slice by value (flaot), like in pandas
+
+        Eample:
+            >>> subset1 = field["13f", "14f":]
+            >>> subset2 = field.loc[13, 14.0:]
+            >>> # subset1 and subset2 should be identical
+        """
+        class FldLocProxy(object):
+            parent = None
+            def __init__(self, parent):
+                self.parent = parent
+
+            @staticmethod
+            def _floatify(item):
+                if isinstance(item, string_types):
+                    item = item.strip().lower()
+                if item in (Ellipsis, '...'):
+                    item = Ellipsis
+                elif item in (np.newaxis, ):
+                    item = np.newaxis
+                elif item in (None, 'none'):
+                    item = None
+                else:
+                    item = "{0}f".format(item)
+                return item
+
+            def _xform(self, item):
+                if not isinstance(item, tuple):
+                    item = (item, )
+                sel = []
+                for it in item:
+                    if isinstance(it, slice):
+                        start = self._floatify(it.start)
+                        stop = self._floatify(it.stop)
+                        step = it.step
+                        sel.append(slice(start, stop, step))
+                    else:
+                        sel.append(self._floatify(it))
+                return sel
+
+            def __getitem__(self, item):
+                return self.parent.__getitem__(self._xform(item))
+
+            def __setitem__(self, item, val):
+                return self.parent.__setitem__(self._xform(item), val)
+
+        return FldLocProxy(self)
+
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
         fld_dat = interp_trilin(self, seeds)
