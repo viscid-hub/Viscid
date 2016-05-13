@@ -1880,6 +1880,61 @@ class Field(tree.Leaf):
     def imag(self):
         return self.wrap(self.data.imag)
 
+    def transpose(self, *axes):
+        """ same behavior as numpy transpose, alse accessable
+        using np.transpose(fld) """
+        if len(axes) == 1 and axes[0]:
+            axes = axes[0]
+        if axes == (None, ) or len(axes) == 0:
+            axes = list(range(self.nr_dims - 1, -1, -1))
+        if len(axes) != self.nr_dims:
+            raise ValueError("transpose can not change number of axes")
+        clist = self._src_crds.get_clist()
+        caxes = list(axes)
+        if self.nr_comps:
+            caxes.remove(self.nr_comp)
+            caxes = [i - 1 if i > self.nr_comp else i for i in caxes]
+        new_clist = [clist[i] for i in caxes]
+        cunits = self._src_crds.get_units(c[0] for c in new_clist)
+        t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist,
+                                      units=cunits, **self._src_crds.meta)
+        t_data = self.data.transpose(axes)
+
+        context = dict(crds=t_crds)
+        # i think the layout should be taken care of automagically
+        return self.wrap(t_data, context=context)
+
+    def transpose_crds(self, *axes):
+        if axes == (None, ) or len(axes) == 0:
+            axes = list(range(self.nr_sdims - 1, -1, -1))
+        ax_inds = [self.crds.ind(ax) for ax in axes]
+        if self.nr_comps:
+            ax_inds = [i + 1 if i >= self.nr_comp else i for i in ax_inds]
+            ax_inds.insert(self.nr_comp, self.nr_comp)
+        return self.transpose(*ax_inds)
+
+    @property
+    def T(self):
+        return self.transpose()
+
+    @property
+    def TC(self):
+        return self.transpose_crds()
+
+    spatial_transpose = transpose_crds
+    ST = TC
+
+    def swapaxes(self, a, b):
+        axes = list(range(self.nr_dims))
+        axes[a], axes[b] = b, a
+        return self.transpose(*axes)
+
+    def swap_crd_axes(self, a, b):
+        a, b = [self.crds.ind(s) for s in (a, b)]
+        axes = list(range(self.nr_sdims))
+        axes[a], axes[b] = b, a
+        return self.transpose_crds(*axes)
+
     def astype(self, dtype):
         ret = self
         if np.dtype(dtype) != self.dtype:
@@ -1934,30 +1989,6 @@ class ScalarField(Field):
         downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist,
                                         units=cunits, **self._src_crds.meta)
         return self.wrap(downdat, {"crds": downcrds})
-
-    def transpose(self, *axes):
-        """ same behavior as numpy transpose, alse accessable
-        using np.transpose(fld) """
-        if axes == (None, ) or len(axes) == 0:
-            axes = list(range(self.nr_dims - 1, -1, -1))
-        if len(axes) != self.nr_dims:
-            raise ValueError("transpose can not change number of axes")
-        clist = self._src_crds.get_clist()
-        new_clist = [clist[ax] for ax in axes]
-        cunits = self._src_crds.get_units(c[0] for c in new_clist)
-        t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist,
-                                      units=cunits, **self._src_crds.meta)
-        t_data = self.data.transpose(axes)
-        return self.wrap(t_data, {"crds": t_crds})
-
-    def swap_axes(self, a, b):
-        new_clist = self._src_crds.get_clist()
-        new_clist[a], new_clist[b] = new_clist[b], new_clist[a]
-        cunits = self._src_crds.get_units(c[0] for c in new_clist)
-        new_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist,
-                                        units=cunits, **self._src_crds.meta)
-        new_data = self.data.swap_axes(a, b)
-        return self.wrap(new_data, {"crds": new_crds})
 
     def as_interlaced(self, force_c_contiguous=True):
         if force_c_contiguous:
