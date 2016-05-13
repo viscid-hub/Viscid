@@ -30,11 +30,8 @@ from viscid.readers import athena_bin
 from viscid.readers import athena_tab
 from viscid.readers import athena_hst
 from viscid.readers import athena_xdmf
-try:
-    from viscid.readers import ggcm_jrrle
-except ImportError:
-    if __DEBUG_IMPORT_ERRORS:
-        raise
+from viscid.readers import ggcm_jrrle
+
 
 __filebucket__ = vfile_bucket.VFileBucket()
 

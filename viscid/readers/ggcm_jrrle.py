@@ -9,8 +9,14 @@ from viscid import grid
 from viscid.readers import vfile
 from viscid.readers import openggcm
 from viscid.readers._fortfile_wrapper import FortranFile
-from viscid.readers import _jrrle
 from viscid.compat import OrderedDict
+
+try:
+    from viscid.readers import _jrrle
+except ImportError as e:
+    from viscid.verror import UnimportedModule
+    msg = "Fortran readers not available since they were not built correctly"
+    _jrrle = UnimportedModule(e, msg=msg)
 
 read_ascii = False
 
@@ -119,13 +125,13 @@ class GGCMFileJrrleIono(GGCMFileJrrleMHD):  # pylint: disable=abstract-method
 
 class JrrleFileWrapper(FortranFile):
     """Interface for actually opening / reading a jrrle file"""
-    _read_func = [_jrrle.read_jrrle1d, _jrrle.read_jrrle2d,
-                  _jrrle.read_jrrle3d]
-
     fields_seen = None
     seen_all_fields = None
 
     def __init__(self, filename):
+        self._read_func = [_jrrle.read_jrrle1d, _jrrle.read_jrrle2d,
+                           _jrrle.read_jrrle3d]
+
         self.fields_seen = OrderedDict()
         self.seen_all_fields = False
         super(JrrleFileWrapper, self).__init__(filename)
