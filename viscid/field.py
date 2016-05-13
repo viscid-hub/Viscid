@@ -1067,7 +1067,7 @@ class Field(tree.Leaf):
         # the slice will have to load the data
 
         # coord transforms are not copied on purpose
-        cunits = self._src_crds.get_units(c[0] for c in crdlst)
+        cunits = self._src_crds.get_units((c[0] for c in crdlst), allow_invalid=1)
         crds = coordinate.wrap_crds(crd_type, crdlst, units=cunits,
                                     **self._src_crds.meta)
 
@@ -1895,7 +1895,7 @@ class Field(tree.Leaf):
             caxes.remove(self.nr_comp)
             caxes = [i - 1 if i > self.nr_comp else i for i in caxes]
         new_clist = [clist[i] for i in caxes]
-        cunits = self._src_crds.get_units(c[0] for c in new_clist)
+        cunits = self._src_crds.get_units((c[0] for c in new_clist), allow_invalid=1)
         t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist,
                                       units=cunits, **self._src_crds.meta)
         t_data = self.data.transpose(axes)
@@ -1985,7 +1985,7 @@ class ScalarField(Field):
                                dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
 
         downclist = self._src_crds.get_clist(np.s_[::2])
-        cunits = self._src_crds.get_units(c[0] for c in downclist)
+        cunits = self._src_crds.get_units((c[0] for c in downclist), allow_invalid=1)
         downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist,
                                         units=cunits, **self._src_crds.meta)
         return self.wrap(downdat, {"crds": downcrds})

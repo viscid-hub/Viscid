@@ -181,8 +181,23 @@ class Coordinates(object):
         else:
             return self.axes.index(axis)
 
-    def get_units(self, axes):
-        return [self.units[self.ind(ax)] for ax in axes]
+    def _axisvalid(self, ax):
+        try:
+            self.ind(ax)
+            return True
+        except ValueError:
+            return False
+
+    def get_units(self, axes, allow_invalid=False):
+        ret = []
+        for ax in axes:
+            if self._axisvalid(ax):
+                ret.append(self.units[self.ind(ax)])
+            elif allow_invalid:
+                ret.append('')
+            else:
+                raise ValueError("{0} not in axes ({1})".format(ax, self._axes))
+        return ret
 
     def get_unit(self, axis):
         return self.get_units([axis])[0]
