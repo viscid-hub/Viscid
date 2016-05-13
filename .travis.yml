@@ -23,10 +23,10 @@ addons:
     packages:
     - gfortran
 
-cache:
-  directories:
-    - $HOME/miniconda
-    - $HOME/mycache
+# cache:
+#   directories:
+#     - $HOME/miniconda
+#     - $HOME/mycache
 
 before_install:
   ## First off, let's lint the version numbers in __init__.py and Changes.md
