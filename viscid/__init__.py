@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """A set of python modules that aid in plotting scientific data
 
 Plotting depends on matplotlib and/or mayavi and file reading uses h5py
@@ -176,6 +177,15 @@ from viscid.verror import *
 from viscid import vjson
 from viscid import vlab
 from viscid import vutil
+
+# now this is just too cute to pass up :)
+if sys.version_info[0] >= 3:
+    import numpy as np
+    # hide setting to a unicode variable name in an exec b/c otherwise
+    # this file wouldn't parse in python2x
+    exec("π = np.pi")  # pylint: disable=exec-used
+    __all__ += ["π"]
+    del np
 
 # apply settings in the rc file
 from viscid import _rc
