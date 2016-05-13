@@ -8,168 +8,171 @@ import viscid
 from viscid.coordinate import wrap_crds
 
 
-__all__ = ["as_mapfield", "as_spherefield", "as_polar_mapfield", "pass_through",
-           "convert_coordinates", "lat2theta", "lon2phi", "mlt2phi",
-           "phi2lon", "phi2mlt", "theta2lat"]
+__all__ = ["as_mapfield", "as_spherefield", "as_polar_mapfield",
+           "convert_coordinates", "lat2theta", "lon2phi",
+           "phi2lon", "theta2lat"]
 
-def _prep_units(units, fld=None):
-    if units is None:
-        units = 'none'
-    units = units.strip().lower()
-    # divine units from fld if needed
-    if units == 'none':
-        if fld is None:
-            raise ValueError("if units is none, fld must be valid")
-        units = fld.crds.meta.get('units', 'deg')
-    # clean units to be either 'deg' or 'rad'
-    if units.startswith('deg'):
-        units = 'deg'
-    elif units.startswith('rad'):
-        units = 'rad'
-    else:
-        raise ValueError()
-    return units
 
-def theta2lat(theta, units='deg'):
-    units = _prep_units(units)
-    p90 = np.pi / 2 if units == 'rad' else 90.0
-    lat = p90 - theta
+def theta2lat(theta, unit='deg'):
+    p90 = np.pi / 2 if unit == 'rad' else 90.0
+    lat = p90 - np.asarray(theta)
     if np.any(lat < -p90) or np.any(lat > p90):
         raise ValueError("Latitude is not bound between -{0} and {0}".format(p90))
     return lat
 
-def phi2lon(phi, units='deg'):
-    units = _prep_units(units)
-    p180 = np.pi if units == 'rad' else 180.0
-    lon = phi - p180
+def phi2lon(phi, unit='deg'):
+    p180 = np.pi if unit == 'rad' else 180.0
+    lon = np.asarray(phi) - p180
     if np.any(lon < -p180) or np.any(lon > p180):
         raise ValueError("Longitude is not bound between -{0} and {0}".format(p180))
     return lon
 
-def phi2mlt(phi, units='deg'):
-    units = _prep_units(units)
-    p360 = 2 * np.pi if units == 'rad' else 360.0
-    mlt = (24 / p360) * phi
-    if np.any(mlt < 0.0) or np.any(mlt > 24.0):
-        raise ValueError("MLT is not bound between 0 and 24")
-    return mlt
-
-def lat2theta(lat, units='deg', warn=True):
-    units = _prep_units(units)
-    p90 = np.pi / 2 if units == 'rad' else 90.0
-    p180 = np.pi if units == 'rad' else 180.0
-    try:
-        if warn and len(lat) >= 2 and lat[0] < lat[1]:
-            viscid.logger.warn("Spherical Fields expect the data to be "
-                               "ordered {0}..-{0} in latitude (theta: 0..{1})"
-                               "".format(p90, p180))
-    except TypeError:
-        pass
-    theta = p90 - lat
+def lat2theta(lat, unit='deg', warn=True):
+    p90 = np.pi / 2 if unit == 'rad' else 90.0
+    p180 = np.pi if unit == 'rad' else 180.0
+    theta = p90 - np.asarray(lat)
     if np.any(theta < 0.0) or np.any(theta > p180):
         raise ValueError("Theta is not bound between 0 and {0}".format(p180))
     return theta
 
-def lon2phi(lon, units='deg'):
-    units = _prep_units(units)
-    p180 = np.pi if units == 'rad' else 180.0
-    p360 = 2 * np.pi if units == 'rad' else 360.0
-    phi = lon + p180
+def lon2phi(lon, unit='deg'):
+    p180 = np.pi if unit == 'rad' else 180.0
+    p360 = 2 * np.pi if unit == 'rad' else 360.0
+    phi = np.asarray(lon) + p180
     if np.any(phi < 0.0) or np.any(phi > p360):
         raise ValueError("Phi is not bound between 0 and {0}".format(p360))
     return phi
 
-def mlt2phi(mlt, units='deg'):
-    units = _prep_units(units)
-    p360 = 2 * np.pi if units == 'rad' else 360.0
-    phi = (p360 / 24) * mlt
-    if np.any(phi < 0.0) or np.any(phi > p360):
-        raise ValueError("Phi is not bound between 0 and {0}".format(p360))
-    return phi
-
-def pass_through(x):
+def arr_noop(x, **_):
     return x
 
-def convert_coordinates(fld, order, crd_mapping):
+def fld_noop(fld, base, target, unit=''):
+    """Although this is called noop, it could do a unit transform"""
+    crd_xform = arr_noop
+    dat_xform = arr_noop
+    return _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
+
+def _prep_units(order, units='', fld=None):
+    if not isinstance(units, (list, tuple)):
+        units = [units] * len(order)
+    units += [None] * (len(units) - len(order))
+    units = ['' if u is None else u.strip() for u in units]
+    if fld is not None:
+        crds = fld.crds
+        units = [u if u else crds.get_unit(ax) for ax, u in zip(order, units)]
+    return units
+
+def _make_transform_unit_func(base_unit, target_unit):
+    if (base_unit and not target_unit) or base_unit == target_unit:
+        ret = arr_noop
+    elif target_unit and not base_unit:
+        raise ValueError("If target_unit is given, then base unit must be valid")
+    elif base_unit == 'deg' and target_unit == 'rad':
+        ret = lambda x: (np.pi / 180.0) * np.asarray(x)
+    elif base_unit == 'rad' and target_unit == 'deg':
+        ret = lambda x: (180.0 / np.pi) * np.asarray(x)
+    else:
+        raise ValueError("No transform to go {0} -> {1}".format(base_unit,
+                                                                target_unit))
+    return ret
+
+def _get_axinds(fld, ax):
+    dcrd = fld.crds.ind(ax)
+    ddat = dcrd + 1 if fld.nr_comps and fld.nr_comp < dcrd else dcrd
+    return dcrd, ddat
+
+def _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform):
+    dcrd, _ = _get_axinds(fld, base)
+
+    unit_xform = _make_transform_unit_func(fld.crds.get_unit(base), unit)
+    if not unit:
+        unit = fld.crds.get_unit(base)
+
+    xforms = (unit_xform, crd_xform, dat_xform)
+    if base == target and all(f is arr_noop for f in xforms):
+        return fld
+    else:
+        clist = fld.get_clist()
+        clist[dcrd][0] = target
+        if fld.crds.is_uniform():
+            clist[dcrd][1][:2] = crd_xform(unit_xform(clist[dcrd][1][:2]))
+        else:
+            clist[dcrd][1] = crd_xform(unit_xform(clist[dcrd][1]))
+
+        units = list(fld.crds.units)
+        units[dcrd] = unit
+        crds = wrap_crds(fld.crds.crdtype, clist, dtype=fld.crds.dtype,
+                         units=units)
+        ctx = dict(crds=crds)
+        return fld.wrap(dat_xform(fld.data), context=ctx)
+
+def fld_phi2lon(fld, base='phi', target='lon', unit='deg'):
+    # FIXME: shouldn't be a noop
+    return fld_noop(fld, base=base, target=target, unit=unit)
+
+def fld_theta2lat(fld, base='theta', target='lat', unit='deg'):
+    _, ddat = _get_axinds(fld, base)
+    crd_xform = lambda x: theta2lat(x, unit=unit)[::-1]
+    dslc = [slice(None)] * fld.nr_dims
+    dslc[ddat] = slice(None, None, -1)
+    dat_xform = lambda a: a[dslc]
+    return _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
+
+def fld_lon2phi(fld, base='lon', target='phi', unit='deg'):
+    # FIXME: shouldn't be a noop
+    return fld_noop(fld, base=base, target=target, unit=unit)
+
+def fld_lat2theta(fld, base='lat', target='theta', unit='deg'):
+    dcrd, ddat = _get_axinds(fld, base)
+    crd_xform = lambda x: lat2theta(x, unit=unit)[::-1]
+    dslc = [slice(None)] * fld.nr_dims
+    dslc[ddat] = slice(None, None, -1)
+    dat_xform = lambda a: a[dslc]
+    ret = _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
+    if ret.xh[dcrd] - ret.xl[dcrd] < 0:
+        p90 = np.pi / 2 if unit == 'rad' else 90.0
+        p180 = np.pi if unit == 'rad' else 180.0
+        viscid.logger.warn("Spherical Fields expect the data to be "
+                           "ordered {0}..-{0} in latitude (theta: 0..{1})"
+                           "".format(p90, p180))
+    return ret
+
+def convert_coordinates(fld, order, crd_mapping, units=''):
     base_axes = fld.crds.axes
 
     # select the bases in crd_mapping that match the axes in fld.crds
+    # _mapping is like {'t': {base: 't', base2target: fld_noop},
+    #                   'lon': {base: 'phi', base2aslas: fld_phi2lon},
+    #                   'lat': {base: 'theta', base2aslas: fld_theta2lat}}
+    # where the keys are the aliases (target crds), and the bases are the
+    # crds that actuall exist in fld, unlike crd_mapping which contains many
+    # bases for each target as a possible transformation
     _mapping = {}
-    for target, base_info in crd_mapping.items():
-        for base, info in base_info.items():
+    for target, available_bases in crd_mapping.items():
+        for base, transform_func in available_bases.items():
             if base in base_axes:
-                info = dict(info)
-                info['base'] = base
-                _mapping[target] = info
+                _mapping[target] = dict(base=base, base2target=transform_func)
                 break
         if not target in _mapping:
-            raise RuntimeError("no mapping found to go {0} -> {1}"
-                               "".format(base_axes, target))
-
-    bases_reordered = [_mapping[ax]['base'] for ax in order]
-    transform = [_mapping[ax]['base2alias'] for ax in order]
-    reverse = [_mapping[ax]['reverse'] for ax in order]
-
-    all_pass_through = all(x == pass_through for x in transform)
-
-    if all_pass_through and list(base_axes) == list(order):
-        ret = fld
-    else:
-        dat_transpose = [base_axes.index(_mapping[ax]['base']) for ax in order]
-        fwd, bkwd = slice(None), slice(None, None, -1)
-        dat_slice = [bkwd if rev else fwd for rev in reverse]
-
-        # for fields with vector components, the slice / transpose were just
-        # done using the coordinates... so adjust the values to include the
-        # component dimension
-        if fld.nr_comps:
-            for i, _ in enumerate(dat_transpose):
-                if dat_transpose[i] >= fld.nr_comp:
-                    dat_transpose[i] += 1
-            dat_transpose.insert(fld.nr_comp, fld.nr_comp)
-            dat_slice.insert(slice(None), fld.nr_comp)
-
-        # change the coordinates
-        uniform = fld.crds.is_uniform()
-        clist = fld.crds.get_clist(axes=bases_reordered)
-
-        for i, c in enumerate(clist):
-            c[0] = order[i]
-            if uniform:
-                c[1][0] = transform[i](c[1][0])
-                c[1][1] = transform[i](c[1][1])
-                if reverse[i]:
-                    c[1][0], c[1][1] = c[1][1], c[1][0]
+            if target in order:
+                _mapping[target] = dict(base=target, base2target=fld_noop)
             else:
-                c[1] = transform[i](c[1])
-                if reverse[i]:
-                    c[1] = c[1][::-1]
+                raise RuntimeError("no mapping found to go {0} -> {1}"
+                                   "".format(base_axes, target))
 
-        crds = wrap_crds(fld.crds.crdtype, clist, dtype=fld.crds.dtype)
+    bases_target_order = [_mapping[ax]['base'] for ax in order]
+    transforms = [_mapping[ax]['base2target'] for ax in order]
+    units = _prep_units(order, units=units)
 
-        # adjust the data
-        dat = fld.data
-        if list(dat_transpose) != list(range(len(dat_transpose))):
-            dat = np.transpose(fld.data, axes=dat_transpose)
+    ret = fld
+    for base, target, transform, unit in zip(bases_target_order, order, transforms, units):
+        ret = transform(ret, base=base, target=target, unit=unit)
 
-        ctx = dict(crds=crds)
-        ret = fld.wrap(dat, context=ctx)
+    if list(order) != list(ret.crds.axes):
+        ret = ret.spatial_transpose(*order)
     return ret
 
-def _make_unit_xform(fld, units):
-    units = _prep_units(units, fld=fld)
-    crd_units = _prep_units(fld.crds.meta.get("units", 'none'), fld=fld)
-    if units == crd_units:
-        pre_xform = pass_through
-    elif crd_units == 'rad' and units == 'deg':
-        pre_xform = lambda x: (180.0 / np.pi) * x
-    elif crd_units == 'deg' and units == 'rad':
-        pre_xform = lambda x: (np.pi / 180.0) * x
-    else:
-        raise ValueError()
-    return pre_xform
-
-def as_mapfield(fld, order=('lon', 'lat'), units='none'):
+def as_mapfield(fld, order=('lon', 'lat'), units=''):
     """Make sure a field has (lon, lat) coordinates
 
     Args:
@@ -181,21 +184,13 @@ def as_mapfield(fld, order=('lon', 'lat'), units='none'):
         Viscid.Field: a field with (lon, lat) coordinates. The data
         will be loaded into memory if not already.
     """
-    units = _prep_units(units, fld=fld)
-    pre_xform = _make_unit_xform(fld, units)
-    _phi2lon = lambda arr: phi2lon(pre_xform(arr), units=units)
-    _theta2lat = lambda arr: theta2lat(pre_xform(arr), units=units)
+    mapping = dict(lon={'phi': fld_phi2lon, 'lon': fld_noop},
+                   lat={'theta': fld_theta2lat, 'lat': fld_noop})
 
-    mapping = dict(lon={'phi': dict(base2alias=_phi2lon, reverse=False),
-                        'lon': dict(base2alias=pre_xform, reverse=False)},
-                   lat={'theta': dict(base2alias=_theta2lat, reverse=True),
-                        'lat': dict(base2alias=pre_xform, reverse=False)})
-
-    ret = convert_coordinates(fld, order, mapping)
-    ret.crds.meta['units'] = units
+    ret = convert_coordinates(fld, order, mapping, units=units)
     return ret
 
-def as_spherefield(fld, order=('phi', 'theta'), units='none'):
+def as_spherefield(fld, order=('phi', 'theta'), units=''):
     """Make sure fld has (phi, theta) coordinates
 
     Args:
@@ -207,24 +202,10 @@ def as_spherefield(fld, order=('phi', 'theta'), units='none'):
         Viscid.Field: a field with (phi, theta) coordinates. The data
         will be loaded into memory if not already.
     """
-    units = _prep_units(units, fld=fld)
-    pre_xform = _make_unit_xform(fld, units)
-    _lon2phi = lambda arr: lon2phi(pre_xform(arr), units=units)
-    _lat2theta = lambda arr: lat2theta(pre_xform(arr), units=units)
-
-    mapping = dict(phi={'lon': dict(base2alias=_lon2phi, reverse=False),
-                        'phi': dict(base2alias=pre_xform, reverse=False)},
-                   theta={'lat': dict(base2alias=_lat2theta, reverse=True),
-                          'theta': dict(base2alias=pre_xform, reverse=False)})
-
-    ret = convert_coordinates(fld, order, mapping)
-    ret.crds.meta['units'] = units
+    mapping = dict(phi={'lon': fld_lon2phi, 'phi': fld_noop},
+                   theta={'lat': fld_lat2theta, 'theta': fld_noop})
+    ret = convert_coordinates(fld, order, mapping, units=units)
     return ret
-
-def _polar_scale_and_offset(fld, hemisphere='north'):
-    scale = -1 if hemisphere == 'north' else 1
-    offset = np.pi / 2
-    return scale, offset
 
 def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north'):
     hemisphere = hemisphere.strip().lower()

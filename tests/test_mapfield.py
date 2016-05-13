@@ -42,7 +42,7 @@ def main():
     assert_similar(fac_sphere_mf_rad_rad, fac_mf_rad)
 
     fac_mf_T = viscid.as_mapfield(fac, order=('lat', 'lon'))
-    assert_similar(fac_mf_T, fac_mf.transpose())
+    assert_similar(fac_mf_T, fac_mf.T)
 
 if __name__ == "__main__":
     main()
