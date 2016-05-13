@@ -99,12 +99,21 @@ def assert_similar(a, b, crd_rtol=1e-5, crd_atol=1e-8, dat_rtol=1e-5,
 
     for i, ac, bc in zip(range(len(a_crds)), a_crds, b_crds):
         if not np.allclose(ac, bc, rtol=crd_rtol, atol=crd_atol):
+            viscid.logger.error("a[{0}]: {1}".format(a.crds.axes[i], ac))
+            viscid.logger.error("b[{0}]: {1}".format(b.crds.axes[i], bc))
             raise RuntimeError("crds '{0}'/'{1}' are not allclose"
                                "".format(a.crds.axes[i], b.crds.axes[i]))
 
     if not np.allclose(a.data, b.data, rtol=dat_rtol, atol=dat_atol):
         raise RuntimeError("data are not allclose")
+    return None
 
+def assert_different(a, b, dat_rtol=1e-5, dat_atol=1e-8):
+    try:
+        if np.allclose(a.data, b.data, rtol=dat_rtol, atol=dat_atol):
+            raise RuntimeError("data are allclose")
+    except ValueError:
+        pass
     return None
 
 def xfail(msg):
