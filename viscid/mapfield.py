@@ -81,7 +81,7 @@ def _get_axinds(fld, ax):
     ddat = dcrd + 1 if fld.nr_comps and fld.nr_comp < dcrd else dcrd
     return dcrd, ddat
 
-def _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform):
+def _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform, raw=False):
     dcrd, _ = _get_axinds(fld, base)
 
     unit_xform = _make_transform_unit_func(fld.crds.get_unit(base), unit)
@@ -94,7 +94,7 @@ def _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform):
     else:
         clist = fld.get_clist()
         clist[dcrd][0] = target
-        if fld.crds.is_uniform():
+        if fld.crds.is_uniform() and not raw:
             clist[dcrd][1][:2] = crd_xform(unit_xform(clist[dcrd][1][:2]))
         else:
             clist[dcrd][1] = crd_xform(unit_xform(clist[dcrd][1]))
@@ -107,7 +107,8 @@ def _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform):
         return fld.wrap(dat_xform(fld.data), context=ctx)
 
 def fld_phi2lon(fld, base='phi', target='lon', unit='deg'):
-    # FIXME: shouldn't be a noop
+    # FIXME: shouldn't be a noop, but longitude is a stupid unit on account
+    # of that bizarre -180 == +180 seam
     return fld_noop(fld, base=base, target=target, unit=unit)
 
 def fld_theta2lat(fld, base='theta', target='lat', unit='deg'):
@@ -119,7 +120,8 @@ def fld_theta2lat(fld, base='theta', target='lat', unit='deg'):
     return _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
 
 def fld_lon2phi(fld, base='lon', target='phi', unit='deg'):
-    # FIXME: shouldn't be a noop
+    # FIXME: shouldn't be a noop, but longitude is a stupid unit on account
+    # of that bizarre -180 == +180 seam
     return fld_noop(fld, base=base, target=target, unit=unit)
 
 def fld_lat2theta(fld, base='lat', target='theta', unit='deg'):
