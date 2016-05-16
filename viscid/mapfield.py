@@ -9,8 +9,8 @@ from viscid.coordinate import wrap_crds
 
 
 __all__ = ["as_mapfield", "as_spherefield", "as_polar_mapfield",
-           "convert_coordinates", "lat2theta", "lon2phi",
-           "phi2lon", "theta2lat"]
+           "pts2polar_mapfield", "convert_coordinates",
+           "lat2theta", "lon2phi", "phi2lon", "theta2lat"]
 
 
 def theta2lat(theta, unit='deg'):
@@ -20,14 +20,10 @@ def theta2lat(theta, unit='deg'):
         raise ValueError("Latitude is not bound between -{0} and {0}".format(p90))
     return lat
 
-def phi2lon(phi, unit='deg'):
-    p180 = np.pi if unit == 'rad' else 180.0
-    lon = np.asarray(phi) - p180
-    if np.any(lon < -p180) or np.any(lon > p180):
-        raise ValueError("Longitude is not bound between -{0} and {0}".format(p180))
-    return lon
+def phi2lon(phi, unit='deg'):  # pylint: disable=unused-argument
+    return phi
 
-def lat2theta(lat, unit='deg', warn=True):
+def lat2theta(lat, unit='deg'):
     p90 = np.pi / 2 if unit == 'rad' else 90.0
     p180 = np.pi if unit == 'rad' else 180.0
     theta = p90 - np.asarray(lat)
@@ -35,13 +31,8 @@ def lat2theta(lat, unit='deg', warn=True):
         raise ValueError("Theta is not bound between 0 and {0}".format(p180))
     return theta
 
-def lon2phi(lon, unit='deg'):
-    p180 = np.pi if unit == 'rad' else 180.0
-    p360 = 2 * np.pi if unit == 'rad' else 360.0
-    phi = np.asarray(lon) + p180
-    if np.any(phi < 0.0) or np.any(phi > p360):
-        raise ValueError("Phi is not bound between 0 and {0}".format(p360))
-    return phi
+def lon2phi(lon, unit='deg'):  # pylint: disable=unused-argument
+    return lon
 
 def arr_noop(x, **_):
     return x
@@ -178,9 +169,9 @@ def as_mapfield(fld, order=('lon', 'lat'), units=''):
     """Make sure a field has (lon, lat) coordinates
 
     Args:
-        fld (TYPE): Description
-        order (tuple, optional): Description
-        radians (bool, optional): Description
+        fld (Field): some field to transform
+        order (tuple, optional): Desired axes of the result
+        units (str, optional): units of the result (deg/rad)
 
     Returns:
         Viscid.Field: a field with (lon, lat) coordinates. The data
@@ -195,13 +186,12 @@ def as_mapfield(fld, order=('lon', 'lat'), units=''):
 def as_spherefield(fld, order=('phi', 'theta'), units=''):
     """Make sure fld has (phi, theta) coordinates
 
-    Args:
-        fld (TYPE): Description
-        order (tuple, optional): Description
-        radians (bool, optional): Description
+        fld (Field): some field to transform
+        order (tuple, optional): Desired axes of the result
+        units (str, optional): units of the result (deg/rad)
 
     Returns:
-        Viscid.Field: a field with (phi, theta) coordinates. The data
+        Viscid.Field: a field with (lon, lat) coordinates. The data
         will be loaded into memory if not already.
     """
     mapping = dict(phi={'lon': fld_lon2phi, 'phi': fld_noop},
@@ -210,6 +200,21 @@ def as_spherefield(fld, order=('phi', 'theta'), units=''):
     return ret
 
 def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north'):
+    """Prepare a theta/phi or lat/lon field for polar projection
+
+    Args:
+        fld (Field): Some scalar or vector field
+        bounding_lat (float, optional): Used to slice the field, i.e.,
+            gives data from the pole to bounding_lat degrees
+            equator-ward of the pole
+        hemisphere (str, optional): 'north' or 'south'
+
+    Returns:
+        Field: a field that can be mapfield plotted on polar axes
+
+    Raises:
+        ValueError: on bad hemisphere
+    """
     hemisphere = hemisphere.strip().lower()
     bounding_lat = (np.pi / 180.0) * bounding_lat
     abs_bounding_lat = abs(bounding_lat)
@@ -222,6 +227,8 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north'):
     elif hemisphere == "south":
         # mfld = mfld["lat=:{0}f".format(-abs_bounding_lat)]
         mfld = mfld.loc[:, :-np.pi / 2 + abs_bounding_lat]
+    else:
+        raise ValueError("hemisphere should be either north or south")
 
     clist = mfld.get_clist()
     offset = np.pi / 2
@@ -236,6 +243,78 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north'):
     crds = wrap_crds(mfld.crds.crdtype, clist, dtype=mfld.crds.dtype)
     ctx = dict(crds=crds)
     return mfld.wrap(mfld.data, context=ctx)
+
+def pts2polar_mapfield(pts, pts_axes, pts_unit='deg', hemisphere='north'):
+    """Prepare theta/phi or lat/lon points for a polar plot
+
+    Args:
+        pts (ndarray): A 2xN array of N points where the spatial
+            dimensions encode phi, theta, lat, or lon.
+        pts_axes (sequence): sequence of strings that say what each
+            axis of pts encodes, i.e., ('theta', 'phi').
+        pts_unit (str, optional): units of pts ('deg' or 'rad')
+        hemisphere (str, optional): 'north' or 'south'
+
+    Returns:
+        ndarray: 2xN array of N points in radians where the axes
+        are ('lon', 'lat'), such that they can be given straight to
+        matplotlib.pyplot.plot()
+
+    Raises:
+        ValueError: On bad pts_axes
+
+    Example:
+        This example plots total field align currents in the northern
+        hemisphere, then plots a curve onto the same plot
+
+        >>> f = viscid.load_file("$SRC/Viscid/sample/*_xdmf.iof.*.xdmf")
+        >>> mpl.plot(1e9 * f['fac_tot'], symmetric=True)
+        >>> # now make a curve from dawn to dusk spanning 20deg in lat
+        >>> N = 64
+        >>> pts = np.vstack([np.linspace(-90, 90, N),
+                             np.linspace(10, 30, N)])
+        >>> pts_polar = viscid.pts2polar_mapfield(pts, ('phi', 'theta'),
+                                                  pts_unit='deg')
+        >>> mpl.plt.plot(pts_polar[0], pts_polar[1])
+        >>> mpl.show()
+
+    """
+    hemisphere = hemisphere.strip().lower()
+
+    pts = np.array(pts)
+    pts_axes = list(pts_axes)
+
+    # convert pts to lat/lon
+    if pts_unit == 'deg':
+        _to_rad = lambda x: (np.pi / 180.0) * np.asarray(x)
+    elif pts_unit == 'rad':
+        _to_rad = lambda x: x
+    else:
+        raise ValueError("bad unit: {0}".format(pts_unit))
+
+    mapping = {'phi': ('lon', phi2lon), 'theta': ('lat', theta2lat)}
+
+    for i, ax in enumerate(pts_axes):
+        if ax in mapping:
+            pts[i, :] = mapping[ax][1](_to_rad(pts[i, :]), unit='rad')
+            pts_axes[i] = mapping[ax][0]
+        else:
+            pts[i, :] = _to_rad(pts[i, :])
+
+    # reorder axes so pts[0, :] are lon and pts[1, :] are lat
+    try:
+        transpose_inds = [pts_axes.index(ax) for ax in ('lon', 'lat')]
+        pts = pts[transpose_inds, :]
+    except ValueError:
+        raise ValueError("pts array must have both lon+lat or phi+theta")
+
+    # clist = mfld.get_clist()
+    offset = np.pi / 2
+    scale = -1 if hemisphere == 'north' else 1
+
+    pts[1, :] = scale * pts[1, :] + offset
+
+    return pts
 
 ##
 ## EOF
