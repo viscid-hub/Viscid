@@ -4,7 +4,13 @@ Changes
 0.96.2 dev
 ==========
 
+Changes:
+  - Added Field.loc[...] for pandas-like slice by location
+  - add 'viscid.as_mapfield', 'viscid.as_spherefield', 'as_polar_mapfield', and 'pts2polar_mapfield' for converting between different representations for spherical fields (theta/phi <-> lat/lon)
+  - Viscid-colorblind defaults to viridis cmap
 
+Backward Incompatible Changes:
+  - Spherical coordinates now use theta/phi or lat/lon always as axis names
 
 0.96.1
 ======
