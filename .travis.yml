@@ -1,3 +1,4 @@
+
 language: generic
 
 env:
@@ -56,18 +57,25 @@ before_install:
      fi'
 
   ## Now setup the Anaconda tools
-  - 'if [ ! -f "$HOME/miniconda/bin/conda" ]; then
-       wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-       rm -rf $HOME/miniconda;
-       bash ./miniconda.sh -b -p $HOME/miniconda;
+  # it saves some download time to use the same python iff 2.7
+  - 'if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+       export CONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh";
+     else
+       export CONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh";
      fi'
-  - 'if [ ! -d "${HOME}/mycache" ]; then
-       mkdir ${HOME}/mycache;
+  # linux has wget, OS X has curl... such is life
+  - 'if [[ "$(which wget &>/dev/null && echo $?)" == "0" ]]; then
+       wget "${CONDA_URL}" -O miniconda.sh;
+     else
+       curl "${CONDA_URL}" > miniconda.sh;
      fi'
+  - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
+  # Useful for debugging any issues with conda
+  - conda info -a
 
   ## Now setup some Viscid specific things, like rc files and make sure
   ## we have a virtual frame buffer
@@ -78,21 +86,23 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 install:
-  - 'export envname="testenv-${PYTHON}-${DEPS}"'
-  - 'export envpath="$HOME/miniconda/envs/${envname}"'
-  - 'export pkg_list="tests/resources/conda_${PYTHON}_${DEPS}.txt"'
-  - 'export cached_pkg_list="${HOME}/mycache/conda_${PYTHON}_${DEPS}.txt"'
-  - 'export prefix="${HOME}/inst/${envname}"'
+  - mkdir -p ${HOME}/mycache
+  - 'export env_name="viscid_${PYTHON}_${DEPS}"'
+  - 'export envpath="$HOME/miniconda/envs/${env_name}"'
+  - 'export env_spec="tests/resources/${env_name}.yml"'
+  - 'export cached_env_spec="${HOME}/mycache/${env_name}.yml"'
+  - 'export prefix="${HOME}/inst/${env_name}"'
 
-  - ls ../Viscid/${pkg_list}
+  - ls ../Viscid/${env_spec}
+  - ls $HOME/miniconda/envs
 
   # if conda package list doesn't match the cached one, just blast
   # the cached conda environment
-  - 'if [ -f ${cached_pkg_list} ]; then
-       if [ "$(diff -qw ${pkg_list} ${cached_pkg_list})" != "" ]; then
+  - 'if [ -f ${cached_env_spec} ]; then
+       if [ "$(diff -qw ${env_spec} ${cached_env_spec})" != "" ]; then
          echo "Package Lists Differed, killing current venv";
-         echo "$(diff -w ${pkg_list} ${cached_pkg_list})";
-         rm ${cached_pkg_list};
+         echo "$(diff -w ${env_spec} ${cached_env_spec})";
+         rm ${cached_env_spec};
          rm -rf ${envpath};
        fi
      fi'
@@ -100,31 +110,12 @@ install:
   # if the conda envronment we need isn't cached, create it, otherwise
   # do an update
   - 'if [ ! -d "${envpath}" ]; then
-       conda create -q -n ${envname} python=${PYTHON};
-       source activate ${envname};
-       conda install --yes --file ${pkg_list};
-       echo "The following line is a hack since matplotlib 1.5 will not";
-       echo "install at the same time as mayavi due to numpy versions";
-       if [ $(conda list | grep -E ''matplotlib\s*1\.4'' &> /dev/null; echo $?) -eq 0 ]; then
-         if [ $(conda list | grep mayavi &> /dev/null; echo $?) -eq 0 ]; then
-           conda remove --yes mayavi;
-           conda install --yes ''matplotlib >=1.5'';
-           conda install --yes -c https://conda.anaconda.org/menpo mayavi pyside;
-         fi;
-       fi;
-       cp ${pkg_list} ${cached_pkg_list};
+       conda env create -f ${env_spec};
+       source activate ${env_name};
+       cp ${env_spec} ${cached_env_spec};
      else
-       source activate ${envname};
-       conda update --all --yes --file ${pkg_list};
-       echo "The following line is a hack since matplotlib 1.5 will not";
-       echo "install at the same time as mayavi due to numpy versions";
-       if [ $(conda list | grep -E ''matplotlib\s*1\.4'' &> /dev/null; echo $?) -eq 0 ]; then
-         if [ $(conda list | grep mayavi &> /dev/null; echo $?) -eq 0 ]; then
-           conda remove --yes mayavi;
-           conda install --yes ''matplotlib >=1.5'';
-           conda install --yes -c https://conda.anaconda.org/menpo mayavi pyside;
-         fi;
-       fi;
+       source activate ${env_name};
+       conda update --all --yes;
      fi'
 
   # if deplying docs, run tests inplace, this makes preparing the docs

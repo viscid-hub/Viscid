@@ -1,0 +1,21 @@
+name: viscid_2.7_full
+channels:
+- menpo
+- defaults
+dependencies:
+- python=2.7
+- numpy>=1.9
+- scipy
+- h5py
+- matplotlib>=1.5
+- cython>0.17
+- numexpr
+- numba
+- pyyaml
+- mayavi
+- pyside
+- flake8
+- sphinx
+- sphinx_rtd_theme
+- ipython
+- jupyter

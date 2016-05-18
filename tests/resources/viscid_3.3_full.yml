@@ -1,0 +1,19 @@
+name: viscid_3.3_full
+channels:
+- defaults
+dependencies:
+- python=3.3
+- numpy>=1.9.0
+- scipy
+- h5py
+- matplotlib>=1.4.0
+- cython>0.17
+- numexpr
+- numba
+- pyyaml
+- pyqt
+- flake8
+- sphinx
+- sphinx_rtd_theme
+- ipython
+- ipython-notebook

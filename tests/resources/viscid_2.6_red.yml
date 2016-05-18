@@ -1,0 +1,10 @@
+name: viscid_2.6_red
+channels:
+- defaults
+dependencies:
+- python=2.6
+- argparse
+- numpy=1.9.2
+- h5py
+- matplotlib=1.4.3
+- flake8
