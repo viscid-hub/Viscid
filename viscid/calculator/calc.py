@@ -355,7 +355,7 @@ def local_vector_points(B, x, y, z, dx=None, dy=None, dz=None):
         pts[2 * i + 1, i] += dcrd[i]
         pts[2 * i + 0, i] -= dcrd[i]
     bs = cycalc.interp_trilin(B, seed.Point(pts))
-    # import code; code.interact("in local_vector_points", local=locals())
+    # viscid.interact(banner="in local_vector_points")
     return bs, pts, dcrd
 
 def jacobian_at_point(B, x, y, z, dx=None, dy=None, dz=None):
