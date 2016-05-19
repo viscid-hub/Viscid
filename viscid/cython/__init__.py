@@ -73,10 +73,11 @@ try:
                 raise RuntimeError(streamline_attrs_err_msg)
     _check_streamline_attrs()
 
-except ImportError:
-    cython_msg = ("Cython module calculator.{0} not available. Cython code "
-                  "must be built using Viscid/setup.py (Note: Cython is "
-                  "not required for the build, just a c compiler)")
+except ImportError as e:
+    cython_msg = ("Cython module calculator.{0} not available. Cython code \n"
+                  "must be rebuilt using Viscid/setup.py (Note: Cython is "
+                  "not required for the build,\njust a c compiler)\n\n"
+                  "ImportError:\n" + str(e).strip())
 
     def interp(*args, **kwargs):  # pylint: disable=unused-argument
         raise CythonNotBuilt(cython_msg.format("interp"))
