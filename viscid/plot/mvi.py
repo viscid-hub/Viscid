@@ -1062,6 +1062,52 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
 
     return day, night
 
+def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
+           fit=None, **kwargs):
+    """Display a mayavi figure inline in an ipython notebook.
+
+    This function takes a screenshot of a figure and blits it to a matplotlib
+    figure using matplotlib.pyplot.imshow()
+
+    Args:
+        figure: A mayavi figure, if not specified, uses mlab.gcf()
+        ax: Matplotlib axis of the destination (plt.gca() if None)
+        size (None, tuple): if given, resize the scene in pixels (x, y)
+        antialiased (bool): Antialias mayavi plot
+        hide (bool): if True, try to hide the render window
+        fit (None, bool): Resize mpl window to fit image exactly. If
+            None, then fit if figure does not currently exist.
+        **kwargs: passed to mayavi.mlab.screenshot()
+    """
+    if figure is None:
+        figure = mlab.gcf()
+
+    if size is not None:
+        resize(size, figure=figure)
+
+    pixmap = mlab.screenshot(figure, antialiased=antialiased, **kwargs)
+
+    # try to hide the window... Qt backend only
+    if hide:
+        hide_window(figure)
+
+    if ax is None:
+        from matplotlib import pyplot as plt
+        # if there are no figures, and fit is None, then fit
+        if fit is None:
+            fit = not bool(plt.get_fignums)
+        ax = plt.gca()
+
+    if fit:
+        pltfig = ax.figure
+        dpi = pltfig.get_dpi()
+        pltfig.set_size_inches([s / dpi for s in figure.scene.get_size()],
+                               forward=True)
+        pltfig.subplots_adjust(top=1, bottom=0, left=0, right=1,
+                               hspace=0, wspace=0)
+    ax.imshow(pixmap)
+    ax.axis('off')
+
 def show(stop=False):
     """Calls :meth:`mayavi.mlab.show(stop=stop)`"""
     mlab.show(stop=stop)
@@ -1177,6 +1223,15 @@ def resize(size, figure=None):
 
     except Exception as e:  # pylint: disable=broad-except
         viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
+
+def hide_window(figure, debug=False):
+    """Try to hide the window; only does something on Qt backend"""
+    try:
+        # fig.scene.control.parent().hide()
+        figure.scene.control.parent().showMinimized()
+    except Exception as e:  # pylint: disable=broad-except,unused-variable
+        if debug:
+            print("Window hide didn't work::", repr(e))
 
 def savefig(*args, **kwargs):
     """Wrap mayavi.mlab.savefig with offscreen hack"""
