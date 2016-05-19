@@ -1190,40 +1190,8 @@ def savefig(*args, **kwargs):
     if fig.scene.off_screen_rendering != prev_offscreen_state:
         fig.scene.off_screen_rendering = prev_offscreen_state
 
-def interact(ipython=True, stack_depth=0, global_ns=None, local_ns=None,
-             include_mvi_ns=True, include_viscid_ns=True):
-    """Start an interactive interpreter"""
-    banner = """Have some fun with mayavi :)
-    - use locals() to explore the namespace
-    - show(stop=True) or show() to interact with the plot/gui
-    - mayavi objects all have a trait_names() method
-    - Use Ctrl-D (eof) to end interaction"""
-
-    ns = dict()
-    if include_viscid_ns:
-        ns.update(dict([(name, getattr(viscid, name)) for name in dir(viscid)]))
-    if include_mvi_ns:
-        ns.update(globals())
-
-    call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
-
-    if global_ns is None:
-        global_ns = call_frame.f_globals
-    ns.update(global_ns)
-
-    if local_ns is None:
-        local_ns = call_frame.f_locals
-    ns.update(local_ns)
-
-    try:
-        if not ipython:
-            raise ImportError
-        from IPython import embed
-        embed(user_ns=ns, banner1=banner)
-    except ImportError:
-        import code
-        code.interact(banner, local=ns)
-    print("Resuming Script")
+def interact(stack_depth=0, **kwargs):
+    viscid.vlab.interact(stack_depth=stack_depth + 1, mvi_ns=True, **kwargs)
 
 ##
 ## EOF

@@ -30,14 +30,33 @@ __all__ = ['interact', 'get_dipole', 'get_trilinear_field', 'multiplot',
            'follow_fluid', 'follow_fluid_generic']
 
 
-def interact(ipython=True, stack_depth=0, global_ns=None, local_ns=None,
-             include_viscid_ns=True):
+def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
+             local_ns=None, viscid_ns=True, mpl_ns=False, mvi_ns=False):
     """Start an interactive interpreter"""
-    banner = "Interactive Viscid, use Ctrl-D (eof) to end interaction."
+    if banner is None:
+        banner = "Interactive Viscid..."
+        if mpl_ns:
+            banner += "\n  - Viscid's matplotlib interface available as `mpl`"
+        if mvi_ns:
+            banner += "\n  - Viscid's mayavi interface available as `mvi`"
+            banner += "\n  - Use mvi.show(...) to interact with Mayavi"
+            banner += "\n  - FYI, all Mayavi objects all have trait_names()"
+        banner += "\n  - Use Ctrl-D (eof) to end interaction"
+
+    def _merge_ns(src, target):
+        target.update(dict([(name, getattr(src, name)) for name in dir(src)]))
+        target[src.__name__.split('.')[-1]] = src
 
     ns = dict()
-    if include_viscid_ns:
-        ns.update(globals())
+
+    if viscid_ns:
+        _merge_ns(viscid, ns)
+    if mpl_ns:
+        from viscid.plot import mpl
+        _merge_ns(mpl, ns)
+    if mvi_ns:
+        from viscid.plot import mvi
+        _merge_ns(mvi, ns)
 
     call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
 
