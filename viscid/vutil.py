@@ -23,7 +23,12 @@ from viscid.compat import izip, string_types
 import numpy as np
 
 
+__all__ = ["timeit", "format_datetime", "format_time", "asarray_dt",
+           "slice_globbed_filenames", "meshlab_convert"]
+
+
 tree_prefix = ".   "
+
 
 def find_field(vfile, fld_name_lst):
     """ convenience function to get a field that could be called many things

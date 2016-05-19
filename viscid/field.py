@@ -28,6 +28,11 @@ LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
 
+__all__ = ['arrays2field', 'dat2field', 'empty', 'zeros', 'ones',
+           'empty_like', 'zeros_like', 'ones_like', 'scalar_fields_to_vector',
+           'wrap_field']
+
+
 def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
                  crd_names="xyzuvw"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.

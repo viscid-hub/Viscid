@@ -10,6 +10,9 @@ import viscid
 from viscid.cython import streamline
 
 
+__all__ = ['topology2color', 'color_map_msphere', 'color_map_generic',
+           'color_map']
+
 # TOPOLOGY_MS_INVALID = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15]
 # TOPOLOGY_G_NONE = 0
 

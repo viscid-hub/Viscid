@@ -1,5 +1,6 @@
 from __future__ import print_function
 import itertools
+import sys
 
 import numpy as np
 try:
@@ -23,6 +24,40 @@ try:
     from viscid.calculator import streamline
 except ImportError:
     pass
+
+
+__all__ = ['interact', 'get_dipole', 'get_trilinear_field', 'multiplot',
+           'follow_fluid', 'follow_fluid_generic']
+
+
+def interact(ipython=True, stack_depth=0, global_ns=None, local_ns=None,
+             include_viscid_ns=True):
+    """Start an interactive interpreter"""
+    banner = "Interactive Viscid, use Ctrl-D (eof) to end interaction."
+
+    ns = dict()
+    if include_viscid_ns:
+        ns.update(globals())
+
+    call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
+
+    if global_ns is None:
+        global_ns = call_frame.f_globals
+    ns.update(global_ns)
+
+    if local_ns is None:
+        local_ns = call_frame.f_locals
+    ns.update(local_ns)
+
+    try:
+        if not ipython:
+            raise ImportError
+        from IPython import embed
+        embed(user_ns=ns, banner1=banner)
+    except ImportError:
+        import code
+        code.interact(banner, local=ns)
+    print("Resuming Script")
 
 def get_dipole(m=None, l=None, h=None, n=None, twod=False, dtype='f8',
                nonuniform=False):

@@ -1,4 +1,4 @@
-""" docstring for readers """
+"""Package for the various data readers"""
 
 # To add a new file type, subclass VFile and import the module here.
 # This registers the file type class as a subclass of VFile, and
@@ -6,8 +6,6 @@
 # Note that subclasses are given precedence in type detection, so
 # care must be taken when crafting the detector regex.
 # Also, look at csv for an example of overriding detect_type(...)
-
-__DEBUG_IMPORT_ERRORS = False
 
 import viscid
 # import vfile
@@ -33,7 +31,12 @@ from viscid.readers import athena_xdmf
 from viscid.readers import ggcm_jrrle
 
 
+__all__ = ['load_file', 'load_files', 'unload_file', 'reload_file', 'get_file',
+           'save_grid', 'save_field', 'save_fields']
+
+
 __filebucket__ = vfile_bucket.VFileBucket()
+
 
 def load(fnames):
     """Generic load

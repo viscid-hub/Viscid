@@ -63,7 +63,7 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
     except ImportError:
         pass
 
-def main():
+def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--notwo", dest='notwo', action="store_true")
     parser.add_argument("--nothree", dest='nothree', action="store_true")
@@ -90,7 +90,7 @@ def main():
              ibound=0.07, obound0=obound0, obound1=obound1, method=viscid.RK12)
 
 if __name__ == "__main__":
-    main()
+    _main()
 
 ##
 ## EOF

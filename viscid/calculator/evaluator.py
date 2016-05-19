@@ -26,6 +26,8 @@ from viscid.calculator import calc
 
 enabled = False
 
+__all__ = ["evaluate"]
+
 
 def evaluate(grid, result_name, eqn, try_numexpr=True, slc=None):
     """Evaluate an equation on a grid

@@ -15,6 +15,10 @@ import viscid
 from viscid.compat import izip, futures, string_types
 
 
+__all__ = ["chunk_list", "chunk_slices", "chunk_interslices", "chunk_sizes",
+           "map", "map_async"]
+
+
 # Non daemonic processes are probably a really bad idea
 class NoDaemonProcess(mp.Process):
     """Using this is probably a bad idea"""

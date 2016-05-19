@@ -3,6 +3,10 @@
 from __future__ import print_function
 
 
+__all__ = ['UnimportedModule', 'DeferredImportError', 'BackendNotFound',
+           'KeyboardInterruptError']
+
+
 class UnimportedModule(object):
     def __init__(self, exception, msg="", **attrs):
         attrs["exception"] = exception

@@ -347,7 +347,7 @@ def find_mp_edges(j_block, msphere_thresh=0.1, sheath_thresh=0.1,
     mp_width = sheath_edge - msphere_edge
     return sheath_edge, msphere_edge, mp_width, sheath_ind, sphere_ind
 
-def main():
+def _main():
     f = viscid.load_file("$WORK/xi_fte_001/*.3d.[4050f].xdmf")
     mp = get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
                      slc="x=6.5f:10.5f, y=-4f:4f, z=-4.8f:3f", cache=False)
@@ -413,7 +413,7 @@ def main():
 
 if __name__ == "__main__":
     import sys  # pylint: disable=wrong-import-position,wrong-import-order
-    sys.exit(main())
+    sys.exit(_main())
 
 
 ##

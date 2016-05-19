@@ -174,7 +174,7 @@ def find_minvar_lmn_around(B, p0, l=1.0, path_dir=(1, 0, 0), n=40, l_basis=(0, 0
     _, evecs = minvar_around(B, p0, l=l, path_dir=path_dir, n=n)
     return _minvar_lmn_directions(evecs[:, 0], evecs[:, 2], l_basis=l_basis)
 
-def main():
+def _main():
     x = np.linspace(-1, 1, 128)
     y = z = np.linspace(-0.25, 0.25, 8)
     B = viscid.zeros((x, y, z), nr_comps=3, layout='interlaced', name="B")
@@ -229,7 +229,7 @@ def main():
 
 if __name__ == "__main__":
     import sys  # pylint: disable=wrong-import-position,wrong-import-order
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

@@ -6,6 +6,10 @@ from itertools import count
 
 import numpy as np
 
+
+__all__ = ['distance_to_clusters', 'cluster']
+
+
 def distance_to_clusters(point, clusters, alt=()):
     """L2 distance between point and clusters"""
     x, y = point

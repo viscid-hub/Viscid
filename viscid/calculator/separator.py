@@ -13,6 +13,10 @@ UNEVEN_MASK = 0b1000
 UNEVEN_HALF = 0.65
 
 
+__all__ = ["trace_separator", "topology_bitor_clusters", "get_sep_pts_bitor",
+           "get_sep_pts_bisect"]
+
+
 def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
                     r=1.0, plot=False, trace_opts=None, cache=True,
                     cache_dir=None):

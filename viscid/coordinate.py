@@ -32,6 +32,9 @@ from viscid.compat import string_types, izip
 from viscid import vutil
 
 
+__all__ = ['arrays2crds', 'wrap_crds', 'extend_arr_by_half']
+
+
 def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
     """make either uniform or nonuniform coordnates given full arrays
 

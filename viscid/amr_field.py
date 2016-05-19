@@ -20,6 +20,9 @@ except ImportError:
     _HAS_CYCALC = False
 
 
+__all__ = ["is_list_of_fields"]
+
+
 def is_list_of_fields(lst):
     for item in lst:
         if not isinstance(item, Field):
