@@ -8,11 +8,11 @@ env:
     - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
     - QT_API=pyside
   matrix:
-    - PYTHON=2.6 DEPS=red
-    - PYTHON=2.7 DEPS=full FLAKE=1 DEPLOY_DOCS=1
-    - PYTHON=3.3 DEPS=full
+    - PYTHON=2.6 DEPS="minimal"
+    - PYTHON=2.7 DEPS="" FLAKE=1 DEPLOY_DOCS=1
+    - PYTHON=3.3 DEPS=""
     # - PYTHON=3.4 DEPS=full  # is this necessary if 3.3 and 3.5 are tested?
-    - PYTHON=3.5 DEPS=full FLAKE=1
+    - PYTHON=3.5 DEPS="" FLAKE=1
 
 git:
   submodules: false
@@ -80,16 +80,16 @@ before_install:
   ## Now setup some Viscid specific things, like rc files and make sure
   ## we have a virtual frame buffer
   - mkdir -p ~/.config/matplotlib
-  - cp tests/resources/matplotlibrc ~/.config/matplotlib/
-  - cp tests/resources/viscidrc ~/.viscidrc
+  - cp resources/matplotlibrc ~/.config/matplotlib/
+  - cp resources/viscidrc ~/.viscidrc
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 
 install:
   - mkdir -p ${HOME}/mycache
-  - 'export env_name="viscid_${PYTHON}_${DEPS}"'
+  - 'export env_name="viscid${PYTHON/./}${DEPS}"'
   - 'export envpath="$HOME/miniconda/envs/${env_name}"'
-  - 'export env_spec="tests/resources/${env_name}.yml"'
+  - 'export env_spec="resources/${env_name}.yml"'
   - 'export cached_env_spec="${HOME}/mycache/${env_name}.yml"'
   - 'export prefix="${HOME}/inst/${env_name}"'
 

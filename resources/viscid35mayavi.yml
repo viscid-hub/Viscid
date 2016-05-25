@@ -1,4 +1,7 @@
-name: viscid_3.5_full
+# there are no pre-built binaries for py3k mayavi, but since
+# menpo has vtk7, pip can install mayavi just fine
+# platform: osx-64 linux-64
+name: viscid35mayavi
 channels:
 - menpo
 - defaults
@@ -19,3 +22,6 @@ dependencies:
 - ipython
 - jupyter
 - vtk>=7.0.0
+- pip:
+  - mayavi
+  - envisage

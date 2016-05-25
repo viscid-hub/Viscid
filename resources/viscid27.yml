@@ -1,4 +1,5 @@
-name: viscid_2.7_full
+# platform: osx-64 linux-64
+name: viscid27
 channels:
 - menpo
 - defaults

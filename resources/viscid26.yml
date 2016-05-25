@@ -1,0 +1,21 @@
+# platform: osx-64 linux-64
+name: viscid26
+channels:
+- defaults
+dependencies:
+- python=2.6
+- argparse
+- numpy>=1.9
+- scipy
+- h5py
+- matplotlib>=1.4
+- cython>0.17
+- numexpr
+- numba
+- pyyaml
+- pyqt
+- flake8
+- sphinx
+- sphinx_rtd_theme
+- ipython
+- ipython-notebook

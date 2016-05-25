@@ -1,4 +1,5 @@
-name: viscid_2.6_red
+# platform: osx-64 linux-64
+name: viscid26minimal
 channels:
 - defaults
 dependencies:

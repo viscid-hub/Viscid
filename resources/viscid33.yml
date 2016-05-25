@@ -1,4 +1,5 @@
-name: viscid_3.3_full
+# platform: osx-64 linux-64
+name: viscid33
 channels:
 - defaults
 dependencies:

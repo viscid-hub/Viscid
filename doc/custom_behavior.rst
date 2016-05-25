@@ -9,7 +9,7 @@ Some classes have attributes that customize how specific files, datasets and gri
 
 Here is an example rc file,
 
-.. literalinclude:: ../tests/resources/viscidrc
+.. literalinclude:: ../resources/viscidrc
   :language: yaml
 
 Common Customizations
