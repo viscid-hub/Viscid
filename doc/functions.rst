@@ -1,6 +1,16 @@
 Useful Functions
 ================
 
+Utility Functions
+-----------------
+
+================================  ===============================================
+Function                          Description
+================================  ===============================================
+:py:func:`viscid.interact`        Stop the program and get an interactive prompt
+                                  at any point (uses ipython if it's installed).
+================================  ===============================================
+
 Fields
 ------
 
