@@ -16,15 +16,12 @@ fi
 
 sdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-tests="$@"
-if [ "${tests}" == "" ]; then
-  tests="$( ls ${sdir}/test_* | grep -Ev '.(log|stderr|stdout)$' )"
-else
-  tests="$( cd ${sdir} && ls *$@* )"
-  for ((i=0;i<${#tests[@]};i++)); do
-      tests[i]="${sdir}/${tests[i]}"
-  done
-fi
+tests="${@:-?}"
+tests0="${tests//,/ }"
+tests=""
+for t in ${tests0}; do
+  tests="${tests} $(ls ${sdir}/test_*${t}* | grep -Ev '.(log|stderr|stdout)$')"
+done
 
 for test in ${tests}; do
   test_name=$(basename "${test%.*}")
@@ -34,11 +31,16 @@ for test in ${tests}; do
   rm -f ${sdir}/ref_plots/${test_name}*.png
 
   if [[ $test == *.py ]]; then
-    cmd="python ${test}"
+    cmd="/usr/bin/env python ${test}"
   elif [[ $test == *.sh ]]; then
-    cmd="bash ${test}"
+    cmd="/usr/bin/env bash ${test}"
   elif [[ -x ${test} ]]; then
     cmd="./${test}"
+  else
+    echo "!! Don't know how to run:" >&2
+    echo "!! ${test}" >&2
+    echo "!! Try giving it execute permission" >&2
+    cmd="false"
   fi
 
   ${cmd}
