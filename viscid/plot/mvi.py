@@ -13,6 +13,7 @@ from mayavi import mlab
 from mayavi.modules.axes import Axes
 from mayavi.sources.builtin_surface import BuiltinSurface
 from mayavi.sources.vtk_data_source import VTKDataSource
+from traits.trait_errors import TraitError
 from tvtk.api import tvtk
 import viscid
 from viscid import field
@@ -648,7 +649,7 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         z = radius * np.cos((np.pi / 180.0) * bounding_lat)
         clip = mlab.pipeline.data_set_clipper(m.module_manager.parent)
         clip.widget.widget.place_widget(-rp, rp, -rp, rp, -z, z)
-        clip.widget.update_implicit_function()
+        clip.update_pipeline()
         clip.widget.widget.enabled = False
         insert_filter(clip, m.module_manager)
         # m.module_manager.parent.parent.filter.auto_orient_normals = True
@@ -995,15 +996,16 @@ def plot_blue_marble(r=1.0, orientation=None, figure=None):
                           y_resolution=16)
     ps.update()
     transform = tvtk.SphericalTransform()
-    tpoly = tvtk.TransformPolyDataFilter(transform=transform, input=ps.output)
+    tpoly = tvtk.TransformPolyDataFilter(transform=transform,
+                                         input_connection=ps.output_port)
+    tpoly.update()
     src = VTKDataSource(data=tpoly.output, name="blue_marble")
     surf = mlab.pipeline.surface(src)
 
     # now load a jpg, and use it to texture the sphere
     fname = os.path.realpath(os.path.dirname(__file__) + '/blue_marble.jpg')
     img = tvtk.JPEGReader(file_name=fname)
-    texture = tvtk.Texture(interpolate=1)
-    texture.input = img.output
+    texture = tvtk.Texture(input_connection=img.output_port, interpolate=1)
     surf.actor.enable_texture = True
     surf.actor.texture = texture
     surf.actor.property.color = (1.0, 1.0, 1.0)
@@ -1132,7 +1134,10 @@ def remove_source(src):
     """
     src.stop()
     try:
-        src.data.release_data_flag = 1
+        try:
+            src.data.release_data()
+        except TraitError:
+            src.data.release_data_flag = 1
         src.cell_scalars_name = ''
         src.cell_tensors_name = ''
         src.cell_vectors_name = ''
