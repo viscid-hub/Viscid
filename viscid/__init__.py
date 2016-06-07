@@ -75,19 +75,32 @@ del _handler
 # this is thunder-hacky, but it's a really simple way to import
 # everything in __all__ and also, if those module have an __all__,
 # then bring that stuff into this namespace too
-def import_injector(attr_list, namespace, package=None):
+def _on_injected_import_error(name, exception, quiet=False):
+    if not quiet:
+        logger.error(str(exception))
+        logger.error("Viscid tried to import {0}, but the import failed.\n"
+                     "This module will not be available".format(name))
+
+def import_injector(attr_list, namespace, package=None, quiet=False,
+                    fatal=False):
     additional = []
-    for s in attr_list:
-        m = import_module("." + s, package=package)
-        namespace[s] = m
-        # print(">", package, ">", s)
-        # print(">", package, ">", s, "::", getattr(m, "__all__", None))
-        if hasattr(m, "__all__"):
-            all_subattrs = getattr(m, "__all__")
-            additional += all_subattrs
-            for sub in all_subattrs:
-                # print("    ", sub, "=", getattr(m, sub))
-                namespace[sub] = getattr(m, sub)
+    for s in list(attr_list):
+        try:
+            m = import_module("." + s, package=package)
+            namespace[s] = m
+            # print(">", package, ">", s)
+            # print(">", package, ">", s, "::", getattr(m, "__all__", None))
+            if hasattr(m, "__all__"):
+                all_subattrs = getattr(m, "__all__")
+                additional += all_subattrs
+                for sub in all_subattrs:
+                    # print("    ", sub, "=", getattr(m, sub))
+                    namespace[sub] = getattr(m, sub)
+        except ImportError as e:
+            _on_injected_import_error(s, e, quiet=quiet)
+            attr_list.remove(s)
+            if fatal:
+                raise
     attr_list += additional
 
 import_injector(__all__, globals(), package="viscid")
