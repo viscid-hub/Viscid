@@ -25,12 +25,12 @@ clean:
 	python ./setup.py clean -a ${BUILD_ARGS}
 
 check: test
-test: inplace
+test: inplace public-doccheck
 	@echo "Note: Running tests on refreshed inplace build."
 	VISCID_TEST_INPLACE=1 bash tests/viscid_runtests ${CHECK_ARGS}
 
 instcheck: insttest
-insttest:
+insttest: public-doccheck
 	@echo "Note: Running tests using first Viscid in PYTHONPATH. Build was not"
 	@echo "      implicitly refreshed."
 	@echo "PYTHONPATH = ${PYTHONPATH}"
@@ -64,3 +64,8 @@ doc-html:
 docclean: doc-clean
 doc-clean:
 	make ARGS="${DOC_ARGS}" -C doc clean
+
+
+public-doccheck:
+	make -C doc public-doccheck
+
