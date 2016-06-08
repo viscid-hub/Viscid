@@ -14,6 +14,7 @@ __all__ = ["as_mapfield", "as_spherefield", "as_polar_mapfield",
 
 
 def theta2lat(theta, unit='deg'):
+    """spherical theta -> latitude transformation"""
     p90 = np.pi / 2 if unit == 'rad' else 90.0
     lat = p90 - np.asarray(theta)
     if np.any(lat < -p90) or np.any(lat > p90):
@@ -21,9 +22,11 @@ def theta2lat(theta, unit='deg'):
     return lat
 
 def phi2lon(phi, unit='deg'):  # pylint: disable=unused-argument
+    """spherical phi -> longitude transform; currently a no-op"""
     return phi
 
 def lat2theta(lat, unit='deg'):
+    """spherical latitude -> theta transformation"""
     p90 = np.pi / 2 if unit == 'rad' else 90.0
     p180 = np.pi if unit == 'rad' else 180.0
     theta = p90 - np.asarray(lat)
@@ -32,6 +35,7 @@ def lat2theta(lat, unit='deg'):
     return theta
 
 def lon2phi(lon, unit='deg'):  # pylint: disable=unused-argument
+    """spherical longitude -> phi transform; currently a no-op"""
     return lon
 
 def arr_noop(x, **_):
@@ -131,6 +135,19 @@ def fld_lat2theta(fld, base='lat', target='theta', unit='deg'):
     return ret
 
 def convert_coordinates(fld, order, crd_mapping, units=''):
+    """Convert a Field's coordinates
+
+    Args:
+        fld (Field): Description
+        order (sequence): target coordinates
+        crd_mapping (dict): summarizes functions that go from
+            base -> target
+        units (str, optional): Additional info if you need to convert
+            units too
+
+    Raises:
+        RuntimeError: If no mapping is found to go base -> target
+    """
     base_axes = fld.crds.axes
 
     # select the bases in crd_mapping that match the axes in fld.crds

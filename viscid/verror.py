@@ -8,6 +8,7 @@ __all__ = ['UnimportedModule', 'DeferredImportError', 'BackendNotFound',
 
 
 class UnimportedModule(object):
+    """Proxy object for unimported modules"""
     def __init__(self, exception, msg="", **attrs):
         attrs["exception"] = exception
         attrs["msg"] = msg
@@ -32,14 +33,17 @@ class UnimportedModule(object):
 
 
 class DeferredImportError(ImportError):
+    """So lack of an optional dependancy doesn't make viscid unimportable"""
     pass
 
 
 class BackendNotFound(RuntimeError):
+    """Calculator backend not installed"""
     pass
 
 
 class KeyboardInterruptError(Exception):
+    """Deprecated and unused"""
     pass
 
 ##

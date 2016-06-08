@@ -17,9 +17,11 @@ _paraboloid_dt = np.dtype([('x0', _dtf), ('y0', _dtf), ('z0', _dtf),
 
 
 def paraboloid(y, z, x0, y0, z0, ax, ay, az):
+    """Generic paraboloid function"""
     return ax * (((y - y0) / ay)**2 + ((z - z0) / az)**2) + x0
 
 def paraboloid_normal(y, z, x0, y0, z0, ax, ay, az, normalize=True):  # pylint: disable=unused-argument
+    """Normal vector of a generic paraboloid"""
     dyF = 2.0 * (y - y0) / ay**2
     dzF = 2.0 * (z - z0) / az**2
     dxF = (-1.0 / ax) * np.ones_like(dyF)

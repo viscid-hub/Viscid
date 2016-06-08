@@ -31,6 +31,7 @@ class CythonNotBuilt(Exception):
     pass
 
 class _dummy(object):
+    """CythonNotBuilt Proxy Object"""
     def __init__(self, msg="Dummy Object", **attrs):
         attrs["msg"] = msg
         for attrname, value in attrs.items():
@@ -80,17 +81,23 @@ except ImportError as e:
                   "ImportError:\n" + str(e).strip())
 
     def interp(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp"))
     def interp_nearest(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp_nearest"))
     def interp_trilin(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp_trilin"))
     def calc_streamlines(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("calc_streamlines"))
     streamlines = calc_streamlines
     def find_classified_nulls(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("find_classified_nulls"))
     def find_nulls(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("find_nulls"))
 
     cyamr = _dummy(cython_msg.format("cyamr"))

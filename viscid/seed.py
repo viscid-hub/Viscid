@@ -1217,6 +1217,7 @@ class SphericalPatch(SeedGen):
 
 
 class PolarIonosphere(Sphere):
+    """Place holder for future seed to cover N+S poles"""
     def __init__(self, *args, **kwargs):
         super(PolarIonosphere, self).__init__(*args, **kwargs)
         raise NotImplementedError()

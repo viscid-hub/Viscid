@@ -42,11 +42,12 @@ class Operation(object):
     opname = None
     short_name = None
 
-    def __init__(self, name, short_name, implementations=()):
+    def __init__(self, name, short_name, implementations=(), doc=""):
         self.opname = name
         self.short_name = short_name
         self._imps = OrderedDict()
         self.add_implementations(implementations)
+        setattr(self, "__doc__", doc)
 
     def add_implementation(self, name, func):
         self._imps[name] = func
@@ -98,36 +99,25 @@ class BinaryOperation(Operation):
         ret.name = "{0} {1} {2}".format(a.name, self.short_name, b.name)
         return ret
 
-add = BinaryOperation("add", "+")
-"""Callable, calculates a + b"""
-diff = BinaryOperation("diff", "-")
-"""Callable, calculates a - b"""
-mul = BinaryOperation("mul", "*")
-"""Callable, calculates a * b"""
-relative_diff = BinaryOperation("relative diff", "%-")
-"""Callable, calculates abs(a - b) / a"""
-abs_diff = BinaryOperation("abs diff", "|-|")
-"""Callable, calculates abs(a - b)"""
-abs_val = UnaryOperation("abs val", "absval")
-"""Callable, calculates abs(a)"""
-abs_max = Operation("abs max", "absmax")
-"""Callable, calculates max(abs(a))"""
-abs_min = Operation("abs min", "absmin")
-"""Callable, calculates min(abs(a))"""
-magnitude = UnaryOperation("magnitude", "magnitude")
-"""Callable, calculates L2 Norm of a vectors in a vector field"""
-dot = BinaryOperation("dot", "dot")
-"""Callable, calculates a dot b"""
-cross = BinaryOperation("cross", "x")
-"""Callable, calculates a cross b"""
-project = BinaryOperation("project", "dot mag")
-"""Callable, scalar projection of a onto b; a dot b / norm(b)"""
-normalize = UnaryOperation("normalize", "normalize")
-"""Callable, divide a vector field by its magnitude"""
-div = UnaryOperation("div", "div")
-"""Callable, divergence of a vector field"""
-curl = UnaryOperation("curl", "curl")
-"""Callable, curl of a vector field"""
+add = BinaryOperation("add", "+", doc="Callable, calculates a + b")
+diff = BinaryOperation("diff", "-", doc="Callable, calculates a - b")
+mul = BinaryOperation("mul", "*", doc="Callable, calculates a * b")
+relative_diff = BinaryOperation("relative diff", "%-",
+                                doc="Callable, calculates abs(a - b) / a")
+abs_diff = BinaryOperation("abs diff", "|-|", doc="Callable, calculates abs(a - b)")
+abs_val = UnaryOperation("abs val", "absval", doc="Callable, calculates abs(a)")
+abs_max = Operation("abs max", "absmax", doc="Callable, calculates max(abs(a))")
+abs_min = Operation("abs min", "absmin", doc="Callable, calculates min(abs(a))")
+magnitude = UnaryOperation("magnitude", "magnitude",
+                           doc="Callable, calculates L2 Norm of a vectors in a vector field")
+dot = BinaryOperation("dot", "dot", doc="Callable, calculates a dot b")
+cross = BinaryOperation("cross", "x", doc="Callable, calculates a cross b")
+project = BinaryOperation("project", "dot mag",
+                          doc="Callable, scalar projection of a onto b; a dot b / norm(b)")
+normalize = UnaryOperation("normalize", "normalize",
+                           doc="Callable, divide a vector field by its magnitude")
+div = UnaryOperation("div", "div", doc="Callable, divergence of a vector field")
+curl = UnaryOperation("curl", "curl", doc="Callable, curl of a vector field")
 
 if has_numexpr:
     add.add_implementation("numexpr", necalc.add)

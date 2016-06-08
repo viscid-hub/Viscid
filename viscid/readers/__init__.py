@@ -87,9 +87,11 @@ def load_files(fnames, **kwargs):
     return __filebucket__.load_files(fnames, **kwargs)
 
 def unload_file(handle):
+    """call unload on the handle in the bucket"""
     __filebucket__[handle].unload()
 
 def reload_file(handle):
+    """call reload on the handle in the bucket"""
     __filebucket__[handle].reload()
 
 def get_file(handle):

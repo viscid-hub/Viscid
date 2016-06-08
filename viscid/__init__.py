@@ -59,14 +59,14 @@ _handler.setFormatter(logging.Formatter(fmt="%(levelname)s: %(message)s"))
 logger.addHandler(_handler)
 
 
-class CustomFilter(logging.Filter, object):
+class _CustomFilter(logging.Filter, object):
     def filter(self, record):
         spaces = ' ' * (len(record.levelname) + 2)
         record.msg = record.msg.replace('\n', '\n' + spaces)
-        return super(CustomFilter, self).filter(record)
+        return super(_CustomFilter, self).filter(record)
 
 
-logger.addFilter(CustomFilter())
+logger.addFilter(_CustomFilter())
 logger.propagate = False
 del _handler
 
@@ -83,6 +83,7 @@ def _on_injected_import_error(name, exception, quiet=False):
 
 def import_injector(attr_list, namespace, package=None, quiet=False,
                     fatal=False):
+    """import list of modules and consume their __all__ attrs"""
     additional = []
     for s in list(attr_list):
         try:

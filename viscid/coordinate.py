@@ -103,6 +103,7 @@ def wrap_crds(crdtype, clist, **kwargs):
         raise NotImplementedError("can not decipher crds: {0}".format(crdtype))
 
 def extend_arr_by_half(x, full_arr=True):
+    """sandwich array with two new values w/ no change in dx"""
     x = vutil.asarray_dt(x)
 
     if full_arr:

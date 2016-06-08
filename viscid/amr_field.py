@@ -24,6 +24,7 @@ __all__ = ["is_list_of_fields"]
 
 
 def is_list_of_fields(lst):
+    """is a sequence a sequence of Field objects?"""
     for item in lst:
         if not isinstance(item, Field):
             return False

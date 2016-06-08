@@ -80,6 +80,7 @@ def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
 
 def get_dipole(m=None, l=None, h=None, n=None, twod=False, dtype='f8',
                nonuniform=False):
+    """Generate a dipole field with magnetic moment m [x, y, z]"""
     if l is None:
         l = [-5] * 3
     if h is None:
@@ -122,6 +123,7 @@ def get_dipole(m=None, l=None, h=None, n=None, twod=False, dtype='f8',
     return B
 
 def get_trilinear_field():
+    """get a generic trilinear field"""
     xl, xh, nx = -1.0, 1.0, 41
     yl, yh, ny = -1.5, 1.5, 41
     zl, zh, nz = -2.0, 2.0, 41

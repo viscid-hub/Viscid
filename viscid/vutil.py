@@ -134,6 +134,7 @@ def timereps(reps, func, *args, **kwargs):
     return min(arr), max(arr), sum(arr) / reps
 
 def timeit(f, *args, **kwargs):
+    """overly simple timeit wrapper"""
     t0 = time()
     ret = f(*args, **kwargs)
     t1 = time()
@@ -275,6 +276,7 @@ def isdatetime(arr, check_objects=True, check_datetime=True, check_timedelta=Tru
 
 def asarray_dt(arr, dtype=None, date_type="datetime64[us]",
                time_type="timedelta64[us]"):
+    """Try to turn arr into a datetime array if possible"""
     if isdatetime(arr, check_timedelta=False):
         arr = np.asarray(arr, dtype=date_type)
     elif isdatetime(arr, check_datetime=False):
