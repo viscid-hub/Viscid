@@ -4,9 +4,10 @@
 # extension is ignored gracefully
 
 from __future__ import print_function
-import sys
+import io
 import os
 import re
+import sys
 from glob import glob
 from subprocess import Popen, CalledProcessError, PIPE
 from distutils.command.clean import clean
@@ -278,7 +279,7 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
               "), but I'll continue anyway...")
 
 def get_viscid_version(init_py):
-    with open(init_py) as f:
+    with io.open(init_py, 'r', encoding="utf-8") as f:
         version = None
         quoted_str = r"((?<![\\])(?:'''|\"\"\"|\"|'))((?:.(?!(?<![\\])\1))*.?)\1"
         ver_re = r"__version__\s*=\s*" + quoted_str

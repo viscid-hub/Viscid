@@ -12,6 +12,7 @@
 # serve to show the default.
 
 from __future__ import print_function
+import io
 import re
 import sys, os
 
@@ -64,7 +65,7 @@ copyright = u'2015, Kristofor Maynard'
 #
 # The short X.Y version.
 def get_viscid_version(init_py):
-    with open(init_py) as f:
+    with io.open(init_py, 'r', encoding='utf-8') as f:
         quoted_str = r"((?<![\\])(?:'''|\"\"\"|\"|'))((?:.(?!(?<![\\])\1))*.?)\1"
         ver_re = r"__version__\s*=\s*" + quoted_str
         for line in f:
