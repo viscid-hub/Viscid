@@ -221,8 +221,8 @@ def empty_like(fld, name="NoName", **kwargs):
         new uninitialized :class:`Field`
     """
     dat = np.empty(fld.shape, dtype=fld.dtype)
-    c = fld.center
-    t = fld.time
+    c = kwargs.pop("center", fld.center)
+    t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
@@ -235,8 +235,8 @@ def zeros_like(fld, name="NoName", **kwargs):
     See Also: :meth:`empty_like`
     """
     dat = np.zeros(fld.shape, dtype=fld.dtype)
-    c = fld.center
-    t = fld.time
+    c = kwargs.pop("center", fld.center)
+    t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
@@ -249,8 +249,8 @@ def ones_like(fld, name="NoName", **kwargs):
     See Also: :meth:`empty_like`
     """
     dat = np.ones(fld.shape, dtype=fld.dtype)
-    c = fld.center
-    t = fld.time
+    c = kwargs.pop("center", fld.center)
+    t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
