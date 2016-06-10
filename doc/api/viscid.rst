@@ -24,6 +24,7 @@ Submodules
    viscid.dataset
    viscid.field
    viscid.grid
+   viscid.mapfield
    viscid.parallel
    viscid.pyeval
    viscid.seed
