@@ -961,11 +961,13 @@ class Sphere(SeedGen):
     def as_uv_coordinates(self):
         theta, phi = self._make_uv_axes()
         if self.theta_phi:
-            crds = viscid.wrap_crds("nonuniform_cartesian",
-                                    (('theta', theta), ('phi', phi)))
+            crds = viscid.wrap_crds("nonuniform_spherical",
+                                    (('theta', theta), ('phi', phi)), 
+                                    units="rad")
         else:
-            crds = viscid.wrap_crds("nonuniform_cartesian",
-                                    (('phi', phi), ('theta', theta)))
+            crds = viscid.wrap_crds("nonuniform_spherical",
+                                    (('phi', phi), ('theta', theta)), 
+                                    units="rad")
         return crds
 
     def as_local_coordinates(self):
