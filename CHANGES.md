@@ -1,6 +1,8 @@
 Changes
 -------
 
+something small
+
 0.96.2 dev
 ==========
 
