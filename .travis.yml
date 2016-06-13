@@ -140,7 +140,7 @@ script:
      else
        make instcheck;
      fi'
-  - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ ]]; then
+  - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ && -n "$GH_TOKEN" ]]; then
        make deploy-summary;
      fi'
 
@@ -151,4 +151,4 @@ deploy:
     - make deploy-html
   on:
     branch: "*"
-    condition: '($TRAVIS_BRANCH =~ ${deployable}) && ("${DEPLOY_DOCS}" == "1")'
+    condition: '($TRAVIS_BRANCH =~ ${deployable}) && -n "$GH_TOKEN" && ("${DEPLOY_DOCS}" == "1")'
