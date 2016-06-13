@@ -191,7 +191,7 @@ class GGCMGrid(grid.Grid):
     _flip_vect_comp_names = "bx, by, b1x, b1y, " \
                             "vx, vy, rv1x, rv1y, " \
                             "jx, jy, xjx, xjy, " \
-                            "ex, ey, ex_cc, ey_cc".split(', ')
+                            "ex, ey, ex_cc, ey_cc, eflx, efly".split(', ')
     _flip_vect_names = "v, b, j, xj".split(', ')
     # _flip_vect_comp_names = []
     # _flip_vect_names = []
@@ -333,8 +333,12 @@ class GGCMGrid(grid.Grid):
                                      pretty_name="B")
 
     def _get_b1(self):
-        return self._assemble_vector("b1", _force_layout=self.force_vector_layout,
-                                     pretty_name="B")
+        try:
+            return self._assemble_vector("b1", _force_layout=self.force_vector_layout,
+                                         pretty_name="B")
+        except KeyError:
+            return self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                         pretty_name="B", suffix="1")
 
     def _get_v(self):
         return self._assemble_vector("v", _force_layout=self.force_vector_layout,
@@ -350,8 +354,15 @@ class GGCMGrid(grid.Grid):
                                      pretty_name="E")
 
     def _get_e_ec(self):
-        return self._assemble_vector("e", suffix="_ec",
-                                     _force_layout=self.force_vector_layout,
+        try:
+            return self._assemble_vector("e", suffix="_ec",
+                                         _force_layout=self.force_vector_layout,
+                                         pretty_name="E")
+        except KeyError:
+            return self._get_efl()
+
+    def _get_efl(self):
+        return self._assemble_vector("efl", _force_layout=self.force_vector_layout,
                                      pretty_name="E")
 
     def _get_j(self):
