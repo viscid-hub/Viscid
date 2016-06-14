@@ -5,6 +5,7 @@ from __future__ import print_function
 import numpy as np
 import numexpr as ne
 
+import viscid
 from viscid import field
 from viscid import coordinate
 
@@ -132,6 +133,8 @@ def div(fld):
         divcenter = "Node"
         # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
         divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Face"):
+        return viscid.div_fc(fld)
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
 

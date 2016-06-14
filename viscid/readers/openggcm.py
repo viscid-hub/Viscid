@@ -175,8 +175,15 @@ class GGCMGrid(grid.Grid):
         - T: Temperature, for now, just pressure / density
         - bx, by, bz: CC mag field components, if not already stored by
           component)
-        - b: mag field as vector, layout affected by
-          GGCMGrid.derived_vector_layout
+        - b, b_cc: B as CC vector field in nT, layout affected by
+            GGCMGrid.derived_vector_layout
+        - b_fc, b1, b2: B as FC vector field in nT, layout affected by
+            GGCMGrid.derived_vector_layout
+        - e_cc: E as CC vector field in mV/m?, layout affected by
+            GGCMGrid.derived_vector_layout.
+        - e_ec: E as EC vector field in mV/m?, layout affected by
+            GGCMGrid.derived_vector_layout. This should be used
+            even for jrrle files.
         - v: velocity as vector, same idea as b
         - beta: plasma beta, just pp/b^2
         - psi: flux function (only works for 2d files/grids)
@@ -193,11 +200,12 @@ class GGCMGrid(grid.Grid):
             layout for vector fields on load (default is
             :py:const:`viscid.field.LAYOUT_DEFAULT`)
     """
-    _flip_vect_comp_names = "bx, by, b1x, b1y, " \
+    _flip_vect_comp_names = "bx, by, ex, ey, " \
                             "vx, vy, rv1x, rv1y, " \
                             "jx, jy, xjx, xjy, " \
-                            "ex, ey, ex_cc, ey_cc".split(', ')
-    _flip_vect_names = "v, b, j, xj".split(', ')
+                            "b1x, b1y, bx1, by1, b2x, b2y, bx2, by2, " \
+                            "ex_cc, ey_cc, ex_ec, ey_ec, eflx, efly".split(', ')
+    _flip_vect_names = "v, b, b1, b2, e_cc, e_ec, efl, j, xj".split(', ')
     # _flip_vect_comp_names = []
     # _flip_vect_names = []
 
@@ -333,31 +341,9 @@ class GGCMGrid(grid.Grid):
         comps = [self[base_name + c + suffix] for c in comp_names]
         return field.scalar_fields_to_vector(comps, name=base_name, **opts)
 
-    def _get_b(self):
-        return self._assemble_vector("b", _force_layout=self.force_vector_layout,
-                                     pretty_name="B")
-
-    def _get_b1(self):
-        return self._assemble_vector("b1", _force_layout=self.force_vector_layout,
-                                     pretty_name="B")
-
     def _get_v(self):
         return self._assemble_vector("v", _force_layout=self.force_vector_layout,
                                      pretty_name="V")
-
-    def _get_e(self):
-        return self._assemble_vector("e", _force_layout=self.force_vector_layout,
-                                     pretty_name="E")
-
-    def _get_e_cc(self):
-        return self._assemble_vector("e", suffix="_cc",
-                                     _force_layout=self.force_vector_layout,
-                                     pretty_name="E")
-
-    def _get_e_ec(self):
-        return self._assemble_vector("e", suffix="_ec",
-                                     _force_layout=self.force_vector_layout,
-                                     pretty_name="E")
 
     def _get_j(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
@@ -366,6 +352,104 @@ class GGCMGrid(grid.Grid):
     def _get_xj(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
                                      pretty_name="J")
+
+    def _ecfc_scalar_setmeta(self, fld, center, compname, staggering=None):
+        raise NotImplementedError("FC/EC component fields are not yet supported")
+
+    def _ecfc_vector_setmeta(self, center, fld):
+        # toggle stagger for Fortran/C3/... stepper as well as mhd->gse transform
+        center = center.title()
+        mhd_type = fld.find_info("ggcm_mhd_fld_mhd_type_str", "UNKNOWN").upper()
+        crd_system = fld.find_info("crd_system", "").lower()
+
+        stagger = [viscid.STAGGER_LEADING] * 3
+        if mhd_type.endswith("_GGCM"):
+            stagger = [1 - s for s in stagger]
+        if crd_system == "gse":
+            fld.set_info(viscid.FLIP_KEY, [True, True, False])
+
+        fld.center = center.title()
+        fld.set_info(viscid.STAGGER_KEY, stagger)
+        fld.set_info(viscid.PREPROCESSED_KEY, False)
+        return viscid.make_ecfc_field_leading(fld)
+
+    def _get_b(self):
+        return self._get_b_cc()
+
+    def _get_b_cc(self):
+        try:
+            # get from [bx, by, bz]
+            return self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                         pretty_name="B")
+        except KeyError:
+            # raise NotImplementedError("FC -> CC transform not standardized")
+            return viscid.fc2cc(self._get_b_fc())
+
+    def _get_b_fc(self):
+        try:
+            return self._get_b1()
+        except KeyError:
+            return self._get_b2()
+
+    def _get_b1(self):
+        # FIXME: FACE CENTERED
+        try:
+            # get from [b1x, b1y, b1z] (xdmf + h5 files)
+            _bfc = self._assemble_vector("b1", _force_layout=self.force_vector_layout,
+                                         pretty_name="B")
+        except KeyError:
+            # get from [bx1, by1, bz1] (jrrle / fortbin files)
+            _bfc = self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                         pretty_name="B", suffix="1")
+        return self._ecfc_vector_setmeta('Face', _bfc)
+
+    def _get_b2(self):
+        # FIXME: FACE CENTERED
+        try:
+            # get from [b2x, b2y, b2z] (xdmf + h5 files)
+            _bfc = self._assemble_vector("b2", _force_layout=self.force_vector_layout,
+                                         pretty_name="B")
+        except KeyError:
+            # get from [bx2, by2, bz2] (jrrle / fortbin files)
+            _bfc = self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                         pretty_name="B", suffix="2")
+        return self._ecfc_vector_setmeta('Face', _bfc)
+
+    def _get_e(self):
+        return self._get_e_cc()
+
+    def _get_e_cc(self):
+        try:
+            # get from [ex_cc, ey_cc, ez_cc] (xdmf + h5 files i think)
+            return self._assemble_vector("e", suffix="_cc",
+                                         _force_layout=self.force_vector_layout,
+                                         pretty_name="E")
+        except KeyError:
+            try:
+                # get from [ex, ey, ez] (not sure which files have this)
+                return self._assemble_vector("e", _force_layout=self.force_vector_layout,
+                                             pretty_name="E")
+            except KeyError:
+                # raise NotImplementedError("EC -> CC transformation not standardized")
+                return viscid.ec2cc(self._get_e_ec())
+
+    def _get_e_ec(self):
+        try:
+            # FIXME: EDGE CENTERED
+            # get from [ex_ec, ey_ec, ez_ec] (xdmf + h5 files)
+            _eec = self._assemble_vector("e", suffix="_ec",
+                                         _force_layout=self.force_vector_layout,
+                                         pretty_name="E")
+            return self._ecfc_vector_setmeta('Edge', _eec)
+        except KeyError:
+            return self._get_efl()
+
+    def _get_efl(self):
+        # FIXME: EDGE CENTERED
+        # get from [eflx, efly, eflz] (jrrle / fortbin files)
+        _eec = self._assemble_vector("efl", _force_layout=self.force_vector_layout,
+                                     pretty_name="E")
+        return self._ecfc_vector_setmeta('Edge', _eec)
 
     @staticmethod
     def _calc_mag(vx, vy, vz):

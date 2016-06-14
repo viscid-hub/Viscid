@@ -640,9 +640,9 @@ class Field(tree.Leaf):
         elif self.iscentered("cell"):
             return list(self._src_crds.shape_cc)
         else:
-            logger.warn("edge/face vectors not implemented, assuming "
-                        "node shape")
-            return self._src_crds.shape
+            # logger.warn("edge/face vectors not implemented, assuming "
+            #             "cell shape")
+            return list(self._src_crds.shape_cc)
 
     @property
     def native_sshape(self):
@@ -1404,7 +1404,10 @@ class Field(tree.Leaf):
     def get_crd(self, axis, shaped=False):
         """ return crd along axis with same centering as field
         axis can be crd name as string, or index, as in x==2, y==1, z==2 """
-        return self._src_crds.get_crd(axis, center=self.center, shaped=shaped)
+        # FIXME: work out how get_crd should act on face/edge fields since
+        #        in this case there are 3 possibilities
+        center = 'cell' if self.center in ('face', 'edge') else self.center
+        return self._src_crds.get_crd(axis, center=center, shaped=shaped)
 
     def get_crd_nc(self, axis, shaped=False):
         """ returns a flat ndarray of coordinates along a given axis
@@ -1430,7 +1433,10 @@ class Field(tree.Leaf):
     # these are the same as something like self._src_crds.get_crds()
     def get_crds(self, axes=None, shaped=False):
         """ return all crds as list of ndarrays with same centering as field """
-        return self._src_crds.get_crds(axes=axes, center=self.center, shaped=shaped)
+        # FIXME: work out how get_crds should act on face/edge fields since
+        #        in this case there are 3 possibilities
+        center = 'cell' if self.center in ('face', 'edge') else self.center
+        return self._src_crds.get_crds(axes=axes, center=center, shaped=shaped)
 
     def get_crds_nc(self, axes=None, shaped=False):
         """ returns all node centered coords as a list of ndarrays, flat if
@@ -1564,6 +1570,12 @@ class Field(tree.Leaf):
             f._cache = self._cache
 
             return f
+
+        elif self.iscentered('face'):
+            return viscid.fc2cc(self)
+
+        elif self.iscentered('edge'):
+            return viscid.ec2cc(self)
 
         else:
             raise NotImplementedError("can't yet move {0} to cell "

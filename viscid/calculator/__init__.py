@@ -23,6 +23,7 @@ from viscid.cython import streamline
 
 __all__ = ["calc",
            "cluster",
+           "ecfc",
            "evaluator",
            "minvar_tools",
            "mpause",
