@@ -347,6 +347,54 @@ def rewrap_field(fld):
                     parents=[fld])
     return ret
 
+
+class _FldSlcProxy(object):
+    parent = None
+    def __init__(self, parent, do_floatify=True):
+        self.parent = parent
+        self.do_floatify = do_floatify
+
+    def _floatify(self, item):
+        if isinstance(item, string_types):
+            item = item.strip().lower()
+        if item in (Ellipsis, '...'):
+            item = Ellipsis
+        elif item in (np.newaxis, ):
+            item = np.newaxis
+        elif item in (None, 'none'):
+            item = None
+        else:
+            if self.do_floatify:
+                item = "{0}f".format(item)
+            else:
+                item = int(item)
+        return item
+
+    def _xform(self, item):
+        if not isinstance(item, tuple):
+            item = (item, )
+        sel = []
+        for it in item:
+            if isinstance(it, slice):
+                start = self._floatify(it.start)
+                stop = self._floatify(it.stop)
+                step = it.step
+                sel.append(slice(start, stop, step))
+            else:
+                sel.append(self._floatify(it))
+
+        if self.parent.nr_comps and len(sel) >= self.parent.nr_comp:
+            sel.insert(self.parent.nr_comp, slice(None))
+
+        return sel
+
+    def __getitem__(self, item):
+        return self.parent.__getitem__(self._xform(item))
+
+    def __setitem__(self, item, val):
+        return self.parent.__setitem__(self._xform(item), val)
+
+
 class Field(tree.Leaf):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
@@ -1261,46 +1309,18 @@ class Field(tree.Leaf):
             >>> subset2 = field.loc[13, 14.0:]
             >>> # subset1 and subset2 should be identical
         """
-        class FldLocProxy(object):
-            parent = None
-            def __init__(self, parent):
-                self.parent = parent
+        return _FldSlcProxy(self, do_floatify=True)
 
-            @staticmethod
-            def _floatify(item):
-                if isinstance(item, string_types):
-                    item = item.strip().lower()
-                if item in (Ellipsis, '...'):
-                    item = Ellipsis
-                elif item in (np.newaxis, ):
-                    item = np.newaxis
-                elif item in (None, 'none'):
-                    item = None
-                else:
-                    item = "{0}f".format(item)
-                return item
+    @property
+    def iloc(self):
+        """Easily slice by value (flaot), like in pandas
 
-            def _xform(self, item):
-                if not isinstance(item, tuple):
-                    item = (item, )
-                sel = []
-                for it in item:
-                    if isinstance(it, slice):
-                        start = self._floatify(it.start)
-                        stop = self._floatify(it.stop)
-                        step = it.step
-                        sel.append(slice(start, stop, step))
-                    else:
-                        sel.append(self._floatify(it))
-                return sel
-
-            def __getitem__(self, item):
-                return self.parent.__getitem__(self._xform(item))
-
-            def __setitem__(self, item, val):
-                return self.parent.__setitem__(self._xform(item), val)
-
-        return FldLocProxy(self)
+        Eample:
+            >>> subset1 = field["13f", "14f":]
+            >>> subset2 = field.loc[13, 14.0:]
+            >>> # subset1 and subset2 should be identical
+        """
+        return _FldSlcProxy(self, do_floatify=False)
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
