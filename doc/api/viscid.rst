@@ -21,6 +21,7 @@ Submodules
    viscid.amr_grid
    viscid.bucket
    viscid.coordinate
+   viscid.cotr
    viscid.dataset
    viscid.dipole
    viscid.field
