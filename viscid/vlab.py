@@ -26,7 +26,7 @@ except ImportError:
     pass
 
 
-__all__ = ['interact', 'get_dipole', 'get_trilinear_field', 'multiplot',
+__all__ = ['interact', 'get_trilinear_field', 'multiplot',
            'follow_fluid', 'follow_fluid_generic']
 
 
@@ -77,50 +77,6 @@ def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
         import code
         code.interact(banner, local=ns)
     print("Resuming Script")
-
-def get_dipole(m=None, l=None, h=None, n=None, twod=False, dtype='f8',
-               nonuniform=False):
-    """Generate a dipole field with magnetic moment m [x, y, z]"""
-    if l is None:
-        l = [-5] * 3
-    if h is None:
-        h = [5] * 3
-    if n is None:
-        n = [256] * 3
-    x = np.array(np.linspace(l[0], h[0], n[0]), dtype=dtype)
-    y = np.array(np.linspace(l[1], h[1], n[1]), dtype=dtype)
-    z = np.array(np.linspace(l[2], h[2], n[2]), dtype=dtype)
-    if twod:
-        y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
-
-    if nonuniform:
-        z += 0.01 * ((h[2] - l[2]) / n[2]) * np.sin(np.linspace(0, np.pi, n[2]))
-
-    B = field.empty([x, y, z], nr_comps=3, name="B", center='cell',
-                    layout='interlaced', dtype=dtype)
-    Xcc, Ycc, Zcc = B.get_crds_cc(shaped=True)  # pylint: disable=W0612
-
-    one = np.array([1.0], dtype=dtype)  # pylint: disable=W0612
-    three = np.array([3.0], dtype=dtype)  # pylint: disable=W0612
-    if m is None:
-        m = [0.0, 0.0, -1.0]
-    m = np.array(m, dtype=dtype)
-    mx, my, mz = m  # pylint: disable=W0612
-
-    if _HAS_NUMEXPR:
-        rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2")  # pylint: disable=W0612
-        mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc")  # pylint: disable=W0612
-        B['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
-        B['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
-        B['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
-    else:
-        rsq = Xcc**2 + Ycc**2 + Zcc**2
-        mdotr = mx * Xcc + my * Ycc + mz * Zcc
-        B['x'] = ((three * Xcc * mdotr / rsq) - mx) / rsq**1.5
-        B['y'] = ((three * Ycc * mdotr / rsq) - my) / rsq**1.5
-        B['z'] = ((three * Zcc * mdotr / rsq) - mz) / rsq**1.5
-
-    return B
 
 def get_trilinear_field():
     """get a generic trilinear field"""
