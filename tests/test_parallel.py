@@ -24,7 +24,7 @@ def main():
 
     for nu in (False, True):
         viscid.logger.info("Test set, nonuniform = {0}".format(nu))
-        b = viscid.vlab.get_dipole(l=(-20, -6.4, -6.4), h=(20, 6.4, 6.4),
+        b = viscid.get_dipole(l=(-20, -6.4, -6.4), h=(20, 6.4, 6.4),
                                    n=(256, 128, 128), dtype='f4', nonuniform=nu)
         seed = viscid.Circle(p0=(0, 0, 0), pole=(0, 0, 1), r=5.5, n=int(1e4))
 

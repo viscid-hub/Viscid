@@ -74,7 +74,7 @@ def _main():
     plot3d = not args.nothree
 
     viscid.logger.info("Testing field lines on 2d field...")
-    B = viscid.vlab.get_dipole(twod=True)
+    B = viscid.get_dipole(twod=True)
     line = viscid.seed.Line((0.2, 0.0, 0.0), (1.0, 0.0, 0.0), 10)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
@@ -82,7 +82,7 @@ def _main():
              ibound=0.07, obound0=obound0, obound1=obound1)
 
     viscid.logger.info("Testing field lines on 3d field...")
-    B = viscid.vlab.get_dipole(m=[0.2, 0.3, -0.9])
+    B = viscid.get_dipole(m=[0.2, 0.3, -0.9])
     sphere = viscid.seed.Sphere((0.0, 0.0, 0.0), 2.0, ntheta=20, nphi=10)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
