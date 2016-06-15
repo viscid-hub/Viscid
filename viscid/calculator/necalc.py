@@ -44,12 +44,18 @@ class VneCalc(object):
         return args[0].wrap(result, context=self.ret_context,
                             fldtype=self.ret_type)
 
+neg = VneCalc("-a", {'a': 0})
 add = VneCalc("a + b", {'a': 0, 'b': 1})
 diff = VneCalc("a - b", {'a': 0, 'b': 1})
 mul = VneCalc("a * b", {'a': 0, 'b': 1})
 relative_diff = VneCalc("(a - b) / a", {'a': 0, 'b': 1})
 abs_diff = VneCalc("abs(a - b)", {'a': 0, 'b': 1})
 abs_val = VneCalc("abs(a)", {'a': 0})
+
+def scale(a, fld):
+    a = np.asarray(a, dtype=fld.dtype)
+    b = fld.data  # pylint: disable=unused-variable
+    return fld.wrap(ne.evaluate("a * b"))
 
 def abs_max(fld):
     a = fld.data  # pylint: disable=W0612
