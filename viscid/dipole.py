@@ -4,8 +4,10 @@
 from __future__ import print_function, division
 
 import numpy as np
-# import viscid
+import viscid
 from viscid import field
+from viscid import seed
+from viscid.calculator import interp_trilin
 # from viscid import vutil
 
 try:
@@ -15,8 +17,8 @@ except ImportError:
     _HAS_NUMEXPR = False
 
 
-__all__ = ['get_dipole_moment_sm', 'get_dipole', 'fill_dipole',
-           'set_in_region', 'make_spherical_mask']
+__all__ = ['get_dipole_moment_sm', 'guess_dipole_moment', 'get_dipole',
+           'fill_dipole', 'set_in_region', 'make_spherical_mask']
 
 
 DEFAULT_STRENGTH = -1.0 / 3.0574e-5
@@ -51,6 +53,27 @@ def get_dipole_moment_sm(strength=DEFAULT_STRENGTH, theta=0.0, mu=0.0,
     assert np.isclose(np.linalg.norm(ret), np.abs(strength))
     return ret
 
+def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
+                        cap_ntheta=121, cap_nphi=121, plot=False):
+    """guess dipole moment from a B field"""
+    cap = seed.SphericalCap(r=r, angle=cap_angle, ntheta=cap_ntheta,
+                            nphi=cap_nphi)
+    b_cap = interp_trilin(b, cap)
+
+    # FIXME: this doesn't get closer than 1.6 deg @ (theta, mu) = (0, 7.5)
+    #        so maybe the index is incorrect somehow?
+    idx = np.argmax(viscid.magnitude(b_cap).data)
+    pole = cap.points()[:, idx]
+    # FIXME: it should be achievabe to get strength from the magimum magnitude,
+    #        up to the direction
+    pole = strength * pole / np.linalg.norm(pole)
+    # # not sure where 0.133 comes from, this is probably not correct
+    # pole *= 0.133 * np.dot(pole, b_cap.data.reshape(-1, 3)[idx, :]) * r**3
+
+    if plot:
+        from viscid.plot import mpl
+        mpl.plot(viscid.magnitude(b_cap), show=True)
+    return pole
 
 def get_dipole(m=(0, 0, DEFAULT_STRENGTH), l=None, h=None, n=None,
                twod=False, dtype='f8', nonuniform=False):
