@@ -128,6 +128,7 @@ project = BinaryOperation("project", "dot mag",
                           doc="Callable, scalar projection of a onto b; a dot b / norm(b)")
 normalize = UnaryOperation("normalize", "normalize",
                            doc="Callable, divide a vector field by its magnitude")
+grad = UnaryOperation("grad", "grad", doc="Callable, gradient of a scalar field")
 div = UnaryOperation("div", "div", doc="Callable, divergence of a vector field")
 curl = UnaryOperation("curl", "curl", doc="Callable, curl of a vector field")
 
@@ -147,6 +148,7 @@ if has_numexpr:
     cross.add_implementation("numexpr", necalc.cross)
     project.add_implementation("numexpr", necalc.project)
     normalize.add_implementation("numexpr", necalc.normalize)
+    grad.add_implementation("numexpr", necalc.grad)
     div.add_implementation("numexpr", necalc.div)
     curl.add_implementation("numexpr", necalc.curl)
 

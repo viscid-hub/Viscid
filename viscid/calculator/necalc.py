@@ -114,6 +114,10 @@ def normalize(fld_a):
     normed = ne.evaluate("a / sqrt((ax**2) + (ay**2) + (az**2))")
     return fld_a.wrap(normed, fldtype="Vector")
 
+def grad(fld):
+    """ first order """
+    pass
+
 def div(fld):
     """ first order """
     vx, vy, vz = fld.component_views()
