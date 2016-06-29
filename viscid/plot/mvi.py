@@ -558,7 +558,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     Parameters:
         lines (list): See :py:func:`lines2source`
         scalars (TYPE): See :py:func:`lines2source`
-        style (str): 'strip' or 'tube'
+        style (str): 'tube' or 'none'
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         name (str): Description
@@ -586,11 +586,15 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
 
     src = lines2source(lines, scalars=scalars, name=name)
 
+    # always use the stripper since actually turns a collection of line
+    # segments into a line... that way capping will cap lines, not line
+    # segments, etc.
+    lines = mlab.pipeline.stripper(src, figure=figure)
     if style == "tube":
-        lines = mlab.pipeline.tube(src, figure=figure, tube_radius=tube_radius,
+        lines = mlab.pipeline.tube(lines, figure=figure, tube_radius=tube_radius,
                                    tube_sides=tube_sides)
-    elif style == "strip":
-        lines = mlab.pipeline.stripper(src, figure=figure)
+    elif style == "none" or not style:
+        pass
     else:
         raise ValueError("Unknown style for lines: {0}".format(style))
 
