@@ -885,6 +885,8 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
     first_idx = np.cumsum([0] + npts[:-1])
     vertices = [np.asarray(line) for line in lines]
     vertices = np.concatenate(lines, axis=1)
+    if vertices.dtype.kind not in 'fc':
+        vertices = np.asarray(vertices, dtype='f')
 
     if vertices.shape[0] > 3:
         if scalars is not None:
@@ -924,11 +926,16 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
         else:
             scalars = scalars.reshape(-1, N)
 
-        if scalars.dtype.kind == 'S':
+        if scalars.dtype.kind in ['S', 'U']:
             # translate hex colors (#ff00ff) into rgb values
             scalars = np.char.lstrip(scalars, '#').astype('S6')
             scalars = np.char.zfill(scalars, 6)
-            scalars = np.frombuffer(np.char.decode(scalars, 'hex'), dtype='u1')
+            # this np.char.decode(..., 'hex') doesn't work for py3k; kinda silly
+            try:
+                scalars = np.frombuffer(np.char.decode(scalars, 'hex'), dtype='u1')
+            except LookupError:
+                import codecs
+                scalars = np.frombuffer(codecs.decode(scalars, 'hex'), dtype='u1')
             scalars = scalars.reshape(-1, 3).T
         elif scalars.shape[0] == 1:
             # normal scalars
