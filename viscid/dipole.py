@@ -72,7 +72,10 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
 
     if plot:
         from viscid.plot import mpl
-        mpl.plot(viscid.magnitude(b_cap), show=True)
+        mpl.plot(viscid.magnitude(b_cap))
+        mpl.plot(viscid.magnitude(b_cap), style='contour', levels=10,
+                 colors='k', colorbar=False, ax=mpl.plt.gca())
+        mpl.show()
     return pole
 
 def get_dipole(m=(0, 0, DEFAULT_STRENGTH), l=None, h=None, n=None,
@@ -128,7 +131,7 @@ def fill_dipole(B, m=(0, 0, -1 / 3.0574e-05), mask=None):
         Bdip['z'] = ((three * Zcc * mdotr / rsq) - mz) / rsq**1.5
 
     if mask:
-        B.data[...] = np.choose(mask, [B, Bdip])
+        B.data[...] = np.choose(mask.astype('i'), [B, Bdip])
     return B
 
 def set_in_region(a, b, alpha=1.0, beta=1.0, mask=None, out=None):
