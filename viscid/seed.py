@@ -428,7 +428,7 @@ class MeshPoints(SeedGen):
 
     def as_uv_coordinates(self):
         l, m = self._make_uv_axes()
-        crds = viscid.wrap_crds("uniform_cartesian", (('x', l), ('y', m)))
+        crds = viscid.wrap_crds("nonuniform_cartesian", (('x', l), ('y', m)))
         return crds
 
     def as_local_coordinates(self):
@@ -1025,49 +1025,40 @@ class Sphere(SeedGen):
         return arr
 
 
-class SphericalCap(Sphere):  # pylint: disable=abstract-class-little-used
+class SphericalCap(Sphere):  # pylint: disable=bad-option-value
     """A spherical cone or cap of seeds
 
     Defined by a center, and a point indicating the direction of the
     cone, and the half angle of the cone.
     """
-    def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), angle=90.0,
-                 ntheta=20, nphi=20, phi_endpoint=False, pole_is_vector=True,
-                 theta_phi=False, roll=0.0, cache=False, dtype=None):
+    def __init__(self, angle0=0.0, angle=90.0, **kwargs):
         """Summary
 
         Args:
-            p0 (list, tuple, or ndarray): Origin of sphere as (x, y, z)
-            r (float): Radius of sphere; or calculated from pole if 0
-            pole (list, tuple, or ndarray): Vector pointing
-                in the direction of the north pole of the sphere.
-                Defaults to (0, 0, 1).
+            angle0 (float): starting angle from pole, useful for making
+                a hole in the center of the cap
             angle (float): cone angle of the cap in degrees
-            ntheta (int): Number of points in theta
-            nphi (int): Number of points in phi
-            phi_endpoint (bool): if true, then let phi inclue upper
-                value. This is false by default since 0 == 2pi.
-            pole_is_vector (bool): Whether pole is a vector or a
-                vector
-            theta_phi (bool): If True, reult can be reshaped as
-                (theta, phi), otherwise it's (phi, theta)
+            **kwargs: passed to :py:class:`Sphere` constructor
         """
-        super(SphericalCap, self).__init__(p0, r=r, pole=pole, ntheta=ntheta,
-                                           nphi=nphi, phi_endpoint=phi_endpoint,
-                                           pole_is_vector=pole_is_vector,
-                                           theta_phi=theta_phi, roll=roll,
-                                           cache=cache, dtype=dtype)
-        self.angle = angle * (np.pi / 180.0)
+        super(SphericalCap, self).__init__(thetalim=(angle0, angle), **kwargs)
+
+    @property
+    def angle0(self):
+        return self.thetalim[0]
+
+    @property
+    def angle(self):
+        return self.thetalim[1]
 
     def to_local(self, pts_3d):
         raise NotImplementedError()
 
-    def _make_uv_axes(self):
-        theta = np.linspace(self.angle, 0.0, self.ntheta, endpoint=False)
-        theta = np.array(theta[::-1], dtype=self.dtype)
-        phi = np.linspace(0, 2.0 * np.pi, self.nphi,
-                          endpoint=self.phi_endpoint).astype(self.dtype)
-        return theta, phi
+    # def _make_uv_axes(self):
+    #     theta = np.linspace(self.angle, 0.0, self.ntheta, endpoint=False)
+    #     theta = np.array(theta[::-1], dtype=self.dtype)
+    #     phi = np.linspace(0, 2.0 * np.pi, self.nphi,
+    #                       endpoint=self.phi_endpoint).astype(self.dtype)
+    #     return theta, phi
 
     def as_mesh(self):
         pts = super(SphericalCap, self).as_mesh()
@@ -1096,28 +1087,22 @@ class Circle(SphericalCap):
 
     Defined by a center and a point normal to the plane of the circle
     """
-    def __init__(self, p0=(0, 0, 0), pole=(0, 0, 1), n=20, r=None,
-                 endpoint=False, pole_is_vector=True, roll=0.0, cache=False,
-                 dtype=None):
-        """Summary
+    def __init__(self, n=20, **kwargs):
+        """Circle of seed points
 
         Args:
-            p0 (list, tuple, or ndarray): Center of circle as (x, y, z)
-            pole (list, tuple, or ndarray): Vector pointing
-                in the direction normal to the circle. Defaults to
-                (0, 0, 1).
-            n (int): Number of points around the circle
-            r (float): Radius of circle; or calculated from pole if 0
-            endpoint (bool): if true, then let phi inclue upper value.
-                This is false by default since 0 == 2pi.
-            pole_is_vector (bool): Whether pole is a vector or a
-                vector
+            **kwargs: passed to :py:class:`Sphere` constructor
+
+        Note:
+            The pole keyword argument is the direction *NORMAL* to the
+            circle.
         """
-        super(Circle, self).__init__(p0, r=r, pole=pole, angle=90.0, nphi=n,
-                                     phi_endpoint=endpoint,
-                                     pole_is_vector=pole_is_vector, roll=roll,
-                                     ntheta=1, cache=cache, dtype=dtype)
-        self.n = self.nphi
+        super(Circle, self).__init__(angle0=90.0, angle=90.0, ntheta=1, nphi=n,
+                                     **kwargs)
+
+    @property
+    def n(self):
+        return self.nphi
 
     def to_local(self, pts_3d):
         raise NotImplementedError()
