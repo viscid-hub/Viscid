@@ -216,7 +216,8 @@ def as_spherefield(fld, order=('phi', 'theta'), units=''):
     ret = convert_coordinates(fld, order, mapping, units=units)
     return ret
 
-def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north'):
+def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
+                      make_periodic=False):
     """Prepare a theta/phi or lat/lon field for polar projection
 
     Args:
@@ -257,9 +258,28 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north'):
     else:
         clist[1][1] = scale * clist[1][1] + offset
 
+    mfld_dat = mfld.data
+    if make_periodic:
+        if mfld.crds.is_uniform():
+            phi_diff = clist[0][1][1] - clist[0][1][0]
+        else:
+            phi_diff = clist[0][1][-1] - clist[0][1][0]
+
+        if phi_diff < 2 * np.pi - 1e-5:
+            if mfld.crds.is_uniform():
+                clist[0][1][1] += phi_diff / clist[0][1][2]
+                if not np.isclose(clist[0][1][1] - clist[0][1][0], 2 * np.pi):
+                    viscid.logger.warn("Tried unsuccessfully to make uniform "
+                                       "polar mapfield periodic: {0:g}"
+                                       "".format(clist[0][1][1] - clist[0][1][0]))
+            else:
+                clist[0][1] = np.concatenate([clist[0][1],
+                                              [clist[0][1][0] + 2 * np.pi]])
+            mfld_dat = np.concatenate([mfld_dat, mfld_dat[0:1, :]], axis=0)
+
     crds = wrap_crds(mfld.crds.crdtype, clist, dtype=mfld.crds.dtype)
     ctx = dict(crds=crds)
-    return mfld.wrap(mfld.data, context=ctx)
+    return mfld.wrap(mfld_dat, context=ctx)
 
 def pts2polar_mapfield(pts, pts_axes, pts_unit='deg', hemisphere='north'):
     """Prepare theta/phi or lat/lon points for a polar plot

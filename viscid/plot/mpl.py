@@ -716,8 +716,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         ax = _get_polar_axis(ax=ax)
 
+        make_periodic = plot_kwargs.get('style', None) in ("contour", "contourf")
         new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
-                                           hemisphere=hemisphere)
+                                           hemisphere=hemisphere,
+                                           make_periodic=make_periodic)
 
         plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
