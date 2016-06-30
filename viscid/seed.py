@@ -806,8 +806,8 @@ class Sphere(SeedGen):
     """Make seeds on the surface of a sphere"""
 
     def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), ntheta=20, nphi=20,
-                 thetalim=(0, 180.0), philim=(0, 360.0), theta_endpoint=False,
-                 phi_endpoint=False, pole_is_vector=True, theta_phi=False,
+                 thetalim=(0, 180.0), philim=(0, 360.0), theta_endpoint='auto',
+                 phi_endpoint='auto', pole_is_vector=True, theta_phi=False,
                  roll=0.0, cache=False, dtype=None):
         """Make seeds on the surface of a sphere
 
@@ -821,12 +821,20 @@ class Sphere(SeedGen):
             nphi (int): Number of points in phi
             thetalim (list): min and max theta (in degrees)
             philim (list): min and max phi (in degrees)
+            theta_endpoint (str): this is a bit of a hack to keep from
+                having redundant seeds at poles. You probably just want
+                auto here
             phi_endpoint (bool): if true, then let phi inclue upper
                 value. This is false by default since 0 == 2pi.
             pole_is_vector (bool): Whether pole is a vector or a
                 vector
             theta_phi (bool): If True, the uv and local representations
                 are ordered (theta, phi), otherwise (phi, theta)
+            roll (float): Roll the seeds around the pole by this angle
+                in deg
+
+        Raises:
+            ValueError: if thetalim or philim don't have 2 values each
         """
         super(Sphere, self).__init__(cache=cache, dtype=dtype)
 
@@ -891,6 +899,35 @@ class Sphere(SeedGen):
         else:
             return ()
 
+    def _resolve_theta_endpoints(self):
+        if self.theta_endpoint == 'auto':
+            theta_endpoints = [True, True]
+            for i in range(2):
+                if self._includes_pole(i):
+                    theta_endpoints[i] = False
+        else:
+            if isinstance(self.theta_endpoint, (list, tuple)):
+                theta_endpoints = self.theta_endpoint  # pylint: disable=redefined-variable-type
+            else:
+                theta_endpoints = [self.theta_endpoint] * 2
+        return theta_endpoints
+
+    def _resolve_phi_endpoint(self):
+        phi_endpoint = self.phi_endpoint
+        if phi_endpoint == 'auto':
+            phi_endpoint = not self._spans_phi
+        return phi_endpoint
+
+    def _includes_pole(self, whichlim):
+        return np.any(np.isclose(self.thetalim[whichlim], [0, np.pi]))
+
+    def _skipped_poles(self):
+        # True if a pole is included in thetalim, but excluded by the linspace
+        # endpoint
+        inc_poles = [self._includes_pole(i) for i in range(2)]
+        endpts = self._resolve_theta_endpoints()
+        return np.bitwise_and(inc_poles, np.invert(endpts)).tolist()
+
     def get_nr_points(self, **kwargs):
         return self.ntheta * self.nphi
 
@@ -938,15 +975,27 @@ class Sphere(SeedGen):
         return arr
 
     def _make_uv_axes(self):
-        if self.theta_endpoint:
+        # well this decision tree is a mess, sorry about that
+        theta_endpoints = self._resolve_theta_endpoints()
+        if all(theta_endpoints):
             theta = np.linspace(self.thetalim[0], self.thetalim[1],
                                 self.ntheta).astype(self.dtype)
+        elif any(theta_endpoints):
+            if theta_endpoints[0]:
+                theta = np.linspace(self.thetalim[0], self.thetalim[1],
+                                    self.ntheta, endpoint=False).astype(self.dtype)
+            else:
+                theta = np.linspace(self.thetalim[1], self.thetalim[0],
+                                    self.ntheta, endpoint=False).astype(self.dtype)
+                theta = theta[::-1]
         else:
             theta = np.linspace(self.thetalim[0], self.thetalim[1],
                                 self.ntheta + 1).astype(self.dtype)
             theta = 0.5 * (theta[1:] + theta[:-1])
+
+        phi_endpoint = self._resolve_phi_endpoint()
         phi = np.linspace(self.philim[0], self.philim[1], self.nphi,
-                          endpoint=self.phi_endpoint).astype(self.dtype)
+                          endpoint=phi_endpoint).astype(self.dtype)
         return theta, phi
 
     def _make_local_axes(self):
@@ -977,22 +1026,33 @@ class Sphere(SeedGen):
         new_shape = [3] + list(self.uv_shape)
         pts = self.get_points().reshape(new_shape)
 
-        if self._is_whole_sphere:
-            if self.theta_phi:
-                pole0 = np.empty((3, 1, self.nphi), dtype=pts.dtype)
-                pole1 = np.empty((3, 1, self.nphi), dtype=pts.dtype)
-            else:
-                pole0 = np.empty((3, self.nphi, 1), dtype=pts.dtype)
-                pole1 = np.empty((3, self.nphi, 1), dtype=pts.dtype)
+        # If the 'top' pole is in thetalim but not included in pts, then
+        # extend the pts to include the pole so there aren't holes in the pole
+        skipped_poles = self._skipped_poles()
+        sgn = [+1, -1]
+        # cat_ax = [1, 2]
 
-            pole0[...] = (self.p0 + (self.r * self.pole)).reshape(3, 1, 1)
-            pole1[...] = (self.p0 - (self.r * self.pole)).reshape(3, 1, 1)
+        for i in range(2):
+            if skipped_poles[i]:
+                if self.theta_phi:
+                    polei = np.empty((3, 1, self.nphi), dtype=pts.dtype)
+                else:
+                    polei = np.empty((3, self.nphi, 1), dtype=pts.dtype)
 
+                polei[...] = (self.p0 + sgn[i] * (self.r * self.pole)).reshape(3, 1, 1)
+
+                cat_lst = [pts]
+                cat_lst.insert(i, polei)
+                if self.theta_phi:
+                    pts = np.concatenate(cat_lst, axis=1)
+                else:
+                    pts = np.concatenate(cat_lst, axis=2)
+
+        # close up the seam at phi = 0 / phi = 2 pi
+        if self._spans_phi and not self._resolve_phi_endpoint():
             if self.theta_phi:
-                pts = np.concatenate([pole0, pts, pole1], axis=1)
                 pts = np.concatenate([pts, pts[:, :, 0, None]], axis=2)
             else:
-                pts = np.concatenate([pole0, pts, pole1], axis=2)
                 pts = np.concatenate([pts, pts[:, 0, None, :]], axis=1)
 
         if not self.theta_phi:
@@ -1003,20 +1063,30 @@ class Sphere(SeedGen):
     def arr2mesh(self, arr):
         arr = arr.reshape(self.uv_shape)
 
-        if self._is_whole_sphere:
+        # average values around a pole for the new mesh vertex @ the pole so
+        # that there's no gap in the mesh
+        skipped_poles = self._skipped_poles()
+        rpt_idx = [0, -1]
+        for i in range(2):
+            if skipped_poles[i]:
+                if self.theta_phi:
+                    p = np.repeat(np.mean(arr[rpt_idx[i], :, None], keepdims=1),
+                                  arr.shape[1], axis=1)
+                    cat_lst = [arr]
+                    cat_lst.insert(i, p)
+                    arr = np.concatenate(cat_lst, axis=0)
+                else:
+                    p = np.repeat(np.mean(arr[:, rpt_idx[i], None], keepdims=1),
+                                  arr.shape[0], axis=0)
+                    cat_lst = [arr]
+                    cat_lst.insert(i, p)
+                    arr = np.concatenate(cat_lst, axis=1)
+
+        # repeat last phi to close the seam at phi = 0 / 2 pi
+        if self._spans_phi and not self._resolve_phi_endpoint():
             if self.theta_phi:
-                p0 = np.repeat(np.mean(arr[0, :, None], keepdims=1),
-                               arr.shape[1], axis=1)
-                p1 = np.repeat(np.mean(arr[-1, :, None], keepdims=1),
-                               arr.shape[1], axis=1)
-                arr = np.concatenate([p0, arr, p1], axis=0)
                 arr = np.concatenate([arr, arr[:, 0, None]], axis=1)
             else:
-                p0 = np.repeat(np.mean(arr[:, 0, None], keepdims=1),
-                               arr.shape[0], axis=0)
-                p1 = np.repeat(np.mean(arr[:, -1, None], keepdims=1),
-                               arr.shape[0], axis=0)
-                arr = np.concatenate([p0, arr, p1], axis=1)
                 arr = np.concatenate([arr, arr[0, None, :]], axis=0)
 
         if not self.theta_phi:
@@ -1025,14 +1095,19 @@ class Sphere(SeedGen):
         return arr
 
 
-class SphericalCap(Sphere):  # pylint: disable=bad-option-value
+class SphericalCap(Sphere):
     """A spherical cone or cap of seeds
 
     Defined by a center, and a point indicating the direction of the
     cone, and the half angle of the cone.
+
+    This is mostly a wrapper for :py:class:`Sphere` that sets
+    thetalim, but it also does some special stuff when wrapping
+    meshes to remove the last theta value so that the cap isn't
+    closed at the bottom.
     """
     def __init__(self, angle0=0.0, angle=90.0, **kwargs):
-        """Summary
+        """Make a spherical cap with an optional hole in the middle
 
         Args:
             angle0 (float): starting angle from pole, useful for making
@@ -1052,35 +1127,6 @@ class SphericalCap(Sphere):  # pylint: disable=bad-option-value
 
     def to_local(self, pts_3d):
         raise NotImplementedError()
-
-    # def _make_uv_axes(self):
-    #     theta = np.linspace(self.angle, 0.0, self.ntheta, endpoint=False)
-    #     theta = np.array(theta[::-1], dtype=self.dtype)
-    #     phi = np.linspace(0, 2.0 * np.pi, self.nphi,
-    #                       endpoint=self.phi_endpoint).astype(self.dtype)
-    #     return theta, phi
-
-    def as_mesh(self):
-        pts = super(SphericalCap, self).as_mesh()
-
-        # don't include anti-pole direction since this is a cap
-        if self.theta_phi:
-            pts = pts[:, :-1, :]
-        else:
-            pts = pts[:, :, :-1]
-
-        return pts
-
-    def arr2mesh(self, arr):
-        arr = super(SphericalCap, self).arr2mesh(arr)
-
-        # don't include anti-pole direction since this is a cap
-        if self.theta_phi:
-            arr = arr[:-1, :]
-        else:
-            arr = arr[:, :-1]
-
-        return arr
 
 class Circle(SphericalCap):
     """A circle of seeds
