@@ -7,22 +7,30 @@ env:
     - 'deployable="^(master|dev|travis)$"'
     - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
     - QT_API=pyside
+    - MESA_GL_VERSION_OVERRIDE=3.2
+    - MESA_GLSL_VERSION_OVERRIDE=150
   matrix:
-    - PYTHON=2.6 DEPS="minimal"
+    # - PYTHON=2.6 DEPS="minimal"
     - PYTHON=2.7 DEPS="" FLAKE=1 DEPLOY_DOCS=1
-    - PYTHON=3.3 DEPS=""
-    # - PYTHON=3.4 DEPS=full  # is this necessary if 3.3 and 3.5 are tested?
-    - PYTHON=3.5 DEPS="" FLAKE=1
+    # - PYTHON=3.3 DEPS=""
+    # # - PYTHON=3.4 DEPS=full  # is this necessary if 3.3 and 3.5 are tested?
+    # - PYTHON=3.5 DEPS="" FLAKE=1
 
 git:
   submodules: false
 
-sudo: false
+dist: trusty
+sudo: required
 
 addons:
   apt:
     packages:
     - gfortran
+    - xvfb
+    - mesa-utils
+    - libglu1-mesa
+    - libgl1-mesa-dri
+    - libgl1-mesa-glx
 
 # cache:
 #   directories:
@@ -34,6 +42,7 @@ before_install:
 
   # before we build, check to see if we're in a release branch, and if
   # so, then do some 0th order validation on the viscid.__version__
+  - dpkg -s libgl1-mesa-glx
   - 'if [[ ($TRAVIS_BRANCH =~ ^(.*release.*|master)$) ]]; then
        if [ "$(grep __version__ viscid/__init__.py | grep -E "(dev|travis)")" != "" ]; then
          echo "Oops, you are preparing a release, but you still have either";
@@ -83,7 +92,12 @@ before_install:
   - cp resources/matplotlibrc ~/.config/matplotlib/
   - cp resources/viscidrc ~/.viscidrc
   - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+  - 'printf ''XVFB=/usr/bin/Xvfb\nXVFBARGS=":99 -screen 0 1440x900x24 -fbdir /var/run -ac"\nPIDFILE=/var/run/xvfb.pid\ncase "$1" in\nstart)\necho -n "Starting virtual X frame buffer: Xvfb"\nstart-stop-daemon --start --quiet --pidfile $PIDFILE --make-pidfile --background --exec $XVFB -- $XVFBARGS\necho "."\n;;\nstop)\necho -n "Stopping virtual X frame buffer: Xvfb"\nstart-stop-daemon --stop --quiet --pidfile $PIDFILE\necho "."\n;;\nrestart)\n$0 stop\n$0 start\n;;\n*)\necho "Usage: /etc/init.d/xvfb {start|stop|restart}"\nexit 1\nesac\nexit 0'' > xvfb'
+  - sudo mv xvfb /etc/init.d/
+  - sudo chmod 755 /etc/init.d/xvfb
+  - sudo sh -e /etc/init.d/xvfb start
+  - sleep 3
+  - glxinfo
 
 install:
   - mkdir -p ${HOME}/mycache
