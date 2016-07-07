@@ -105,7 +105,11 @@ def _as_datetime64_scalar(time, unit=None):
     unit_args = [unit] if unit else []
 
     if isinstance(time, viscid.string_types):
-        time = as_isotime(time)
+        try:
+            time = as_isotime(time)
+        except (TypeError, ValueError):
+            pass  # Let ValueErrors happen in numpy constructors below
+
         if _is_timeunit(np.datetime64(time).dtype) and _NP_TZ:
             has_tz = bool(re.match(r".*([+-][0-9]{2,4}|Z)$", time))
             if not has_tz:
@@ -125,7 +129,12 @@ def _as_timedelta64_scalar(time, unit=None):
     return np.timedelta64(time, *unit_args)
 
 def as_isotime(time):
-    """Try to convert times in string format to ISO 8601"""
+    """Try to convert times in string format to ISO 8601
+
+    Raises:
+        TypeError: Elements are not strings
+        ValueError: numpy.datetime64(time) fails
+    """
     if isinstance(time, (list, tuple, np.ndarray)):
         scalar = False
     else:
@@ -138,12 +147,23 @@ def as_isotime(time):
             t = t.strip()
             if re.match(r"^[0-9]{2}([0-9]{2}:){3,5}[0-9]{2}(\.[0-9]*)?$", t):
                 # Handle YYYY:MM:DD:hh:mm:ss.ms -> YYYY-MM-DDThh:mm:ss.ms
+                #        YYYY:MM:DD:hh:mm:ss    -> YYYY-MM-DDThh:mm:ss
+                #        YYYY:MM:DD:hh:mm       -> YYYY-MM-DDThh:mm
+                #        YYYY:MM:DD:hh          -> YYYY-MM-DDThh
                 ret[i] = t[:10].replace(':', '-') + 'T' + t[11:]
             elif re.match(r"^[0-9]{2}([0-9]{2}:){2}[0-9]{2}$", t):
                 # Handle YYYY:MM:DD -> YYYY-MM-DD
                 ret[i] = t.replace(':', '-')
             else:
                 ret[i] = t
+
+            try:
+                np.datetime64(ret[i])
+            except ValueError:
+                raise
+        else:
+            raise TypeError("Can only turn strings to ISO 8601 time format "
+                            "({0})".format(type(t)))
 
     if scalar:
         return ret[0]
