@@ -121,21 +121,22 @@ def main():
 
     if 1:
         viscid.logger.info('Testing Spherical Cap (phi, theta)...')
-        seeds = viscid.SphericalCap([0, 0, 0], r=1.0, ntheta=64, nphi=80,
+        seeds = viscid.SphericalCap(p0=[0, 0, 0], r=1.0, ntheta=64, nphi=80,
                                     pole=[-1, -1, -1], theta_phi=False)
         run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, add_title="PT",
                  view_kwargs=dict(azimuth=180, elevation=180), show=args.show)
 
     if 1:
         viscid.logger.info('Testing Spherical Cap (theta, phi)...')
-        seeds = viscid.SphericalCap([0, 0, 0], r=1.0, ntheta=64, nphi=80,
+        seeds = viscid.SphericalCap(p0=[0, 0, 0], r=1.0, ntheta=64, nphi=80,
                                     pole=[-1, -1, -1], theta_phi=True)
         run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, add_title="TP",
                  view_kwargs=dict(azimuth=180, elevation=180), show=args.show)
 
     if 1:
         viscid.logger.info('Testing Spherical Patch...')
-        seeds = viscid.SphericalPatch([0, 0, 0], [0, -0, -1], 30.0, 59.9,
+        seeds = viscid.SphericalPatch(p0=[0, 0, 0], p1=[0, -0, -1],
+                                      max_alpha=30.0, max_beta=59.9,
                                       nalpha=65, nbeta=80, r=0.5, roll=45.0)
         run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
 
