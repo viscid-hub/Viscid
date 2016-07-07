@@ -53,7 +53,7 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
         crd_arrs = [crd_arrs]
 
     for crd_name, arr in zip(crd_names, crd_arrs):
-        arr = vutil.asarray_dt(arr)
+        arr = viscid.asarray_datetime64(arr, conservative=True)
 
         clist.append((crd_name, arr))
         try:
@@ -66,7 +66,7 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
         else:
             diff = [1, 1]
 
-        if vutil.isdatetime(diff):
+        if viscid.is_timedelta_like(diff):
             diff = diff / np.ones((1,), dtype=diff.dtype)
 
         if np.allclose(diff[0], diff[1:], atol=atol):
@@ -75,7 +75,7 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
             is_uniform = False
 
     # uniform crds don't play nice with datetime axes
-    if any(vutil.isdatetime(arr) for arr in crd_arrs):
+    if any(viscid.is_time_like(arr) for arr in crd_arrs):
         is_uniform = False
 
     if is_uniform:
@@ -104,7 +104,7 @@ def wrap_crds(crdtype, clist, **kwargs):
 
 def extend_arr_by_half(x, full_arr=True):
     """sandwich array with two new values w/ no change in dx"""
-    x = vutil.asarray_dt(x)
+    x = viscid.asarray_datetime64(x, conservative=True)
 
     if full_arr:
         dxl = x[1] - x[0]
@@ -681,7 +681,7 @@ class StructuredCrds(Coordinates):
         if axis:
             crd_arr = crd_arr.get_crd(axis, center=center)
 
-        crd_arr = vutil.asarray_dt(crd_arr)
+        crd_arr = viscid.asarray_datetime64(crd_arr, conservative=True)
 
         if slc is not None:
             crd_arr = crd_arr[slc]
@@ -1286,7 +1286,7 @@ class UniformCrds(StructuredCrds):
             viscid.logger.warn(s)
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
-                if vutil.isdatetime(arr):
+                if viscid.is_time_like(arr):
                     raise NotImplementedError("Datetime arrays can't be in "
                                               "uniform crds yet")
                 arr = np.asarray(arr)
@@ -1304,7 +1304,7 @@ class UniformCrds(StructuredCrds):
             for _, arr in init_clist:
                 if len(arr) != 3:
                     raise ValueError("is this a full_array?")
-                if vutil.isdatetime([arr[0], arr[1]]):
+                if viscid.is_time_like([arr[0], arr[1]]):
                     raise NotImplementedError("Datetime arrays can't be in "
                                               "uniform crds yet")
             _nc_linspace_args = [arr for _, arr in init_clist]

@@ -271,6 +271,51 @@ def _apply_actions(acts):
             act_args = [act_args]
         act[0](*act_args)
 
+def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
+                       using_default_equalax):
+    new_ax_arrs = [None] * len(ax_arrs)
+    datetime_fmt = [None] * len(ax_arrs)
+
+    for i, XI in enumerate(ax_arrs):
+        if viscid.is_datetime_like(XI):
+            # new_ax_arrs[i] = mdates.date2num(viscid.as_datetime(XI))
+            new_ax_arrs[i] = viscid.as_datetime(XI)
+            datetime_fmt[i] = datefmt
+        elif viscid.is_timedelta_like(XI):
+            # new_ax_arrs[i] = mdates.date2num(viscid.as_datetime(XI))
+            new_ax_arrs[i] = viscid.as_datetime(XI)
+            datetime_fmt[i] = timefmt
+        else:
+            new_ax_arrs[i] = XI
+
+    # with time axes, you probably don't want equalax, but only override
+    # this if the user didn't specify with a plot_opt
+    try:
+        if using_default_equalax:
+            actions.pop(actions.index((ax.axis, 'equal')))
+    except ValueError:
+        pass
+
+    # take x and y plot opts and convert them to datetimes
+    for i, setter in enumerate([ax.set_xlim, ax.set_ylim]):
+        if datetime_fmt[i]:
+            for iact, act in enumerate(actions):
+                if act[0] == setter:
+                    # print("OVERRIDE::", act)
+                    datetimeified = viscid.as_datetime(act[1]).tolist()
+                    actions[iact] = (setter, datetimeified)
+                    # print("       --", actions[iact])
+
+    return new_ax_arrs, datetime_fmt
+
+def _apply_time_axes(fig, ax, datetime_fmt, autofmt_xdate):
+    for fmt, axis_i in zip(datetime_fmt, (ax.xaxis, ax.yaxis)):
+        if fmt:
+            datetime_formatter = mdates.DateFormatter(fmt)
+            axis_i.set_major_formatter(datetime_formatter)
+            if axis_i is ax.xaxis and autofmt_xdate:
+                plt.gcf().autofmt_xdate()
+
 def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
                  which_axes="xy"):
     ax_axes = {'x': ax.xaxis, 'y': ax.yaxis}
@@ -295,7 +340,8 @@ def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
 
 def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
                    masknan, latlon, flip_plot, patchec, patchlw, patchaa,
-                   datefmt, autofmt_xdate, all_masked, extra_args, **kwargs):
+                   datefmt, timefmt, autofmt_xdate, all_masked, extra_args,
+                   actions, using_default_equalax, **kwargs):
     """Make a 2d plot of a single patch
 
     Returns:
@@ -343,13 +389,20 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         dat = dat.T
         namex, namey = namey, namex
 
-    datetime_mask = [False, False]
-    if vutil.isdatetime(X):
-        X = mdates.date2num(X.astype(datetime))
-        datetime_mask[0] = True
-    if vutil.isdatetime(Y):
-        Y = mdates.date2num(Y.astype(datetime))
-        datetime_mask[1] = True
+    ax_arrs, datetime_fmt = _prepare_time_axes(ax, [X, Y], datefmt, timefmt,
+                                               actions, using_default_equalax)
+    X, Y = ax_arrs
+
+    # datetime_fmt = [False, False]
+    # _XY = [X, Y]
+    # for i, XI in enumerate(_XY):
+    #     if viscid.is_datetime_like(XI):
+    #         _XY[i] = mdates.date2num(viscid.as_datetime(XI))
+    #         datetime_fmt[i] = datefmt
+    #     elif viscid.is_timedelta_like(XI):
+    #         _XY[i] = mdates.date2num(viscid.as_datetime(XI))
+    #         datetime_fmt[i] = timefmt
+    # X, Y = _XY
 
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, *extra_args, **kwargs)
@@ -362,10 +415,10 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
 
-    for isdt_i, axis_i in zip(datetime_mask, (ax.xaxis, ax.yaxis)):
-        if isdt_i:
-            date_format = mdates.DateFormatter(datefmt)
-            axis_i.set_major_formatter(date_format)
+    for _fmt, axis_i in zip(datetime_fmt, (ax.xaxis, ax.yaxis)):
+        if _fmt:
+            datetime_formatter = mdates.DateFormatter(_fmt)
+            axis_i.set_major_formatter(datetime_formatter)
             if axis_i is ax.xaxis and autofmt_xdate:
                 plt.gcf().autofmt_xdate()
 
@@ -420,6 +473,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # parse plot_opts
     plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    using_default_equalax = 'equalaxis' not in plot_kwargs
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'equalaxis': True})
 
@@ -436,6 +490,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
     datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
+    timefmt = plot_kwargs.pop("timefmt", "%H:%M:%S")
     autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
     autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
@@ -566,9 +621,9 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         p, all_masked = _plot2d_single(action_ax, patch, style,
                                        namex, namey, mod, scale, masknan,
                                        latlon, flip_plot,
-                                       patchec, patchlw, patchaa, datefmt,
+                                       patchec, patchlw, patchaa, datefmt, timefmt,
                                        autofmt_xdate, all_masked, extra_args,
-                                       **plot_kwargs)
+                                       actions, using_default_equalax, **plot_kwargs)
 
     # apply option actions... this is for setting xlim / xscale / etc.
     _apply_actions(actions)
@@ -810,6 +865,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # parse plot_opts
     plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    using_default_equalax = 'equalaxis' not in plot_kwargs
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'equalaxis': False})
 
@@ -824,6 +880,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
     datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
+    timefmt = plot_kwargs.pop("timefmt", "%H:%M:%S")
     autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
     autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
@@ -845,10 +902,9 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     dat = np.concatenate([blk.data for blk in fld.patches])
 
-    datetime_mask = [False]
-    if vutil.isdatetime(x):
-        x = mdates.date2num(x.astype(datetime))
-        datetime_mask[0] = True
+    ax_arrs, datetime_fmt = _prepare_time_axes(ax, [x, dat], datefmt, timefmt,
+                                               actions, using_default_equalax)
+    x, dat = ax_arrs
 
     if mod:
         x *= mod
@@ -858,13 +914,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         dat = np.ma.masked_where(np.isnan(dat), dat)
     p = ax.plot(x, dat, **plot_kwargs)
 
-    for isdt_i, axis_i in zip(datetime_mask, (ax.xaxis, ax.yaxis)):
-        if isdt_i:
-            date_format = mdates.DateFormatter(datefmt)
-            axis_i.set_major_formatter(date_format)
-            if axis_i is ax.xaxis and autofmt_xdate:
-                plt.gcf().autofmt_xdate()
-
+    _apply_time_axes(plt.gcf(), ax, datetime_fmt, autofmt_xdate)
     _apply_actions(actions)
 
     ###############################
