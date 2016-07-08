@@ -1462,7 +1462,7 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
 
         for i, start, stop in izip(count(), line_start, line_stop):
             n_coarse = stop - start  # number of verts, not segments
-            n_fine = np.ceil(subsample * (n_coarse - 1)) + 1
+            n_fine = int(np.ceil(subsample * (n_coarse - 1)) + 1)
             coarse_verts = verts[:, start:stop]
             coarse_scalars = scalars[:, start:stop]
             fine_verts[i] = np.empty((nr_sdims, n_fine), dtype=verts.dtype)
