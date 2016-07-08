@@ -1133,7 +1133,7 @@ class Circle(SphericalCap):
 
     Defined by a center and a point normal to the plane of the circle
     """
-    def __init__(self, n=20, **kwargs):
+    def __init__(self, n=20, endpoint=None, **kwargs):
         """Circle of seed points
 
         Args:
@@ -1143,12 +1143,18 @@ class Circle(SphericalCap):
             The pole keyword argument is the direction *NORMAL* to the
             circle.
         """
+        if endpoint is not None:
+            kwargs['phi_endpoint'] = endpoint
         super(Circle, self).__init__(angle0=90.0, angle=90.0, ntheta=1, nphi=n,
                                      **kwargs)
 
     @property
     def n(self):
         return self.nphi
+
+    @property
+    def endpoint(self):
+        return self.phi_endpoint
 
     def to_local(self, pts_3d):
         raise NotImplementedError()
