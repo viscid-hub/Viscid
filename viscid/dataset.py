@@ -278,6 +278,8 @@ class DatasetTemporal(Dataset):
         # integers, floats, and bare colons that mark the slices
         # Note: for datetime-like strings, the letters preceeding a datetime
         # are necessary, otherwise 02:20:30.01 would have more than one meaning
+        # FIXME: ideally this would work for both ggcm time syntax (which
+        #        works now) as well as ISO time syntax
         rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+f?)\s*|"
                 r"[-+]?[0-9]+")
         r = re.compile(rstr, re.I)

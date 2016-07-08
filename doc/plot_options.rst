@@ -66,6 +66,8 @@ minorfmt       ticker.Formatter  Formatter for minor axes (x and y)
 majorloc       ticker.Locator    Locator for major axes (x and y)
 minorloc       ticker.Locator    Locator for minor axes (x and y)
 datefmt        str               date format string in the datetime.strftime format
+timefmt        str               time format string in the datetime.strftime format
+                                 (used for timedeltas)
 autofmt_xdate  [bool]            auto-rotate date labels on the x-axis
 autofmtxdate   [bool]            alias for autofmt_xdate
 show           [bool]            Call :py:func:`pyplot.show` before returning

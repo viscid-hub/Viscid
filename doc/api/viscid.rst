@@ -26,6 +26,7 @@ Submodules
    viscid.field
    viscid.grid
    viscid.mapfield
+   viscid.npdatetime
    viscid.parallel
    viscid.pyeval
    viscid.seed

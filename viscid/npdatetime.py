@@ -194,6 +194,7 @@ def as_datetime64(time, unit=None):
     return time
 
 def as_timedelta64(time, unit=None):
+    """Convert to a timedelta64 type"""
     if isinstance(time, np.ndarray):
         time = time.astype(_format_unit(unit, base=DELTA_BASE))
     elif isinstance(time, (list, tuple)):
