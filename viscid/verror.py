@@ -4,7 +4,7 @@ from __future__ import print_function
 
 
 __all__ = ['UnimportedModule', 'DeferredImportError', 'BackendNotFound',
-           'KeyboardInterruptError']
+           'NoBasetimeError', 'KeyboardInterruptError']
 
 
 class UnimportedModule(object):
@@ -40,6 +40,12 @@ class DeferredImportError(ImportError):
 class BackendNotFound(RuntimeError):
     """Calculator backend not installed"""
     pass
+
+
+class NoBasetimeError(Exception):
+    """When a dataset is trying to get time as datetime but has no basetime"""
+    def __init__(self, msg):
+        super(NoBasetimeError, self).__init__(msg)
 
 
 class KeyboardInterruptError(Exception):

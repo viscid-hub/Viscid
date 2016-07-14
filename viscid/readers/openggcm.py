@@ -18,6 +18,7 @@ try:
 except ImportError:
     _has_numexpr = False
 
+import viscid
 from viscid import logger
 from viscid.compat import string_types
 from viscid.readers.vfile_bucket import ContainerFile
@@ -29,6 +30,10 @@ from viscid import grid
 from viscid import field
 from viscid.coordinate import wrap_crds
 from viscid.calculator import plasma
+
+
+GGCM_EPOCH = np.datetime64('1966-01-01T00:00:00Z')
+GGCM_NO_DIPTILT = np.datetime64('1967-01-01T00:00:00Z')
 
 
 def find_file_uptree(directory, basename, max_depth=8, _depth=0):
@@ -461,71 +466,27 @@ class GGCMFile(object):  # pylint: disable=abstract-method
         else:
             self.set_info("_viscid_log_fname", False)
 
-    def _get_dipoletime_as_datetime(self):
-        try:
-            # FIXME: this should be STARTTIME, but that's not part
-            # of a libmrc object
-            diptime = ":".join(self.find_info('ggcm_dipole_dipoltime'))
-            dipoletime = datetime.strptime(diptime, "%Y:%m:%d:%H:%M:%S.%f")
-        except KeyError:
-            raise KeyError("Can't use UT times without reading "
-                           "a logfile that has a value for "
-                           "ggcm_dipole_dipoltime")
-        except ValueError:
-            raise ValueError("Dipoletime from the logfile is mangled "
-                             "({0}). You may need to fix the log file"
-                             "by hand.".format(diptime))
-        return dipoletime
+    @property
+    def dipoletime(self):
+        dipoletime = self.find_info('ggcm_dipole_dipoltime', default=None)
+        if dipoletime is None:
+            raise KeyError("Node {0} did not set ggcm_dipole_dipoltime. Maybe "
+                           "your logfile is missing or mangled."
+                           "".format(repr(self)))
+        return viscid.as_datetime64(dipoletime)
 
-    def _sub_translate_time(self, time):
-        if isinstance(time, string_types):
-            try:
-                time = datetime.strptime(time, "UT%Y:%m:%d:%H:%M:%S.%f")
-            except ValueError:
-                pass
-
-        if isinstance(time, datetime):
-            if time.year < 1967:
-                # times < 1967 are not valid GGCM UT times, so pass them to
-                # the super class
-                return NotImplemented
-            dipoletime = self._get_dipoletime_as_datetime()
-            # Why was this relative to time 0?
-            # delta = dipoletime - datetime.strptime("00", "%S")
-            delta = time - dipoletime
-            return delta.total_seconds()
-
-        return NotImplemented
-
-    def _sub_format_time(self, time, style=".02f"):
-        """
-        Args:
-            t (float): time
-            info (dict): info dict
-            style (str): for this method, can be anything
-                :func:`viscid.vutil.format_time` can understand, or
-                'UT' to print a UT time
-
-        Returns:
-            string or NotImplemented if style is not understood
-        """
-        if style.lower().startswith("ut"):
-            style = style[2:].strip()
-            dipoletime = self._get_dipoletime_as_datetime()
-            ut_time = dipoletime + self.time_as_timedelta(time)
-            return vutil.format_time(ut_time, style)
-        else:
-            return NotImplemented
-
-    def _sub_time_as_datetime(self, time, epoch):
-        try:
-            dipoletime = self._get_dipoletime_as_datetime()
-            ut_time = dipoletime + self.time_as_timedelta(time)
-            return ut_time
-        except (KeyError, ValueError):
-            pass
-        return NotImplemented
-
+    @staticmethod
+    def parse_timestring(timestr):
+        prefix = 'time='
+        timestr.strip()
+        if not timestr.startswith(prefix):
+            raise ValueError("Time string '{0}' is malformed".fermat(timestr))
+        timestr = timestr[len(prefix):].split()
+        t = float(timestr[0])
+        uttime = viscid.as_datetime64(timestr[2])
+        basetime = uttime - viscid.as_timedelta64(t, 's')
+        basetime = viscid.round_time(basetime, 1)
+        return basetime, uttime
 
 class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-method
     """An abstract class from which jrrle and fortbin files are derived

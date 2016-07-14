@@ -66,7 +66,7 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
         else:
             diff = [1, 1]
 
-        if viscid.is_timedelta_like(diff):
+        if viscid.is_timedelta_like(diff, conservative=True):
             diff = diff / np.ones((1,), dtype=diff.dtype)
 
         if np.allclose(diff[0], diff[1:], atol=atol):
@@ -75,7 +75,7 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
             is_uniform = False
 
     # uniform crds don't play nice with datetime axes
-    if any(viscid.is_time_like(arr) for arr in crd_arrs):
+    if any(viscid.is_time_like(arr, conservative=True) for arr in crd_arrs):
         is_uniform = False
 
     if is_uniform:
@@ -1286,7 +1286,7 @@ class UniformCrds(StructuredCrds):
             viscid.logger.warn(s)
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
-                if viscid.is_time_like(arr):
+                if viscid.is_time_like(arr, conservative=True):
                     raise NotImplementedError("Datetime arrays can't be in "
                                               "uniform crds yet")
                 arr = np.asarray(arr)
@@ -1304,7 +1304,7 @@ class UniformCrds(StructuredCrds):
             for _, arr in init_clist:
                 if len(arr) != 3:
                     raise ValueError("is this a full_array?")
-                if viscid.is_time_like([arr[0], arr[1]]):
+                if viscid.is_time_like([arr[0], arr[1]], conservative=True):
                     raise NotImplementedError("Datetime arrays can't be in "
                                               "uniform crds yet")
             _nc_linspace_args = [arr for _, arr in init_clist]

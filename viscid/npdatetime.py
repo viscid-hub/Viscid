@@ -24,18 +24,23 @@ from distutils.version import LooseVersion
 import re
 
 import numpy as np
+
 import viscid
+from viscid.compat import izip
 
 
 __all__ = ['as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
            'to_datetime64', 'to_timedelta64', 'to_datetime', 'to_timedelta',
-           'as_isotime', 'to_isotime',
+           'as_isotime', 'to_isotime', 'format_time', 'format_datetime',
            'is_valid_datetime64', 'is_valid_timedelta64',
+           'round_datetime', 'round_timedelta', 'round_time',
            'asarray_datetime64', 'linspace_datetime64',
-           'is_datetime_like', 'is_timedelta_like', 'is_time_like']
+           'is_datetime_like', 'is_timedelta_like',
+           'is_time_like']
 
 _NP_TZ = LooseVersion(np.__version__) < LooseVersion('1.11')
 TIME_UNITS = ('as', 'fs', 'ps', 'ns', 'us', 'ms', 's', 'm', 'h')
+TIME_SCALE = (1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 60, 60)
 DATE_UNITS = ('D', 'W', 'M', 'Y')
 
 DATETIME_BASE = "datetime64"
@@ -104,7 +109,9 @@ def _most_precise_diff(dt1, dt2):
 def _as_datetime64_scalar(time, unit=None):
     unit_args = [unit] if unit else []
 
-    if isinstance(time, viscid.string_types):
+    if is_timedelta_like(time):
+        scalar = as_timedelta64(time, unit=unit).astype(_format_unit(None))
+    elif isinstance(time, viscid.string_types):
         try:
             time = as_isotime(time)
         except (TypeError, ValueError):
@@ -116,16 +123,46 @@ def _as_datetime64_scalar(time, unit=None):
                 time += 'Z'
 
         scalar = np.datetime64(time, *unit_args)
-    elif isinstance(time, np.timedelta64):
-        scalar = np.array([time]).astype(_format_unit(unit))[0]
-    elif isinstance(time, timedelta):
-        scalar = np.array([time], dtype='timedelta64').astype(_format_unit(unit))[0]
     else:
         scalar = np.datetime64(time, *unit_args)
     return scalar
 
 def _as_timedelta64_scalar(time, unit=None):
     unit_args = [unit] if unit else []
+    flt_unit = unit if unit else 's'
+    # turn 'H:M:S.ms', 'M:S.ms', 'S.ms' into floating point seconds
+    if isinstance(time, viscid.string_types):# and ':' in time:
+        time = [float(t) for t in time.split(':')][::-1]
+        if len(time) > 1 and unit is not None:
+            raise ValueError("When giving time as a string, units are automatic")
+        if len(time) > 3:
+            raise ValueError("Timedelta as string only goes up to hours")
+        t_flt = 0.0
+        for factor, t in zip([1, 60, 60 * 60], time):
+            t_flt += factor * t
+        time = t_flt
+        flt_unit = 's'
+    # turn floating point time into integer with the correct unit
+    if is_datetime_like(time):
+        time = as_datetime64(time) - as_datetime64(np.timedelta64(0, 's'))
+    elif isinstance(time, (np.timedelta64, timedelta)):
+        time = np.timedelta64(time).astype(_format_unit(unit, base=DELTA_BASE))
+    elif isinstance(time, (int, float, np.integer, np.floating)):
+        orig_time, orig_flt_unit = time, flt_unit
+        unit_idx = TIME_UNITS.index(flt_unit)
+        try:
+            eps = np.finfo(time).resolution
+        except ValueError:
+            eps = 1e-15
+        while not np.isclose(time, int(time), rtol=eps, atol=1e-15):
+            if unit_idx <= 0:
+                raise ValueError("Floating point time {0} [{1}] is too precise "
+                                 "for any time unit?".format(orig_time, orig_flt_unit))
+            unit_idx -= 1
+            time *= TIME_SCALE[unit_idx]
+            flt_unit = TIME_UNITS[unit_idx]
+        time = np.timedelta64(int(time), flt_unit)
+        unit, unit_args = flt_unit, [flt_unit]
     return np.timedelta64(time, *unit_args)
 
 def as_isotime(time):
@@ -144,7 +181,7 @@ def as_isotime(time):
     ret = [None] * len(time)
     for i, t in enumerate(time):
         if isinstance(t, viscid.string_types):
-            t = t.strip()
+            t = t.strip().upper().lstrip('UT')
             if re.match(r"^[0-9]{2}([0-9]{2}:){3,5}[0-9]{2}(\.[0-9]*)?$", t):
                 # Handle YYYY:MM:DD:hh:mm:ss.ms -> YYYY-MM-DDThh:mm:ss.ms
                 #        YYYY:MM:DD:hh:mm:ss    -> YYYY-MM-DDThh:mm:ss
@@ -194,12 +231,18 @@ def as_datetime64(time, unit=None):
     return time
 
 def as_timedelta64(time, unit=None):
-    """Convert to a timedelta64 type"""
-    if isinstance(time, np.ndarray):
-        time = time.astype(_format_unit(unit, base=DELTA_BASE))
-    elif isinstance(time, (list, tuple)):
-        time = np.array([_as_timedelta64_scalar(ti, unit=unit) for ti in time],
-                        dtype=_format_unit(unit, base=DELTA_BASE))
+    """Convert to a timedelta64 type
+
+
+    Args:
+        time (timedelta-like): an int/float/string/... to convert
+        unit (None): This is the unit of the input, the result
+            will be the most coarse unit that can store the time
+    """
+    # if isinstance(time, np.ndarray):
+    #     time = time.astype(_format_unit(None, base=DELTA_BASE))
+    if isinstance(time, (np.ndarray, list, tuple)):
+        time = np.array([_as_timedelta64_scalar(ti, unit=unit) for ti in time])
     else:
         time = _as_timedelta64_scalar(time, unit=unit)
     return time
@@ -215,7 +258,10 @@ def as_datetime(time, unit=None):
     Returns:
         np.ndarray of native datetime.datetime objects (dtype = object)
     """
-    return as_datetime64(time, unit=unit).astype(datetime)
+    try:
+        return as_datetime64(time, unit=unit).astype(datetime)
+    except ValueError:
+        return as_datetime64(as_timedelta64(time, unit=unit)).astype(datetime)
 
 def as_timedelta(time, unit=None):
     """Convert time to a Numpy ndarray of datetime.datetime objects
@@ -272,7 +318,7 @@ def linspace_datetime64(start, stop, n, endpoint=True, unit=None):
     arr[:] = start + np.arange(n) * dx
     return arr
 
-def is_valid_datetime64(arr, unit=False):
+def is_valid_datetime64(arr, unit=None):
     """Returns True iff arr can be made into a datetime64 array"""
     try:
         as_datetime64(arr, unit=unit)
@@ -280,15 +326,112 @@ def is_valid_datetime64(arr, unit=False):
     except ValueError:
         return False
 
-def is_valid_timedelta64(arr, unit=False):
-    """Returns True iff arr can be made into a datetime64 array"""
+def is_valid_timedelta64(arr, unit=None):
+    """Returns True iff arr can be made into a timedelta64 array"""
     try:
         as_timedelta64(arr, unit=unit)
         return True
     except ValueError:
         return False
 
+def round_datetime(a, decimals=0):
+    """round datetime a to the nearest dicimals seconds"""
+    a_as_dt64 = as_datetime64(a)
+    rounded = np.round(as_timedelta(a_as_dt64).total_seconds(), decimals)
+    return as_datetime64(rounded)
+
+def round_timedelta(a, decimals=0):
+    """round timedelta a to the nearest dicimals seconds"""
+    rounded = np.round(as_timedelta(a).total_seconds(), decimals)
+    return as_timedelta64(rounded, unit='s')
+
+def round_time(a, decimals=0):
+    """round a to the nearest dicimals seconds"""
+    if is_datetime_like(a):
+        return round_datetime(a, decimals=decimals)
+    elif is_timedelta_like(a, conservative=True):
+        return round_timedelta(a, decimals=decimals)
+    else:
+        return np.round(a, decimals=decimals)
+
+def format_datetime(time, fmt="%Y-%m-%d %H:%M:%S.%.02f"):
+    """Shortcut to :py:func:`format_time` for a datetime format"""
+    return format_time(time, fmt=fmt)
+
+def format_time(time, fmt='.02f'):
+    """Format time as a string
+
+    Args:
+        t (float): time
+        style (str): for this method, can be::
+          style               |   time  | string
+          --------------------------------------------------------------
+          'hms'               | 90015.0 | "25:00:15.000"
+          'hmss'              | 90015.0 | "25:00:15.000 (090015)"
+          'dhms'              |   900.0 | "0 days 00:15:00.000"
+          'dhmss'             |   900.0 | "0 days 00:15:00.000 (000900)"
+          '.02f'              |   900.0 | '900.00'
+          '%Y-%m-%d %H:%M:%S' |   900.0 | '1970-01-01 00:15:00'
+
+          Note that the last one can involve any formatting strings
+          understood by datetime.strftime
+
+    Returns:
+        str
+    """
+    time = as_datetime(time)
+    ret = ""
+
+    if fmt.lower() == 'ut':
+        fmt = '%Y-%m-%d %H:%M:%S'
+
+    if fmt in ('dhms', 'dhmss', 'hms', 'hmss'):
+        # These are special time-style formatters
+        if fmt.startswith('d'):
+            days = int(as_timedelta64(time) / np.timedelta64(1, 'D'))
+            if days == 1:
+                days_str = '{0} day'.format(days)
+            else:
+                days_str = '{0} days '.format(days)
+        else:
+            days_str = ''
+        ret = datetime.strftime(time, days_str + '%H:%M:%S')
+        if fmt.endswith('ss'):
+            ret += " ({0:06d})".format(int(as_timedelta(time).total_seconds()))
+    elif '%' not in fmt:
+        # if there's no % symbol, then it's probably not a strftime format,
+        # so use fmt as normal string formatting of total_seconds
+        ret = "{0:{1}}".format(as_timedelta(time).total_seconds(), fmt.strip())
+    else:
+        if not fmt:
+            msec_fmt = ['1']
+            fmt = "%Y-%m-%d %H:%M:%S.%f"
+        else:
+            msec_fmt = re.findall(r"%\.?([0-9]*)f", fmt)
+            fmt = re.sub(r"%\.?([0-9]*)f", "%f", fmt)
+
+        tstr = datetime.strftime(time, fmt)
+
+        # now go back and for any %f -> [0-9]{6}, reformat the precision
+        it = list(izip(msec_fmt, re.finditer("[0-9]{6}", tstr)))
+        for ffmt, m in reversed(it):
+            a, b = m.span()
+            val = float("0." + tstr[a:b])
+            ifmt = int(ffmt) if len(ffmt) > 0 else 6
+            f = "{0:0.{1}f}".format(val, ifmt)[2:]
+            tstr = tstr[:a] + f + tstr[b:]
+        ret = tstr
+    return ret
+
 def _check_like(val, _np_types, _native_types, check_str=None):  # pylint: disable=too-many-return-statements
+    """
+    Checks the follwing:
+      - if val is instance of _np_types or _native_types
+      - if val is a list or ndarray of _np_types or _native_types
+      - if val is a string or list of strings that can be parsed by check_str
+    Does not check:
+      - if val is an ndarray of strings that can be parsed by check_str
+    """
     _all_types = _np_types + _native_types
 
     if isinstance(val, _all_types):
@@ -311,19 +454,24 @@ def _check_like(val, _np_types, _native_types, check_str=None):  # pylint: disab
     else:
         return False
 
-def is_datetime_like(val):
+def is_datetime_like(val, conservative=False):  # pylint: disable=unused-argument
     """Returns True iff val is datetime-like"""
     return _check_like(val, (np.datetime64, ), (datetime, ),
                        is_valid_datetime64)
 
-def is_timedelta_like(val):
+def is_timedelta_like(val, conservative=False):
     """Returns True iff val is timedelta-like"""
-    return _check_like(val, (np.timedelta64, ), (timedelta, ),
-                       is_valid_timedelta64)
+    if conservative:
+        return _check_like(val, (np.timedelta64, ), (timedelta, ),
+                           is_valid_timedelta64)
+    else:
+        return _check_like(val, (np.timedelta64, np.floating, np.integer),
+                           (timedelta, float, int), is_valid_timedelta64)
 
-def is_time_like(val):
+def is_time_like(val, conservative=False):
     """Returns True iff val is datetime-like or timedelta-like"""
-    return is_datetime_like(val) or is_timedelta_like(val)
+    return (is_datetime_like(val, conservative=conservative) or
+            is_timedelta_like(val, conservative=conservative))
 
 to_datetime64 = as_datetime64
 to_timedelta64 = as_timedelta64

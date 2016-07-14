@@ -23,8 +23,7 @@ from viscid.compat import izip, string_types
 import numpy as np
 
 
-__all__ = ["timeit", "format_datetime", "format_time", "slice_globbed_filenames",
-           "meshlab_convert"]
+__all__ = ["timeit", "slice_globbed_filenames", "meshlab_convert"]
 
 
 tree_prefix = ".   "
@@ -167,91 +166,6 @@ def str_to_value(s):
             except ValueError:
                 pass
     return ret
-
-def format_datetime(dt, fmt):
-    r"""Wrapper around datetime.datetime.strftime
-
-    This function allows one to specify the precision of fractional
-    seconds (mircoseconds) using something like '%2f' to round to
-    the nearest hundredth of a second.
-
-    Args:
-        dt (datetime.datetime): time to format
-        fmt (str): format string that strftime understands with the
-            addition of '%\.?[0-9]f' to the syntax.
-
-    Returns:
-        str
-    """
-    if len(fmt) == 0:
-        msec_fmt = ['1']
-        fmt = "%Y-%m-%d %H:%M:%S.%f"
-    else:
-        msec_fmt = re.findall(r"%\.?([0-9]*)f", fmt)
-        fmt = re.sub(r"%\.?([0-9]*)f", "%f", fmt)
-
-    tstr = datetime.datetime.strftime(dt, fmt)
-
-    # now go back and for any %f -> [0-9]{6}, reformat the precision
-    it = list(izip(msec_fmt, re.finditer("[0-9]{6}", tstr)))
-    for ffmt, m in reversed(it):
-        a, b = m.span()
-        val = float("0." + tstr[a:b])
-        ifmt = int(ffmt) if len(ffmt) > 0 else 6
-        f = "{0:0.{1}f}".format(val, ifmt)[2:]
-        tstr = tstr[:a] + f + tstr[b:]
-    return tstr
-
-def format_time(t, style='.02f'):
-    """Format time as a string
-
-    Note:
-        If t is a datetime.datetime instance, then this function
-        returns the result of format_datetime(t, style), which is
-        basically datetime.datetime.strftime
-
-    Args:
-        t (float): time
-        style (str): for this method, can be::
-                style          |   time   | string
-                --------------------------------------------------
-                'hms'          | 90015.0  | "25:00:15.000"
-                'hms'          | 90000.0  | "1 day 01:00:15.000"
-                'hmss'         | 90015.0  | "25:00:15.000 (90015)"
-                'dhms'         |   900.0  | "0 days 00:15:00.000"
-                '.02f'         |   900.0  | '900.00'
-
-    Returns:
-        str
-    """
-    lstyle = style.lower()
-    if t is None:
-        return ""
-    elif isinstance(t, datetime.datetime):
-        return format_datetime(t, style)
-    elif "hms" in lstyle:
-        days = int(t // (24 * 3600))
-        hrs = int((t // 3600) % 24)
-        mins = int((t // 60) % 60)
-        secs = t % 60
-
-        if lstyle == "dhms":
-            daystr = "day" if days == 1 else "days"
-            return "{0} {1}, {2}:{3:02d}:{4:04.01f}".format(days, daystr,
-                                                            hrs, mins, secs)
-        elif lstyle.startswith("hms"):
-            hrs += 24 * days
-            s = "{0:02d}:{1:02d}:{2:05.2f}".format(hrs, mins, secs)
-            if lstyle == "hmss":
-                s += " ({0:d})".format(int(t))
-            return s
-        else:
-            raise ValueError("Unknown time style: {0}".format(style))
-    elif lstyle == "none":
-        return ""
-    else:
-        return "{0:{1}}".format(t, style)
-    raise NotImplementedError("should never be here")
 
 def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     """Make sure slices go forward
