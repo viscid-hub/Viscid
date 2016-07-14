@@ -291,7 +291,7 @@ def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
     # with time axes, you probably don't want equalax, but only override
     # this if the user didn't specify with a plot_opt
     try:
-        if using_default_equalax:
+        if using_default_equalax and any(datetime_fmt):
             actions.pop(actions.index((ax.axis, 'equal')))
     except ValueError:
         pass
