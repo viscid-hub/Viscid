@@ -4,6 +4,7 @@
 #
 
 other_args=""
+stop_on_err=0
 tests="?"
 
 print_usage() {
@@ -14,6 +15,7 @@ Run all Viscid tests
 
   Optional Arguments:
     -h          help
+    -S          Stop on first error
     -t TESTS    comma separated list of explicit tests to run, note
                 that you should not include the _test part of the name,
                 i.e., use mvi instead of test_mvi
@@ -24,11 +26,12 @@ exit $1
 }
 
 OPTIND=1
-while getopts "h?a:t:" arg; do
+while getopts "h?Sa:t:" arg; do
   case $arg in
     h|\?)
       print_usage 0;;
     a) other_args="${OPTARG}";;
+    S) stop_on_err=1;;
     t) tests="${OPTARG}";;
     *) print_usage 1;;
   esac
@@ -131,7 +134,7 @@ for test in ${tests}; do
 
   # ${cmd} > >(tee ${fstdout}) 2> >(tee ${fstderr} >&2)
   status="$(cd ${sdir} && ${cmd} 1>${fstdout} 2>${fstderr}; echo "$?")"
-  cat ${fstderr} | grep -qE "^XFAIL:"
+  ! cat ${fstderr} | grep -qE "^XFAIL:"
   xfail_status=$?
 
   echo "===== STDOUT =====" > ${flog}
@@ -144,7 +147,7 @@ for test in ${tests}; do
     passed=$((passed+1))
     echo -e "${PASSC}PASS${NC}: $(basename ${test})"
     rm ${flog}
-  elif [ ${xfail_status} -eq 0 ]; then
+  elif [ ${xfail_status} -ne 0 ]; then
     xfailed=$((xfailed+1))
     echo -e "${XFAILC}XFAIL${NC}: $(basename ${test})"
     cat ${fstderr}
@@ -155,6 +158,10 @@ for test in ${tests}; do
   fi
 
   rm ${fstdout} ${fstderr}
+
+  if [[ ${stop_on_err} -ne 0 && ${status} -ne 0 && ${xfail_status} -eq 0 ]]; then
+    exit 1
+  fi
 
 done
 
