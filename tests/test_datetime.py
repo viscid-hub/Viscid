@@ -16,9 +16,12 @@ def main():
     parser = argparse.ArgumentParser(description="Test divergence")
     parser.add_argument("--show", "--plot", action="store_true")
     args = viscid.vutil.common_argparse(parser)
+    # args.show = True
 
     t = viscid.linspace_datetime64('2006-06-10 12:30:00.0',
-                                   '2006-06-10 12:33:00.0', 4)
+                                   '2006-06-10 12:33:00.0', 16)
+    tL = viscid.as_datetime64('2006-06-10 12:31:00.0')
+    tR = viscid.as_datetime64('2006-06-10 12:32:00.0')
     y = np.linspace(2 * np.pi, 4 * np.pi, 12)
 
     ### plots with a datetime64 axis
@@ -30,7 +33,7 @@ def main():
     fig = mpl.plt.figure(figsize=(10, 5))
     # 1D plot
     mpl.subplot(121)
-    mpl.plot(f0['y=0'], marker='^')
+    mpl.plot(f0[tL:tR]['y=0'], marker='^')
     mpl.plt.xlim(*viscid.as_datetime(t[[0, -1]]).tolist())
     # 2D plot
     mpl.subplot(122)
@@ -44,6 +47,8 @@ def main():
     mpl.plt.close(fig)
 
     ### plots with a timedelta64 axis
+    tL = tL - t[0]
+    tR = tR - t[0]
     t = t - t[0]
     f0 = viscid.ones([t, y], crd_names='ty', center='node')
     T, Y = f0.get_crds(shaped=True)
@@ -53,7 +58,7 @@ def main():
     fig = mpl.plt.figure(figsize=(10, 5))
     # 1D plot
     mpl.subplot(121)
-    mpl.plot(f0['y=0'], marker='^')
+    mpl.plot(f0[tL:tR]['y=0'], marker='^')
     mpl.plt.xlim(*viscid.as_datetime(t[[0, -1]]).tolist())
     # 2D plot
     mpl.subplot(122)
