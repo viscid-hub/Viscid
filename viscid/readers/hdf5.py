@@ -3,8 +3,10 @@ import os
 
 import numpy as np
 
+import viscid
 from viscid import logger
 from viscid.readers import vfile
+
 
 try:
     import h5py
@@ -12,6 +14,7 @@ try:
 except ImportError:
     HAS_H5PY = False
     logger.warn("h5py library not found, no hdf5 support.")
+
 
 class H5pyDataWrapper(vfile.DataWrapper):
     """  """
@@ -39,7 +42,7 @@ class H5pyDataWrapper(vfile.DataWrapper):
     def _read_info(self):
         try:
             with h5py.File(self.fname, 'r') as f:
-                dset = f[self.loc]
+                dset = self._resolve_loc(f)
                 self._shape = list(dset.shape)
                 if self.comp_dim is not None:
                     self._shape.pop(self.comp_dim)
@@ -111,19 +114,23 @@ class H5pyDataWrapper(vfile.DataWrapper):
                 # ability for fields to specify their xyz/zyx order in the
                 # xyz branch, but that branch isn't fully tested yet
                 fill_arr = np.empty(arr.shape[::-1], dtype=arr.dtype)
-            f[self.loc].read_direct(fill_arr, source_sel=source_sel,
-                                    **kwargs)
+            self._resolve_loc(f).read_direct(fill_arr, source_sel=source_sel,
+                                             **kwargs)
             if self.transpose:
                 arr[...] = fill_arr.T
 
     def __getitem__(self, item):
         item = self._inject_comp_slice(item)
         with h5py.File(self.fname, 'r') as f:
-            arr = f[self.loc][item]
+            arr = self._resolve_loc(f)[item]
             if self.transpose:
                 return np.transpose(arr)
             else:
                 return arr
+
+    def _resolve_loc(self, open_file):
+        ret, self.loc = viscid.resolve_path(open_file, self.loc, first=True)
+        return ret
 
 
 class FileLazyHDF5(vfile.VFile):
@@ -143,8 +150,18 @@ class FileLazyHDF5(vfile.VFile):
     def get_data(self, handle):
         return H5pyDataWrapper(self.fname, handle)
 
+    def resolve_path(self, path, first=False):
+        with h5py.File(self.fname, 'r') as f:
+            return viscid.resolve_path(f, path, first=first)
 
-class FileHDF5(vfile.VFile):  # pylint: disable=R0922
+    def find_items(self, item):
+        return self.resolve_path(item)[0]
+
+    def find_item(self, item):
+        return self.resolve_path(item, first=True)[0]
+
+
+class FileHDF5(vfile.VFile):
     """ this is an abstract-ish class from which other types of hdf5 readers
     should derrive """
     _detector = r".*\.h5\s*$"

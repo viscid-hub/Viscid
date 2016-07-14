@@ -7,7 +7,7 @@ from __future__ import print_function, division
 import datetime
 import fnmatch
 from glob import glob
-from itertools import count
+from itertools import count, chain
 import logging
 from operator import itemgetter
 import os.path
@@ -23,7 +23,8 @@ from viscid.compat import izip, string_types
 import numpy as np
 
 
-__all__ = ["timeit", "slice_globbed_filenames", "meshlab_convert"]
+__all__ = ["timeit", "resolve_path", "find_item", "find_items",
+           "slice_globbed_filenames", "meshlab_convert"]
 
 
 tree_prefix = ".   "
@@ -144,6 +145,74 @@ def timeit(f, *args, **kwargs):
           "took", s, secs)
 
     return ret
+
+def resolve_path(dset, loc, first=False):
+    """Search for globbed paths in a nested dict-like hierarchy
+
+    Args:
+        dset (dict): Root of some nested dict-like hierarchy
+        loc (str): path as a glob pattern
+        first (bool): Stop at first match and return a single value
+
+    Raises:
+        KeyError: If there are no glob matches
+
+    Returns:
+        If first == True, (value, path)
+        else, ([value0, value1, ...], [path0, path1, ...])
+    """
+    try:
+        if first:
+            return dset[loc], loc
+        else:
+            return [dset[loc]], [loc]
+    except KeyError:
+        searches = [loc.strip('/').split('/')]
+        dsets = [dset]
+        paths = [[]]
+
+        while any(searches):
+            next_dsets = []
+            next_searches = []
+            next_paths = []
+            for dset, search, path in viscid.izip(dsets, searches, paths):
+                try:
+                    next_dsets.append(dset[search[0]])
+                    next_searches.append(search[1:])
+                    next_paths.append(path + [search[0]])
+                except (KeyError, TypeError, IndexError):
+                    s = [{}.items()]
+                    if hasattr(dset, 'items'):
+                        s.append(dset.items())
+                    if hasattr(dset, 'attrs'):
+                        s.append(dset.attrs.items())
+                    for key, val in chain(*s):
+                        if fnmatch.fnmatchcase(key, search[0]):
+                            next_dsets.append(val)
+                            next_searches.append(search[1:])
+                            next_paths.append(path + [key])
+                            if first:
+                                break
+            dsets = next_dsets
+            searches = next_searches
+            paths = next_paths
+
+    if dsets:
+        dsets, paths = dsets, ['/'.join(p) for p in paths]
+        if first:
+            return dsets[0], paths[0]
+        else:
+            return dsets, paths
+    else:
+        raise KeyError("Path {0} has no matches".format(loc))
+
+def find_item(dset, loc):
+    """Shortcut for first :py:func:`resolve_path`, item only"""
+    return resolve_path(dset, loc, first=True)[0]
+
+def find_items(dset, loc):
+    """Shortcut for :py:func:`resolve_path`, items only"""
+    return resolve_path(dset, loc)[0]
 
 def str_to_value(s):
     ret = s

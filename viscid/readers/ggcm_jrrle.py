@@ -93,16 +93,13 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
                 template.append(d)
 
             if meta is not None:
-                timestr = meta['timestr']
-                # WARNING: lstrip is 'character-wise', this works
-                # cause the first thing we care about is a number
-                timestr = timestr.lstrip("time=").split()
-                t = float(timestr[0])
-                ut = datetime.strptime(timestr[2], "%Y:%m:%d:%H:%M:%S.%f")
-                dipole_time = ut - timedelta(seconds=t)
-                dipole_time = dipole_time.strftime("%Y:%m:%d:%H:%M:%S.%f")
-                dipole_time = dipole_time.split(':')
-                self.set_info("ggcm_dipole_dipoltime", dipole_time)
+                if self.find_info('basetime', default=None) is None:
+                    basetime, _ = self.parse_timestring(meta['timestr'])
+                    if self.parents:
+                        self.parents[0].set_info("basetime", basetime)
+                    else:
+                        self.set_info("basetime", basetime)
+
         return template
 
     @classmethod
