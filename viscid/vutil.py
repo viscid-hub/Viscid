@@ -466,70 +466,92 @@ def extract_index(arr, start=None, stop=None, step=None, endpoint=True,
     _step = 1 if step is None else int(step)
     epsilon_step = epsilon if _step > 0 else -epsilon
 
+    start = convert_timelike(start)
+    stop = convert_timelike(stop)
+
     start = convert_deprecated_floats(start, "start")
     stop = convert_deprecated_floats(stop, "stop")
 
     # print("?!? |{0}|  |{1}|".format(start, stop))
 
-    try:
-        start = start.rstrip()
-        if len(start) == 0:
-            start = None
-        elif start[-1] == 'f':
-            start = float(start[:-1])
-            diff = arr - start + epsilon_step
-            if _step > 0:
-                diff = np.ma.masked_less_equal(diff, 0)
-            else:
-                diff = np.ma.masked_greater_equal(diff, 0)
+    startstop = [start, stop]
+    eps_sign = [1, -1]
 
-            if np.ma.count(diff) == 0:
-                # start value is past the wrong end of the array
+    # if start or stop is not an int, try to make it one
+    for i in range(2):
+        byval = None
+        s = startstop[i]
+        _epsilon_step = epsilon_step
+
+        if viscid.is_datetime_like(s, conservative=True):
+            byval = s.astype(arr.dtype)
+            _epsilon_step = 0
+        elif viscid.is_timedelta_like(s, conservative=True):
+            byval = s.astype(arr.dtype)
+            _epsilon_step = 0
+        else:
+            try:
+                s = s.strip()
+                if len(s) == 0:
+                    startstop[i] = None
+                elif s[-1] == 'f':
+                    byval = float(s[:-1])
+            except AttributeError:
+                pass
+
+        if byval is not None:
+            if _epsilon_step:
+                diff = arr - byval + (eps_sign[i] * _epsilon_step)
+            else:
+                diff = arr - byval
+            zero = np.array([0]).astype(diff.dtype)[0]
+
+            # FIXME: there is far too much decision making here
+            if i == 0:
+                # start
                 if _step > 0:
-                    start = len(arr)
+                    diff = np.ma.masked_less(diff, zero)
                 else:
-                    # start = -len(arr) - 1
-                    # having a value < -len(arr) won't play
-                    # nice with make_fwd_slice, but in this
-                    # case, the slice will have no data, so...
-                    return 0, 0, step
-            else:
-                start = int(np.argmin(np.abs(diff)))
-    except AttributeError:
-        pass
+                    diff = np.ma.masked_greater(diff, zero)
 
-    try:
-        stop = stop.rstrip()
-        if len(stop) == 0:
-            stop = None
-        elif stop[-1] == 'f':
-            stop = float(stop.rstrip()[:-1])
-            diff = arr - stop - epsilon_step
-            if _step > 0:
-                diff = np.ma.masked_greater_equal(diff, 0)
                 if np.ma.count(diff) == 0:
-                    # stop value is past the wong end of the array
-                    stop = 0
+                    # start value is past the wrong end of the array
+                    if _step > 0:
+                        startstop[i] = len(arr)
+                    else:
+                        # start = -len(arr) - 1
+                        # having a value < -len(arr) won't play
+                        # nice with make_fwd_slice, but in this
+                        # case, the slice will have no data, so...
+                        return 0, 0, step
                 else:
-                    stop = int(np.argmin(np.abs(diff)))
-                    if endpoint:
-                        stop += 1
+                    startstop[i] = int(np.argmin(np.abs(diff)))
             else:
-                diff = np.ma.masked_less_equal(diff, 0)
-                if np.ma.count(diff) == 0:
-                    # stop value is past the wrong end of the array
-                    stop = len(arr)
+                # stop
+                if _step > 0:
+                    diff = np.ma.masked_greater(diff, zero)
+                    if np.ma.count(diff) == 0:
+                        # stop value is past the wong end of the array
+                        startstop[i] = 0
+                    else:
+                        startstop[i] = int(np.argmin(np.abs(diff)))
+                        if endpoint:
+                            startstop[i] += 1
                 else:
-                    stop = int(np.argmin(np.abs(diff)))
-                    if endpoint:
-                        if stop > 0:
-                            stop -= 1
-                        else:
-                            # 0 - 1 == -1 which would wrap to the end of
-                            # of the array... instead, just make it None
-                            stop = None
-    except AttributeError:
-        pass
+                    diff = np.ma.masked_less(diff, zero)
+                    if np.ma.count(diff) == 0:
+                        # stop value is past the wrong end of the array
+                        startstop[i] = len(arr)
+                    else:
+                        startstop[i] = int(np.argmin(np.abs(diff)))
+                        if endpoint:
+                            if startstop[i] > 0:
+                                startstop[i] -= 1
+                            else:
+                                # 0 - 1 == -1 which would wrap to the end of
+                                # of the array... instead, just make it None
+                                startstop[i] = None
+    start, stop = startstop
 
     # turn start, stop, step into indices
     sss = [start, stop, step]
@@ -781,6 +803,16 @@ def value_is_float_not_int(value):
             return False
     except TypeError:
         return False
+
+def convert_timelike(value):
+    if value in (None, ''):
+        return None
+    elif viscid.is_datetime_like(value, conservative=True):
+        return viscid.as_datetime64(value)
+    elif viscid.is_timedelta_like(value, conservative=True):
+        return viscid.as_timedelta64(value)
+    else:
+        return value
 
 def convert_deprecated_floats(value, varname="value"):
     if value_is_float_not_int(value):
