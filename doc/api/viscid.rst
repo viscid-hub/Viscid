@@ -22,6 +22,7 @@ Submodules
    viscid.bucket
    viscid.coordinate
    viscid.dataset
+   viscid.dipole
    viscid.field
    viscid.grid
    viscid.mapfield

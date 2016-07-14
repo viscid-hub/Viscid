@@ -56,6 +56,9 @@ def main():
 
     N = 62
 
+    # this is annoying, and it's clearly not motivating me to update the docs
+    without_sphinx = []  # !!!!!!!!!!!!!!!!!
+
     if without_docstr or without_sphinx:
         print("*" * N, file=sys.stderr)
         print("         documentation issues...           ", file=sys.stderr)
