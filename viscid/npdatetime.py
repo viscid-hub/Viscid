@@ -43,8 +43,16 @@ TIME_UNITS = ('as', 'fs', 'ps', 'ns', 'us', 'ms', 's', 'm', 'h')
 TIME_SCALE = (1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 60, 60)
 DATE_UNITS = ('D', 'W', 'M', 'Y')
 
+
 DATETIME_BASE = "datetime64"
 DELTA_BASE = "timedelta64"
+
+if not hasattr(timedelta, "total_seconds"):
+    class timedelta_compat(timedelta):
+        def total_seconds(self):
+            return (self.microseconds + (self.seconds + self.days *
+                                         24 * 3600) * 10**6) / 10**6
+    timedelta = timedelta_compat
 
 
 def _format_unit(unit, base=DATETIME_BASE):
