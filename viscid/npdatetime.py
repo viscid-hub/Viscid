@@ -47,12 +47,24 @@ DATE_UNITS = ('D', 'W', 'M', 'Y')
 DATETIME_BASE = "datetime64"
 DELTA_BASE = "timedelta64"
 
-if not hasattr(timedelta, "total_seconds"):
-    class timedelta_compat(timedelta):
-        def total_seconds(self):
-            return (self.microseconds + (self.seconds + self.days *
-                                         24 * 3600) * 10**6) / 10**6
-    timedelta = timedelta_compat
+
+# This class is for Python2.6 compatability since in 2.6, timedelta has
+# no total_seconds method
+class TimeDeltaCompat(timedelta):
+    @staticmethod
+    def __new__(*args, **kwargs):  # pylint: disable=no-method-argument
+        if len(args) == 2 and isinstance(args[1], (timedelta, np.timedelta64)):
+            return timedelta.__new__(args[0], args[1].days, args[1].seconds,
+                                     args[1].microseconds)
+        else:
+            return timedelta.__new__(*args, **kwargs)
+
+    def total_seconds(self):
+        try:
+            return super(TimeDeltaCompat, self).total_seconds()
+        except AttributeError:
+            return (self.microseconds + (self.seconds + self.days * 24 * 3600)
+                    * 10**6) / 10**6
 
 
 def _format_unit(unit, base=DATETIME_BASE):
@@ -282,7 +294,12 @@ def as_timedelta(time, unit=None):
     Returns:
         np.ndarray of native datetime.datetime objects (dtype = object)
     """
-    return as_timedelta64(time, unit=unit).astype(timedelta)
+    ret = as_timedelta64(time, unit=unit).astype(timedelta)
+    if not isinstance(ret, np.ndarray) and not hasattr(ret, "total_seconds"):
+        ret = TimeDeltaCompat(ret)
+    elif isinstance(ret, np.ndarray) and not hasattr(ret[0], "total_seconds"):
+        ret = np.array([TimeDeltaCompat(r) for r in ret])
+    return ret
 
 def asarray_datetime64(arr, unit=None, conservative=False):
     """If is_valid_datetime64, then return a datetime64 array

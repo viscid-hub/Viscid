@@ -189,7 +189,8 @@ class Node(object):
     @time.setter
     def time(self, val):
         if viscid.is_datetime_like(val):
-            val = (self.basetime - viscid.as_datetime64(val)).total_seconds()
+            val = viscid.as_timedelta(self.basetime - viscid.as_datetime64(val))
+            val = val.total_seconds()
         elif viscid.is_timedelta_like(val, conservative=True):
             val = viscid.as_timedelta(val).total_seconds()
         elif val is not None:
