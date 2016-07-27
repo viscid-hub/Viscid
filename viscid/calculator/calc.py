@@ -27,12 +27,13 @@ try:
 except ImportError as e:
     has_numexpr = False
 
-__all__ = ['add', 'diff', 'mul', 'relative_diff', 'abs_diff', 'abs_val',
-           'abs_max', 'abs_min', 'magnitude', 'dot', 'cross', 'div', 'curl',
-           'normalize', 'project', 'project_vector', 'project_along_line',
-           'resample_lines', 'integrate_along_line', 'integrate_along_lines',
-           'jacobian_at_point', 'jacobian_at_ind', 'jacobian_eig_at_point',
-           'jacobian_eig_at_ind', 'div_at_point', 'curl_at_point']
+__all__ = ['neg', 'scale', 'add', 'diff', 'mul', 'relative_diff', 'abs_diff',
+           'abs_val', 'abs_max', 'abs_min', 'magnitude', 'dot', 'cross',
+           'div', 'curl', 'normalize', 'project', 'project_vector',
+           'project_along_line', 'resample_lines', 'integrate_along_line',
+           'integrate_along_lines', 'jacobian_at_point', 'jacobian_at_ind',
+           'jacobian_eig_at_point', 'jacobian_eig_at_ind', 'div_at_point',
+           'curl_at_point']
 
 
 class Operation(object):
@@ -42,11 +43,12 @@ class Operation(object):
     opname = None
     short_name = None
 
-    def __init__(self, name, short_name, implementations=()):
+    def __init__(self, name, short_name, implementations=(), doc=""):
         self.opname = name
         self.short_name = short_name
         self._imps = OrderedDict()
         self.add_implementations(implementations)
+        setattr(self, "__doc__", doc)
 
     def add_implementation(self, name, func):
         self._imps[name] = func
@@ -95,41 +97,44 @@ class UnaryOperation(Operation):
 class BinaryOperation(Operation):
     def __call__(self, a, b, **kwargs):
         ret = super(BinaryOperation, self).__call__(a, b, **kwargs)
-        ret.name = "{0} {1} {2}".format(a.name, self.short_name, b.name)
+        try:
+            ret.name = "{0} {1} {2}".format(a.name, self.short_name, b.name)
+        except AttributeError:
+            try:
+                ret.name = "{0} {1}".format(self.short_name, b.name)
+            except AttributeError:
+                try:
+                    ret.name = "{0} {1}".format(self.short_name, a.name)
+                except AttributeError:
+                    ret.name = self.short_name
         return ret
 
-add = BinaryOperation("add", "+")
-"""Callable, calculates a + b"""
-diff = BinaryOperation("diff", "-")
-"""Callable, calculates a - b"""
-mul = BinaryOperation("mul", "*")
-"""Callable, calculates a * b"""
-relative_diff = BinaryOperation("relative diff", "%-")
-"""Callable, calculates abs(a - b) / a"""
-abs_diff = BinaryOperation("abs diff", "|-|")
-"""Callable, calculates abs(a - b)"""
-abs_val = UnaryOperation("abs val", "absval")
-"""Callable, calculates abs(a)"""
-abs_max = Operation("abs max", "absmax")
-"""Callable, calculates max(abs(a))"""
-abs_min = Operation("abs min", "absmin")
-"""Callable, calculates min(abs(a))"""
-magnitude = UnaryOperation("magnitude", "magnitude")
-"""Callable, calculates L2 Norm of a vectors in a vector field"""
-dot = BinaryOperation("dot", "dot")
-"""Callable, calculates a dot b"""
-cross = BinaryOperation("cross", "x")
-"""Callable, calculates a cross b"""
-project = BinaryOperation("project", "dot mag")
-"""Callable, scalar projection of a onto b; a dot b / norm(b)"""
-normalize = UnaryOperation("normalize", "normalize")
-"""Callable, divide a vector field by its magnitude"""
-div = UnaryOperation("div", "div")
-"""Callable, divergence of a vector field"""
-curl = UnaryOperation("curl", "curl")
-"""Callable, curl of a vector field"""
+neg = UnaryOperation("neg", "-", doc="Callable, calculates -a")
+scale = BinaryOperation("scale", "*=", doc="Callable, scales a")
+add = BinaryOperation("add", "+", doc="Callable, calculates a + b")
+diff = BinaryOperation("diff", "-", doc="Callable, calculates a - b")
+mul = BinaryOperation("mul", "*", doc="Callable, calculates a * b")
+relative_diff = BinaryOperation("relative diff", "%-",
+                                doc="Callable, calculates abs(a - b) / a")
+abs_diff = BinaryOperation("abs diff", "|-|", doc="Callable, calculates abs(a - b)")
+abs_val = UnaryOperation("abs val", "absval", doc="Callable, calculates abs(a)")
+abs_max = Operation("abs max", "absmax", doc="Callable, calculates max(abs(a))")
+abs_min = Operation("abs min", "absmin", doc="Callable, calculates min(abs(a))")
+magnitude = UnaryOperation("magnitude", "magnitude",
+                           doc="Callable, calculates L2 Norm of a vectors in a vector field")
+dot = BinaryOperation("dot", "dot", doc="Callable, calculates a dot b")
+cross = BinaryOperation("cross", "x", doc="Callable, calculates a cross b")
+project = BinaryOperation("project", "dot mag",
+                          doc="Callable, scalar projection of a onto b; a dot b / norm(b)")
+normalize = UnaryOperation("normalize", "normalize",
+                           doc="Callable, divide a vector field by its magnitude")
+grad = UnaryOperation("grad", "grad", doc="Callable, gradient of a scalar field")
+div = UnaryOperation("div", "div", doc="Callable, divergence of a vector field")
+curl = UnaryOperation("curl", "curl", doc="Callable, curl of a vector field")
 
 if has_numexpr:
+    neg.add_implementation("numexpr", necalc.neg)
+    scale.add_implementation("numexpr", necalc.scale)
     add.add_implementation("numexpr", necalc.add)
     diff.add_implementation("numexpr", necalc.diff)
     mul.add_implementation("numexpr", necalc.mul)
@@ -143,10 +148,13 @@ if has_numexpr:
     cross.add_implementation("numexpr", necalc.cross)
     project.add_implementation("numexpr", necalc.project)
     normalize.add_implementation("numexpr", necalc.normalize)
+    grad.add_implementation("numexpr", necalc.grad)
     div.add_implementation("numexpr", necalc.div)
     curl.add_implementation("numexpr", necalc.curl)
 
 # numpy versions
+neg.add_implementation("numpy", lambda a: -a)
+scale.add_implementation("numpy", lambda a, b: np.asarray(a, dtype=b.dtype) * b)
 add.add_implementation("numpy", lambda a, b: a + b)
 diff.add_implementation("numpy", lambda a, b: a - b)
 mul.add_implementation("numpy", lambda a, b: a * b)
@@ -355,7 +363,7 @@ def local_vector_points(B, x, y, z, dx=None, dy=None, dz=None):
         pts[2 * i + 1, i] += dcrd[i]
         pts[2 * i + 0, i] -= dcrd[i]
     bs = cycalc.interp_trilin(B, seed.Point(pts))
-    # import code; code.interact("in local_vector_points", local=locals())
+    # viscid.interact(banner="in local_vector_points")
     return bs, pts, dcrd
 
 def jacobian_at_point(B, x, y, z, dx=None, dy=None, dz=None):

@@ -18,6 +18,7 @@ try:
 except ImportError:
     _has_numexpr = False
 
+import viscid
 from viscid import logger
 from viscid.compat import string_types
 from viscid.readers.vfile_bucket import ContainerFile
@@ -29,6 +30,10 @@ from viscid import grid
 from viscid import field
 from viscid.coordinate import wrap_crds
 from viscid.calculator import plasma
+
+
+GGCM_EPOCH = np.datetime64('1966-01-01T00:00:00Z')
+GGCM_NO_DIPTILT = np.datetime64('1967-01-01T00:00:00Z')
 
 
 def find_file_uptree(directory, basename, max_depth=8, _depth=0):
@@ -265,6 +270,8 @@ class GGCMGrid(grid.Grid):
             # crds_object.transform_funcs = transform_dict
             # crds_object.transform_kwargs = dict(copy_on_transform=self.copy_on_transform)
             crds_object.reflect_axes = "xy"
+        if not 'units' in crds_object.meta:
+            crds_object.units = 'Re'
         super(GGCMGrid, self).set_crds(crds_object)
 
     def add_field(self, *fields):
@@ -281,9 +288,9 @@ class GGCMGrid(grid.Grid):
                 else:
                     f.post_reshape_transform_func = mhd2gse_field_scalar
                 f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
-                f.meta["crd_system"] = "gse"
+                f.set_info("crd_system", "gse")
             else:
-                f.meta["crd_system"] = "mhd"
+                f.set_info("crd_system", "mhd")
         super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):
@@ -330,6 +337,10 @@ class GGCMGrid(grid.Grid):
         return self._assemble_vector("b", _force_layout=self.force_vector_layout,
                                      pretty_name="B")
 
+    def _get_b1(self):
+        return self._assemble_vector("b1", _force_layout=self.force_vector_layout,
+                                     pretty_name="B")
+
     def _get_v(self):
         return self._assemble_vector("v", _force_layout=self.force_vector_layout,
                                      pretty_name="V")
@@ -340,6 +351,11 @@ class GGCMGrid(grid.Grid):
 
     def _get_e_cc(self):
         return self._assemble_vector("e", suffix="_cc",
+                                     _force_layout=self.force_vector_layout,
+                                     pretty_name="E")
+
+    def _get_e_ec(self):
+        return self._assemble_vector("e", suffix="_ec",
                                      _force_layout=self.force_vector_layout,
                                      pretty_name="E")
 
@@ -389,7 +405,7 @@ class GGCMGrid(grid.Grid):
     def _get_psi(self):
         B = self['b']
 
-        rev = True if B.meta["crd_system"] == "gse" else False
+        rev = True if B.find_info("crd_system", None) == "gse" else False
         psi = plasma.calc_psi(B, rev=rev)
         return psi
 
@@ -450,71 +466,27 @@ class GGCMFile(object):  # pylint: disable=abstract-method
         else:
             self.set_info("_viscid_log_fname", False)
 
-    def _get_dipoletime_as_datetime(self):
-        try:
-            # FIXME: this should be STARTTIME, but that's not part
-            # of a libmrc object
-            diptime = ":".join(self.find_info('ggcm_dipole_dipoltime'))
-            dipoletime = datetime.strptime(diptime, "%Y:%m:%d:%H:%M:%S.%f")
-        except KeyError:
-            raise KeyError("Can't use UT times without reading "
-                           "a logfile that has a value for "
-                           "ggcm_dipole_dipoltime")
-        except ValueError:
-            raise ValueError("Dipoletime from the logfile is mangled "
-                             "({0}). You may need to fix the log file"
-                             "by hand.".format(diptime))
-        return dipoletime
+    @property
+    def dipoletime(self):
+        dipoletime = self.find_info('ggcm_dipole_dipoltime', default=None)
+        if dipoletime is None:
+            raise KeyError("Node {0} did not set ggcm_dipole_dipoltime. Maybe "
+                           "your logfile is missing or mangled."
+                           "".format(repr(self)))
+        return viscid.as_datetime64(dipoletime)
 
-    def _sub_translate_time(self, time):
-        if isinstance(time, string_types):
-            try:
-                time = datetime.strptime(time, "UT%Y:%m:%d:%H:%M:%S.%f")
-            except ValueError:
-                pass
-
-        if isinstance(time, datetime):
-            if time.year < 1967:
-                # times < 1967 are not valid GGCM UT times, so pass them to
-                # the super class
-                return NotImplemented
-            dipoletime = self._get_dipoletime_as_datetime()
-            # Why was this relative to time 0?
-            # delta = dipoletime - datetime.strptime("00", "%S")
-            delta = time - dipoletime
-            return delta.total_seconds()
-
-        return NotImplemented
-
-    def _sub_format_time(self, time, style=".02f"):
-        """
-        Args:
-            t (float): time
-            info (dict): info dict
-            style (str): for this method, can be anything
-                :func:`viscid.vutil.format_time` can understand, or
-                'UT' to print a UT time
-
-        Returns:
-            string or NotImplemented if style is not understood
-        """
-        if style.lower().startswith("ut"):
-            style = style[2:].strip()
-            dipoletime = self._get_dipoletime_as_datetime()
-            ut_time = dipoletime + self.time_as_timedelta(time)
-            return vutil.format_time(ut_time, style)
-        else:
-            return NotImplemented
-
-    def _sub_time_as_datetime(self, time, epoch):
-        try:
-            dipoletime = self._get_dipoletime_as_datetime()
-            ut_time = dipoletime + self.time_as_timedelta(time)
-            return ut_time
-        except (KeyError, ValueError):
-            pass
-        return NotImplemented
-
+    @staticmethod
+    def parse_timestring(timestr):
+        prefix = 'time='
+        timestr.strip()
+        if not timestr.startswith(prefix):
+            raise ValueError("Time string '{0}' is malformed".fermat(timestr))
+        timestr = timestr[len(prefix):].split()
+        t = float(timestr[0])
+        uttime = viscid.as_datetime64(timestr[2])
+        basetime = uttime - viscid.as_timedelta64(t, 's')
+        basetime = viscid.round_time(basetime, 1)
+        return basetime, uttime
 
 class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-method
     """An abstract class from which jrrle and fortbin files are derived
@@ -604,10 +576,10 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
     def make_crds(self):
         if self.get_info('fieldtype') == 'iof':
             # 181, 61
-            nlon, nlat = self._shape_discovery_hack(self._collection[0])
-            crdlst = [['lon', [0.0, 360.0, nlon]],
-                      ['lat', [0.0, 180.0, nlat]]]
-            return wrap_crds("uniform_spherical", crdlst)
+            nphi, ntheta = self._shape_discovery_hack(self._collection[0])
+            crdlst = [['phi', [0.0, 360.0, nphi]],
+                      ['theta', [0.0, 180.0, ntheta]]]
+            return wrap_crds("uniform_spherical", crdlst, units='deg')
 
         else:
             return self.read_grid2()
@@ -678,7 +650,7 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
                     nc = nc[ccind:ccind + 2]
             crdlst.append([dim, nc])
 
-        return wrap_crds("nonuniform_cartesian", crdlst)
+        return wrap_crds("nonuniform_cartesian", crdlst, units='Re')
 
     # def _parse_many(fnames):
     #     pass

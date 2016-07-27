@@ -1,6 +1,12 @@
 # mostly stolen from pyggcm... thanks Matt
 
-from viscid.readers import _fortfile
+try:
+    from viscid.readers import _fortfile
+except ImportError as e:
+    from viscid.verror import UnimportedModule
+    msg = "Fortran readers not available since they were not built correctly"
+    _fortfile = UnimportedModule(e, msg=msg)
+
 
 # FIXME: this my not play nicely in a multiprocessing environment
 _available_units = list(range(10, 50))

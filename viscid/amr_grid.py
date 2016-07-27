@@ -10,6 +10,10 @@ from viscid.amr_field import AMRField
 from viscid.cython import CythonNotBuilt
 from viscid.cython import cyamr
 
+
+__all__ = ["dataset_to_amr_grid"]
+
+
 def dataset_to_amr_grid(dset, template_skeleton=None):
     """Try to divine AMR-ness from a Dataset
 

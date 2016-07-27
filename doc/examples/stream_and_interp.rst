@@ -13,7 +13,7 @@ A more in-depth example of using and plotting streamlines can be found in the :d
     import viscid
     from viscid.plot import mpl
 
-    B = viscid.vlab.get_dipole(twod=True)
+    B = viscid.get_dipole(twod=True)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
     lines, topo = viscid.calc_streamlines(B,

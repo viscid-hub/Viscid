@@ -1,0 +1,11 @@
+# platform: osx-64 linux-64
+name: viscid26minimal
+channels:
+- defaults
+dependencies:
+- python=2.6
+- argparse
+- numpy=1.9.2
+- h5py
+- matplotlib=1.4.3
+- flake8

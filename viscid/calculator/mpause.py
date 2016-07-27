@@ -17,9 +17,11 @@ _paraboloid_dt = np.dtype([('x0', _dtf), ('y0', _dtf), ('z0', _dtf),
 
 
 def paraboloid(y, z, x0, y0, z0, ax, ay, az):
+    """Generic paraboloid function"""
     return ax * (((y - y0) / ay)**2 + ((z - z0) / az)**2) + x0
 
 def paraboloid_normal(y, z, x0, y0, z0, ax, ay, az, normalize=True):  # pylint: disable=unused-argument
+    """Normal vector of a generic paraboloid"""
     dyF = 2.0 * (y - y0) / ay**2
     dzF = 2.0 * (z - z0) / az**2
     dxF = (-1.0 / ax) * np.ones_like(dyF)
@@ -145,7 +147,7 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
     except (IOError, KeyError):
         mp_info = {}
 
-        crd_system = b.meta.get("crd_system", None)
+        crd_system = b.find_info("crd_system", None)
         if crd_system != 'gse':
             raise RuntimeError("get_mp_info can't work in MHD crds, "
                                "switch to GSE please")
@@ -347,7 +349,7 @@ def find_mp_edges(j_block, msphere_thresh=0.1, sheath_thresh=0.1,
     mp_width = sheath_edge - msphere_edge
     return sheath_edge, msphere_edge, mp_width, sheath_ind, sphere_ind
 
-def main():
+def _main():
     f = viscid.load_file("$WORK/xi_fte_001/*.3d.[4050f].xdmf")
     mp = get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
                      slc="x=6.5f:10.5f, y=-4f:4f, z=-4.8f:3f", cache=False)
@@ -413,7 +415,7 @@ def main():
 
 if __name__ == "__main__":
     import sys  # pylint: disable=wrong-import-position,wrong-import-order
-    sys.exit(main())
+    sys.exit(_main())
 
 
 ##

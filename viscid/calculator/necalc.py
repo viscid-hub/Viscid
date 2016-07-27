@@ -44,12 +44,18 @@ class VneCalc(object):
         return args[0].wrap(result, context=self.ret_context,
                             fldtype=self.ret_type)
 
+neg = VneCalc("-a", {'a': 0})
 add = VneCalc("a + b", {'a': 0, 'b': 1})
 diff = VneCalc("a - b", {'a': 0, 'b': 1})
 mul = VneCalc("a * b", {'a': 0, 'b': 1})
 relative_diff = VneCalc("(a - b) / a", {'a': 0, 'b': 1})
 abs_diff = VneCalc("abs(a - b)", {'a': 0, 'b': 1})
 abs_val = VneCalc("abs(a)", {'a': 0})
+
+def scale(a, fld):
+    a = np.asarray(a, dtype=fld.dtype)
+    b = fld.data  # pylint: disable=unused-variable
+    return fld.wrap(ne.evaluate("a * b"))
 
 def abs_max(fld):
     a = fld.data  # pylint: disable=W0612
@@ -108,6 +114,10 @@ def normalize(fld_a):
     normed = ne.evaluate("a / sqrt((ax**2) + (ay**2) + (az**2))")
     return fld_a.wrap(normed, fldtype="Vector")
 
+def grad(fld):
+    """ first order """
+    pass
+
 def div(fld):
     """ first order """
     vx, vy, vz = fld.component_views()
@@ -145,11 +155,13 @@ def curl(fld):
     if fld.iscentered("Cell"):
         crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
         curlcenter = "cell"
-        curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     elif fld.iscentered("Node"):
         crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
         curlcenter = "node"
-        curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     else:
         raise NotImplementedError("Can only do cell and node centered divs")
 

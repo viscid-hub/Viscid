@@ -32,7 +32,7 @@ Branch               Test Status       Docs
 
 .. _master: https://github.com/KristoforMaynard/Viscid
 .. _html_master: http://kristoformaynard.github.io/Viscid/docs/master/index.html
-.. _tests_master: http://kristoformaynard.github.io/Viscid/summary/master-2.7-full/index.html
+.. _tests_master: http://kristoformaynard.github.io/Viscid/summary/master-2.7/index.html
 .. |travis-master| raw:: html
 
   <a href="https://travis-ci.org/KristoforMaynard/Viscid">
@@ -41,7 +41,7 @@ Branch               Test Status       Docs
 
 .. _dev: https://github.com/KristoforMaynard/Viscid/tree/dev
 .. _html_dev: http://kristoformaynard.github.io/Viscid/docs/dev/index.html
-.. _tests_dev: http://kristoformaynard.github.io/Viscid/summary/dev-2.7-full/index.html
+.. _tests_dev: http://kristoformaynard.github.io/Viscid/summary/dev-2.7/index.html
 .. |travis-dev| raw:: html
 
   <a href="https://travis-ci.org/KristoforMaynard/Viscid">
@@ -73,7 +73,7 @@ Contents
   philosophy
   functions
   plot_options
-  mpl_styles
+  mpl_style_gallery
   custom_behavior
   command_line
   dev_guide

@@ -9,6 +9,7 @@ from __future__ import print_function
 import os
 import sys
 
+import numpy as np
 
 CODE_XFAIL = 0xf0
 
@@ -85,6 +86,35 @@ def next_plot_fname(main__file__, series='', fmt='png'):
                                            NPLOT[series], fmt)
     NPLOT[series] += 1
     return name
+
+def assert_similar(a, b, crd_rtol=1e-5, crd_atol=1e-8, dat_rtol=1e-5,
+                   dat_atol=1e-8):
+    a_crds = a.get_crds()
+    b_crds = b.get_crds()
+
+    if len(a_crds) != len(b_crds):
+        print("a's axes: {0}; b's axes: {1}".format(a.crds.axes, b.crds.axes),
+              file=sys.stderr)
+        raise RuntimeError("Fields haven't got same number of crds")
+
+    for i, ac, bc in zip(range(len(a_crds)), a_crds, b_crds):
+        if not np.allclose(ac, bc, rtol=crd_rtol, atol=crd_atol):
+            viscid.logger.error("a[{0}]: {1}".format(a.crds.axes[i], ac))
+            viscid.logger.error("b[{0}]: {1}".format(b.crds.axes[i], bc))
+            raise RuntimeError("crds '{0}'/'{1}' are not allclose"
+                               "".format(a.crds.axes[i], b.crds.axes[i]))
+
+    if not np.allclose(a.data, b.data, rtol=dat_rtol, atol=dat_atol):
+        raise RuntimeError("data are not allclose")
+    return None
+
+def assert_different(a, b, dat_rtol=1e-5, dat_atol=1e-8):
+    try:
+        if np.allclose(a.data, b.data, rtol=dat_rtol, atol=dat_atol):
+            raise RuntimeError("data are allclose")
+    except ValueError:
+        pass
+    return None
 
 def xfail(msg):
     print("XFAIL: {0}".format(msg), file=sys.stderr)

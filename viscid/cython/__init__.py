@@ -12,7 +12,10 @@ probably assume it's the path of least resistance in the whole Cython
 mess.
 """
 
-__all__ = ["cyamr", "cycalc", "cyfield", "integrate", "streamline"]
+__all__ = ["cyamr", "cycalc", "cyfield", "streamline", "integrate",
+           "null_tools",
+           "interp", "interp_nearest", "interp_trilin", "calc_streamlines",
+           "streamlines", "find_classified_nulls", "find_nulls"]
 
 # these are duplicated so that the values are available even if the cython
 # code is not built. In principle, I could parse streamline.pyx to pull
@@ -28,6 +31,7 @@ class CythonNotBuilt(Exception):
     pass
 
 class _dummy(object):
+    """CythonNotBuilt Proxy Object"""
     def __init__(self, msg="Dummy Object", **attrs):
         attrs["msg"] = msg
         for attrname, value in attrs.items():
@@ -43,16 +47,18 @@ class _dummy(object):
 try:
     from viscid.cython import cyamr
     from viscid.cython import cycalc
+    from viscid.cython import cyfield
     from viscid.cython import streamline
+    from viscid.cython import integrate
     from viscid.cython import null_tools
 
     from viscid.cython.cycalc import interp
     from viscid.cython.cycalc import interp_nearest
     from viscid.cython.cycalc import interp_trilin
-    from viscid.cython.null_tools import find_classified_nulls, find_nulls
     from viscid.cython.streamline import calc_streamlines
-
     streamlines = calc_streamlines
+    from viscid.cython.null_tools import find_classified_nulls
+    from viscid.cython.null_tools import find_nulls
 
     # Check to make sure the _streamline_attrs values are the same as
     # the actual cython values. Since this is fragile in that _streamline_attrs
@@ -68,30 +74,47 @@ try:
                 raise RuntimeError(streamline_attrs_err_msg)
     _check_streamline_attrs()
 
-except ImportError:
-    cython_msg = ("Cython module calculator.{0} not available. Cython code "
-                  "must be built using Viscid/setup.py (Note: Cython is "
-                  "not required for the build, just a c compiler)")
+except ImportError as e:
+    cython_msg = ("Cython module calculator.{0} not available. Cython code \n"
+                  "must be rebuilt using Viscid/setup.py (Note: Cython is "
+                  "not required for the build,\njust a c compiler)\n\n"
+                  "ImportError:\n" + str(e).strip())
 
     def interp(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp"))
     def interp_nearest(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp_nearest"))
     def interp_trilin(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp_trilin"))
-    def streamlines(*args, **kwargs):  # pylint: disable=unused-argument
-        raise CythonNotBuilt(cython_msg.format("streamlines"))
     def calc_streamlines(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("calc_streamlines"))
+    streamlines = calc_streamlines
     def find_classified_nulls(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("find_classified_nulls"))
     def find_nulls(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("find_nulls"))
 
     cyamr = _dummy(cython_msg.format("cyamr"))
     cycalc = _dummy(cython_msg.format("cycalc"))
+    cyfield = _dummy(cython_msg.format("cyfield"))
     streamline = _dummy(cython_msg.format("streamline"), **_streamline_attrs)
+    integrate = _dummy(cython_msg.format("integrate"))
     null_tools = _dummy(cython_msg.format("null_tools"))
+
+
+# this is kinda silly, but lets us have access to TOPOLOGY_MS_* even
+# when cython code is not built
+for attr in dir(streamline):
+    if attr[0] != '_' and attr.isupper():
+        vars()[attr] = getattr(streamline, attr)
+        __all__.append(attr)
+
 
 ##
 ## EOF

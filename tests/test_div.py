@@ -7,9 +7,9 @@ There is a systematic error in this case because the initial condition is
 sign waves and we use a central difference divergence """
 
 from __future__ import print_function
-from time import time
 import argparse
 import sys
+from timeit import default_timer as time
 
 import numpy as np
 import matplotlib.pyplot as plt

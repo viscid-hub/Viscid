@@ -7,6 +7,7 @@ from itertools import chain
 
 import numpy as np
 
+import viscid
 from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
@@ -278,7 +279,7 @@ class DatasetTemporal(Dataset):
         # integers, floats, and bare colons that mark the slices
         # Note: for datetime-like strings, the letters preceeding a datetime
         # are necessary, otherwise 02:20:30.01 would have more than one meaning
-        rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+f?)\s*|"
+        rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:T]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+f?)\s*|"
                 r"[-+]?[0-9]+")
         r = re.compile(rstr, re.I)
 
@@ -298,9 +299,11 @@ class DatasetTemporal(Dataset):
         for i, val in enumerate(ret):
             ret[i] = vutil.str_to_value(val)
         if len(ret) > 3:
-            raise ValueError("Could not decipher slice: {0}. Perhaps you're "
+            raise ValueError("Could not decipher slice: '{0}'. Perhaps you're "
                              "missing some letters in front of a time "
                              "string?".format(slc_str))
+        # trim trailing dots
+        ret = [r.rstrip('.') if hasattr(r, 'rstrip') else r for r in ret]
         return slice(*ret)
 
     def _slice_time(self, slc=":"):
@@ -313,7 +316,6 @@ class DatasetTemporal(Dataset):
         Returns:
             list of slices (containing integers only) or ints
         """
-        # print("> slice time", slc)
         # print("SLC::", slc)
         if not isinstance(slc, (list, tuple)):
             slc = [slc]
@@ -343,21 +345,23 @@ class DatasetTemporal(Dataset):
 
             # do translation from string/datetime/etc -> floats
             for i in range(min(len(slc_lst), 2)):
-                translation = self._translate_time(slc_lst[i])
-                if translation != NotImplemented:
-                    # hack: convert floats to a string with a trailing f as per
-                    # the rest of viscid. we do this because _translate_time
-                    # returns a float
-                    if isinstance(translation, (float, np.floating)):
-                        translation = "{0}f".format(translation)
-                    slc_lst[i] = translation
+                t_as_s = None
+                if viscid.is_timedelta_like(slc_lst[i], conservative=True):
+                    t_as_s = viscid.as_timedelta(slc_lst[i]).total_seconds()
+                elif viscid.is_datetime_like(slc_lst[i], conservative=True):
+                    delta_t = viscid.as_datetime64(slc_lst[i]) - self.basetime
+                    t_as_s = viscid.as_timedelta(delta_t).total_seconds()
+                elif not isinstance(slc_lst[i], (int, np.integer, type(None))):
+                    t_as_s = float(slc_lst[i])
+
+                if t_as_s is not None:
+                    slc_lst[i] = "{0}f".format(t_as_s)
 
             if single_val:
                 ret.append(to_slice(times, slc_lst[0]))
             else:
                 ret.append(to_slice(times, slc_lst))
 
-        # print("< time slice made:", ret)
         return ret
 
     def _time_slice_to_iterator(self, slc):

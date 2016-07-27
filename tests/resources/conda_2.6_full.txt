@@ -1,9 +1,0 @@
-argparse
-numpy
-matplotlib
-h5py
-
-scipy
-numexpr
-
-flake8

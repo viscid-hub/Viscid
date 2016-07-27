@@ -232,7 +232,6 @@ class Bucket(object):
 
 if __name__ == '__main__':
     import os
-    import code
     import viscid
 
     _viscid_root = os.path.dirname(viscid.__file__)
@@ -261,7 +260,7 @@ if __name__ == '__main__':
     # print("load test.xdmf")
     # ftest = fm.load('../sample/test.xdmf')
 
-    code.interact(local=locals())
+    viscid.interact()
 
     print("done")
 

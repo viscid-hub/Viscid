@@ -64,8 +64,8 @@ def main():
     ######################################################################
     # plot a random circle with scalars colored by the Matplotlib viridis
     # color map, just because we can; this is a useful toy for debugging
-    circle = viscid.Circle([0, 0, 0], r=4.0, n=128, endpoint=True)
-    scalar = np.sin(circle.as_local_coordinates().get_crd('x'))
+    circle = viscid.Circle(p0=[0, 0, 0], r=4.0, n=128, endpoint=True)
+    scalar = np.sin(circle.as_local_coordinates().get_crd('phi'))
     surf = mvi.plot_line(circle.get_points(), scalars=scalar, clim=0.8)
 
     ######################################################################

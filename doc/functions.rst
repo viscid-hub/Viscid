@@ -1,6 +1,16 @@
 Useful Functions
 ================
 
+Utility Functions
+-----------------
+
+================================  ===============================================
+Function                          Description
+================================  ===============================================
+:py:func:`viscid.interact`        Stop the program and get an interactive prompt
+                                  at any point (uses ipython if it's installed).
+================================  ===============================================
+
 Fields
 ------
 
@@ -211,6 +221,8 @@ Function                                         Description
                                                  :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
 :py:func:`viscid.plot.mvi.vectorbar`             Wrap `mayavi.mlab.vectorbar`, then change the colormap if any
                                                  :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
+:py:func:`viscid.plot.mvi.fancy_axes`            Make axes with 3 shaded walls and a grid similar to what
+                                                 matplotlib and paraview have
 :py:func:`viscid.plot.mvi.axes`                  Wrap `mayavi.mlab.axes`
 :py:func:`viscid.plot.mvi.xlabel`                Wrap `mayavi.mlab.xlabel`
 :py:func:`viscid.plot.mvi.ylabel`                Wrap `mayavi.mlab.ylabel`

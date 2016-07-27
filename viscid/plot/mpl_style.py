@@ -14,7 +14,8 @@ Attributes:
         unpacked into the rc function call.
 
 Style Sheets:
-    See :doc:`/mpl_styles` for a review of available style sheets.
+    See :doc:`/mpl_style_gallery` for a review of available style
+    sheets.
 
 Rc Parameters:
     Here are some viscid-specific options that can be put into the

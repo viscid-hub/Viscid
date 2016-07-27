@@ -10,6 +10,7 @@ Note:
 # FIXME: this module is way too long
 
 from __future__ import print_function
+from datetime import datetime
 from distutils.version import LooseVersion
 from itertools import count
 
@@ -19,6 +20,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize, LogNorm, ListedColormap
+import matplotlib.dates as mdates
 try:
     from mpl_toolkits.basemap import Basemap  # pylint: disable=no-name-in-module
     _HAS_BASEMAP = True
@@ -26,10 +28,11 @@ except ImportError:
     _HAS_BASEMAP = False
 
 import viscid
-from viscid import pyeval
-from viscid import logger
-from viscid.compat import izip, string_types
 from viscid import coordinate
+from viscid.compat import izip, string_types
+from viscid import logger
+from viscid import pyeval
+from viscid import vutil
 from viscid.plot import mpl_style  # pylint: disable=unused-import
 from viscid.plot import mpl_extra
 from viscid.plot import vseaborn
@@ -268,6 +271,51 @@ def _apply_actions(acts):
             act_args = [act_args]
         act[0](*act_args)
 
+def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
+                       using_default_equalax):
+    new_ax_arrs = [None] * len(ax_arrs)
+    datetime_fmt = [None] * len(ax_arrs)
+
+    for i, XI in enumerate(ax_arrs):
+        if viscid.is_datetime_like(XI):
+            # new_ax_arrs[i] = mdates.date2num(viscid.as_datetime(XI))
+            new_ax_arrs[i] = viscid.as_datetime(XI)
+            datetime_fmt[i] = datefmt
+        elif viscid.is_timedelta_like(XI):
+            # new_ax_arrs[i] = mdates.date2num(viscid.as_datetime(XI))
+            new_ax_arrs[i] = viscid.as_datetime(XI)
+            datetime_fmt[i] = timefmt
+        else:
+            new_ax_arrs[i] = XI
+
+    # with time axes, you probably don't want equalax, but only override
+    # this if the user didn't specify with a plot_opt
+    try:
+        if using_default_equalax and any(datetime_fmt):
+            actions.pop(actions.index((ax.axis, 'equal')))
+    except ValueError:
+        pass
+
+    # take x and y plot opts and convert them to datetimes
+    for i, setter in enumerate([ax.set_xlim, ax.set_ylim]):
+        if datetime_fmt[i]:
+            for iact, act in enumerate(actions):
+                if act[0] == setter:
+                    # print("OVERRIDE::", act)
+                    datetimeified = viscid.as_datetime(act[1]).tolist()
+                    actions[iact] = (setter, datetimeified)
+                    # print("       --", actions[iact])
+
+    return new_ax_arrs, datetime_fmt
+
+def _apply_time_axes(fig, ax, datetime_fmt, autofmt_xdate):
+    for fmt, axis_i in zip(datetime_fmt, (ax.xaxis, ax.yaxis)):
+        if fmt:
+            datetime_formatter = mdates.DateFormatter(fmt)
+            axis_i.set_major_formatter(datetime_formatter)
+            if axis_i is ax.xaxis and autofmt_xdate:
+                plt.gcf().autofmt_xdate()
+
 def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
                  which_axes="xy"):
     ax_axes = {'x': ax.xaxis, 'y': ax.yaxis}
@@ -292,7 +340,8 @@ def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
 
 def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
                    masknan, latlon, flip_plot, patchec, patchlw, patchaa,
-                   all_masked, extra_args, **kwargs):
+                   datefmt, timefmt, autofmt_xdate, all_masked, extra_args,
+                   actions, using_default_equalax, **kwargs):
     """Make a 2d plot of a single patch
 
     Returns:
@@ -340,6 +389,21 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         dat = dat.T
         namex, namey = namey, namex
 
+    ax_arrs, datetime_fmt = _prepare_time_axes(ax, [X, Y], datefmt, timefmt,
+                                               actions, using_default_equalax)
+    X, Y = ax_arrs
+
+    # datetime_fmt = [False, False]
+    # _XY = [X, Y]
+    # for i, XI in enumerate(_XY):
+    #     if viscid.is_datetime_like(XI):
+    #         _XY[i] = mdates.date2num(viscid.as_datetime(XI))
+    #         datetime_fmt[i] = datefmt
+    #     elif viscid.is_timedelta_like(XI):
+    #         _XY[i] = mdates.date2num(viscid.as_datetime(XI))
+    #         datetime_fmt[i] = timefmt
+    # X, Y = _XY
+
     if style == "pcolormesh":
         p = ax.pcolormesh(X, Y, dat, *extra_args, **kwargs)
     elif style == "contour":
@@ -350,6 +414,13 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         p = ax.pcolor(X, Y, dat, *extra_args, **kwargs)
     else:
         raise RuntimeError("I don't understand {0} 2d plot style".format(style))
+
+    for _fmt, axis_i in zip(datetime_fmt, (ax.xaxis, ax.yaxis)):
+        if _fmt:
+            datetime_formatter = mdates.DateFormatter(_fmt)
+            axis_i.set_major_formatter(datetime_formatter)
+            if axis_i is ax.xaxis and autofmt_xdate:
+                plt.gcf().autofmt_xdate()
 
     try:
         if masknan:
@@ -402,6 +473,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # parse plot_opts
     plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    using_default_equalax = 'equalaxis' not in plot_kwargs
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'equalaxis': True})
 
@@ -417,6 +489,10 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     minorfmt = plot_kwargs.pop("minorfmt", rcParams.get("viscid.minorfmt", None))
     majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
+    datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
+    timefmt = plot_kwargs.pop("timefmt", "%H:%M:%S")
+    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
+    autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
 
     # 2d plot options
@@ -545,8 +621,9 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         p, all_masked = _plot2d_single(action_ax, patch, style,
                                        namex, namey, mod, scale, masknan,
                                        latlon, flip_plot,
-                                       patchec, patchlw, patchaa,
-                                       all_masked, extra_args, **plot_kwargs)
+                                       patchec, patchlw, patchaa, datefmt, timefmt,
+                                       autofmt_xdate, all_masked, extra_args,
+                                       actions, using_default_equalax, **plot_kwargs)
 
     # apply option actions... this is for setting xlim / xscale / etc.
     _apply_actions(actions)
@@ -692,34 +769,17 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                "version 1.1. Update your matplotlib and "
                                "profit.")
 
-        absboundinglat = np.abs(bounding_lat)
-
         ax = _get_polar_axis(ax=ax)
 
-        if hemisphere == "north":
-            sl_fld = fld["lat=:{0}f".format(absboundinglat)]
-            maxlat = sl_fld.get_crd_nc('lat')[-1]
-        elif hemisphere == "south":
-            sl_fld = fld["lat={0}f:".format(180.0 - absboundinglat)]["lat=::-1"]
-            maxlat = 180.0 - sl_fld.get_crd_nc('lat')[-1]
-
-        lat, lon = sl_fld.get_crds_nc(['lat', 'lon'])
-        new_lat = (np.pi / 180.0) * np.linspace(0.0, maxlat, len(lat))
-        # FIXME: Matt's code had a - 0.5 * (lon[1] - lon[0]) here...
-        # I'm omiting it
-        ax.set_theta_offset(-90 * np.pi / 180.0)
-        # new_lon = (lon - 90.0) * np.pi / 180.0
-        new_lon = lon * np.pi / 180.0
-        new_crds = coordinate.wrap_crds("uniform_spherical",
-                                        [('lon', [new_lon[0], new_lon[-1],
-                                                  len(new_lon)]),
-                                         ('lat', [new_lat[0], new_lat[-1],
-                                                  len(new_lat)])])
-        new_fld = fld.wrap(sl_fld.data, context=dict(crds=new_crds))
+        make_periodic = plot_kwargs.get('style', None) in ("contour", "contourf")
+        new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
+                                           hemisphere=hemisphere,
+                                           make_periodic=make_periodic)
 
         plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
+        ax.set_theta_offset(-90 * np.pi / 180.0)
 
         if title:
             if not isinstance(title, string_types):
@@ -733,11 +793,12 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             mlt_grid_pos = (0, 45, 90, 135, 180, 225, 270, 315)
             mlt_labels = (24, 3, 6, 9, 12, 15, 18, 21)
             if not label_mlt:
-                mlt_labels = []
+                mlt_labels = ()
             ax.set_thetagrids(mlt_grid_pos, mlt_labels)
 
             abs_grid_dr = 10
             # grid_dr = abs_grid_dr * np.sign(bounding_lat)
+            absboundinglat = np.abs(bounding_lat)
             lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
             lat_labels = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
             if label_lat == "from_pole":
@@ -804,6 +865,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # parse plot_opts
     plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    using_default_equalax = 'equalaxis' not in plot_kwargs
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'equalaxis': False})
 
@@ -817,6 +879,10 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     minorfmt = plot_kwargs.pop("minorfmt", rcParams.get("viscid.minorfmt", None))
     majorloc = plot_kwargs.pop("majorloc", rcParams.get("viscid.majorloc", None))
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
+    datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
+    timefmt = plot_kwargs.pop("timefmt", "%H:%M:%S")
+    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
+    autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
 
     # 1d plot options
@@ -836,6 +902,10 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     dat = np.concatenate([blk.data for blk in fld.patches])
 
+    ax_arrs, datetime_fmt = _prepare_time_axes(ax, [x, dat], datefmt, timefmt,
+                                               actions, using_default_equalax)
+    x, dat = ax_arrs
+
     if mod:
         x *= mod
     if scale:
@@ -844,6 +914,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         dat = np.ma.masked_where(np.isnan(dat), dat)
     p = ax.plot(x, dat, **plot_kwargs)
 
+    _apply_time_axes(plt.gcf(), ax, datetime_fmt, autofmt_xdate)
     _apply_actions(actions)
 
     ###############################
@@ -1270,7 +1341,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
     # this is kind of a hacky way to
     if hasattr(plane_spec, "patches"):
         # this is for both Fields and AMRFields
-        crd_system = plane_spec.patches[0].meta.get("crd_system", crd_system)
+        crd_system = plane_spec.patches[0].find_info("crd_system", crd_system)
         values = []
         for blk in plane_spec.patches:
             # take only the 1st reduced.nr_sdims... this should just work
@@ -1441,7 +1512,7 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
 
         for i, start, stop in izip(count(), line_start, line_stop):
             n_coarse = stop - start  # number of verts, not segments
-            n_fine = np.ceil(subsample * (n_coarse - 1)) + 1
+            n_fine = int(np.ceil(subsample * (n_coarse - 1)) + 1)
             coarse_verts = verts[:, start:stop]
             coarse_scalars = scalars[:, start:stop]
             fine_verts[i] = np.empty((nr_sdims, n_fine), dtype=verts.dtype)
@@ -1511,6 +1582,9 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
             seg_scalars = scalars[..., connections[:, 0]]
 
     return verts, segments, scalars, seg_scalars, colors, seg_colors, other
+
+def interact(stack_depth=0, **kwargs):
+    viscid.vlab.interact(stack_depth=stack_depth + 1, mpl_ns=True, **kwargs)
 
 # just explicitly bring in some matplotlib functions
 subplot = plt.subplot

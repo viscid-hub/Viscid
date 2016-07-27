@@ -1,6 +1,28 @@
 Changes
 -------
 
+0.97.0
+======
+
+Changes:
+  - Added Field.loc[...] for pandas-like slice by location
+  - add 'viscid.as_mapfield', 'viscid.as_spherefield', 'as_polar_mapfield', and 'pts2polar_mapfield' for converting between different representations for spherical fields (theta/phi <-> lat/lon)
+  - Spherical seed generators now plot on polar projection by default in MPL
+  - Switch all internals from Datetime to numpy.datetime64 and numpy.timedelta64
+  - Use of the new viscid.as_datetime64 and viscid.as_timedelta64 is HIGHLY recommended. This does the extra step of setting Zulu time if a tz is not specified for older versions of numpy (numpy >= 1.11 is tz agnostic).
+  - Openggcm now correctly calls the simulation start time basetime and makes every attempt for this to be as precise as possible for hdf5/jrrle/etc and still be lazy.
+  - Viscid-colorblind defaults to viridis cmap
+
+Preliminary:
+  - dipole tools
+  - gradient
+
+Bugfixes:
+  - Sphere / Cap / Circle are now more standardized
+
+Backward Incompatible Changes:
+  - Spherical coordinates now use theta/phi or lat/lon always as axis names
+
 0.96.1
 ======
 

@@ -28,6 +28,11 @@ LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
 
+__all__ = ['arrays2field', 'dat2field', 'empty', 'zeros', 'ones',
+           'empty_like', 'zeros_like', 'ones_like', 'scalar_fields_to_vector',
+           'wrap_field']
+
+
 def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
                  crd_names="xyzuvw"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.
@@ -216,8 +221,8 @@ def empty_like(fld, name="NoName", **kwargs):
         new uninitialized :class:`Field`
     """
     dat = np.empty(fld.shape, dtype=fld.dtype)
-    c = fld.center
-    t = fld.time
+    c = kwargs.pop("center", fld.center)
+    t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
@@ -230,8 +235,8 @@ def zeros_like(fld, name="NoName", **kwargs):
     See Also: :meth:`empty_like`
     """
     dat = np.zeros(fld.shape, dtype=fld.dtype)
-    c = fld.center
-    t = fld.time
+    c = kwargs.pop("center", fld.center)
+    t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
@@ -244,8 +249,8 @@ def ones_like(fld, name="NoName", **kwargs):
     See Also: :meth:`empty_like`
     """
     dat = np.ones(fld.shape, dtype=fld.dtype)
-    c = fld.center
-    t = fld.time
+    c = kwargs.pop("center", fld.center)
+    t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
@@ -341,6 +346,54 @@ def rewrap_field(fld):
                     forget_source=True, _copy=True, zyx_native=False,
                     parents=[fld])
     return ret
+
+
+class _FldSlcProxy(object):
+    parent = None
+    def __init__(self, parent, do_floatify=True):
+        self.parent = parent
+        self.do_floatify = do_floatify
+
+    def _floatify(self, item):
+        if isinstance(item, string_types):
+            item = item.strip().lower()
+        if item in (Ellipsis, '...'):
+            item = Ellipsis
+        elif item in (np.newaxis, ):
+            item = np.newaxis
+        elif item in (None, 'none'):
+            item = None
+        else:
+            if self.do_floatify:
+                item = "{0}f".format(item)
+            else:
+                item = int(item)
+        return item
+
+    def _xform(self, item):
+        if not isinstance(item, tuple):
+            item = (item, )
+        sel = []
+        for it in item:
+            if isinstance(it, slice):
+                start = self._floatify(it.start)
+                stop = self._floatify(it.stop)
+                step = it.step
+                sel.append(slice(start, stop, step))
+            else:
+                sel.append(self._floatify(it))
+
+        if self.parent.nr_comps and len(sel) >= self.parent.nr_comp:
+            sel.insert(self.parent.nr_comp, slice(None))
+
+        return sel
+
+    def __getitem__(self, item):
+        return self.parent.__getitem__(self._xform(item))
+
+    def __setitem__(self, item, val):
+        return self.parent.__setitem__(self._xform(item), val)
+
 
 class Field(tree.Leaf):
     _TYPE = "none"
@@ -651,6 +704,8 @@ class Field(tree.Leaf):
         self._nr_comps = None
         self._dtype = None
         self._src_data = dat
+        if self.meta and self.meta.get('zyx_native', False):
+            self.meta['zyx_native'] = False
         # self._translate_src_data()  # um, what's this for? looks dangerous
         # do some sort of lazy pre-setup _src_data inspection?
 
@@ -1065,7 +1120,9 @@ class Field(tree.Leaf):
         # the slice will have to load the data
 
         # coord transforms are not copied on purpose
-        crds = coordinate.wrap_crds(crd_type, crdlst)
+        cunits = self._src_crds.get_units((c[0] for c in crdlst), allow_invalid=1)
+        crds = coordinate.wrap_crds(crd_type, crdlst, units=cunits,
+                                    **self._src_crds.meta)
 
         # be intelligent here, if we haven't loaded the data and
         # the source is an h5py-like source, we don't have to read
@@ -1242,6 +1299,28 @@ class Field(tree.Leaf):
 
     slice_reduce = slice_and_reduce
     slice_keep = slice_and_keep
+
+    @property
+    def loc(self):
+        """Easily slice by value (flaot), like in pandas
+
+        Eample:
+            >>> subset1 = field["13f", "14f":]
+            >>> subset2 = field.loc[13, 14.0:]
+            >>> # subset1 and subset2 should be identical
+        """
+        return _FldSlcProxy(self, do_floatify=True)
+
+    @property
+    def iloc(self):
+        """Easily slice by value (flaot), like in pandas
+
+        Eample:
+            >>> subset1 = field["13f", "14f":]
+            >>> subset2 = field.loc[13, 14.0:]
+            >>> # subset1 and subset2 should be identical
+        """
+        return _FldSlcProxy(self, do_floatify=False)
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
@@ -1826,6 +1905,61 @@ class Field(tree.Leaf):
     def imag(self):
         return self.wrap(self.data.imag)
 
+    def transpose(self, *axes):
+        """ same behavior as numpy transpose, alse accessable
+        using np.transpose(fld) """
+        if len(axes) == 1 and axes[0]:
+            axes = axes[0]
+        if axes == (None, ) or len(axes) == 0:
+            axes = list(range(self.nr_dims - 1, -1, -1))
+        if len(axes) != self.nr_dims:
+            raise ValueError("transpose can not change number of axes")
+        clist = self._src_crds.get_clist()
+        caxes = list(axes)
+        if self.nr_comps:
+            caxes.remove(self.nr_comp)
+            caxes = [i - 1 if i > self.nr_comp else i for i in caxes]
+        new_clist = [clist[i] for i in caxes]
+        cunits = self._src_crds.get_units((c[0] for c in new_clist), allow_invalid=1)
+        t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist,
+                                      units=cunits, **self._src_crds.meta)
+        t_data = self.data.transpose(axes)
+
+        context = dict(crds=t_crds)
+        # i think the layout should be taken care of automagically
+        return self.wrap(t_data, context=context)
+
+    def transpose_crds(self, *axes):
+        if axes == (None, ) or len(axes) == 0:
+            axes = list(range(self.nr_sdims - 1, -1, -1))
+        ax_inds = [self.crds.ind(ax) for ax in axes]
+        if self.nr_comps:
+            ax_inds = [i + 1 if i >= self.nr_comp else i for i in ax_inds]
+            ax_inds.insert(self.nr_comp, self.nr_comp)
+        return self.transpose(*ax_inds)
+
+    @property
+    def T(self):
+        return self.transpose()
+
+    @property
+    def TC(self):
+        return self.transpose_crds()
+
+    spatial_transpose = transpose_crds
+    ST = TC
+
+    def swapaxes(self, a, b):
+        axes = list(range(self.nr_dims))
+        axes[a], axes[b] = b, a
+        return self.transpose(*axes)
+
+    def swap_crd_axes(self, a, b):
+        a, b = [self.crds.ind(s) for s in (a, b)]
+        axes = list(range(self.nr_sdims))
+        axes[a], axes[b] = b, a
+        return self.transpose_crds(*axes)
+
     def astype(self, dtype):
         ret = self
         if np.dtype(dtype) != self.dtype:
@@ -1876,28 +2010,10 @@ class ScalarField(Field):
                                dat[1:end[0]:2, 1:end[1]:2, 1:end[2]:2])
 
         downclist = self._src_crds.get_clist(np.s_[::2])
-        downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist)
+        cunits = self._src_crds.get_units((c[0] for c in downclist), allow_invalid=1)
+        downcrds = coordinate.wrap_crds("nonuniform_cartesian", downclist,
+                                        units=cunits, **self._src_crds.meta)
         return self.wrap(downdat, {"crds": downcrds})
-
-    def transpose(self, *axes):
-        """ same behavior as numpy transpose, alse accessable
-        using np.transpose(fld) """
-        if axes == (None, ) or len(axes) == 0:
-            axes = list(range(self.nr_dims - 1, -1, -1))
-        if len(axes) != self.nr_dims:
-            raise ValueError("transpose can not change number of axes")
-        clist = self._src_crds.get_clist()
-        new_clist = [clist[ax] for ax in axes]
-        t_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist)
-        t_data = self.data.transpose(axes)
-        return self.wrap(t_data, {"crds": t_crds})
-
-    def swap_axes(self, a, b):
-        new_clist = self._src_crds.get_clist()
-        new_clist[a], new_clist[b] = new_clist[b], new_clist[a]
-        new_crds = coordinate.wrap_crds(self._src_crds.crdtype, new_clist)
-        new_data = self.data.swap_axes(a, b)
-        return self.wrap(new_data, {"crds": new_crds})
 
     def as_interlaced(self, force_c_contiguous=True):
         if force_c_contiguous:

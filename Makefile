@@ -13,54 +13,59 @@ all: build
 dev: inplace
 
 inplace:
-	python ./setup.py build_ext -i
+	python ./setup.py build_ext -i ${BUILD_ARGS}
 
 build:
-	python ./setup.py build_ext
+	python ./setup.py build_ext ${BUILD_ARGS}
 
 install:
-	python ./setup.py install
+	python ./setup.py install ${BUILD_ARGS}
 
 clean:
-	python ./setup.py clean -a
+	python ./setup.py clean -a ${BUILD_ARGS}
 
 check: test
-test: inplace
+test: inplace public-doccheck
 	@echo "Note: Running tests on refreshed inplace build."
-	VISCID_TEST_INPLACE=1 bash tests/viscid_runtests
+	VISCID_TEST_INPLACE=1 bash tests/viscid_runtests ${CHECK_ARGS}
 
 instcheck: insttest
-insttest:
+insttest: public-doccheck
 	@echo "Note: Running tests using first Viscid in PYTHONPATH. Build was not"
 	@echo "      implicitly refreshed."
 	@echo "PYTHONPATH = ${PYTHONPATH}"
-	VISCID_TEST_INPLACE=0 bash tests/viscid_runtests
+	VISCID_TEST_INPLACE=0 bash tests/viscid_runtests ${CHECK_ARGS}
 
 flake8:
 	flake8 --max-line-length=92 --show-source --select $(flake_on) \
-	       --ignore $(flake_off) viscid tests scripts
+	       --ignore $(flake_off) viscid tests scripts ${FLAKE_ARGS}
 
 # update all reference plots
 update_ref_plots: refupdate
 update_ref: refupdate
 refupdate:
-	bash tests/viscid_update_ref_plots
+	bash tests/viscid_update_ref_plots ${DOC_ARGS}
 
 deploysummary: deploy-summary-ghpages
 deploy-summary: deploy-summary-ghpages
 deploy-summary-ghpages:
-	bash tests/deploy_test_summary.sh
+	bash tests/deploy_test_summary.sh ${DOC_ARGS}
 
 deployhtml: deploy-html-ghpages
 deploy-html: deploy-html-ghpages
 deploy-html-ghpages:
-	make -C doc deploy-html
+	make ARGS="${DOC_ARGS}" -C doc deploy-html
 
 html: doc-html
 dochtml: doc-html
 doc-html:
-	make -C doc html
+	make ARGS="${DOC_ARGS}" -C doc html
 
 docclean: doc-clean
 doc-clean:
-	make -C doc clean
+	make ARGS="${DOC_ARGS}" -C doc clean
+
+
+public-doccheck:
+	make -C doc public-doccheck
+

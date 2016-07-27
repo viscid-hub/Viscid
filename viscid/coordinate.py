@@ -20,7 +20,7 @@ FIXME: uniform coordinates are generally unsupported, but they're just
        with uniform coordinates
 """
 
-from __future__ import print_function
+from __future__ import print_function, division
 # from timeit import default_timer as time
 import itertools
 import sys
@@ -32,7 +32,10 @@ from viscid.compat import string_types, izip
 from viscid import vutil
 
 
-def arrays2crds(crd_arrs, crd_names="xyzuvw"):
+__all__ = ['arrays2crds', 'wrap_crds', 'extend_arr_by_half']
+
+
+def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
     """make either uniform or nonuniform coordnates given full arrays
 
     Args:
@@ -50,7 +53,8 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw"):
         crd_arrs = [crd_arrs]
 
     for crd_name, arr in zip(crd_names, crd_arrs):
-        arr = np.array(arr)
+        arr = viscid.asarray_datetime64(arr, conservative=True)
+
         clist.append((crd_name, arr))
         try:
             atol = 100 * np.finfo(arr.dtype).eps
@@ -62,15 +66,22 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw"):
         else:
             diff = [1, 1]
 
+        if viscid.is_timedelta_like(diff, conservative=True):
+            diff = diff / np.ones((1,), dtype=diff.dtype)
+
         if np.allclose(diff[0], diff[1:], atol=atol):
             uniform_clist.append((crd_name, [arr[0], arr[-1], len(arr)]))
         else:
             is_uniform = False
 
+    # uniform crds don't play nice with datetime axes
+    if any(viscid.is_time_like(arr, conservative=True) for arr in crd_arrs):
+        is_uniform = False
+
     if is_uniform:
-        crds = wrap_crds("uniform", uniform_clist)
+        crds = wrap_crds("uniform", uniform_clist, **kwargs)
     else:
-        crds = wrap_crds("nonuniform", clist)
+        crds = wrap_crds("nonuniform", clist, **kwargs)
     return crds
 
 def lookup_crds_type(type_name):
@@ -91,10 +102,65 @@ def wrap_crds(crdtype, clist, **kwargs):
     except TypeError:
         raise NotImplementedError("can not decipher crds: {0}".format(crdtype))
 
+def extend_arr_by_half(x, full_arr=True):
+    """sandwich array with two new values w/ no change in dx"""
+    x = viscid.asarray_datetime64(x, conservative=True)
+
+    if full_arr:
+        dxl = x[1] - x[0]
+        dxh = x[-1] - x[-2]
+        ret = np.concatenate([[x[0] - dxl], x, [x[-1] + dxh]])
+    else:
+        xl, xh, nx = x
+        nx = int(nx)
+        dx = (xh - xl) / nx
+        xl -= 0.5 * dx
+        xh += 0.5 * dx
+        nx += 1
+        ret = np.array([xl, xh, nx], dtype=x.dtype)
+    return ret
+
+
 class Coordinates(object):
+    """Base class for all coordinate types
+
+    Note:
+        Subclasses should only call super(...).__init__ after setting
+        up the axes
+    """
     _TYPE = "none"
 
+    _axes = ["x", "y", "z"]
+
     __crds = None
+    meta = None
+    _units_validated = False
+    _units = None
+
+    def __init__(self, units=None, **kwargs):
+        self.units = units
+        self.meta = kwargs
+
+    @property
+    def axes(self):
+        return self._axes
+
+    @property
+    def units(self):
+        if not self._units_validated:
+            units = self._units
+            if not isinstance(units, (list, tuple)):
+                units = [units] * self.nr_dims
+            units += [None] * (len(units) - self.nr_dims)
+            units = ["" if u is None else u.strip() for u in units]
+            self._units = units
+            self._units_validated = True
+        return self._units
+
+    @units.setter
+    def units(self, val):
+        self._units_validated = False
+        self._units = val
 
     @property
     def crdtype(self):
@@ -107,8 +173,47 @@ class Coordinates(object):
     def is_spherical(self):
         return "spherical" in self._TYPE
 
-    def __init__(self, **kwargs):
-        pass
+    def is_uniform(self):
+        return self._TYPE.startswith('uniform')
+
+    def ind(self, axis):
+        if isinstance(axis, int):
+            if axis < len(self.axes):
+                return axis
+            else:
+                raise ValueError()
+        else:
+            return self.axes.index(axis)
+
+    def _axisvalid(self, ax):
+        try:
+            self.ind(ax)
+            return True
+        except ValueError:
+            return False
+
+    def get_units(self, axes, allow_invalid=False):
+        ret = []
+        for ax in axes:
+            if self._axisvalid(ax):
+                ret.append(self.units[self.ind(ax)])
+            elif allow_invalid:
+                ret.append('')
+            else:
+                raise ValueError("{0} not in axes ({1})".format(ax, self._axes))
+        return ret
+
+    def get_unit(self, axis):
+        return self.get_units([axis])[0]
+
+    def axis_name(self, axis):
+        if isinstance(axis, string_types):
+            if axis in self._crds:
+                return axis
+            else:
+                raise KeyError(axis)
+        else:
+            return self.axes[axis]
 
     def as_local_coordinates(self):
         return self
@@ -120,6 +225,7 @@ class Coordinates(object):
             return self
         else:
             raise NotImplementedError()
+
 
 class StructuredCrds(Coordinates):
     _TYPE = "structured"
@@ -140,7 +246,6 @@ class StructuredCrds(Coordinates):
                  **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
-        super(StructuredCrds, self).__init__(**kwargs)
         self.has_cc = has_cc
 
         self.reflect_axes = reflect_axes
@@ -149,7 +254,8 @@ class StructuredCrds(Coordinates):
             self._axes = [d[0].lower() for d in init_clist]
         self.clear_crds()
         if init_clist is not None:
-            self.set_crds(init_clist)
+            self._set_crds(init_clist)
+        super(StructuredCrds, self).__init__(**kwargs)
 
     @property
     def xl_nc(self):
@@ -181,10 +287,6 @@ class StructuredCrds(Coordinates):
     def nr_dims(self):
         """ number of spatial dimensions """
         return len(self._axes)
-
-    @property
-    def axes(self):
-        return self._axes
 
     @property
     def dtype(self):
@@ -243,7 +345,7 @@ class StructuredCrds(Coordinates):
     def clear_cache(self):
         self.__crds = None
 
-    def set_crds(self, clist):
+    def _set_crds(self, clist):
         """ called with a list of lists:
         (('x', ndarray), ('y',ndarray), ('z',ndarray))
         Note: input crds are assumed to be node centered
@@ -345,7 +447,9 @@ class StructuredCrds(Coordinates):
             elif self.shape[i] == 1:
                 ccarr = self.__crds[a]
             else:
-                ccarr = 0.5 * (self.__crds[a][1:] + self.__crds[a][:-1])
+                # doing the cc math this way also works for datetime objects
+                ccarr = self.__crds[a][:-1] + 0.5 * (self.__crds[a][1:] -
+                                                     self.__crds[a][:-1])
             flatarr, openarr = self._ogrid_single(a, ccarr)
             self.__crds[a + sfx] = flatarr
             self.__crds[a.upper() + sfx] = openarr
@@ -398,24 +502,6 @@ class StructuredCrds(Coordinates):
             return np.ravel(arr), arr
         else:
             raise ValueError()
-
-    def ind(self, axis):
-        if isinstance(axis, int):
-            if axis < len(self.axes):
-                return axis
-            else:
-                raise ValueError()
-        else:
-            return self.axes.index(axis)
-
-    def axis_name(self, axis):
-        if isinstance(axis, string_types):
-            if axis in self._crds:
-                return axis
-            else:
-                raise KeyError(axis)
-        else:
-            return self.axes[axis]
 
     def get_slice_extent(self, selection):
         """work in progress"""
@@ -595,7 +681,8 @@ class StructuredCrds(Coordinates):
         if axis:
             crd_arr = crd_arr.get_crd(axis, center=center)
 
-        crd_arr = np.asarray(crd_arr)
+        crd_arr = viscid.asarray_datetime64(crd_arr, conservative=True)
+
         if slc is not None:
             crd_arr = crd_arr[slc]
         return crd_arr.reshape(-1)
@@ -629,11 +716,7 @@ class StructuredCrds(Coordinates):
         axes = self.axes
         crds_cc = self.get_crds_cc()
         for i, x in enumerate(crds_cc):
-            dxl = x[1] - x[0]
-            dxh = x[-1] - x[-2]
-            crds_cc[i] = np.concatenate([[x[0] - dxl],
-                                         x,
-                                         [x[-1] + dxh]])
+            crds_cc[i] = extend_arr_by_half(x, full_arr=True)
         new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
         return type(self)(new_clist)
 
@@ -863,7 +946,9 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     def slice_and_reduce(self, selection, cc=False):
         """Get crds that describe a slice (subset) of this grid. Go
@@ -875,7 +960,9 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     def slice_and_keep(self, selection, cc=False):
         slices, crdlst, reduced, crds_type = self.make_slice_keep(selection,
@@ -883,7 +970,9 @@ class StructuredCrds(Coordinates):
         # pass through if nothing happened
         if slices == [slice(None)] * len(slices):
             return self
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     slice_reduce = slice_and_reduce
     slice_keep = slice_and_keep
@@ -911,7 +1000,9 @@ class StructuredCrds(Coordinates):
                 else:
                     # FIXME: I don't think this is right
                     crdlst[i][1][0] = val
-        return wrap_crds(crds_type, crdlst, dtype=self.dtype)
+        cunits = self.get_units(c[0] for c in crdlst)
+        return wrap_crds(crds_type, crdlst, dtype=self.dtype, units=cunits,
+                         **self.meta)
 
     def get_crd(self, axis, shaped=False, center="none"):
         """if axis is not specified, return all coords,
@@ -998,12 +1089,12 @@ class StructuredCrds(Coordinates):
         if axes is None:
             axes = self.axes
 
-        ret = [[axis, self.get_crd(axis, center=center)[slc]] for axis in axes]
+        ret = [[axis, self.get_crd(axis, center=center)[slc].copy()] for axis in axes]
 
         if slc is None and full_arrays and center == 'node' and self._src_crds_cc:
             for i, axis in enumerate(axes):
                 if axis in self._src_crds_cc:
-                    ret[i].append(self._src_crds_cc[axis])
+                    ret[i].append(self._src_crds_cc[axis].copy())
         return ret
 
     ## These methods just return one crd axis
@@ -1138,7 +1229,10 @@ class StructuredCrds(Coordinates):
         """I recommend against doing this since there may be unintended
         side effects
         """
-        return self.set_crds((axis, arr))
+        raise RuntimeError("setting crds is deprecated - the constructor "
+                           "does far too much transforming of the input "
+                           "to assume that arr will be in the right form")
+        # return self._set_crds((axis, arr))
 
     def __delitem__(self, item):
         raise ValueError("can not delete crd this way")
@@ -1192,6 +1286,9 @@ class UniformCrds(StructuredCrds):
             viscid.logger.warn(s)
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
+                if viscid.is_time_like(arr, conservative=True):
+                    raise NotImplementedError("Datetime arrays can't be in "
+                                              "uniform crds yet")
                 arr = np.asarray(arr)
                 if len(arr) > 1:
                     diff = arr[1:] - arr[:-1]
@@ -1204,10 +1301,13 @@ class UniformCrds(StructuredCrds):
                     raise ValueError("Crds are not uniform")
                 _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
         else:
-            for d in init_clist:
-                if len(d[1]) != 3:
+            for _, arr in init_clist:
+                if len(arr) != 3:
                     raise ValueError("is this a full_array?")
-            _nc_linspace_args = [d[1] for d in init_clist]
+                if viscid.is_time_like([arr[0], arr[1]], conservative=True):
+                    raise NotImplementedError("Datetime arrays can't be in "
+                                              "uniform crds yet")
+            _nc_linspace_args = [arr for _, arr in init_clist]
 
         self._nc_linspace_args = _nc_linspace_args
         self._cc_linspace_args = []
@@ -1389,7 +1489,7 @@ class UniformCrds(StructuredCrds):
             if ax in self.reflect_axes:
                 lst.append([ax, [-ls_args[1], -ls_args[0], ls_args[2]]])
             else:
-                lst.append([ax, ls_args])
+                lst.append([ax, list(ls_args)])
         return lst
 
     def _fill_crds_dict(self):
@@ -1453,7 +1553,7 @@ class UniformSphericalCrds(UniformCrds):
     _axes = ["phi", "theta", "r"]
 
 
-class NonuniformSphericalCrds(UniformCrds):
+class NonuniformSphericalCrds(NonuniformCrds):
     _TYPE = "nonuniform_spherical"
     _axes = ["phi", "theta", "r"]
 

@@ -1,5 +1,6 @@
 from __future__ import print_function
 import itertools
+import sys
 
 import numpy as np
 try:
@@ -24,50 +25,61 @@ try:
 except ImportError:
     pass
 
-def get_dipole(m=None, l=None, h=None, n=None, twod=False, dtype='f8',
-               nonuniform=False):
-    if l is None:
-        l = [-5] * 3
-    if h is None:
-        h = [5] * 3
-    if n is None:
-        n = [256] * 3
-    x = np.array(np.linspace(l[0], h[0], n[0]), dtype=dtype)
-    y = np.array(np.linspace(l[1], h[1], n[1]), dtype=dtype)
-    z = np.array(np.linspace(l[2], h[2], n[2]), dtype=dtype)
-    if twod:
-        y = np.array(np.linspace(-0.1, 0.1, 2), dtype=dtype)
 
-    if nonuniform:
-        z += 0.01 * ((h[2] - l[2]) / n[2]) * np.sin(np.linspace(0, np.pi, n[2]))
+__all__ = ['interact', 'get_trilinear_field', 'multiplot',
+           'follow_fluid', 'follow_fluid_generic']
 
-    B = field.empty([x, y, z], nr_comps=3, name="B", center='cell',
-                    layout='interlaced', dtype=dtype)
-    Xcc, Ycc, Zcc = B.get_crds_cc(shaped=True)  # pylint: disable=W0612
 
-    one = np.array([1.0], dtype=dtype)  # pylint: disable=W0612
-    three = np.array([3.0], dtype=dtype)  # pylint: disable=W0612
-    if m is None:
-        m = [0.0, 0.0, -1.0]
-    m = np.array(m, dtype=dtype)
-    mx, my, mz = m  # pylint: disable=W0612
+def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
+             local_ns=None, viscid_ns=True, mpl_ns=False, mvi_ns=False):
+    """Start an interactive interpreter"""
+    if banner is None:
+        banner = "Interactive Viscid..."
+        if mpl_ns:
+            banner += "\n  - Viscid's matplotlib interface available as `mpl`"
+        if mvi_ns:
+            banner += "\n  - Viscid's mayavi interface available as `mvi`"
+            banner += "\n  - Use mvi.show(...) to interact with Mayavi"
+            banner += "\n  - FYI, all Mayavi objects all have trait_names()"
+        banner += "\n  - Use Ctrl-D (eof) to end interaction"
 
-    if _HAS_NUMEXPR:
-        rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2")  # pylint: disable=W0612
-        mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc")  # pylint: disable=W0612
-        B['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
-        B['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
-        B['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
-    else:
-        rsq = Xcc**2 + Ycc**2 + Zcc**2
-        mdotr = mx * Xcc + my * Ycc + mz * Zcc
-        B['x'] = ((three * Xcc * mdotr / rsq) - mx) / rsq**1.5
-        B['y'] = ((three * Ycc * mdotr / rsq) - my) / rsq**1.5
-        B['z'] = ((three * Zcc * mdotr / rsq) - mz) / rsq**1.5
+    def _merge_ns(src, target):
+        target.update(dict([(name, getattr(src, name)) for name in dir(src)]))
+        target[src.__name__.split('.')[-1]] = src
 
-    return B
+    ns = dict()
+
+    if viscid_ns:
+        _merge_ns(viscid, ns)
+    if mpl_ns:
+        from viscid.plot import mpl
+        _merge_ns(mpl, ns)
+    if mvi_ns:
+        from viscid.plot import mvi
+        _merge_ns(mvi, ns)
+
+    call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
+
+    if global_ns is None:
+        global_ns = call_frame.f_globals
+    ns.update(global_ns)
+
+    if local_ns is None:
+        local_ns = call_frame.f_locals
+    ns.update(local_ns)
+
+    try:
+        if not ipython:
+            raise ImportError
+        from IPython import embed
+        embed(user_ns=ns, banner1=banner)
+    except ImportError:
+        import code
+        code.interact(banner, local=ns)
+    print("Resuming Script")
 
 def get_trilinear_field():
+    """get a generic trilinear field"""
     xl, xh, nx = -1.0, 1.0, 41
     yl, yh, ny = -1.5, 1.5, 41
     zl, zh, nz = -2.0, 2.0, 41

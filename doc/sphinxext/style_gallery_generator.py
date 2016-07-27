@@ -70,8 +70,8 @@ Example Source Code
 
 INDEX_TEMPLATE = """
 
-Matplotlib Styles
-=================
+Matplotlib Style Gallery
+========================
 
 If you have Matplotlib 1.5 or higher, you really should use a style sheet
 for your plots. They are very easy to use as
@@ -127,9 +127,15 @@ using a viscidrc file as explained in :doc:`custom_behavior`.
 
     .autogen.figure p {{
         position: absolute;
+        left: 0px;
         top: 45%;
-        width: 330px;
-        font-size: 110%;
+        width: 240px;
+        margin-left: 45px;
+        margin-right: 45px;
+        font-size: 105%;
+        border-radius: 6px;
+        background-color: hsla(0, 0%, 8%, 0.6);
+        color: hsl(0, 0%, 96%);
     }}
 
     .autogen.figure:hover span {{
@@ -172,9 +178,8 @@ GALERY_ENTRY_TEMPLATE = """\
     <div class='autogen figure align-center'>
     <a class='autogen' href=./{html_fname}>
     <img class='autogen' src=_static/{thumb_fname}>
-    <span class='autogen figure-label'>
+    <span class='autogen figure-label'></span>
     <p class='autogen'>{style_name}</p>
-    </span>
     </a>
     </div>
 
@@ -349,7 +354,7 @@ def main(app):
                                                  style_name=style)
 
     # write index file
-    with open('mpl_styles.rst', 'w') as index:
+    with open('mpl_style_gallery.rst', 'w') as index:
         index.write(INDEX_TEMPLATE.format(sphinx_tag="style_examples",
                                           toctree=toctree,
                                           contents=contents))

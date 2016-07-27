@@ -1,0 +1,27 @@
+# there are no pre-built binaries for py3k mayavi, but since
+# menpo has vtk7, pip can install mayavi just fine
+# platform: osx-64 linux-64
+name: viscid35mayavi
+channels:
+- menpo
+- defaults
+dependencies:
+- python=3.5
+- numpy>=1.9.0
+- scipy
+- h5py
+- matplotlib>=1.5.0
+- cython>0.17
+- numexpr
+- numba
+- pyyaml
+- pyqt
+- flake8
+- sphinx
+- sphinx_rtd_theme
+- ipython
+- jupyter
+- vtk>=7.0.0
+- pip:
+  - mayavi
+  - envisage

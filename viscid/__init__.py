@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """A set of python modules that aid in plotting scientific data
 
 Plotting depends on matplotlib and/or mayavi and file reading uses h5py
@@ -14,205 +15,116 @@ Attributes:
 """
 
 from __future__ import print_function
+import logging
+import signal
 import sys
 
-__version__ = """0.96.1"""
+import numpy
 
-__all__ = ['amr_field',  # Modules
+from viscid import _rc
+from viscid.compat.vimportlib import import_module
+
+
+__version__ = """0.97.0"""
+
+__all__ = ['amr_field',
            'amr_grid',
-           'calculator',
-           'readers',
            'bucket',
            'coordinate',
            'dataset',
+           'dipole',
            'field',
            'grid',
+           'mapfield',
+           'npdatetime',
            'parallel',
            'pyeval',
            'seed',
+           'tree',
            'verror',
            'vjson',
            'vlab',
            'vutil',
-           'logger',  # logger
-           'load_file',  # reader helpers
-           'load_files',
-           'unload_file',
-           'reload_file',
-           'get_file',
-           'save_grid',
-           'save_field',
-           'save_fields',
-           'arrays2field',  # Field helpers
-           'dat2field',
-           'empty',
-           'zeros',
-           'ones',
-           'empty_like',
-           'zeros_like',
-           'ones_like',
-           'scalar_fields_to_vector',
-           'wrap_field',
-           'arrays2crds',  # Crd helpers
-           'interp',  # cython helpers
-           'interp_nearest',
-           'interp_trilin',
-           'calc_streamlines',
-           'find_classified_nulls',
-           'find_nulls'
-           # viscid.calculator.calc.* is added below
-           # viscid.seed.* is added below
+           'calculator',  # packages
+           'compat',
+           'cython',
+           'plot',
+           'readers',
           ]
 
+
+#########################################
 # setup logger for use throughout viscid
-import logging
 logger = logging.getLogger("viscid")
 _handler = logging.StreamHandler()
 _handler.setFormatter(logging.Formatter(fmt="%(levelname)s: %(message)s"))
 logger.addHandler(_handler)
 
 
-class CustomFilter(logging.Filter, object):
+class _CustomFilter(logging.Filter, object):
     def filter(self, record):
         spaces = ' ' * (len(record.levelname) + 2)
         record.msg = record.msg.replace('\n', '\n' + spaces)
-        return super(CustomFilter, self).filter(record)
+        return super(_CustomFilter, self).filter(record)
 
 
-logger.addFilter(CustomFilter())
+logger.addFilter(_CustomFilter())
 logger.propagate = False
 del _handler
 
-# pull file reading helpers into namespace
-from viscid import readers
-load_file = readers.load_file
-load_files = readers.load_files
-unload_file = readers.unload_file
-reload_file = readers.reload_file
-get_file = readers.get_file
-save_grid = readers.save_grid
-save_field = readers.save_field
-save_fields = readers.save_fields
 
-# pull field and coordnate helpers into the namespace
-from viscid import field
-arrays2field = field.arrays2field
-dat2field = field.dat2field
-empty = field.empty
-zeros = field.zeros
-ones = field.ones
-empty_like = field.empty_like
-zeros_like = field.zeros_like
-ones_like = field.ones_like
-scalar_fields_to_vector = field.scalar_fields_to_vector
-wrap_field = field.wrap_field
+###################################################################
+# this is thunder-hacky, but it's a really simple way to import
+# everything in __all__ and also, if those module have an __all__,
+# then bring that stuff into this namespace too
+def _on_injected_import_error(name, exception, quiet=False):
+    if not quiet:
+        logger.error(str(exception))
+        logger.error("Viscid tried to import {0}, but the import failed.\n"
+                     "This module will not be available".format(name))
 
-from viscid import coordinate
-arrays2crds = coordinate.arrays2crds
-wrap_crds = coordinate.wrap_crds
+def import_injector(attr_list, namespace, package=None, quiet=False,
+                    fatal=False):
+    """import list of modules and consume their __all__ attrs"""
+    additional = []
+    for s in list(attr_list):
+        try:
+            m = import_module("." + s, package=package)
+            namespace[s] = m
+            # print(">", package, ">", s)
+            # print(">", package, ">", s, "::", getattr(m, "__all__", None))
+            if hasattr(m, "__all__"):
+                all_subattrs = getattr(m, "__all__")
+                additional += all_subattrs
+                for sub in all_subattrs:
+                    # print("    ", sub, "=", getattr(m, sub))
+                    namespace[sub] = getattr(m, sub)
+        except ImportError as e:
+            _on_injected_import_error(s, e, quiet=quiet)
+            attr_list.remove(s)
+            if fatal:
+                raise
+    attr_list += additional
 
-from viscid.seed import *  # pylint: disable=wildcard-import
-from viscid import seed
-__all__ += seed.__all__
+import_injector(__all__, globals(), package="viscid")
 
-from viscid.calculator.cluster import cluster
-__all__ += ["cluster"]
 
-from viscid.calculator.topology import topology2color
-__all__ += ["topology2color"]
+##############################################################
+# now add some other random things into the __all__ namespace
+__all__.append("logger")
 
-from viscid.calculator.separator import trace_separator
-from viscid.calculator.separator import topology_bitor_clusters
-from viscid.calculator.separator import get_sep_pts_bitor
-from viscid.calculator.separator import get_sep_pts_bisect
-__all__ += ["trace_separator"]
-__all__ += ["topology_bitor_clusters", "get_sep_pts_bitor"]
-__all__ += ["get_sep_pts_bisect"]
-
-from viscid.calculator.plasma import *  # pylint: disable=wildcard-import
-from viscid.calculator import plasma
-__all__ += plasma.__all__
-
-from viscid.calculator.minvar_tools import *  # pylint: disable=wildcard-import
-from viscid.calculator import minvar_tools
-__all__ += minvar_tools.__all__
-
-from viscid.calculator.mpause import *  # pylint: disable=wildcard-import
-from viscid.calculator import mpause
-__all__ += mpause.__all__
-
-from viscid.calculator.calc import *  # pylint: disable=wildcard-import
-from viscid.calculator import calc
-__all__ += calc.__all__
-
-from viscid.cython import interp, interp_nearest, interp_trilin
-from viscid.cython import calc_streamlines
-from viscid.cython import streamline
-for attr in dir(streamline):
-    if attr[0] != '_' and attr.isupper():
-        vars()[attr] = getattr(streamline, attr)
-        __all__.append(attr)
-del streamline
-from viscid.cython import find_classified_nulls, find_nulls
-
-# always bring in custom matplotlib stuff (colormaps & rc params)
-from viscid.plot import mpl_style
-
-# pull other useful modules into the namespace
-# Note: plot and calculator are intentionally left
-#       out of the viscid namespace since importing
-#       some of these modules (like mpl and mvi) have
-#       side effects
-from viscid import amr_field
-from viscid import amr_grid
-from viscid import bucket
-from viscid import dataset
-from viscid import grid
-from viscid import parallel
-from viscid import pyeval
-from viscid import tree
-from viscid import verror
-from viscid.verror import *
-from viscid import vjson
-from viscid import vlab
-from viscid import vutil
+# now this is just too cute to pass up :)
+if sys.version_info[0] >= 3:
+    # hide setting to a unicode variable name in an exec b/c otherwise
+    # this file wouldn't parse in python2x
+    exec("π = numpy.pi")  # pylint: disable=exec-used
+    __all__ += ["π"]
 
 # apply settings in the rc file
-from viscid import _rc
 _rc.load_rc_file("~/.viscidrc")
-
-def interact(ipython=True, stack_depth=0, global_ns=None, local_ns=None,
-             include_viscid_ns=True):
-    """Start an interactive interpreter"""
-    banner = "Interactive Viscid, use Ctrl-D (eof) to end interaction."
-
-    ns = dict()
-    if include_viscid_ns:
-        ns.update(globals())
-
-    call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
-
-    if global_ns is None:
-        global_ns = call_frame.f_globals
-    ns.update(global_ns)
-
-    if local_ns is None:
-        local_ns = call_frame.f_locals
-    ns.update(local_ns)
-
-    try:
-        if not ipython:
-            raise ImportError
-        from IPython import embed
-        embed(user_ns=ns, banner1=banner)
-    except ImportError:
-        import code
-        code.interact(banner, local=ns)
-    print("Resuming Script")
 
 # this block is useful for debugging, ie, immediately do a pdb.set_trace()
 # on the SIGUSR2 signal
-import signal
 def _set_trace(seg, frame):  # pylint: disable=unused-argument
     import pdb
     pdb.set_trace()

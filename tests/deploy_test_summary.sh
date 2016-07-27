@@ -11,7 +11,10 @@ root_dir="${sdir}/../"
 if [[ -n ${TRAVIS} && -n ${CONTINUOUS_INTEGRATION} ]]; then
   branch=${TRAVIS_BRANCH}
   tags=${TRAVIS_TAG}
-  name="${branch}-${PYTHON}-${DEPS}"
+  name="${branch}-${PYTHON}"
+  if [[ "${DEPS}" != "" ]]; then
+    name="${name}-${DEPS}"
+  fi
 else
   branch="$(git rev-parse --abbrev-ref HEAD)"
   branch="${branch##*/}"

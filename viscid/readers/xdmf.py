@@ -382,10 +382,11 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             # crdlist = [['theta', [0.0, 180.0, ntheta]],
             #            ['phi', [0.0, 360.0, nphi]]]
             ######## names on a map
-            nlat, nlon = [int(s) for s in topoattrs["Dimensions"].split(' ')]
-            crdlist = [['lon', [0.0, 360.0, nlon]],
-                       ['lat', [0.0, 180.0, nlat]]]
+            ntheta, nphi = [int(s) for s in topoattrs["Dimensions"].split(' ')]
+            crdlist = [['phi', [0.0, 360.0, nphi]],
+                       ['theta', [0.0, 180.0, ntheta]]]
             crdkwargs["full_arrays"] = False
+            crdkwargs["units"] = 'deg'
 
         elif topotype in ['3DSMesh']:
             raise NotImplementedError("3D spherical grids not yet supported")

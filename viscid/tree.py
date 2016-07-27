@@ -1,17 +1,14 @@
 """Classes for elements along the tree from files to fields"""
 
 from __future__ import print_function
-from string import ascii_letters
-from datetime import datetime, timedelta
 
-from viscid.compat import string_types
-from viscid.vutil import format_time as generic_format_time
+import viscid
+
 
 class Node(object):
     """Base class for Datasets and Grids"""
 
     name = None
-    time = None
     _info = None
     parents = None
 
@@ -19,11 +16,12 @@ class Node(object):
         if name is None:
             name = "<{0} @ {1}>".format(self.__class__.__name__, hex(id(self)))
         self.name = name
-        self.time = time
 
         if info is None:
             info = dict()
         self._info = info
+
+        self.time = time
 
         if parents is None:
             parents = []
@@ -170,111 +168,51 @@ class Node(object):
     ##########################
     # for time related things
 
-    # these _sub_* methods are intended to be overridden
-    def _sub_translate_time(self, time):
-        return NotImplemented
+    @property
+    def basetime(self):
+        basetime = self.find_info('basetime', default=None)
+        if basetime is None:
+            s = ("Node {0} did not set basetime, so it can't deal with "
+                 "datetimes. Maybe you forgot to set basetime, or your "
+                 "logfile is missing or mangled.".format(repr(self)))
+            raise viscid.NoBasetimeError(s)
+        return viscid.as_datetime64(basetime)
 
-    def _sub_format_time(self, time, style):
-        return NotImplemented
+    @basetime.setter
+    def basetime(self, val):
+        self.set_info('basetime', viscid.as_datetime64(val))
 
-    def _sub_time_as_datetime(self, time, epoch):
-        return NotImplemented
+    @property
+    def time(self):
+        return self.find_info('time', default=None)
 
-    # these routines should not be overridden
-    def _translate_time(self, time):
-        """Translate time from one representation to a float
+    @time.setter
+    def time(self, val):
+        if viscid.is_datetime_like(val):
+            val = viscid.as_timedelta(self.basetime - viscid.as_datetime64(val))
+            val = val.total_seconds()
+        elif viscid.is_timedelta_like(val, conservative=True):
+            val = viscid.as_timedelta(val).total_seconds()
+        elif val is not None:
+            self.set_info('time', float(val))
 
-        Note:
-            do not override this function, instead override
-            _sub_translate_time since that is automagically
-            monkey-patched along the tree of datasets / grids / fields
+    def time_as_timedelta64(self):
+        return viscid.as_timedelta64(self.time, unit='s')
 
-        Returns:
-            NotImplemented or float representation of time for the
-            current dataset
-        """
-        def getvalue(obj):
-            return obj._sub_translate_time(time)
+    def time_as_timedelta(self):
+        return viscid.as_timedelta(self.time, unit='s')
 
-        def condition(obj, val):
-            return val != NotImplemented
+    def time_as_datetime64(self):
+        return self.basetime + self.time_as_timedelta64()
 
-        _, val = self._parent_bfs(condition, getvalue)
-        if val is not None:
-            return val
+    def time_as_datetime(self):
+        return viscid.as_datetime(self.time_as_datetime64())
 
-        # parse a string, if that's what time is
-        if isinstance(time, string_types):
-            time = time.lstrip(ascii_letters)
-            # there MUST be a better way to do this than 3 nested trys
-            try:
-                time = datetime.strptime(time, "%H:%M:%S.%f")
-            except ValueError:
-                try:
-                    time = datetime.strptime(time, "%d:%H:%M:%S.%f")
-                except ValueError:
-                    try:
-                        time = datetime.strptime(time, "%m:%d:%H:%M:%S.%f")
-                    except ValueError:
-                        pass
-
-        # figure out the datetime, if that's what time is
-        if isinstance(time, datetime):
-            delta = time - datetime.strptime("00", "%S")
-            return delta.total_seconds()
-
-        return NotImplemented
-
-    def format_time(self, style=".02f", time=None):
-        """Format time as a string
-
-        See Also:
-            :py:func:`viscid.vutil.format_time`
-
-        Returns:
-            string
-        """
-        if time is None:
-            time = self.time
-
-        def getvalue(obj):
-            return obj._sub_format_time(time, style)
-
-        def condition(obj, val):
-            return val != NotImplemented
-
-        _, val = self._parent_bfs(condition, getvalue)
-        if val is not None:
-            return val
-        return generic_format_time(time, style)
-
-    def time_as_datetime(self, time=None, epoch=None):
-        """Convert floating point time to datetime
-
-        Args:
-            t (float): time
-            epoch (datetime): if None, uses Jan 1 1970
-        """
-        def getvalue(obj):
-            return obj._sub_time_as_datetime(self.time, epoch)
-
-        def condition(obj, val):
-            return val != NotImplemented
-
-        _, val = self._parent_bfs(condition, getvalue)
-        if val is not None:
-            return val
-
-        dt = self.time_as_timedelta(self.time)
-        if epoch is None:
-            epoch = datetime.utcfromtimestamp(0)
-        return epoch + dt
-
-    def time_as_timedelta(self, time=None):
-        """Convert floating point time to a timedelta"""
-        if time is None:
-            time = self.time
-        return timedelta(seconds=time)
+    def format_time(self, fmt='.02f'):
+        try:
+            return viscid.format_time(self.time_as_datetime64(), fmt=fmt)
+        except viscid.NoBasetimeError:
+            return viscid.format_time(self.time_as_timedelta64(), fmt=fmt)
 
 
 class Leaf(Node):

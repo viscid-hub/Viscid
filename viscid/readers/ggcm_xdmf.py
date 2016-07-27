@@ -86,6 +86,12 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
         else:
             super(GGCMFileXDMF, self)._parse()
 
+        # now this is a wicked hack :(
+        if self.find_info('basetime', default=None) is None:
+            timestr = self._child_files[0].find_item('openggcm*/time_str')
+            basetime, _ = self.parse_timestring(timestr.decode())
+            self.set_info("basetime", basetime)
+
 
 class GGCMIonoFileXDMF(GGCMFileXDMF):  # pylint: disable=abstract-method
     """Ionosphere Files"""

@@ -4,10 +4,10 @@
 
 from __future__ import print_function, division
 
-from datetime import datetime
+import datetime
 import fnmatch
 from glob import glob
-from itertools import count
+from itertools import count, chain
 import logging
 from operator import itemgetter
 import os.path
@@ -23,7 +23,12 @@ from viscid.compat import izip, string_types
 import numpy as np
 
 
+__all__ = ["timeit", "resolve_path", "find_item", "find_items",
+           "slice_globbed_filenames", "meshlab_convert"]
+
+
 tree_prefix = ".   "
+
 
 def find_field(vfile, fld_name_lst):
     """ convenience function to get a field that could be called many things
@@ -129,6 +134,7 @@ def timereps(reps, func, *args, **kwargs):
     return min(arr), max(arr), sum(arr) / reps
 
 def timeit(f, *args, **kwargs):
+    """overly simple timeit wrapper"""
     t0 = time()
     ret = f(*args, **kwargs)
     t1 = time()
@@ -139,6 +145,74 @@ def timeit(f, *args, **kwargs):
           "took", s, secs)
 
     return ret
+
+def resolve_path(dset, loc, first=False):
+    """Search for globbed paths in a nested dict-like hierarchy
+
+    Args:
+        dset (dict): Root of some nested dict-like hierarchy
+        loc (str): path as a glob pattern
+        first (bool): Stop at first match and return a single value
+
+    Raises:
+        KeyError: If there are no glob matches
+
+    Returns:
+        If first == True, (value, path)
+        else, ([value0, value1, ...], [path0, path1, ...])
+    """
+    try:
+        if first:
+            return dset[loc], loc
+        else:
+            return [dset[loc]], [loc]
+    except KeyError:
+        searches = [loc.strip('/').split('/')]
+        dsets = [dset]
+        paths = [[]]
+
+        while any(searches):
+            next_dsets = []
+            next_searches = []
+            next_paths = []
+            for dset, search, path in viscid.izip(dsets, searches, paths):
+                try:
+                    next_dsets.append(dset[search[0]])
+                    next_searches.append(search[1:])
+                    next_paths.append(path + [search[0]])
+                except (KeyError, TypeError, IndexError):
+                    s = [{}.items()]
+                    if hasattr(dset, 'items'):
+                        s.append(dset.items())
+                    if hasattr(dset, 'attrs'):
+                        s.append(dset.attrs.items())
+                    for key, val in chain(*s):
+                        if fnmatch.fnmatchcase(key, search[0]):
+                            next_dsets.append(val)
+                            next_searches.append(search[1:])
+                            next_paths.append(path + [key])
+                            if first:
+                                break
+            dsets = next_dsets
+            searches = next_searches
+            paths = next_paths
+
+    if dsets:
+        dsets, paths = dsets, ['/'.join(p) for p in paths]
+        if first:
+            return dsets[0], paths[0]
+        else:
+            return dsets, paths
+    else:
+        raise KeyError("Path {0} has no matches".format(loc))
+
+def find_item(dset, loc):
+    """Shortcut for first :py:func:`resolve_path`, item only"""
+    return resolve_path(dset, loc, first=True)[0]
+
+def find_items(dset, loc):
+    """Shortcut for :py:func:`resolve_path`, items only"""
+    return resolve_path(dset, loc)[0]
 
 def str_to_value(s):
     ret = s
@@ -161,91 +235,6 @@ def str_to_value(s):
             except ValueError:
                 pass
     return ret
-
-def format_datetime(dt, fmt):
-    r"""Wrapper around datetime.datetime.strftime
-
-    This function allows one to specify the precision of fractional
-    seconds (mircoseconds) using something like '%2f' to round to
-    the nearest hundredth of a second.
-
-    Args:
-        dt (datetime.datetime): time to format
-        fmt (str): format string that strftime understands with the
-            addition of '%\.?[0-9]f' to the syntax.
-
-    Returns:
-        str
-    """
-    if len(fmt) == 0:
-        msec_fmt = ['1']
-        fmt = "%Y-%m-%d %H:%M:%S.%f"
-    else:
-        msec_fmt = re.findall(r"%\.?([0-9]*)f", fmt)
-        fmt = re.sub(r"%\.?([0-9]*)f", "%f", fmt)
-
-    tstr = datetime.strftime(dt, fmt)
-
-    # now go back and for any %f -> [0-9]{6}, reformat the precision
-    it = list(izip(msec_fmt, re.finditer("[0-9]{6}", tstr)))
-    for ffmt, m in reversed(it):
-        a, b = m.span()
-        val = float("0." + tstr[a:b])
-        ifmt = int(ffmt) if len(ffmt) > 0 else 6
-        f = "{0:0.{1}f}".format(val, ifmt)[2:]
-        tstr = tstr[:a] + f + tstr[b:]
-    return tstr
-
-def format_time(t, style='.02f'):
-    """Format time as a string
-
-    Note:
-        If t is a datetime.datetime instance, then this function
-        returns the result of format_datetime(t, style), which is
-        basically datetime.datetime.strftime
-
-    Args:
-        t (float): time
-        style (str): for this method, can be::
-                style          |   time   | string
-                --------------------------------------------------
-                'hms'          | 90015.0  | "25:00:15.000"
-                'hms'          | 90000.0  | "1 day 01:00:15.000"
-                'hmss'         | 90015.0  | "25:00:15.000 (90015)"
-                'dhms'         |   900.0  | "0 days 00:15:00.000"
-                '.02f'         |   900.0  | '900.00'
-
-    Returns:
-        str
-    """
-    lstyle = style.lower()
-    if t is None:
-        return ""
-    elif isinstance(t, datetime):
-        return format_datetime(t, style)
-    elif "hms" in lstyle:
-        days = int(t // (24 * 3600))
-        hrs = int((t // 3600) % 24)
-        mins = int((t // 60) % 60)
-        secs = t % 60
-
-        if lstyle == "dhms":
-            daystr = "day" if days == 1 else "days"
-            return "{0} {1}, {2}:{3:02d}:{4:04.01f}".format(days, daystr,
-                                                            hrs, mins, secs)
-        elif lstyle.startswith("hms"):
-            hrs += 24 * days
-            s = "{0:02d}:{1:02d}:{2:05.2f}".format(hrs, mins, secs)
-            if lstyle == "hmss":
-                s += " ({0:d})".format(int(t))
-            return s
-        else:
-            raise ValueError("Unknown time style: {0}".format(style))
-    elif lstyle == "none":
-        return ""
-    else:
-        return "{0:{1}}".format(t, style)
-    raise NotImplementedError("should never be here")
 
 def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     """Make sure slices go forward
@@ -477,70 +466,92 @@ def extract_index(arr, start=None, stop=None, step=None, endpoint=True,
     _step = 1 if step is None else int(step)
     epsilon_step = epsilon if _step > 0 else -epsilon
 
+    start = convert_timelike(start)
+    stop = convert_timelike(stop)
+
     start = convert_deprecated_floats(start, "start")
     stop = convert_deprecated_floats(stop, "stop")
 
     # print("?!? |{0}|  |{1}|".format(start, stop))
 
-    try:
-        start = start.rstrip()
-        if len(start) == 0:
-            start = None
-        elif start[-1] == 'f':
-            start = float(start[:-1])
-            diff = arr - start + epsilon_step
-            if _step > 0:
-                diff = np.ma.masked_less_equal(diff, 0)
-            else:
-                diff = np.ma.masked_greater_equal(diff, 0)
+    startstop = [start, stop]
+    eps_sign = [1, -1]
 
-            if np.ma.count(diff) == 0:
-                # start value is past the wrong end of the array
+    # if start or stop is not an int, try to make it one
+    for i in range(2):
+        byval = None
+        s = startstop[i]
+        _epsilon_step = epsilon_step
+
+        if viscid.is_datetime_like(s, conservative=True):
+            byval = s.astype(arr.dtype)
+            _epsilon_step = 0
+        elif viscid.is_timedelta_like(s, conservative=True):
+            byval = s.astype(arr.dtype)
+            _epsilon_step = 0
+        else:
+            try:
+                s = s.strip()
+                if len(s) == 0:
+                    startstop[i] = None
+                elif s[-1] == 'f':
+                    byval = float(s[:-1])
+            except AttributeError:
+                pass
+
+        if byval is not None:
+            if _epsilon_step:
+                diff = arr - byval + (eps_sign[i] * _epsilon_step)
+            else:
+                diff = arr - byval
+            zero = np.array([0]).astype(diff.dtype)[0]
+
+            # FIXME: there is far too much decision making here
+            if i == 0:
+                # start
                 if _step > 0:
-                    start = len(arr)
+                    diff = np.ma.masked_less(diff, zero)
                 else:
-                    # start = -len(arr) - 1
-                    # having a value < -len(arr) won't play
-                    # nice with make_fwd_slice, but in this
-                    # case, the slice will have no data, so...
-                    return 0, 0, step
-            else:
-                start = int(np.argmin(np.abs(diff)))
-    except AttributeError:
-        pass
+                    diff = np.ma.masked_greater(diff, zero)
 
-    try:
-        stop = stop.rstrip()
-        if len(stop) == 0:
-            stop = None
-        elif stop[-1] == 'f':
-            stop = float(stop.rstrip()[:-1])
-            diff = arr - stop - epsilon_step
-            if _step > 0:
-                diff = np.ma.masked_greater_equal(diff, 0)
                 if np.ma.count(diff) == 0:
-                    # stop value is past the wong end of the array
-                    stop = 0
+                    # start value is past the wrong end of the array
+                    if _step > 0:
+                        startstop[i] = len(arr)
+                    else:
+                        # start = -len(arr) - 1
+                        # having a value < -len(arr) won't play
+                        # nice with make_fwd_slice, but in this
+                        # case, the slice will have no data, so...
+                        return 0, 0, step
                 else:
-                    stop = int(np.argmin(np.abs(diff)))
-                    if endpoint:
-                        stop += 1
+                    startstop[i] = int(np.argmin(np.abs(diff)))
             else:
-                diff = np.ma.masked_less_equal(diff, 0)
-                if np.ma.count(diff) == 0:
-                    # stop value is past the wrong end of the array
-                    stop = len(arr)
+                # stop
+                if _step > 0:
+                    diff = np.ma.masked_greater(diff, zero)
+                    if np.ma.count(diff) == 0:
+                        # stop value is past the wong end of the array
+                        startstop[i] = 0
+                    else:
+                        startstop[i] = int(np.argmin(np.abs(diff)))
+                        if endpoint:
+                            startstop[i] += 1
                 else:
-                    stop = int(np.argmin(np.abs(diff)))
-                    if endpoint:
-                        if stop > 0:
-                            stop -= 1
-                        else:
-                            # 0 - 1 == -1 which would wrap to the end of
-                            # of the array... instead, just make it None
-                            stop = None
-    except AttributeError:
-        pass
+                    diff = np.ma.masked_less(diff, zero)
+                    if np.ma.count(diff) == 0:
+                        # stop value is past the wrong end of the array
+                        startstop[i] = len(arr)
+                    else:
+                        startstop[i] = int(np.argmin(np.abs(diff)))
+                        if endpoint:
+                            if startstop[i] > 0:
+                                startstop[i] -= 1
+                            else:
+                                # 0 - 1 == -1 which would wrap to the end of
+                                # of the array... instead, just make it None
+                                startstop[i] = None
+    start, stop = startstop
 
     # turn start, stop, step into indices
     sss = [start, stop, step]
@@ -758,6 +769,16 @@ def slice_globbed_filenames(glob_pattern):
     if n_slices:
         if not fnames:
             raise IOError("the glob {0} matched no files".format(edited_glob))
+
+        times = []
+        _newfn = []
+        for fn in fnames:
+            try:
+                times.append(float(re.match(res_re, fn).group('TSLICE')))
+                _newfn.append(fn)
+            except ValueError:
+                pass
+        fnames = _newfn
         times = [float(re.match(res_re, fn).group('TSLICE')) for fn in fnames]
         fnames = [fn for fn, t in sorted(zip(fnames, times), key=itemgetter(1))]
         times.sort()
@@ -782,6 +803,16 @@ def value_is_float_not_int(value):
             return False
     except TypeError:
         return False
+
+def convert_timelike(value):
+    if value in (None, ''):
+        return None
+    elif viscid.is_datetime_like(value, conservative=True):
+        return viscid.as_datetime64(value)
+    elif viscid.is_timedelta_like(value, conservative=True):
+        return viscid.as_timedelta64(value)
+    else:
+        return value
 
 def convert_deprecated_floats(value, varname="value"):
     if value_is_float_not_int(value):
@@ -834,6 +865,8 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
     first_idx = np.cumsum([0] + npts[:-1])
     vertices = [np.asarray(line) for line in lines]
     vertices = np.concatenate(lines, axis=1)
+    if vertices.dtype.kind not in 'fc':
+        vertices = np.asarray(vertices, dtype='f')
 
     if vertices.shape[0] > 3:
         if scalars is not None:
@@ -873,11 +906,16 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
         else:
             scalars = scalars.reshape(-1, N)
 
-        if scalars.dtype.kind == 'S':
+        if scalars.dtype.kind in ['S', 'U']:
             # translate hex colors (#ff00ff) into rgb values
             scalars = np.char.lstrip(scalars, '#').astype('S6')
             scalars = np.char.zfill(scalars, 6)
-            scalars = np.frombuffer(np.char.decode(scalars, 'hex'), dtype='u1')
+            # this np.char.decode(..., 'hex') doesn't work for py3k; kinda silly
+            try:
+                scalars = np.frombuffer(np.char.decode(scalars, 'hex'), dtype='u1')
+            except LookupError:
+                import codecs
+                scalars = np.frombuffer(codecs.decode(scalars, 'hex'), dtype='u1')
             scalars = scalars.reshape(-1, 3).T
         elif scalars.shape[0] == 1:
             # normal scalars

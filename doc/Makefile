@@ -46,10 +46,13 @@ clean:
 	rm -rf styles
 	rm -f mpl_styles.rst
 
+public-doccheck:
+	python public_doccheck.py
+
 #apidoc:
 #	$(SPHINXAPIDOC) -o $(SOURCEDIR)  ../viscid
 
-html:
+html: public-doccheck
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."

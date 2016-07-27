@@ -10,6 +10,23 @@ import numpy as np
 
 from viscid.readers import vfile
 
+
+# FIXME: This lookup table is based on an enum in ggcm_mhd.h, ie, the numerical
+#        values (index in this list) could change in the future - but libmrc
+#        only writes out the integer value for mhd->ggcm_mhd_fld->mhd_type
+#        into the log file, so a guess is better than nothing...
+MHD_TYPES = ["MT_PRIMITIVE",
+             # the following have B staggered the openggcm way: [-1..mx[
+             "MT_SEMI_CONSERVATIVE_GGCM",
+             # the following have B staggered the "normal" way: [0..mx]
+             "MT_SEMI_CONSERVATIVE",
+             "MT_FULLY_CONSERVATIVE",
+             # cell-centered fully conservative MHD
+             "MT_FULLY_CONSERVATIVE_CC",
+             # the multi-moment schemes are cell-centered for all quantities
+             "MT_GKEYLL"]
+
+
 class GGCMLogFile(vfile.VFile):  # pylint: disable=W0223
     """Libmrc log file reader
 
@@ -27,7 +44,9 @@ class GGCMLogFile(vfile.VFile):  # pylint: disable=W0223
                        "mrc_domain",
                        "mrc_crds",
                        "ggcm_mhd_ic",
-                       "ggcm_dipole"]
+                       "ggcm_dipole",
+                       "ggcm_mhd_step",
+                       "ggcm_mhd_fld"]
 
     info = None
 
@@ -72,6 +91,12 @@ class GGCMLogFile(vfile.VFile):  # pylint: disable=W0223
                     except AttributeError:
                         # not the start of a new class view, that's ok
                         pass
+
+        try:
+            mhd_type = _info["ggcm_mhd_fld_mhd_type"]
+            _info["ggcm_mhd_fld_mhd_type_str"] = MHD_TYPES[mhd_type]
+        except (IndexError, KeyError):
+            _info["ggcm_mhd_fld_mhd_type_str"] = "UNKNOWN"
 
         self.info = _info
 

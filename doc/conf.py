@@ -12,6 +12,7 @@
 # serve to show the default.
 
 from __future__ import print_function
+import io
 import re
 import sys, os
 
@@ -28,9 +29,11 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['matplotlib.sphinxext.plot_directive', 'matplotlib.sphinxext.mathmpl',
+extensions = ['matplotlib.sphinxext.plot_directive',
               'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode',
-              'style_example_generator']
+              'style_gallery_generator',
+              # 'matplotlib.sphinxext.mathmpl',
+              ]
 
 try:
     from sphinx.ext import napoleon
@@ -64,7 +67,7 @@ copyright = u'2015, Kristofor Maynard'
 #
 # The short X.Y version.
 def get_viscid_version(init_py):
-    with open(init_py) as f:
+    with io.open(init_py, 'r', encoding='utf-8') as f:
         quoted_str = r"((?<![\\])(?:'''|\"\"\"|\"|'))((?:.(?!(?<![\\])\1))*.?)\1"
         ver_re = r"__version__\s*=\s*" + quoted_str
         for line in f:
@@ -144,7 +147,7 @@ html_theme_options = {
                        ("Philosophy", "philosophy"),
                        ("Useful Functions", "functions"),
                        ("Plot Options", "plot_options"),
-                       ("Matplotlib Styles", "mpl_styles"),
+                       ("Matplotlib Style Gallery", "mpl_style_gallery"),
                        ("RC file", "custom_behavior"),
                        ("Command Line Tools", "command_line"),
                        ("Developer's Guide", "dev_guide"),

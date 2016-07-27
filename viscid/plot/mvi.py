@@ -3,15 +3,17 @@
 Note:
     You can't set rc parameters for this module!
 """
-from __future__ import print_function
+from __future__ import print_function, division
 import os
 import sys
 
 import numpy as np
 import mayavi
 from mayavi import mlab
+from mayavi.modules.axes import Axes
 from mayavi.sources.builtin_surface import BuiltinSurface
 from mayavi.sources.vtk_data_source import VTKDataSource
+from traits.trait_errors import TraitError
 from tvtk.api import tvtk
 import viscid
 from viscid import field
@@ -556,7 +558,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     Parameters:
         lines (list): See :py:func:`lines2source`
         scalars (TYPE): See :py:func:`lines2source`
-        style (str): 'strip' or 'tube'
+        style (str): 'tube' or 'none'
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         name (str): Description
@@ -584,11 +586,15 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
 
     src = lines2source(lines, scalars=scalars, name=name)
 
+    # always use the stripper since actually turns a collection of line
+    # segments into a line... that way capping will cap lines, not line
+    # segments, etc.
+    lines = mlab.pipeline.stripper(src, figure=figure)
     if style == "tube":
-        lines = mlab.pipeline.tube(src, figure=figure, tube_radius=tube_radius,
+        lines = mlab.pipeline.tube(lines, figure=figure, tube_radius=tube_radius,
                                    tube_sides=tube_sides)
-    elif style == "strip":
-        lines = mlab.pipeline.stripper(src, figure=figure)
+    elif style == "none" or not style:
+        pass
     else:
         raise ValueError("Unknown style for lines: {0}".format(style))
 
@@ -647,7 +653,7 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
         z = radius * np.cos((np.pi / 180.0) * bounding_lat)
         clip = mlab.pipeline.data_set_clipper(m.module_manager.parent)
         clip.widget.widget.place_widget(-rp, rp, -rp, rp, -z, z)
-        clip.widget.update_implicit_function()
+        clip.update_pipeline()
         clip.widget.widget.enabled = False
         insert_filter(clip, m.module_manager)
         # m.module_manager.parent.parent.filter.auto_orient_normals = True
@@ -683,6 +689,135 @@ def plot_nulls(nulls, Acolor=(0.0, 0.263, 0.345), Bcolor=(0.686, 0.314, 0.0),
     if Bcolor is not None and Bpts.shape[1]:
         mlab.points3d(Bpts[0], Bpts[1], Bpts[2], color=Bcolor, name="Bnulls",
                       **kwargs)
+
+def fancy_axes(figure=None, target=None, nb_labels=5, xl=None, xh=None,
+               tight=False, symmetric=False, padding=0.05, opacity=0.7,
+               face_color=None, line_width=2.0, grid_color=None,
+               labels=True, label_color=None, label_shadow=True,
+               consolidate_labels=True):
+    """Make axes with 3 shaded walls and a grid similar to matplotlib
+
+    Args:
+        figure (mayavi.core.scene.Scene): specific figure, or None for
+            :py:func:`mayavi.mlab.gcf`
+        target (Mayavi Element): If either xl or xh are not given, then
+            get that limit from a bounding box around `target`
+        nb_labels (int, sequence): number of labels in all, or each
+            (x, y, z) directions
+        xl (float, sequence): lower corner of axes
+        xh (float, sequence): upper corner of axes
+        tight (bool): If False, then let xl and xh expand to make nicer
+            labels. This uses matplotlib to determine new extrema
+        symmetric (bool): If True, then xl + xh = 0
+        padding (float): add padding as a fraction of the total length
+        opacity (float): opacity of faces
+        face_color (sequence): color (r, g, b) of faces
+        line_width (float): Width of grid lines
+        grid_color (sequence): Color of grid lines
+        labels (bool): Whether or not to put axis labels on
+        label_color (sequence): color of axis labels
+        label_shadow (bool): Add shadows to all labels
+        consolidate_labels (bool): if all nb_labels are the same, then
+            only make one axis for the labels
+
+    Returns:
+        VTKDataSource: source to which 2 surfaces and 3 axes belong
+    """
+    if figure is None:
+        figure = mlab.gcf()
+
+    # setup xl and xh
+    if xl is None or xh is None:
+        _outline = mlab.outline(target, figure=figure)
+
+        if xl is None:
+            xl = _outline.bounds[0::2]
+        if xh is None:
+            xh = _outline.bounds[1::2]
+        _outline.remove()
+
+    nb_labels = np.broadcast_to(nb_labels, (3,))
+    xl = np.array(np.broadcast_to(xl, (3,)))
+    xh = np.array(np.broadcast_to(xh, (3,)))
+    L = xh - xl
+
+    xl -= padding * L
+    xh += padding * L
+
+    # now adjust xl and xh to be prettier
+    if symmetric:
+        tight = False
+    if not tight:
+        from matplotlib.ticker import AutoLocator
+        for i in range(len(xl)):  # pylint: disable=consider-using-enumerate
+            l = AutoLocator()
+            l.create_dummy_axis()
+            l.set_view_interval(xl[i], xh[i])
+            locs = l()
+            xl[i] = locs[0]
+            xh[i] = locs[-1]
+
+    dx = (xh - xl) / (nb_labels - 1)
+    grid = tvtk.ImageData(dimensions=nb_labels, origin=xl, spacing=dx)
+    src = VTKDataSource(data=grid)
+    src.name = "fancy_axes"
+
+    if face_color is None:
+        face_color = figure.scene.background
+    if grid_color is None:
+        grid_color = figure.scene.foreground
+    if label_color is None:
+        label_color = grid_color
+
+    face = mlab.pipeline.surface(src, figure=figure, opacity=opacity,
+                                 color=face_color)
+    face.actor.property.frontface_culling = True
+
+    if line_width:
+        grid = mlab.pipeline.surface(src, figure=figure, opacity=1.0,
+                                     color=grid_color, line_width=line_width,
+                                     representation='wireframe')
+        grid.actor.property.frontface_culling = True
+
+    if labels:
+        def _make_ax_for_labels(_i, all_axes=False):
+            if all_axes:
+                _ax = Axes(name='axes-labels')
+            else:
+                _ax = Axes(name='{0}-axis-labels'.format('xyz'[_i]))
+                # VTK bug... y_axis and z_axis are flipped... how is VTK still
+                # the de-facto 3d plotting library?
+                if _i == 0:
+                    _ax.axes.x_axis_visibility = True
+                    _ax.axes.y_axis_visibility = False
+                    _ax.axes.z_axis_visibility = False
+                elif _i == 1:
+                    _ax.axes.x_axis_visibility = False
+                    _ax.axes.y_axis_visibility = False
+                    _ax.axes.z_axis_visibility = True  # VTK bug
+                elif _i == 2:
+                    _ax.axes.x_axis_visibility = False
+                    _ax.axes.y_axis_visibility = True  # VTK bug
+                    _ax.axes.z_axis_visibility = False
+                else:
+                    raise ValueError()
+            _ax.property.opacity = 0.0
+            _ax.axes.number_of_labels = nb_labels[_i]
+            # import IPython; IPython.embed()
+            _ax.title_text_property.color = label_color
+            _ax.title_text_property.shadow = label_shadow
+            _ax.label_text_property.color = label_color
+            _ax.label_text_property.shadow = label_shadow
+            src.add_module(_ax)
+
+        if consolidate_labels and np.all(nb_labels[:] == nb_labels[0]):
+            _make_ax_for_labels(0, all_axes=True)
+        else:
+            _make_ax_for_labels(0, all_axes=False)
+            _make_ax_for_labels(1, all_axes=False)
+            _make_ax_for_labels(2, all_axes=False)
+
+    return src
 
 axes = mlab.axes
 xlabel = mlab.xlabel
@@ -865,17 +1000,19 @@ def plot_blue_marble(r=1.0, orientation=None, figure=None):
                           y_resolution=16)
     ps.update()
     transform = tvtk.SphericalTransform()
-    tpoly = tvtk.TransformPolyDataFilter(transform=transform, input=ps.output)
+    tpoly = tvtk.TransformPolyDataFilter(transform=transform,
+                                         input_connection=ps.output_port)
+    tpoly.update()
     src = VTKDataSource(data=tpoly.output, name="blue_marble")
     surf = mlab.pipeline.surface(src)
 
     # now load a jpg, and use it to texture the sphere
     fname = os.path.realpath(os.path.dirname(__file__) + '/blue_marble.jpg')
     img = tvtk.JPEGReader(file_name=fname)
-    texture = tvtk.Texture(interpolate=1)
-    texture.input = img.output
+    texture = tvtk.Texture(input_connection=img.output_port, interpolate=1)
     surf.actor.enable_texture = True
     surf.actor.texture = texture
+    surf.actor.property.color = (1.0, 1.0, 1.0)
 
     if orientation:
         surf.actor.actor.orientation = orientation
@@ -898,7 +1035,7 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
         crd_system (str, optional): 'mhd' or 'gse', can be gotten from
-            an openggcm field using ``fld.meta["crd_system"]``.
+            an openggcm field using ``fld.find_info("crd_system", 'mhd')``.
 
     Returns:
         Tuple (day, night) as vtk sources
@@ -931,6 +1068,52 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
 
     return day, night
 
+def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
+           fit=None, **kwargs):
+    """Display a mayavi figure inline in an ipython notebook.
+
+    This function takes a screenshot of a figure and blits it to a matplotlib
+    figure using matplotlib.pyplot.imshow()
+
+    Args:
+        figure: A mayavi figure, if not specified, uses mlab.gcf()
+        ax: Matplotlib axis of the destination (plt.gca() if None)
+        size (None, tuple): if given, resize the scene in pixels (x, y)
+        antialiased (bool): Antialias mayavi plot
+        hide (bool): if True, try to hide the render window
+        fit (None, bool): Resize mpl window to fit image exactly. If
+            None, then fit if figure does not currently exist.
+        **kwargs: passed to mayavi.mlab.screenshot()
+    """
+    if figure is None:
+        figure = mlab.gcf()
+
+    if size is not None:
+        resize(size, figure=figure)
+
+    pixmap = mlab.screenshot(figure, antialiased=antialiased, **kwargs)
+
+    # try to hide the window... Qt backend only
+    if hide:
+        hide_window(figure)
+
+    if ax is None:
+        from matplotlib import pyplot as plt
+        # if there are no figures, and fit is None, then fit
+        if fit is None:
+            fit = not bool(plt.get_fignums)
+        ax = plt.gca()
+
+    if fit:
+        pltfig = ax.figure
+        dpi = pltfig.get_dpi()
+        pltfig.set_size_inches([s / dpi for s in figure.scene.get_size()],
+                               forward=True)
+        pltfig.subplots_adjust(top=1, bottom=0, left=0, right=1,
+                               hspace=0, wspace=0)
+    ax.imshow(pixmap)
+    ax.axis('off')
+
 def show(stop=False):
     """Calls :meth:`mayavi.mlab.show(stop=stop)`"""
     mlab.show(stop=stop)
@@ -955,7 +1138,10 @@ def remove_source(src):
     """
     src.stop()
     try:
-        src.data.release_data_flag = 1
+        try:
+            src.data.release_data()
+        except TraitError:
+            src.data.release_data_flag = 1
         src.cell_scalars_name = ''
         src.cell_tensors_name = ''
         src.cell_vectors_name = ''
@@ -1047,6 +1233,15 @@ def resize(size, figure=None):
     except Exception as e:  # pylint: disable=broad-except
         viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
 
+def hide_window(figure, debug=False):
+    """Try to hide the window; only does something on Qt backend"""
+    try:
+        # fig.scene.control.parent().hide()
+        figure.scene.control.parent().showMinimized()
+    except Exception as e:  # pylint: disable=broad-except,unused-variable
+        if debug:
+            print("Window hide didn't work::", repr(e))
+
 def savefig(*args, **kwargs):
     """Wrap mayavi.mlab.savefig with offscreen hack"""
     fig = mlab.gcf()
@@ -1059,40 +1254,8 @@ def savefig(*args, **kwargs):
     if fig.scene.off_screen_rendering != prev_offscreen_state:
         fig.scene.off_screen_rendering = prev_offscreen_state
 
-def interact(ipython=True, stack_depth=0, global_ns=None, local_ns=None,
-             include_mvi_ns=True, include_viscid_ns=True):
-    """Start an interactive interpreter"""
-    banner = """Have some fun with mayavi :)
-    - use locals() to explore the namespace
-    - show(stop=True) or show() to interact with the plot/gui
-    - mayavi objects all have a trait_names() method
-    - Use Ctrl-D (eof) to end interaction"""
-
-    ns = dict()
-    if include_viscid_ns:
-        ns.update(dict([(name, getattr(viscid, name)) for name in dir(viscid)]))
-    if include_mvi_ns:
-        ns.update(globals())
-
-    call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
-
-    if global_ns is None:
-        global_ns = call_frame.f_globals
-    ns.update(global_ns)
-
-    if local_ns is None:
-        local_ns = call_frame.f_locals
-    ns.update(local_ns)
-
-    try:
-        if not ipython:
-            raise ImportError
-        from IPython import embed
-        embed(user_ns=ns, banner1=banner)
-    except ImportError:
-        import code
-        code.interact(banner, local=ns)
-    print("Resuming Script")
+def interact(stack_depth=0, **kwargs):
+    viscid.vlab.interact(stack_depth=stack_depth + 1, mvi_ns=True, **kwargs)
 
 ##
 ## EOF
