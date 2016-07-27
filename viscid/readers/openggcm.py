@@ -288,9 +288,9 @@ class GGCMGrid(grid.Grid):
                 else:
                     f.post_reshape_transform_func = mhd2gse_field_scalar
                 f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
-                f.meta["crd_system"] = "gse"
+                f.set_info("crd_system", "gse")
             else:
-                f.meta["crd_system"] = "mhd"
+                f.set_info("crd_system", "mhd")
         super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):

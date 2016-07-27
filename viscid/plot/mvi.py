@@ -1035,7 +1035,7 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
         crd_system (str, optional): 'mhd' or 'gse', can be gotten from
-            an openggcm field using ``fld.meta["crd_system"]``.
+            an openggcm field using ``fld.find_info("crd_system", 'mhd')``.
 
     Returns:
         Tuple (day, night) as vtk sources
