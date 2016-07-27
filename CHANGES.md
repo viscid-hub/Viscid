@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.96.2 dev
-==========
+0.97.0
+======
 
 Changes:
   - Added Field.loc[...] for pandas-like slice by location
