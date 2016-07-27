@@ -405,7 +405,7 @@ class GGCMGrid(grid.Grid):
     def _get_psi(self):
         B = self['b']
 
-        rev = True if B.meta["crd_system"] == "gse" else False
+        rev = True if B.find_info("crd_system", None) == "gse" else False
         psi = plasma.calc_psi(B, rev=rev)
         return psi
 
