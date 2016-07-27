@@ -31,7 +31,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['matplotlib.sphinxext.plot_directive',
               'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode',
-              'style_example_generator',
+              'style_gallery_generator',
               # 'matplotlib.sphinxext.mathmpl',
               ]
 
@@ -147,7 +147,7 @@ html_theme_options = {
                        ("Philosophy", "philosophy"),
                        ("Useful Functions", "functions"),
                        ("Plot Options", "plot_options"),
-                       ("Matplotlib Styles", "mpl_styles"),
+                       ("Matplotlib Style Gallery", "mpl_style_gallery"),
                        ("RC file", "custom_behavior"),
                        ("Command Line Tools", "command_line"),
                        ("Developer's Guide", "dev_guide"),
