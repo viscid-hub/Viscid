@@ -487,7 +487,7 @@ def is_datetime_like(val, conservative=False):  # pylint: disable=unused-argumen
         try:
             int(val)
             return False
-        except ValueError:
+        except (ValueError, TypeError):
             pass
     return _check_like(val, (np.datetime64, ), (datetime, ),
                        is_valid_datetime64)
@@ -500,7 +500,7 @@ def is_timedelta_like(val, conservative=False):
         try:
             int(val)
             return False
-        except ValueError:
+        except (ValueError, TypeError):
             pass
         return _check_like(val, (np.timedelta64, ), (timedelta, ),
                            is_valid_timedelta64)
