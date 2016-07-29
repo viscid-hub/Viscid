@@ -32,6 +32,8 @@ from viscid.coordinate import wrap_crds
 from viscid.calculator import plasma
 
 
+DEFAULT_BBNORM = 3.0574001e-05 / 1e-9
+
 GGCM_EPOCH = np.datetime64('1966-01-01T00:00:00Z')
 GGCM_NO_DIPTILT = np.datetime64('1967-01-01T00:00:00Z')
 
@@ -373,6 +375,17 @@ class GGCMGrid(grid.Grid):
         fld.set_info(viscid.PREPROCESSED_KEY, False)
         return viscid.make_ecfc_field_leading(fld)
 
+    @property
+    def _bbnorm(self):
+        # FIXME: b1 / divB use different bbnorm scale for h5/jrrle
+        try:
+            owner = self.find_info_owner('ggcm_mhd_bbnorm')
+            return owner.get_info('ggcm_mhd_bbnorm')
+        except KeyError:
+            viscid.logger.warn("Could not find bbnorm, using {0:g}. Maybe "
+                               "your logfile is mangled.".format(DEFAULT_BBNORM))
+            return DEFAULT_BBNORM
+
     def _get_b(self):
         return self._get_b_cc()
 
@@ -397,6 +410,7 @@ class GGCMGrid(grid.Grid):
             # get from [b1x, b1y, b1z] (xdmf + h5 files)
             _bfc = self._assemble_vector("b1", _force_layout=self.force_vector_layout,
                                          pretty_name="B")
+            _bfc = viscid.scale(self._bbnorm, _bfc)
         except KeyError:
             # get from [bx1, by1, bz1] (jrrle / fortbin files)
             _bfc = self._assemble_vector("b", _force_layout=self.force_vector_layout,
@@ -409,6 +423,7 @@ class GGCMGrid(grid.Grid):
             # get from [b2x, b2y, b2z] (xdmf + h5 files)
             _bfc = self._assemble_vector("b2", _force_layout=self.force_vector_layout,
                                          pretty_name="B")
+            _bfc = viscid.scale(self._bbnorm, _bfc)
         except KeyError:
             # get from [bx2, by2, bz2] (jrrle / fortbin files)
             _bfc = self._assemble_vector("b", _force_layout=self.force_vector_layout,
@@ -493,6 +508,8 @@ class GGCMGrid(grid.Grid):
         psi = plasma.calc_psi(B, rev=rev)
         return psi
 
+    def _process_divB(self, fld):
+        return viscid.scale(self._bbnorm, fld)
 
 class GGCMFile(object):  # pylint: disable=abstract-method
     """Mixin some GGCM convenience stuff

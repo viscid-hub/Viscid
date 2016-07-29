@@ -212,6 +212,9 @@ class Grid(tree.Node):
                 ret = self.fields[fldname]
             else:
                 ret = self.fields[fldname].shell_copy(force=False)
+            process_func = "_process_" + fldname
+            if hasattr(self, process_func):
+                ret = getattr(self, process_func)(ret)
         except KeyError:
             func = "_get_" + fldname
             if hasattr(self, func):
