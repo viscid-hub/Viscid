@@ -8,7 +8,7 @@ dependencies:
 - scipy
 - h5py
 - matplotlib>=1.4.0
-- cython>0.17
+- cython=0.22
 - numexpr
 - numba
 - pyyaml
