@@ -1109,7 +1109,7 @@ class Field(tree.Leaf):
         # to do any more work
         src_is_fld_list = (isinstance(self._src_data, (list, tuple)) and
                            all([isinstance(f, Field) for f in self._src_data]))
-        if no_sslices and src_is_fld_list:
+        if self._cache is None and no_sslices and src_is_fld_list:
             if self.post_reshape_transform_func is not None:
                 raise NotImplementedError()
             return self._src_data[comp_slc]
