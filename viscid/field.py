@@ -2027,7 +2027,7 @@ class ScalarField(Field):
                                         units=cunits, **self._src_crds.meta)
         return self.wrap(downdat, {"crds": downcrds})
 
-    def as_interlaced(self, force_c_contiguous=True):
+    def as_layout(self, to_layout, force_c_contiguous=True):
         if force_c_contiguous:
             return self.as_c_contiguous()
         else:
@@ -2058,7 +2058,7 @@ class VectorField(Field):
             lst[i] = self[slc]
         return lst
 
-    def as_interlaced(self, force_c_contiguous=True):
+    def as_layout(self, to_layout, force_c_contiguous=True):
         """Get an interlaced version of this field
 
         Note:
@@ -2066,6 +2066,7 @@ class VectorField(Field):
             in memory
 
         Args:
+            to_layout: either LAYOUT_INTERLACED or LAYOUT_FLAT
             force_c_contiguous: if data is not c contiguous, then wrap
                 it in another np.array() call.
 
@@ -2075,7 +2076,7 @@ class VectorField(Field):
         was_loaded = self.is_loaded
 
         ret = None
-        if self.layout == LAYOUT_INTERLACED:
+        if self.layout == to_layout:
             if force_c_contiguous:
                 if not self.data.flags['C_CONTIGUOUS']:
                     # print("calling np.ascontiguousarray")
@@ -2084,7 +2085,7 @@ class VectorField(Field):
                     # print("returning self")
                     ret = self
         else:
-            ctx = dict(force_layout=LAYOUT_INTERLACED)
+            ctx = dict(force_layout=to_layout)
             # the data load is going to wrap the array, i think it's
             # redundant to put an "ascontiguousarray" here
             ret = self.wrap(self.data, ctx)
@@ -2092,6 +2093,14 @@ class VectorField(Field):
         if not was_loaded and ret is not self:
             self.clear_cache()
         return ret
+
+    def as_interlaced(self, force_c_contiguous=True):
+        return self.as_layout(LAYOUT_INTERLACED,
+                              force_c_contiguous=force_c_contiguous)
+
+    def as_flat(self, force_c_contiguous=True):
+        return self.as_layout(LAYOUT_FLAT,
+                              force_c_contiguous=force_c_contiguous)
 
 class MatrixField(Field):
     _TYPE = "matrix"
