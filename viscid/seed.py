@@ -22,7 +22,7 @@ def to_seeds(pts):
             This can be 3xN so long as N != 3.
     """
     if (hasattr(pts, "nr_points") and hasattr(pts, "iter_points") and
-        hasattr(pts, "points")):  # pylint: disable=bad-continuation
+        hasattr(pts, "points") and hasattr(pts, "wrap_field")):
         return pts
     else:
         return Point(pts)
