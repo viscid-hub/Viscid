@@ -152,7 +152,11 @@ def set_in_region(a, b, alpha=1.0, beta=1.0, mask=None, out=None):
     if mask is None:
         out.data[...] = vals
     else:
-        out.data[...] = np.choose(mask, [a.data, vals])
+        try:
+            out.data[...] = np.choose(mask, [a.data, vals])
+        except ValueError:
+            out.data[...] = np.choose(mask.data.reshape(list(mask.sshape) + [1]),
+                                      [a.data, vals])
     return out
 
 def make_spherical_mask(fld, rmin=0.0, rmax=None, rsq=None):
