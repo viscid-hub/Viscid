@@ -465,12 +465,12 @@ class StructuredCrds(Coordinates):
         # store references to face and edge centers while we're here
         sfx = self._CENTER["face"]
         for i, a in enumerate(self.axes):
-            self.__crds[a + sfx] = [None] * len(self.axes)
-            self.__crds[a.upper() + sfx] = [None] * len(self.axes)
+            self.__crds[a + sfx] = [None] * 3
+            self.__crds[a.upper() + sfx] = [None] * 3
             for j, d in enumerate(self.axes):  # pylint: disable=W0612
                 if i == j:
-                    self.__crds[a + sfx][j] = crds_nc[i]
-                    self.__crds[a.upper() + sfx][j] = crds_nc_shaped[i]
+                    self.__crds[a + sfx][j] = crds_nc[i][:-1]
+                    self.__crds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
                 else:
                     self.__crds[a + sfx][j] = crds_cc[i]
                     self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
@@ -478,15 +478,21 @@ class StructuredCrds(Coordinates):
         # same as face, but swap nc with cc
         sfx = self._CENTER["edge"]
         for i, a in enumerate(self.axes):
-            self.__crds[a + sfx] = [None] * len(self.axes)
-            self.__crds[a.upper() + sfx] = [None] * len(self.axes)
-            for j, d in enumerate(self.axes):
-                if i == j:
+            self.__crds[a + sfx] = [None] * 3
+            self.__crds[a.upper() + sfx] = [None] * 3
+            for j in range(3):
+                if i != j:
+                    self.__crds[a + sfx][j] = crds_nc[i][:-1]
+                    self.__crds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
+                else:
                     self.__crds[a + sfx][j] = crds_cc[i]
                     self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
-                else:
-                    self.__crds[a + sfx][j] = crds_nc[i]
-                    self.__crds[a.upper() + sfx][j] = crds_nc_shaped[i]
+
+    @staticmethod
+    def _sm1(a):
+        n = a.shape
+        slices = [slice(None) if ni <= 1 else slice(None, -1) for ni in n]
+        return a[slices]
 
     def _ogrid_single(self, axis, arr):
         """ returns (flat array, open array) """

@@ -38,7 +38,11 @@ def interp(vfield, seeds, kind="trilinear", wrap=True):
     kind = kind.strip().lower()
     seeds = to_seeds(seeds)
 
-    cdef int nr_points = seeds.get_nr_points(center=vfield.center)
+    seed_center = seeds.center if hasattr(seeds, 'center') else vfield.center
+    if seed_center.lower() in ('face', 'edge'):
+        seed_center = 'cell'
+
+    cdef int nr_points = seeds.get_nr_points(center=seed_center)
     cdef int nr_comps = vfield.nr_comps
     if nr_comps == 0:
         scalar = True
@@ -48,8 +52,8 @@ def interp(vfield, seeds, kind="trilinear", wrap=True):
 
     amrfld = make_cyamrfield(vfield)
     result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
-    seed_iter = seeds.iter_points(center=vfield.center)
 
+    seed_iter = seeds.iter_points(center=seed_center)
     if kind == "nearest":
         _py_interp_nearest(amrfld, seed_iter, result)
     elif kind == "trilinear" or kind == "trilin":
@@ -137,21 +141,21 @@ cdef real_t _c_interp_trilin(FusedField fld, int m, real_t x[3],
 
     # find closest inds
     for d in range(3):
-        if fld.n[d] == 1 or x[d] <= fld.xl[d]:
+        if fld.n[d] == 1 or x[d] <= fld.xl[m, d]:
             ind = 0
             ix[d] = ind
             p[d] = 0
             xd[d] = 0.0
-        elif x[d] >= fld.xh[d]:
+        elif x[d] >= fld.xh[m, d]:
             # switch to nearest neighbor for points beyond last value
             ind = fld.n[d] - 1
             p[d] = 0
             xd[d] = 0.0
         else:
-            ind = closest_preceeding_ind(fld, d, x[d], cached_idx3)
+            ind = closest_preceeding_ind(fld, m, d, x[d], cached_idx3)
             p[d] = 1
-            xd[d] = ((x[d] - fld.crds[d, ind]) /
-                     (fld.crds[d, ind + 1] - fld.crds[d, ind]))
+            xd[d] = ((x[d] - fld.crds[m, d, ind]) /
+                     (fld.crds[m, d, ind + 1] - fld.crds[m, d, ind]))
         ix[d] = ind
 
     # INTERLACED ... x first
@@ -213,11 +217,11 @@ cdef real_t _c_interp_nearest(FusedField fld, int m, real_t x[3],
     cdef int d
 
     for d in range(3):
-        ind[d] = closest_ind(fld, d, x[d], cached_idx3)
+        ind[d] = closest_ind(fld, m, d, x[d], cached_idx3)
     return fld.data[ind[0], ind[1], ind[2], m]
 
 
-cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value,
+cdef inline int closest_preceeding_ind(FusedField fld, int m, int d, real_t value,
                                        int cached_idx3[3]) nogil except -1:
     """Index of the element closest (and to the left) of x = value
 
@@ -242,15 +246,15 @@ cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value,
     if n == 1:
         ind = 0
     elif fld.uniform_crds:
-        frac = (value - fld.xl[d]) / (fld.L[d])
+        frac = (value - fld.xl[m, d]) / (fld.L[m, d])
         i = <int> floor((fld.nm1[d]) * frac)
         ind = int_min(int_max(i, 0), fld.nm2[d])
     else:
         found_ind = 0
-        if fld.crds[d, startidx] <= value:
+        if fld.crds[m, d, startidx] <= value:
             i = startidx
             for i in range(startidx, n - 1):
-                if fld.crds[d, i + 1] > value:
+                if fld.crds[m, d, i + 1] > value:
                     found_ind = 1
                     break
             if not found_ind:
@@ -258,7 +262,7 @@ cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value,
         else:
             i = startidx - 1
             for i in range(startidx - 1, -1, -1):
-                if fld.crds[d, i] <= value:
+                if fld.crds[m, d, i] <= value:
                     found_ind = 1
                     break
             if not found_ind:
@@ -268,15 +272,15 @@ cdef inline int closest_preceeding_ind(FusedField fld, int d, real_t value,
     cached_idx3[d] = ind  # using fld.cached_ind is not threadsafe
     return ind
 
-cdef inline int closest_ind(FusedField fld, int d, real_t value,
+cdef inline int closest_ind(FusedField fld, int m, int d, real_t value,
                             int cached_idx3[3]) nogil except -1:
     cdef double d1, d2
-    cdef int preceeding_ind = closest_preceeding_ind(fld, d, value, cached_idx3)
+    cdef int preceeding_ind = closest_preceeding_ind(fld, m, d, value, cached_idx3)
     if preceeding_ind == fld.n[d] - 1:
         return fld.n[d] - 1
     else:
-        d1 = fabs(fld.crds[d, preceeding_ind] - value)
-        d2 = fabs(fld.crds[d, preceeding_ind + 1] - value)
+        d1 = fabs(fld.crds[m, d, preceeding_ind] - value)
+        d2 = fabs(fld.crds[m, d, preceeding_ind + 1] - value)
         if d1 <= d2:
             return preceeding_ind
         else:

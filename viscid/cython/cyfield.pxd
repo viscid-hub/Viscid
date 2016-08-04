@@ -25,54 +25,54 @@ cdef class CyField:
 
 cdef class Field_I4_Crd_F8(CyField):
     cdef cnp.int32_t[:,:,:,::1] data
-    cdef cnp.float64_t[:] x, y, z
+    # cdef cnp.float64_t[:] x, y, z
     cdef cnp.float64_t[:] xnc, ync, znc
     cdef cnp.float64_t[:] xcc, ycc, zcc
-    cdef cnp.float64_t[:, ::1] crds     # [x, y, z]
+    cdef cnp.float64_t[:, :, ::1] crds  # [x, y, z]  # first dim is for comp (ECFC)
     cdef cnp.float64_t[:, ::1] crds_nc  # [xnc, ync, znc]
     cdef cnp.float64_t[:, ::1] crds_cc  # [xcc, ycc, zcc]
-    cdef cnp.float64_t[3] xl, xlnc, xlcc
-    cdef cnp.float64_t[3] xh, xhnc, xhcc
-    cdef cnp.float64_t[3] L  # xh - xl
+    cdef cnp.float64_t[3] xlnc, xlcc
+    cdef cnp.float64_t[3] xhnc, xhcc
+    cdef cnp.float64_t[:, ::1] xl, xh, L  # first dim is for comp (ECFC)
     cdef cnp.float64_t[3] dx  # cell width, = NaN if uniform_crds == False
 
 cdef class Field_I8_Crd_F8(CyField):
     cdef cnp.int64_t[:,:,:,::1] data
-    cdef cnp.float64_t[:] x, y, z
+    # cdef cnp.float64_t[:] x, y, z
     cdef cnp.float64_t[:] xnc, ync, znc
     cdef cnp.float64_t[:] xcc, ycc, zcc
-    cdef cnp.float64_t[:, ::1] crds     # [x, y, z]
+    cdef cnp.float64_t[:, :, ::1] crds  # [x, y, z]  # first dim is for comp (ECFC)
     cdef cnp.float64_t[:, ::1] crds_nc  # [xnc, ync, znc]
     cdef cnp.float64_t[:, ::1] crds_cc  # [xcc, ycc, zcc]
-    cdef cnp.float64_t[3] xl, xlnc, xlcc
-    cdef cnp.float64_t[3] xh, xhnc, xhcc
-    cdef cnp.float64_t[3] L  # xh - xl
+    cdef cnp.float64_t[3] xlnc, xlcc
+    cdef cnp.float64_t[3] xhnc, xhcc
+    cdef cnp.float64_t[:, ::1] xl, xh, L  # first dim is for comp (ECFC)
     cdef cnp.float64_t[3] dx  # cell width, = NaN if uniform_crds == False
 
 cdef class Field_F4_Crd_F4(CyField):
     cdef cnp.float32_t[:,:,:,::1] data
-    cdef cnp.float32_t[:] x, y, z
+    # cdef cnp.float32_t[:] x, y, z
     cdef cnp.float32_t[:] xnc, ync, znc
     cdef cnp.float32_t[:] xcc, ycc, zcc
-    cdef cnp.float32_t[:, ::1] crds     # [x, y, z]
+    cdef cnp.float32_t[:, :, ::1] crds  # [x, y, z]  # first dim is for comp (ECFC)
     cdef cnp.float32_t[:, ::1] crds_nc  # [xnc, ync, znc]
     cdef cnp.float32_t[:, ::1] crds_cc  # [xcc, ycc, zcc]
-    cdef cnp.float32_t[3] xl, xlnc, xlcc
-    cdef cnp.float32_t[3] xh, xhnc, xhcc
-    cdef cnp.float32_t[3] L  # xh - xl
+    cdef cnp.float32_t[3] xlnc, xlcc
+    cdef cnp.float32_t[3] xhnc, xhcc
+    cdef cnp.float32_t[:, ::1] xl, xh, L  # first dim is for comp (ECFC)
     cdef cnp.float32_t[3] dx  # cell width, = NaN if uniform_crds == False
 
 cdef class Field_F8_Crd_F8(CyField):
     cdef cnp.float64_t[:,:,:,::1] data
-    cdef cnp.float64_t[:] x, y, z
+    # cdef cnp.float64_t[:] x, y, z
     cdef cnp.float64_t[:] xnc, ync, znc
     cdef cnp.float64_t[:] xcc, ycc, zcc
-    cdef cnp.float64_t[:, ::1] crds     # [x, y, z]
+    cdef cnp.float64_t[:, :, ::1] crds  # [x, y, z]  # first dim is for comp (ECFC)
     cdef cnp.float64_t[:, ::1] crds_nc  # [xnc, ync, znc]
     cdef cnp.float64_t[:, ::1] crds_cc  # [xcc, ycc, zcc]
-    cdef cnp.float64_t[3] xl, xlnc, xlcc
-    cdef cnp.float64_t[3] xh, xhnc, xhcc
-    cdef cnp.float64_t[3] L  # xh - xl
+    cdef cnp.float64_t[3] xlnc, xlcc
+    cdef cnp.float64_t[3] xhnc, xhcc
+    cdef cnp.float64_t[:, ::1] xl, xh, L  # first dim is for comp (ECFC)
     cdef cnp.float64_t[3] dx  # cell width, = NaN if uniform_crds == False
 
 ctypedef fused FusedField:
