@@ -1271,7 +1271,7 @@ class Field(tree.Leaf):
         that dimension out. For other behavior see
         slice_reduce and slice_keep
         """
-        cc = self.iscentered("Cell")
+        cc = self.iscentered("Cell") or self.iscentered("Face") or self.iscentered("Edge")
         selection, comp_slc = self._prepare_slice(selection)
         slices, crdlst, reduced, crd_type = self._src_crds.make_slice(selection, cc=cc)
         return self._finalize_slice(slices, crdlst, reduced, crd_type, comp_slc)
@@ -1280,7 +1280,7 @@ class Field(tree.Leaf):
         """ Slice the field, then go through all dims and look for dimensions
         with only one coordinate. Reduce those dimensions out of the new
         field """
-        cc = self.iscentered("Cell")
+        cc = self.iscentered("Cell") or self.iscentered("Face") or self.iscentered("Edge")
         selection, comp_slc = self._prepare_slice(selection)
         slices, crdlst, reduced, crd_type = self._src_crds.make_slice_reduce(selection,
                                                                              cc=cc)
@@ -1290,7 +1290,7 @@ class Field(tree.Leaf):
         """ Slice the field, then go through dimensions that would be reduced
         by a normal numpy slice (like saying 'z=0') and keep those dimensions
         in the new field """
-        cc = self.iscentered("Cell")
+        cc = self.iscentered("Cell") or self.iscentered("Face") or self.iscentered("Edge")
         selection, comp_slc = self._prepare_slice(selection)
         slices, crdlst, reduced, crd_type = self._src_crds.make_slice_keep(selection,
                                                                            cc=cc)
@@ -1440,7 +1440,12 @@ class Field(tree.Leaf):
         elif center == 'edge':
             return self.get_crds_ec(axes=axes, shaped=shaped)
         else:
-            c = self._src_crds.get_crds(axes=axes, shaped=shaped)
+            if center == 'cell':
+                c = self._src_crds.get_crds_cc(axes=axes, shaped=shaped)
+            elif center == 'node':
+                c = self._src_crds.get_crds_nc(axes=axes, shaped=shaped)
+            else:
+                raise RuntimeError()
             c = [[ci] * 3 for ci in c]
             return c
 
@@ -1547,7 +1552,7 @@ class Field(tree.Leaf):
     # Note: these are kind of specific to cartesian connected grids
 
     def as_centered(self, center):
-        if not center:
+        if not center or self.iscentered(center):
             fld = self
         elif center.lower() == "cell":
             fld = self.as_cell_centered()
@@ -1583,6 +1588,12 @@ class Field(tree.Leaf):
             f._cache = self._cache
 
             return f
+
+        elif not self.nr_comps:
+            viscid.logger.warn("Converting ECFC scalar to cell center has no "
+                               "effect on data. Only coordinates have changed. "
+                               "The result will appear staggered strangely.")
+            return self.wrap_field(self.data, name=self.name, center='cell')
 
         elif self.iscentered('face'):
             return viscid.fc2cc(self)
@@ -1662,7 +1673,10 @@ class Field(tree.Leaf):
             if self.nr_comps:
                 new_shape.insert(self.nr_comp, self.nr_comps)
 
-            newcrds = self.crds.atleast_3d(xl, xh, cc=self.iscentered('cell'))
+            _cc = (self.iscentered('cell') or self.iscentered('face') or
+                   self.iscentered('edge'))
+            newcrds = self.crds.atleast_3d(xl, xh, cc=_cc)
+
             ctx = {'crds': newcrds}
             if self.is_loaded:
                 return self.wrap(self.data.reshape(new_shape), context=ctx)
@@ -1776,8 +1790,9 @@ class Field(tree.Leaf):
 
     def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
         """Wrap an ndarray into a field in the local representation"""
+        center = kwargs.pop('center', self.center)
         return viscid.wrap_field(data, self.crds, name=name, fldtype=fldtype,
-                                 center=self.center, **kwargs)
+                                 center=center, **kwargs)
 
     def __array_wrap__(self, out_arr, context=None):  # pylint: disable=W0613
         return self.wrap(out_arr)
@@ -1991,6 +2006,17 @@ class Field(tree.Leaf):
             ret = self.wrap(self.data.astype(dtype))
         return ret
 
+    def as_layout(self, to_layout, force_c_contiguous=True):
+        raise NotImplementedError("abstract method")
+
+    def as_interlaced(self, force_c_contiguous=True):
+        return self.as_layout(LAYOUT_INTERLACED,
+                              force_c_contiguous=force_c_contiguous)
+
+    def as_flat(self, force_c_contiguous=True):
+        return self.as_layout(LAYOUT_FLAT,
+                              force_c_contiguous=force_c_contiguous)
+
 
 class ScalarField(Field):
     _TYPE = "scalar"
@@ -2107,13 +2133,6 @@ class VectorField(Field):
             self.clear_cache()
         return ret
 
-    def as_interlaced(self, force_c_contiguous=True):
-        return self.as_layout(LAYOUT_INTERLACED,
-                              force_c_contiguous=force_c_contiguous)
-
-    def as_flat(self, force_c_contiguous=True):
-        return self.as_layout(LAYOUT_FLAT,
-                              force_c_contiguous=force_c_contiguous)
 
 class MatrixField(Field):
     _TYPE = "matrix"
