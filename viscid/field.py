@@ -1431,6 +1431,19 @@ class Field(tree.Leaf):
 
     ## these return all crd dimensions
     # these are the same as something like self._src_crds.get_crds()
+    def get_crds_vector(self, axes=None, shaped=False):
+        """ returns all face centered coords as a list of ndarrays, flat if
+        shaped==False, or shaped if shaped==True """
+        center = self.center.lower()
+        if center == 'face':
+            return self.get_crds_fc(axes=axes, shaped=shaped)
+        elif center == 'edge':
+            return self.get_crds_ec(axes=axes, shaped=shaped)
+        else:
+            c = self._src_crds.get_crds(axes=axes, shaped=shaped)
+            c = [[ci] * 3 for ci in c]
+            return c
+
     def get_crds(self, axes=None, shaped=False):
         """ return all crds as list of ndarrays with same centering as field """
         # FIXME: work out how get_crds should act on face/edge fields since
