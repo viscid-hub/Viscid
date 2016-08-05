@@ -108,7 +108,9 @@ def fill_dipole(B, m=(0, 0, -1 / 3.0574e-05), mask=None):
     else:
         Bdip = B
 
-    Xcc, Ycc, Zcc = B.get_crds_cc(shaped=True)  # pylint: disable=W0612
+    # Xcc, Ycc, Zcc = B.get_crds_cc(shaped=True)  # pylint: disable=W0612
+    Xv, Yv, Zv = B.get_crds_vector(shaped=True)  # pylint: disable=W0612
+    _crd_lst = [[_x, _y, _z] for _x, _y, _z in zip(Xv, Yv, Zv)]
 
     dtype = B.dtype
     one = np.array([1.0], dtype=dtype)  # pylint: disable=W0612
@@ -118,17 +120,21 @@ def fill_dipole(B, m=(0, 0, -1 / 3.0574e-05), mask=None):
 
     # geneate a dipole field for the entire grid
     if _HAS_NUMEXPR:
-        rsq = ne.evaluate("Xcc**2 + Ycc**2 + Zcc**2")  # pylint: disable=W0612
-        mdotr = ne.evaluate("mx * Xcc + my * Ycc + mz * Zcc")  # pylint: disable=W0612
-        Bdip['x'] = ne.evaluate("((three * Xcc * mdotr / rsq) - mx) / rsq**1.5")
-        Bdip['y'] = ne.evaluate("((three * Ycc * mdotr / rsq) - my) / rsq**1.5")
-        Bdip['z'] = ne.evaluate("((three * Zcc * mdotr / rsq) - mz) / rsq**1.5")
+        for i, cn in enumerate("xyz"):
+            _X, _Y, _Z = _crd_lst[i]
+            _XI = _crd_lst[i][i]
+            _mi = m[i]
+            rsq = ne.evaluate("_X**2 + _Y**2 + _Z**2")  # pylint: disable=W0612
+            mdotr = ne.evaluate("mx * _X + my * _Y + mz * _Z")  # pylint: disable=W0612
+            Bdip[cn] = ne.evaluate("((three * _XI * mdotr / rsq) - _mi) / rsq**1.5")
     else:
-        rsq = Xcc**2 + Ycc**2 + Zcc**2
-        mdotr = mx * Xcc + my * Ycc + mz * Zcc
-        Bdip['x'] = ((three * Xcc * mdotr / rsq) - mx) / rsq**1.5
-        Bdip['y'] = ((three * Ycc * mdotr / rsq) - my) / rsq**1.5
-        Bdip['z'] = ((three * Zcc * mdotr / rsq) - mz) / rsq**1.5
+        for i, cn in enumerate("xyz"):
+            _X, _Y, _Z = _crd_lst[i]
+            _XI = _crd_lst[i][i]
+            _mi = m[i]
+            rsq = _X**2 + _Y**2 + _Z**2
+            mdotr = mx * _X + my * _Y + mz * _Z
+            Bdip[cn] = ((three * _XI * mdotr / rsq) - _mi) / rsq**1.5
 
     if mask:
         B.data[...] = np.choose(mask.astype('i'), [B, Bdip])
@@ -152,6 +158,8 @@ def set_in_region(a, b, alpha=1.0, beta=1.0, mask=None, out=None):
     if mask is None:
         out.data[...] = vals
     else:
+        if hasattr(mask, "nr_comps") and mask.nr_comps:
+            mask = mask.as_centered(a.center).as_layout(a.layout)
         try:
             out.data[...] = np.choose(mask, [a.data, vals])
         except ValueError:
@@ -163,11 +171,24 @@ def make_spherical_mask(fld, rmin=0.0, rmax=None, rsq=None):
     """make a mask that is True between rmin and rmax"""
     if rmax is None:
         rmax = np.sqrt(0.9 * np.finfo('f8').max)
-    rsq = np.sum([c**2 for c in fld.get_crds(shaped=True)], axis=0)
-    mask = np.bitwise_and(rsq >= rmin**2, rsq < rmax**2)
-    if fld.nr_comps:
-        fld = fld['x']
-    return fld.wrap_field(mask, dtype='bool')
+
+    if True and fld.nr_comps and fld.center.lower() in ('edge', 'face'):
+        mask = np.empty(fld.shape, dtype='bool')
+        Xv, Yv, Zv = fld.get_crds_vector(shaped=True)  # pylint: disable=W0612
+        _crd_lst = [[_x, _y, _z] for _x, _y, _z in zip(Xv, Yv, Zv)]
+        # csq = [c**2 for c in fld.get_crds_vector(shaped=True)]
+        for i in range(3):
+            rsq = np.sum([c**2 for c in _crd_lst[i]], axis=0)
+            _slc = [slice(None)] * len(fld.shape)
+            _slc[fld.nr_comp] = i
+            mask[_slc] = np.bitwise_and(rsq >= rmin**2, rsq < rmax**2)
+        return fld.wrap_field(mask, dtype='bool')
+    else:
+        rsq = np.sum([c**2 for c in fld.get_crds(shaped=True)], axis=0)
+        mask = np.bitwise_and(rsq >= rmin**2, rsq < rmax**2)
+        if fld.nr_comps:
+            fld = fld['x']
+        return fld.wrap_field(mask, dtype='bool')
 
 def _main():
     crd_system = 'gse'
