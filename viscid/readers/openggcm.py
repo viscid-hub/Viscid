@@ -581,7 +581,7 @@ class GGCMFile(object):  # pylint: disable=abstract-method
         prefix = 'time='
         timestr.strip()
         if not timestr.startswith(prefix):
-            raise ValueError("Time string '{0}' is malformed".fermat(timestr))
+            raise ValueError("Time string '{0}' is malformed".format(timestr))
         timestr = timestr[len(prefix):].split()
         t = float(timestr[0])
         uttime = viscid.as_datetime64(timestr[2])
