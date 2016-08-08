@@ -88,8 +88,15 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
 
         # now this is a wicked hack :(
         if self.find_info('basetime', default=None) is None:
-            timestr = self._child_files[0].find_item('openggcm*/time_str')
-            basetime, _ = self.parse_timestring(timestr.decode())
+            try:
+                timestr = self._child_files[0].find_item('openggcm*/time_str')
+                basetime, _ = self.parse_timestring(timestr.decode())
+            except KeyError:
+                # if no basetime found, then use the special no dip tilt time
+                # this is a selfish hack in that old files that I saved
+                # will usually use this as basetime
+                basetime = openggcm.GGCM_NO_DIPTILT
+
             self.set_info("basetime", basetime)
 
 

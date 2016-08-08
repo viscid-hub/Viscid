@@ -255,6 +255,20 @@ class FileHDF5(vfile.VFile):
                 # xdmf files use kji ordering
                 f[loc] = fld.data.T
 
+            # big bad openggcm time_str hack to put basetime into hdf5 file
+            for fld in flds:
+                if fld.basetime is not None:
+                    tfmt = "%Y:%m:%d:%H:%M:%S.%f"
+                    sec_td = viscid.as_timedelta64(fld.time, 's')
+                    dtime = viscid.as_datetime(fld.basetime + sec_td).strftime(tfmt)
+                    epoch = viscid.readers.openggcm.GGCM_EPOCH
+                    ts = viscid.as_timedelta(fld.basetime - epoch).total_seconds()
+                    ts += fld.time
+                    timestr = "time= {0} {1:.16e} {2} 300c".format(fld.time, ts, dtime)
+                    f.create_group('openggcm')
+                    f['openggcm'].attrs['time_str'] = np.string_(timestr)
+                    break
+
         # now write an xdmf file
         xdmf_fname = os.path.splitext(fname)[0] + ".xdmf"
         relh5fname = "./" + os.path.basename(fname)
