@@ -260,7 +260,7 @@ class FileHDF5(vfile.VFile):
 
             # big bad openggcm time_str hack to put basetime into hdf5 file
             for fld in flds:
-                if fld.basetime is not None:
+                try:
                     tfmt = "%Y:%m:%d:%H:%M:%S.%f"
                     sec_td = viscid.as_timedelta64(fld.time, 's')
                     dtime = viscid.as_datetime(fld.basetime + sec_td).strftime(tfmt)
@@ -271,6 +271,8 @@ class FileHDF5(vfile.VFile):
                     f.create_group('openggcm')
                     f['openggcm'].attrs['time_str'] = np.string_(timestr)
                     break
+                except viscid.NoBasetimeError:
+                    pass
 
         # now write an xdmf file
         xdmf_fname = os.path.splitext(fname)[0] + ".xdmf"
