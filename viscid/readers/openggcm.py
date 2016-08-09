@@ -528,6 +528,16 @@ class GGCMGrid(grid.Grid):
     def _process_divB(self, fld):
         return viscid.scale(self._bbnorm, fld)
 
+    def _processALL(self, fld):
+        if fld.iscentered("face") or fld.iscentered("edge"):
+            if not fld.has_info(viscid.PREPROCESSED_KEY):
+                crd_system = fld.find_info("crd_system", "").lower()
+                if self.find_info("_viscid_do_mhd_to_gse_on_read", False):
+                    fld.set_info(viscid.FLIP_KEY, [True, True, False])
+                fld.set_info(viscid.PREPROCESSED_KEY, False)
+                fld = viscid.make_ecfc_field_leading(fld, trim_leading=True)
+        return fld
+
 class GGCMFile(object):  # pylint: disable=abstract-method
     """Mixin some GGCM convenience stuff
 
