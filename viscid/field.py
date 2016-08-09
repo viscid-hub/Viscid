@@ -1131,7 +1131,8 @@ class Field(tree.Leaf):
 
         hypersliceable = getattr(self._src_data, "_hypersliceable", False)
         single_comp_slc = hasattr(comp_slc, "__index__")
-        cc = self.iscentered("Cell")
+        cc = (self.iscentered("Cell") or self.iscentered("Face") or
+              self.iscentered("Edge"))
 
         zyx_native = self.meta.get("zyx_native", False)
         # if zyx_native:
@@ -1335,7 +1336,8 @@ class Field(tree.Leaf):
         NOTE:
             This is only lightly tested
         """
-        cc = self.iscentered("Cell")
+        cc = (self.iscentered("Cell") or self.iscentered("Face") or
+              self.iscentered("Edge"))
         selection, comp_slc = self._prepare_slice(selection)
         slices, _ = self._src_crds.make_slice(selection, cc=cc)[:2]
         try:
