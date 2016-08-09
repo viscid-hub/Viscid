@@ -1217,7 +1217,18 @@ class Field(tree.Leaf):
                 # zyx in a lazy hdf5 file
                 slced_dat = self._src_data[tuple(_first)][tuple(_second)]
                 if zyx_native:
-                    slced_dat = np.array(slced_dat.T)
+                    if comp_slc is not None and self.nr_comps and not single_comp_slc:
+                        _n = len(slced_dat.shape)
+                        if self.nr_comp == 0:
+                            _t_axes = [0] + list(range(1, _n))[::-1]
+                        else:
+                            # this is slightly fragile if they layout isn't
+                            # strictly interlaced, but that would be rather
+                            # pathalogical
+                            _t_axes = list(range(_n - 1))[::-1] + [_n - 1]
+                        slced_dat = np.array(np.transpose(slced_dat, _t_axes))
+                    else:
+                        slced_dat = np.array(slced_dat.T)
 
                 # post-reshape-transform
                 if self.post_reshape_transform_func is not None:
