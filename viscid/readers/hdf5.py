@@ -285,6 +285,8 @@ class FileHDF5(vfile.VFile):
             f.write(s)
 
             for fld in flds:
+            for fld in flds:
+                fld = fld.as_flat().T
                 dt = fld.dtype.name.rstrip("0123456789").title()
                 precision = fld.dtype.itemsize
                 fld_dim_str = " ".join([str(l) for l in fld.shape])
