@@ -288,6 +288,12 @@ class FileHDF5(vfile.VFile):
             f.write(s)
 
             for fld in flds:
+                _crd_system = fld.find_info("crd_system", None)
+                if _crd_system:
+                    f.write(cls._XDMF_INFO_TEMPLATE.format(name="crd_system",
+                                                           value=_crd_system))
+                    break
+
             for fld in flds:
                 fld = fld.as_flat().T
                 dt = fld.dtype.name.rstrip("0123456789").title()
