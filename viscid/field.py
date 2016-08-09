@@ -756,6 +756,12 @@ class Field(tree.Leaf):
             self._parent_field._cache = self._cache
             # self._parent_field._cached_xyz_src_view = self._cached_xyz_src_view
 
+    def resolve(self):
+        """Resolve all pending actions on a field like translations etc"""
+        if self._cache is None:
+            self._fill_cache()
+        return self
+
     # um, what was this for? looks dangerous
     # def _translate_src_data(self):
     #     pass

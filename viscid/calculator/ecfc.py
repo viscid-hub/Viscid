@@ -120,6 +120,7 @@ def make_ecfc_field_leading(fc, trim_leading=True):
             else:
                 raise RuntimeError("I shouldn't be here")
 
+        fc.resolve()  # if translating -> gse, do it once, not 4 times
         s0vec = list(sc)
         s0vec.insert(fc.nr_comp, slice(None))
         prepared_fc = viscid.zeros_like(fc[s0vec])
