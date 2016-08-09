@@ -56,6 +56,11 @@ def make_ecfc_field_leading(fc, trim_leading=True):
     """Standardize staggering on edge / face centered fields"""
     if fc.find_info(PREPROCESSED_KEY, False):
         return fc
+    elif fc.find_info(PREPROCESSED_KEY, None) is None:
+        # this is for non-ggcm fields
+        fc.set_info(PREPROCESSED_KEY, True)
+        fc.set_info(STAGGER_KEY, [STAGGER_LEADING] * 3)
+        return fc
     else:
         # NOTE: I deeply apologize for the variable names and logic here,
         # it turns out to be super confusing to deal with staggering and
@@ -89,7 +94,8 @@ def make_ecfc_field_leading(fc, trim_leading=True):
         # sc: how to slice the xyz NC coordinates
         sd = [[None] * 3, [None] * 3, [None] * 3]
         sc = [None] * 3
-        staggering = fc.find_info(STAGGER_KEY, [STAGGER_TRAILING] * 3)
+        # staggering = fc.find_info(STAGGER_KEY, [STAGGER_TRAILING] * 3)
+        staggering = fc.find_info(STAGGER_KEY, [STAGGER_LEADING] * 3)
         flipping = fc.find_info(FLIP_KEY, [False] * 3)
 
         for i, n in enumerate(fc.sshape):

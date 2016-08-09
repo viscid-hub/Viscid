@@ -223,6 +223,22 @@ class GGCMGrid(grid.Grid):
 
             # what are we asking for?
             request = self.mhd_to_gse_on_read.lower()
+
+            # if crd_system is set, but _viscid_do_mhd_to_gse_on_read is not
+            # then crd_system must have come from the original meta data, which
+            # means the data is already in that crd_system and there's no
+            # need to do any flipping
+            _crd_system = self.find_info("crd_system", None)
+            # self.print_info_tree()
+            if _crd_system is not None:
+                if (_crd_system.strip().lower() == "mhd" and
+                    (request == True or "auto" in request or "true" in request)):
+                    self.set_info("_viscid_do_mhd_to_gse_on_read", True)
+                    return True
+                else:
+                    self.set_info("_viscid_do_mhd_to_gse_on_read", False)
+                    return False
+
             if request.startswith("auto"):
                 # setup the default
                 ret = False
@@ -300,7 +316,8 @@ class GGCMGrid(grid.Grid):
                 f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
                 f.set_info("crd_system", "gse")
             else:
-                f.set_info("crd_system", "mhd")
+                if f.find_info("crd_system", None) is None:
+                    f.set_info("crd_system", "mhd")
         super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):
@@ -367,7 +384,7 @@ class GGCMGrid(grid.Grid):
         stagger = [viscid.STAGGER_LEADING] * 3
         if mhd_type.endswith("_GGCM"):
             stagger = [1 - s for s in stagger]
-        if crd_system == "gse":
+        if self.find_info("_viscid_do_mhd_to_gse_on_read", False):
             fld.set_info(viscid.FLIP_KEY, [True, True, False])
 
         fld.center = center.title()
