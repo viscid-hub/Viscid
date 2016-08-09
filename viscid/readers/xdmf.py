@@ -172,11 +172,13 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             if ct == "Temporal":
                 grd = self._make_dataset(parent_node, dset_type="temporal",
                                          name=attrs["Name"])
+                self._inject_info(el, grd)
                 ttag = el.find("./Time")
                 if ttag is not None:
                     times, tattrs = self._parse_time(ttag)
             elif ct == "Spatial":
                 grd = self._make_dataset(parent_node, name=attrs["Name"])
+                self._inject_info(el, grd)
             else:
                 logger.warn("Unknown collection type %s, ignoring grid", ct)
 
@@ -194,6 +196,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             else:
                 grd = self._make_grid(parent_node, name=attrs["Name"],
                                       **self._grid_opts)
+                self._inject_info(el, grd)
                 for attribute in el.findall("./Attribute"):
                     fld = self._parse_attribute(grd, attribute, crds,
                                                 topoattrs, time)
@@ -410,6 +413,8 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
         fldtype = attrs["AttributeType"]
         fld = self._make_field(parent_node, fldtype, name, crds, data,
                                center=center, time=time, zyx_native=True)
+        self._inject_info(item, fld)
+
         return fld
 
     def _parse_dataitem(self, item, keep_flat=False):
@@ -479,6 +484,23 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
         else:
             logger.warn("invalid TimeType.\n")
 
+    def _parse_information(self, information):
+        """ parse generic information tag """
+        attrs = self._fill_attrs(information)
+        name = attrs["Name"]
+        val = attrs["Value"]
+        if val is None:
+            _di = information.find(".//DataItem")
+            if _di:
+                val, _ = self._parse_dataitem(_di)
+            else:
+                val = information.text
+        return name, val
+
+    def _inject_info(self, el, target):
+        for _, information in enumerate(el.findall("./Information")):
+            _name, _val = self._parse_information(information)
+            target.set_info(_name, _val)
 
 if __name__ == '__main__':
     import sys

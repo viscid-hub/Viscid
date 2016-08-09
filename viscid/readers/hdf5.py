@@ -203,6 +203,9 @@ class FileHDF5(vfile.VFile):
       </DataItem>
     </Attribute>
 """
+
+    _XDMF_INFO_TEMPLATE = '<Information Name="{name}" Value="{value}" />\n'
+
     _XDMF_TEMPLATE_GRID_END = """  </Grid>
 """
     _XDMF_TEMPLATE_END = """</Grid>
