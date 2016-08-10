@@ -19,7 +19,7 @@ import viscid
 from viscid.plot import mpl
 
 
-def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2e-6,
+def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2.2e-6,
                     trim_slc='x=1:-1, y=1:-1, z=1:-1', make_plots=False):
     trimmed = cc_fld[trim_slc]
     cc = to_cc_fn(ecfc_fld)
@@ -66,7 +66,7 @@ def main():
         else:
             raise ValueError()
         catol = 1e-8
-        rtol = 2e-6
+        rtol = 2.2e-6
     elif mhd_type in ("F", "FORTRAN"):
         f = viscid.load_file("$WORK/tmedium3/*.3df.[-1]")
         catol = 1e-8
