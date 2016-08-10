@@ -217,77 +217,84 @@ class GGCMGrid(grid.Grid):
 
     def _do_mhd_to_gse_on_read(self):
         """Return True if we """
-        if isinstance(self.mhd_to_gse_on_read, string_types):
-            # we already know what this data file needs
-            if self.has_info("_viscid_do_mhd_to_gse_on_read"):
-                return self.find_info("_viscid_do_mhd_to_gse_on_read")
+        # we already know what this data file needs
+        if self.has_info("_viscid_do_mhd_to_gse_on_read"):
+            return self.find_info("_viscid_do_mhd_to_gse_on_read")
 
-            # what are we asking for?
-            request = self.mhd_to_gse_on_read.lower()
+        # do we already know the crd system of this grid?
+        crd_system = self.find_info("crd_system", None)
+        determined_crd_system = crd_system is None
 
-            # if crd_system is set, but _viscid_do_mhd_to_gse_on_read is not
-            # then crd_system must have come from the original meta data, which
-            # means the data is already in that crd_system and there's no
-            # need to do any flipping
-            _crd_system = self.find_info("crd_system", None)
-            # self.print_info_tree()
-            if _crd_system is not None:
-                if (_crd_system.strip().lower() == "mhd" and
-                    (request == True or "auto" in request or "true" in request)):
-                    self.set_info("_viscid_do_mhd_to_gse_on_read", True)
-                    return True
-                else:
-                    self.set_info("_viscid_do_mhd_to_gse_on_read", False)
-                    return False
-
-            if request.startswith("auto"):
-                # setup the default
-                ret = False
-                if request.endswith("true"):
-                    ret = True
-
-                # sanity check the logfile stuffs
-                log_fname = self.find_info("_viscid_log_fname")
-                if log_fname is False:
-                    raise RuntimeError("If you're using 'auto' for mhd->gse "
-                                       "conversion, reading the logfile "
-                                       "MUST be turned on.")
-                elif log_fname is None:
-                    logger.warn("Tried to determine coordinate system using "
-                                "logfile parameters, but no logfile found. "
-                                "Copy over the log file to use auto mhd->gse "
-                                "conversion. (Using default {0})".format(ret))
-                else:
-                    # ok, we want auto, and we have a logfile so let's figure
-                    # out the current layout
-                    try:
-                        # if we're using a mirdip IC, and low edge is at least
-                        # twice smaller than the high edge, then assume
-                        # it's a magnetosphere box with xl < 0.0 is the sunward
-                        # edge in "MHD" coordinates
-                        is_openggcm = (self.find_info('ggcm_mhd_type') == "ggcm")
-                        # this 2nd check is in case the ggcm_mhd view in the
-                        # log file is mangled... this happens sometimes
-                        ic_type = self.find_info('ggcm_mhd_ic_type')
-                        is_openggcm |= (ic_type.startswith("mirdip"))
-                        xl = float(self.find_info('mrc_crds_l')[0])
-                        xh = float(self.find_info('mrc_crds_h')[0])
-                        if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
-                            ret = True
-                    except KeyError as e:
-                        logger.warn("Could not determine coordiname system; "
-                                    "either the logfile is mangled, or "
-                                    "the libmrc options I'm using in infer "
-                                    "crd system have changed (%s)", e.args[0])
-                self.set_info("_viscid_do_mhd_to_gse_on_read", ret)
-                return ret
+        # I guess not, can we figure out the crd system of this grid?
+        if crd_system is None:
+            # sanity check the logfile stuffs
+            log_fname = self.find_info("_viscid_log_fname")
+            if log_fname is False:
+                raise RuntimeError("If you're using 'auto' for mhd->gse "
+                                   "conversion, reading the logfile "
+                                   "MUST be turned on.")
+            elif log_fname is None:
+                logger.warn("Tried to determine coordinate system using "
+                            "logfile parameters, but no logfile found. "
+                            "Copy over the log file to use auto mhd->gse "
+                            "conversion. (Using default)")
             else:
-                raise ValueError("Invalid value for mhd_to_gse_on_read: "
-                                 "'{0}'; valid choices: (True, False, auto, "
-                                 "auto_true)".format(self.mhd_to_gse_on_read))
-            return True
+                # try to intuit the _crd system based on the log file and grid
+                try:
+                    # if we're using a mirdip IC, and low edge is at least
+                    # twice smaller than the high edge, then assume
+                    # it's a magnetosphere box with xl < 0.0 is the sunward
+                    # edge in "MHD" coordinates
+                    is_openggcm = (self.find_info('ggcm_mhd_type') == "ggcm")
+                    # this 2nd check is in case the ggcm_mhd view in the
+                    # log file is mangled... this happens sometimes
+                    ic_type = self.find_info('ggcm_mhd_ic_type')
+                    is_openggcm |= (ic_type.startswith("mirdip"))
+                    xl = float(self.find_info('mrc_crds_l')[0])
+                    xh = float(self.find_info('mrc_crds_h')[0])
+                    if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
+                        crd_system = "mhd"
+                    elif is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xh > xl:
+                        crd_system = "gse"
+                    else:
+                        crd_system = "other"
+                except KeyError as e:
+                    logger.warn("Could not determine coordiname system; "
+                                "either the logfile is mangled, or "
+                                "the libmrc options I'm using in infer "
+                                "crd system have changed (%s)", e.args[0])
+
+        if crd_system is None:
+            crd_system = "unknown"
+
+        if determined_crd_system:
+            self.set_info("crd_system", crd_system)
+
+        # now that we have an idea what the crd_system is, determine
+        # whether or not to do a mhd -> gse translation
+
+        request = str(self.mhd_to_gse_on_read).strip().lower()
+
+        if request == 'true':
+            ret = True
+        elif request == 'false':
+            ret = False
+        elif request.startswith("auto"):
+            default = True if request.endswith('true') else False
+            if crd_system == "mhd":
+                ret = True
+            elif crd_system == "gse":
+                ret = False
+            else:
+                # crd_system is either 'other' or 'unknown'
+                ret = default
         else:
-            return self.mhd_to_gse_on_read
+            raise ValueError("Invalid value for mhd_to_gse_on_read: "
+                             "'{0}'; valid choices: (True, False, auto, "
+                             "auto_true)".format(request))
+
+        self.set_info("_viscid_do_mhd_to_gse_on_read", ret)
+        return ret
 
     def set_crds(self, crds_object):
         if self._do_mhd_to_gse_on_read():
@@ -317,8 +324,8 @@ class GGCMGrid(grid.Grid):
                 f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
                 f.set_info("crd_system", "gse")
             else:
-                if f.find_info("crd_system", None) is None:
-                    f.set_info("crd_system", "mhd")
+                f.set_info("crd_system", self.get_info("crd_system"))
+
         super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):
