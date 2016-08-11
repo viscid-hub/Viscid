@@ -100,10 +100,11 @@ def import_injector(attr_list, namespace, package=None, quiet=False,
                     # print("    ", sub, "=", getattr(m, sub))
                     namespace[sub] = getattr(m, sub)
         except ImportError as e:
-            _on_injected_import_error(s, e, quiet=quiet)
-            attr_list.remove(s)
-            if fatal:
-                raise
+            if s not in namespace:
+                _on_injected_import_error(s, e, quiet=quiet)
+                attr_list.remove(s)
+                if fatal:
+                    raise
     attr_list += additional
 
 import_injector(__all__, globals(), package="viscid")
