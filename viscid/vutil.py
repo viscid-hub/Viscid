@@ -134,15 +134,54 @@ def timereps(reps, func, *args, **kwargs):
     return min(arr), max(arr), sum(arr) / reps
 
 def timeit(f, *args, **kwargs):
-    """overly simple timeit wrapper"""
-    t0 = time()
-    ret = f(*args, **kwargs)
-    t1 = time()
+    """overly simple timeit wrapper
 
-    s = "{0:.03g}".format(t1 - t0)
-    secs = "second" if s == "1" else "seconds"
-    print("<function {0}.{1}>".format(f.__module__, f.__name__),
-          "took", s, secs)
+    Arguments:
+        f: callable to timeit
+        *args: positional arguments for `f`
+        **kwargs: keyword arguments for `f`
+
+    Keyword arguments:
+        timeit_repeat (int): number of times to call `f` (Default: 1)
+        timeit_print_stats (bool): print min/max/mean/median when done
+        timeit_quet (bool): quiets all output (useful if you only want
+            the timeit_stats dict filled)
+        timeit_stats (dict): Stats will be stuffed into here
+
+    Returns:
+        The result of `f(*args, **kwargs)`
+    """
+    timeit_repeat = kwargs.pop('timeit_repeat', 1)
+    timeit_print_stats = kwargs.pop('timeit_print_stats', True)
+    timeit_quiet = kwargs.pop('timeit_quiet', False)
+    timeit_stats = kwargs.pop('timeit_stats', dict())
+
+    times = np.empty((timeit_repeat,), dtype='f8')
+
+    for i in range(timeit_repeat):
+        ret = None
+        t0 = time()
+        ret = f(*args, **kwargs)
+        t1 = time()
+
+        s = "{0:.03g}".format(t1 - t0)
+        times[i] = t1 - t0
+        if not timeit_quiet and (timeit_repeat == 1 or not timeit_print_stats):
+            secs = "second" if s == "1" else "seconds"
+            print("<function {0}.{1}>".format(f.__module__, f.__name__),
+                  "took", s, secs)
+
+    timeit_stats['min'] = np.min(times)
+    timeit_stats['max'] = np.max(times)
+    timeit_stats['mean'] = np.mean(times)
+    timeit_stats['median'] = np.median(times)
+    timeit_stats['repeat'] = timeit_repeat
+
+    if not timeit_quiet and timeit_repeat > 1 and timeit_print_stats:
+        print("<function {0}.{1}> stats ({2} runs):"
+              "".format(f.__module__, f.__name__, timeit_repeat))
+        print("  Min: {min:.3g}, Mean: {mean:.3g}, Median: {median:.3g}, "
+              "Max: {max:.3g}".format(**timeit_stats))
 
     return ret
 
