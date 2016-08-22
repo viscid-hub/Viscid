@@ -33,7 +33,7 @@ from viscid.compat import izip
 ###########
 # cimports
 cimport cython
-from libc.math cimport fabs
+from libc.math cimport fabs, NAN
 from libc.time cimport time_t, time, clock_t, clock, CLOCKS_PER_SEC
 cimport numpy as cnp
 
@@ -327,6 +327,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         int i_stream
         int nprogress = max(nr_streams / 50, 1)  # progeress at every 5%
         int nr_segs = 0
+        int maxit2
 
         int ret  # return status of euler integrate
         int end_flags
@@ -344,12 +345,13 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         int line_ends[2]
 
         int[:] topology_mv = None
-        real_t[:,:,::1] line_mv = None
+        real_t[:, ::1] line_mv = None
         real_t[:] dx
         real_t[:, ::1] seed_pts
 
         int cached_idx3[3]
 
+    maxit2 = 2 * maxit + 1
     _dir_d[:] = [-1, 1]
     cached_idx3[:] = [0, 0, 0]
 
@@ -410,7 +412,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     # establish arrays for output
     if output & OUTPUT_STREAMLINES:
         # 2 (0=backward, 1=forward), 3 (x, y, z), maxit points in the line
-        line_ndarr = np.empty((2, 3, maxit), dtype=amrfld.crd_dtype)
+        line_ndarr = np.empty((3, maxit2), dtype=amrfld.crd_dtype)
         line_mv = line_ndarr
         lines = [None] * nr_streams
     if output & OUTPUT_TOPOLOGY:
@@ -432,11 +434,12 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
             x0[2] = seed_pts[i_stream, 2]
 
             if line_mv is not None:
-                line_mv[0, 0, maxit - 1] = x0[0]
-                line_mv[0, 1, maxit - 1] = x0[1]
-                line_mv[0, 2, maxit - 1] = x0[2]
-            line_ends[0] = maxit - 2
-            line_ends[1] = 0
+                # line_mv[:, :] = NAN  # Debug only
+                line_mv[0, maxit] = x0[0]
+                line_mv[1, maxit] = x0[1]
+                line_mv[2, maxit] = x0[2]
+            line_ends[0] = maxit - 1
+            line_ends[1] = maxit + 1
             end_flags = _C_END_NONE
 
             for i in range(2):
@@ -457,7 +460,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                 it = line_ends[i]
 
                 done = _C_END_NONE
-                while 0 <= it and it < maxit:
+                while 0 <= it and it < maxit2:
                     nr_segs += 1
                     pre_ds = fabs(ds)
 
@@ -489,9 +492,9 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                         break
 
                     if line_mv is not None:
-                        line_mv[i, 0, it] = s[0]
-                        line_mv[i, 1, it] = s[1]
-                        line_mv[i, 2, it] = s[2]
+                        line_mv[0, it] = s[0]
+                        line_mv[1, it] = s[1]
+                        line_mv[2, it] = s[2]
                     it += d
 
                     # end conditions
@@ -511,9 +514,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
             # now we have forward and background traces, process this streamline
             if line_mv is not None:
                 with gil:
-                    line_cat = np.concatenate((line_mv[0, :, line_ends[0] + 1:],
-                                               line_mv[1, :, :line_ends[1]]), axis=1)
-                    lines[i_stream] = line_cat
+                    lines[i_stream] = line_ndarr[:, line_ends[0] + 1:line_ends[1]].copy()
 
             if topology_mv is not None:
                 topology_mv[i_stream] = end_flags_to_topology(end_flags)
