@@ -207,7 +207,12 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
 
     seed = to_seeds(seed)
 
-    nr_streams = seed.get_nr_points(center=vfield.center)
+    seed_center = seed.center if hasattr(seed, 'center') else vfield.center
+    if seed_center.lower() in ('face', 'edge'):
+        seed_center = 'cell'
+    kwargs['seed_center'] = seed_center
+
+    nr_streams = seed.get_nr_points(center=seed_center)
     nr_procs = parallel.sanitize_nr_procs(nr_procs)
 
     nr_chunks = max(1, min(chunk_factor * nr_procs, nr_streams))
@@ -259,7 +264,7 @@ def _do_streamline_star(*args, **kwargs):
     return _streamline_fused_wrapper(gfld, *args, **kwargs)
 
 def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
-                              seed_slice=(None,), **kwargs):
+                              seed_slice=(None,), seed_center="cell", **kwargs):
     """Wrapper to make sure type specialization is same as fld's dtypes"""
     # cdef str amr_type = cython.typeof(amrfld)
     # # FIXME: **THUNDER-HACK** trim off the AMR part of the type name
@@ -269,7 +274,8 @@ def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
     # cdef str real_type = "float{0}_t".format(nbits)
     func = _py_streamline[cython.typeof(fld), cython.typeof(fld.active_patch),
                           cython.typeof(fld.min_dx)]
-    return func(fld, fld.active_patch, nr_streams, seed, seed_slice=seed_slice, **kwargs)
+    return func(fld, fld.active_patch, nr_streams, seed, seed_slice=seed_slice,
+                seed_center=seed_center, **kwargs)
 
 @cython.wraparound(True)
 def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
@@ -281,7 +287,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                    real_t tol_lo=1e-3, real_t tol_hi=1e-2,
                    real_t fac_refine=0.5, real_t fac_coarsen=1.25,
                    real_t smallest_step=1e-4, real_t largest_step=1e2,
-                   str topo_style="msphere"):
+                   str topo_style="msphere", str seed_center="cell"):
     r""" Start calculating a streamline at x0
 
     Args:
@@ -424,7 +430,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     # for profiling
     # t0_all = time()
 
-    seed_iter = islice(seed.iter_points(center=active_patch.center), *seed_slice)
+    seed_iter = islice(seed.iter_points(center=seed_center), *seed_slice)
     seed_pts = np.array(list(seed_iter), dtype=amrfld.crd_dtype)
 
     assert seed_pts.shape[1] == 3, "Seeds must have 3 spatial dimensions"
