@@ -48,7 +48,7 @@ ctypedef fused FusedAMRField:
     AMRField_F8_Crd_F8
 
 
-cdef CyAMRField make_cyamrfield(vfield)
+cdef make_cyamrfield(vfield)
 cdef CyField activate_patch(FusedAMRField amrfld, real_t x[3])
 
 ##

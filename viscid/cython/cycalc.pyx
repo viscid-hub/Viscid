@@ -1,4 +1,5 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
+# cython: emit_code_comments=False
 
 from __future__ import print_function
 
@@ -9,6 +10,7 @@ from viscid.seed import to_seeds
 from cython.operator cimport dereference as deref
 from libc.math cimport floor, fabs
 
+from viscid.cython.cyamr cimport CyAMRField
 from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_patch
 from viscid.cython.cyfield cimport real_t
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
@@ -51,7 +53,11 @@ def interp(vfield, seeds, kind="trilinear", wrap=True):
         scalar = False
 
     amrfld = make_cyamrfield(vfield)
-    result = np.empty((nr_points, nr_comps), dtype=amrfld.crd_dtype)
+    # NOTE: this potentially unsafe cast is a hack because Cython's Fused
+    # types no longer support returning a specialized fused type? It should
+    # be ok (ie, doesn't segfault / return gibberish) as long as
+    # make_cyamrfield always returns a CyAMRField subclass, which it should.
+    result = np.empty((nr_points, nr_comps), dtype=(<CyAMRField>amrfld).crd_dtype)
 
     seed_iter = seeds.iter_points(center=seed_center)
     if kind == "nearest":

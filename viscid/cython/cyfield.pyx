@@ -1,4 +1,6 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
+# cython: emit_code_comments=False
+
 from viscid.cython.cyfield cimport *
 from viscid.cython.misc_inlines cimport int_max
 
@@ -16,25 +18,7 @@ cdef inline int _c_int_max(int a, int b):
     else:
         return b
 
-cdef CyField make_cyfield(vfield):
-    vfield = vfield.as_interlaced(force_c_contiguous=True).atleast_3d()
-    fld_dtype = np.dtype(vfield.dtype)
-
-    if fld_dtype == np.dtype('i4'):
-        fld = _init_cyfield(Field_I4_Crd_F8(), vfield, 'i4', 'f8')
-    elif fld_dtype == np.dtype('i8'):
-        fld = _init_cyfield(Field_I8_Crd_F8(), vfield, 'i8', 'f8')
-    if fld_dtype == np.dtype('f4'):
-        fld = _init_cyfield(Field_F4_Crd_F4(), vfield, 'f4', 'f4')
-    elif fld_dtype == np.dtype('f8'):
-        fld = _init_cyfield(Field_F8_Crd_F8(), vfield, 'f8', 'f8')
-    else:
-        raise RuntimeError("Bad field dtype for cython code {0}"
-                           "".format(fld_dtype))
-
-    return fld
-
-cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
+cdef _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
     dat = vfield.data
     while len(dat.shape) < 4:
         dat = np.expand_dims(dat, axis=4)
@@ -126,6 +110,24 @@ cdef FusedField _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
     fld.fld_dtype = fld_dtype
     fld.crd_dtype = crd_dtype
     fld.vfield = vfield
+
+    return fld
+
+cdef make_cyfield(vfield):
+    vfield = vfield.as_interlaced(force_c_contiguous=True).atleast_3d()
+    fld_dtype = np.dtype(vfield.dtype)
+
+    if fld_dtype == np.dtype('i4'):
+        fld = _init_cyfield(Field_I4_Crd_F8(), vfield, 'i4', 'f8')
+    elif fld_dtype == np.dtype('i8'):
+        fld = _init_cyfield(Field_I8_Crd_F8(), vfield, 'i8', 'f8')
+    if fld_dtype == np.dtype('f4'):
+        fld = _init_cyfield(Field_F4_Crd_F4(), vfield, 'f4', 'f4')
+    elif fld_dtype == np.dtype('f8'):
+        fld = _init_cyfield(Field_F8_Crd_F8(), vfield, 'f8', 'f8')
+    else:
+        raise RuntimeError("Bad field dtype for cython code {0}"
+                           "".format(fld_dtype))
 
     return fld
 

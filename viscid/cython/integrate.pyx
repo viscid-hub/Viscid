@@ -1,5 +1,8 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
+# cython: emit_code_comments=False
+
 """3D Integrators of Vector Fields with 3 Components"""
+
 from __future__ import print_function
 from viscid import logger
 

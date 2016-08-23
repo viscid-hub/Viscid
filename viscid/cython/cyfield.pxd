@@ -81,4 +81,4 @@ ctypedef fused FusedField:
     Field_F4_Crd_F4
     Field_F8_Crd_F8
 
-cdef CyField make_cyfield(vfield)
+cdef make_cyfield(vfield)

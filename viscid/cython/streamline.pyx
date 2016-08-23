@@ -1,4 +1,6 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
+# cython: emit_code_comments=False
+
 r"""All streamlines all the time
 
 Calculate streamlines of a vector field on as many processors as your
