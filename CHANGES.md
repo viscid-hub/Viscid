@@ -4,7 +4,12 @@ Changes
 0.97.1 dev
 ==========
 
+Changes:
+  - Support for Edge / Face centered fields (interpolate, streamline, fill_dipole, div, fc2cc, ec2cc)
 
+Bugfixes:
+  - fix cythonize errors for cython >= 0.24
+  - misc. hdf5/xdmf bugs when saving fields
 
 0.97.0
 ======
