@@ -58,32 +58,38 @@ def main():
 
     # seeds = viscid.SphericalCap(r=1.02, ntheta=64, nphi=32, angle0=17, angle=20,
     #                             philim=(100, 260), roll=-180.0)
-    seeds = viscid.SphericalCap(r=1.02, ntheta=64, nphi=32, angle0=17, angle=20,
-                                philim=(0, 10), roll=0.0)
+    # seeds = viscid.SphericalCap(r=1.02, ntheta=64, nphi=32, angle0=17, angle=20,
+    #                             philim=(0, 10), roll=0.0)
+    seedsN = viscid.Sphere(r=1.02, ntheta=16, nphi=16, thetalim=(15, 25),
+                           philim=(0, 300), crd_system=b)
+    seedsS = viscid.Sphere(r=1.02, ntheta=16, nphi=16, thetalim=(155, 165),
+                           philim=(0, 300), crd_system=b)
 
     bl_kwargs = dict(ibound=0.9, obound0=(-20, -10, -10), obound1=(11, 10, 10))
 
     # blines_cc, topo_cc = viscid.streamlines(b, seeds, **bl_kwargs)
-    blines_fc, topo_fc = viscid.streamlines(b1, seeds, **bl_kwargs)
+    blinesN_fc, topoN_fc = viscid.streamlines(b1, seedsN, **bl_kwargs)
+    _, topoS_fc = viscid.streamlines(b1, seedsS, output=viscid.OUTPUT_TOPOLOGY,
+                                     **bl_kwargs)
 
     if True:
         from viscid.plot import mvi
-        mesh = mvi.mesh_from_seeds(seeds, scalars=topo_fc)
+        mesh = mvi.mesh_from_seeds(seedsN, scalars=topoN_fc)
         mesh.actor.property.backface_culling = True
         # mvi.plot_lines(blines_cc, scalars="#000000", tube_radius=0.03)
-        mvi.plot_lines(blines_fc, scalars=viscid.topology2color(topo_fc),
+        mvi.plot_lines(blinesN_fc, scalars=viscid.topology2color(topoN_fc),
                        opacity=0.7)
 
         mvi.plot_blue_marble(r=1.0)
-        mvi.plot_earth_3d(radius=1.01, crd_system="gse", night_only=True,
-                          opacity=0.5)
+        mvi.plot_earth_3d(radius=1.01, crd_system=b.find_info('crd_system'),
+                          night_only=True, opacity=0.5)
         mvi.show()
 
     if True:
         mpl.subplot(121, projection='polar')
-        # mpl.plot(topo_cc)
+        mpl.plot(topoN_fc)
         mpl.subplot(122, projection='polar')
-        mpl.plot(topo_fc)
+        mpl.plot(topoS_fc)
         mpl.show()
 
     return 0

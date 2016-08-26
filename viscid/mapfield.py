@@ -240,9 +240,17 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
     mfld = as_mapfield(fld, order=('lon', 'lat'), units='rad')
 
     if hemisphere == "north":
+        if np.all(mfld.get_crd('lat') < abs_bounding_lat):
+            raise ValueError("fld {0} contains no values north of bounding lat "
+                             "{1:g} deg"
+                             "".format(fld.name, bounding_lat * 180 / np.pi))
         # mfld = mfld["lat=:{0}f:-1".format(abs_bounding_lat)]
         mfld = mfld.loc[:, :np.pi / 2 - abs_bounding_lat:-1]
     elif hemisphere == "south":
+        if np.all(mfld.get_crd('lat') > -abs_bounding_lat):
+            raise ValueError("fld {0} contains no values south of bounding lat "
+                             "{1:g} deg"
+                             "".format(fld.name, bounding_lat * 180 / np.pi))
         # mfld = mfld["lat=:{0}f".format(-abs_bounding_lat)]
         mfld = mfld.loc[:, :-np.pi / 2 + abs_bounding_lat]
     else:

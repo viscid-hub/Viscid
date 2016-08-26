@@ -6,6 +6,7 @@ Changes
 
 Changes:
   - Support for Edge / Face centered fields (interpolate, streamline, fill_dipole, div, fc2cc, ec2cc)
+  - Spherical seeds now take crd_system argument that changes the meaning of phi=0 from the +x axis to midnight
 
 Bugfixes:
   - fix cythonize errors for cython >= 0.24

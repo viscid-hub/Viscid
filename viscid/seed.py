@@ -806,10 +806,19 @@ class Sphere(SeedGen):
     """Make seeds on the surface of a sphere"""
 
     def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), ntheta=20, nphi=20,
-                 thetalim=(0, 180.0), philim=(0, 360.0), theta_endpoint='auto',
-                 phi_endpoint='auto', pole_is_vector=True, theta_phi=False,
-                 roll=0.0, cache=False, dtype=None):
+                 thetalim=(0, 180.0), philim=(0, 360.0), roll=0.0, crd_system=None,
+                 theta_endpoint='auto', phi_endpoint='auto', pole_is_vector=True,
+                 theta_phi=False, cache=False, dtype=None):
         """Make seeds on the surface of a sphere
+
+        Note:
+            There is some funny business about the meaning of phi=0 and
+            `crd_system`. By default, this seed generator is agnostic
+            to coordinate systems and phi=0 always means the +x axis.
+            If crd_system is 'gse', 'mhd', or an object whose find_info
+            method returns a 'crd_system', then phi=0 means midnight.
+            This is important when specifying a phi range or plotting
+            on a matplotlib polar plot.
 
         Args:
             p0 (list, tuple, or ndarray): Origin of sphere as (x, y, z)
@@ -821,6 +830,11 @@ class Sphere(SeedGen):
             nphi (int): Number of points in phi
             thetalim (list): min and max theta (in degrees)
             philim (list): min and max phi (in degrees)
+            roll (float): Roll the seeds around the pole by this angle
+                in deg
+            crd_system (str, Field): a crd system ('gse', 'mhd') or an
+                object that has 'crd_system' info such that phi=0
+                means midnight instead of the +x axis.
             theta_endpoint (str): this is a bit of a hack to keep from
                 having redundant seeds at poles. You probably just want
                 auto here
@@ -830,8 +844,6 @@ class Sphere(SeedGen):
                 vector
             theta_phi (bool): If True, the uv and local representations
                 are ordered (theta, phi), otherwise (phi, theta)
-            roll (float): Roll the seeds around the pole by this angle
-                in deg
 
         Raises:
             ValueError: if thetalim or philim don't have 2 values each
@@ -857,6 +869,23 @@ class Sphere(SeedGen):
         if not len(thetalim) == len(philim) == 2:
             raise ValueError("thetalim and philim must have both min and max")
 
+        try:
+            roll = float(roll)
+        except TypeError:
+            pass
+
+        # square away crd system
+        if crd_system:
+            if hasattr(crd_system, 'find_info'):
+                crd_system = crd_system.find_info('crd_system', 'none')
+        else:
+            crd_system = 'none'
+        if crd_system.strip().lower() == 'gse':
+            crd_system_roll = -180.0
+        else:
+            crd_system_roll = 0.0
+
+
         self.r = r
         self.ntheta = ntheta
         self.nphi = nphi
@@ -866,6 +895,7 @@ class Sphere(SeedGen):
         self.phi_endpoint = phi_endpoint
         self.theta_phi = theta_phi
         self.roll = roll
+        self.crd_system_roll = crd_system_roll
 
     @property
     def _spans_theta(self):
@@ -1005,7 +1035,7 @@ class Sphere(SeedGen):
 
     def get_rotation(self):
         return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.pole,
-                                    roll=self.roll)
+                                    roll=self.roll + self.crd_system_roll)
 
     def as_uv_coordinates(self):
         theta, phi = self._make_uv_axes()

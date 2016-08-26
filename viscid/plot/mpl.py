@@ -729,7 +729,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     axgridlw = plot_kwargs.pop("axgridlw", 1.0)
 
     projection = plot_kwargs.pop("projection", "polar")
-    hemisphere = plot_kwargs.pop("hemisphere", "north").lower().strip()
+    hemisphere = plot_kwargs.pop("hemisphere", "none").lower().strip()
     drawcoastlines = plot_kwargs.pop("drawcoastlines", False)
     lon_0 = plot_kwargs.pop("lon_0", 0.0)
     lat_0 = plot_kwargs.pop("lat_0", None)
@@ -738,6 +738,19 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     label_lat = plot_kwargs.pop("label_lat", True)
     label_mlt = plot_kwargs.pop("label_mlt", True)
 
+    # try to autodiscover hemisphere if ALL the thetas are either above
+    # or below the equator
+    if hemisphere == "none":
+        lat = viscid.as_mapfield(fld, units='deg').get_crd('lat')
+        if np.all(lat >= 0.0):
+            hemisphere = "north"
+        elif np.all(lat <= 0.0):
+            hemisphere = "south"
+        else:
+            raise RuntimeError("hemisphere of field {0} is ambiguous, the"
+                               "field contains both. Please specify either "
+                               "north or south".format(fld.name))
+    # now that we know hemisphere is useful, setup the latlabel array
     if hemisphere == "north":
         # def_projection = "nplaea"
         # def_boundinglat = 40.0
