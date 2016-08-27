@@ -989,15 +989,38 @@ def insert_filter(filtr, module_manager):
     filtr.parent.children.remove(module_manager)
     filtr.children.append(module_manager)
 
-def plot_blue_marble(r=1.0, orientation=None, figure=None):
-    """Plot Earth using the blue marble NASA image"""
+def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=32, ntheta=16,
+                     crd_system='mhd', map_style=None, lines=False, res=2,
+                     notilt1967=False):
+    """Plot Earth using the Natural Earth dataset maps
+
+    Args:
+        r (float): radius of earth
+        rotate (None, sequence): sequence of length 4 that contains
+            (angle, ux, uy, uz) for the angle and axis of a rotation
+        figure (mayavi.core.scene.Scene): specific figure, or None for
+            :py:func:`mayavi.mlab.gcf`
+        nphi (int): phi resolution of Earth's mesh
+        ntheta (int): theta resolution of Earth's mesh
+        crd_system (str): 'mhd', 'gse', etc. (For future use)
+        map_style (str): Nothing for standard map, or 'faded'
+        lines (bool): Whether or not to show equator, tropics,
+            arctic circles, and a couple meridians.
+        res (int): Resolution in thousands of pixels longitude (must
+            be one of 1, 2, 4, 8)
+        notilt1967 (bool): is 1 Jan 1967 the special notilt time?
+
+    Returns:
+        (VTKDataSource, mayavi.modules.surface.Surface)
+    """
     # make a plane, then deform it into a sphere
     eps = 1e-4
-    ps = tvtk.PlaneSource(origin=(r, np.pi - eps, 0.0),
-                          point1=(r, np.pi - eps, 2 * np.pi),
+    ps = tvtk.PlaneSource(origin=(r, r * np.pi - eps, r * 0.0),
+                          point1=(r, r * np.pi - eps, r * 2 * np.pi),
                           point2=(r, eps, 0.0),
-                          x_resolution=32,
-                          y_resolution=16)
+                          x_resolution=nphi,
+                          y_resolution=ntheta)
+
     ps.update()
     transform = tvtk.SphericalTransform()
     tpoly = tvtk.TransformPolyDataFilter(transform=transform,
@@ -1007,21 +1030,30 @@ def plot_blue_marble(r=1.0, orientation=None, figure=None):
     surf = mlab.pipeline.surface(src)
 
     # now load a jpg, and use it to texture the sphere
-    fname = os.path.realpath(os.path.dirname(__file__) + '/blue_marble.jpg')
+
+    linestr = '_lines' if lines else ''
+    assert map_style in (None, '', 'faded')
+    assert res in (1, 2, 4, 8)
+    map_style = '_{0}'.format(map_style) if map_style else ''
+    img_name = "images/earth{0}{1}_{2}k.jpg".format(map_style, linestr, res)
+    fname = os.path.realpath(os.path.dirname(__file__) + '/' + img_name)
     img = tvtk.JPEGReader(file_name=fname)
     texture = tvtk.Texture(input_connection=img.output_port, interpolate=1)
     surf.actor.enable_texture = True
     surf.actor.texture = texture
     surf.actor.property.color = (1.0, 1.0, 1.0)
 
-    if orientation:
-        surf.actor.actor.orientation = orientation
-    else:
-        surf.actor.actor.orientation = (0, 0, -45.0)
+    # rotate 180deg b/c i can't rotate the texture to make the prime meridian
+    surf.actor.actor.rotate_z(180)
+
+    if rotate is not None:
+        surf.actor.actor.rotate_wxyz(*rotate)
 
     add_source(src, figure=figure)
 
-    return src
+    return src, surf
+
+plot_natural_earth = plot_blue_marble
 
 def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
                   radius=1.0, res=24, crd_system="mhd", night_only=False,
@@ -1047,6 +1079,9 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
     if crd_system == "mhd":
         theta_dusk, theta_dawn = 270, 90
     elif crd_system == "gse":
+        theta_dusk, theta_dawn = 90, 270
+    else:
+        # use GSE convention?
         theta_dusk, theta_dawn = 90, 270
 
     night = BuiltinSurface(source='sphere', name='night')
