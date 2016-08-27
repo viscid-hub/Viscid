@@ -1,4 +1,5 @@
-"""This is a shim to use numpy datetime in a standard way
+#!/usr/bin/env python
+"""This is a shim to use numpy datetime64 and timedelta64 types
 
 Times must be given in ISO 8601 format as per numpy >= 1.7.
 
@@ -13,20 +14,40 @@ Note:
     a problem for matplotlib plots if arr.astype(datetime.datetime) is
     used. This is because python's datetime objects are timezone
     agnostic, so matplotlib won't know a thing about your local TZ.
-"""
 
-# info about time span of each time unit is available at:
-# http://docs.scipy.org/doc/numpy/reference/arrays.datetime.html#datetime-units
+See Also:
+    Information about the time span of each time unit is available at
+    [1]_.
+
+References:
+    .. [1] http://docs.scipy.org/doc/numpy/reference/arrays.datetime.html#datetime-units
+
+This module is completely orthogonal to Viscid, so that it can be
+ripped out and used more generally. Please note that Viscid is MIT
+licensed, which requires attribution.
+
+The MIT License (MIT)
+Copyright (c) 2016 Kristofor Maynard
+
+"""
 
 from __future__ import print_function, division
 from datetime import datetime, timedelta
 from distutils.version import LooseVersion
+try:
+    from itertools import izip
+except ImportError:
+    izip = zip
 import re
+import sys
 
 import numpy as np
 
-import viscid
-from viscid.compat import izip
+
+if sys.version_info[0] == 3:
+    string_types = str,
+else:
+    string_types = basestring,  # pylint: disable=undefined-variable
 
 
 __all__ = ['as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
@@ -34,9 +55,10 @@ __all__ = ['as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
            'as_isotime', 'to_isotime', 'format_time', 'format_datetime',
            'is_valid_datetime64', 'is_valid_timedelta64',
            'round_datetime', 'round_timedelta', 'round_time',
-           'asarray_datetime64', 'linspace_datetime64',
+           'asarray_datetime64', 'linspace_datetime64', 'most_precise_tdiff',
            'is_datetime_like', 'is_timedelta_like',
            'is_time_like']
+
 
 _NP_TZ = LooseVersion(np.__version__) < LooseVersion('1.11')
 TIME_UNITS = ('as', 'fs', 'ps', 'ns', 'us', 'ms', 's', 'm', 'h')
@@ -131,7 +153,7 @@ def _as_datetime64_scalar(time, unit=None):
 
     if is_timedelta_like(time):
         scalar = as_timedelta64(time, unit=unit).astype(_format_unit(None))
-    elif isinstance(time, viscid.string_types):
+    elif isinstance(time, string_types):
         try:
             time = as_isotime(time)
         except (TypeError, ValueError):
@@ -151,7 +173,7 @@ def _as_timedelta64_scalar(time, unit=None):
     unit_args = [unit] if unit else []
     flt_unit = unit if unit else 's'
     # turn 'H:M:S.ms', 'M:S.ms', 'S.ms' into floating point seconds
-    if isinstance(time, viscid.string_types):# and ':' in time:
+    if isinstance(time, string_types):# and ':' in time:
         time = [float(t) for t in time.split(':')][::-1]
         if len(time) > 1 and unit is not None:
             raise ValueError("When giving time as a string, units are automatic")
@@ -200,7 +222,7 @@ def as_isotime(time):
 
     ret = [None] * len(time)
     for i, t in enumerate(time):
-        if isinstance(t, viscid.string_types):
+        if isinstance(t, string_types):
             t = t.strip().upper().lstrip('UT')
             if re.match(r"^[0-9]{2}([0-9]{2}:){3,5}[0-9]{2}(\.[0-9]*)?$", t):
                 # Handle YYYY:MM:DD:hh:mm:ss.ms -> YYYY-MM-DDThh:mm:ss.ms
@@ -343,6 +365,12 @@ def linspace_datetime64(start, stop, n, endpoint=True, unit=None):
     arr[:] = start + np.arange(n) * dx
     return arr
 
+def most_precise_tdiff(t1, t2):
+    """return t1 - t2 with the best precision it can and still be
+    able to represent both dt1 and dt2
+    """
+    return _most_precise_diff(as_datetime64(t1), as_datetime64(t2))
+
 def is_valid_datetime64(arr, unit=None):
     """Returns True iff arr can be made into a datetime64 array"""
     try:
@@ -461,11 +489,11 @@ def _check_like(val, _np_types, _native_types, check_str=None):  # pylint: disab
 
     if isinstance(val, _all_types):
         return True
-    elif isinstance(val, viscid.string_types):
+    elif isinstance(val, string_types):
         return check_str and check_str(val)
     elif isinstance(val, (list, tuple)):
         for v in val:
-            if isinstance(v, viscid.string_types):
+            if isinstance(v, string_types):
                 if check_str and check_str(v):
                     continue
             if not isinstance(v, _all_types):
