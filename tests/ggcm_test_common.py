@@ -12,7 +12,7 @@ from viscid.plot import mpl
 # built-in reader and implement some convenience getters for
 # derived quantities not in the file
 class MyGGCMGrid(openggcm.GGCMGrid):
-    mhd_to_gse_on_read = True
+    mhd_to_gse_on_read = 'force'
 
     def _get_bcc(self):
         return self['b']
