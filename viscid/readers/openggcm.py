@@ -636,9 +636,22 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
     _fld_templates = None
     grid2 = None
 
+    # you can override this in your viscidrc file with:
+    #   "readers.openggcm.GGCMFileFortran.assume_mhd_crds": true
+    # But chances are, fortran (jrrle/fortbin) files are in 'mhd' crds and
+    # will want to be switched to 'gse'
+    assume_mhd_crds = True
+
+
     def __init__(self, fname, crds=None, fld_templates=None, **kwargs):
         self._crds = crds
         self._fld_templates = fld_templates
+
+        if 'assume_mhd_crds' in kwargs:
+            self.assume_mhd_crds = kwargs['assume_mhd_crds']
+        else:
+            kwargs['assume_mhd_crds'] = self.assume_mhd_crds
+
         super(GGCMFileFortran, self).__init__(fname, **kwargs)
 
     @classmethod
