@@ -223,51 +223,44 @@ class GGCMGrid(grid.Grid):
 
         # do we already know the crd system of this grid?
         crd_system = self.find_info("crd_system", None)
-        determined_crd_system = crd_system is None
+        freshly_determined_crd_system = crd_system is None
 
         # I guess not, can we figure out the crd system of this grid?
-        if crd_system is None:
-            # sanity check the logfile stuffs
-            log_fname = self.find_info("_viscid_log_fname")
-            if log_fname is False:
-                raise RuntimeError("If you're using 'auto' for mhd->gse "
-                                   "conversion, reading the logfile "
-                                   "MUST be turned on.")
-            elif log_fname is None:
-                logger.warn("Tried to determine coordinate system using "
-                            "logfile parameters, but no logfile found. "
-                            "Copy over the log file to use auto mhd->gse "
-                            "conversion. (Using default)")
-            else:
-                # try to intuit the _crd system based on the log file and grid
-                try:
-                    # if we're using a mirdip IC, and low edge is at least
-                    # twice smaller than the high edge, then assume
-                    # it's a magnetosphere box with xl < 0.0 is the sunward
-                    # edge in "MHD" coordinates
-                    is_openggcm = (self.find_info('ggcm_mhd_type') == "ggcm")
-                    # this 2nd check is in case the ggcm_mhd view in the
-                    # log file is mangled... this happens sometimes
-                    ic_type = self.find_info('ggcm_mhd_ic_type')
-                    is_openggcm |= (ic_type.startswith("mirdip"))
-                    xl = float(self.find_info('mrc_crds_l')[0])
-                    xh = float(self.find_info('mrc_crds_h')[0])
-                    if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
-                        crd_system = "mhd"
-                    elif is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xh > xl:
-                        crd_system = "gse"
-                    else:
-                        crd_system = "other"
-                except KeyError as e:
-                    logger.warn("Could not determine coordiname system; "
-                                "either the logfile is mangled, or "
-                                "the libmrc options I'm using in infer "
-                                "crd system have changed (%s)", e.args[0])
+        if crd_system is None and self.find_info('assume_mhd_crds', False):
+            crd_system = "mhd"
+
+        if crd_system is None and self.find_info("_viscid_log_fname"):
+            # try to intuit the _crd system based on the log file and grid
+            try:
+                # if we're using a mirdip IC, and low edge is at least
+                # twice smaller than the high edge, then assume
+                # it's a magnetosphere box with xl < 0.0 is the sunward
+                # edge in "MHD" coordinates
+                is_openggcm = self.find_info('ggcm_mhd_type') == "ggcm"
+                # this 2nd check is in case the ggcm_mhd view in the
+                # log file is mangled... this happens sometimes
+                ic_type = self.find_info('ggcm_mhd_ic_type', '')
+                is_openggcm |= ic_type.startswith("mirdip")
+                # note that these default values are total hacks for fortran
+                # runs which don't spew mrc information @ the beginning
+                xl = float(self.find_info('mrc_crds_l')[0])
+                xh = float(self.find_info('mrc_crds_h')[0])
+                if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
+                    crd_system = "mhd"
+                elif is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xh > xl:
+                    crd_system = "gse"
+                else:
+                    crd_system = "other"
+            except KeyError as e:
+                logger.warn("Could not determine coordiname system; "
+                            "either the logfile is mangled, or "
+                            "the libmrc options I'm using in infer "
+                            "crd system have changed (%s)", e.args[0])
 
         if crd_system is None:
             crd_system = "unknown"
 
-        if determined_crd_system:
+        if freshly_determined_crd_system:
             self.set_info("crd_system", crd_system)
 
         # now that we have an idea what the crd_system is, determine
@@ -276,6 +269,16 @@ class GGCMGrid(grid.Grid):
         request = str(self.mhd_to_gse_on_read).strip().lower()
 
         if request == 'true':
+            viscid.logger.warn("'mhd_to_gse_on_read = true' is deprecated due "
+                               "to lack of clarity. Please use 'auto', or if "
+                               "you really want to always flip the axes, use "
+                               "'force'. Only use 'force' if you are certain, "
+                               "since even non-magnetosphere OpenGGCM grids "
+                               "will be flipped, and you will be confused "
+                               "some day when you open an MHD-in-a-box run, "
+                               "and you have forgetten about this message.")
+            ret = True
+        elif request == 'force':
             ret = True
         elif request == 'false':
             ret = False
@@ -286,12 +289,33 @@ class GGCMGrid(grid.Grid):
             elif crd_system == "gse":
                 ret = False
             else:
+                log_fname = self.find_info("_viscid_log_fname")
+                # which error / warning to print depends on why crd_system
+                # neither mhd | gse; was logfile reading turned off, was
+                # the logfile not found, or was the logfile simply mangled?
+                if default:
+                    default_action = "flipping axes since default is True"
+                else:
+                    default_action = "not flipping axes since default is False"
+
+                if log_fname is False:
+                    logger.error("If you're using 'auto' for mhd->gse "
+                                 "conversion, reading the logfile MUST be "
+                                 "turned on. ({0})".format(default_action))
+                elif log_fname is None:
+                    logger.warn("Tried to determine coordinate system using "
+                                "logfile parameters, but no logfile found. "
+                                "Copy over the log file to use auto mhd->gse "
+                                "conversion. ({0})".format(default_action))
+                else:
+                    logger.warn("Could not determine crd_system used for this "
+                                "grid on disk ({0})".format(default_action))
                 # crd_system is either 'other' or 'unknown'
                 ret = default
         else:
             raise ValueError("Invalid value for mhd_to_gse_on_read: "
                              "'{0}'; valid choices: (True, False, auto, "
-                             "auto_true)".format(request))
+                             "auto_true, force)".format(request))
 
         self.set_info("_viscid_do_mhd_to_gse_on_read", ret)
         return ret
