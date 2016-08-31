@@ -1216,6 +1216,7 @@ def streamplot(fld, **kwargs):
     lm = "".join([l, m])
 
     # get scalar fields for the vector components in the plane
+    fld = fld.atleast_3d()
     vl, vm = fld[l], fld[m]
     xl, xm = fld.get_crds(lm, shaped=False)
 
@@ -1226,15 +1227,11 @@ def streamplot(fld, **kwargs):
     dxm = xm[1:] - xm[:-1]
     if not np.allclose(dxl[0], dxl) or not np.allclose(dxm[0], dxm):
         # viscid.logger.warn("Matplotlib's streamplot is for uniform grids only")
-        nl = np.ceil((xl[-1] - xl[0]) / np.min(dxl))
-        nm = np.ceil((xm[-1] - xm[0]) / np.min(dxm))
+        vol = viscid.Volume(fld.xl, fld.xh, fld.sshape)
+        vl = viscid.interp_trilin(vl, vol, wrap=True)
+        vm = viscid.interp_trilin(vm, vol, wrap=True)
 
-        vol = viscid.Volume([xl[0], xm[0], 0], [xl[-1], xm[-1], 0],
-                            [nl, nm, 1])
-        vl = viscid.interp_trilin(vl, vol, wrap=True).slice_reduce(":")
-        vm = viscid.interp_trilin(vm, vol, wrap=True).slice_reduce(":")
-
-        xl, xm = vl.get_crds()[:2]
+        xl, xm = vl.get_crds(lm)
 
         # interpolate linewidth and color too if given
         for other in ['linewidth', 'color']:
@@ -1253,6 +1250,9 @@ def streamplot(fld, **kwargs):
                 kwargs[other] = kwargs[other].data
         except KeyError:
             pass
+
+    vl = vl.slice_reduce(':')
+    vm = vm.slice_reduce(':')
 
     return plt.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
 

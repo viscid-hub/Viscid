@@ -66,7 +66,7 @@ By default, spheres ore plotted in 2D via their phi (x-axis) and theta (y-axis).
     f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
 
     b = viscid.interp_trilin(f3d['bz'], viscid.Sphere(p0=(0, 0, 0), r=7.0))
-    mpl.plot(b, lin=0)
+    mpl.plot(b, lin=0, hemisphere='north')
 
 
 Interpolating Vectors Onto a Plane
