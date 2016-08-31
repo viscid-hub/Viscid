@@ -16,8 +16,10 @@ Attributes:
 
 from __future__ import print_function
 import logging
+import re
 import signal
 import sys
+import textwrap
 
 import numpy
 
@@ -63,6 +65,8 @@ logger.addHandler(_handler)
 
 class _CustomFilter(logging.Filter, object):
     def filter(self, record):
+        if '\n' not in record.msg:
+            record.msg = '\n'.join(textwrap.wrap(record.msg, width=65))
         spaces = ' ' * (len(record.levelname) + 2)
         record.msg = record.msg.replace('\n', '\n' + spaces)
         return super(_CustomFilter, self).filter(record)
