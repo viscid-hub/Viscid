@@ -747,9 +747,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         elif np.all(lat <= 0.0):
             hemisphere = "south"
         else:
-            viscid.warn("hemisphere of field {0} is ambiguous, the "
-                        "field contains both. Please specify either "
-                        "north or south (defaulting to North).".format(fld.name))
+            viscid.logger.warn("hemisphere of field {0} is ambiguous, the "
+                               "field contains both. Please specify either "
+                               "north or south (defaulting to North)."
+                               "".format(fld.name))
             hemisphere = 'north'
     # now that we know hemisphere is useful, setup the latlabel array
     if hemisphere == "north":
