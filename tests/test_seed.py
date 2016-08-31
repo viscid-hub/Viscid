@@ -143,6 +143,54 @@ def main():
                                       nalpha=65, nbeta=80, r=0.5, roll=45.0)
         run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
 
+    if 1:
+        viscid.logger.info('Testing RectilinearMeshPoints...')
+        f = viscid.load_file(sample_dir + '/sample_xdmf.3d.[-1].xdmf')
+        slc = 'x=-40f:12f, y=-10f:10f, z=-10f:10f'
+        b = f['b'][slc]
+        z = b.get_crd('z')
+        sheet_iz = np.argmin(b['x']**2, axis=2)
+        sheet_pts = b['z=0:1'].get_points()
+        sheet_pts[2, :] = z[sheet_iz].reshape(-1)
+        isphere_mask = np.sum(sheet_pts[:2, :]**2, axis=0) < 5**2
+        day_mask = sheet_pts[0:1, :] > -1.0
+        sheet_pts[2, :] = np.choose(isphere_mask, [sheet_pts[2, :], 0])
+        sheet_pts[2, :] = np.choose(day_mask, [sheet_pts[2, :], 0])
+        nx, ny, _ = b.sshape
+        sheet_seed = viscid.RectilinearMeshPoints(sheet_pts.reshape(3, nx, ny))
+        vx_sheet = viscid.interp_nearest(f['vx'], sheet_seed)
+
+        try:
+            if not plot2d:
+                raise ImportError
+            from viscid.plot import mpl
+            mpl.clf()
+            mpl.plot(vx_sheet, symmetric=True)
+            mpl.plt.savefig(next_plot_fname(__file__, series='2d'))
+            if args.show:
+                mpl.show()
+        except ImportError:
+            pass
+
+        try:
+            if not plot3d:
+                raise ImportError
+            from viscid.plot import mvi
+            mvi.clf()
+            mesh = mvi.mesh_from_seeds(sheet_seed, scalars=vx_sheet,
+                                       clim=(-400, 400))
+            mvi.plot_earth_3d(crd_system=b.find_info('crd_system', 'mhd'))
+            mvi.view(azimuth=+90.0 + 45.0, elevation=90.0 - 25.0,
+                     distance=30.0, focalpoint=(-10.0, +1.0, +1.0))
+
+            mvi.title("RectilinearMeshPoints")
+            mvi.savefig(next_plot_fname(__file__, series='3d'))
+            if args.show:
+                mvi.show()
+
+        except ImportError:
+            pass
+
     return 0
 
 if __name__ == "__main__":

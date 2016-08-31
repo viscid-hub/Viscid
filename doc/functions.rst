@@ -39,21 +39,23 @@ Streamlines and Interpolation
 
 .. cssclass:: table-striped
 
-===================================  =================================================
-Class                                Description
-===================================  =================================================
-:py:func:`viscid.calc_streamlines`   Calculate streamlines
-:py:func:`viscid.interp`             Interpolation, use `kind` kwarg for trilinear /
-                                     nearest neighbor
-:py:class:`viscid.Point`             Collection of hand picked points
-:py:class:`viscid.Line`              A line between 2 points
-:py:class:`viscid.Plane`             A plane defined by an origin and a normal vector
-:py:class:`viscid.Volume`            A Volume of points on a uniform cartesian grid
-:py:class:`viscid.Sphere`            Points on the surface of a sphere
-:py:class:`viscid.SphericalCap`      A cap of points around the pole of a sphere
-:py:class:`viscid.Circle`            Just a circle
-:py:class:`viscid.SphericalPatch`    A rectangular patch on the surface of a sphere
-===================================  =================================================
+========================================  ==================================================
+Class                                     Description
+========================================  ==================================================
+:py:func:`viscid.calc_streamlines`        Calculate streamlines
+:py:func:`viscid.interp`                  Interpolation, use `kind` kwarg for trilinear /
+                                          nearest neighbor
+:py:class:`viscid.Point`                  Collection of hand picked points
+:py:class:`viscid.RectilinearMeshPoints`  Points that can be 2d plotted using [u, :, 0] and
+                                          [v, 0, :] slices of pts as coordinate arrays
+:py:class:`viscid.Line`                   A line between 2 points
+:py:class:`viscid.Plane`                  A plane defined by an origin and a normal vector
+:py:class:`viscid.Volume`                 A Volume of points on a uniform cartesian grid
+:py:class:`viscid.Sphere`                 Points on the surface of a sphere
+:py:class:`viscid.SphericalCap`           A cap of points around the pole of a sphere
+:py:class:`viscid.Circle`                 Just a circle
+:py:class:`viscid.SphericalPatch`         A rectangular patch on the surface of a sphere
+========================================  ==================================================
 
 Math
 ~~~~

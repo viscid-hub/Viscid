@@ -444,7 +444,14 @@ class MeshPoints(SeedGen):
 
 class RectilinearMeshPoints(MeshPoints):
     """Generic seeds with 2d rect mesh topology"""
-    def __init__(self, pts, mesh_axes=(0, 1), cache=False, dtype=None):
+    def __init__(self, pts, mesh_axes="xy", cache=False, dtype=None):
+        """Generic seeds with 2d rect mesh topology
+
+        Args:
+            pts (ndarray): 3xNUxNV array
+            mesh_axes (tuple, str): which directions do u and v
+                correspond to.
+        """
         _lookup = {0: 0, 1: 1, 'x': 0, 'y': 1}
         self.mesh_axes = [_lookup[ax] for ax in mesh_axes]
         super(RectilinearMeshPoints, self).__init__(pts, cache=cache,
