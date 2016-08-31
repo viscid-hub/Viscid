@@ -10,8 +10,9 @@ import viscid
 from viscid.compat import izip
 
 __all__ = ['make_rotation_matrix', 'to_seeds', 'SeedGen', 'Point',
-           'MeshPoints', 'Line', 'Plane', 'Volume', 'Sphere', 'SphericalCap',
-           'Circle', 'SphericalPatch', 'PolarIonosphere']
+           'MeshPoints', 'RectilinearMeshPoints', 'Line', 'Plane', 'Volume',
+           'Sphere', 'SphericalCap', 'Circle', 'SphericalPatch',
+           'PolarIonosphere']
 
 def to_seeds(pts):
     """Try to turn anything into a set of seeds
@@ -439,6 +440,20 @@ class MeshPoints(SeedGen):
 
     def arr2mesh(self, arr):
         return arr.reshape(self.uv_shape)
+
+
+class RectilinearMeshPoints(MeshPoints):
+    """Generic seeds with 2d rect mesh topology"""
+    def __init__(self, pts, mesh_axes=(0, 1), cache=False, dtype=None):
+        _lookup = {0: 0, 1: 1, 'x': 0, 'y': 1}
+        self.mesh_axes = [_lookup[ax] for ax in mesh_axes]
+        super(RectilinearMeshPoints, self).__init__(pts, cache=cache,
+                                                    dtype=dtype)
+
+    def _make_uv_axes(self):
+        u = self.pts[self.mesh_axes[0], :, 0]
+        v = self.pts[self.mesh_axes[1], 0, :]
+        return u, v
 
 
 class Line(SeedGen):
