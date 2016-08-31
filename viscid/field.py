@@ -538,7 +538,7 @@ class Field(tree.Leaf):
     def layout(self, new_layout):
         """ UNTESTED, clear cache if layout changes """
         new_layout = new_layout.lower()
-        if self.is_loaded():
+        if self.is_loaded:
             current_layout = self.layout
             if new_layout != current_layout:
                 self.clear_cache()
@@ -738,6 +738,7 @@ class Field(tree.Leaf):
                 extent[1, i] = self.xh[i]
         return extent
 
+    @property
     def is_loaded(self):
         return self._cache is not None
 
@@ -1669,7 +1670,7 @@ class Field(tree.Leaf):
         Returns:
             Field or self
         """
-        was_loaded = self.is_loaded()
+        was_loaded = self.is_loaded
         ret = None
 
         if self.data.flags['C_CONTIGUOUS']:
