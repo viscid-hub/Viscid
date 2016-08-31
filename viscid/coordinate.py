@@ -239,16 +239,20 @@ class StructuredCrds(Coordinates):
     _src_crds_nc = None
     _src_crds_cc = None
 
+    _dtype = None
+
     _reflect_axes = None
     has_cc = None
 
     def __init__(self, init_clist, has_cc=True, reflect_axes=None,
-                 **kwargs):
+                 dtype=None, **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
         self.has_cc = has_cc
 
         self.reflect_axes = reflect_axes
+
+        self.dtype = dtype
 
         if init_clist is not None:
             self._axes = [d[0].lower() for d in init_clist]
@@ -290,7 +294,14 @@ class StructuredCrds(Coordinates):
 
     @property
     def dtype(self):
-        return self[self.axes[0]].dtype
+        if self._dtype:
+            return self._dtype
+        else:
+            return self[self.axes[0]].dtype
+
+    @dtype.setter
+    def dtype(self, dtype):
+        self._dtype = dtype
 
     @property
     def shape(self):
@@ -1282,8 +1293,6 @@ class UniformCrds(StructuredCrds):
     _nc_linspace_args = None
     _cc_linspace_args = None
 
-    dtype = None
-
     xl_nc = None
     xh_nc = None
     L_nc = None
@@ -1372,7 +1381,8 @@ class UniformCrds(StructuredCrds):
         self.min_dx_cc = self.L_cc / self.shape_cc
 
         init_clist = [(axis, None) for axis, _ in init_clist]
-        super(UniformCrds, self).__init__(init_clist, **kwargs)
+        super(UniformCrds, self).__init__(init_clist, dtype=self.dtype,
+                                          **kwargs)
 
     def _pull_out_axes(self, arrs, axes, center='none'):
         center = center.lower()
