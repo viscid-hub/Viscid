@@ -996,8 +996,10 @@ def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=32, ntheta=16,
 
     Args:
         r (float): radius of earth
-        rotate (None, sequence): sequence of length 4 that contains
-            (angle, ux, uy, uz) for the angle and axis of a rotation
+        rotate (None, sequence, str, datetime64): sequence of length 4
+            that contains (angle, ux, uy, uz) for the angle and axis of
+            a rotation, or a UT time as string or datetime64 to rotate
+            earth to a specific date/time
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         nphi (int): phi resolution of Earth's mesh
@@ -1047,6 +1049,11 @@ def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=32, ntheta=16,
     surf.actor.actor.rotate_z(180)
 
     if rotate is not None:
+        if viscid.is_datetime_like(rotate):
+            rotate = viscid.as_datetime64(rotate)
+            cotr = viscid.Cotr(rotate, notilt1967=notilt1967)  # pylint: disable=not-callable
+            rotate = cotr.get_rotation_wxyz('geo', crd_system)
+        assert len(rotate) == 4
         surf.actor.actor.rotate_wxyz(*rotate)
 
     add_source(src, figure=figure)

@@ -890,10 +890,8 @@ def _main():
                 mvi.clf()
                 cotr = Cotr(t)
 
-                rotate_wxyz = Cotr(t).get_rotation_wxyz('geo', crd_system)
-                mvi.plot_blue_marble(r=1.0, rotate=rotate_wxyz,
-                                     crd_system=crd_system, nphi=256,
-                                     ntheta=128, res=4, lines=True)
+                mvi.plot_blue_marble(r=1.0, rotate=t, crd_system=crd_system,
+                                     nphi=256, ntheta=128, res=4, lines=True)
 
                 mvi.plot_earth_3d(radius=1.005, crd_system=crd_system,
                                   night_only=True, opacity=0.5)
