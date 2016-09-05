@@ -21,7 +21,8 @@ __all__ = ['get_dipole_moment_sm', 'guess_dipole_moment', 'get_dipole',
            'fill_dipole', 'set_in_region', 'make_spherical_mask']
 
 
-DEFAULT_STRENGTH = -1.0 / 3.0574e-5
+# note that this global is used immutably (ie, not rc file configurable)
+DEFAULT_STRENGTH = 1.0 / 3.0574e-5
 
 
 def get_dipole_moment_sm(strength=DEFAULT_STRENGTH, theta=0.0, mu=0.0,
@@ -32,7 +33,7 @@ def get_dipole_moment_sm(strength=DEFAULT_STRENGTH, theta=0.0, mu=0.0,
     #     Geophysical%20Coordinate%20Transformations.htm
     # theta is the angle between GSE and GSM (+ is duskward)
     # mu is the dipole tilt angle from GSM to SM (+ is sunward)
-    m_sm = np.array([0.0, 0.0, strength])
+    m_sm = np.array([0.0, 0.0, -strength])
     theta = (np.pi / 180.0) * theta
     mu = (np.pi / 180.0) * mu
 
