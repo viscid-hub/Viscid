@@ -83,6 +83,7 @@ Function                                          Description
 :py:func:`viscid.calculator.calc.normalize`       Divide a vector field by its magnitude
 :py:func:`viscid.calculator.calc.project`         Project one :py:class:`viscid.field.VectorField` onto
                                                   another, i.e., `a dot b / |b|`
+:py:func:`viscid.set_in_region`                   Set values in one field from another given a mask
 :py:func:`viscid.calculator.calc.project_vector`  Project VectorField a onto b in the direction of b, i.e.,
                                                   `(a dot b / |b|) * (b / |b|)`
 :py:func:`viscid.project_along_line`              Project a Vector Field Parallel to a streamline.
@@ -94,6 +95,32 @@ Function                                          Description
 :py:func:`viscid.calc_psi`                        Calculate a 2D flux function
 :py:func:`viscid.calc_beta`                       Calculate plasma beta
 ================================================  ===========================================================
+
+Geospace Tools
+~~~~~~~~~~~~~~
+
+These functions allow for transforming between geophysical coordinate systems, and adding a magnetic dipole to a field.
+
+.. cssclass:: table-striped
+
+================================================  ============================================================
+Function                                          Description
+================================================  ============================================================
+:py:func:`viscid.Cotr`                            Object that facilitates geospace coordinate transformations
+                                                  at a given UT time
+:py:func:`viscid.cotr_transform`                  Transform a vector from one crd system to another at a
+                                                  given UT time
+:py:func:`viscid.get_dipole_moment`               Get Earth's dipole moment at a given time in any coordinate
+                                                  system
+:py:func:`viscid.get_dipole_moment_ang`           Get dipole moment given gsm-tilt and dipole-tilt angles in
+                                                  gse or mhd crds
+:py:func:`viscid.get_dipole`                      Create new dipole vector field to an existing field given
+                                                  dipole moment vector
+:py:func:`viscid.fill_dipole`                     Add dipole vector field to an existing field given dipole
+                                                  moment vector (can be masked)
+:py:func:`viscid.make_spherical_mask`             Make a spherically shaped mask (useful in conjunction with
+                                                  :py:func:`viscid.fill_dipole`)
+================================================  ============================================================
 
 Magnetosphere Tools
 ~~~~~~~~~~~~~~~~~~~
