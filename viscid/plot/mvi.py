@@ -1114,6 +1114,29 @@ def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
     ax.imshow(pixmap)
     ax.axis('off')
 
+def figure(*args, **kwargs):
+    offscreen = kwargs.pop('offscreen', False)
+    hide = kwargs.pop('hide', None)
+
+    fig = mlab.figure(*args, **kwargs)
+    # if size was set, run resize to account for the height of window
+    # decorations
+    if 'size' in kwargs:
+        resize(kwargs['size'], figure=fig)
+    # hide window by default?
+    if hide or (hide is None and offscreen):
+        hide_window(fig)
+    # send it offscreen?
+    if offscreen:
+        make_fig_offscreen(fig, hide=False)
+    return fig
+
+def make_fig_offscreen(figure, hide=True):
+    if hide:
+        hide_window(figure)
+    figure.scene.off_screen_rendering = True
+    return figure
+
 def show(stop=False):
     """Calls :meth:`mayavi.mlab.show(stop=stop)`"""
     mlab.show(stop=stop)
@@ -1212,6 +1235,11 @@ def resize(size, figure=None):
         # go into the backend and do it by hand
         if mlab.options.offscreen:
             figure.scene.set_size(size)
+        elif figure.scene.off_screen_rendering:
+            viscid.logger.warn("viscid.plot.mvi.resize doesn't work for "
+                               "figures that are off-screened this way. Try "
+                               "creating the figure with viscid.plot.mvi."
+                               "figure(size=(w, h), offscreen=True)")
         else:
             toolkit = mayavi.ETSConfig.toolkit
 
