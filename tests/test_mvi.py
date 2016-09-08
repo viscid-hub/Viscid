@@ -30,6 +30,8 @@ def main():
     pp = f3d["pp"]
     e = f3d["e_cc"]
 
+    mvi.figure(size=(1200, 800), offscreen=True)
+
     ######################################
     # plot a scalar cut plane of pressure
     pp_src = mvi.field2source(pp, center='node')
@@ -112,7 +114,9 @@ def main():
     oa = mvi.orientation_axes()
     oa.marker.set_viewport(0.75, 0.75, 1.0, 1.0)
 
-    mvi.resize([1200, 800])
+    # note that resize won't work if the current figure has the
+    # off_screen_rendering flag set
+    # mvi.resize([1200, 800])
     mvi.view(azimuth=45, elevation=70, distance=35.0, focalpoint=[-2, 0, 0])
 
     ##############

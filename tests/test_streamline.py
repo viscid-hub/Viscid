@@ -11,6 +11,9 @@ from viscid_test_common import next_plot_fname
 import viscid
 
 
+_global_ns = dict()
+
+
 def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
              **kwargs):
     lines, topo = viscid.calc_streamlines(_fld, _seeds, **kwargs)
@@ -39,7 +42,13 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
         if not plot3d:
             raise ImportError
         from viscid.plot import mvi
-        mvi.clf()
+
+        try:
+            fig = _global_ns['figure']
+            mvi.clf()
+        except KeyError:
+            fig = mvi.figure(size=[1200, 800], offscreen=True)
+            _global_ns['figure'] = fig
 
         fld_mag = np.log(viscid.magnitude(_fld))
         try:

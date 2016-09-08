@@ -10,6 +10,9 @@ import numpy as np
 import viscid
 
 
+_global_ns = dict()
+
+
 def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
              view_kwargs=None, show=False):
     interpolated_fld = viscid.interp_trilin(fld, seeds)
@@ -39,7 +42,13 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         if not plot3d:
             raise ImportError
         from viscid.plot import mvi
-        mvi.clf()
+
+        try:
+            fig = _global_ns['figure']
+            mvi.clf()
+        except KeyError:
+            fig = mvi.figure(size=[1200, 800], offscreen=True)
+            _global_ns['figure'] = fig
 
         try:
             mesh = mvi.mesh_from_seeds(seeds, scalars=interpolated_fld)
