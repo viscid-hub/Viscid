@@ -17,42 +17,13 @@ except ImportError:
     _HAS_NUMEXPR = False
 
 
-__all__ = ['get_dipole_moment_sm', 'guess_dipole_moment', 'make_dipole',
-           'fill_dipole', 'set_in_region', 'make_spherical_mask']
+__all__ = ['guess_dipole_moment', 'make_dipole', 'fill_dipole',
+           'set_in_region', 'make_spherical_mask']
 
 
 # note that this global is used immutably (ie, not rc file configurable)
 DEFAULT_STRENGTH = 1.0 / 3.0574e-5
 
-
-def get_dipole_moment_sm(strength=DEFAULT_STRENGTH, theta=0.0, mu=0.0,
-                         crd_system='gse'):
-    """Get dipole moment from sm given theta and mu angles"""
-    # theta and mu are given by:
-    #     http://jsoc.stanford.edu/doc/keywords/Chris_Russel/
-    #     Geophysical%20Coordinate%20Transformations.htm
-    # theta is the angle between GSE and GSM (+ is duskward)
-    # mu is the dipole tilt angle from GSM to SM (+ is sunward)
-    m_sm = np.array([0.0, 0.0, -strength])
-    theta = (np.pi / 180.0) * theta
-    mu = (np.pi / 180.0) * mu
-
-    if crd_system.strip().lower() == "mhd":
-        theta *= -1
-        mu *= -1
-    elif crd_system.strip().lower() != "gse":
-        raise ValueError("crd_system == {0}, not mhd or gse".format(crd_system))
-
-    gsm2gse = np.array([[1.0,                   0.0,            0.0],
-                        [0.0,        +np.cos(theta), -np.sin(theta)],
-                        [0.0,        +np.sin(theta), +np.cos(theta)]]).T
-    sm2gsm = np.array([[+np.cos(mu),            0.0, -np.sin(mu)],
-                       [        0.0,            1.0,         0.0],
-                       [+np.sin(mu),            0.0, +np.cos(mu)]]).T
-
-    ret = np.dot(gsm2gse, np.dot(sm2gsm, m_sm))
-    assert np.isclose(np.linalg.norm(ret), np.abs(strength))
-    return ret
 
 def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
                         cap_ntheta=121, cap_nphi=121, plot=False):
@@ -81,8 +52,9 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
         mpl.show()
     return pole
 
-def make_dipole(m=(0, 0, DEFAULT_STRENGTH), l=None, h=None, n=None,
-                twod=False, dtype='f8', nonuniform=False):
+def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
+                n=None, twod=False, dtype='f8', nonuniform=False,
+                crd_system='mhd'):
     """Generate a dipole field with magnetic moment m [x, y, z]"""
     if l is None:
         l = [-5] * 3
@@ -101,10 +73,23 @@ def make_dipole(m=(0, 0, DEFAULT_STRENGTH), l=None, h=None, n=None,
 
     B = field.empty([x, y, z], nr_comps=3, name="B", center='cell',
                     layout='interlaced', dtype=dtype)
-    return fill_dipole(B, m=m)
+    B.set_info('crd_system', viscid.get_crd_system(crd_system))
+    return fill_dipole(B, m=m, strength=strength)
 
-def fill_dipole(B, m=(0, 0, -1 / 3.0574e-05), mask=None):
-    """set B to a dipole with magnetic moment m"""
+def fill_dipole(B, m=(0, 0, -DEFAULT_STRENGTH), strength=None, mask=None):
+    """set B to a dipole with magnetic moment m
+
+    Args:
+        B (Field): Field to fill with a dipole
+        m (ndarray, or datetime64-like): Description
+        strength (float): if given, rescale the dipole moment
+            even if it was given explicitly
+        mask (Field): boolean field as mask, B will be filled where
+            the mask is True
+
+    Returns:
+        Field: B
+    """
     # FIXME: should really be taking the curl of a vector field
     if mask:
         Bdip = field.empty_like(B)
@@ -118,7 +103,13 @@ def fill_dipole(B, m=(0, 0, -1 / 3.0574e-05), mask=None):
     dtype = B.dtype
     one = np.array([1.0], dtype=dtype)  # pylint: disable=W0612
     three = np.array([3.0], dtype=dtype)  # pylint: disable=W0612
-    m = np.asarray(m, dtype=dtype)
+    if viscid.is_datetime_like(m):
+        m = viscid.get_dipole_moment(m, crd_system=B)
+    else:
+        m = np.asarray(m, dtype=dtype)
+
+    if strength is not None:
+        m = (strength / np.linalg.norm(m)) * m
     mx, my, mz = m  # pylint: disable=W0612
 
     # geneate a dipole field for the entire grid
@@ -195,9 +186,12 @@ def make_spherical_mask(fld, rmin=0.0, rmax=None, rsq=None):
 
 def _main():
     crd_system = 'gse'
-    print(get_dipole_moment_sm(theta=45.0, mu=0.0, crd_system=crd_system))
-    print(get_dipole_moment_sm(theta=0.0, mu=45.0, crd_system=crd_system))
-    print(get_dipole_moment_sm(theta=45.0, mu=45.0, crd_system=crd_system))
+    print(viscid.get_dipole_moment_ang(dip_tilt=45.0, dip_gsm=0.0,
+                                       crd_system=crd_system))
+    print(viscid.get_dipole_moment_ang(dip_tilt=0.0, dip_gsm=45.0,
+                                       crd_system=crd_system))
+    print(viscid.get_dipole_moment_ang(dip_tilt=45.0, dip_gsm=45.0,
+                                       crd_system=crd_system))
 
 if __name__ == "__main__":
     _main()
