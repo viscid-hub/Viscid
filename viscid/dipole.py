@@ -54,7 +54,7 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
 
 def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
                 n=None, twod=False, dtype='f8', nonuniform=False,
-                crd_system='mhd'):
+                crd_system='gse'):
     """Generate a dipole field with magnetic moment m [x, y, z]"""
     if l is None:
         l = [-5] * 3

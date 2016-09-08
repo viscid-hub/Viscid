@@ -603,7 +603,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     apply_cmap(surface, **cmap_kwargs)
     return surface
 
-def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
+def plot_ionosphere(fld, radius=1.063, crd_system="gse", figure=None,
                     bounding_lat=0.0, **kwargs):
     """Plot an ionospheric field
 
@@ -992,7 +992,7 @@ def insert_filter(filtr, module_manager):
     filtr.children.append(module_manager)
 
 def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=128 , ntheta=64,
-                     crd_system='mhd', map_style=None, lines=False, res=2,
+                     crd_system='gse', map_style=None, lines=False, res=2,
                      notilt1967=False):
     """Plot Earth using the Natural Earth dataset maps
 
@@ -1068,7 +1068,7 @@ def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=128 , ntheta=64,
 plot_natural_earth = plot_blue_marble
 
 def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
-                  radius=1.0, res=24, crd_system="mhd", night_only=False,
+                  radius=1.0, res=24, crd_system="gse", night_only=False,
                   **kwargs):
     """Plot a black and white sphere (Earth) showing sunward direction
 

@@ -1333,7 +1333,7 @@ def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
     return ret
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
-               daycol='w', nightcol='k', crd_system="mhd",
+               daycol='w', nightcol='k', crd_system="gse",
                zorder=10):
     """Plot a black and white Earth to show sunward direction
 
