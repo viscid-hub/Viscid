@@ -12,7 +12,7 @@ import cyscratch
 from viscid import field
 from viscid import coordinate
 
-def get_dipole(m=None, twod=False):
+def make_dipole(m=None, twod=False):
     dtype = 'float64'
     n = 256
     x = np.array(np.linspace(-5, 5, n), dtype=dtype)
@@ -46,7 +46,7 @@ def get_dipole(m=None, twod=False):
     return fld  # , fld_rsq
 
 def main():
-    B = get_dipole(twod=True)
+    B = make_dipole(twod=True)
     bmag = cyscratch.magnitude(B)
 
 if __name__ == "__main__":

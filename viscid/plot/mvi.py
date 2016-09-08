@@ -545,7 +545,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
             >>> import viscid
             >>> from viscid.plot import mvi
             >>>
-            >>> B = viscid.vlab.get_dipole()
+            >>> B = viscid.vlab.make_dipole()
             >>> seeds = viscid.Line([-4, 0, 0], [4, 0, 0])
             >>> lines, topology = viscid.calc_streamlines(B, seeds,
             >>>                                           ibound=0.05)

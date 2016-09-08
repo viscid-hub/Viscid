@@ -114,7 +114,7 @@ Function                                          Description
                                                   system
 :py:func:`viscid.get_dipole_moment_ang`           Get dipole moment given gsm-tilt and dipole-tilt angles in
                                                   gse or mhd crds
-:py:func:`viscid.get_dipole`                      Create new dipole vector field to an existing field given
+:py:func:`viscid.make_dipole`                     Create new dipole vector field to an existing field given
                                                   dipole moment vector
 :py:func:`viscid.fill_dipole`                     Add dipole vector field to an existing field given dipole
                                                   moment vector (can be masked)

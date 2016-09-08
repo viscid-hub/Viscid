@@ -18,7 +18,7 @@ from viscid.calculator import streamline
 from viscid.calculator import seed
 from viscid.plot import mpl
 
-def get_dipole(m=None, twod=False):
+def make_dipole(m=None, twod=False):
     dtype = 'float64'
     n = 64
     x = np.array(np.linspace(-5, 5, n), dtype=dtype)
@@ -52,7 +52,7 @@ def get_dipole(m=None, twod=False):
     return fld  # , fld_rsq
 
 if __name__ == "__main__":
-    B = get_dipole(m=[0.2, 0.3, -0.9])
+    B = make_dipole(m=[0.2, 0.3, -0.9])
     t0 = time()
     # sphere = seed.Sphere((0.0, 0.0, 0.0), 2.0, 500, 500)
     # cProfile.runctx("""interp_vals = cycalc.interp_trilin(B, sphere)""",

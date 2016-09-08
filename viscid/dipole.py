@@ -17,7 +17,7 @@ except ImportError:
     _HAS_NUMEXPR = False
 
 
-__all__ = ['get_dipole_moment_sm', 'guess_dipole_moment', 'get_dipole',
+__all__ = ['get_dipole_moment_sm', 'guess_dipole_moment', 'make_dipole',
            'fill_dipole', 'set_in_region', 'make_spherical_mask']
 
 
@@ -81,8 +81,8 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
         mpl.show()
     return pole
 
-def get_dipole(m=(0, 0, DEFAULT_STRENGTH), l=None, h=None, n=None,
-               twod=False, dtype='f8', nonuniform=False):
+def make_dipole(m=(0, 0, DEFAULT_STRENGTH), l=None, h=None, n=None,
+                twod=False, dtype='f8', nonuniform=False):
     """Generate a dipole field with magnetic moment m [x, y, z]"""
     if l is None:
         l = [-5] * 3
