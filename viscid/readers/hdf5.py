@@ -290,7 +290,7 @@ class FileHDF5(vfile.VFile):
             f.write(s)
 
             for fld in flds:
-                _crd_system = fld.find_info("crd_system", None)
+                _crd_system = viscid.get_crd_system(fld, None)
                 if _crd_system:
                     f.write(cls._XDMF_INFO_TEMPLATE.format(name="crd_system",
                                                            value=_crd_system))

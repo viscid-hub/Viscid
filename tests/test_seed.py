@@ -188,7 +188,7 @@ def main():
             mvi.clf()
             mesh = mvi.mesh_from_seeds(sheet_seed, scalars=vx_sheet,
                                        clim=(-400, 400))
-            mvi.plot_earth_3d(crd_system=b.find_info('crd_system', 'mhd'))
+            mvi.plot_earth_3d(crd_system=b)
             mvi.view(azimuth=+90.0 + 45.0, elevation=90.0 - 25.0,
                      distance=30.0, focalpoint=(-10.0, +1.0, +1.0))
 

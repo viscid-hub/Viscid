@@ -610,7 +610,8 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
     Args:
         fld (Field): Some spherical (phi, theta) / (lot, lat) field
         radius (float): Defaults to 1Re + 400km == 1.063Re
-        crd_system (str): Either 'gse' or 'mhd'
+        crd_system (str, other): Anything that returns from
+            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse')
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         bounding_lat (float): Description
@@ -629,6 +630,7 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
     if figure is None:
         figure = mlab.gcf()
 
+    crd_system = viscid.get_crd_system(crd_system)
     if crd_system == "mhd":
         roll = 0.0
     elif crd_system == "gse":
@@ -989,7 +991,7 @@ def insert_filter(filtr, module_manager):
     filtr.parent.children.remove(module_manager)
     filtr.children.append(module_manager)
 
-def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=32, ntheta=16,
+def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=128 , ntheta=64,
                      crd_system='mhd', map_style=None, lines=False, res=2,
                      notilt1967=False):
     """Plot Earth using the Natural Earth dataset maps
@@ -1004,7 +1006,9 @@ def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=32, ntheta=16,
             :py:func:`mayavi.mlab.gcf`
         nphi (int): phi resolution of Earth's mesh
         ntheta (int): theta resolution of Earth's mesh
-        crd_system (str): 'mhd', 'gse', etc. (For future use)
+        crd_system (str, other): Anything that returns from
+            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse').
+            Used if rotate is a datetime.
         map_style (str): Nothing for standard map, or 'faded'
         lines (bool): Whether or not to show equator, tropics,
             arctic circles, and a couple meridians.
@@ -1052,6 +1056,7 @@ def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=32, ntheta=16,
         if viscid.is_datetime_like(rotate):
             rotate = viscid.as_datetime64(rotate)
             cotr = viscid.Cotr(rotate, notilt1967=notilt1967)  # pylint: disable=not-callable
+            crd_system = viscid.get_crd_system(crd_system)
             rotate = cotr.get_rotation_wxyz('geo', crd_system)
         assert len(rotate) == 4
         surf.actor.actor.rotate_wxyz(*rotate)
@@ -1073,8 +1078,8 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
         daycol (tuple, optional): color of dayside (RGB)
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
-        crd_system (str, optional): 'mhd' or 'gse', can be gotten from
-            an openggcm field using ``fld.find_info("crd_system", 'mhd')``.
+        crd_system (str, other): Anything that returns from
+            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse')
 
     Returns:
         Tuple (day, night) as vtk sources
@@ -1082,7 +1087,7 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
     if figure is None:
         figure = mlab.gcf()
 
-    crd_system = crd_system.lower()
+    crd_system = viscid.get_crd_system(crd_system)
     if crd_system == "mhd":
         theta_dusk, theta_dawn = 270, 90
     elif crd_system == "gse":

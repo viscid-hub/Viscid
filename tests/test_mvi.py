@@ -96,17 +96,16 @@ def main():
     # Plot the ionosphere
     fac_tot = 1e9 * f_iono['fac_tot']
 
-    crd_system = 'gse'
-    m = mvi.plot_ionosphere(fac_tot, crd_system=crd_system, bounding_lat=30.0,
+    m = mvi.plot_ionosphere(fac_tot, crd_system=b, bounding_lat=30.0,
                             vmin=-300, vmax=300, opacity=0.75)
 
     ########################################################################
     # Add some markers for earth, i.e., real earth, and dayside / nightside
     # representation
-    mvi.plot_blue_marble(r=1.0, orientation=(0, 21.5, -45.0))
+    mvi.plot_blue_marble(r=1.0, rotate="2010-06-21T15:00:00.0", lines=False,
+                         ntheta=64, nphi=128, crd_system=b)
     # now shade the night side with a transparent black hemisphere
-    mvi.plot_earth_3d(radius=1.01, crd_system="gse", night_only=True,
-                      opacity=0.5)
+    mvi.plot_earth_3d(radius=1.01, night_only=True, opacity=0.5, crd_system=b)
 
     ####################
     # Finishing Touches

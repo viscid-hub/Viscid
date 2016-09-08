@@ -147,7 +147,7 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
     except (IOError, KeyError):
         mp_info = {}
 
-        crd_system = b.find_info("crd_system", None)
+        crd_system = viscid.get_crd_system(b, None)
         if crd_system != 'gse':
             raise RuntimeError("get_mp_info can't work in MHD crds, "
                                "switch to GSE please")
