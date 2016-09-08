@@ -11,6 +11,9 @@ from viscid_test_common import next_plot_fname
 import viscid
 
 
+_global_ns = dict()
+
+
 def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
              **kwargs):
     lines, topo = viscid.calc_streamlines(_fld, _seeds, **kwargs)
@@ -39,7 +42,13 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
         if not plot3d:
             raise ImportError
         from viscid.plot import mvi
-        mvi.clf()
+
+        try:
+            fig = _global_ns['figure']
+            mvi.clf()
+        except KeyError:
+            fig = mvi.figure(size=[1200, 800], offscreen=True)
+            _global_ns['figure'] = fig
 
         fld_mag = np.log(viscid.magnitude(_fld))
         try:
@@ -74,7 +83,7 @@ def _main():
     plot3d = not args.nothree
 
     viscid.logger.info("Testing field lines on 2d field...")
-    B = viscid.get_dipole(twod=True)
+    B = viscid.make_dipole(twod=True)
     line = viscid.seed.Line((0.2, 0.0, 0.0), (1.0, 0.0, 0.0), 10)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
@@ -82,7 +91,7 @@ def _main():
              ibound=0.07, obound0=obound0, obound1=obound1)
 
     viscid.logger.info("Testing field lines on 3d field...")
-    B = viscid.get_dipole(m=[0.2, 0.3, -0.9])
+    B = viscid.make_dipole(m=[0.2, 0.3, -0.9])
     sphere = viscid.seed.Sphere((0.0, 0.0, 0.0), 2.0, ntheta=20, nphi=10)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)

@@ -81,8 +81,8 @@ def main():
                        opacity=0.7)
 
         mvi.plot_blue_marble(r=1.0)
-        mvi.plot_earth_3d(radius=1.01, crd_system=b.find_info('crd_system'),
-                          night_only=True, opacity=0.5)
+        mvi.plot_earth_3d(radius=1.01, crd_system=b, night_only=True,
+                          opacity=0.5)
         mvi.show()
 
     if True:

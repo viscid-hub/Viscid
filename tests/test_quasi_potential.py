@@ -72,6 +72,8 @@ def main():
     except ImportError:
         xfail("Mayavi not installed")
 
+    mvi.figure(size=[1200, 800], offscreen=True)
+
     inds = np.argsort(xi_dat)[-64:]
     inds = np.concatenate([inds, np.arange(len(xi_dat))[::71]])
     s = mvi.plot_lines(b_lines[inds], scalars=epar, cmap='viridis')
@@ -82,7 +84,6 @@ def main():
 
     oa = mvi.orientation_axes()
     oa.marker.set_viewport(0.75, 0.75, 1.0, 1.0)
-    mvi.resize([1200, 800])
     mvi.view(roll=0, azimuth=90, elevation=25, distance=30.0,
              focalpoint=[0, 2, 0])
 

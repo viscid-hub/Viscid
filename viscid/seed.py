@@ -899,7 +899,7 @@ class Sphere(SeedGen):
         # square away crd system
         if crd_system:
             if hasattr(crd_system, 'find_info'):
-                crd_system = crd_system.find_info('crd_system', 'none')
+                crd_system = viscid.get_crd_system(crd_system, 'none')
         else:
             crd_system = 'none'
         if crd_system.strip().lower() == 'gse':

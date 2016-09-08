@@ -299,7 +299,7 @@ try:
           include_dirs=[np.get_include()],
           ext_modules=ext_mods,
           scripts=scripts,
-          data_files=[('viscid/plot', ['viscid/plot/blue_marble.jpg']),
+          data_files=[('viscid/plot/images', glob("viscid/plot/images/*.jpg")),
                       ('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle'))]
          )
 except SystemExit as e:

@@ -545,7 +545,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
             >>> import viscid
             >>> from viscid.plot import mvi
             >>>
-            >>> B = viscid.vlab.get_dipole()
+            >>> B = viscid.vlab.make_dipole()
             >>> seeds = viscid.Line([-4, 0, 0], [4, 0, 0])
             >>> lines, topology = viscid.calc_streamlines(B, seeds,
             >>>                                           ibound=0.05)
@@ -603,14 +603,15 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     apply_cmap(surface, **cmap_kwargs)
     return surface
 
-def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
+def plot_ionosphere(fld, radius=1.063, crd_system="gse", figure=None,
                     bounding_lat=0.0, **kwargs):
     """Plot an ionospheric field
 
     Args:
         fld (Field): Some spherical (phi, theta) / (lot, lat) field
         radius (float): Defaults to 1Re + 400km == 1.063Re
-        crd_system (str): Either 'gse' or 'mhd'
+        crd_system (str, other): Anything that returns from
+            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse')
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         bounding_lat (float): Description
@@ -629,6 +630,7 @@ def plot_ionosphere(fld, radius=1.063, crd_system="mhd", figure=None,
     if figure is None:
         figure = mlab.gcf()
 
+    crd_system = viscid.get_crd_system(crd_system)
     if crd_system == "mhd":
         roll = 0.0
     elif crd_system == "gse":
@@ -989,15 +991,42 @@ def insert_filter(filtr, module_manager):
     filtr.parent.children.remove(module_manager)
     filtr.children.append(module_manager)
 
-def plot_blue_marble(r=1.0, orientation=None, figure=None):
-    """Plot Earth using the blue marble NASA image"""
+def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=128 , ntheta=64,
+                     crd_system='gse', map_style=None, lines=False, res=2,
+                     notilt1967=False):
+    """Plot Earth using the Natural Earth dataset maps
+
+    Args:
+        r (float): radius of earth
+        rotate (None, sequence, str, datetime64): sequence of length 4
+            that contains (angle, ux, uy, uz) for the angle and axis of
+            a rotation, or a UT time as string or datetime64 to rotate
+            earth to a specific date/time
+        figure (mayavi.core.scene.Scene): specific figure, or None for
+            :py:func:`mayavi.mlab.gcf`
+        nphi (int): phi resolution of Earth's mesh
+        ntheta (int): theta resolution of Earth's mesh
+        crd_system (str, other): Anything that returns from
+            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse').
+            Used if rotate is a datetime.
+        map_style (str): Nothing for standard map, or 'faded'
+        lines (bool): Whether or not to show equator, tropics,
+            arctic circles, and a couple meridians.
+        res (int): Resolution in thousands of pixels longitude (must
+            be one of 1, 2, 4, 8)
+        notilt1967 (bool): is 1 Jan 1967 the special notilt time?
+
+    Returns:
+        (VTKDataSource, mayavi.modules.surface.Surface)
+    """
     # make a plane, then deform it into a sphere
     eps = 1e-4
-    ps = tvtk.PlaneSource(origin=(r, np.pi - eps, 0.0),
-                          point1=(r, np.pi - eps, 2 * np.pi),
+    ps = tvtk.PlaneSource(origin=(r, r * np.pi - eps, r * 0.0),
+                          point1=(r, r * np.pi - eps, r * 2 * np.pi),
                           point2=(r, eps, 0.0),
-                          x_resolution=32,
-                          y_resolution=16)
+                          x_resolution=nphi,
+                          y_resolution=ntheta)
+
     ps.update()
     transform = tvtk.SphericalTransform()
     tpoly = tvtk.TransformPolyDataFilter(transform=transform,
@@ -1007,24 +1036,39 @@ def plot_blue_marble(r=1.0, orientation=None, figure=None):
     surf = mlab.pipeline.surface(src)
 
     # now load a jpg, and use it to texture the sphere
-    fname = os.path.realpath(os.path.dirname(__file__) + '/blue_marble.jpg')
+
+    linestr = '_lines' if lines else ''
+    assert map_style in (None, '', 'faded')
+    assert res in (1, 2, 4, 8)
+    map_style = '_{0}'.format(map_style) if map_style else ''
+    img_name = "images/earth{0}{1}_{2}k.jpg".format(map_style, linestr, res)
+    fname = os.path.realpath(os.path.dirname(__file__) + '/' + img_name)
     img = tvtk.JPEGReader(file_name=fname)
     texture = tvtk.Texture(input_connection=img.output_port, interpolate=1)
     surf.actor.enable_texture = True
     surf.actor.texture = texture
     surf.actor.property.color = (1.0, 1.0, 1.0)
 
-    if orientation:
-        surf.actor.actor.orientation = orientation
-    else:
-        surf.actor.actor.orientation = (0, 0, -45.0)
+    # rotate 180deg b/c i can't rotate the texture to make the prime meridian
+    surf.actor.actor.rotate_z(180)
+
+    if rotate is not None:
+        if viscid.is_datetime_like(rotate):
+            rotate = viscid.as_datetime64(rotate)
+            cotr = viscid.Cotr(rotate, notilt1967=notilt1967)  # pylint: disable=not-callable
+            crd_system = viscid.get_crd_system(crd_system)
+            rotate = cotr.get_rotation_wxyz('geo', crd_system)
+        assert len(rotate) == 4
+        surf.actor.actor.rotate_wxyz(*rotate)
 
     add_source(src, figure=figure)
 
-    return src
+    return src, surf
+
+plot_natural_earth = plot_blue_marble
 
 def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
-                  radius=1.0, res=24, crd_system="mhd", night_only=False,
+                  radius=1.0, res=24, crd_system="gse", night_only=False,
                   **kwargs):
     """Plot a black and white sphere (Earth) showing sunward direction
 
@@ -1034,8 +1078,8 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
         daycol (tuple, optional): color of dayside (RGB)
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
-        crd_system (str, optional): 'mhd' or 'gse', can be gotten from
-            an openggcm field using ``fld.find_info("crd_system", 'mhd')``.
+        crd_system (str, other): Anything that returns from
+            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse')
 
     Returns:
         Tuple (day, night) as vtk sources
@@ -1043,10 +1087,13 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
     if figure is None:
         figure = mlab.gcf()
 
-    crd_system = crd_system.lower()
+    crd_system = viscid.get_crd_system(crd_system)
     if crd_system == "mhd":
         theta_dusk, theta_dawn = 270, 90
     elif crd_system == "gse":
+        theta_dusk, theta_dawn = 90, 270
+    else:
+        # use GSE convention?
         theta_dusk, theta_dawn = 90, 270
 
     night = BuiltinSurface(source='sphere', name='night')
@@ -1113,6 +1160,29 @@ def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
                                hspace=0, wspace=0)
     ax.imshow(pixmap)
     ax.axis('off')
+
+def figure(*args, **kwargs):
+    offscreen = kwargs.pop('offscreen', False)
+    hide = kwargs.pop('hide', None)
+
+    fig = mlab.figure(*args, **kwargs)
+    # if size was set, run resize to account for the height of window
+    # decorations
+    if 'size' in kwargs:
+        resize(kwargs['size'], figure=fig)
+    # hide window by default?
+    if hide or (hide is None and offscreen):
+        hide_window(fig)
+    # send it offscreen?
+    if offscreen:
+        make_fig_offscreen(fig, hide=False)
+    return fig
+
+def make_fig_offscreen(figure, hide=True):
+    if hide:
+        hide_window(figure)
+    figure.scene.off_screen_rendering = True
+    return figure
 
 def show(stop=False):
     """Calls :meth:`mayavi.mlab.show(stop=stop)`"""
@@ -1212,6 +1282,11 @@ def resize(size, figure=None):
         # go into the backend and do it by hand
         if mlab.options.offscreen:
             figure.scene.set_size(size)
+        elif figure.scene.off_screen_rendering:
+            viscid.logger.warn("viscid.plot.mvi.resize doesn't work for "
+                               "figures that are off-screened this way. Try "
+                               "creating the figure with viscid.plot.mvi."
+                               "figure(size=(w, h), offscreen=True)")
         else:
             toolkit = mayavi.ETSConfig.toolkit
 

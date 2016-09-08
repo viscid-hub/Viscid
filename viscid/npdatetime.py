@@ -56,6 +56,7 @@ __all__ = ['as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
            'is_valid_datetime64', 'is_valid_timedelta64',
            'round_datetime', 'round_timedelta', 'round_time',
            'asarray_datetime64', 'linspace_datetime64', 'most_precise_tdiff',
+           'datetime64_as_years',
            'is_datetime_like', 'is_timedelta_like',
            'is_time_like']
 
@@ -506,6 +507,16 @@ def _check_like(val, _np_types, _native_types, check_str=None):  # pylint: disab
             return val.dtype.type in _np_types
     else:
         return False
+
+def datetime64_as_years(time):
+    """Get time as floating point years since the year 0000"""
+    time = as_datetime64(time)
+    _epoch_year = 1900
+    _epoch = as_datetime64("{0}-01-01T00:00:00.0".format(_epoch_year))
+    _epoch = _epoch.astype(time.dtype)
+    tdelta = as_timedelta(time - _epoch).total_seconds()
+    years = tdelta / (365.242 * 24 * 3600) + _epoch_year
+    return years
 
 def is_datetime_like(val, conservative=False):  # pylint: disable=unused-argument
     """Returns True iff val is datetime-like"""

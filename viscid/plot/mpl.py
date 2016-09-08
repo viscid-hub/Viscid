@@ -1333,7 +1333,7 @@ def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
     return ret
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
-               daycol='w', nightcol='k', crd_system="mhd",
+               daycol='w', nightcol='k', crd_system="gse",
                zorder=10):
     """Plot a black and white Earth to show sunward direction
 
@@ -1356,7 +1356,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
     # this is kind of a hacky way to
     if hasattr(plane_spec, "patches"):
         # this is for both Fields and AMRFields
-        crd_system = plane_spec.patches[0].find_info("crd_system", crd_system)
+        crd_system = viscid.get_crd_system(plane_spec.patches[0], crd_system)
         values = []
         for blk in plane_spec.patches:
             # take only the 1st reduced.nr_sdims... this should just work
