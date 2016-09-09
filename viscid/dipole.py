@@ -138,7 +138,9 @@ def set_in_region(a, b, alpha=1.0, beta=1.0, mask=None, out=None):
     """set `ret = alpha * a + beta * b` where mask is True"""
     alpha = np.asarray(alpha, dtype=a.dtype)
     beta = np.asarray(beta, dtype=a.dtype)
-    a_dat, b_dat, b = a.data, b.data, None
+    a_dat = a.data if isinstance(a, viscid.field.Field) else a
+    b_dat = b.data if isinstance(b, viscid.field.Field) else b
+    b = None
 
     if _HAS_NUMEXPR:
         vals = ne.evaluate("alpha * a_dat + beta * b_dat")
