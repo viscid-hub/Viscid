@@ -47,7 +47,7 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
             fig = _global_ns['figure']
             mvi.clf()
         except KeyError:
-            fig = mvi.figure(size=[1200, 800], offscreen=True)
+            fig = mvi.figure(size=[1200, 800], offscreen=not show)
             _global_ns['figure'] = fig
 
         try:

@@ -72,7 +72,7 @@ def main():
     except ImportError:
         xfail("Mayavi not installed")
 
-    mvi.figure(size=[1200, 800], offscreen=True)
+    mvi.figure(size=[1200, 800], offscreen=not args.show)
 
     inds = np.argsort(xi_dat)[-64:]
     inds = np.concatenate([inds, np.arange(len(xi_dat))[::71]])

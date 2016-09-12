@@ -30,7 +30,7 @@ def main():
     pp = f3d["pp"]
     e = f3d["e_cc"]
 
-    mvi.figure(size=(1200, 800), offscreen=True)
+    mvi.figure(size=(1200, 800), offscreen=not args.show)
 
     ######################################
     # plot a scalar cut plane of pressure
