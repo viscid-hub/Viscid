@@ -230,31 +230,43 @@ def make_translation(v):
                      [0, 0, 0,     1]])
     return tmat, imat
 
-def get_rotation_wxyz(mat, check_det=True):
+def get_rotation_wxyz(mat, check_inverse=True, quick=True):
     """Find rotation axis and angle of a rotation matrix
 
     Args:
         mat (ndarray): 3x3 rotation matrix with determinant +1
-        check_det (bool): check if mat's determinant is +/- 1
+        check_inverse (bool): check if mat.T == inverse(mat)
+        quick (bool): Try a quicker, less well tested method first
 
     Returns:
         ndarray: [w (rotation angle), ux, uy, uz] where u is the
             normalized axis vector
     """
-    if check_det and not np.isclose(abs(np.linalg.det(mat)), 1.0):
-        raise ValueError("Determinant of mat is not close to +/- 1")
+    if check_inverse and not np.allclose(mat.T, np.linalg.inv(mat)):
+        raise ValueError("Matrix transpose != inverse, not a rotation")
 
-    ux = mat[2, 1] - mat[1, 2]
-    uy = mat[0, 2] - mat[2, 0]
-    uz = mat[1, 0] - mat[0, 1]
-    u = np.array([ux, uy, uz])
+    if quick:
+        # I'm not sure if I trust this method, although it is probably
+        # quicker than calculating eigenvectors
+        ux = mat[2, 1] - mat[1, 2]
+        uy = mat[0, 2] - mat[2, 0]
+        uz = mat[1, 0] - mat[0, 1]
+        u = np.array([ux, uy, uz])
+    else:
+        u = np.array([0.0, 0.0, 0.0])
 
-    # normalize unit axis vector
+    if np.isclose(np.linalg.norm(u), 0.0):
+        eigval, eigvecs = np.linalg.eig(mat)
+        i = np.argmin(np.abs(eigval - 1.0))
+        u = eigvecs[:, i].real  # eigenvector for eigenval closest to 1.0
+
+    # normalize axis vector
     u = u / np.linalg.norm(u)
 
     # find a vector `b1` that is perpendicular to rotation axis `u`
     a = np.array([1, 0, 0], dtype=u.dtype)
-    if np.linalg.norm(a - u) < 0.1:
+    au_diff = np.linalg.norm(a - u)
+    if au_diff < 0.1 or au_diff > 1.9:
         a = np.array([0, 1, 0], dtype=u.dtype)
     b1 = np.cross(a, u)
     b1 = b1 / np.linalg.norm(b1)  # minimize effect of roundoff error
@@ -263,6 +275,11 @@ def get_rotation_wxyz(mat, check_det=True):
     b2 = np.dot(mat, b1)
     b2 = b2 / np.linalg.norm(b2)  # minimize effect of roundoff error
     angleB = np.rad2deg(np.arccos(np.dot(b1, b2)))
+
+    # fix sign of `u` to make the rotation angle right handed, note that
+    # the angle will always be positive due to range or np.arccos
+    if np.dot(np.cross(b1, b2), u) < 0.0:
+        u *= -1
 
     return np.array([angleB, u[0], u[1], u[2]])
 
@@ -792,7 +809,7 @@ def _main():
     It makes 3d plots using both Viscid and Mayavi
     """
     plot_mpl = True
-    plot_mvi = False
+    plot_mvi = True
     crd_system = 'gse'
 
     dtfmt = "%Y-%m-%d %H:%M"
