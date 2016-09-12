@@ -993,7 +993,7 @@ def insert_filter(filtr, module_manager):
 
 def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=128 , ntheta=64,
                      crd_system='gse', map_style=None, lines=False, res=2,
-                     notilt1967=False):
+                     notilt1967=True):
     """Plot Earth using the Natural Earth dataset maps
 
     Args:

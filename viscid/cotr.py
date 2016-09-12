@@ -93,7 +93,6 @@ __all__ = ['as_nvec', 'make_rotation', 'make_translation', 'get_rotation_wxyz',
 
 
 # note that these globals are used immutably (ie, not rc file configurable)
-_DEFAULT_NOTILT_1967 = True
 DEFAULT_STRENGTH = 1.0 / 3.0574e-5  # Strength of earth's dipole in nT
 
 
@@ -120,7 +119,7 @@ _IGRF = np.array([[1950.0, -30554.00, -2250.00, 5815.00],
                   [2015.0, -29442.00, -1501.00, 4797.10]], dtype='f8')
 
 
-def _igrf_interpolate(time, notilt1967=_DEFAULT_NOTILT_1967):
+def _igrf_interpolate(time, notilt1967=True):
     # get time as decimal year, note that epoch is completely arbitrary
     years = datetime64_as_years(time)
 
@@ -358,8 +357,8 @@ class Cotr(object):
                     "heeq->heeq": (0),  # identity
                    }
 
-    def __init__(self, time, rdim=3, dip_tilt=None, dip_gsm=None,
-                 notilt1967=_DEFAULT_NOTILT_1967):
+    def __init__(self, time='1967-01-01', dip_tilt=None, dip_gsm=None, rdim=3,
+                 notilt1967=True):
         """Construct Cotr instance
 
         Args:
@@ -409,7 +408,10 @@ class Cotr(object):
         self.h11 = h11
 
         self._disable_mag_crds = dip_tilt is not None or dip_gsm is not None
-        if self._disable_mag_crds:
+        years = datetime64_as_years(time)
+        notilt = notilt1967 and np.abs(years - 1967.0) < 0.0006
+
+        if self._disable_mag_crds or notilt:
             dip_tilt = 0.0 if dip_tilt is None else dip_tilt
             dip_gsm = 0.0 if dip_gsm is None else dip_gsm
 
@@ -423,10 +425,11 @@ class Cotr(object):
 
         # hack the cache to set all geocentric transforms to the identity
         # except GSE -> MHD
-        years = datetime64_as_years(time)
-        if notilt1967 and np.abs(years - 1967.0) < 0.0006:
+        if notilt:
             eye = np.eye(self.rdim)
-            for i in (1, 2, 3, 4, 5):
+            # matrices 3, 4, and 6 are missing so that gse, gsm, sm, mhd
+            # transformations still do something (from dip_tilt and dip_gsm)
+            for i in (1, 2, 5):
                 self._emat_cache[-i] = eye
                 self._emat_cache[i] = eye
 
@@ -712,8 +715,7 @@ class Cotr(object):
         return self.dip_tilt, self.dip_gsm
 
 
-def cotr_transform(date_time, from_system, to_system, vec,
-                   notilt1967=_DEFAULT_NOTILT_1967):
+def cotr_transform(date_time, from_system, to_system, vec, notilt1967=True):
     """Transform a vector from one system to another
 
     Args:
@@ -731,7 +733,7 @@ def cotr_transform(date_time, from_system, to_system, vec,
     return c.transform(from_system, to_system, vec)
 
 def get_dipole_moment(date_time, crd_system='gse', strength=DEFAULT_STRENGTH,
-                      notilt1967=_DEFAULT_NOTILT_1967):
+                      notilt1967=True):
     """Get Earth's dipole moment at datetime
 
     Args:
@@ -765,7 +767,7 @@ def get_dipole_moment_ang(dip_tilt=0.0, dip_gsm=0.0, crd_system='gse',
     c = Cotr(0, dip_tilt=dip_tilt, dip_gsm=dip_gsm)
     return c.get_dipole_moment(strength=strength, crd_system=crd_system)
 
-def get_dipole_angles(date_time, notilt1967=_DEFAULT_NOTILT_1967):
+def get_dipole_angles(date_time, notilt1967=True):
     """Get rotation angles between dipole and GSE
 
     Args:
