@@ -603,18 +603,28 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     apply_cmap(surface, **cmap_kwargs)
     return surface
 
-def plot_ionosphere(fld, radius=1.063, crd_system="gse", figure=None,
-                    bounding_lat=0.0, **kwargs):
+def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
+                    rotate=None, crd_system="gse", notilt1967=True, **kwargs):
     """Plot an ionospheric field
 
     Args:
         fld (Field): Some spherical (phi, theta) / (lot, lat) field
         radius (float): Defaults to 1Re + 400km == 1.063Re
-        crd_system (str, other): Anything that returns from
-            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse')
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         bounding_lat (float): Description
+        rotate (None, sequence, str, datetime64): sequence of length 4
+            that contains (angle, ux, uy, uz) for the angle and axis of
+            a rotation, or a UT time as string or datetime64 to rotate
+            earth to a specific date/time, or a cotr object in
+            conjunction with crd_system
+        crd_system (str, other): Used if rotate is datetime-like. Can
+            be one of ('gse', 'mhd'), or anything that returns from
+            :py:func:`viscid.get_crd_system`.
+        notilt1967 (bool): is 1 Jan 1967 the special notilt time? Only
+            used if rotate is datetime-like and a new Cotr object is
+            constructed. If rotate is a Cotr object, then this option
+            does nothing.
         **kwargs: passed to :py:func:`mayavi.mlab.mesh`
 
     Keyword Arguments:
@@ -624,24 +634,15 @@ def plot_ionosphere(fld, radius=1.063, crd_system="gse", figure=None,
         symmetric (bool): see :py:func:`apply_cmap`
         logscale (bool): see :py:func:`apply_cmap`
 
-    Raises:
+    No Longer Raises:
         ValueError: Description
     """
     if figure is None:
         figure = mlab.gcf()
 
-    crd_system = viscid.get_crd_system(crd_system)
-    if crd_system == "mhd":
-        roll = 0.0
-    elif crd_system == "gse":
-        roll = 180.0
-    else:
-        raise ValueError("crd_system == '{0}' not understood"
-                         "".format(crd_system))
-
     nphi, ntheta = fld.shape
     sphere = viscid.Sphere([0, 0, 0], r=radius, ntheta=ntheta, nphi=nphi,
-                           theta_phi=False, roll=roll)
+                           theta_phi=False)
     verts, arr = sphere.wrap_mesh(fld.data)
 
     kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
@@ -665,6 +666,10 @@ def plot_ionosphere(fld, radius=1.063, crd_system="gse", figure=None,
     m.actor.mapper.interpolate_scalars_before_mapping = True
 
     apply_cmap(m, **cmap_kwargs)
+
+    m.actor.actor.rotate_z(180)
+    _apply_rotation(m, 'sm', rotate, crd_system=crd_system,
+                    notilt1967=notilt1967)
 
     return m
 
@@ -991,30 +996,50 @@ def insert_filter(filtr, module_manager):
     filtr.parent.children.remove(module_manager)
     filtr.children.append(module_manager)
 
-def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=128 , ntheta=64,
-                     crd_system='gse', map_style=None, lines=False, res=2,
+def _apply_rotation(obj, from_system, rotate=None, crd_system='gse',
+                    notilt1967=True):
+    if hasattr(rotate, "get_rotation_wxyz"):
+        rotate = rotate.get_rotation_wxyz(from_system, crd_system)
+    elif viscid.is_datetime_like(rotate):
+        cotr = viscid.Cotr(rotate, notilt1967=notilt1967)  # pylint: disable=not-callable
+        rotate = cotr.get_rotation_wxyz(from_system, crd_system)
+    else:
+        cotr = viscid.Cotr()  # pylint: disable=not-callable
+        rotate = cotr.get_rotation_wxyz(from_system, crd_system)
+
+    if len(rotate) != 4:
+        raise ValueError("Rotate should be [angle, ux, uy, uz], got {0}"
+                         "".format(rotate))
+    obj.actor.actor.rotate_wxyz(*rotate)
+
+def plot_blue_marble(r=1.0, figure=None, nphi=128, ntheta=64, map_style=None,
+                     lines=False, res=2, rotate=None, crd_system='gse',
                      notilt1967=True):
     """Plot Earth using the Natural Earth dataset maps
 
     Args:
         r (float): radius of earth
-        rotate (None, sequence, str, datetime64): sequence of length 4
-            that contains (angle, ux, uy, uz) for the angle and axis of
-            a rotation, or a UT time as string or datetime64 to rotate
-            earth to a specific date/time
         figure (mayavi.core.scene.Scene): specific figure, or None for
             :py:func:`mayavi.mlab.gcf`
         nphi (int): phi resolution of Earth's mesh
         ntheta (int): theta resolution of Earth's mesh
-        crd_system (str, other): Anything that returns from
-            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse').
-            Used if rotate is a datetime.
         map_style (str): Nothing for standard map, or 'faded'
         lines (bool): Whether or not to show equator, tropics,
             arctic circles, and a couple meridians.
         res (int): Resolution in thousands of pixels longitude (must
             be one of 1, 2, 4, 8)
-        notilt1967 (bool): is 1 Jan 1967 the special notilt time?
+        rotate (None, sequence, str, datetime64): sequence of length 4
+            that contains (angle, ux, uy, uz) for the angle and axis of
+            a rotation, or a UT time as string or datetime64 to rotate
+            earth to a specific date/time, or a cotr object in
+            conjunction with crd_system
+        crd_system (str, other): Used if rotate is datetime-like. Can
+            be one of ('gse', 'mhd'), or anything that returns from
+            :py:func:`viscid.get_crd_system`.
+        notilt1967 (bool): is 1 Jan 1967 the special notilt time? Only
+            used if rotate is datetime-like and a new Cotr object is
+            constructed. If rotate is a Cotr object, then this option
+            does nothing.
 
     Returns:
         (VTKDataSource, mayavi.modules.surface.Surface)
@@ -1051,15 +1076,8 @@ def plot_blue_marble(r=1.0, rotate=None, figure=None, nphi=128 , ntheta=64,
 
     # rotate 180deg b/c i can't rotate the texture to make the prime meridian
     surf.actor.actor.rotate_z(180)
-
-    if rotate is not None:
-        if viscid.is_datetime_like(rotate):
-            rotate = viscid.as_datetime64(rotate)
-            cotr = viscid.Cotr(rotate, notilt1967=notilt1967)  # pylint: disable=not-callable
-            crd_system = viscid.get_crd_system(crd_system)
-            rotate = cotr.get_rotation_wxyz('geo', crd_system)
-        assert len(rotate) == 4
-        surf.actor.actor.rotate_wxyz(*rotate)
+    _apply_rotation(surf, 'geo', rotate, crd_system=crd_system,
+                    notilt1967=notilt1967)
 
     add_source(src, figure=figure)
 
@@ -1078,8 +1096,8 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
         daycol (tuple, optional): color of dayside (RGB)
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
-        crd_system (str, other): Anything that returns from
-            :py:func:`viscid.get_crd_system`, or one of ('mhd', 'gse')
+        crd_system (str, other): One of ('mhd', 'gse'), or anything
+            that returns from :py:func:`viscid.get_crd_system`.
 
     Returns:
         Tuple (day, night) as vtk sources
