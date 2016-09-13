@@ -2104,7 +2104,8 @@ class VectorField(Field):
         return [f.data for f in flds]
 
     def component_fields(self):
-        if (self.layout == LAYOUT_FLAT and
+        if (self._cache is None and
+            self.layout == LAYOUT_FLAT and
             isinstance(self._src_data, (list, tuple)) and
             all([isinstance(f, Field) for f in self._src_data])):
             # if all elements are fields
