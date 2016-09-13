@@ -16,6 +16,10 @@ except ImportError:
     xfail("Mayavi not installed")
 
 
+# uncomment to test MHD coordinates
+# viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = False
+
+
 def main():
     parser = argparse.ArgumentParser(description="Test calc")
     parser.add_argument("--show", "--plot", action="store_true")
@@ -31,6 +35,15 @@ def main():
     e = f3d["e_cc"]
 
     mvi.figure(size=(1200, 800), offscreen=not args.show)
+
+    ##########################################################
+    # make b a dipole inside 3.1Re and set e = 0 inside 4.0Re
+    cotr = viscid.Cotr(dip_tilt=0.0)  # pylint: disable=not-callable
+    moment = cotr.get_dipole_moment(crd_system=b)
+    isphere_mask = viscid.make_spherical_mask(b, rmax=3.1)
+    viscid.fill_dipole(b, m=moment, mask=isphere_mask)
+    e_mask = viscid.make_spherical_mask(b, rmax=4.0)
+    viscid.set_in_region(e, 0.0, alpha=0.0, mask=e_mask, out=e)
 
     ######################################
     # plot a scalar cut plane of pressure
@@ -64,11 +77,13 @@ def main():
     mvi.plot_lines(b_lines, scalars=viscid.topology2color(topo))
 
     ######################################################################
-    # plot a random circle with scalars colored by the Matplotlib viridis
-    # color map, just because we can; this is a useful toy for debugging
-    circle = viscid.Circle(p0=[0, 0, 0], r=4.0, n=128, endpoint=True)
+    # plot a random circle at geosynchronus orbit with scalars colored
+    # by the Matplotlib viridis color map, just because we can; this is
+    # a useful toy for debugging
+    circle = viscid.Circle(p0=[0, 0, 0], r=6.618, n=128, endpoint=True)
     scalar = np.sin(circle.as_local_coordinates().get_crd('phi'))
-    surf = mvi.plot_line(circle.get_points(), scalars=scalar, clim=0.8)
+    surf = mvi.plot_line(circle.get_points(), scalars=scalar, clim=0.8,
+                         cmap="Spectral_r")
 
     ######################################################################
     # Use Mayavi (VTK) to calculate field lines using an interactive seed
@@ -76,7 +91,7 @@ def main():
     epar = viscid.project(e, b)
     epar.name = "Epar"
     bsl2 = mvi.streamline(b, epar, seedtype='sphere', seed_resolution=4,
-                          integration_direction='both', vmin=-0.1, vmax=0.1)
+                          integration_direction='both', clim=(-0.05, 0.05))
 
     # now tweak the VTK streamlines
     bsl2.stream_tracer.maximum_propagation = 20.
@@ -92,18 +107,34 @@ def main():
     cbar.scalar_bar_representation.position = (0.2, 0.01)
     cbar.scalar_bar_representation.position2 = (0.6, 0.14)
 
-    ######################
-    # Plot the ionosphere
+    ###############################################################
+    # Make a contour at the open-closed boundary in the ionosphere
+    seeds_iono = viscid.Sphere(r=1.063, pole=-moment, ntheta=256, nphi=256,
+                               thetalim=(0, 180), philim=(0, 360), crd_system=b)
+    _, topo_iono = viscid.calc_streamlines(b, seeds_iono, ibound=1.0,
+                                           nr_procs='all',
+                                           output=viscid.OUTPUT_TOPOLOGY)
+    topo_iono = np.log2(topo_iono)
+
+    m = mvi.mesh_from_seeds(seeds_iono, scalars=topo_iono, opacity=1.0,
+                            clim=(0, 3), color=(0.992, 0.445, 0.0))
+    m.enable_contours = True
+
+    ####################################################################
+    # Plot the ionosphere, note that the sample data has the ionosphere
+    # at a different time, so the open-closed boundary found above
+    # will not be consistant with the field aligned currents
     fac_tot = 1e9 * f_iono['fac_tot']
 
-    m = mvi.plot_ionosphere(fac_tot, crd_system=b, bounding_lat=30.0,
-                            vmin=-300, vmax=300, opacity=0.75)
+    m = mvi.plot_ionosphere(fac_tot, bounding_lat=30.0, vmin=-300, vmax=300,
+                            opacity=0.75, rotate=cotr, crd_system=b)
+    m.actor.property.backface_culling = True
 
     ########################################################################
     # Add some markers for earth, i.e., real earth, and dayside / nightside
     # representation
-    mvi.plot_blue_marble(r=1.0, rotate="2010-06-21T15:00:00.0", lines=False,
-                         ntheta=64, nphi=128, crd_system=b)
+    mvi.plot_blue_marble(r=1.0, lines=False, ntheta=64, nphi=128,
+                         rotate=cotr, crd_system=b)
     # now shade the night side with a transparent black hemisphere
     mvi.plot_earth_3d(radius=1.01, night_only=True, opacity=0.5, crd_system=b)
 
