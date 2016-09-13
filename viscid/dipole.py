@@ -157,10 +157,10 @@ def set_in_region(a, b, alpha=1.0, beta=1.0, mask=None, out=None):
         if hasattr(mask, "nr_comps") and mask.nr_comps:
             mask = mask.as_centered(a.center).as_layout(a.layout)
         try:
-            out.data[...] = np.choose(mask, [a.data, vals])
+            out.data[...] = np.choose(mask, [out.data, vals])
         except ValueError:
             out.data[...] = np.choose(mask.data.reshape(list(mask.sshape) + [1]),
-                                      [a.data, vals])
+                                      [out.data, vals])
     return out
 
 def make_spherical_mask(fld, rmin=0.0, rmax=None, rsq=None):
