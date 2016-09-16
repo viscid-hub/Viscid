@@ -64,37 +64,39 @@ These functions will by accelerated by Numexpr if it is installed. All functions
 
 .. cssclass:: table-striped
 
-================================================  ===========================================================
-Function                                          Description
-================================================  ===========================================================
-:py:func:`viscid.calculator.calc.add`             Add two fields
-:py:func:`viscid.calculator.calc.diff`            Subtract a field from another
-:py:func:`viscid.calculator.calc.mul`             Multiply two fields
-:py:func:`viscid.calculator.calc.relative_diff`   Divide the difference by the magnitude
-:py:func:`viscid.calculator.calc.abs_diff`        Absolute value of the difference
-:py:func:`viscid.calculator.calc.abs_val`         Absolute value
-:py:func:`viscid.calculator.calc.abs_max`         Max of the absolute value
-:py:func:`viscid.calculator.calc.abs_min`         Min of the absolute value
-:py:func:`viscid.calculator.calc.magnitude`       Magnitude of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.calculator.calc.dot`             Dot product of two :py:class:`viscid.field.VectorField`
-:py:func:`viscid.calculator.calc.cross`           Cross product of two :py:class:`viscid.field.VectorField`
-:py:func:`viscid.calculator.calc.div`             Divergence of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.calculator.calc.curl`            Curl of a :py:class:`viscid.field.VectorField`
-:py:func:`viscid.calculator.calc.normalize`       Divide a vector field by its magnitude
-:py:func:`viscid.calculator.calc.project`         Project one :py:class:`viscid.field.VectorField` onto
-                                                  another, i.e., `a dot b / |b|`
-:py:func:`viscid.set_in_region`                   Set values in one field from another given a mask
-:py:func:`viscid.calculator.calc.project_vector`  Project VectorField a onto b in the direction of b, i.e.,
-                                                  `(a dot b / |b|) * (b / |b|)`
-:py:func:`viscid.project_along_line`              Project a Vector Field Parallel to a streamline.
-:py:func:`viscid.resample_lines`                  Resample a list of lines to either more or fewer points.
-                                                  With scipy, oversampling can be done with any type of
-                                                  interpolation that :py:func:`scipy.interpolate.interp1d`
-                                                  understands.
-:py:func:`viscid.integrate_along_lines`           Integrate a field along streamlines
-:py:func:`viscid.calc_psi`                        Calculate a 2D flux function
-:py:func:`viscid.calc_beta`                       Calculate plasma beta
-================================================  ===========================================================
+===================================================  ===========================================================
+Function                                             Description
+===================================================  ===========================================================
+:py:func:`viscid.calculator.calc.add`                Add two fields
+:py:func:`viscid.calculator.calc.diff`               Subtract a field from another
+:py:func:`viscid.calculator.calc.mul`                Multiply two fields
+:py:func:`viscid.calculator.calc.relative_diff`      Divide the difference by the magnitude
+:py:func:`viscid.calculator.calc.abs_diff`           Absolute value of the difference
+:py:func:`viscid.calculator.calc.abs_val`            Absolute value
+:py:func:`viscid.calculator.calc.abs_max`            Max of the absolute value
+:py:func:`viscid.calculator.calc.abs_min`            Min of the absolute value
+:py:func:`viscid.calculator.calc.magnitude`          Magnitude of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.dot`                Dot product of two :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.cross`              Cross product of two :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.grad`               Gradient of a :py:class:`viscid.field.ScalarField`
+:py:func:`viscid.calculator.calc.convective_deriv`   A dot grad B for vector field A and scalar/vector filed B
+:py:func:`viscid.calculator.calc.div`                Divergence of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.curl`               Curl of a :py:class:`viscid.field.VectorField`
+:py:func:`viscid.calculator.calc.normalize`          Divide a vector field by its magnitude
+:py:func:`viscid.calculator.calc.project`            Project one :py:class:`viscid.field.VectorField` onto
+                                                     another, i.e., `a dot b / |b|`
+:py:func:`viscid.set_in_region`                      Set values in one field from another given a mask
+:py:func:`viscid.calculator.calc.project_vector`     Project VectorField a onto b in the direction of b, i.e.,
+                                                     `(a dot b / |b|) * (b / |b|)`
+:py:func:`viscid.project_along_line`                 Project a Vector Field Parallel to a streamline.
+:py:func:`viscid.resample_lines`                     Resample a list of lines to either more or fewer points.
+                                                     With scipy, oversampling can be done with any type of
+                                                     interpolation that :py:func:`scipy.interpolate.interp1d`
+                                                     understands.
+:py:func:`viscid.integrate_along_lines`              Integrate a field along streamlines
+:py:func:`viscid.calc_psi`                           Calculate a 2D flux function
+:py:func:`viscid.calc_beta`                          Calculate plasma beta
+===================================================  ===========================================================
 
 Geospace Tools
 ~~~~~~~~~~~~~~
