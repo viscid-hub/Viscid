@@ -28,12 +28,12 @@ except ImportError as e:
     has_numexpr = False
 
 __all__ = ['neg', 'scale', 'add', 'diff', 'mul', 'relative_diff', 'abs_diff',
-           'abs_val', 'abs_max', 'abs_min', 'magnitude', 'dot', 'cross',
-           'div', 'curl', 'normalize', 'project', 'project_vector',
-           'project_along_line', 'resample_lines', 'integrate_along_line',
-           'integrate_along_lines', 'jacobian_at_point', 'jacobian_at_ind',
-           'jacobian_eig_at_point', 'jacobian_eig_at_ind', 'div_at_point',
-           'curl_at_point']
+           'abs_val', 'abs_max', 'abs_min', 'magnitude', 'dot', 'cross', 'grad',
+           'convective_deriv', 'div', 'curl', 'normalize', 'project',
+           'project_vector', 'project_along_line', 'resample_lines',
+           'integrate_along_line', 'integrate_along_lines', 'jacobian_at_point',
+           'jacobian_at_ind', 'jacobian_eig_at_point', 'jacobian_eig_at_ind',
+           'div_at_point', 'curl_at_point']
 
 
 class Operation(object):
@@ -95,7 +95,7 @@ class UnaryOperation(Operation):
         return ret
 
 class BinaryOperation(Operation):
-    def __call__(self, a, b, **kwargs):
+    def __call__(self, a, b=None, **kwargs):
         ret = super(BinaryOperation, self).__call__(a, b, **kwargs)
         try:
             ret.name = "{0} {1} {2}".format(a.name, self.short_name, b.name)
@@ -129,6 +129,8 @@ project = BinaryOperation("project", "dot mag",
 normalize = UnaryOperation("normalize", "normalize",
                            doc="Callable, divide a vector field by its magnitude")
 grad = UnaryOperation("grad", "grad", doc="Callable, gradient of a scalar field")
+convective_deriv = BinaryOperation("convective_deriv", "convective_deriv",
+                                   doc="Callable, convective operator")
 div = UnaryOperation("div", "div", doc="Callable, divergence of a vector field")
 curl = UnaryOperation("curl", "curl", doc="Callable, curl of a vector field")
 
@@ -149,6 +151,7 @@ if has_numexpr:
     project.add_implementation("numexpr", necalc.project)
     normalize.add_implementation("numexpr", necalc.normalize)
     grad.add_implementation("numexpr", necalc.grad)
+    convective_deriv.add_implementation("numexpr", necalc.convective_deriv)
     div.add_implementation("numexpr", necalc.div)
     curl.add_implementation("numexpr", necalc.curl)
 

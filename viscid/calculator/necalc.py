@@ -110,14 +110,63 @@ def project(fld_a, fld_b):
 
 def normalize(fld_a):
     """ normalize a vector field """
-    a = fld_a.data
+    a = fld_a.as_flat().data
     ax, ay, az = fld_a.component_views()  # pylint: disable=W0612
     normed = ne.evaluate("a / sqrt((ax**2) + (ay**2) + (az**2))")
     return fld_a.wrap(normed, fldtype="Vector")
 
 def grad(fld):
     """ first order """
-    pass
+    # vx, vy, vz = fld.component_views()
+    v = fld.data
+
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        divcenter = "Cell"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        divcenter = "Node"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered gradients")
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxp, vxm = v[2:  , 1:-1, 1:-1], v[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vyp, vym = v[1:-1, 2:  , 1:-1], v[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vzp, vzm = v[1:-1, 1:-1, 2:  ], v[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    g = viscid.zeros(fld['x=1:-1, y=1:-1, z=1:-1'].crds, nr_comps=3)
+    g['x'].data[...] = ne.evaluate("(vxp-vxm)/(xp-xm)")
+    g['y'].data[...] = ne.evaluate("(vyp-vym)/(yp-ym)")
+    g['z'].data[...] = ne.evaluate("(vzp-vzm)/(zp-zm)")
+    return g
+
+def convective_deriv(a, b=None):
+    r"""Compute (a \dot \nabla) b for vector fields a and b"""
+    # [(B \dot \nabla) B]_j = B_i \partial_i B_j
+    # FIXME: this is a lot of temporary arrays
+    if b is None:
+        b = a
+    a_slc = a['x=1:-1, y=1:-1, z=1:-1']
+    if b.nr_comps > 1:
+        diBj = [[None, None, None], [None, None, None], [None, None, None]]
+        for j, jcmp in enumerate('xyz'):
+            g = grad(b[jcmp])
+            for i, icmp in enumerate('xyz'):
+                diBj[i][j] = g[icmp]
+        dest = viscid.zeros(a_slc.crds, nr_comps=3)
+        for i, icmp in enumerate('xyz'):
+            for j, jcmp in enumerate('xyz'):
+                dest[jcmp][...] += a_slc[icmp] * diBj[i][j]
+    else:
+        dest = dot(a_slc, grad(b))
+    return dest
 
 def div(fld):
     """ first order """
