@@ -12,6 +12,11 @@ import viscid
 from viscid import vutil
 from viscid.plot import mpl
 
+try:
+    import numexpr as ne  # pylint: disable=unused-import,wrong-import-order
+except ImportError:
+    xfail("Numexpr is not installed")
+
 
 def main():
     parser = argparse.ArgumentParser(description="Test grad")
