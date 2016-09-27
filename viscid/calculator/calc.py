@@ -50,6 +50,10 @@ class Operation(object):
         self.add_implementations(implementations)
         setattr(self, "__doc__", doc)
 
+    @property
+    def __name__(self):
+        return self.opname
+
     def add_implementation(self, name, func):
         self._imps[name] = func
 
