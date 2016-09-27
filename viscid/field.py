@@ -308,7 +308,8 @@ def field_type(fldtype):
     logger.error("Field type {0} not understood".format(fldtype))
     return None
 
-def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
+def wrap_field(data, crds, name="NoName", fldtype="scalar", center='node',
+               **kwargs):
     """Convenience script for wrapping ndarrays
 
     Parameters:
@@ -324,11 +325,12 @@ def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
     """
     # try to auto-detect vector fields
     try:
-        size = data.size
-        if (data.size % np.prod(crds.shape_nc) == 0 and
+        if (center.strip().lower() == 'node' and
+            data.size % np.prod(crds.shape_nc) == 0 and
             data.size // np.prod(crds.shape_nc) > 1):
             fldtype = "vector"
-        elif (data.size % np.prod(crds.shape_cc) == 0 and
+        elif (center.strip().lower() == 'cell' and
+              data.size % np.prod(crds.shape_cc) == 0 and
               data.size // np.prod(crds.shape_cc) > 1):
             fldtype = "vector"
     except AttributeError:
@@ -336,7 +338,7 @@ def wrap_field(data, crds, name="NoName", fldtype="scalar", **kwargs):
 
     cls = field_type(fldtype)
     if cls is not None:
-        return cls(name, crds, data, **kwargs)
+        return cls(name, crds, data, center=center, **kwargs)
     else:
         raise NotImplementedError("can not decipher field")
 
