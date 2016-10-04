@@ -633,6 +633,7 @@ class GGCMFile(object):  # pylint: disable=abstract-method
             raise KeyError("Node {0} did not set ggcm_dipole_dipoltime. Maybe "
                            "your logfile is missing or mangled."
                            "".format(repr(self)))
+        dipoletime = ":".join((dipoletime))
         return viscid.as_datetime64(dipoletime)
 
     @staticmethod
