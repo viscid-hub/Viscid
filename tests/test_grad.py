@@ -20,12 +20,21 @@ except ImportError:
 
 def main():
     parser = argparse.ArgumentParser(description="Test grad")
+    parser.add_argument("--prof", action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
     b = viscid.make_dipole(l=(-5, -5, -5), h=(5, 5, 5), n=(256, 256, 128),
                            m=(0, 0, -1))
     b2 = np.sum(b * b, axis=b.nr_comp)
+
+    if args.prof:
+        print("Without boundaries")
+        viscid.timeit(viscid.grad, b2, bnd=False, timeit_repeat=10,
+                      timeit_print_stats=True)
+        print("With boundaries")
+        viscid.timeit(viscid.grad, b2, bnd=True, timeit_repeat=10,
+                      timeit_print_stats=True)
 
     grad_b2 = viscid.grad(b2)
     grad_b2.pretty_name = r"$\nabla$ B$^2$"

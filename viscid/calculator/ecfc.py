@@ -135,7 +135,7 @@ def make_ecfc_field_leading(fc, trim_leading=True):
         prepared_fc.pretty_name = fc.pretty_name
         return prepared_fc
 
-def fc2cc(fc, force_numpy=False):
+def fc2cc(fc, force_numpy=False, bnd=True):
     """Average a face centered field to cell centers"""
     fc = fc.atleast_3d()
     fc = make_ecfc_field_leading(fc)
@@ -166,11 +166,16 @@ def fc2cc(fc, force_numpy=False):
         cc['x'] = 0.5 * (fcx0 + fcx1)
         cc['y'] = 0.5 * (fcy0 + fcy1)
         cc['z'] = 0.5 * (fcz0 + fcz1)
+
+    if bnd:
+        # FIXME: this is really just faking the bnd so there aren't shape
+        #        errors when doing math with the result
+        cc = viscid.extend_boundaries(cc, nl=1, nh=1, order=0, crd_order=1)
     cc.name = fc.name
     cc.pretty_name = fc.pretty_name
     return cc
 
-def ec2cc(ec, force_numpy=False):
+def ec2cc(ec, force_numpy=False, bnd=True):
     """Average an edge centered field to cell centers"""
     ec = ec.atleast_3d()
     ec = make_ecfc_field_leading(ec)
@@ -207,15 +212,22 @@ def ec2cc(ec, force_numpy=False):
         cc['x'] = 0.25 * (ecx0 + ecx1 + ecx2 + ecx3)
         cc['y'] = 0.25 * (ecy0 + ecy1 + ecy2 + ecy3)
         cc['z'] = 0.25 * (ecz0 + ecz1 + ecz2 + ecz3)
+
+    if bnd:
+        # FIXME: this is really just faking the bnd so there aren't shape
+        #        errors when doing math with the result
+        cc = viscid.extend_boundaries(cc, nl=1, nh=1, order=0, crd_order=1)
     cc.name = ec.name
     cc.pretty_name = ec.pretty_name
     return cc
 
 
-def div_fc(fc, force_numpy=False):
+def div_fc(fc, force_numpy=False, bnd=True):
     """Calculate cell centered divergence of face centered field"""
     fc = fc.atleast_3d()
     fc = make_ecfc_field_leading(fc)
+    # FIXME: maybe it's possible to do the boundary correctly here without
+    #        just faking it with a 0 order hold before returning
     s0, sm, sp = _prep_slices(fc)
 
     s0vec = list(s0)
@@ -251,45 +263,15 @@ def div_fc(fc, force_numpy=False):
         div_cc[:, :, :] = (((fcx1 - fcx0) / (xp - xm)) +
                            ((fcy1 - fcy0) / (yp - ym)) +
                            ((fcz1 - fcz0) / (zp - zm)))
+
+    if bnd:
+        # FIXME: this is really just faking the bnd so there aren't shape
+        #        errors when doing math with the result
+        div_cc = viscid.extend_boundaries(div_cc, nl=1, nh=1, order=0,
+                                          crd_order=1)
     div_cc.name = "div " + fc.name
     div_cc.pretty_name = "Div " + fc.pretty_name
     return div_cc
-
-    """Average a face centered field to cell centers"""
-    fc = fc.atleast_3d()
-    fc = make_ecfc_field_leading(fc)
-    s0, sm, sp = _prep_slices(fc)
-
-    s0vec = list(s0)
-    s0vec.insert(fc.nr_comp, slice(None))
-    cc = viscid.zeros_like(fc[s0vec])
-    cc.center = "Cell"
-
-    fcx0, fcx1 = (fc['x', sm[0], s0[1], s0[2]].data,
-                  fc['x', sp[0], s0[1], s0[2]].data)
-    fcy0, fcy1 = (fc['y', s0[0], sm[1], s0[2]].data,
-                  fc['y', s0[0], sp[1], s0[2]].data)
-    fcz0, fcz1 = (fc['z', s0[0], s0[1], sm[2]].data,
-                  fc['z', s0[0], s0[1], sp[2]].data)
-
-    if _HAS_NUMEXPR and not force_numpy:
-        half = np.array([0.5], dtype=fc.dtype)[0]  # pylint: disable=unused-variable
-        s = "half * (a + b)"
-        a, b = fcx0, fcx1  # pylint: disable=unused-variable
-        cc['x'] = ne.evaluate(s)
-        a, b = fcy0, fcy1
-        cc['y'] = ne.evaluate(s)
-        a, b = fcz0, fcz1
-        cc['z'] = ne.evaluate(s)
-    else:
-        cc['x'] = 0.5 * (fcx0 + fcx1)
-        cc['y'] = 0.5 * (fcy0 + fcy1)
-        cc['z'] = 0.5 * (fcz0 + fcz1)
-    cc.name = fc.name
-    cc.pretty_name = fc.pretty_name
-    return cc
-
-
 
 ##
 ## EOF

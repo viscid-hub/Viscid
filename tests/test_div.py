@@ -32,7 +32,7 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     t1 = time()
     logger.info("numexpr magnitude runtime: %g", t1 - t0)
 
-    result_diff = viscid.diff(result_numexpr, exact[1:-1, 1:-1, 1:-1])
+    result_diff = viscid.diff(result_numexpr, exact)['x=1:-1, y=1:-1, z=1:-1']
     if not ignore_inexact and not (result_diff.data < 5e-5).all():
         logger.warn("numexpr result is far from the exact result")
     logger.info("min/max(abs(numexpr - exact)): %g / %g",
@@ -59,6 +59,7 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
 
 def main():
     parser = argparse.ArgumentParser(description="Test divergence")
+    parser.add_argument("--prof", action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
@@ -79,6 +80,14 @@ def main():
     v['y'] = ne.evaluate("(cos(Ycc))")  # + Xcc# + Zcc
     v['z'] = ne.evaluate("-((sin(Zcc)))")  # + Xcc# + Ycc
     exact_cc[:, :, :] = ne.evaluate("cos(Xcc) - sin(Ycc) - cos(Zcc)")
+
+    if args.prof:
+        print("Without boundaries")
+        viscid.timeit(viscid.div, v, bnd=False, timeit_repeat=10,
+                      timeit_print_stats=True)
+        print("With boundaries")
+        viscid.timeit(viscid.div, v, bnd=True, timeit_repeat=10,
+                      timeit_print_stats=True)
 
     logger.info("node centered tests")
     v_nc = v.as_centered('node')

@@ -102,19 +102,25 @@ def main():
     #       are not the same up to order (dx/4) I think. You can see this
     #       since (fcdiv - divb_trimmed) is both noisy and stripy
     if test_div:
+        bnd = 0
+
         if mhd_type not in ("F", "FORTRAN"):
             b1 = f['b1'][ISLICE]
             divb = f['divB'][ISLICE]
-            trimmed = divb['x=1:-1, y=1:-1, z=1:-1']
+            if bnd:
+                trimmed = divb
+            else:
+                trimmed = divb['x=1:-1, y=1:-1, z=1:-1']
+            b1mag = viscid.magnitude(viscid.fc2cc(b1, bnd=bnd))
 
-            divb1 = viscid.div_fc(b1)
+            divb1 = viscid.div_fc(b1, bnd=bnd)
 
             viscid.set_in_region(trimmed, trimmed, alpha=0.0, beta=0.0, out=trimmed,
                                  mask=viscid.make_spherical_mask(trimmed, rmax=5.0))
             viscid.set_in_region(divb1, divb1, alpha=0.0, beta=0.0, out=divb1,
                                  mask=viscid.make_spherical_mask(divb1, rmax=5.0))
 
-            reldiff = (divb1 - trimmed) / viscid.magnitude(viscid.fc2cc(b1))
+            reldiff = (divb1 - trimmed) / b1mag
             reldiff = reldiff["x=1:-1, y=1:-1, z=1:-1"]
             reldiff.name = divb1.name + " - " + trimmed.name
             reldiff.pretty_name = divb1.pretty_name + " - " + trimmed.pretty_name

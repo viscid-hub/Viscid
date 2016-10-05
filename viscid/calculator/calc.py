@@ -33,7 +33,8 @@ __all__ = ['neg', 'scale', 'add', 'diff', 'mul', 'relative_diff', 'abs_diff',
            'project_vector', 'project_along_line', 'resample_lines',
            'integrate_along_line', 'integrate_along_lines', 'jacobian_at_point',
            'jacobian_at_ind', 'jacobian_eig_at_point', 'jacobian_eig_at_ind',
-           'div_at_point', 'curl_at_point']
+           'div_at_point', 'curl_at_point', 'extend_boundaries',
+           'extend_boundaries_ndarr']
 
 
 class Operation(object):
@@ -466,6 +467,145 @@ def curl_at_point(A, x, y, z, dx=None, dy=None, dz=None):
     c[2] = ((As[2 * 2 + 1, 1] - As[2 * 2 + 0, 1]) / (2.0 * dcrd[0]) -
             (As[2 * 1 + 1, 0] - As[2 * 1 + 0, 0]) / (2.0 * dcrd[1]))
     return c
+
+def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
+                            order=1):
+    """Extend and pad boundaries of ndarray (leaves new corners @ 0.0)
+
+    Args:
+        arr (ndarray): Array to extend
+        nl (int): extend this many cells in lower direction
+        nh (int): extend this many cells in upper direction
+        axes (list): list of ints that correspond to axes that should
+            be extended. If nr_comp != None, then axes > nr_comp will
+            be shifted by 1.
+        nr_comp (int, None): index of shape that corresponds to vector
+            component dimension
+        order (int): 0 for repeating boundary values or 1 for linear
+            extrapolation
+
+    Returns:
+        ndarray: A new extended / padded ndarray
+    """
+    if nr_comp is not None:
+        axes = [ax if ax < nr_comp else ax + 1 for ax in axes]
+
+    shape = list(arr.shape)
+    target_shape = [s + nl + nh if i in axes else s for i, s in enumerate(shape)]
+
+    s0 = []
+    for i, s in enumerate(shape):
+        if i in axes:
+            _nl = nl if nl else None
+            _nh = -nh if nh else None
+            s0.append(slice(_nl, _nh))
+        else:
+            s0.append(slice(None))
+
+    v = np.zeros(target_shape, dtype=arr.dtype)
+
+    v[s0] = arr[...]
+
+    for i, _ in enumerate(axes):
+        ni = shape[i] + nl
+        dest_slc = [slice(None)] * len(v.shape)
+        src_slc = [slice(None)] * len(v.shape)
+        src_slcR = [slice(None)] * len(v.shape)
+
+        if order == 0 or arr.shape[i] < 2:
+            if nl:
+                dest_slc[i] = slice(None, nl)
+                src_slc[i] = slice(nl, nl + 1)
+                v[dest_slc] = v[src_slc]
+            if nh:
+                dest_slc[i] = slice(ni, None)
+                src_slc[i] = slice(ni - 1, ni)
+                v[dest_slc] = v[src_slc]
+        elif order == 1:
+            for j in range(nl):
+                dest_slc[i] = slice(nl - j - 1, nl - j)
+                src_slc[i] = slice(nl - j, nl - j + 1)
+                src_slcR[i] = slice(nl - j + 1, nl - j + 2)
+                v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
+            for j in range(nh):
+                dest_slc[i] = slice(ni + j, ni + j + 1)
+                src_slc[i] = slice(ni + j - 1, ni + j)
+                src_slcR[i] = slice(ni + j -2, ni + j - 1)
+                v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
+            # src_slc[i] = slice(-1, None)
+            # dest_slc[i] = slice(-nh, None)
+            # v[dest_slc] = arr[src_slc]
+        else:
+            raise ValueError("extend_boundaries can only be 0th or 1st order")
+    return v
+
+def extend_boundaries(fld, nl=1, nh=1, axes='all', nr_comp=None, order=1,
+                      crd_order=1, crds=None):
+    """Extend and pad boundaries of field (leaves new corners @ 0.0)
+
+    Warning:
+        When using crd_order=0 (0 order hold), coordinates will be
+        extended by repeating boundary values, so min_dx will be 0.
+        Keep this in mind if dividing by dx.
+
+    Args:
+        fld (Field): Field to extend
+        nl (int): extend this many cells in lower direction
+        nh (int): extend this many cells in upper direction
+        axes (str, list): something like 'xyz', ['x', 'theta'], etc.
+        nr_comp (int, None): index of shape that corresponds to vector
+            component dimension
+        order (int): extrapolation order for data; 0 for repeating
+            boundary values or 1 for linear extrapolation
+        crd_order (int): extrapolation order for crds; 0 for repeating
+            boundary values or 1 for linear extrapolation
+        crds (Coordinates): Use these coordinates, no extrapolate them
+
+    Returns:
+        ndarray: A new extended / padded ndarray
+    """
+    arr_axes = fld.crds.axes
+    axis_lookup = dict()
+    for i, ax in enumerate(arr_axes):
+        axis_lookup[i] = i
+        axis_lookup[ax] = i
+    if axes == 'all':
+        axes = list([i for i, s in enumerate(fld.sshape) if s > 1])
+    if not isinstance(axes, (list, tuple, viscid.string_types)):
+        axes = list(axes)
+    axes = [axis_lookup[ax] for ax in axes]
+
+    try:
+        nr_comp = fld.nr_comp
+    except TypeError:
+        nr_comp = None
+
+    new_dat = extend_boundaries_ndarr(fld.data, nl=nl, nh=nh, axes=axes,
+                                      nr_comp=nr_comp, order=order)
+
+    if crds is not None:
+        new_crds = crds
+    else:
+        new_clist = []
+        crds_nc = fld.crds.get_crds_nc()
+        crds_cc = fld.crds.get_crds_cc()
+        for ax, nc, cc in zip(fld.crds.axes, crds_nc, crds_cc):
+            if fld.crds.axes.index(ax) in axes:
+                new_nc = extend_boundaries_ndarr(nc, nl=nl, nh=nh, axes=[0],
+                                                 order=crd_order)
+                new_cc = extend_boundaries_ndarr(cc, nl=nl, nh=nh, axes=[0],
+                                                 order=crd_order)
+            else:
+                new_nc = nc
+                new_cc = cc
+            new_clist.append((ax, new_nc, new_cc))
+
+        crdtype = fld.crds.crdtype
+        if 'nonuniform' not in crdtype:
+            crdtype = crdtype.replace('uniform', 'nonuniform')
+        new_crds = viscid.wrap_crds(crdtype, new_clist)
+
+    return fld.wrap(new_dat, context=dict(crds=new_crds))
 
 ##
 ## EOF
