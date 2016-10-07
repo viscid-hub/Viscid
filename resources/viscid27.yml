@@ -16,6 +16,7 @@ dependencies:
 - mayavi
 - vtk=5
 - pyside
+- pyqt=4
 - flake8
 - sphinx
 - sphinx_rtd_theme

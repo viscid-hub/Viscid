@@ -13,7 +13,7 @@ dependencies:
 - numexpr
 - numba
 - pyyaml
-- pyqt
+- pyqt=4
 - flake8
 - sphinx
 - sphinx_rtd_theme
