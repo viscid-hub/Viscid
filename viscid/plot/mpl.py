@@ -605,6 +605,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # ok, here's some hackery for contours
     if style in ["contourf", "contour"]:
+        if plot_kwargs.get("colors", None):
+            plot_kwargs['cmap'] = None
         if isinstance(levels, int):
             if vscale == "log":
                 levels = np.logspace(np.log10(vmin), np.log10(vmax), levels)
