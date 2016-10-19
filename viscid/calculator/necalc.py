@@ -150,34 +150,6 @@ def grad(fld, bnd=True):
     g['z'].data[...] = ne.evaluate("(vzp-vzm)/(zp-zm)")
     return g
 
-def convective_deriv(a, b=None, bnd=True):
-    r"""Compute (a \dot \nabla) b for vector fields a and b"""
-    # [(B \dot \nabla) B]_j = B_i \partial_i B_j
-    # FIXME: this is a lot of temporary arrays
-    if bnd:
-        if b is None:
-            b = viscid.extend_boundaries(a, order=0, crd_order=0)
-        else:
-            b = viscid.extend_boundaries(b, order=0, crd_order=0)
-    else:
-        if b is None:
-            b = a
-        a = a['x=1:-1, y=1:-1, z=1:-1']
-
-    if b.nr_comps > 1:
-        diBj = [[None, None, None], [None, None, None], [None, None, None]]
-        for j, jcmp in enumerate('xyz'):
-            g = grad(b[jcmp], bnd=False)
-            for i, icmp in enumerate('xyz'):
-                diBj[i][j] = g[icmp]
-        dest = viscid.zeros(a.crds, nr_comps=3)
-        for i, icmp in enumerate('xyz'):
-            for j, jcmp in enumerate('xyz'):
-                dest[jcmp][...] += a[icmp] * diBj[i][j]
-    else:
-        dest = dot(a, grad(b, bnd=False))
-    return dest
-
 def div(fld, bnd=True):
     """2nd order centeral diff, 1st order @ boundaries if bnd"""
     if fld.iscentered("Face"):

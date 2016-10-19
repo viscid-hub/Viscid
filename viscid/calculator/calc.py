@@ -134,8 +134,6 @@ project = BinaryOperation("project", "dot mag",
 normalize = UnaryOperation("normalize", "normalize",
                            doc="Callable, divide a vector field by its magnitude")
 grad = UnaryOperation("grad", "grad", doc="Callable, gradient of a scalar field")
-convective_deriv = BinaryOperation("convective_deriv", "convective_deriv",
-                                   doc="Callable, convective operator")
 div = UnaryOperation("div", "div", doc="Callable, divergence of a vector field")
 curl = UnaryOperation("curl", "curl", doc="Callable, curl of a vector field")
 
@@ -156,7 +154,6 @@ if has_numexpr:
     project.add_implementation("numexpr", necalc.project)
     normalize.add_implementation("numexpr", necalc.normalize)
     grad.add_implementation("numexpr", necalc.grad)
-    convective_deriv.add_implementation("numexpr", necalc.convective_deriv)
     div.add_implementation("numexpr", necalc.div)
     curl.add_implementation("numexpr", necalc.curl)
 
@@ -193,7 +190,35 @@ def _normalize_np(a):
     return a / np.linalg.norm(a, axis=a.nr_comp)
 normalize.add_implementation("numpy", _normalize_np)
 
-# native versions
+def convective_deriv(a, b=None, bnd=True):
+    r"""Compute (a \dot \nabla) b for vector fields a and b"""
+    # [(B \dot \nabla) B]_j = B_i \partial_i B_j
+    # FIXME: this is a lot of temporary arrays
+    if bnd:
+        if b is None:
+            b = viscid.extend_boundaries(a, order=0, crd_order=0)
+        else:
+            b = viscid.extend_boundaries(b, order=0, crd_order=0)
+    else:
+        if b is None:
+            b = a
+        a = a['x=1:-1, y=1:-1, z=1:-1']
+
+    if b.nr_comps > 1:
+        diBj = [[None, None, None], [None, None, None], [None, None, None]]
+        for j, jcmp in enumerate('xyz'):
+            g = grad(b[jcmp], bnd=False)
+            for i, icmp in enumerate('xyz'):
+                diBj[i][j] = g[icmp]
+        dest = viscid.zeros(a.crds, nr_comps=3)
+        for i, icmp in enumerate('xyz'):
+            for j, jcmp in enumerate('xyz'):
+                dest[jcmp][...] += a[icmp] * diBj[i][j]
+    else:
+        dest = dot(a, grad(b, bnd=False))
+    return dest
+
+# native versions  NOTE: magnitude_native is really only for benchmarking
 def _magnitude_native(fld):
     vx, vy, vz = fld.component_views()
     mag = np.empty_like(vx)
