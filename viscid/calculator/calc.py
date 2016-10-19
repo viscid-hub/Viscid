@@ -10,6 +10,7 @@ from itertools import count
 import numpy as np
 
 import viscid
+from viscid import field
 from viscid import logger
 from viscid import verror
 from viscid import seed
@@ -169,12 +170,6 @@ abs_val.add_implementation("numpy", np.abs)
 abs_max.add_implementation("numpy", lambda a: np.max(np.abs(a)))
 abs_min.add_implementation("numpy", lambda a: np.min(np.abs(a)))
 
-def _dot_np(fld_a, fld_b):
-    if fld_a.nr_comp != fld_b.nr_comp:
-        raise ValueError("field must have same layout (flat or interlaced)")
-    return np.sum(fld_a * fld_b, axis=fld_a.nr_comp)
-dot.add_implementation("numpy", _dot_np)
-
 def _magnitude_np(fld):
     return np.sqrt((np.sum(fld * fld, axis=fld.nr_comp)))
 magnitude.add_implementation("numpy", _magnitude_np)
@@ -189,6 +184,139 @@ def _normalize_np(a):
     """ normalize a vector field """
     return a / np.linalg.norm(a, axis=a.nr_comp)
 normalize.add_implementation("numpy", _normalize_np)
+
+def _dot_np(fld_a, fld_b):
+    """dot product of two vector fields"""
+    if fld_a.nr_comp != fld_b.nr_comp:
+        raise ValueError("field must have same layout (flat or interlaced)")
+    return np.sum(fld_a * fld_b, axis=fld_a.nr_comp)
+dot.add_implementation("numpy", _dot_np)
+
+def _cross_np(fld_a, fld_b):
+    """cross product of two vector fields"""
+    ax, ay, az = fld_a.component_views()
+    bx, by, bz = fld_b.component_views()
+    prodx = ay * bz - az * by
+    prody = -ax * bz + az * bx
+    prodz = ax * by - ay * bx
+    return fld_a.wrap([prodx, prody, prodz])
+cross.add_implementation("numpy", _cross_np)
+
+def _grad_np(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        # divcenter = "Cell"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        # divcenter = "Node"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered gradients")
+
+    v = fld.data
+    g = viscid.zeros(fld['x=1:-1, y=1:-1, z=1:-1'].crds, nr_comps=3)
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxp, vxm = v[2:  , 1:-1, 1:-1], v[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vyp, vym = v[1:-1, 2:  , 1:-1], v[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vzp, vzm = v[1:-1, 1:-1, 2:  ], v[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    g['x'].data[...] = (vxp - vxm) / (xp - xm)
+    g['y'].data[...] = (vyp - vym) / (yp - ym)
+    g['z'].data[...] = (vzp - vzm) / (zp - zm)
+    return g
+grad.add_implementation("numpy", _grad_np)
+
+def _div_np(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if fld.iscentered("Face"):
+        # dispatch fc div immediately since that does its own pre-processing
+        return viscid.div_fc(fld, bnd=bnd)
+
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
+    vx, vy, vz = fld.component_views()
+
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        divcenter = "Cell"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        divcenter = "Node"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered divs")
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxp, vxm = vx[2:  , 1:-1, 1:-1], vx[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vyp, vym = vy[1:-1, 2:  , 1:-1], vy[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vzp, vzm = vz[1:-1, 1:-1, 2:  ], vz[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    div_arr = ((vxp - vxm) / (xp - xm) + (vyp - vym) / (yp - ym) +
+               (vzp - vzm) / (zp - zm))
+    return field.wrap_field(div_arr, divcrds, name="div " + fld.name,
+                            center=divcenter, time=fld.time, parents=[fld])
+div.add_implementation("numpy", _div_np)
+
+def _curl_np(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
+    vx, vy, vz = fld.component_views()
+
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        curlcenter = "cell"
+        # curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        curlcenter = "node"
+        # curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered divs")
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxpy, vxmy = vx[1:-1, 2:  , 1:-1], vx[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vxpz, vxmz = vx[1:-1, 1:-1, 2:  ], vx[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    vypx, vymx = vy[2:  , 1:-1, 1:-1], vy[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vypz, vymz = vy[1:-1, 1:-1, 2:  ], vy[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    vzpx, vzmx = vz[2:  , 1:-1, 1:-1], vz[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vzpy, vzmy = vz[1:-1, 2:  , 1:-1], vz[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+
+    curl_x = (vzpy - vzmy) / (yp - ym) - (vypz - vymz) / (zp - zm)
+    curl_y = -(vzpx - vzmx) / (xp - xm) + (vxpz - vxmz) / (zp - zm)
+    curl_z = (vypx - vymx) / (xp - xm) - (vxpy - vxmy) / (yp - ym)
+
+    return field.wrap_field([curl_x, curl_y, curl_z], curlcrds,
+                            name="curl " + fld.name, fldtype="Vector",
+                            center=curlcenter, time=fld.time,
+                            parents=[fld])
+curl.add_implementation("numpy", _curl_np)
 
 def convective_deriv(a, b=None, bnd=True):
     r"""Compute (a \dot \nabla) b for vector fields a and b"""

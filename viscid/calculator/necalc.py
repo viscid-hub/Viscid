@@ -123,14 +123,14 @@ def grad(fld, bnd=True):
 
     if fld.iscentered("Cell"):
         crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
-        divcenter = "Cell"
+        # divcenter = "Cell"
         # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
-        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     elif fld.iscentered("Node"):
         crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
-        divcenter = "Node"
+        # divcenter = "Node"
         # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
-        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
     else:
         raise NotImplementedError("Can only do cell and node centered gradients")
 
