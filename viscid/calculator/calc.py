@@ -271,7 +271,7 @@ def project_along_line(line, fld):
     dsvec = dsvec / np.linalg.norm(dsvec, axis=0)
     return np.sum(fld_on_verts * dsvec.T, axis=1)
 
-def integrate_along_line(line, fld, reduction="dot"):
+def integrate_along_line(line, fld, reduction="dot", mask_func=None):
     """Integrate the value of fld along a line
 
     Args:
@@ -284,9 +284,10 @@ def integrate_along_line(line, fld, reduction="dot"):
     Returns:
         a scalar with the same dtype as fld
     """
-    return integrate_along_lines([line], fld, reduction=reduction)[0]
+    return integrate_along_lines([line], fld, reduction=reduction,
+                                 mask_func=mask_func)[0]
 
-def integrate_along_lines(lines, fld, reduction="dot"):
+def integrate_along_lines(lines, fld, reduction="dot", mask_func=None):
     """Integrate the value of fld along a list of lines
 
     Args:
@@ -316,7 +317,10 @@ def integrate_along_lines(lines, fld, reduction="dot"):
                 dsvec = dsvec / np.linalg.norm(dsvec, axis=0)
                 values = 0.5 * (fld_on_verts[start:stop - 1, :] +
                                 fld_on_verts[start + 1:stop, :])
-                values = np.sum(values * dsvec.T, axis=1)
+                values = values * dsvec.T
+                if mask_func is not None:
+                    values = np.ma.masked_where(mask_func(values), values)
+                values = np.sum(values, axis=1)
             elif reduction in ["mag", "magnitude", "norm"]:
                 mag = np.linalg.norm(fld_on_verts[start:stop], axis=1)
                 values = 0.5 * (mag[start:stop - 1] + mag[start + 1:stop])
