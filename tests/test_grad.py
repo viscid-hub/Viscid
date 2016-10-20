@@ -12,11 +12,6 @@ import viscid
 from viscid import vutil
 from viscid.plot import mpl
 
-try:
-    import numexpr as ne  # pylint: disable=unused-import,wrong-import-order
-except ImportError:
-    xfail("Numexpr is not installed")
-
 
 def main():
     parser = argparse.ArgumentParser(description="Test grad")
@@ -50,7 +45,8 @@ def main():
     ax2 = mpl.subplot(234)
     mpl.plot(b2['y=0f'], logscale=True)
     mpl.plot(b2['y=0f'], logscale=True, style='contour', levels=10, colors='grey')
-    mpl.plot2d_quiver(viscid.normalize(b['y=0f'], only='numpy'), step=16, pivot='mid')
+    mpl.plot2d_quiver(viscid.normalize(b['y=0f'], preferred='numpy'),
+                      step=16, pivot='mid')
 
     mpl.subplot(232, sharex=ax1, sharey=ax1)
     mpl.plot(1e-4 + viscid.magnitude(grad_b2['z=0f']), logscale=True)
