@@ -182,7 +182,9 @@ project.add_implementation("numpy", _project_np)
 
 def _normalize_np(a):
     """ normalize a vector field """
-    return a / np.linalg.norm(a, axis=a.nr_comp)
+    shp0 = list(a.shape)
+    shp0[a.nr_comp] = 1
+    return a / np.linalg.norm(a, axis=a.nr_comp).reshape(shp0)
 normalize.add_implementation("numpy", _normalize_np)
 
 def _dot_np(fld_a, fld_b):
