@@ -306,6 +306,29 @@ class DatasetTemporal(Dataset):
         ret = [r.rstrip('.') if hasattr(r, 'rstrip') else r for r in ret]
         return slice(*ret)
 
+    def as_floating_t(self, t, none_passthrough=False):
+        t_as_s = None
+        try:
+            t = vutil.str_to_value(t)
+
+            if viscid.is_timedelta_like(t, conservative=True):
+                t_as_s = viscid.as_timedelta(t).total_seconds()
+            elif viscid.is_datetime_like(t, conservative=True):
+                delta_t = viscid.as_datetime64(t) - self.basetime
+                t_as_s = viscid.as_timedelta(delta_t).total_seconds()
+            elif not isinstance(t, (int, np.integer, type(None))):
+                t_as_s = float(t)
+        except AttributeError:
+            if t is None:
+                if none_passthrough:
+                    pass
+                else:
+                    t = 0.0
+            else:
+                t_as_s = float(t)
+
+        return t_as_s
+
     def _slice_time(self, slc=":"):
         """
         Args:
@@ -345,15 +368,7 @@ class DatasetTemporal(Dataset):
 
             # do translation from string/datetime/etc -> floats
             for i in range(min(len(slc_lst), 2)):
-                t_as_s = None
-                if viscid.is_timedelta_like(slc_lst[i], conservative=True):
-                    t_as_s = viscid.as_timedelta(slc_lst[i]).total_seconds()
-                elif viscid.is_datetime_like(slc_lst[i], conservative=True):
-                    delta_t = viscid.as_datetime64(slc_lst[i]) - self.basetime
-                    t_as_s = viscid.as_timedelta(delta_t).total_seconds()
-                elif not isinstance(slc_lst[i], (int, np.integer, type(None))):
-                    t_as_s = float(slc_lst[i])
-
+                t_as_s = self.as_floating_t(slc_lst[i], none_passthrough=True)
                 if t_as_s is not None:
                     slc_lst[i] = "{0}f".format(t_as_s)
 
