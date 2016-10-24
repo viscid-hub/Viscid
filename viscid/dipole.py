@@ -54,7 +54,7 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
 
 def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
                 n=None, twod=False, dtype='f8', nonuniform=False,
-                crd_system='gse'):
+                crd_system='gse', name='b'):
     """Generate a dipole field with magnetic moment m [x, y, z]"""
     if l is None:
         l = [-5] * 3
@@ -71,7 +71,7 @@ def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
     if nonuniform:
         z += 0.01 * ((h[2] - l[2]) / n[2]) * np.sin(np.linspace(0, np.pi, n[2]))
 
-    B = field.empty([x, y, z], nr_comps=3, name="B", center='cell',
+    B = field.empty([x, y, z], nr_comps=3, name=name, center='cell',
                     layout='interlaced', dtype=dtype)
     B.set_info('crd_system', viscid.get_crd_system(crd_system))
     return fill_dipole(B, m=m, strength=strength)
