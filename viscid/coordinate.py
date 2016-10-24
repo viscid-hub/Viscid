@@ -1028,7 +1028,7 @@ class StructuredCrds(Coordinates):
         sfx can be none, node, cell, face, edge
         raises KeyError if axis not found
         """
-        return self.get_crds([axis], shaped, center)[0]
+        return self.get_crds([axis], shaped=shaped, center=center)[0]
 
     def get_crds(self, axes=None, shaped=False, center="none"):
         """Get coordinate arrays
@@ -1044,12 +1044,11 @@ class StructuredCrds(Coordinates):
             list of coords as ndarrays
         """
         if axes is None:
-            axes = [a.upper() if shaped else a for a in self.axes]
-        if not isinstance(axes, (list, tuple)):
-            try:
-                axes = [a.upper() if shaped else a for a in axes]
-            except TypeError:
-                axes = [axes]
+            axes = list(self.axes)
+
+        axes = [self.axes[a] if isinstance(a, (int, np.int)) else a for a in axes]
+        axes = [a.upper() if shaped else a for a in axes]
+
         sfx = self._CENTER[center.lower()]
         return [self._crds[self.axis_name(a) + sfx] for a in axes]
 
