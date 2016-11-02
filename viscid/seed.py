@@ -28,8 +28,8 @@ def to_seeds(pts):
     else:
         return Point(pts)
 
-def make_rotation_matrix(origin, p1, p2, roll=0.0):
-    """Make a matrix that rotates origin-p1 to origin-p2
+def make_rotation_matrix(origin, p1, p2, roll=0.0, new_x=None):
+    """Make a matrix that rotates origin-p2 to origin-p1
 
     Note:
         If you want `p1` and `p2` to be vectors, just set `origin` to
@@ -43,6 +43,9 @@ def make_rotation_matrix(origin, p1, p2, roll=0.0):
             line
         roll (float): Angle (in degrees) of roll around the
             origin-p2 vector
+        new_x (ndarray): If given, then roll is set such that
+            the `x` axis (phi = 0) new_x projected in the plane
+            perpendicular to origin-p1
 
     Returns:
         ndarray: 3x3 orthonormal rotation matrix
@@ -69,6 +72,13 @@ def make_rotation_matrix(origin, p1, p2, roll=0.0):
                   [k[2] ,     0, -k[0]],  # pylint: disable=bad-whitespace
                   [-k[1],  k[0],     0]])  # pylint: disable=bad-whitespace
     R = np.eye(3) + np.sin(theta) * K + (1 - np.cos(theta)) * np.dot(K, K)
+
+    # if new_x is given, use it to set roll
+    if new_x is not None:
+        new_x = np.asarray(new_x) / np.linalg.norm(new_x)
+        x_rot = np.dot(R, [1, 0, 0])
+        x_rot /= np.linalg.norm(x_rot)
+        roll = (180.0 / np.pi) * np.arccos(np.dot(new_x, x_rot))
 
     # now use the same formula to roll around the the origin-p2 axis
     phi = (np.pi / 180.0) * roll
