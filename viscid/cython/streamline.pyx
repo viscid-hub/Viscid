@@ -61,23 +61,24 @@ OUTPUT_TOPOLOGY = 2
 OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
 # topology will be 1+ of these flags binary or-ed together
-#                                bit #   4 2 0 8 6 4 2 0  Notes         bit
-END_NONE = 0                         # 0b000000000000000 not ended yet    X
-END_IBOUND = 1                       # 0b000000000000001                  0
-END_IBOUND_NORTH = 2 | END_IBOUND    # 0b000000000000011  == 3            1
-END_IBOUND_SOUTH = 4 | END_IBOUND    # 0b000000000000101  == 5            2
-END_OBOUND = 8                       # 0b000000000001000                  3
-END_OBOUND_XL = 16 | END_OBOUND      # 0b000000000011000  == 24           4
-END_OBOUND_XH = 32 | END_OBOUND      # 0b000000000101000  == 40           5
-END_OBOUND_YL = 64 | END_OBOUND      # 0b000000001001000  == 72           6
-END_OBOUND_YH = 128 | END_OBOUND     # 0b000000010001000  == 136          7
-END_OBOUND_ZL = 256 | END_OBOUND     # 0b000000100001000  == 264          8
-END_OBOUND_ZH = 512 | END_OBOUND     # 0b000001000001000  == 520          9
-END_CYCLIC = 1024                    # 0b000010000000000  !!NOT USED!!   10
-END_OTHER = 2048                     # 0b000100000000000                 11
-END_MAXIT = 4096 | END_OTHER         # 0b001100000000000  == 6144        12
-END_MAX_LENGTH = 8192 | END_OTHER    # 0b010100000000000  == 10240       13
-END_ZERO_LENGTH = 16384 | END_OTHER  # 0b100100000000000  == 18432       14
+#                                bit #    4 2 0 8 6 4 2 0  Notes         bit
+END_NONE = 0                         # 0b0000000000000000 not ended yet    X
+END_IBOUND = 1                       # 0b0000000000000001                  0
+END_IBOUND_NORTH = 2 | END_IBOUND    # 0b0000000000000011  == 3            1
+END_IBOUND_SOUTH = 4 | END_IBOUND    # 0b0000000000000101  == 5            2
+END_OBOUND = 8                       # 0b0000000000001000                  3
+END_OBOUND_XL = 16 | END_OBOUND      # 0b0000000000011000  == 24           4
+END_OBOUND_XH = 32 | END_OBOUND      # 0b0000000000101000  == 40           5
+END_OBOUND_YL = 64 | END_OBOUND      # 0b0000000001001000  == 72           6
+END_OBOUND_YH = 128 | END_OBOUND     # 0b0000000010001000  == 136          7
+END_OBOUND_ZL = 256 | END_OBOUND     # 0b0000000100001000  == 264          8
+END_OBOUND_ZH = 512 | END_OBOUND     # 0b0000001000001000  == 520          9
+END_OBOUND_R = 1024 | END_OBOUND     # 0b0000010000001000  == 1032        10
+END_CYCLIC = 2048                    # 0b0000100000000000  !!NOT USED!!   11
+END_OTHER = 4096                     # 0b0001000000000000                 12
+END_MAXIT = 8192 | END_OTHER         # 0b0011000000000000  == 12288       13
+END_MAX_LENGTH = 16384 | END_OTHER   # 0b0101000000000000  == 20480       14
+END_ZERO_LENGTH = 32768 | END_OTHER  # 0b1001000000000000  == 36864       15
 
 # IMPORTANT! If TOPOLOGY_MS_* values change, make sure to also change the
 # values in viscid/cython/__init__.py since those are used if the cython
@@ -121,6 +122,7 @@ cdef:
     int _C_END_OBOUND_YH = END_OBOUND_YH
     int _C_END_OBOUND_ZL = END_OBOUND_ZL
     int _C_END_OBOUND_ZH = END_OBOUND_ZH
+    int _C_END_OBOUND_R = END_OBOUND_R
     int _C_END_CYCLIC = END_CYCLIC
     int _C_END_OTHER = END_OTHER
     int _C_END_MAXIT = END_MAXIT
@@ -168,6 +170,7 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
         ibound (float): Inner boundary as distance from (0, 0, 0)
         obound0 (array-like): lower corner of outer boundary (x, y, z)
         obound1 (array-like): upper corner of outer boundary (x, y, z)
+        obound_r (float): Outer boundary as distance from (0, 0, 0)
         maxit (int): maximum number of line segments
         max_length (float): maximum streamline length
         stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
@@ -281,8 +284,8 @@ def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
 def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                    int nr_streams, seed, seed_slice=(None, ),
                    real_t ds0=0.0, real_t ibound=0.0, obound0=None, obound1=None,
-                   int stream_dir=_C_DIR_BOTH, int output=_C_OUTPUT_BOTH,
-                   int method=EULER1,
+                   real_t obound_r=0.0, int stream_dir=_C_DIR_BOTH,
+                   int output=_C_OUTPUT_BOTH, int method=EULER1,
                    int maxit=90000, real_t max_length=1e30,
                    real_t tol_lo=1e-3, real_t tol_hi=1e-2,
                    real_t fac_refine=0.5, real_t fac_coarsen=1.25,
@@ -507,7 +510,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
 
                     # end conditions
                     done = classify_endpoint(s, stream_length, ibound,
-                                             c_obound0, c_obound1,
+                                             c_obound0, c_obound1, obound_r,
                                              max_length, ds, x0)
 
                     if done:
@@ -536,7 +539,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     return lines, topology_ndarr
 
 cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
-                           real_t obound0[3], real_t obound1[3],
+                           real_t obound0[3], real_t obound1[3], real_t obound_r,
                            real_t max_length, real_t ds, real_t pt0[3]) nogil:
     cdef int done = _C_END_NONE
     cdef real_t rsq = pt[0]**2 + pt[1]**2 + pt[2]**2
@@ -546,6 +549,8 @@ cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
             done = _C_END_IBOUND_NORTH
         else:
             done = _C_END_IBOUND_SOUTH
+    elif obound_r != 0.0 and rsq > obound_r**2:
+        done = _C_END_OBOUND_R
     elif pt[0] < obound0[0]:
         done = _C_END_OBOUND_XL
     elif pt[1] < obound0[1]:
