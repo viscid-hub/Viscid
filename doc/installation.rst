@@ -34,12 +34,13 @@ The optional calculator modules (necalc and cycalc) are all dispatched through
 calculator.calc, and it is intelligent enough not to use a library that is not
 installed.
 
-To get the dependancies squared away, I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable.
-
 Quickstart
 ----------
 
-If you want to **install Anaconda python** to manage your dependancies, start with
+Installing Anaconda (optional but recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `Anaconda Python Distribution <https://store.continuum.io/cshop/anaconda/>`_ makes installing dependancies as easy as running one shell command.
 
 .. code-block:: bash
 
@@ -55,7 +56,10 @@ If you want to **install Anaconda python** to manage your dependancies, start wi
     conda config --set changeps1 no
     conda update -q conda
 
-**Getting and installing Viscid**; this should be done in whatever directory you want to store the Viscid source code. I use `~/src` myself.
+Downloading Viscid
+~~~~~~~~~~~~~~~~~~
+
+This should be done in whatever directory you want to store the Viscid source code. I use `~/src` myself.
 
 .. code-block:: bash
 
@@ -63,28 +67,54 @@ If you want to **install Anaconda python** to manage your dependancies, start wi
     mkdir -p ~/.config/matplotlib
     cp Viscid/resources/viscidrc ~/.viscidrc
 
-If you are using Anaconda to manage your dependancies, you can **use the default Viscid environment** to automatically install all Viscid's dependancies,
+Installing Dependancies
+~~~~~~~~~~~~~~~~~~~~~~~
+
+If you are using Anaconda to manage your dependancies, you can use the default Viscid environment to automatically install all Viscid's dependancies,
 
 .. code-block:: bash
 
     conda env create -f Viscid/resources/viscid27.yml
+    # for the more adventurous, you can try python 3.5
+    conda env create -f Viscid/resources/viscid35mayavi.yml
 
-Note that in order to use Viscid, you will need to run
+Note that in order to use Viscid, you will need to activate the virtual environment that we just created (this needs to be done for each new terminal session),
 
 .. code-block:: bash
 
-    source activate viscid27
+    source activate viscid27  # or viscid35mayavi, etc.
 
-to activate the viscid environment for each new terminal session, or just prepend your PATH in your ~/.bashrc with
+An alternative to activating this environment for each session is to prepend your PATH in your ~/.bashrc with
 
 .. code-block:: bash
 
     export PATH="~/local/anaconda/envs/viscid27:${PATH}"
+    echo "export PATH=~/local/anaconda/envs/viscid27:"'${PATH}' >> ~/.bashrc
+
+Building / Installing Viscid
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now you have two choices about how you want to use Viscid. If you intend to edit viscid to your own liking then I recommend using it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
 
-Choice 1 (inplace)
-~~~~~~~~~~~~~~~~~~
+Choice 1 (installed)
+^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+    cd Viscid
+    make
+    make install
+
+to pull updates from github in the future, use
+
+.. code-block:: bash
+
+    git pull
+    make
+    make install
+
+Choice 2 (inplace)
+^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
@@ -95,29 +125,12 @@ Choice 1 (inplace)
     echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ~/.bashrc
     echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ~/.bashrc
 
-to pull updates from github,
+to pull updates from github in the future, use
 
 .. code-block:: bash
 
     git pull
     make inplace
-
-Choice 2 (installed)
-~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: bash
-
-    cd Viscid
-    make
-    make install
-
-to pull updates from github,
-
-.. code-block:: bash
-
-    git pull
-    make
-    make install
 
 Known Workarounds
 -----------------
