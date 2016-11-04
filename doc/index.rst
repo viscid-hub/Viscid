@@ -6,6 +6,20 @@
 Viscid: Visualizing Plasma Simulations in Python
 ================================================
 
+.. raw:: html
+
+    <style type="text/css">
+    div.figure img {
+        border-radius: 25px;
+    }
+    </style>
+
+.. figure:: images/3d_cropped.png
+    :align: right
+    :width: 400px
+    :alt: Mayavi Example
+    :target: examples/mayavi.html
+
 Viscid is a python framework to visualize scientific data on structured meshes. The following file types are understood,
 
 + XDMF + HDF5
