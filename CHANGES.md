@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.98.0 dev
-==========
+0.98.0
+======
 
 Changes:
   - Support for Edge / Face centered fields (interpolate, streamline, fill_dipole, div, fc2cc, ec2cc)
