@@ -36,22 +36,88 @@ installed.
 
 To get the dependancies squared away, I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable.
 
-Standard Setup
---------------
+Quickstart
+----------
 
-The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code. To build Viscid, I recommend running::
+If you want to **install Anaconda python** to manage your dependancies, start with
 
-    make inplace  # (this is an alias for ./setup.py build_ext -i)
-    viscid_dir=$(pwd)
-    export PYTHONPATH=$PYTHONPATH:${viscid_dir}
-    export PATH=$PATH:${viscid_dir}/scripts
+.. code-block:: bash
 
-and adding the `Viscid` directory to your `PYTHONPATH` and `Viscid/scripts` to your `PATH`. This makes editing Viscid far easier.
+    if [ "$(uname -s)" == "Linux" ]; then
+      wget -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+    elif [ "$(uname -s)" == "Darwin" ]; then
+      curl -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
+    fi
+    bash miniconda.sh -b -p $HOME/local/anaconda
+    rm miniconda.sh
+    source ~/.bashrc
+    hash -r
+    conda config --set changeps1 no
+    conda update -q conda
 
-However, the standard distutils commands also work if you're so inclined::
+**Getting and installing Viscid**; this should be done in whatever directory you want to store the Viscid source code. I use `~/src` myself.
 
-    make  # (this is an alias for ./setup.py build_ext)
-    make install  # (this is an alias for ./setup.py install)
+.. code-block:: bash
+
+    git clone git@github.com:KristoforMaynard/Viscid.git
+    mkdir -p ~/.config/matplotlib
+    cp Viscid/resources/viscidrc ~/.viscidrc
+
+If you are using Anaconda to manage your dependancies, you can **use the default Viscid environment** to automatically install all Viscid's dependancies,
+
+.. code-block:: bash
+
+    conda env create -f Viscid/resources/viscid27.yml
+
+Note that in order to use Viscid, you will need to run
+
+.. code-block:: bash
+
+    source activate viscid27
+
+to activate the viscid environment for each new terminal session, or just prepend your PATH in your ~/.bashrc with
+
+.. code-block:: bash
+
+    export PATH="~/local/anaconda/envs/viscid27:${PATH}"
+
+Now you have two choices about how you want to use Viscid. If you intend to edit viscid to your own liking then I recommend using it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
+
+Choice 1 (inplace)
+~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+    cd Viscid
+    make inplace
+    export PATH="${PATH}:${PWD}/Viscid/scripts"
+    export PYTHONPATH="${PYTHONPATH}:${PWD}/Viscid"
+    echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ~/.bashrc
+    echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ~/.bashrc
+
+to pull updates from github,
+
+.. code-block:: bash
+
+    git pull
+    make inplace
+
+Choice 2 (installed)
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+    cd Viscid
+    make
+    make install
+
+to pull updates from github,
+
+.. code-block:: bash
+
+    git pull
+    make
+    make install
 
 Known Workarounds
 -----------------

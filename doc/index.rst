@@ -48,15 +48,10 @@ Branch               Test Status       Docs
    <img src="https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev"
   </a>
 
-Quick Start
------------
+Quickstart
+----------
 
-I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable. Check :doc:`installation` for the list of dependancies. To build Viscid, I recommend running::
-
-  make inplace  # (this is an alias for ./setup.py build_ext -i)
-  viscid_dir=$(pwd)
-  export PYTHONPATH=$PYTHONPATH:${viscid_dir}
-  export PATH=$PATH:${viscid_dir}/scripts
+Please refer to the quickstart instructions in :doc:`installation`.
 
 Contents
 --------
