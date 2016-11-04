@@ -216,7 +216,7 @@ with mpl.plt.style.context(("{style}",)):
 
     mpl.plt.subplot2grid((2, 9), (0, 1), rowspan=2, colspan=4)
     x = np.linspace(0, 2 * np.pi)
-    for phase in np.linspace(0, np.pi / 4, 6):
+    for phase in np.linspace(0, np.pi / 4, n):
         mpl.plt.plot(x, (1 + np.sqrt(phase)) * np.sin(x - phase),
                      label=r"$\phi = {{0:.2g}}$".format(phase))
     mpl.plt.legend(loc=0)

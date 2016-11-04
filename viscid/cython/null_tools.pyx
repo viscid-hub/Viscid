@@ -1,4 +1,5 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True
+# cython: emit_code_comments=False
 
 from itertools import count
 

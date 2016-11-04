@@ -16,8 +16,10 @@ Attributes:
 
 from __future__ import print_function
 import logging
+import re
 import signal
 import sys
+import textwrap
 
 import numpy
 
@@ -25,12 +27,13 @@ from viscid import _rc
 from viscid.compat.vimportlib import import_module
 
 
-__version__ = """0.97.0"""
+__version__ = """0.98.0"""
 
 __all__ = ['amr_field',
            'amr_grid',
            'bucket',
            'coordinate',
+           'cotr',
            'dataset',
            'dipole',
            'field',
@@ -63,6 +66,8 @@ logger.addHandler(_handler)
 
 class _CustomFilter(logging.Filter, object):
     def filter(self, record):
+        if '\n' not in record.msg:
+            record.msg = '\n'.join(textwrap.wrap(record.msg, width=65))
         spaces = ' ' * (len(record.levelname) + 2)
         record.msg = record.msg.replace('\n', '\n' + spaces)
         return super(_CustomFilter, self).filter(record)
@@ -100,10 +105,11 @@ def import_injector(attr_list, namespace, package=None, quiet=False,
                     # print("    ", sub, "=", getattr(m, sub))
                     namespace[sub] = getattr(m, sub)
         except ImportError as e:
-            _on_injected_import_error(s, e, quiet=quiet)
-            attr_list.remove(s)
-            if fatal:
-                raise
+            if s not in namespace:
+                _on_injected_import_error(s, e, quiet=quiet)
+                attr_list.remove(s)
+                if fatal:
+                    raise
     attr_list += additional
 
 import_injector(__all__, globals(), package="viscid")

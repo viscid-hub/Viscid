@@ -16,10 +16,10 @@ There is also preliminary support for reading and plotting AMR datasets from XDM
 
 Both the master and dev branches should make every attempt to be usable (thanks to continuous integration), but the obvious caveats exist, i.e. the dev branch has more cool new features but it isn't _as_ tested.
 
-Branch        | Docs                                                                      | Test Status
+Branch                                                      | Docs                                                                      | Test Status
 ------------- | ------------------------------------------------------------------------- | -----------------------
-master        | [html](http://kristoformaynard.github.io/Viscid/docs/master/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/master-2.7/index.html)   | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master)](https://travis-ci.org/KristoforMaynard/Viscid)
-dev           | [html](http://kristoformaynard.github.io/Viscid/docs/dev/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/dev-2.7/index.html)      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev)](https://travis-ci.org/KristoforMaynard/Viscid)
+[master](https://github.com/KristoforMaynard/Viscid)        | [html](http://kristoformaynard.github.io/Viscid/docs/master/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/master-2.7/index.html)   | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master)](https://travis-ci.org/KristoforMaynard/Viscid)
+[dev](https://github.com/KristoforMaynard/Viscid/tree/dev)  | [html](http://kristoformaynard.github.io/Viscid/docs/dev/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/dev-2.7/index.html)      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev)](https://travis-ci.org/KristoforMaynard/Viscid)
 
 ## Install ##
 
@@ -48,19 +48,9 @@ The optional calculator modules (necalc and cycalc) are all dispatched through
 calculator.calc, and it is intelligent enough not to use a library that is not
 installed.
 
-The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code. To build Viscid, I recommend running::
+The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code.
 
-    ./setup.py build_ext -i
-    viscid_dir=$(pwd)
-    export PYTHONPATH=$PYTHONPATH:${viscid_dir}
-    export PATH=$PATH:${viscid_dir}/scripts
-
-and adding the `Viscid` directory to your `PYTHONPATH` and `Viscid/scripts` to your `PATH`. This makes editing Viscid far easier.
-
-However, the standard distutils commands also work if you're so inclined::
-
-    ./setup.py build
-    ./setup.py install
+For explicit installation instructions, please refer to the [Quickstart Documentation](http://kristoformaynard.github.io/Viscid/docs/master/installation.html).
 
 ## Development ##
 

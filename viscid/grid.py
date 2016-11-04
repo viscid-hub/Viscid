@@ -223,6 +223,13 @@ class Grid(tree.Node):
             else:
                 raise KeyError("field not found: {0}".format(fldname))
 
+        process_func = "_process_" + fldname
+        if hasattr(self, process_func):
+            ret = getattr(self, process_func)(ret)
+
+        if hasattr(self, "_processALL"):
+            ret = getattr(self, "_processALL")(ret)
+
         if slc is not None and try_final_slice:
             ret = ret.slice_and_keep(slc)
         return ret

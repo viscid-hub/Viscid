@@ -23,16 +23,17 @@ from viscid.plot import mpl
 
 try:
     import numexpr as ne
+    HAS_NUMEXPR = True
 except ImportError:
-    xfail("Numexpr is not installed")
+    HAS_NUMEXPR = False
 
 def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     t0 = time()
-    result_numexpr = viscid.div(fld, preferred="numexpr", only=True)
+    result_numexpr = viscid.div(fld, preferred="numexpr", only=False)
     t1 = time()
     logger.info("numexpr magnitude runtime: %g", t1 - t0)
 
-    result_diff = viscid.diff(result_numexpr, exact[1:-1, 1:-1, 1:-1])
+    result_diff = viscid.diff(result_numexpr, exact)['x=1:-1, y=1:-1, z=1:-1']
     if not ignore_inexact and not (result_diff.data < 5e-5).all():
         logger.warn("numexpr result is far from the exact result")
     logger.info("min/max(abs(numexpr - exact)): %g / %g",
@@ -59,6 +60,7 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
 
 def main():
     parser = argparse.ArgumentParser(description="Test divergence")
+    parser.add_argument("--prof", action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
@@ -75,16 +77,33 @@ def main():
 
     Xcc, Ycc, Zcc = exact_cc.get_crds_cc(shaped=True)  # pylint: disable=W0612
 
-    v['x'] = ne.evaluate("(sin(Xcc))")  # + Zcc
-    v['y'] = ne.evaluate("(cos(Ycc))")  # + Xcc# + Zcc
-    v['z'] = ne.evaluate("-((sin(Zcc)))")  # + Xcc# + Ycc
-    exact_cc[:, :, :] = ne.evaluate("cos(Xcc) - sin(Ycc) - cos(Zcc)")
+    if HAS_NUMEXPR:
+        v['x'] = ne.evaluate("(sin(Xcc))")  # + Zcc
+        v['y'] = ne.evaluate("(cos(Ycc))")  # + Xcc# + Zcc
+        v['z'] = ne.evaluate("-((sin(Zcc)))")  # + Xcc# + Ycc
+        exact_cc[:, :, :] = ne.evaluate("cos(Xcc) - sin(Ycc) - cos(Zcc)")
+    else:
+        v['x'] = (np.sin(Xcc))  # + Zcc
+        v['y'] = (np.cos(Ycc))  # + Xcc# + Zcc
+        v['z'] = -((np.sin(Zcc)))  # + Xcc# + Ycc
+        exact_cc[:, :, :] = np.cos(Xcc) - np.sin(Ycc) - np.cos(Zcc)
+
+    if args.prof:
+        print("Without boundaries")
+        viscid.timeit(viscid.div, v, bnd=False, timeit_repeat=10,
+                      timeit_print_stats=True)
+        print("With boundaries")
+        viscid.timeit(viscid.div, v, bnd=True, timeit_repeat=10,
+                      timeit_print_stats=True)
 
     logger.info("node centered tests")
     v_nc = v.as_centered('node')
     exact_nc = viscid.empty_like(v_nc['x'])
     X, Y, Z = exact_nc.get_crds_nc(shaped=True)  # pylint: disable=W0612
-    exact_nc[:, :, :] = ne.evaluate("cos(X) - sin(Y) - cos(Z)")
+    if HAS_NUMEXPR:
+        exact_nc[:, :, :] = ne.evaluate("cos(X) - sin(Y) - cos(Z)")
+    else:
+        exact_nc[:, :, :] = np.cos(X) - np.sin(Y) - np.cos(Z)
     # FIXME: why is the error so much larger here?
     run_div_test(v_nc, exact_nc, title='Node Centered', show=args.show,
                  ignore_inexact=True)

@@ -10,6 +10,7 @@ from itertools import count
 import numpy as np
 
 import viscid
+from viscid import field
 from viscid import logger
 from viscid import verror
 from viscid import seed
@@ -28,12 +29,13 @@ except ImportError as e:
     has_numexpr = False
 
 __all__ = ['neg', 'scale', 'add', 'diff', 'mul', 'relative_diff', 'abs_diff',
-           'abs_val', 'abs_max', 'abs_min', 'magnitude', 'dot', 'cross',
-           'div', 'curl', 'normalize', 'project', 'project_vector',
-           'project_along_line', 'resample_lines', 'integrate_along_line',
-           'integrate_along_lines', 'jacobian_at_point', 'jacobian_at_ind',
-           'jacobian_eig_at_point', 'jacobian_eig_at_ind', 'div_at_point',
-           'curl_at_point']
+           'abs_val', 'abs_max', 'abs_min', 'magnitude', 'dot', 'cross', 'grad',
+           'convective_deriv', 'div', 'curl', 'normalize', 'project',
+           'project_vector', 'project_along_line', 'resample_lines',
+           'integrate_along_line', 'integrate_along_lines', 'jacobian_at_point',
+           'jacobian_at_ind', 'jacobian_eig_at_point', 'jacobian_eig_at_ind',
+           'div_at_point', 'curl_at_point', 'extend_boundaries',
+           'extend_boundaries_ndarr']
 
 
 class Operation(object):
@@ -49,6 +51,10 @@ class Operation(object):
         self._imps = OrderedDict()
         self.add_implementations(implementations)
         setattr(self, "__doc__", doc)
+
+    @property
+    def __name__(self):
+        return self.opname
 
     def add_implementation(self, name, func):
         self._imps[name] = func
@@ -95,7 +101,7 @@ class UnaryOperation(Operation):
         return ret
 
 class BinaryOperation(Operation):
-    def __call__(self, a, b, **kwargs):
+    def __call__(self, a, b=None, **kwargs):
         ret = super(BinaryOperation, self).__call__(a, b, **kwargs)
         try:
             ret.name = "{0} {1} {2}".format(a.name, self.short_name, b.name)
@@ -164,12 +170,6 @@ abs_val.add_implementation("numpy", np.abs)
 abs_max.add_implementation("numpy", lambda a: np.max(np.abs(a)))
 abs_min.add_implementation("numpy", lambda a: np.min(np.abs(a)))
 
-def _dot_np(fld_a, fld_b):
-    if fld_a.nr_comp != fld_b.nr_comp:
-        raise ValueError("field must have same layout (flat or interlaced)")
-    return np.sum(fld_a * fld_b, axis=fld_a.nr_comp)
-dot.add_implementation("numpy", _dot_np)
-
 def _magnitude_np(fld):
     return np.sqrt((np.sum(fld * fld, axis=fld.nr_comp)))
 magnitude.add_implementation("numpy", _magnitude_np)
@@ -182,10 +182,173 @@ project.add_implementation("numpy", _project_np)
 
 def _normalize_np(a):
     """ normalize a vector field """
-    return a / np.linalg.norm(a, axis=a.nr_comp)
+    shp0 = list(a.shape)
+    shp0[a.nr_comp] = 1
+    return a / np.linalg.norm(a, axis=a.nr_comp).reshape(shp0)
 normalize.add_implementation("numpy", _normalize_np)
 
-# native versions
+def _dot_np(fld_a, fld_b):
+    """dot product of two vector fields"""
+    if fld_a.nr_comp != fld_b.nr_comp:
+        raise ValueError("field must have same layout (flat or interlaced)")
+    return np.sum(fld_a * fld_b, axis=fld_a.nr_comp)
+dot.add_implementation("numpy", _dot_np)
+
+def _cross_np(fld_a, fld_b):
+    """cross product of two vector fields"""
+    ax, ay, az = fld_a.component_views()
+    bx, by, bz = fld_b.component_views()
+    prodx = ay * bz - az * by
+    prody = -ax * bz + az * bx
+    prodz = ax * by - ay * bx
+    return fld_a.wrap([prodx, prody, prodz])
+cross.add_implementation("numpy", _cross_np)
+
+def _grad_np(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        # divcenter = "Cell"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        # divcenter = "Node"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered gradients")
+
+    v = fld.data
+    g = viscid.zeros(fld['x=1:-1, y=1:-1, z=1:-1'].crds, nr_comps=3)
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxp, vxm = v[2:  , 1:-1, 1:-1], v[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vyp, vym = v[1:-1, 2:  , 1:-1], v[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vzp, vzm = v[1:-1, 1:-1, 2:  ], v[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    g['x'].data[...] = (vxp - vxm) / (xp - xm)
+    g['y'].data[...] = (vyp - vym) / (yp - ym)
+    g['z'].data[...] = (vzp - vzm) / (zp - zm)
+    return g
+grad.add_implementation("numpy", _grad_np)
+
+def _div_np(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if fld.iscentered("Face"):
+        # dispatch fc div immediately since that does its own pre-processing
+        return viscid.div_fc(fld, bnd=bnd)
+
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
+    vx, vy, vz = fld.component_views()
+
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        divcenter = "Cell"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        divcenter = "Node"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered divs")
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxp, vxm = vx[2:  , 1:-1, 1:-1], vx[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vyp, vym = vy[1:-1, 2:  , 1:-1], vy[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vzp, vzm = vz[1:-1, 1:-1, 2:  ], vz[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    div_arr = ((vxp - vxm) / (xp - xm) + (vyp - vym) / (yp - ym) +
+               (vzp - vzm) / (zp - zm))
+    return field.wrap_field(div_arr, divcrds, name="div " + fld.name,
+                            center=divcenter, time=fld.time, parents=[fld])
+div.add_implementation("numpy", _div_np)
+
+def _curl_np(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
+    vx, vy, vz = fld.component_views()
+
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        curlcenter = "cell"
+        # curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        curlcenter = "node"
+        # curlcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        curlcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered divs")
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxpy, vxmy = vx[1:-1, 2:  , 1:-1], vx[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vxpz, vxmz = vx[1:-1, 1:-1, 2:  ], vx[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    vypx, vymx = vy[2:  , 1:-1, 1:-1], vy[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vypz, vymz = vy[1:-1, 1:-1, 2:  ], vy[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    vzpx, vzmx = vz[2:  , 1:-1, 1:-1], vz[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vzpy, vzmy = vz[1:-1, 2:  , 1:-1], vz[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+
+    curl_x = (vzpy - vzmy) / (yp - ym) - (vypz - vymz) / (zp - zm)
+    curl_y = -(vzpx - vzmx) / (xp - xm) + (vxpz - vxmz) / (zp - zm)
+    curl_z = (vypx - vymx) / (xp - xm) - (vxpy - vxmy) / (yp - ym)
+
+    return field.wrap_field([curl_x, curl_y, curl_z], curlcrds,
+                            name="curl " + fld.name, fldtype="Vector",
+                            center=curlcenter, time=fld.time,
+                            parents=[fld])
+curl.add_implementation("numpy", _curl_np)
+
+def convective_deriv(a, b=None, bnd=True):
+    r"""Compute (a \dot \nabla) b for vector fields a and b"""
+    # [(B \dot \nabla) B]_j = B_i \partial_i B_j
+    # FIXME: this is a lot of temporary arrays
+    if bnd:
+        if b is None:
+            b = viscid.extend_boundaries(a, order=0, crd_order=0)
+        else:
+            b = viscid.extend_boundaries(b, order=0, crd_order=0)
+    else:
+        if b is None:
+            b = a
+        a = a['x=1:-1, y=1:-1, z=1:-1']
+
+    if b.nr_comps > 1:
+        diBj = [[None, None, None], [None, None, None], [None, None, None]]
+        for j, jcmp in enumerate('xyz'):
+            g = grad(b[jcmp], bnd=False)
+            for i, icmp in enumerate('xyz'):
+                diBj[i][j] = g[icmp]
+        dest = viscid.zeros(a.crds, nr_comps=3)
+        for i, icmp in enumerate('xyz'):
+            for j, jcmp in enumerate('xyz'):
+                dest[jcmp][...] += a[icmp] * diBj[i][j]
+    else:
+        dest = dot(a, grad(b, bnd=False))
+    return dest
+
+# native versions  NOTE: magnitude_native is really only for benchmarking
 def _magnitude_native(fld):
     vx, vy, vz = fld.component_views()
     mag = np.empty_like(vx)
@@ -263,7 +426,7 @@ def project_along_line(line, fld):
     dsvec = dsvec / np.linalg.norm(dsvec, axis=0)
     return np.sum(fld_on_verts * dsvec.T, axis=1)
 
-def integrate_along_line(line, fld, reduction="dot"):
+def integrate_along_line(line, fld, reduction="dot", mask_func=None):
     """Integrate the value of fld along a line
 
     Args:
@@ -276,9 +439,10 @@ def integrate_along_line(line, fld, reduction="dot"):
     Returns:
         a scalar with the same dtype as fld
     """
-    return integrate_along_lines([line], fld, reduction=reduction)[0]
+    return integrate_along_lines([line], fld, reduction=reduction,
+                                 mask_func=mask_func)[0]
 
-def integrate_along_lines(lines, fld, reduction="dot"):
+def integrate_along_lines(lines, fld, reduction="dot", mask_func=None):
     """Integrate the value of fld along a list of lines
 
     Args:
@@ -308,7 +472,10 @@ def integrate_along_lines(lines, fld, reduction="dot"):
                 dsvec = dsvec / np.linalg.norm(dsvec, axis=0)
                 values = 0.5 * (fld_on_verts[start:stop - 1, :] +
                                 fld_on_verts[start + 1:stop, :])
-                values = np.sum(values * dsvec.T, axis=1)
+                values = values * dsvec.T
+                if mask_func is not None:
+                    values = np.ma.masked_where(mask_func(values), values)
+                values = np.sum(values, axis=1)
             elif reduction in ["mag", "magnitude", "norm"]:
                 mag = np.linalg.norm(fld_on_verts[start:stop], axis=1)
                 values = 0.5 * (mag[start:stop - 1] + mag[start + 1:stop])
@@ -459,6 +626,145 @@ def curl_at_point(A, x, y, z, dx=None, dy=None, dz=None):
     c[2] = ((As[2 * 2 + 1, 1] - As[2 * 2 + 0, 1]) / (2.0 * dcrd[0]) -
             (As[2 * 1 + 1, 0] - As[2 * 1 + 0, 0]) / (2.0 * dcrd[1]))
     return c
+
+def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
+                            order=1):
+    """Extend and pad boundaries of ndarray (leaves new corners @ 0.0)
+
+    Args:
+        arr (ndarray): Array to extend
+        nl (int): extend this many cells in lower direction
+        nh (int): extend this many cells in upper direction
+        axes (list): list of ints that correspond to axes that should
+            be extended. If nr_comp != None, then axes > nr_comp will
+            be shifted by 1.
+        nr_comp (int, None): index of shape that corresponds to vector
+            component dimension
+        order (int): 0 for repeating boundary values or 1 for linear
+            extrapolation
+
+    Returns:
+        ndarray: A new extended / padded ndarray
+    """
+    if nr_comp is not None:
+        axes = [ax if ax < nr_comp else ax + 1 for ax in axes]
+
+    shape = list(arr.shape)
+    target_shape = [s + nl + nh if i in axes else s for i, s in enumerate(shape)]
+
+    s0 = []
+    for i, s in enumerate(shape):
+        if i in axes:
+            _nl = nl if nl else None
+            _nh = -nh if nh else None
+            s0.append(slice(_nl, _nh))
+        else:
+            s0.append(slice(None))
+
+    v = np.zeros(target_shape, dtype=arr.dtype)
+
+    v[s0] = arr[...]
+
+    for i, _ in enumerate(axes):
+        ni = shape[i] + nl
+        dest_slc = [slice(None)] * len(v.shape)
+        src_slc = [slice(None)] * len(v.shape)
+        src_slcR = [slice(None)] * len(v.shape)
+
+        if order == 0 or arr.shape[i] < 2:
+            if nl:
+                dest_slc[i] = slice(None, nl)
+                src_slc[i] = slice(nl, nl + 1)
+                v[dest_slc] = v[src_slc]
+            if nh:
+                dest_slc[i] = slice(ni, None)
+                src_slc[i] = slice(ni - 1, ni)
+                v[dest_slc] = v[src_slc]
+        elif order == 1:
+            for j in range(nl):
+                dest_slc[i] = slice(nl - j - 1, nl - j)
+                src_slc[i] = slice(nl - j, nl - j + 1)
+                src_slcR[i] = slice(nl - j + 1, nl - j + 2)
+                v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
+            for j in range(nh):
+                dest_slc[i] = slice(ni + j, ni + j + 1)
+                src_slc[i] = slice(ni + j - 1, ni + j)
+                src_slcR[i] = slice(ni + j -2, ni + j - 1)
+                v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
+            # src_slc[i] = slice(-1, None)
+            # dest_slc[i] = slice(-nh, None)
+            # v[dest_slc] = arr[src_slc]
+        else:
+            raise ValueError("extend_boundaries can only be 0th or 1st order")
+    return v
+
+def extend_boundaries(fld, nl=1, nh=1, axes='all', nr_comp=None, order=1,
+                      crd_order=1, crds=None):
+    """Extend and pad boundaries of field (leaves new corners @ 0.0)
+
+    Warning:
+        When using crd_order=0 (0 order hold), coordinates will be
+        extended by repeating boundary values, so min_dx will be 0.
+        Keep this in mind if dividing by dx.
+
+    Args:
+        fld (Field): Field to extend
+        nl (int): extend this many cells in lower direction
+        nh (int): extend this many cells in upper direction
+        axes (str, list): something like 'xyz', ['x', 'theta'], etc.
+        nr_comp (int, None): index of shape that corresponds to vector
+            component dimension
+        order (int): extrapolation order for data; 0 for repeating
+            boundary values or 1 for linear extrapolation
+        crd_order (int): extrapolation order for crds; 0 for repeating
+            boundary values or 1 for linear extrapolation
+        crds (Coordinates): Use these coordinates, no extrapolate them
+
+    Returns:
+        ndarray: A new extended / padded ndarray
+    """
+    arr_axes = fld.crds.axes
+    axis_lookup = dict()
+    for i, ax in enumerate(arr_axes):
+        axis_lookup[i] = i
+        axis_lookup[ax] = i
+    if axes == 'all':
+        axes = list([i for i, s in enumerate(fld.sshape) if s > 1])
+    if not isinstance(axes, (list, tuple, viscid.string_types)):
+        axes = list(axes)
+    axes = [axis_lookup[ax] for ax in axes]
+
+    try:
+        nr_comp = fld.nr_comp
+    except TypeError:
+        nr_comp = None
+
+    new_dat = extend_boundaries_ndarr(fld.data, nl=nl, nh=nh, axes=axes,
+                                      nr_comp=nr_comp, order=order)
+
+    if crds is not None:
+        new_crds = crds
+    else:
+        new_clist = []
+        crds_nc = fld.crds.get_crds_nc()
+        crds_cc = fld.crds.get_crds_cc()
+        for ax, nc, cc in zip(fld.crds.axes, crds_nc, crds_cc):
+            if fld.crds.axes.index(ax) in axes:
+                new_nc = extend_boundaries_ndarr(nc, nl=nl, nh=nh, axes=[0],
+                                                 order=crd_order)
+                new_cc = extend_boundaries_ndarr(cc, nl=nl, nh=nh, axes=[0],
+                                                 order=crd_order)
+            else:
+                new_nc = nc
+                new_cc = cc
+            new_clist.append((ax, new_nc, new_cc))
+
+        crdtype = fld.crds.crdtype
+        if 'nonuniform' not in crdtype:
+            crdtype = crdtype.replace('uniform', 'nonuniform')
+        new_crds = viscid.wrap_crds(crdtype, new_clist)
+
+    return fld.wrap(new_dat, context=dict(crds=new_crds))
 
 ##
 ## EOF

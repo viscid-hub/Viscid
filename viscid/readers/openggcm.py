@@ -32,6 +32,8 @@ from viscid.coordinate import wrap_crds
 from viscid.calculator import plasma
 
 
+DEFAULT_BBNORM = 3.0574001e-05 / 1e-9
+
 GGCM_EPOCH = np.datetime64('1966-01-01T00:00:00Z')
 GGCM_NO_DIPTILT = np.datetime64('1967-01-01T00:00:00Z')
 
@@ -175,8 +177,15 @@ class GGCMGrid(grid.Grid):
         - T: Temperature, for now, just pressure / density
         - bx, by, bz: CC mag field components, if not already stored by
           component)
-        - b: mag field as vector, layout affected by
-          GGCMGrid.derived_vector_layout
+        - b, b_cc: B as CC vector field in nT, layout affected by
+            GGCMGrid.derived_vector_layout
+        - b_fc, b1, b2: B as FC vector field in nT, layout affected by
+            GGCMGrid.derived_vector_layout
+        - e_cc: E as CC vector field in mV/m?, layout affected by
+            GGCMGrid.derived_vector_layout.
+        - e_ec: E as EC vector field in mV/m?, layout affected by
+            GGCMGrid.derived_vector_layout. This should be used
+            even for jrrle files.
         - v: velocity as vector, same idea as b
         - beta: plasma beta, just pp/b^2
         - psi: flux function (only works for 2d files/grids)
@@ -193,11 +202,13 @@ class GGCMGrid(grid.Grid):
             layout for vector fields on load (default is
             :py:const:`viscid.field.LAYOUT_DEFAULT`)
     """
-    _flip_vect_comp_names = "bx, by, b1x, b1y, " \
+    _flip_vect_comp_names = "bx, by, ex, ey, " \
                             "vx, vy, rv1x, rv1y, " \
                             "jx, jy, xjx, xjy, " \
-                            "ex, ey, ex_cc, ey_cc".split(', ')
-    _flip_vect_names = "v, b, j, xj".split(', ')
+                            "b1x, b1y, bx1, by1, b2x, b2y, bx2, by2, " \
+                            "ex_cc, ey_cc, ex_ec, ey_ec, eflx, efly".split(', ')
+    _flip_vect_names = "v, b, b1, b2, b_cc, b_fc, " \
+                       "e_cc, e_ec, efl, j, xj".split(', ')
     # _flip_vect_comp_names = []
     # _flip_vect_names = []
 
@@ -206,61 +217,108 @@ class GGCMGrid(grid.Grid):
 
     def _do_mhd_to_gse_on_read(self):
         """Return True if we """
-        if isinstance(self.mhd_to_gse_on_read, string_types):
-            # we already know what this data file needs
-            if self.has_info("_viscid_do_mhd_to_gse_on_read"):
-                return self.find_info("_viscid_do_mhd_to_gse_on_read")
+        # we already know what this data file needs
+        if self.has_info("_viscid_do_mhd_to_gse_on_read"):
+            return self.find_info("_viscid_do_mhd_to_gse_on_read")
 
-            # what are we asking for?
-            request = self.mhd_to_gse_on_read.lower()
-            if request.startswith("auto"):
-                # setup the default
+        # do we already know the crd system of this grid?
+        crd_system = self.find_info("crd_system", None)
+        freshly_determined_crd_system = crd_system is None
+
+        # I guess not, can we figure out the crd system of this grid?
+        if crd_system is None and self.find_info('assume_mhd_crds', False):
+            crd_system = "mhd"
+
+        if crd_system is None and self.find_info("_viscid_log_fname"):
+            # try to intuit the _crd system based on the log file and grid
+            try:
+                # if we're using a mirdip IC, and low edge is at least
+                # twice smaller than the high edge, then assume
+                # it's a magnetosphere box with xl < 0.0 is the sunward
+                # edge in "MHD" coordinates
+                is_openggcm = self.find_info('ggcm_mhd_type') == "ggcm"
+                # this 2nd check is in case the ggcm_mhd view in the
+                # log file is mangled... this happens sometimes
+                ic_type = self.find_info('ggcm_mhd_ic_type', '')
+                is_openggcm |= ic_type.startswith("mirdip")
+                # note that these default values are total hacks for fortran
+                # runs which don't spew mrc information @ the beginning
+                xl = float(self.find_info('mrc_crds_l')[0])
+                xh = float(self.find_info('mrc_crds_h')[0])
+                if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
+                    crd_system = "mhd"
+                elif is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xh > xl:
+                    crd_system = "gse"
+                else:
+                    crd_system = "other"
+            except KeyError as e:
+                logger.warn("Could not determine coordiname system; "
+                            "either the logfile is mangled, or "
+                            "the libmrc options I'm using in infer "
+                            "crd system have changed (%s)", e.args[0])
+
+        if crd_system is None:
+            crd_system = "unknown"
+
+        if freshly_determined_crd_system:
+            self.set_info("crd_system", crd_system)
+
+        # now that we have an idea what the crd_system is, determine
+        # whether or not to do a mhd -> gse translation
+
+        request = str(self.mhd_to_gse_on_read).strip().lower()
+
+        if request == 'true':
+            viscid.logger.warn("'mhd_to_gse_on_read = true' is deprecated due "
+                               "to lack of clarity. Please use 'auto', or if "
+                               "you really want to always flip the axes, use "
+                               "'force'. Only use 'force' if you are certain, "
+                               "since even non-magnetosphere OpenGGCM grids "
+                               "will be flipped, and you will be confused "
+                               "some day when you open an MHD-in-a-box run, "
+                               "and you have forgetten about this message.")
+            ret = True
+        elif request == 'force':
+            ret = True
+        elif request == 'false':
+            ret = False
+        elif request.startswith("auto"):
+            default = True if request.endswith('true') else False
+            if crd_system == "mhd":
+                ret = True
+            elif crd_system == "gse":
                 ret = False
-                if request.endswith("true"):
-                    ret = True
-
-                # sanity check the logfile stuffs
+            else:
                 log_fname = self.find_info("_viscid_log_fname")
+                # which error / warning to print depends on why crd_system
+                # neither mhd | gse; was logfile reading turned off, was
+                # the logfile not found, or was the logfile simply mangled?
+                if default:
+                    default_action = "flipping axes since default is True"
+                else:
+                    default_action = "not flipping axes since default is False"
+
                 if log_fname is False:
-                    raise RuntimeError("If you're using 'auto' for mhd->gse "
-                                       "conversion, reading the logfile "
-                                       "MUST be turned on.")
+                    logger.error("If you're using 'auto' for mhd->gse "
+                                 "conversion, reading the logfile MUST be "
+                                 "turned on. ({0})".format(default_action))
                 elif log_fname is None:
                     logger.warn("Tried to determine coordinate system using "
                                 "logfile parameters, but no logfile found. "
                                 "Copy over the log file to use auto mhd->gse "
-                                "conversion. (Using default {0})".format(ret))
+                                "conversion. ({0})".format(default_action))
                 else:
-                    # ok, we want auto, and we have a logfile so let's figure
-                    # out the current layout
-                    try:
-                        # if we're using a mirdip IC, and low edge is at least
-                        # twice smaller than the high edge, then assume
-                        # it's a magnetosphere box with xl < 0.0 is the sunward
-                        # edge in "MHD" coordinates
-                        is_openggcm = (self.find_info('ggcm_mhd_type') == "ggcm")
-                        # this 2nd check is in case the ggcm_mhd view in the
-                        # log file is mangled... this happens sometimes
-                        ic_type = self.find_info('ggcm_mhd_ic_type')
-                        is_openggcm |= (ic_type.startswith("mirdip"))
-                        xl = float(self.find_info('mrc_crds_l')[0])
-                        xh = float(self.find_info('mrc_crds_h')[0])
-                        if is_openggcm and xl < 0.0 and xh > 0.0 and -2 * xl < xh:
-                            ret = True
-                    except KeyError as e:
-                        logger.warn("Could not determine coordiname system; "
-                                    "either the logfile is mangled, or "
-                                    "the libmrc options I'm using in infer "
-                                    "crd system have changed (%s)", e.args[0])
-                self.set_info("_viscid_do_mhd_to_gse_on_read", ret)
-                return ret
-            else:
-                raise ValueError("Invalid value for mhd_to_gse_on_read: "
-                                 "'{0}'; valid choices: (True, False, auto, "
-                                 "auto_true)".format(self.mhd_to_gse_on_read))
-            return True
+                    logger.warn("Could not determine crd_system used for this "
+                                "grid on disk ({0})".format(default_action))
+                # crd_system is either 'other' or 'unknown'
+                ret = default
         else:
-            return self.mhd_to_gse_on_read
+            raise ValueError("Invalid value for mhd_to_gse_on_read: "
+                             "'{0}'; valid choices: (True, False, auto, "
+                             "auto_true, force)".format(request))
+
+        self.set_info("_viscid_do_mhd_to_gse_on_read", ret)
+        return ret
 
     def set_crds(self, crds_object):
         if self._do_mhd_to_gse_on_read():
@@ -290,7 +348,8 @@ class GGCMGrid(grid.Grid):
                 f.transform_func_kwargs = dict(copy_on_transform=self.copy_on_transform)
                 f.set_info("crd_system", "gse")
             else:
-                f.set_info("crd_system", "mhd")
+                f.set_info("crd_system", self.get_info("crd_system"))
+
         super(GGCMGrid, self).add_field(*fields)
 
     def _get_T(self):
@@ -333,31 +392,9 @@ class GGCMGrid(grid.Grid):
         comps = [self[base_name + c + suffix] for c in comp_names]
         return field.scalar_fields_to_vector(comps, name=base_name, **opts)
 
-    def _get_b(self):
-        return self._assemble_vector("b", _force_layout=self.force_vector_layout,
-                                     pretty_name="B")
-
-    def _get_b1(self):
-        return self._assemble_vector("b1", _force_layout=self.force_vector_layout,
-                                     pretty_name="B")
-
     def _get_v(self):
         return self._assemble_vector("v", _force_layout=self.force_vector_layout,
                                      pretty_name="V")
-
-    def _get_e(self):
-        return self._assemble_vector("e", _force_layout=self.force_vector_layout,
-                                     pretty_name="E")
-
-    def _get_e_cc(self):
-        return self._assemble_vector("e", suffix="_cc",
-                                     _force_layout=self.force_vector_layout,
-                                     pretty_name="E")
-
-    def _get_e_ec(self):
-        return self._assemble_vector("e", suffix="_ec",
-                                     _force_layout=self.force_vector_layout,
-                                     pretty_name="E")
 
     def _get_j(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
@@ -366,6 +403,117 @@ class GGCMGrid(grid.Grid):
     def _get_xj(self):
         return self._assemble_vector("j", _force_layout=self.force_vector_layout,
                                      pretty_name="J")
+
+    def _ecfc_scalar_setmeta(self, fld, center, compname, staggering=None):
+        raise NotImplementedError("FC/EC component fields are not yet supported")
+
+    def _ecfc_vector_setmeta(self, center, fld):
+        # toggle stagger for Fortran/C3/... stepper as well as mhd->gse transform
+        center = center.title()
+        mhd_type = fld.find_info("ggcm_mhd_fld_mhd_type_str", "UNKNOWN").upper()
+        crd_system = fld.find_info("crd_system", "").lower()
+
+        stagger = [viscid.STAGGER_LEADING] * 3
+        if mhd_type.endswith("_GGCM"):
+            stagger = [1 - s for s in stagger]
+        if self.find_info("_viscid_do_mhd_to_gse_on_read", False):
+            fld.set_info(viscid.FLIP_KEY, [True, True, False])
+
+        fld.center = center.title()
+        fld.set_info(viscid.STAGGER_KEY, stagger)
+        fld.set_info(viscid.PREPROCESSED_KEY, False)
+        return viscid.make_ecfc_field_leading(fld)
+
+    @property
+    def _bbnorm(self):
+        # FIXME: b1 / divB use different bbnorm scale for h5/jrrle
+        try:
+            owner = self.find_info_owner('ggcm_mhd_bbnorm')
+            return owner.get_info('ggcm_mhd_bbnorm')
+        except KeyError:
+            viscid.logger.warn("Could not find bbnorm, using {0:g}. Maybe "
+                               "your logfile is mangled.".format(DEFAULT_BBNORM))
+            return DEFAULT_BBNORM
+
+    def _get_b(self):
+        return self._get_b_cc()
+
+    def _get_b_cc(self):
+        try:
+            # get from [bx, by, bz]
+            return self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                         pretty_name="B")
+        except KeyError:
+            # raise NotImplementedError("FC -> CC transform not standardized")
+            return viscid.fc2cc(self._get_b_fc())
+
+    def _get_b_fc(self):
+        try:
+            return self._get_b1()
+        except KeyError:
+            return self._get_b2()
+
+    def _get_b1(self):
+        # FIXME: FACE CENTERED
+        try:
+            # get from [b1x, b1y, b1z] (xdmf + h5 files)
+            _bfc = self._assemble_vector("b1", _force_layout=self.force_vector_layout,
+                                         pretty_name="B")
+            _bfc = viscid.scale(self._bbnorm, _bfc)
+        except KeyError:
+            # get from [bx1, by1, bz1] (jrrle / fortbin files)
+            _bfc = self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                         pretty_name="B", suffix="1")
+        return self._ecfc_vector_setmeta('Face', _bfc)
+
+    def _get_b2(self):
+        # FIXME: FACE CENTERED
+        try:
+            # get from [b2x, b2y, b2z] (xdmf + h5 files)
+            _bfc = self._assemble_vector("b2", _force_layout=self.force_vector_layout,
+                                         pretty_name="B")
+            _bfc = viscid.scale(self._bbnorm, _bfc)
+        except KeyError:
+            # get from [bx2, by2, bz2] (jrrle / fortbin files)
+            _bfc = self._assemble_vector("b", _force_layout=self.force_vector_layout,
+                                         pretty_name="B", suffix="2")
+        return self._ecfc_vector_setmeta('Face', _bfc)
+
+    def _get_e(self):
+        return self._get_e_cc()
+
+    def _get_e_cc(self):
+        try:
+            # get from [ex_cc, ey_cc, ez_cc] (xdmf + h5 files i think)
+            return self._assemble_vector("e", suffix="_cc",
+                                         _force_layout=self.force_vector_layout,
+                                         pretty_name="E")
+        except KeyError:
+            try:
+                # get from [ex, ey, ez] (not sure which files have this)
+                return self._assemble_vector("e", _force_layout=self.force_vector_layout,
+                                             pretty_name="E")
+            except KeyError:
+                # raise NotImplementedError("EC -> CC transformation not standardized")
+                return viscid.ec2cc(self._get_e_ec())
+
+    def _get_e_ec(self):
+        try:
+            # FIXME: EDGE CENTERED
+            # get from [ex_ec, ey_ec, ez_ec] (xdmf + h5 files)
+            _eec = self._assemble_vector("e", suffix="_ec",
+                                         _force_layout=self.force_vector_layout,
+                                         pretty_name="E")
+            return self._ecfc_vector_setmeta('Edge', _eec)
+        except KeyError:
+            return self._get_efl()
+
+    def _get_efl(self):
+        # FIXME: EDGE CENTERED
+        # get from [eflx, efly, eflz] (jrrle / fortbin files)
+        _eec = self._assemble_vector("efl", _force_layout=self.force_vector_layout,
+                                     pretty_name="E")
+        return self._ecfc_vector_setmeta('Edge', _eec)
 
     @staticmethod
     def _calc_mag(vx, vy, vz):
@@ -409,6 +557,18 @@ class GGCMGrid(grid.Grid):
         psi = plasma.calc_psi(B, rev=rev)
         return psi
 
+    def _process_divB(self, fld):
+        return viscid.scale(self._bbnorm, fld)
+
+    def _processALL(self, fld):
+        if fld.iscentered("face") or fld.iscentered("edge"):
+            if not fld.has_info(viscid.PREPROCESSED_KEY):
+                crd_system = fld.find_info("crd_system", "").lower()
+                if self.find_info("_viscid_do_mhd_to_gse_on_read", False):
+                    fld.set_info(viscid.FLIP_KEY, [True, True, False])
+                fld.set_info(viscid.PREPROCESSED_KEY, False)
+                fld = viscid.make_ecfc_field_leading(fld, trim_leading=True)
+        return fld
 
 class GGCMFile(object):  # pylint: disable=abstract-method
     """Mixin some GGCM convenience stuff
@@ -473,6 +633,7 @@ class GGCMFile(object):  # pylint: disable=abstract-method
             raise KeyError("Node {0} did not set ggcm_dipole_dipoltime. Maybe "
                            "your logfile is missing or mangled."
                            "".format(repr(self)))
+        dipoletime = ":".join((dipoletime))
         return viscid.as_datetime64(dipoletime)
 
     @staticmethod
@@ -480,7 +641,7 @@ class GGCMFile(object):  # pylint: disable=abstract-method
         prefix = 'time='
         timestr.strip()
         if not timestr.startswith(prefix):
-            raise ValueError("Time string '{0}' is malformed".fermat(timestr))
+            raise ValueError("Time string '{0}' is malformed".format(timestr))
         timestr = timestr[len(prefix):].split()
         t = float(timestr[0])
         uttime = viscid.as_datetime64(timestr[2])
@@ -500,9 +661,22 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
     _fld_templates = None
     grid2 = None
 
+    # you can override this in your viscidrc file with:
+    #   "readers.openggcm.GGCMFileFortran.assume_mhd_crds": true
+    # But chances are, fortran (jrrle/fortbin) files are in 'mhd' crds and
+    # will want to be switched to 'gse'
+    assume_mhd_crds = True
+
+
     def __init__(self, fname, crds=None, fld_templates=None, **kwargs):
         self._crds = crds
         self._fld_templates = fld_templates
+
+        if 'assume_mhd_crds' in kwargs:
+            self.assume_mhd_crds = kwargs['assume_mhd_crds']
+        else:
+            kwargs['assume_mhd_crds'] = self.assume_mhd_crds
+
         super(GGCMFileFortran, self).__init__(fname, **kwargs)
 
     @classmethod

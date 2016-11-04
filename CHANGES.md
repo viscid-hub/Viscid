@@ -1,6 +1,23 @@
 Changes
 -------
 
+0.98.0
+======
+
+Changes:
+  - Support for Edge / Face centered fields (interpolate, streamline, fill_dipole, div, fc2cc, ec2cc)
+  - Spherical seeds now take crd_system argument that changes the meaning of phi=0 from the +x axis to midnight
+  - New cotr module to facilitate geophysical coordinate transformations
+  - dipole utilities use new cotr module
+  - div, grad, curl now work with both numpy and numexpr
+  - Allow an outer boundary radius for streamlines
+  - let make_rotation_matrix roll to a specific x axis
+
+Bugfixes:
+  - fix cythonize errors for cython >= 0.24
+  - misc. hdf5/xdmf bugs when saving fields
+  - getting shaped coordinates
+
 0.97.0
 ======
 

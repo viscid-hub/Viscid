@@ -605,6 +605,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # ok, here's some hackery for contours
     if style in ["contourf", "contour"]:
+        if plot_kwargs.get("colors", None):
+            plot_kwargs['cmap'] = None
         if isinstance(levels, int):
             if vscale == "log":
                 levels = np.logspace(np.log10(vmin), np.log10(vmax), levels)
@@ -729,7 +731,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     axgridlw = plot_kwargs.pop("axgridlw", 1.0)
 
     projection = plot_kwargs.pop("projection", "polar")
-    hemisphere = plot_kwargs.pop("hemisphere", "north").lower().strip()
+    hemisphere = plot_kwargs.pop("hemisphere", "none").lower().strip()
     drawcoastlines = plot_kwargs.pop("drawcoastlines", False)
     lon_0 = plot_kwargs.pop("lon_0", 0.0)
     lat_0 = plot_kwargs.pop("lat_0", None)
@@ -738,6 +740,21 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     label_lat = plot_kwargs.pop("label_lat", True)
     label_mlt = plot_kwargs.pop("label_mlt", True)
 
+    # try to autodiscover hemisphere if ALL the thetas are either above
+    # or below the equator
+    if hemisphere == "none":
+        lat = viscid.as_mapfield(fld, units='deg').get_crd('lat')
+        if np.all(lat >= 0.0):
+            hemisphere = "north"
+        elif np.all(lat <= 0.0):
+            hemisphere = "south"
+        else:
+            viscid.logger.warn("hemisphere of field {0} is ambiguous, the "
+                               "field contains both. Please specify either "
+                               "north or south (defaulting to North)."
+                               "".format(fld.name))
+            hemisphere = 'north'
+    # now that we know hemisphere is useful, setup the latlabel array
     if hemisphere == "north":
         # def_projection = "nplaea"
         # def_boundinglat = 40.0
@@ -1201,6 +1218,7 @@ def streamplot(fld, **kwargs):
     lm = "".join([l, m])
 
     # get scalar fields for the vector components in the plane
+    fld = fld.atleast_3d()
     vl, vm = fld[l], fld[m]
     xl, xm = fld.get_crds(lm, shaped=False)
 
@@ -1211,15 +1229,11 @@ def streamplot(fld, **kwargs):
     dxm = xm[1:] - xm[:-1]
     if not np.allclose(dxl[0], dxl) or not np.allclose(dxm[0], dxm):
         # viscid.logger.warn("Matplotlib's streamplot is for uniform grids only")
-        nl = np.ceil((xl[-1] - xl[0]) / np.min(dxl))
-        nm = np.ceil((xm[-1] - xm[0]) / np.min(dxm))
+        vol = viscid.Volume(fld.xl, fld.xh, fld.sshape)
+        vl = viscid.interp_trilin(vl, vol, wrap=True)
+        vm = viscid.interp_trilin(vm, vol, wrap=True)
 
-        vol = viscid.Volume([xl[0], xm[0], 0], [xl[-1], xm[-1], 0],
-                            [nl, nm, 1])
-        vl = viscid.interp_trilin(vl, vol, wrap=True).slice_reduce(":")
-        vm = viscid.interp_trilin(vm, vol, wrap=True).slice_reduce(":")
-
-        xl, xm = vl.get_crds()[:2]
+        xl, xm = vl.get_crds(lm)
 
         # interpolate linewidth and color too if given
         for other in ['linewidth', 'color']:
@@ -1238,6 +1252,9 @@ def streamplot(fld, **kwargs):
                 kwargs[other] = kwargs[other].data
         except KeyError:
             pass
+
+    vl = vl.slice_reduce(':')
+    vm = vm.slice_reduce(':')
 
     return plt.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
 
@@ -1318,7 +1335,7 @@ def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
     return ret
 
 def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
-               daycol='w', nightcol='k', crd_system="mhd",
+               daycol='w', nightcol='k', crd_system="gse",
                zorder=10):
     """Plot a black and white Earth to show sunward direction
 
@@ -1341,7 +1358,7 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
     # this is kind of a hacky way to
     if hasattr(plane_spec, "patches"):
         # this is for both Fields and AMRFields
-        crd_system = plane_spec.patches[0].find_info("crd_system", crd_system)
+        crd_system = viscid.get_crd_system(plane_spec.patches[0], crd_system)
         values = []
         for blk in plane_spec.patches:
             # take only the 1st reduced.nr_sdims... this should just work

@@ -9,13 +9,14 @@ dependencies:
 - scipy
 - h5py
 - matplotlib>=1.5
-- cython>0.17
+- cython
 - numexpr
 - numba
 - pyyaml
 - mayavi
 - vtk=5
 - pyside
+- pyqt=4
 - flake8
 - sphinx
 - sphinx_rtd_theme

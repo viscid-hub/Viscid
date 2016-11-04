@@ -18,7 +18,20 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
     _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3d|3df)" \
                 r"(?:\.([0-9]{6}))?\.(xmf|xdmf)\s*$"
 
+    # you can override this in your viscidrc file with:
+    #   "readers.ggcm_xdmf.GGCMFileXDMF.assume_mhd_crds": true
+    # BUT, usually XDMF files have enough meta data so this isn't necessary,
+    # and then one day, you'll be trying to load a non-magnetosphere file,
+    # and be confused when the axes are flipped
+    assume_mhd_crds = False
+
+
     def __init__(self, *args, **kwargs):
+        if 'assume_mhd_crds' in kwargs:
+            self.assume_mhd_crds = kwargs['assume_mhd_crds']
+        else:
+            kwargs['assume_mhd_crds'] = self.assume_mhd_crds
+
         super(GGCMFileXDMF, self).__init__(*args, **kwargs)
 
     @classmethod
@@ -88,8 +101,15 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
 
         # now this is a wicked hack :(
         if self.find_info('basetime', default=None) is None:
-            timestr = self._child_files[0].find_item('openggcm*/time_str')
-            basetime, _ = self.parse_timestring(timestr.decode())
+            try:
+                timestr = self._child_files[0].find_item('openggcm*/time_str')
+                basetime, _ = self.parse_timestring(timestr.decode())
+            except KeyError:
+                # if no basetime found, then use the special no dip tilt time
+                # this is a selfish hack in that old files that I saved
+                # will usually use this as basetime
+                basetime = openggcm.GGCM_NO_DIPTILT
+
             self.set_info("basetime", basetime)
 
 

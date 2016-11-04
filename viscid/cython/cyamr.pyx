@@ -1,4 +1,5 @@
 # cython: boundscheck=True, wraparound=False, cdivision=True, profile=False
+# cython: emit_code_comments=False
 
 from __future__ import print_function
 
@@ -109,7 +110,7 @@ def _py_discover_neighbors(skel, real_t[:, ::1] xm, real_t[:, ::1] L,
     return nr_neighbors, neighbors, neighbor_mask
 
 
-cdef CyAMRField make_cyamrfield(vfield):
+cdef make_cyamrfield(vfield):
     fld_dtype = np.dtype(vfield.dtype)
 
     if fld_dtype == np.dtype('i4'):
@@ -125,7 +126,7 @@ cdef CyAMRField make_cyamrfield(vfield):
                            "".format(fld_dtype))
     return amrfld
 
-cdef FusedAMRField _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
+cdef _init_cyamrfield(FusedAMRField amrfld, vfield, crd_dtype):
     cdef int i, j
     cdef int nr_patches = vfield.nr_patches
     cdef CyField _patch

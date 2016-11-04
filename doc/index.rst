@@ -6,6 +6,20 @@
 Viscid: Visualizing Plasma Simulations in Python
 ================================================
 
+.. raw:: html
+
+    <style type="text/css">
+    div.figure img {
+        border-radius: 25px;
+    }
+    </style>
+
+.. figure:: images/3d_cropped.png
+    :align: right
+    :width: 400px
+    :alt: Mayavi Example
+    :target: examples/mayavi.html
+
 Viscid is a python framework to visualize scientific data on structured meshes. The following file types are understood,
 
 + XDMF + HDF5
@@ -48,15 +62,10 @@ Branch               Test Status       Docs
    <img src="https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev"
   </a>
 
-Quick Start
------------
+Quickstart
+----------
 
-I recommend using the `anaconda <https://store.continuum.io/cshop/anaconda/>`_ python distribution. It makes installing new python libraries almost enjoyable. Check :doc:`installation` for the list of dependancies. To build Viscid, I recommend running::
-
-  make inplace  # (this is an alias for ./setup.py build_ext -i)
-  viscid_dir=$(pwd)
-  export PYTHONPATH=$PYTHONPATH:${viscid_dir}
-  export PATH=$PATH:${viscid_dir}/scripts
+Please refer to the quickstart instructions in :doc:`installation`.
 
 Contents
 --------

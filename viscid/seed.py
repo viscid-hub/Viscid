@@ -10,8 +10,9 @@ import viscid
 from viscid.compat import izip
 
 __all__ = ['make_rotation_matrix', 'to_seeds', 'SeedGen', 'Point',
-           'MeshPoints', 'Line', 'Plane', 'Volume', 'Sphere', 'SphericalCap',
-           'Circle', 'SphericalPatch', 'PolarIonosphere']
+           'MeshPoints', 'RectilinearMeshPoints', 'Line', 'Plane', 'Volume',
+           'Sphere', 'SphericalCap', 'Circle', 'SphericalPatch',
+           'PolarIonosphere']
 
 def to_seeds(pts):
     """Try to turn anything into a set of seeds
@@ -22,13 +23,13 @@ def to_seeds(pts):
             This can be 3xN so long as N != 3.
     """
     if (hasattr(pts, "nr_points") and hasattr(pts, "iter_points") and
-        hasattr(pts, "points")):  # pylint: disable=bad-continuation
+        hasattr(pts, "points") and hasattr(pts, "wrap_field")):
         return pts
     else:
         return Point(pts)
 
-def make_rotation_matrix(origin, p1, p2, roll=0.0):
-    """Make a matrix that rotates origin-p1 to origin-p2
+def make_rotation_matrix(origin, p1, p2, roll=0.0, new_x=None):
+    """Make a matrix that rotates origin-p2 to origin-p1
 
     Note:
         If you want `p1` and `p2` to be vectors, just set `origin` to
@@ -42,6 +43,9 @@ def make_rotation_matrix(origin, p1, p2, roll=0.0):
             line
         roll (float): Angle (in degrees) of roll around the
             origin-p2 vector
+        new_x (ndarray): If given, then roll is set such that
+            the `x` axis (phi = 0) new_x projected in the plane
+            perpendicular to origin-p1
 
     Returns:
         ndarray: 3x3 orthonormal rotation matrix
@@ -68,6 +72,13 @@ def make_rotation_matrix(origin, p1, p2, roll=0.0):
                   [k[2] ,     0, -k[0]],  # pylint: disable=bad-whitespace
                   [-k[1],  k[0],     0]])  # pylint: disable=bad-whitespace
     R = np.eye(3) + np.sin(theta) * K + (1 - np.cos(theta)) * np.dot(K, K)
+
+    # if new_x is given, use it to set roll
+    if new_x is not None:
+        new_x = np.asarray(new_x) / np.linalg.norm(new_x)
+        x_rot = np.dot(R, [1, 0, 0])
+        x_rot /= np.linalg.norm(x_rot)
+        roll = (180.0 / np.pi) * np.arccos(np.dot(new_x, x_rot))
 
     # now use the same formula to roll around the the origin-p2 axis
     phi = (np.pi / 180.0) * roll
@@ -441,6 +452,27 @@ class MeshPoints(SeedGen):
         return arr.reshape(self.uv_shape)
 
 
+class RectilinearMeshPoints(MeshPoints):
+    """Generic seeds with 2d rect mesh topology"""
+    def __init__(self, pts, mesh_axes="xy", cache=False, dtype=None):
+        """Generic seeds with 2d rect mesh topology
+
+        Args:
+            pts (ndarray): 3xNUxNV array
+            mesh_axes (tuple, str): which directions do u and v
+                correspond to.
+        """
+        _lookup = {0: 0, 1: 1, 'x': 0, 'y': 1}
+        self.mesh_axes = [_lookup[ax] for ax in mesh_axes]
+        super(RectilinearMeshPoints, self).__init__(pts, cache=cache,
+                                                    dtype=dtype)
+
+    def _make_uv_axes(self):
+        u = self.pts[self.mesh_axes[0], :, 0]
+        v = self.pts[self.mesh_axes[1], 0, :]
+        return u, v
+
+
 class Line(SeedGen):
     """A line of seed points"""
     def __init__(self, p0=(0, 0, 0), p1=(1, 0, 0), n=20,
@@ -806,10 +838,19 @@ class Sphere(SeedGen):
     """Make seeds on the surface of a sphere"""
 
     def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), ntheta=20, nphi=20,
-                 thetalim=(0, 180.0), philim=(0, 360.0), theta_endpoint='auto',
-                 phi_endpoint='auto', pole_is_vector=True, theta_phi=False,
-                 roll=0.0, cache=False, dtype=None):
+                 thetalim=(0, 180.0), philim=(0, 360.0), roll=0.0, crd_system=None,
+                 theta_endpoint='auto', phi_endpoint='auto', pole_is_vector=True,
+                 theta_phi=False, cache=False, dtype=None):
         """Make seeds on the surface of a sphere
+
+        Note:
+            There is some funny business about the meaning of phi=0 and
+            `crd_system`. By default, this seed generator is agnostic
+            to coordinate systems and phi=0 always means the +x axis.
+            If crd_system is 'gse', 'mhd', or an object whose find_info
+            method returns a 'crd_system', then phi=0 means midnight.
+            This is important when specifying a phi range or plotting
+            on a matplotlib polar plot.
 
         Args:
             p0 (list, tuple, or ndarray): Origin of sphere as (x, y, z)
@@ -821,6 +862,11 @@ class Sphere(SeedGen):
             nphi (int): Number of points in phi
             thetalim (list): min and max theta (in degrees)
             philim (list): min and max phi (in degrees)
+            roll (float): Roll the seeds around the pole by this angle
+                in deg
+            crd_system (str, Field): a crd system ('gse', 'mhd') or an
+                object that has 'crd_system' info such that phi=0
+                means midnight instead of the +x axis.
             theta_endpoint (str): this is a bit of a hack to keep from
                 having redundant seeds at poles. You probably just want
                 auto here
@@ -830,8 +876,6 @@ class Sphere(SeedGen):
                 vector
             theta_phi (bool): If True, the uv and local representations
                 are ordered (theta, phi), otherwise (phi, theta)
-            roll (float): Roll the seeds around the pole by this angle
-                in deg
 
         Raises:
             ValueError: if thetalim or philim don't have 2 values each
@@ -857,6 +901,23 @@ class Sphere(SeedGen):
         if not len(thetalim) == len(philim) == 2:
             raise ValueError("thetalim and philim must have both min and max")
 
+        try:
+            roll = float(roll)
+        except TypeError:
+            pass
+
+        # square away crd system
+        if crd_system:
+            if hasattr(crd_system, 'find_info'):
+                crd_system = viscid.get_crd_system(crd_system, 'none')
+        else:
+            crd_system = 'none'
+        if crd_system.strip().lower() == 'gse':
+            crd_system_roll = -180.0
+        else:
+            crd_system_roll = 0.0
+
+
         self.r = r
         self.ntheta = ntheta
         self.nphi = nphi
@@ -866,6 +927,7 @@ class Sphere(SeedGen):
         self.phi_endpoint = phi_endpoint
         self.theta_phi = theta_phi
         self.roll = roll
+        self.crd_system_roll = crd_system_roll
 
     @property
     def _spans_theta(self):
@@ -1005,7 +1067,7 @@ class Sphere(SeedGen):
 
     def get_rotation(self):
         return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.pole,
-                                    roll=self.roll)
+                                    roll=self.roll + self.crd_system_roll)
 
     def as_uv_coordinates(self):
         theta, phi = self._make_uv_axes()

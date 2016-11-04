@@ -8,6 +8,7 @@ Submodules
 
    viscid.calculator.calc
    viscid.calculator.cluster
+   viscid.calculator.ecfc
    viscid.calculator.evaluator
    viscid.calculator.minvar_tools
    viscid.calculator.mpause

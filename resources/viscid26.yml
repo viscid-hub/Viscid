@@ -9,11 +9,11 @@ dependencies:
 - scipy
 - h5py
 - matplotlib>=1.4
-- cython>0.17
+- cython
 - numexpr
 - numba
 - pyyaml
-- pyqt
+- pyqt=4
 - flake8
 - sphinx
 - sphinx_rtd_theme

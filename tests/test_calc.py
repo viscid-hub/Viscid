@@ -25,7 +25,7 @@ def run_mag_test(fld, title="", show=False):
 
     try:
         t0 = time()
-        mag_ne = viscid.magnitude(fld, preferred="numexpr", only=True)
+        mag_ne = viscid.magnitude(fld, preferred="numexpr", only=False)
         t1 = time()
         logger.info("numexpr mag runtime: %g", t1 - t0)
     except viscid.verror.BackendNotFound:

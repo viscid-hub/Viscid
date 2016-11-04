@@ -203,6 +203,9 @@ class FileHDF5(vfile.VFile):
       </DataItem>
     </Attribute>
 """
+
+    _XDMF_INFO_TEMPLATE = '<Information Name="{name}" Value="{value}" />\n'
+
     _XDMF_TEMPLATE_GRID_END = """  </Grid>
 """
     _XDMF_TEMPLATE_END = """</Grid>
@@ -255,6 +258,22 @@ class FileHDF5(vfile.VFile):
                 # xdmf files use kji ordering
                 f[loc] = fld.data.T
 
+            # big bad openggcm time_str hack to put basetime into hdf5 file
+            for fld in flds:
+                try:
+                    tfmt = "%Y:%m:%d:%H:%M:%S.%f"
+                    sec_td = viscid.as_timedelta64(fld.time, 's')
+                    dtime = viscid.as_datetime(fld.basetime + sec_td).strftime(tfmt)
+                    epoch = viscid.readers.openggcm.GGCM_EPOCH
+                    ts = viscid.as_timedelta(fld.basetime - epoch).total_seconds()
+                    ts += fld.time
+                    timestr = "time= {0} {1:.16e} {2} 300c".format(fld.time, ts, dtime)
+                    f.create_group('openggcm')
+                    f['openggcm'].attrs['time_str'] = np.string_(timestr)
+                    break
+                except viscid.NoBasetimeError:
+                    pass
+
         # now write an xdmf file
         xdmf_fname = os.path.splitext(fname)[0] + ".xdmf"
         relh5fname = "./" + os.path.basename(fname)
@@ -271,6 +290,14 @@ class FileHDF5(vfile.VFile):
             f.write(s)
 
             for fld in flds:
+                _crd_system = viscid.get_crd_system(fld, None)
+                if _crd_system:
+                    f.write(cls._XDMF_INFO_TEMPLATE.format(name="crd_system",
+                                                           value=_crd_system))
+                    break
+
+            for fld in flds:
+                fld = fld.as_flat().T
                 dt = fld.dtype.name.rstrip("0123456789").title()
                 precision = fld.dtype.itemsize
                 fld_dim_str = " ".join([str(l) for l in fld.shape])

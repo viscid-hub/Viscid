@@ -5,6 +5,7 @@ from __future__ import print_function
 import numpy as np
 import numexpr as ne
 
+import viscid
 from viscid import field
 from viscid import coordinate
 
@@ -109,17 +110,55 @@ def project(fld_a, fld_b):
 
 def normalize(fld_a):
     """ normalize a vector field """
-    a = fld_a.data
+    a = fld_a.as_flat().data
     ax, ay, az = fld_a.component_views()  # pylint: disable=W0612
     normed = ne.evaluate("a / sqrt((ax**2) + (ay**2) + (az**2))")
     return fld_a.wrap(normed, fldtype="Vector")
 
-def grad(fld):
-    """ first order """
-    pass
+def grad(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    # vx, vy, vz = fld.component_views()
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
 
-def div(fld):
-    """ first order """
+    if fld.iscentered("Cell"):
+        crdx, crdy, crdz = fld.get_crds_cc(shaped=True)
+        # divcenter = "Cell"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    elif fld.iscentered("Node"):
+        crdx, crdy, crdz = fld.get_crds_nc(shaped=True)
+        # divcenter = "Node"
+        # divcrds = coordinate.NonuniformCartesianCrds(fld.crds.get_clist(np.s_[1:-1]))
+        # divcrds = fld.crds.slice_keep(np.s_[1:-1, 1:-1, 1:-1])
+    else:
+        raise NotImplementedError("Can only do cell and node centered gradients")
+
+    v = fld.data
+    g = viscid.zeros(fld['x=1:-1, y=1:-1, z=1:-1'].crds, nr_comps=3)
+
+    xp, xm = crdx[2:,  :,  :], crdx[:-2, :  , :  ]  # pylint: disable=bad-whitespace
+    yp, ym = crdy[ :, 2:,  :], crdy[:  , :-2, :  ]  # pylint: disable=bad-whitespace
+    zp, zm = crdz[ :,  :, 2:], crdz[:  , :  , :-2]  # pylint: disable=bad-whitespace
+
+    vxp, vxm = v[2:  , 1:-1, 1:-1], v[ :-2, 1:-1, 1:-1]  # pylint: disable=bad-whitespace
+    vyp, vym = v[1:-1, 2:  , 1:-1], v[1:-1,  :-2, 1:-1]  # pylint: disable=bad-whitespace
+    vzp, vzm = v[1:-1, 1:-1, 2:  ], v[1:-1, 1:-1,  :-2]  # pylint: disable=bad-whitespace
+
+    g['x'].data[...] = ne.evaluate("(vxp-vxm)/(xp-xm)")
+    g['y'].data[...] = ne.evaluate("(vyp-vym)/(yp-ym)")
+    g['z'].data[...] = ne.evaluate("(vzp-vzm)/(zp-zm)")
+    return g
+
+def div(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if fld.iscentered("Face"):
+        # dispatch fc div immediately since that does its own pre-processing
+        return viscid.div_fc(fld, bnd=bnd)
+
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
     vx, vy, vz = fld.component_views()
 
     if fld.iscentered("Cell"):
@@ -148,8 +187,11 @@ def div(fld):
     return field.wrap_field(div_arr, divcrds, name="div " + fld.name,
                             center=divcenter, time=fld.time, parents=[fld])
 
-def curl(fld):
-    """ first order """
+def curl(fld, bnd=True):
+    """2nd order centeral diff, 1st order @ boundaries if bnd"""
+    if bnd:
+        fld = viscid.extend_boundaries(fld, order=0, crd_order=0)
+
     vx, vy, vz = fld.component_views()
 
     if fld.iscentered("Cell"):

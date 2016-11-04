@@ -5,6 +5,10 @@ from __future__ import print_function
 import viscid
 
 
+class _NO_DEFAULT_GIVEN(object):
+    pass
+
+
 class Node(object):
     """Base class for Datasets and Grids"""
 
@@ -12,7 +16,7 @@ class Node(object):
     _info = None
     parents = None
 
-    def __init__(self, name=None, time=None, info=None, parents=None):
+    def __init__(self, name=None, time=None, info=None, parents=None, **kwargs):
         if name is None:
             name = "<{0} @ {1}>".format(self.__class__.__name__, hex(id(self)))
         self.name = name
@@ -28,6 +32,8 @@ class Node(object):
         if not isinstance(parents, (list, tuple)):
             parents = [parents]
         self.parents = parents
+
+        self._info.update(kwargs)
 
     def prepare_child(self, obj):
         if self not in obj.parents:
@@ -105,8 +111,14 @@ class Node(object):
     def has_info(self, key):
         return key in self._info
 
-    def get_info(self, key):
-        return self._info[key]
+    def get_info(self, key, default=_NO_DEFAULT_GIVEN):
+        try:
+            return self._info[key]
+        except KeyError:
+            if default is _NO_DEFAULT_GIVEN:
+                raise
+            else:
+                return default
 
     def get_all_info(self):
         all_info = dict()
@@ -146,13 +158,16 @@ class Node(object):
         else:
             return matching_parent
 
-    def find_info(self, key, default=None):
+    def find_info(self, key, default=_NO_DEFAULT_GIVEN):
         """Go through the parents (breadth first) and find the info"""
         try:
             matching_parent = self.find_info_owner(key)
             return matching_parent.get_info(key)
         except KeyError:
-            return default
+            if default is _NO_DEFAULT_GIVEN:
+                raise
+            else:
+                return default
 
     def update_info(self, key, val, fallback=True):
         """Update an existing key if found, or fall back to add_info"""

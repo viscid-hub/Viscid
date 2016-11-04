@@ -239,16 +239,20 @@ class StructuredCrds(Coordinates):
     _src_crds_nc = None
     _src_crds_cc = None
 
+    _dtype = None
+
     _reflect_axes = None
     has_cc = None
 
     def __init__(self, init_clist, has_cc=True, reflect_axes=None,
-                 **kwargs):
+                 dtype=None, **kwargs):
         """ if caled with an init_clist, then the coordinate names
         are taken from this list """
         self.has_cc = has_cc
 
         self.reflect_axes = reflect_axes
+
+        self.dtype = dtype
 
         if init_clist is not None:
             self._axes = [d[0].lower() for d in init_clist]
@@ -290,7 +294,14 @@ class StructuredCrds(Coordinates):
 
     @property
     def dtype(self):
-        return self[self.axes[0]].dtype
+        if self._dtype:
+            return self._dtype
+        else:
+            return self[self.axes[0]].dtype
+
+    @dtype.setter
+    def dtype(self, dtype):
+        self._dtype = dtype
 
     @property
     def shape(self):
@@ -465,12 +476,12 @@ class StructuredCrds(Coordinates):
         # store references to face and edge centers while we're here
         sfx = self._CENTER["face"]
         for i, a in enumerate(self.axes):
-            self.__crds[a + sfx] = [None] * len(self.axes)
-            self.__crds[a.upper() + sfx] = [None] * len(self.axes)
+            self.__crds[a + sfx] = [None] * 3
+            self.__crds[a.upper() + sfx] = [None] * 3
             for j, d in enumerate(self.axes):  # pylint: disable=W0612
                 if i == j:
-                    self.__crds[a + sfx][j] = crds_nc[i]
-                    self.__crds[a.upper() + sfx][j] = crds_nc_shaped[i]
+                    self.__crds[a + sfx][j] = crds_nc[i][:-1]
+                    self.__crds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
                 else:
                     self.__crds[a + sfx][j] = crds_cc[i]
                     self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
@@ -478,15 +489,21 @@ class StructuredCrds(Coordinates):
         # same as face, but swap nc with cc
         sfx = self._CENTER["edge"]
         for i, a in enumerate(self.axes):
-            self.__crds[a + sfx] = [None] * len(self.axes)
-            self.__crds[a.upper() + sfx] = [None] * len(self.axes)
-            for j, d in enumerate(self.axes):
-                if i == j:
+            self.__crds[a + sfx] = [None] * 3
+            self.__crds[a.upper() + sfx] = [None] * 3
+            for j in range(3):
+                if i != j:
+                    self.__crds[a + sfx][j] = crds_nc[i][:-1]
+                    self.__crds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
+                else:
                     self.__crds[a + sfx][j] = crds_cc[i]
                     self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
-                else:
-                    self.__crds[a + sfx][j] = crds_nc[i]
-                    self.__crds[a.upper() + sfx][j] = crds_nc_shaped[i]
+
+    @staticmethod
+    def _sm1(a):
+        n = a.shape
+        slices = [slice(None) if ni <= 1 else slice(None, -1) for ni in n]
+        return a[slices]
 
     def _ogrid_single(self, axis, arr):
         """ returns (flat array, open array) """
@@ -1011,7 +1028,7 @@ class StructuredCrds(Coordinates):
         sfx can be none, node, cell, face, edge
         raises KeyError if axis not found
         """
-        return self.get_crds([axis], shaped, center)[0]
+        return self.get_crds([axis], shaped=shaped, center=center)[0]
 
     def get_crds(self, axes=None, shaped=False, center="none"):
         """Get coordinate arrays
@@ -1027,12 +1044,11 @@ class StructuredCrds(Coordinates):
             list of coords as ndarrays
         """
         if axes is None:
-            axes = [a.upper() if shaped else a for a in self.axes]
-        if not isinstance(axes, (list, tuple)):
-            try:
-                axes = [a.upper() if shaped else a for a in axes]
-            except TypeError:
-                axes = [axes]
+            axes = list(self.axes)
+
+        axes = [self.axes[a] if isinstance(a, (int, np.int)) else a for a in axes]
+        axes = [a.upper() if shaped else a for a in axes]
+
         sfx = self._CENTER[center.lower()]
         return [self._crds[self.axis_name(a) + sfx] for a in axes]
 
@@ -1158,8 +1174,8 @@ class StructuredCrds(Coordinates):
         shape = [len(c) for c in crds]
         arr = np.empty([len(shape)] + [np.prod(shape)])
         for i, c in enumerate(crds):
-            arr[i, :] = np.tile(np.repeat(c, np.prod(shape[:i])),
-                                np.prod(shape[i + 1:]))
+            arr[i, :] = np.repeat(np.tile(c, np.prod(shape[:i])),
+                                  np.prod(shape[i + 1:]))
         return arr
 
     def as_mesh(self, center="none"):
@@ -1209,6 +1225,32 @@ class StructuredCrds(Coordinates):
         """
         return itertools.product(*self.get_crds(shaped=False, center=center))
 
+    def _newax_cval(self, xl, xh, cc):
+        raise NotImplementedError()
+
+    def atleast_3d(self, xl=-1, xh=1, cc=False):
+        if self.nr_dims >= 3:
+            return self
+        else:
+            current_axes = self._axes
+            if 'x' in current_axes or 'y' in current_axes or 'z' in current_axes:
+                axes3 = ['x', 'y', 'z']
+                target_idx = [0, 1, 2]
+                for i, ax in reversed(list(enumerate(axes3))):
+                    if ax in current_axes:
+                        axes3.pop(i)
+                        target_idx.pop(i)
+            else:
+                axes3 = ['fill_a', 'fill_b', 'fill_c']
+                target_idx = [3, 3, 3]
+
+            new_clist = self.get_clist()
+
+            axes3 = axes3[:3 - len(current_axes)]
+            for idx, ax in zip(target_idx, axes3):
+                new_clist.insert(idx, (ax, self._newax_cval(xl, xh, cc)))
+            return type(self)(new_clist)
+
     def print_tree(self):
         c = self.get_clist()
         for l in c:
@@ -1249,8 +1291,6 @@ class UniformCrds(StructuredCrds):
 
     _nc_linspace_args = None
     _cc_linspace_args = None
-
-    dtype = None
 
     xl_nc = None
     xh_nc = None
@@ -1340,7 +1380,8 @@ class UniformCrds(StructuredCrds):
         self.min_dx_cc = self.L_cc / self.shape_cc
 
         init_clist = [(axis, None) for axis, _ in init_clist]
-        super(UniformCrds, self).__init__(init_clist, **kwargs)
+        super(UniformCrds, self).__init__(init_clist, dtype=self.dtype,
+                                          **kwargs)
 
     def _pull_out_axes(self, arrs, axes, center='none'):
         center = center.lower()
@@ -1453,19 +1494,12 @@ class UniformCrds(StructuredCrds):
         new_clist = [(ax, [xl[i], xh[i], nx[i]]) for i, ax in enumerate(axes)]
         return type(self)(new_clist)
 
-    def atleast_3d(self, xl=-1, xh=1, cc=False):
-        if self.nr_dims >= 3:
-            return self
+    def _newax_cval(self, xl, xh, cc):
+        if cc:
+            return [xl, xh, 1]
         else:
-            axes3 = "xyz"
-            new_clist = self.get_clist()
-            for ax in axes3[self.nr_dims:]:
-                if cc:
-                    new_clist.append((ax, [xl, xh, 1]))
-                else:
-                    x0 = 0.5 * (xl + xh)
-                    new_clist.append((ax, [x0, x0, 1]))
-            return type(self)(new_clist)
+            x0 = 0.5 * (xl + xh)
+            return [x0, x0, 1]
 
     def get_clist(self, axes=None, slc=None, full_arrays=False, center="node"):
         if full_arrays:
@@ -1508,20 +1542,11 @@ class NonuniformCrds(StructuredCrds):
             raise ValueError("did you want Uniform crds?")
         super(NonuniformCrds, self).__init__(init_clist, **kwargs)
 
-    def atleast_3d(self, xl=-1, xh=1, cc=False):
-        if self.nr_dims >= 3:
-            return self
+    def _newax_cval(self, xl, xh, cc):
+        if cc:
+            return np.array([xl, xh], dtype=self.dtype)
         else:
-            axes3 = ['fill_x', 'fill_y', 'fill_z']
-            new_clist = self.get_clist()
-            for ax in axes3[self.nr_dims:]:
-                if cc:
-                    new_clist.append((ax, np.array([xl, xh],
-                                                   dtype=self.dtype)))
-                else:
-                    new_clist.append((ax, np.array([0.5 * (xl + xh)],
-                                                   dtype=self.dtype)))
-            return type(self)(new_clist)
+            return np.array([0.5 * (xl + xh)], dtype=self.dtype)
 
     def get_clist(self, axes=None, slc=None, full_arrays=True, center="node"):
         """??

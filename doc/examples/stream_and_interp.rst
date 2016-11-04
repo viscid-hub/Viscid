@@ -13,7 +13,7 @@ A more in-depth example of using and plotting streamlines can be found in the :d
     import viscid
     from viscid.plot import mpl
 
-    B = viscid.get_dipole(twod=True)
+    B = viscid.make_dipole(twod=True)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
     lines, topo = viscid.calc_streamlines(B,
@@ -66,7 +66,7 @@ By default, spheres ore plotted in 2D via their phi (x-axis) and theta (y-axis).
     f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
 
     b = viscid.interp_trilin(f3d['bz'], viscid.Sphere(p0=(0, 0, 0), r=7.0))
-    mpl.plot(b, lin=0)
+    mpl.plot(b, lin=0, hemisphere='north')
 
 
 Interpolating Vectors Onto a Plane

@@ -1,4 +1,6 @@
 # cython: boundscheck=False, wraparound=False, cdivision=True, profile=False
+# cython: emit_code_comments=False
+
 r"""All streamlines all the time
 
 Calculate streamlines of a vector field on as many processors as your
@@ -33,7 +35,7 @@ from viscid.compat import izip
 ###########
 # cimports
 cimport cython
-from libc.math cimport fabs
+from libc.math cimport fabs, NAN
 from libc.time cimport time_t, time, clock_t, clock, CLOCKS_PER_SEC
 cimport numpy as cnp
 
@@ -59,23 +61,24 @@ OUTPUT_TOPOLOGY = 2
 OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
 # topology will be 1+ of these flags binary or-ed together
-#                                bit #   4 2 0 8 6 4 2 0  Notes         bit
-END_NONE = 0                         # 0b000000000000000 not ended yet    X
-END_IBOUND = 1                       # 0b000000000000001                  0
-END_IBOUND_NORTH = 2 | END_IBOUND    # 0b000000000000011  == 3            1
-END_IBOUND_SOUTH = 4 | END_IBOUND    # 0b000000000000101  == 5            2
-END_OBOUND = 8                       # 0b000000000001000                  3
-END_OBOUND_XL = 16 | END_OBOUND      # 0b000000000011000  == 24           4
-END_OBOUND_XH = 32 | END_OBOUND      # 0b000000000101000  == 40           5
-END_OBOUND_YL = 64 | END_OBOUND      # 0b000000001001000  == 72           6
-END_OBOUND_YH = 128 | END_OBOUND     # 0b000000010001000  == 136          7
-END_OBOUND_ZL = 256 | END_OBOUND     # 0b000000100001000  == 264          8
-END_OBOUND_ZH = 512 | END_OBOUND     # 0b000001000001000  == 520          9
-END_CYCLIC = 1024                    # 0b000010000000000  !!NOT USED!!   10
-END_OTHER = 2048                     # 0b000100000000000                 11
-END_MAXIT = 4096 | END_OTHER         # 0b001100000000000  == 6144        12
-END_MAX_LENGTH = 8192 | END_OTHER    # 0b010100000000000  == 10240       13
-END_ZERO_LENGTH = 16384 | END_OTHER  # 0b100100000000000  == 18432       14
+#                                bit #    4 2 0 8 6 4 2 0  Notes         bit
+END_NONE = 0                         # 0b0000000000000000 not ended yet    X
+END_IBOUND = 1                       # 0b0000000000000001                  0
+END_IBOUND_NORTH = 2 | END_IBOUND    # 0b0000000000000011  == 3            1
+END_IBOUND_SOUTH = 4 | END_IBOUND    # 0b0000000000000101  == 5            2
+END_OBOUND = 8                       # 0b0000000000001000                  3
+END_OBOUND_XL = 16 | END_OBOUND      # 0b0000000000011000  == 24           4
+END_OBOUND_XH = 32 | END_OBOUND      # 0b0000000000101000  == 40           5
+END_OBOUND_YL = 64 | END_OBOUND      # 0b0000000001001000  == 72           6
+END_OBOUND_YH = 128 | END_OBOUND     # 0b0000000010001000  == 136          7
+END_OBOUND_ZL = 256 | END_OBOUND     # 0b0000000100001000  == 264          8
+END_OBOUND_ZH = 512 | END_OBOUND     # 0b0000001000001000  == 520          9
+END_OBOUND_R = 1024 | END_OBOUND     # 0b0000010000001000  == 1032        10
+END_CYCLIC = 2048                    # 0b0000100000000000  !!NOT USED!!   11
+END_OTHER = 4096                     # 0b0001000000000000                 12
+END_MAXIT = 8192 | END_OTHER         # 0b0011000000000000  == 12288       13
+END_MAX_LENGTH = 16384 | END_OTHER   # 0b0101000000000000  == 20480       14
+END_ZERO_LENGTH = 32768 | END_OTHER  # 0b1001000000000000  == 36864       15
 
 # IMPORTANT! If TOPOLOGY_MS_* values change, make sure to also change the
 # values in viscid/cython/__init__.py since those are used if the cython
@@ -119,6 +122,7 @@ cdef:
     int _C_END_OBOUND_YH = END_OBOUND_YH
     int _C_END_OBOUND_ZL = END_OBOUND_ZL
     int _C_END_OBOUND_ZH = END_OBOUND_ZH
+    int _C_END_OBOUND_R = END_OBOUND_R
     int _C_END_CYCLIC = END_CYCLIC
     int _C_END_OTHER = END_OTHER
     int _C_END_MAXIT = END_MAXIT
@@ -166,6 +170,7 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
         ibound (float): Inner boundary as distance from (0, 0, 0)
         obound0 (array-like): lower corner of outer boundary (x, y, z)
         obound1 (array-like): upper corner of outer boundary (x, y, z)
+        obound_r (float): Outer boundary as distance from (0, 0, 0)
         maxit (int): maximum number of line segments
         max_length (float): maximum streamline length
         stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
@@ -205,7 +210,12 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
 
     seed = to_seeds(seed)
 
-    nr_streams = seed.get_nr_points(center=vfield.center)
+    seed_center = seed.center if hasattr(seed, 'center') else vfield.center
+    if seed_center.lower() in ('face', 'edge'):
+        seed_center = 'cell'
+    kwargs['seed_center'] = seed_center
+
+    nr_streams = seed.get_nr_points(center=seed_center)
     nr_procs = parallel.sanitize_nr_procs(nr_procs)
 
     nr_chunks = max(1, min(chunk_factor * nr_procs, nr_streams))
@@ -257,7 +267,7 @@ def _do_streamline_star(*args, **kwargs):
     return _streamline_fused_wrapper(gfld, *args, **kwargs)
 
 def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
-                              seed_slice=(None,), **kwargs):
+                              seed_slice=(None,), seed_center="cell", **kwargs):
     """Wrapper to make sure type specialization is same as fld's dtypes"""
     # cdef str amr_type = cython.typeof(amrfld)
     # # FIXME: **THUNDER-HACK** trim off the AMR part of the type name
@@ -267,19 +277,20 @@ def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
     # cdef str real_type = "float{0}_t".format(nbits)
     func = _py_streamline[cython.typeof(fld), cython.typeof(fld.active_patch),
                           cython.typeof(fld.min_dx)]
-    return func(fld, fld.active_patch, nr_streams, seed, seed_slice=seed_slice, **kwargs)
+    return func(fld, fld.active_patch, nr_streams, seed, seed_slice=seed_slice,
+                seed_center=seed_center, **kwargs)
 
 @cython.wraparound(True)
 def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                    int nr_streams, seed, seed_slice=(None, ),
                    real_t ds0=0.0, real_t ibound=0.0, obound0=None, obound1=None,
-                   int stream_dir=_C_DIR_BOTH, int output=_C_OUTPUT_BOTH,
-                   int method=EULER1,
+                   real_t obound_r=0.0, int stream_dir=_C_DIR_BOTH,
+                   int output=_C_OUTPUT_BOTH, int method=EULER1,
                    int maxit=90000, real_t max_length=1e30,
                    real_t tol_lo=1e-3, real_t tol_hi=1e-2,
                    real_t fac_refine=0.5, real_t fac_coarsen=1.25,
                    real_t smallest_step=1e-4, real_t largest_step=1e2,
-                   str topo_style="msphere"):
+                   str topo_style="msphere", str seed_center="cell"):
     r""" Start calculating a streamline at x0
 
     Args:
@@ -327,6 +338,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         int i_stream
         int nprogress = max(nr_streams / 50, 1)  # progeress at every 5%
         int nr_segs = 0
+        int maxit2
 
         int ret  # return status of euler integrate
         int end_flags
@@ -344,12 +356,13 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         int line_ends[2]
 
         int[:] topology_mv = None
-        real_t[:,:,::1] line_mv = None
+        real_t[:, ::1] line_mv = None
         real_t[:] dx
         real_t[:, ::1] seed_pts
 
         int cached_idx3[3]
 
+    maxit2 = 2 * maxit + 1
     _dir_d[:] = [-1, 1]
     cached_idx3[:] = [0, 0, 0]
 
@@ -410,7 +423,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     # establish arrays for output
     if output & OUTPUT_STREAMLINES:
         # 2 (0=backward, 1=forward), 3 (x, y, z), maxit points in the line
-        line_ndarr = np.empty((2, 3, maxit), dtype=amrfld.crd_dtype)
+        line_ndarr = np.empty((3, maxit2), dtype=amrfld.crd_dtype)
         line_mv = line_ndarr
         lines = [None] * nr_streams
     if output & OUTPUT_TOPOLOGY:
@@ -420,7 +433,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     # for profiling
     # t0_all = time()
 
-    seed_iter = islice(seed.iter_points(center=active_patch.center), *seed_slice)
+    seed_iter = islice(seed.iter_points(center=seed_center), *seed_slice)
     seed_pts = np.array(list(seed_iter), dtype=amrfld.crd_dtype)
 
     assert seed_pts.shape[1] == 3, "Seeds must have 3 spatial dimensions"
@@ -432,11 +445,12 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
             x0[2] = seed_pts[i_stream, 2]
 
             if line_mv is not None:
-                line_mv[0, 0, maxit - 1] = x0[0]
-                line_mv[0, 1, maxit - 1] = x0[1]
-                line_mv[0, 2, maxit - 1] = x0[2]
-            line_ends[0] = maxit - 2
-            line_ends[1] = 0
+                # line_mv[:, :] = NAN  # Debug only
+                line_mv[0, maxit] = x0[0]
+                line_mv[1, maxit] = x0[1]
+                line_mv[2, maxit] = x0[2]
+            line_ends[0] = maxit - 1
+            line_ends[1] = maxit + 1
             end_flags = _C_END_NONE
 
             for i in range(2):
@@ -457,7 +471,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                 it = line_ends[i]
 
                 done = _C_END_NONE
-                while 0 <= it and it < maxit:
+                while 0 <= it and it < maxit2:
                     nr_segs += 1
                     pre_ds = fabs(ds)
 
@@ -489,14 +503,14 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                         break
 
                     if line_mv is not None:
-                        line_mv[i, 0, it] = s[0]
-                        line_mv[i, 1, it] = s[1]
-                        line_mv[i, 2, it] = s[2]
+                        line_mv[0, it] = s[0]
+                        line_mv[1, it] = s[1]
+                        line_mv[2, it] = s[2]
                     it += d
 
                     # end conditions
                     done = classify_endpoint(s, stream_length, ibound,
-                                             c_obound0, c_obound1,
+                                             c_obound0, c_obound1, obound_r,
                                              max_length, ds, x0)
 
                     if done:
@@ -511,9 +525,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
             # now we have forward and background traces, process this streamline
             if line_mv is not None:
                 with gil:
-                    line_cat = np.concatenate((line_mv[0, :, line_ends[0] + 1:],
-                                               line_mv[1, :, :line_ends[1]]), axis=1)
-                    lines[i_stream] = line_cat
+                    lines[i_stream] = line_ndarr[:, line_ends[0] + 1:line_ends[1]].copy()
 
             if topology_mv is not None:
                 topology_mv[i_stream] = end_flags_to_topology(end_flags)
@@ -527,7 +539,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
     return lines, topology_ndarr
 
 cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
-                           real_t obound0[3], real_t obound1[3],
+                           real_t obound0[3], real_t obound1[3], real_t obound_r,
                            real_t max_length, real_t ds, real_t pt0[3]) nogil:
     cdef int done = _C_END_NONE
     cdef real_t rsq = pt[0]**2 + pt[1]**2 + pt[2]**2
@@ -537,6 +549,8 @@ cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
             done = _C_END_IBOUND_NORTH
         else:
             done = _C_END_IBOUND_SOUTH
+    elif obound_r != 0.0 and rsq > obound_r**2:
+        done = _C_END_OBOUND_R
     elif pt[0] < obound0[0]:
         done = _C_END_OBOUND_XL
     elif pt[1] < obound0[1]:
