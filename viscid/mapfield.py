@@ -2,6 +2,7 @@
 """utility for translating spherical fields (theta, phi) <-> (lat, lon)"""
 
 from __future__ import division, print_function
+import sys
 
 import numpy as np
 import viscid
@@ -10,7 +11,9 @@ from viscid.coordinate import wrap_crds
 
 __all__ = ["as_mapfield", "as_spherefield", "as_polar_mapfield",
            "pts2polar_mapfield", "convert_coordinates",
-           "lat2theta", "lon2phi", "phi2lon", "theta2lat"]
+           "lat2theta", "lon2phi", "phi2lon", "theta2lat",
+           "cart2sph", "cart2latlon", "sph2cart", "latlon2cart",
+           "great_circle"]
 
 
 def theta2lat(theta, unit='deg'):
@@ -360,6 +363,207 @@ def pts2polar_mapfield(pts, pts_axes, pts_unit='deg', hemisphere='north'):
     pts[1, :] = scale * pts[1, :] + offset
 
     return pts
+
+def _as_3xN(arr, d=3):
+    """return a copy of arr as a 3xN array"""
+    arr = np.array(arr)
+    was_single_point = arr.shape == (d, )
+    arr = arr.reshape((d, -1))
+    return arr, was_single_point
+
+def cart2sph(arr, deg=False):
+    """Convert cartesian points to spherical (rad by default)
+
+    Args:
+        arr (sequence): shaped (3, ) or (3, N) for N xyz points
+        deg (bool): if result should be in degrees
+
+    Returns:
+        ndarray: shaped (3, ) or (3, N) r, theta, phi points in radians
+            by default
+    """
+    arr, was_single_point = _as_3xN(arr)
+    ret = np.zeros_like(arr)
+    ret[0, :] = np.sqrt(arr[0, :]**2 + arr[1, :]**2 + arr[2, :]**2)
+    ret[1, :] = np.arccos(arr[2, :] / ret[0, :])
+    ret[2, :] = np.arctan2(arr[1, :], arr[0, :])
+    if deg:
+        arr[1:] *= 180.0 / np.pi
+    if was_single_point:
+        return ret[:, 0]
+    else:
+        return ret
+
+def sph2cart(arr, deg=False):
+    """Convert cartesian points to spherical (rad by default)
+
+    Args:
+        arr (sequence): shaped (3, ) or (3, N) for N r, theta, phi
+            points in radians by default
+        deg (bool): if arr is in dergrees
+
+    Returns:
+        ndarray: shaped (3, ) or (3, N) xyz
+    """
+    arr, was_single_point = _as_3xN(arr)
+    if deg:
+        arr[1:] *= np.pi / 180.0
+    ret = np.zeros_like(arr)
+    ret[0, :] = arr[0, :] * np.sin(arr[1, :]) * np.cos(arr[2, :])
+    ret[1, :] = arr[0, :] * np.sin(arr[1, :]) * np.sin(arr[2, :])
+    ret[2, :] = arr[0, :] * np.cos(arr[1, :])
+    if was_single_point:
+        return ret[:, 0]
+    else:
+        return ret
+
+def latlon2cart(arr, r=1.0, deg=True):
+    """Convert cartesian points to latitude longitude (deg by default)
+
+    Args:
+        arr (sequence): shaped (2, ) or (2, N) for N r, theta, phi
+            points in radians by default
+        deg (bool): if arr is in dergrees
+
+    Returns:
+        ndarray: shaped (3, ) or (3, N) xyz
+    """
+    quarter_circ = 90 if deg else np.pi / 2
+    half_circ = 180 if deg else np.pi
+    arr, was_single_point = _as_3xN(arr, d=2)
+    arr = np.concatenate([r * np.ones_like(arr[:1, :]), arr], axis=0)
+    arr[1, :] = quarter_circ - arr[1, :]
+    arr[2, :] += half_circ
+    arr_cart = sph2cart(arr, deg=deg)
+    if was_single_point:
+        return arr_cart[:, 0]
+    else:
+        return arr_cart
+
+def cart2latlon(arr, deg=True):
+    """Convert latitude longitude (deg by default) to cartesian
+
+    Args:
+        arr (sequence): shaped (3, ) or (3, N) for N r, theta, phi
+            points in radians by default
+        deg (bool): if arr is in dergrees
+
+    Returns:
+        ndarray: shaped (2, ) or (2, N) xyz
+    """
+    quarter_circ = 90 if deg else np.pi / 2
+    half_circ = 180 if deg else np.pi
+    arr, was_single_point = _as_3xN(arr)
+    arr_sph = cart2sph(arr, deg=deg)
+    arr_sph[1, :] = quarter_circ - arr_sph[1, :]
+    arr_sph[2, :] -= half_circ
+    if was_single_point:
+        return arr_sph[1:, 0]
+    else:
+        return arr_sph[1:]
+
+def great_circle(p1, p2, origin=(0, 0, 0), n=32):
+    """Get great circle path between two points in 3d
+
+    Args:
+        p1 (sequence): first point as [x, y, z]
+        p2 (sequence): second point as [x, y, z]
+        origin (sequence): origin of the sphere
+        n (int): Number of line segments along the great circle
+
+    Returns:
+        3xN ndarray
+    """
+    origin = _as_3xN(origin)[0][:, 0]
+    p1 = _as_3xN(p1)[0][:, 0] - origin
+    p2 = _as_3xN(p2)[0][:, 0] - origin
+
+    r1, _, _ = cart2sph(p1)
+    r2, _, _ = cart2sph(p2)
+
+    # generate points on sphere B whose equator (theta = pi / 2) will be the
+    # shortest path between p0 and p1
+
+    # Convention: A labels the p0/p1 normal xyz coordinate system, while B
+    #             denotes the rotated system
+
+    pole = np.cross(p1, p2)
+
+    # handle edge case colinear p1 == p2
+    if np.isclose(np.linalg.norm(pole), 0.0):
+        viscid.logger.warn("Great circle says p1 and p2 are colinear.")
+        pole = np.array([0, -1, 0])
+        if np.isclose(np.linalg.norm(np.cross(pole, p1)), 0.0):
+            pole = np.array([0, 0, -1])
+
+    matBtoA = viscid.make_rotation_matrix([0, 0, 0], [0, 0, 1], pole, new_x=p1)
+
+    # this is some code to validate rotation matrix
+    _xrot = np.dot(matBtoA, [1, 0, 0])
+    _xrot = _xrot / np.linalg.norm(_xrot)
+    _p1 = p1 / np.linalg.norm(p1)
+    if not np.all(np.isclose(_p1, _xrot)):
+        viscid.logger.error("Great circle says new_x: {0} != {1}"
+                            "".format(_xrot, _p1))
+
+    dphi = np.arctan2(np.linalg.norm(np.cross(p1, p2)), np.dot(p1, p2))
+
+    r = np.linspace(r1, r2, n)
+    theta = (np.pi / 2) * np.ones_like(r)
+    phi = np.linspace(0, dphi, n)
+    cartB = sph2cart(np.vstack([r, theta, phi]))
+
+    # now rotate our special coordinates into the same coordinates ax p0 and p1
+    cartA = np.einsum('ij,jk->ik', matBtoA, cartB)
+    return cartA + origin.reshape(3, 1)
+
+def _main():
+    try:
+        # raise ImportError
+        from viscid.plot import mvi
+        _HAS_MVI = True
+    except ImportError:
+        _HAS_MVI = False
+
+    def _test(_p1, _p2, r1=None, r2=None, color=(0.8, 0.8, 0.8)):
+        if r1 is not None:
+            _p1 = r1 * np.asarray(_p1) / np.linalg.norm(_p1)
+        if r2 is not None:
+            _p2 = r2 * np.asarray(_p2) / np.linalg.norm(_p2)
+        circ = great_circle(_p1, _p2)
+        if not np.all(np.isclose(circ[:, 0], _p1)):
+            print("!! great circle error P1:", _p1, ", P2:", _p2)
+            print("             first_point:", circ[:, 0], "!= P1")
+        if not np.all(np.isclose(circ[:, -1], _p2)):
+            print("!! great circle error P1:", _p1, ", P2:", _p2)
+            print("              last_point:", circ[:, -1], "!= P2")
+
+        if _HAS_MVI:
+            mvi.plot_lines([circ], tube_radius=0.02, color=color)
+
+    print("TEST 1")
+    _test([1, 0, 0], [0, 1, 0], r1=1.0, r2=1.0, color=(0.8, 0.8, 0.2))
+    print("TEST 2")
+    _test([1, 0, 0], [-1, 0, 0], r1=1.0, r2=1.0, color=(0.2, 0.8, 0.8))
+    print("TEST 3")
+    _test([1, 1, 0.01], [-1, -1, 0.01], r1=1.0, r2=1.5, color=(0.8, 0.2, 0.8))
+
+    print("TEST 4")
+    _test([-0.9947146, 1.3571029, 2.6095123], [-0.3371437, -1.5566425, 2.6634643],
+          color=(0.8, 0.2, 0.2))
+    print("TEST 5")
+    _test([0.9775307, -1.3741084, 2.6030273], [0.3273931, 1.5570284, 2.6652965],
+          color=(0.2, 0.2, 0.8))
+
+    if _HAS_MVI:
+        mvi.plot_blue_marble(r=1.0, lines=False, ntheta=64, nphi=128)
+        mvi.plot_earth_3d(radius=1.01, night_only=True, opacity=0.5)
+        mvi.show()
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(_main())
 
 ##
 ## EOF
