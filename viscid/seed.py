@@ -61,7 +61,7 @@ def make_rotation_matrix(origin, p1, p2, roll=0.0, new_x=None):
     # Use Rodrigues' Rotation Formula to rotate theta degrees around the
     # cross prodect of a and b. Here, K is the skew-symmetric cross-product
     # matrix
-    theta = np.arccos(np.sum(a * b))
+    theta = np.arctan2(np.linalg.norm(np.cross(a, b)), np.dot(a, b))
     k = np.cross(a, b)
     if np.allclose(k, [0, 0, 0]):
         k = np.cross(a, [1, 0, 0])
@@ -75,10 +75,19 @@ def make_rotation_matrix(origin, p1, p2, roll=0.0, new_x=None):
 
     # if new_x is given, use it to set roll
     if new_x is not None:
-        new_x = np.asarray(new_x) / np.linalg.norm(new_x)
-        x_rot = np.dot(R, [1, 0, 0])
-        x_rot /= np.linalg.norm(x_rot)
-        roll = (180.0 / np.pi) * np.arccos(np.dot(new_x, x_rot))
+        new_x = np.asarray(new_x)
+        # project new_x into the plane perpendicular to b
+        new_x = new_x - np.dot(new_x, b) * b
+        new_x_norm = np.linalg.norm(new_x)
+        if np.isclose(new_x_norm, 0):
+            roll = 0.0
+        else:
+            current_x = np.dot(R, [1, 0, 0])
+            new_x /= new_x_norm
+            current_x /= np.linalg.norm(current_x)
+            roll = np.arctan2(np.linalg.norm(np.cross(current_x, new_x)),
+                              np.dot(current_x, new_x)) * (180.0 / np.pi)
+            roll *= np.sign(np.dot(np.cross(current_x, new_x), b))
 
     # now use the same formula to roll around the the origin-p2 axis
     phi = (np.pi / 180.0) * roll
