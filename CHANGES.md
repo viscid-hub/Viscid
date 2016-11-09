@@ -1,10 +1,11 @@
 Changes
 -------
 
-0.98.1 dev
-==========
+0.98.1
+======
 
-
+Bugfixes:
+  - fix make_rotation_matrix new_x option
 
 0.98.0
 ======
