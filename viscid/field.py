@@ -34,7 +34,7 @@ __all__ = ['arrays2field', 'dat2field', 'empty', 'zeros', 'ones',
 
 
 def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
-                 crd_names="xyzuvw"):
+                 crd_type=None, crd_names="xyzuvw"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.
 
     This is a convenience function that takes care of making coordnates
@@ -51,7 +51,7 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
         center (str, None): If not None, translate field to this
             centering (node or cell)
     """
-    crds = coordinate.arrays2crds(crd_arrs, crd_names=crd_names)
+    crds = coordinate.arrays2crds(crd_arrs, crd_type=crd_type, crd_names=crd_names)
 
     # discover what kind of data was given
     crds_shape_nc = list(crds.shape_nc)
@@ -121,7 +121,8 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
     return arrays2field(dat_arr, crd_arrs, name=name, center=center)
 
 def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
-          nr_comps=0, crd_names="xyzuvw", _initial_vals="empty", **kwargs):
+          nr_comps=0, crd_type=None, crd_names="xyzuvw", _initial_vals="empty",
+          **kwargs):
     """Analogous to `numpy.empty` (uninitialized array)
 
     Parameters:
@@ -151,7 +152,7 @@ def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
             crds = [np.arange(c).astype(dtype) for c in crds]
         # now assume that crds is a list of coordinate arrays that arrays2crds
         # can understand
-        crds = coordinate.arrays2crds(crds, crd_names=crd_names)
+        crds = coordinate.arrays2crds(crds, crd_type=crd_type, crd_names=crd_names)
 
     if center.lower() == "cell":
         sshape = crds.shape_cc
