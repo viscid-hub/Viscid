@@ -792,7 +792,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
                                            hemisphere=hemisphere,
                                            make_periodic=make_periodic)
-
+        show = plot_kwargs.pop('show', False)
         plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
@@ -833,6 +833,8 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             ax.grid(False)
             ax.set_xticklabels([])
             ax.set_yticklabels([])
+        if show:
+            mplshow()
         return ret
 
     else:
@@ -840,6 +842,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             ax = plt.gca()
         m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
                     boundinglat=bounding_lat, ax=ax)
+        show = plot_kwargs.pop('show', False)
         plot_kwargs['latlon'] = True
         plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
@@ -863,6 +866,8 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                             linewidth=axgridlw)
         if drawcoastlines:
             m.drawcoastlines(linewidth=0.25)
+        if show:
+            mplshow()
         return ret
 
 def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
