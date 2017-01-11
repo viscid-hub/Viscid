@@ -14,7 +14,7 @@ dependencies:
 - numba
 - pyyaml
 - mayavi
-- vtk=5
+- vtk=6
 - pyside
 - pyqt=4
 - flake8
