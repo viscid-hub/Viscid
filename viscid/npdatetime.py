@@ -317,6 +317,8 @@ def as_timedelta(time, unit=None):
     Returns:
         np.ndarray of native datetime.datetime objects (dtype = object)
     """
+    # FIXME: this is known not to work in all cases, for instance when
+    # time is in units of ns
     ret = as_timedelta64(time, unit=unit).astype(timedelta)
     if not isinstance(ret, np.ndarray) and not hasattr(ret, "total_seconds"):
         ret = TimeDeltaCompat(ret)
@@ -391,8 +393,10 @@ def is_valid_timedelta64(arr, unit=None):
 def round_datetime(a, decimals=0):
     """round datetime a to the nearest dicimals seconds"""
     a_as_dt64 = as_datetime64(a)
-    rounded = np.round(as_timedelta(a_as_dt64).total_seconds(), decimals)
-    return as_datetime64(rounded)
+    _epoch = as_datetime64(a_as_dt64, unit='s')
+    frac = (a_as_dt64 - _epoch) / np.timedelta64(1, 's')
+    rounded = np.round(frac, decimals)
+    return as_datetime64(_epoch + as_timedelta64(rounded, unit='s'))
 
 def round_timedelta(a, decimals=0):
     """round timedelta a to the nearest dicimals seconds"""
