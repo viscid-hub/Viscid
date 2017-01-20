@@ -1031,7 +1031,7 @@ def meshlab_convert(fname, fmt="dae", quiet=True):
     iname = fname
     oname = '.'.join(iname.split('.')[:-1]) + "." + fmt.strip()
     redirect = "&> {0}".format(os.devnull) if quiet else ""
-    cmd = ("meshlabserver -i {0} -o {1} -om vc vn fc fn {2}"
+    cmd = ("meshlabserver -i {0} -o {1} -m vc vn fc fn {2}"
            "".format(iname, oname, redirect))
     sub.Popen(cmd, shell=True, stdout=None, stderr=None)
 
