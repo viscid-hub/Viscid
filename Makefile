@@ -10,7 +10,10 @@ flake_off := E121,E123,E124,E126,E129,E133,E201,E202,E203,E226,E24,E266,E3,E402,
 flake_off := $(flake_off),F401,F403,F841,C,N
 
 all: build
-dev: inplace
+
+dev:
+	# shortcut for ./setup.py build_ext -i --with-cython
+	python ./setup.py dev ${BUILD_ARGS}
 
 inplace:
 	python ./setup.py build_ext -i ${BUILD_ARGS}
