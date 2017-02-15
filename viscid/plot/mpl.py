@@ -871,6 +871,94 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             mplshow()
         return ret
 
+def plot_iono(fld, *args, **kwargs):
+    """Wrapper for easier annotated ionosphere plots
+
+    Args:
+        fld (Field): Some spherical field
+        **kwargs: Consumed, or passed to :py:func:`plot2d_mapfield`
+
+    Keyword Arugments:
+        scale (float): scale fld by some scalar
+        annotations (str): 'pot' to annotate min/max/cpcp
+        units (str): units for annotation values
+        hemisphere (str): 'north' or 'south'
+        fontsize (int): point of font
+        titlescale (float): scale fontsize of title by this much
+        title (str): title for the plot
+
+    Returns:
+        TYPE: Description
+
+    Raises:
+        ValueError: Description
+    """
+    kwargs['nolabels'] = True
+    scale = kwargs.pop("scale", None)
+    colorbar = kwargs.get("colorbar", True)
+    annotations = kwargs.pop("annotations", 'pot').strip().lower()
+    units = kwargs.pop("units", '').strip()
+    _fontsize = kwargs.pop("fontsize", 12)
+    _title_scale = kwargs.pop("titlescale", 1.25)
+    _title = '\n' + kwargs.get("title", fld.pretty_name).strip() + '\n'
+    hem = kwargs.get("hemisphere", "None").strip().lower()
+
+    fld = viscid.as_mapfield(fld, units='deg')
+    if scale is not None:
+        fld *= scale
+    lat = fld.get_crd('lat')
+
+    if colorbar:
+        if not isinstance(colorbar, dict):
+            colorbar = {}
+        if 'pad' not in colorbar:
+            colorbar['pad'] = 0.1
+        kwargs['colorbar'] = colorbar
+
+    if units:
+        units = " " + units
+
+    if hem == 'none':
+        if np.all(lat >= 0.0):
+            hem = 'north'
+        elif np.all(lat <= 0.0):
+            hem = 'south'
+        else:
+            hem = 'north'
+
+    if hem in ('north', 'n'):
+        fldH = fld["lat=10f:"]
+    elif hem in ('south', 's'):
+        fldH = fld['theta=:-10f']
+    else:
+        raise ValueError("Unknown hemisphere: {0}".format(hem))
+
+    # now make the plot
+    p, cbar = plot2d_mapfield(fld, *args, **kwargs)
+
+    if annotations == 'pot':
+        fldH_min = np.min(fldH)
+        fldH_max = np.max(fldH)
+
+        plt.annotate("Min: {0:.1f}{1}".format(fldH_min, units), (-0.04, 1.0),
+                     fontsize=_fontsize, xycoords='axes fraction')
+        plt.annotate("Max: {0:.1f}{1}".format(fldH_max, units), (0.75, 1.0),
+                     fontsize=_fontsize, xycoords='axes fraction')
+        plt.annotate("CPCP: {0:.1f}{1}".format(fldH_max - fldH_min, units),
+                     (-0.04, -0.04), fontsize=_fontsize, xycoords='axes fraction')
+    elif annotations in ('', 'none'):
+        pass
+    else:
+        raise ValueError("unknown annotations type: {0}".format(annotations))
+
+    plt.title(_title, fontsize=int(_title_scale * _fontsize))
+
+    # viscid.interact()
+    if cbar:
+        cbar.ax.margins(x=0.5)
+
+    return p, cbar
+
 def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     """Plot a 1D Field using lines
 
