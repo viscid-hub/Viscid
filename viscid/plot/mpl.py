@@ -755,11 +755,11 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                "".format(fld.name))
             hemisphere = 'north'
     # now that we know hemisphere is useful, setup the latlabel array
-    if hemisphere == "north":
+    if hemisphere in ("north", 'n'):
         # def_projection = "nplaea"
         # def_boundinglat = 40.0
         latlabel_arr = np.linspace(50.0, 80.0, 4)
-    elif hemisphere == "south":
+    elif hemisphere in ("south", 's'):
         # def_projection = "splaea"
         # def_boundinglat = -40.0
         # FIXME: should I be doing this?
@@ -821,7 +821,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             if label_lat == "from_pole":
                 lat_labels = ["{0:g}".format(l) for l in lat_labels]
             elif label_lat:
-                if hemisphere == 'north':
+                if hemisphere in ('north', 'n'):
                     lat_labels = 90 - lat_labels
                 else:
                     lat_labels = -90 + lat_labels
