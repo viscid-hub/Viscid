@@ -24,7 +24,7 @@ import numpy as np
 
 
 __all__ = ["timeit", "resolve_path", "find_item", "find_items",
-           "slice_globbed_filenames", "meshlab_convert"]
+           "slice_globbed_filenames", "glob2", "meshlab_convert"]
 
 
 tree_prefix = ".   "
@@ -836,6 +836,14 @@ def slice_globbed_filenames(glob_pattern):
         slc = slice(None)
 
     return fnames[slc]
+
+
+def glob2(glob_pattern, *args, **kwargs):
+    """Wrap slice_globbed_filenames, but return [] on no match"""
+    try:
+        return slice_globbed_filenames(glob_pattern, *args, **kwargs)
+    except IOError:
+        return []
 
 def value_is_float_not_int(value):
     """Return if value is a float and not an int"""
