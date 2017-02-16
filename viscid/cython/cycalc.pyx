@@ -17,7 +17,7 @@ from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
 from viscid.cython.misc_inlines cimport int_min, int_max
 
 
-def interp(vfield, seeds, kind="trilinear", wrap=True):
+def interp(vfield, seeds, kind="linear", wrap=True, method=None):
     """Interpolate a field to points described by seeds
 
     Note:
@@ -29,8 +29,9 @@ def interp(vfield, seeds, kind="trilinear", wrap=True):
     Parameters:
         vfield (viscid.field.Field): Some Vector or Scalar field
         seeds (viscid.claculator.seed): locations for the interpolation
-        kind (str): either 'trilin'/'trilinear', or 'nearest'
+        kind (str): either 'linear' or 'nearest'
         wrap (bool): if true, then call seeds.wrap on the result
+        method (str): alias for kind, because why not
 
     Returns:
         numpy.ndarray of interpolated values. Shaped (seed.nr_points,)
@@ -38,6 +39,9 @@ def interp(vfield, seeds, kind="trilinear", wrap=True):
         Vector field.
     """
     kind = kind.strip().lower()
+    if method:
+        kind = method.strip().lower()
+
     seeds = to_seeds(seeds)
 
     seed_center = seeds.center if hasattr(seeds, 'center') else vfield.center
@@ -62,10 +66,10 @@ def interp(vfield, seeds, kind="trilinear", wrap=True):
     seed_iter = seeds.iter_points(center=seed_center)
     if kind == "nearest":
         _py_interp_nearest(amrfld, seed_iter, result)
-    elif kind == "trilinear" or kind == "trilin":
+    elif kind == "linear" or kind == "trilinear" or kind == "trilin":
         _py_interp_trilin(amrfld, seed_iter, result)
     else:
-        raise ValueError("kind '{0}' not understood. Use trilinear or nearest"
+        raise ValueError("kind '{0}' not understood. Use linear or nearest"
                          "".format(kind))
 
     if scalar:
@@ -98,7 +102,9 @@ def interp_trilin(vfield, seeds, wrap=True):
         or (seed.nr_points, vfield.nr_comps) if vfield is a Scalar or
         Vector field.
     """
-    return interp(vfield, seeds, wrap=wrap, kind="trilinear")
+    return interp(vfield, seeds, wrap=wrap, kind="linear")
+
+interp_linear = interp_trilin
 
 def interp_nearest(vfield, seeds, wrap=True):
     """Interpolate a field to points described by seeds

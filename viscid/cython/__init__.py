@@ -14,8 +14,9 @@ mess.
 
 __all__ = ["cyamr", "cycalc", "cyfield", "streamline", "integrate",
            "null_tools",
-           "interp", "interp_nearest", "interp_trilin", "calc_streamlines",
-           "streamlines", "find_classified_nulls", "find_nulls"]
+           "interp", "interp_nearest", "interp_linear", "interp_trilin",
+           "calc_streamlines", "streamlines", "find_classified_nulls",
+           "find_nulls"]
 
 # these are duplicated so that the values are available even if the cython
 # code is not built. In principle, I could parse streamline.pyx to pull
@@ -54,6 +55,7 @@ try:
 
     from viscid.cython.cycalc import interp
     from viscid.cython.cycalc import interp_nearest
+    from viscid.cython.cycalc import interp_linear
     from viscid.cython.cycalc import interp_trilin
     from viscid.cython.streamline import calc_streamlines
     streamlines = calc_streamlines
@@ -86,6 +88,9 @@ except ImportError as e:
     def interp_nearest(*args, **kwargs):  # pylint: disable=unused-argument
         """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp_nearest"))
+    def interp_linear(*args, **kwargs):  # pylint: disable=unused-argument
+        """CythonNotBuilt Proxy"""
+        raise CythonNotBuilt(cython_msg.format("interp_linear"))
     def interp_trilin(*args, **kwargs):  # pylint: disable=unused-argument
         """CythonNotBuilt Proxy"""
         raise CythonNotBuilt(cython_msg.format("interp_trilin"))
