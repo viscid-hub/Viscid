@@ -223,12 +223,14 @@ class Node(object):
     def time_as_datetime(self):
         return viscid.as_datetime(self.time_as_datetime64())
 
-    def format_time(self, fmt='.02f'):
-        try:
-            return viscid.format_time(self.time_as_datetime64(), fmt=fmt)
-        except viscid.NoBasetimeError:
-            return viscid.format_time(self.time_as_timedelta64(), fmt=fmt)
-
+    def format_time(self, fmt='.02f', default="Timeless"):
+        if self.time is None:
+            return default
+        else:
+            try:
+                return viscid.format_time(self.time_as_datetime64(), fmt=fmt)
+            except viscid.NoBasetimeError:
+                return viscid.format_time(self.time_as_timedelta64(), fmt=fmt)
 
 class Leaf(Node):
     """Base class for fields"""
