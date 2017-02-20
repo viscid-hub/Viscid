@@ -27,7 +27,8 @@ def interp(vfield, seeds, kind="linear", wrap=True, method=None):
         step-like at patch boundaries.
 
     Parameters:
-        vfield (viscid.field.Field): Some Vector or Scalar field
+        vfield (viscid.field.Field): Some Vector or Scalar field. If
+            this field is not 3D, then vfield.atleast_3d() is called
         seeds (viscid.claculator.seed): locations for the interpolation
         kind (str): either 'linear' or 'nearest'
         wrap (bool): if true, then call seeds.wrap on the result
@@ -41,6 +42,9 @@ def interp(vfield, seeds, kind="linear", wrap=True, method=None):
     kind = kind.strip().lower()
     if method:
         kind = method.strip().lower()
+
+    if vfield.nr_sdims != 3:
+        vfield = vfield.atleast_3d()
 
     seeds = to_seeds(seeds)
 

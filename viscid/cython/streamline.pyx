@@ -147,7 +147,8 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
     r"""Trace streamlines
 
     Args:
-        vfield: A VectorField with 3 components
+        vfield: A VectorField with 3 components,  If this field is not
+            3D, then vfield.atleast_3d() is called
         seed: can be a Seeds instance or a Coordinates instance, or
             anything that exposes an iter_points method
         nr_procs: how many processes for streamlines (>1 only works on
@@ -201,6 +202,8 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
     """
     # if not fld.layout == field.LAYOUT_INTERLACED:
     #     raise ValueError("Streamlines only written for interlaced data.")
+    if vfield.nr_sdims != 3:
+        vfield = vfield.atleast_3d()
     if vfield.nr_sdims != 3 or vfield.nr_comps != 3:
         raise ValueError("Streamlines are only written in 3D.")
 
