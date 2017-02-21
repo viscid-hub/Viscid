@@ -228,7 +228,8 @@ class Node(object):
             return default
         else:
             try:
-                return viscid.format_time(self.time_as_datetime64(), fmt=fmt)
+                return viscid.format_time(self.time_as_datetime64(), fmt=fmt,
+                                          basetime=self.basetime)
             except viscid.NoBasetimeError:
                 return viscid.format_time(self.time_as_timedelta64(), fmt=fmt)
 
