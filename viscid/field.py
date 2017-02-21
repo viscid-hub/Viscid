@@ -1811,9 +1811,14 @@ class Field(tree.Leaf):
             fld = fld.component_fields()[0]
         return fld
 
-    def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
+    def wrap_field(self, data, name="NoName", fldtype=None, **kwargs):
         """Wrap an ndarray into a field in the local representation"""
         center = kwargs.pop('center', self.center)
+        if fldtype is None:
+            if len(data.shape) == len(self.shape):
+                fldtype = self.fldtype
+            else:
+                fldtype = "scalar"
         return viscid.wrap_field(data, self.crds, name=name, fldtype=fldtype,
                                  center=center, **kwargs)
 
