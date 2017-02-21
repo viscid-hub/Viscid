@@ -673,31 +673,31 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
 
     v[s0] = arr[...]
 
-    for i, _ in enumerate(axes):
-        ni = shape[i] + nl
+    for _, axi in enumerate(axes):
+        ni = shape[axi] + nl
         dest_slc = [slice(None)] * len(v.shape)
         src_slc = [slice(None)] * len(v.shape)
         src_slcR = [slice(None)] * len(v.shape)
 
-        if order == 0 or arr.shape[i] < 2:
+        if order == 0 or arr.shape[axi] < 2:
             if nl:
-                dest_slc[i] = slice(None, nl)
-                src_slc[i] = slice(nl, nl + 1)
+                dest_slc[axi] = slice(None, nl)
+                src_slc[axi] = slice(nl, nl + 1)
                 v[dest_slc] = v[src_slc]
             if nh:
-                dest_slc[i] = slice(ni, None)
-                src_slc[i] = slice(ni - 1, ni)
+                dest_slc[axi] = slice(ni, None)
+                src_slc[axi] = slice(ni - 1, ni)
                 v[dest_slc] = v[src_slc]
         elif order == 1:
             for j in range(nl):
-                dest_slc[i] = slice(nl - j - 1, nl - j)
-                src_slc[i] = slice(nl - j, nl - j + 1)
-                src_slcR[i] = slice(nl - j + 1, nl - j + 2)
+                dest_slc[axi] = slice(nl - j - 1, nl - j)
+                src_slc[axi] = slice(nl - j, nl - j + 1)
+                src_slcR[axi] = slice(nl - j + 1, nl - j + 2)
                 v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
             for j in range(nh):
-                dest_slc[i] = slice(ni + j, ni + j + 1)
-                src_slc[i] = slice(ni + j - 1, ni + j)
-                src_slcR[i] = slice(ni + j -2, ni + j - 1)
+                dest_slc[axi] = slice(ni + j, ni + j + 1)
+                src_slc[axi] = slice(ni + j - 1, ni + j)
+                src_slcR[axi] = slice(ni + j -2, ni + j - 1)
                 v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
             # src_slc[i] = slice(-1, None)
             # dest_slc[i] = slice(-nh, None)

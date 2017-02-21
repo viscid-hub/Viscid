@@ -14,14 +14,12 @@ Changes:
   - re-cython .pyx files with Cython 0.25.2
 
 Bugfixes:
+  - extend_boundaries_ndarr was broken for flat vector arrays
   - array dimensions in Cotr are now standardized and documented properly
   - mapfields were funny when show = True
   - tests that use vtk 6.3 w/ Linux + MESA
   - round_datetime straight up didn't work
   - fix external call to meshlabserver
-
-Known Issues:
-  - edge centered / face centered fields got broken somehow
 
 0.98.1
 ======

@@ -20,9 +20,9 @@ from viscid.plot import mpl
 
 
 def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2.2e-6,
-                    trim_slc='x=1:-1, y=1:-1, z=1:-1', make_plots=False):
+                    trim_slc=':', bnd=True, make_plots=False):
     trimmed = cc_fld[trim_slc]
-    cc = to_cc_fn(ecfc_fld)
+    cc = to_cc_fn(ecfc_fld, bnd=bnd)
     reldiff = (cc - trimmed) / viscid.magnitude(trimmed)
     reldiff = reldiff["x=1:-1, y=1:-1, z=1:-1"]
     reldiff.name = cc.name + " - " + trimmed.name
@@ -31,7 +31,9 @@ def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2.2e-6,
 
     for i, d in enumerate('xyz'):
         abs_max_rel_diff = np.nanmax(np.abs(reldiff[d]))
-        max_crd_diff = np.max(trimmed.get_crd(d) - cc.get_crd(d))
+        # trim first and last when diffing crds since they're extrapolated
+        # in the ecfc field, so we already know they won't match up do dx
+        max_crd_diff = np.max((trimmed.get_crd(d) - cc.get_crd(d))[1:-1])
         print("{0}{1}, max absolute relative diff: {2:.3e} ({1} crds: {3:.1e})"
               "".format(cc_fld.name, d, abs_max_rel_diff, max_crd_diff))
         if abs_max_rel_diff > rtol or abs(max_crd_diff) > catol:
@@ -66,7 +68,7 @@ def main():
         else:
             raise ValueError()
         catol = 1e-8
-        rtol = 2.2e-6
+        rtol = 5e-6
     elif mhd_type in ("F", "FORTRAN"):
         f = viscid.load_file("$WORK/tmedium3/*.3df.[-1]")
         catol = 1e-8
