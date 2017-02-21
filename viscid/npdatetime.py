@@ -431,10 +431,10 @@ def format_time(time, fmt='.02f'):
           'dhmss'                 900.0   "0 days 00:15:00.000 (000900)"
           '.02f'                  900.0   '900.00'
           '%Y-%m-%d %H:%M:%S'     900.0   '1970-01-01 00:15:00'
+          -------------------   -------   ------------------------------
 
           Note that the last one can involve any formatting strings
           understood by datetime.strftime
-          -------------------   -------   ------------------------------
 
     Returns:
         str
