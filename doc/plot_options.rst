@@ -144,6 +144,23 @@ label_lat       [bool or str]     Label latitudes at 80, 70, 60 degrees
 label_mlt       [bool]            label magnetic local time
 ==============  ===============   ==================================================
 
+2-D Iono Plots
+--------------
+
+All options for normal 2-D and map plots apply too.
+
+.. cssclass:: table-striped
+
+==============  ===============   ==================================================
+Option          Arguments         Description
+==============  ===============   ==================================================
+annotations     str               'pot' annotates min/max/cpcp, others may be added
+                                  in the future
+units           str               units for annotations / title etc
+fontsize        int               font size in points
+titlescale      float             now much larger to make the title as a fraction
+                                  (1.5 is 50% larger than annotations)
+==============  ===============   ==================================================
 
 1-D Color Plots
 ---------------

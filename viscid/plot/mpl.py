@@ -888,10 +888,13 @@ def plot_iono(fld, *args, **kwargs):
         title (str): title for the plot
 
     Returns:
-        TYPE: Description
+        (plot_object, colorbar_object)
+
+    See Also:
+        * :doc:`/plot_options`: Contains a full list of plot options
 
     Raises:
-        ValueError: Description
+        ValueError: on bad hemisphere
     """
     kwargs['nolabels'] = True
     scale = kwargs.pop("scale", None)

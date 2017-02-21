@@ -16,6 +16,7 @@ Changes:
 Bugfixes:
   - extend_boundaries_ndarr was broken for flat vector arrays
   - array dimensions in Cotr are now standardized and documented properly
+  - making vector masks (ie, of edge / face centered fields) now works
   - mapfields were funny when show = True
   - tests that use vtk 6.3 w/ Linux + MESA
   - round_datetime straight up didn't work
