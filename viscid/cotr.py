@@ -137,11 +137,11 @@ def _igrf_interpolate(time, notilt1967=True):
 def as_nvec(arr, ndim=4, init_vals=(0, 0, 0, 1)):
     """Extend vectors to `ndim` dimensions
 
-    The last dimension or arr that is the one that is extended. If the
+    The first dimension or arr that is the one that is extended. If the
     last dimension has shape >= 4, leave arr unchanged
 
     Args:
-        arr (sequence): array with shape (3,) or (N, 3) for N vectors
+        arr (sequence): array with shape (3,) or (3, N) for N vectors
         ndim (int): extend arr to this many dimensions
         init_vals (sequence): initialized values for new dimensions,
             note that init_vals[i] is the initialization for the ith
@@ -149,18 +149,18 @@ def as_nvec(arr, ndim=4, init_vals=(0, 0, 0, 1)):
             rotation+translation matrices
 
     Returns:
-        ndarray: (ndim,) or (N, ndim) depending on input
+        ndarray: (ndim,) or (ndim, N) depending on input
     """
     arr = np.asarray(arr)
-    if arr.shape[-1] < ndim:
-        dim1234 = np.empty(list(arr.shape)[:-1] + [ndim - arr.shape[-1]],
+    if arr.shape[0] < ndim:
+        dim1234 = np.empty([ndim - arr.shape[0]] + list(arr.shape)[1:],
                            dtype=arr.dtype)
         # dim4 = np.empty(list(arr.shape)[:-1] + [1], dtype=arr.dtype)
         if len(init_vals) < ndim:
             raise ValueError("init vals should have length at least ndim")
-        for i, j in enumerate(range(arr.shape[-1], ndim)):
-            dim1234[..., i] = init_vals[j]
-        arr = np.concatenate([arr, dim1234], axis=len(arr.shape) - 1)
+        for i, j in enumerate(range(arr.shape[0], ndim)):
+            dim1234[i, ...] = init_vals[j]
+        arr = np.concatenate([arr, dim1234], axis=0)
     return arr
 
 def make_rotation(theta, axis='z', rdim=3):
@@ -666,16 +666,20 @@ class Cotr(object):
         Args:
             from_system (str): abbreviation of crd_system
             to_system (str): abbreviation of crd_system
-            vec (ndarray): should have shape (3, ) or (N, 3) to
+            vec (ndarray): should have shape (3, ) or (3, N) to
                 transform N vectors at once
 
         Returns:
-            ndarray: vec in new crd system
+            ndarray: vec in new crd system shaped either (3, ) or
+                (3, N) mirroring the shape of vec
         """
         from_system = get_crd_system(from_system)
         to_system = get_crd_system(to_system)
 
-        vec = np.asarray(vec)
+        in_vec = np.asarray(vec)
+        vec = as_nvec(in_vec, ndim=self.rdim)
+        if len(vec.shape) == 1:
+            vec = vec.reshape([-1, 1])
 
         if from_system in self.HELIOCENTRIC and to_system in self.GEOCENTRIC:
             ret = None
@@ -685,12 +689,15 @@ class Cotr(object):
             raise NotImplementedError("Geocentric -> Heliocentric not implemented")
         else:
             mat = self.get_transform_matrix(from_system, to_system)
-            # ret = np.dot(mat, vec)
-            ret = np.dot(mat, as_nvec(vec, ndim=self.rdim))
+            ret = np.dot(mat, vec)
 
         # the slice is in case as_nvec made vec larger to accomidate
         # translation, but make sure we return at least 3-D
-        return np.array(ret[..., :max(vec.shape[-1], 3)])
+        ret = np.array(ret[:max(in_vec.shape[0], 3), ...])
+
+        if len(in_vec.shape) == 1:
+            ret = ret[:, 0]
+        return ret
 
     def get_rotation_wxyz(self, from_system, to_system):
         """Get rotation axis and angle for a transformation
