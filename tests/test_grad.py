@@ -19,7 +19,7 @@ def main():
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
-    b = viscid.make_dipole(l=(-5, -5, -5), h=(5, 5, 5), n=(256, 256, 128),
+    b = viscid.make_dipole(l=(-5, -5, -5), h=(5, 5, 5), n=(255, 255, 127),
                            m=(0, 0, -1))
     b2 = np.sum(b * b, axis=b.nr_comp)
 
