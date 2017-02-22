@@ -159,7 +159,7 @@ class AthenaTabFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
             stop = int(np.prod(dims[:i + 1]))
             step = int(np.prod(dims[:i]))
             cc = dat[i][:stop:step]
-            dxmin = np.min(dxmin, np.min(cc[1:] - cc[:-1]))
+            dxmin = np.min([dxmin, np.min(cc[1:] - cc[:-1])])
             assert len(cc) == dim
             cclist.append((axis, cc))
 
