@@ -963,11 +963,17 @@ class Field(tree.Leaf):
                 break
 
         # check which dims match the shape of the crds
-        if dat_shape == sshape:
+        # or if they match when disregarding length 1 axes.
+        # This 2nd part happens when calling atleast_3d() on
+        # a field that isn't already in memory
+        dat_shape2 = [si for si in dat_shape if si > 1]
+        sshape2 = [si for si in dat_shape if si > 1]
+
+        if dat_shape == sshape or dat_shape2 == sshape2:
             layout = LAYOUT_SCALAR
-        elif dat_shape[1:] == sshape:
+        elif dat_shape[1:] == sshape or dat_shape2[1:] == sshape2:
             layout = LAYOUT_FLAT
-        elif dat_shape[:-1] == sshape:
+        elif dat_shape[:-1] == sshape or dat_shape2[:-1] == sshape2:
             layout = LAYOUT_INTERLACED
         elif dat_shape[0] == np.prod(sshape):
             layout = LAYOUT_INTERLACED
