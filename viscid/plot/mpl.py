@@ -381,6 +381,9 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
     if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
         all_masked = all_masked and dat.mask.all()
+    if kwargs.pop('logscale_mask_neg', False):
+        dat = np.ma.masked_where(dat <= 0.0, dat)
+        all_masked = all_masked and dat.mask.all()
 
     # Field.data is now xyz as are the crds
 
@@ -572,10 +575,12 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             if vmax <= 0.0:
                 logger.warn("Using log scale on a field with no "
                             "positive values")
+                plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = 1e-20, 1e-20
             elif vmin <= 0.0:
                 logger.warn("Using log scale on a field with values "
                             "<= 0. Only plotting 4 decades.")
+                plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
         elif vscale is None:
