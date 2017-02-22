@@ -536,7 +536,7 @@ class StructuredCrds(Coordinates):
                          "'x = 0f' or field['0f']")
         axes, selection = self._parse_slice(selection)
         # FIXME: this is a rediculous use of NaN
-        extent = np.nan * np.empty((2, self.nr_dims), dtype='f')
+        extent = np.nan * np.ones((2, self.nr_dims), dtype='f')
 
         for i, slc in enumerate(selection):
             if slc != slice(None):

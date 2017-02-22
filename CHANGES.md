@@ -23,6 +23,7 @@ Bugfixes:
   - tests that use vtk 6.3 w/ Linux + MESA
   - round_datetime straight up didn't work
   - fix external call to meshlabserver
+  - quiet a whole host of runtime warnings
 
 0.98.1
 ======
