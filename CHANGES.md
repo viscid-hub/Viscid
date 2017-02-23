@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.98.2 dev
-==========
+0.98.2
+======
 
 Changes:
   - Interpolaton / Streamline code calls atleast_3d() on field if it thinks that might be necessary

@@ -969,9 +969,9 @@ class Field(tree.Leaf):
         dat_shape2 = [si for si in dat_shape if si > 1]
         sshape2 = [si for si in dat_shape if si > 1]
 
-        if dat_shape == sshape or dat_shape2 == sshape2:
+        if dat_shape == sshape:
             layout = LAYOUT_SCALAR
-        elif dat_shape[1:] == sshape or dat_shape2[1:] == sshape2:
+        elif dat_shape[1:] == sshape:
             layout = LAYOUT_FLAT
         elif dat_shape[:-1] == sshape or dat_shape2[:-1] == sshape2:
             layout = LAYOUT_INTERLACED
@@ -979,6 +979,13 @@ class Field(tree.Leaf):
             layout = LAYOUT_INTERLACED
         elif dat_shape[-1] == np.prod(sshape):
             layout = LAYOUT_FLAT
+        # the following are layouts that happen after a call to atleast_3d()
+        elif dat_shape2 == sshape2:
+            layout = LAYOUT_SCALAR
+        elif dat_shape2[1:] == sshape2:
+            layout = LAYOUT_FLAT
+        elif dat_shape2[:-1] == sshape2:
+            layout = LAYOUT_INTERLACED
         else:
             # if this happens, don't ignore it even if it happens to work
             # print("??", self, self.native_shape, self.shape, )
