@@ -242,14 +242,14 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
 
     mfld = as_mapfield(fld, order=('lon', 'lat'), units='rad')
 
-    if hemisphere == "north":
+    if hemisphere in ("north", 'n'):
         if np.all(mfld.get_crd('lat') < abs_bounding_lat):
             raise ValueError("fld {0} contains no values north of bounding lat "
                              "{1:g} deg"
                              "".format(fld.name, bounding_lat * 180 / np.pi))
         # mfld = mfld["lat=:{0}f:-1".format(abs_bounding_lat)]
         mfld = mfld.loc[:, :np.pi / 2 - abs_bounding_lat:-1]
-    elif hemisphere == "south":
+    elif hemisphere in ("south", 's'):
         if np.all(mfld.get_crd('lat') > -abs_bounding_lat):
             raise ValueError("fld {0} contains no values south of bounding lat "
                              "{1:g} deg"
@@ -261,7 +261,7 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
 
     clist = mfld.get_clist()
     offset = np.pi / 2
-    scale = -1 if hemisphere == 'north' else 1
+    scale = -1 if hemisphere in ('north', 'n') else 1
 
     if mfld.crds.is_uniform():
         for i in range(2):
@@ -358,7 +358,7 @@ def pts2polar_mapfield(pts, pts_axes, pts_unit='deg', hemisphere='north'):
 
     # clist = mfld.get_clist()
     offset = np.pi / 2
-    scale = -1 if hemisphere == 'north' else 1
+    scale = -1 if hemisphere in ('north', 'n') else 1
 
     pts[1, :] = scale * pts[1, :] + offset
 

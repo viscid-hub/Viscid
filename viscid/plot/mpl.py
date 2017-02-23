@@ -381,6 +381,9 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
     if masknan:
         dat = np.ma.masked_where(np.isnan(dat), dat)
         all_masked = all_masked and dat.mask.all()
+    if kwargs.pop('logscale_mask_neg', False):
+        dat = np.ma.masked_where(dat <= 0.0, dat)
+        all_masked = all_masked and dat.mask.all()
 
     # Field.data is now xyz as are the crds
 
@@ -572,10 +575,12 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             if vmax <= 0.0:
                 logger.warn("Using log scale on a field with no "
                             "positive values")
+                plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = 1e-20, 1e-20
             elif vmin <= 0.0:
                 logger.warn("Using log scale on a field with values "
                             "<= 0. Only plotting 4 decades.")
+                plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
         elif vscale is None:
@@ -755,11 +760,11 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                "".format(fld.name))
             hemisphere = 'north'
     # now that we know hemisphere is useful, setup the latlabel array
-    if hemisphere == "north":
+    if hemisphere in ("north", 'n'):
         # def_projection = "nplaea"
         # def_boundinglat = 40.0
         latlabel_arr = np.linspace(50.0, 80.0, 4)
-    elif hemisphere == "south":
+    elif hemisphere in ("south", 's'):
         # def_projection = "splaea"
         # def_boundinglat = -40.0
         # FIXME: should I be doing this?
@@ -792,7 +797,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
                                            hemisphere=hemisphere,
                                            make_periodic=make_periodic)
-
+        show = plot_kwargs.pop('show', False)
         plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
@@ -821,7 +826,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             if label_lat == "from_pole":
                 lat_labels = ["{0:g}".format(l) for l in lat_labels]
             elif label_lat:
-                if hemisphere == 'north':
+                if hemisphere in ('north', 'n'):
                     lat_labels = 90 - lat_labels
                 else:
                     lat_labels = -90 + lat_labels
@@ -829,10 +834,13 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             else:
                 lat_labels = []
             ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
+            ax.set_rmax(np.deg2rad(bounding_lat))
         else:
             ax.grid(False)
             ax.set_xticklabels([])
             ax.set_yticklabels([])
+        if show:
+            mplshow()
         return ret
 
     else:
@@ -840,6 +848,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             ax = plt.gca()
         m = Basemap(projection=projection, lon_0=lon_0, lat_0=lat_0,
                     boundinglat=bounding_lat, ax=ax)
+        show = plot_kwargs.pop('show', False)
         plot_kwargs['latlon'] = True
         plot_kwargs['nolabels'] = True
         plot_kwargs['equalaxis'] = False
@@ -863,7 +872,100 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                             linewidth=axgridlw)
         if drawcoastlines:
             m.drawcoastlines(linewidth=0.25)
+        if show:
+            mplshow()
         return ret
+
+def plot_iono(fld, *args, **kwargs):
+    """Wrapper for easier annotated ionosphere plots
+
+    Args:
+        fld (Field): Some spherical field
+        **kwargs: Consumed, or passed to :py:func:`plot2d_mapfield`
+
+    Keyword Arugments:
+        scale (float): scale fld by some scalar
+        annotations (str): 'pot' to annotate min/max/cpcp
+        units (str): units for annotation values
+        hemisphere (str): 'north' or 'south'
+        fontsize (int): point of font
+        titlescale (float): scale fontsize of title by this much
+        title (str): title for the plot
+
+    Returns:
+        (plot_object, colorbar_object)
+
+    See Also:
+        * :doc:`/plot_options`: Contains a full list of plot options
+
+    Raises:
+        ValueError: on bad hemisphere
+    """
+    kwargs['nolabels'] = True
+    scale = kwargs.pop("scale", None)
+    colorbar = kwargs.get("colorbar", True)
+    annotations = kwargs.pop("annotations", 'pot').strip().lower()
+    units = kwargs.pop("units", '').strip()
+    _fontsize = kwargs.pop("fontsize", 12)
+    _title_scale = kwargs.pop("titlescale", 1.25)
+    _title = '\n' + kwargs.get("title", fld.pretty_name).strip() + '\n'
+    hem = kwargs.get("hemisphere", "None").strip().lower()
+
+    fld = viscid.as_mapfield(fld, units='deg')
+    if scale is not None:
+        fld *= scale
+    lat = fld.get_crd('lat')
+
+    if colorbar:
+        if not isinstance(colorbar, dict):
+            colorbar = {}
+        if 'pad' not in colorbar:
+            colorbar['pad'] = 0.1
+        kwargs['colorbar'] = colorbar
+
+    if units:
+        units = " " + units
+
+    if hem == 'none':
+        if np.all(lat >= 0.0):
+            hem = 'north'
+        elif np.all(lat <= 0.0):
+            hem = 'south'
+        else:
+            hem = 'north'
+
+    if hem in ('north', 'n'):
+        fldH = fld["lat=10f:"]
+    elif hem in ('south', 's'):
+        fldH = fld['theta=:-10f']
+    else:
+        raise ValueError("Unknown hemisphere: {0}".format(hem))
+
+    # now make the plot
+    p, cbar = plot2d_mapfield(fld, *args, **kwargs)
+
+    if annotations == 'pot':
+        fldH_min = np.min(fldH)
+        fldH_max = np.max(fldH)
+
+        plt.annotate("Min: {0:.1f}{1}".format(fldH_min, units), (-0.04, 1.0),
+                     fontsize=_fontsize, xycoords='axes fraction')
+        plt.annotate("Max: {0:.1f}{1}".format(fldH_max, units), (0.75, 1.0),
+                     fontsize=_fontsize, xycoords='axes fraction')
+        plt.annotate("CPCP: {0:.1f}{1}".format(fldH_max - fldH_min, units),
+                     (-0.04, -0.04), fontsize=_fontsize, xycoords='axes fraction')
+    elif annotations in ('', 'none'):
+        pass
+    else:
+        raise ValueError("unknown annotations type: {0}".format(annotations))
+
+    plt.title(_title, fontsize=int(_title_scale * _fontsize))
+
+    # viscid.interact()
+    if cbar:
+        cbar.ax.margins(x=0.5)
+
+    return p, cbar
 
 def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     """Plot a 1D Field using lines

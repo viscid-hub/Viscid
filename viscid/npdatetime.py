@@ -317,6 +317,8 @@ def as_timedelta(time, unit=None):
     Returns:
         np.ndarray of native datetime.datetime objects (dtype = object)
     """
+    # FIXME: this is known not to work in all cases, for instance when
+    # time is in units of ns
     ret = as_timedelta64(time, unit=unit).astype(timedelta)
     if not isinstance(ret, np.ndarray) and not hasattr(ret, "total_seconds"):
         ret = TimeDeltaCompat(ret)
@@ -391,8 +393,10 @@ def is_valid_timedelta64(arr, unit=None):
 def round_datetime(a, decimals=0):
     """round datetime a to the nearest dicimals seconds"""
     a_as_dt64 = as_datetime64(a)
-    rounded = np.round(as_timedelta(a_as_dt64).total_seconds(), decimals)
-    return as_datetime64(rounded)
+    _epoch = as_datetime64(a_as_dt64, unit='s')
+    frac = (a_as_dt64 - _epoch) / np.timedelta64(1, 's')
+    rounded = np.round(frac, decimals)
+    return as_datetime64(_epoch + as_timedelta64(rounded, unit='s'))
 
 def round_timedelta(a, decimals=0):
     """round timedelta a to the nearest dicimals seconds"""
@@ -412,29 +416,37 @@ def format_datetime(time, fmt="%Y-%m-%d %H:%M:%S.%.02f"):
     """Shortcut to :py:func:`format_time` for a datetime format"""
     return format_time(time, fmt=fmt)
 
-def format_time(time, fmt='.02f'):
+def format_time(time, fmt='.02f', basetime=None):
     """Format time as a string
 
     Args:
         t (float): time
         style (str): for this method, can be::
-          style               |   time  | string
-          --------------------------------------------------------------
-          'hms'               | 90015.0 | "25:00:15.000"
-          'hmss'              | 90015.0 | "25:00:15.000 (090015)"
-          'dhms'              |   900.0 | "0 days 00:15:00.000"
-          'dhmss'             |   900.0 | "0 days 00:15:00.000 (000900)"
-          '.02f'              |   900.0 | '900.00'
-          '%Y-%m-%d %H:%M:%S' |   900.0 | '1970-01-01 00:15:00'
+          -----------------------   -------   ------------------------------
+          style                     time      string
+          -----------------------   -------   ------------------------------
+          'hms'                     90015.0   "25:00:15.000"
+          'hmss'                    90015.0   "25:00:15.000 (090015)"
+          'dhms'                      900.0   "0 days 00:15:00.000"
+          'dhmss'                     900.0   "0 days 00:15:00.000 (000900)"
+          '.02f'                      900.0   '900.00'
+          '%Y-%m-%d %H:%M:%S'         900.0   '1970-01-01 00:15:00'
+          '%Y-%m-%d %H:%M:%S.%1f'     900.0   '1970-01-01 00:15:00.0'
+          -----------------------   -------   ------------------------------
 
           Note that the last one can involve any formatting strings
           understood by datetime.strftime
+        basetime (np.datetime64): if formatting just number of seconds
+            from something like ".02f", then use this time as 0 seconds
 
     Returns:
         str
     """
     time = as_datetime(time)
     ret = ""
+
+    if basetime is None:
+        basetime = as_datetime64(0.0)
 
     if fmt.lower() == 'ut':
         fmt = '%Y-%m-%d %H:%M:%S'
@@ -451,11 +463,13 @@ def format_time(time, fmt='.02f'):
             days_str = ''
         ret = datetime.strftime(time, days_str + '%H:%M:%S')
         if fmt.endswith('ss'):
-            ret += " ({0:06d})".format(int(as_timedelta(time).total_seconds()))
+            _tt = as_timedelta(as_datetime64(time) - basetime).total_seconds()
+            ret += " ({0:06d})".format(int(_tt))
     elif '%' not in fmt:
         # if there's no % symbol, then it's probably not a strftime format,
         # so use fmt as normal string formatting of total_seconds
-        ret = "{0:{1}}".format(as_timedelta(time).total_seconds(), fmt.strip())
+        _tt = as_timedelta(as_datetime64(time) - basetime).total_seconds()
+        ret = "{0:{1}}".format(_tt, fmt.strip())
     else:
         if not fmt:
             msec_fmt = ['1']

@@ -368,9 +368,13 @@ class DatasetTemporal(Dataset):
 
             # do translation from string/datetime/etc -> floats
             for i in range(min(len(slc_lst), 2)):
-                t_as_s = self.as_floating_t(slc_lst[i], none_passthrough=True)
-                if t_as_s is not None:
-                    slc_lst[i] = "{0}f".format(t_as_s)
+                try:
+                    slc_lst[i] = int(slc_lst[i])
+                except (ValueError, TypeError):
+                    t_as_s = self.as_floating_t(slc_lst[i], none_passthrough=True)
+
+                    if t_as_s is not None:
+                        slc_lst[i] = "{0}f".format(t_as_s)
 
             if single_val:
                 ret.append(to_slice(times, slc_lst[0]))

@@ -412,21 +412,26 @@ def resample_lines(lines, factor=1, kind="linear"):
         lines[i] = newline
     return lines
 
-def project_along_line(line, fld):
+def project_along_line(line, fld, interp_kind='trilin'):
     """Project a Vector Field Parallel to a streamline
 
     Args:
         line (ndarray): 3xN of points along the
         fld (VectorField): Field to interpolate and project onto the
             line
+        interp_kind (str): which interpolation to use, const or trilin
     """
-    fld_on_verts = viscid.interp_trilin(fld, line)
+    fld_on_verts = viscid.interp(fld, line, kind=interp_kind)
+    # FIXME: here in lies a bug, which axis am I actually summing over?
+    #        maybe that's not the bug, but there must be something wrong
+    #        here as indicated by kris_scripts/work/iono_xi_mismatch/analytic_pot.py
     dsvec = line[:, 2:] - line[:, :-2]
     dsvec = np.concatenate([dsvec[:, 0:1], dsvec, dsvec[:, -2:-1]], axis=1)
     dsvec = dsvec / np.linalg.norm(dsvec, axis=0)
     return np.sum(fld_on_verts * dsvec.T, axis=1)
 
-def integrate_along_line(line, fld, reduction="dot", mask_func=None):
+def integrate_along_line(line, fld, reduction="dot", mask_func=None,
+                         interp_kind='trilin'):
     """Integrate the value of fld along a line
 
     Args:
@@ -435,14 +440,16 @@ def integrate_along_line(line, fld, reduction="dot", mask_func=None):
         reduction (str): If fld is a vector field, what quantity to
             integrate. Can be "dot" to dot the vectors with ds along
             the line, or "mag" to integrate the magnitude.
+        interp_kind (str): which interpolation to use, const or trilin
 
     Returns:
         a scalar with the same dtype as fld
     """
     return integrate_along_lines([line], fld, reduction=reduction,
-                                 mask_func=mask_func)[0]
+                                 mask_func=mask_func, interp_kind=interp_kind)[0]
 
-def integrate_along_lines(lines, fld, reduction="dot", mask_func=None):
+def integrate_along_lines(lines, fld, reduction="dot", mask_func=None,
+                          interp_kind='trilin'):
     """Integrate the value of fld along a list of lines
 
     Args:
@@ -452,6 +459,7 @@ def integrate_along_lines(lines, fld, reduction="dot", mask_func=None):
         reduction (str): If fld is a vector field, what quantity to
             integrate. Can be "dot" to dot the vectors with ds along
             the line, or "mag" to integrate the magnitude.
+        interp_kind (str): which interpolation to use, const or trilin
 
     Returns:
         ndarray with shape (len(lines), )
@@ -460,7 +468,7 @@ def integrate_along_lines(lines, fld, reduction="dot", mask_func=None):
 
     cum_n = np.cumsum([0] + [line.shape[1] for line in lines])
     all_verts = np.concatenate(lines, axis=1)
-    fld_on_verts = viscid.interp_trilin(fld, all_verts).data
+    fld_on_verts = viscid.interp(fld, all_verts, kind=interp_kind).data
 
     for i, start, stop in izip(count(), cum_n[:-1], cum_n[1:]):
         ds = np.linalg.norm(lines[i][:, 1:] - lines[i][:, :-1], axis=0)
@@ -665,31 +673,31 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
 
     v[s0] = arr[...]
 
-    for i, _ in enumerate(axes):
-        ni = shape[i] + nl
+    for _, axi in enumerate(axes):
+        ni = shape[axi] + nl
         dest_slc = [slice(None)] * len(v.shape)
         src_slc = [slice(None)] * len(v.shape)
         src_slcR = [slice(None)] * len(v.shape)
 
-        if order == 0 or arr.shape[i] < 2:
+        if order == 0 or arr.shape[axi] < 2:
             if nl:
-                dest_slc[i] = slice(None, nl)
-                src_slc[i] = slice(nl, nl + 1)
+                dest_slc[axi] = slice(None, nl)
+                src_slc[axi] = slice(nl, nl + 1)
                 v[dest_slc] = v[src_slc]
             if nh:
-                dest_slc[i] = slice(ni, None)
-                src_slc[i] = slice(ni - 1, ni)
+                dest_slc[axi] = slice(ni, None)
+                src_slc[axi] = slice(ni - 1, ni)
                 v[dest_slc] = v[src_slc]
         elif order == 1:
             for j in range(nl):
-                dest_slc[i] = slice(nl - j - 1, nl - j)
-                src_slc[i] = slice(nl - j, nl - j + 1)
-                src_slcR[i] = slice(nl - j + 1, nl - j + 2)
+                dest_slc[axi] = slice(nl - j - 1, nl - j)
+                src_slc[axi] = slice(nl - j, nl - j + 1)
+                src_slcR[axi] = slice(nl - j + 1, nl - j + 2)
                 v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
             for j in range(nh):
-                dest_slc[i] = slice(ni + j, ni + j + 1)
-                src_slc[i] = slice(ni + j - 1, ni + j)
-                src_slcR[i] = slice(ni + j -2, ni + j - 1)
+                dest_slc[axi] = slice(ni + j, ni + j + 1)
+                src_slc[axi] = slice(ni + j - 1, ni + j)
+                src_slcR[axi] = slice(ni + j -2, ni + j - 1)
                 v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
             # src_slc[i] = slice(-1, None)
             # dest_slc[i] = slice(-nh, None)

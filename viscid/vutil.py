@@ -24,7 +24,7 @@ import numpy as np
 
 
 __all__ = ["timeit", "resolve_path", "find_item", "find_items",
-           "slice_globbed_filenames", "meshlab_convert"]
+           "slice_globbed_filenames", "glob2", "meshlab_convert"]
 
 
 tree_prefix = ".   "
@@ -837,6 +837,14 @@ def slice_globbed_filenames(glob_pattern):
 
     return fnames[slc]
 
+
+def glob2(glob_pattern, *args, **kwargs):
+    """Wrap slice_globbed_filenames, but return [] on no match"""
+    try:
+        return slice_globbed_filenames(glob_pattern, *args, **kwargs)
+    except IOError:
+        return []
+
 def value_is_float_not_int(value):
     """Return if value is a float and not an int"""
     # this is klugy and only needed to display deprecation warnings
@@ -1031,7 +1039,7 @@ def meshlab_convert(fname, fmt="dae", quiet=True):
     iname = fname
     oname = '.'.join(iname.split('.')[:-1]) + "." + fmt.strip()
     redirect = "&> {0}".format(os.devnull) if quiet else ""
-    cmd = ("meshlabserver -i {0} -o {1} -om vc vn fc fn {2}"
+    cmd = ("meshlabserver -i {0} -o {1} -m vc vn fc fn {2}"
            "".format(iname, oname, redirect))
     sub.Popen(cmd, shell=True, stdout=None, stderr=None)
 

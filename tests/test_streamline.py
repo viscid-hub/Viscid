@@ -98,6 +98,11 @@ def _main():
     run_test(B, sphere, plot2d=plot2d, plot3d=plot3d, title='3D', show=args.show,
              ibound=0.07, obound0=obound0, obound1=obound1, method=viscid.RK12)
 
+    # prevent weird xorg bad-instructions on tear down
+    if 'figure' in _global_ns and _global_ns['figure'] is not None:
+        from viscid.plot import mvi
+        mvi.mlab.close(_global_ns['figure'])
+
 if __name__ == "__main__":
     _main()
 

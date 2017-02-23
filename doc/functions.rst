@@ -193,6 +193,9 @@ Function                                          Description
 :py:func:`viscid.plot.mpl.plot1d_field`           Line plots of a 1D field.
 :py:func:`viscid.plot.mpl.plot2d_field`           Colored plots (pcolormesh, contour, contourf) of 2D fields
 :py:func:`viscid.plot.mpl.plot2d_mapfield`        Plots on the surface of a sphere (like ionosphere plots)
+:py:func:`viscid.plot.mpl.plot_iono`              make annotated polar plots of ionosphere quantities, this
+                                                  is just a wrapper for plot2d_mapfield that handles small
+                                                  annyoances and annotations
 :py:func:`viscid.plot.mpl.plot2d_lines`           Plot a list of colored lines parallel-projected into 2D
 :py:func:`viscid.plot.mpl.plot2d_quiver`          Plot a :py:class:`viscid.field.VectorField` using
                                                   Matplotlib's quivers.

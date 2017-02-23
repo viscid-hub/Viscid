@@ -84,6 +84,8 @@ def next_plot_fname(main__file__, series='', fmt='png'):
         sseries = series
     name = "{0}/{1}-{2}{3:03d}.{4}".format(plot_dir, test_name, sseries,
                                            NPLOT[series], fmt)
+    if not os.path.isdir(plot_dir):
+        os.mkdir(plot_dir)
     NPLOT[series] += 1
     return name
 

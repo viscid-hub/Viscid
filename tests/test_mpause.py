@@ -5,6 +5,7 @@ streamlines or something """
 from __future__ import print_function
 import argparse
 import sys
+import warnings
 
 from viscid_test_common import sample_dir, xfail
 
@@ -12,10 +13,19 @@ import numpy as np
 import viscid
 from viscid import vutil
 
+try:
+    from scipy.optimize import OptimizeWarning
+    _HAS_SCIPY = True
+except ImportError:
+    _HAS_SCIPY = False
+
 
 def main():
     parser = argparse.ArgumentParser(description="Test calc")
     _ = vutil.common_argparse(parser)
+
+    if _HAS_SCIPY:
+        warnings.filterwarnings("ignore", category=OptimizeWarning)
 
     f = viscid.load_file(sample_dir + '/sample_xdmf.3d.[0].xdmf')
     mp = viscid.get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',

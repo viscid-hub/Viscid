@@ -1,6 +1,30 @@
 Changes
 -------
 
+0.98.2
+======
+
+Changes:
+  - Interpolaton / Streamline code calls atleast_3d() on field if it thinks that might be necessary
+  - interp now accepts 'linear' as well as 'trilin' etc.
+  - add convenience glob2 function that wraps slice_globbed_filenames
+  - mapfield now accepts 'n' and 's' for hemisphere
+  - add a provisional convenience mpl function plot_iono (automatically annotates CPCP etc on ionosphere plots)
+  - let user pass crd_type to easy-crd-constructors
+  - re-cython .pyx files with Cython 0.25.2
+
+Bugfixes:
+  - extend_boundaries_ndarr was broken for flat vector arrays
+  - array dimensions in Cotr are now standardized and documented properly
+  - making vector masks (ie, of edge / face centered fields) now works
+  - slicing time by int was broken
+  - time formatting as seconds was broken
+  - mapfields were funny when show = True
+  - tests that use vtk 6.3 w/ Linux + MESA
+  - round_datetime straight up didn't work
+  - fix external call to meshlabserver
+  - quiet a whole host of runtime warnings
+
 0.98.1
 ======
 

@@ -35,12 +35,14 @@ from viscid import vutil
 __all__ = ['arrays2crds', 'wrap_crds', 'extend_arr_by_half']
 
 
-def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
+def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
     """make either uniform or nonuniform coordnates given full arrays
 
     Args:
         crd_arrs (array-like): for n-dimensional crds, supply a list
             of n ndarrays
+        crd_type (str): passed to wrap_crds, should uniquely specify a
+            type of coordinate object
         crd_names (iterable): names of coordinates in the same order
             as crd_arrs. Should always be in xyz order.
     """
@@ -78,7 +80,14 @@ def arrays2crds(crd_arrs, crd_names="xyzuvw", **kwargs):
     if any(viscid.is_time_like(arr, conservative=True) for arr in crd_arrs):
         is_uniform = False
 
-    if is_uniform:
+    if crd_type:
+        if 'uniform' in crd_type:
+            assert is_uniform
+            crds = wrap_crds(crd_type, uniform_clist, **kwargs)
+        else:
+            # TODO: warn if is_uniform?
+            crds = wrap_crds(crd_type, clist, **kwargs)
+    elif is_uniform:
         crds = wrap_crds("uniform", uniform_clist, **kwargs)
     else:
         crds = wrap_crds("nonuniform", clist, **kwargs)
@@ -527,7 +536,7 @@ class StructuredCrds(Coordinates):
                          "'x = 0f' or field['0f']")
         axes, selection = self._parse_slice(selection)
         # FIXME: this is a rediculous use of NaN
-        extent = np.nan * np.empty((2, self.nr_dims), dtype='f')
+        extent = np.nan * np.ones((2, self.nr_dims), dtype='f')
 
         for i, slc in enumerate(selection):
             if slc != slice(None):

@@ -49,15 +49,15 @@ cdef _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
     _crd_lst_nc = [xnc, ync, znc]
     _crd_lst_cc = [xcc, ycc, zcc]
     sshape_max = max(sshape)
-    fld.crds = np.nan * np.empty((3, 3, sshape_max), dtype=crd_dtype)
+    fld.crds = np.nan * np.ones((3, 3, sshape_max), dtype=crd_dtype)
     sshape_nc_max = max(sshape_nc)
-    fld.crds_nc = np.nan * np.empty((3, sshape_nc_max), dtype=crd_dtype)
+    fld.crds_nc = np.nan * np.ones((3, sshape_nc_max), dtype=crd_dtype)
     sshape_cc_max = max(sshape_cc)
-    fld.crds_cc = np.nan * np.empty((3, sshape_cc_max), dtype=crd_dtype)
+    fld.crds_cc = np.nan * np.ones((3, sshape_cc_max), dtype=crd_dtype)
 
-    fld.xl = np.nan * np.empty((3, 3), dtype=crd_dtype)
-    fld.xh = np.nan * np.empty((3, 3), dtype=crd_dtype)
-    fld.L = np.nan * np.empty((3, 3), dtype=crd_dtype)
+    fld.xl = np.nan * np.ones((3, 3), dtype=crd_dtype)
+    fld.xh = np.nan * np.ones((3, 3), dtype=crd_dtype)
+    fld.L = np.nan * np.ones((3, 3), dtype=crd_dtype)
 
     for ic in range(3):
         for i in range(3):

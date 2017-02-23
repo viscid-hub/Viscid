@@ -91,6 +91,11 @@ def main():
     if args.show:
         mvi.show()
 
+    try:
+        mvi.mlab.close()
+    except AttributeError:
+        pass
+
 if __name__ == "__main__":
     main()
 

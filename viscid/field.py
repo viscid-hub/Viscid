@@ -34,7 +34,7 @@ __all__ = ['arrays2field', 'dat2field', 'empty', 'zeros', 'ones',
 
 
 def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
-                 crd_names="xyzuvw"):
+                 crd_type=None, crd_names="xyzuvw"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.
 
     This is a convenience function that takes care of making coordnates
@@ -51,7 +51,7 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
         center (str, None): If not None, translate field to this
             centering (node or cell)
     """
-    crds = coordinate.arrays2crds(crd_arrs, crd_names=crd_names)
+    crds = coordinate.arrays2crds(crd_arrs, crd_type=crd_type, crd_names=crd_names)
 
     # discover what kind of data was given
     crds_shape_nc = list(crds.shape_nc)
@@ -121,7 +121,8 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
     return arrays2field(dat_arr, crd_arrs, name=name, center=center)
 
 def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
-          nr_comps=0, crd_names="xyzuvw", _initial_vals="empty", **kwargs):
+          nr_comps=0, crd_type=None, crd_names="xyzuvw", _initial_vals="empty",
+          **kwargs):
     """Analogous to `numpy.empty` (uninitialized array)
 
     Parameters:
@@ -151,7 +152,7 @@ def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
             crds = [np.arange(c).astype(dtype) for c in crds]
         # now assume that crds is a list of coordinate arrays that arrays2crds
         # can understand
-        crds = coordinate.arrays2crds(crds, crd_names=crd_names)
+        crds = coordinate.arrays2crds(crds, crd_type=crd_type, crd_names=crd_names)
 
     if center.lower() == "cell":
         sshape = crds.shape_cc
@@ -962,16 +963,29 @@ class Field(tree.Leaf):
                 break
 
         # check which dims match the shape of the crds
+        # or if they match when disregarding length 1 axes.
+        # This 2nd part happens when calling atleast_3d() on
+        # a field that isn't already in memory
+        dat_shape2 = [si for si in dat_shape if si > 1]
+        sshape2 = [si for si in dat_shape if si > 1]
+
         if dat_shape == sshape:
             layout = LAYOUT_SCALAR
         elif dat_shape[1:] == sshape:
             layout = LAYOUT_FLAT
-        elif dat_shape[:-1] == sshape:
+        elif dat_shape[:-1] == sshape or dat_shape2[:-1] == sshape2:
             layout = LAYOUT_INTERLACED
         elif dat_shape[0] == np.prod(sshape):
             layout = LAYOUT_INTERLACED
         elif dat_shape[-1] == np.prod(sshape):
             layout = LAYOUT_FLAT
+        # the following are layouts that happen after a call to atleast_3d()
+        elif dat_shape2 == sshape2:
+            layout = LAYOUT_SCALAR
+        elif dat_shape2[1:] == sshape2:
+            layout = LAYOUT_FLAT
+        elif dat_shape2[:-1] == sshape2:
+            layout = LAYOUT_INTERLACED
         else:
             # if this happens, don't ignore it even if it happens to work
             # print("??", self, self.native_shape, self.shape, )
@@ -1810,9 +1824,14 @@ class Field(tree.Leaf):
             fld = fld.component_fields()[0]
         return fld
 
-    def wrap_field(self, data, name="NoName", fldtype="scalar", **kwargs):
+    def wrap_field(self, data, name="NoName", fldtype=None, **kwargs):
         """Wrap an ndarray into a field in the local representation"""
         center = kwargs.pop('center', self.center)
+        if fldtype is None:
+            if len(data.shape) == len(self.shape):
+                fldtype = self.fldtype
+            else:
+                fldtype = "scalar"
         return viscid.wrap_field(data, self.crds, name=name, fldtype=fldtype,
                                  center=center, **kwargs)
 
