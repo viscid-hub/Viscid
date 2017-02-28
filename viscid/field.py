@@ -786,7 +786,16 @@ class Field(tree.Leaf):
         if self._cached_xyz_src_view is None:
             if self.meta.get("zyx_native", False):
                 if isinstance(self._src_data, (list, tuple)):
-                    lst = [np.array(d).T for d in self._src_data]
+                    # lst = [np.array(d).T for d in self._src_data]
+                    # self._cached_xyz_src_view = lst
+
+                    lst = []
+                    for d in self._src_data:
+                        lst.append(np.array(d).T)
+                        # Slight memory hack: clear cache on src data, there
+                        # probably exists a better way to be more lazy
+                        if hasattr(d, "clear_cache"):
+                            d.clear_cache()
                     self._cached_xyz_src_view = lst
                 else:
                     # spatial_transpose = list(range(len(self.shape)))
@@ -880,7 +889,14 @@ class Field(tree.Leaf):
             arr = arrfunc(dat, dtype=dat.dtype.name, copy=self.deep_meta["copy"])
         elif isinstance(dat, (list, tuple)):
             dt = dat[0].dtype.name
-            tmp = [np.array(d, dtype=dt, copy=self.deep_meta["copy"]) for d in dat]
+            # tmp = [np.array(d, dtype=dt, copy=self.deep_meta["copy"]) for d in dat]
+            tmp = []
+            for d in dat:
+                tmp.append(np.array(d, dtype=dt, copy=self.deep_meta["copy"]))
+                # Slight memory hack: clear cache on src data, there
+                # probably exists a better way to be more lazy
+                if hasattr(d, "clear_cache"):
+                    d.clear_cache()
             _shape = tmp[0].shape
             arr = np.empty([len(tmp)] + list(_shape), dtype=dt)
             for i, t in enumerate(tmp):
