@@ -225,12 +225,22 @@ def as_isotime(time):
     for i, t in enumerate(time):
         if isinstance(t, string_types):
             t = t.strip().upper().lstrip('UT')
-            if re.match(r"^[0-9]{2}([0-9]{2}:){3,5}[0-9]{2}(\.[0-9]*)?$", t):
+            if re.match(r"^[0-9]{2}([0-9]{2}:){3,5}[0-9]{1,2}(\.[0-9]*)?$", t):
                 # Handle YYYY:MM:DD:hh:mm:ss.ms -> YYYY-MM-DDThh:mm:ss.ms
+                #        YYYY:MM:DD:hh:mm:s.ms  -> YYYY-MM-DDThh:mm:s.ms
                 #        YYYY:MM:DD:hh:mm:ss    -> YYYY-MM-DDThh:mm:ss
                 #        YYYY:MM:DD:hh:mm       -> YYYY-MM-DDThh:mm
                 #        YYYY:MM:DD:hh          -> YYYY-MM-DDThh
+                # -- all this _tsp nonsense is to take care of s.ms; annoying
+                _tsp = t.replace('.', ':').split(':')
+                _tsp[0] = _tsp[0].zfill(4)
+                _tsp[1:6] = [_s.zfill(2) for _s in _tsp[1:6]]
+                t = ":".join(_tsp[:6])
+                if len(_tsp) > 6:
+                    t += "." + _tsp[6]
+                # --
                 ret[i] = t[:10].replace(':', '-') + 'T' + t[11:]
+
             elif re.match(r"^[0-9]{2}([0-9]{2}:){2}[0-9]{2}$", t):
                 # Handle YYYY:MM:DD -> YYYY-MM-DD
                 ret[i] = t.replace(':', '-')
