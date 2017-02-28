@@ -4,7 +4,8 @@ Changes
 0.98.3 dev
 ==========
 
-
+Changes:
+  - Improve performance on handling large jrrle/fortbin files
 
 0.98.2
 ======

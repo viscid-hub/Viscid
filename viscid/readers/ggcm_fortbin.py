@@ -281,7 +281,7 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
     _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3df)" \
                 r"\.([0-9]{6}).b\s*$"
 
-    _file_wrapper = None
+    _fwrapper_type = GGCMFortbinFileWrapper
     _data_item_templates = None
     _def_fld_center = "Cell"
 
@@ -289,7 +289,7 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         super(GGCMFileFortbinMHD, self).__init__(filename, **kwargs)
 
     def _shape_discovery_hack(self, filename):
-        with GGCMFortbinFileWrapper(filename) as f:
+        with self.get_file_wrapper(filename) as f:
             _, meta = f.inquire_next()
         return meta['dims']
 
@@ -299,8 +299,6 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         # file in the group, and package them up into grids
 
         # find the time from the first field's meta data
-        self._file_wrapper = GGCMFortbinFileWrapper(filename)
-
         int_time = int(re.match(self._detector, filename).group(3))
         time = float(int_time)
 
@@ -323,8 +321,9 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
             data_wrapper = FortbinDataWrapper
 
         for item in templates:
-            data = data_wrapper(self._file_wrapper, item['fld_name'],
-                                item['shape'], item['file_position'])
+            data = data_wrapper(self.get_file_wrapper(filename),
+                                item['fld_name'], item['shape'],
+                                item['file_position'])
             fld = self._make_field(_grid, "Scalar", item['fld_name'],
                                    self._crds, data, center=self._def_fld_center,
                                    time=time, zyx_native=True)
@@ -336,7 +335,7 @@ class GGCMFileFortbinMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-
         a list of field names and shapes, all the required info
         to make a FortbinDataWrapper
         """
-        with GGCMFortbinFileWrapper(filename) as f:
+        with self.get_file_wrapper(filename) as f:
             f.inquire_all_fields()
             template = []
 

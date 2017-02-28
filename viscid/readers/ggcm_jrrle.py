@@ -192,7 +192,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
     _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3df)" \
                 r"\.([0-9]{6})\s*$"
 
-    _file_wrapper = None
+    _fwrapper_type = JrrleFileWrapper
     _data_item_templates = None
     _def_fld_center = "Cell"
 
@@ -200,7 +200,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         super(GGCMFileJrrleMHD, self).__init__(filename, **kwargs)
 
     def _shape_discovery_hack(self, filename):
-        with JrrleFileWrapper(filename) as f:
+        with self.get_file_wrapper(filename) as f:
             _, meta = f.inquire_next()
         return meta['dims']
 
@@ -210,8 +210,6 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         # file in the group, and package them up into grids
 
         # find the time from the first field's meta data
-        self._file_wrapper = JrrleFileWrapper(filename)
-
         int_time = int(re.match(self._detector, filename).group(3))
         time = float(int_time)
 
@@ -234,8 +232,8 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
             data_wrapper = JrrleDataWrapper
 
         for item in templates:
-            data = data_wrapper(self._file_wrapper, item['fld_name'],
-                                item['shape'])
+            data = data_wrapper(self.get_file_wrapper(filename),
+                                item['fld_name'], item['shape'])
             fld = self._make_field(_grid, "Scalar", item['fld_name'],
                                    self._crds, data,
                                    center=self._def_fld_center, time=time,
@@ -248,7 +246,7 @@ class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-me
         a list of field names and shapes, all the required info
         to make a JrrleDataWrapper
         """
-        with JrrleFileWrapper(filename) as f:
+        with self.get_file_wrapper(filename) as f:
             f.inquire_all_fields()
             template = []
 

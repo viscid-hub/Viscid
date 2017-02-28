@@ -657,6 +657,8 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
     """
     _detector = None
 
+    _fwrapper_type = None
+    _fwrapper = None
     _crds = None
     _fld_templates = None
     grid2 = None
@@ -668,9 +670,11 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
     assume_mhd_crds = True
 
 
-    def __init__(self, fname, crds=None, fld_templates=None, **kwargs):
+    def __init__(self, fname, crds=None, fld_templates=None, file_wrapper=None,
+                 **kwargs):
         self._crds = crds
         self._fld_templates = fld_templates
+        self._fwrapper = file_wrapper
 
         if 'assume_mhd_crds' in kwargs:
             self.assume_mhd_crds = kwargs['assume_mhd_crds']
@@ -737,15 +741,36 @@ class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-meth
             self._fld_templates = self._make_template(self._collection[0])
 
             for fname in self._collection:
+                if fname == self._collection[0]:
+                    _fwrapper = self.get_file_wrapper(fname)
+                else:
+                    _fwrapper = None
+
                 f = self._load_child_file(fname, index_handle=False,
                                           file_type=type(self),
                                           grid_type=self._grid_type,
                                           crds=self._crds,
-                                          fld_templates=self._fld_templates)
+                                          fld_templates=self._fld_templates,
+                                          file_wrapper=_fwrapper)
                 data_temporal.add(f)
             data_temporal.activate(0)
             self.add(data_temporal)
             self.activate(0)
+
+    def get_file_wrapper(self, filename):
+        if self._fwrapper is None:
+            if self._fwrapper_type is None:
+                raise NotImplementedError("GGCMFileFortran is not meant to "
+                                          "be used by itself")
+            else:
+                self._fwrapper = self._fwrapper_type(filename)  # pylint: disable=not-callable
+        else:
+            assert (self._fwrapper.filename == filename or
+                    viscid.glob2(self._fwrapper.filename) == viscid.glob2(filename))
+        return self._fwrapper
+
+    def set_file_wrapper(self, wrapper):
+        raise NotImplementedError("This must be done at file init")
 
     def make_crds(self):
         if self.get_info('fieldtype') == 'iof':
