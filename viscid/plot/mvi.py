@@ -417,7 +417,7 @@ def quiver3d(*args, **kwargs):
     apply_cmap(quivers, mode='vector', **cmap_kwargs)
     return quivers
 
-def points3d(*args, modify_args=True, **kwargs):
+def points3d(*args, **kwargs):
     """Wraps `mayavi.mlab.points3d`
 
     Args:
@@ -426,8 +426,8 @@ def points3d(*args, modify_args=True, **kwargs):
             `mayavi.mlab.points3d`
 
     Keyword Arguments:
-        modify_args (bool): if True, then check if args is a single
-            2d sequence of shape 3xN or Nx3. Then split them up
+        modify_args (bool): if True (default), then check if args is a
+            single 2d sequence of shape 3xN or Nx3. Then split them up
             appropriately. if False, then args are passed through
             to mlab.points3d unchanged, nomatter what.
         cmap (str, None, False): see :py:func:`apply_cmap`
@@ -439,7 +439,9 @@ def points3d(*args, modify_args=True, **kwargs):
     Returns:
         TYPE: Description
     """
+    modify_args = kwargs.pop('modify_args', True)
     kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
+
     if modify_args and len(args) < 3:
         a0 = np.asarray(args[0])
         if len(a0.shape) > 1 and a0.shape[0] == 3:
