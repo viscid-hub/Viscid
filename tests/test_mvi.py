@@ -16,13 +16,12 @@ except ImportError:
     xfail("Mayavi not installed")
 
 
-# uncomment to test MHD coordinates
-# viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = False
-
 # In this test, the OpenGGCM reader needs to read the log file
-# in order to determine the crds when doing the cotr transformation
-# in general, this flag is useful to put in your viscidrc file
+# in order to determine the crds when doing the cotr transformation.
+# In general, this flag is useful to put in your viscidrc file, see
+# the corresponding page in the tutorial for more information.
 viscid.readers.openggcm.GGCMFile.read_log_file = True
+viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
 
 
 def main():

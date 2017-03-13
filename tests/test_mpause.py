@@ -20,6 +20,13 @@ except ImportError:
     _HAS_SCIPY = False
 
 
+# The magnetopause tools only work in GSE crds. Usually these flags
+# should be set in your rc file. See the corresponding page in the
+# tutorial for more information
+viscid.readers.openggcm.GGCMFile.read_log_file = True
+viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
+
+
 def main():
     parser = argparse.ArgumentParser(description="Test calc")
     _ = vutil.common_argparse(parser)

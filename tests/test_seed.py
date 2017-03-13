@@ -13,6 +13,13 @@ import viscid
 _global_ns = dict()
 
 
+# The reference plots are made in GSE crds (for the RectilinearMeshPoints
+# test). Usually these flags should be set in your rc file. See the
+# corresponding page in the tutorial for more information.
+viscid.readers.openggcm.GGCMFile.read_log_file = True
+viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
+
+
 def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
              view_kwargs=None, show=False):
     interpolated_fld = viscid.interp_trilin(fld, seeds)
