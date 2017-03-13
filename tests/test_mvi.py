@@ -19,6 +19,11 @@ except ImportError:
 # uncomment to test MHD coordinates
 # viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = False
 
+# In this test, the OpenGGCM reader needs to read the log file
+# in order to determine the crds when doing the cotr transformation
+# in general, this flag is useful to put in your viscidrc file
+viscid.readers.openggcm.GGCMFile.read_log_file = True
+
 
 def main():
     parser = argparse.ArgumentParser(description="Test calc")
