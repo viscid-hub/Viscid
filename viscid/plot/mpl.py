@@ -834,7 +834,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             else:
                 lat_labels = []
             ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
-            ax.set_rmax(np.deg2rad(bounding_lat))
+            ax.set_rmax(np.deg2rad(absboundinglat))
         else:
             ax.grid(False)
             ax.set_xticklabels([])
