@@ -313,7 +313,8 @@ try:
           ext_modules=ext_mods,
           scripts=scripts,
           data_files=[('viscid/plot/images', glob("viscid/plot/images/*.jpg")),
-                      ('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle'))]
+                      ('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle')),
+                      ('viscid/sample', glob("sample/*"))]
          )
 except SystemExit as e:
     if os.uname()[0] == 'Darwin':
