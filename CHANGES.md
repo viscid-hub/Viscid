@@ -6,6 +6,13 @@ Changes
 
 Changes:
   - Improve performance on handling large jrrle/fortbin files
+  - install samples in `make install`
+  - add attr `viscid.sample_dir` which should always return a valid dir
+  - doc examples all copy/paste/run-able
+  - make all tests run out of the box without a viscidrc file
+
+Bugfixes:
+  - rlim on southern hemispheres
 
 0.98.2
 ======
