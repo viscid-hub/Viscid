@@ -21,7 +21,7 @@ inplace:
 build:
 	python ./setup.py build_ext ${BUILD_ARGS}
 
-install:
+install: uninstall
 	python ./setup.py install ${BUILD_ARGS}
 
 clean:

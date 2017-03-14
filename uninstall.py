@@ -47,7 +47,7 @@ def _main():
         del inst_manifest[sys.executable]
 
         with open(INSTALL_MANIFEST, 'w') as fout:
-            json.dump(inst_manifest, fout, indent=2)
+            json.dump(inst_manifest, fout, indent=2, sort_keys=True)
     elif verb:
         print("Uninstall: not in manifest for", sys.executable,
               file=sys.stderr)

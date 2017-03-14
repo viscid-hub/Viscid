@@ -362,7 +362,7 @@ try:
                                              file_list=file_list)
 
         with open(INSTALL_MANIFEST, 'w') as fout:
-            json.dump(inst_manifest, fout, indent=2)
+            json.dump(inst_manifest, fout, indent=2, sort_keys=True)
 
         if desired_record_fname:
             shutil.copy(RECORD_FNAME, desired_record_fname)
