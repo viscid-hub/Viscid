@@ -11,15 +11,20 @@ The best way to show the utility of this extended syntax is by example, so here 
 .. plot::
     :include-source:
 
+    from os import path
+
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     # Notice that slices by location are done by appending an 'f' to the
     # slice. This means "y=0" is not the same as "y=0f".
     pp = f3d["pp"]["x = 5:-25, y = 0.0f, z = -8.0f:10.0f:2"]
     mpl.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
+
+    mpl.show()
 
 Temporal Slices
 ---------------
@@ -28,25 +33,28 @@ Temporal Datasets can be sliced a number of ways too, here are some examples
 
 .. doctest::
 
-    >>>> import viscid
-    >>>> f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
-    >>>>
-    >>>> grids = f3d.get_times(slice("UT1967:01:01:00:10:00.0",
-    >>>>                             "UT1967:01:01:00:20:00.0"))
-    >>>> print([grid.time for grid in grids])
+    >>> from os import path
+    >>>
+    >>> import viscid
+    >>>
+    >>>
+    >>> f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
+    >>>
+    >>> grids = f3d.get_times(slice("UT1967:01:01:00:10:00.0",
+    >>>                             "UT1967:01:01:00:20:00.0"))
+    >>> print([grid.time for grid in grids])
     [600.0, 1200.0]
-    >>>>
-    >>>> grids = f3d.get_times(1)
-    >>>> print([grid.time for grid in grids])
+    >>>
+    >>> grids = f3d.get_times(1)
+    >>> print([grid.time for grid in grids])
     [600.0]
-    >>>>
-    >>>> grids = f3d.get_times(slice(None, 600.0))
-    >>>> print([grid.time for grid in grids])
+    >>>
+    >>> grids = f3d.get_times(slice(None, 600.0))
+    >>> print([grid.time for grid in grids])
     [600.0]
-    >>>> grids = f3d.get_times("T0:10:00.0:T0:20:00.0")
-    >>>> print([grid.time for grid in grids])
+    >>> grids = f3d.get_times("T0:10:00.0:T0:20:00.0")
+    >>> print([grid.time for grid in grids])
     [600.0, 1200.0]
-    >>>>
 
 Single Time Slice
 ~~~~~~~~~~~~~~~~~
@@ -54,10 +62,13 @@ Single Time Slice
 .. plot::
     :include-source:
 
+    from os import path
+
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     ax1 = mpl.plt.subplot2grid((2, 1), (0, 0))
     f3d.activate_time(0)
@@ -74,7 +85,9 @@ Single Time Slice
     mpl.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
              style="contourf", levels=50, plot_opts="lin_0,earth")
     mpl.plt.title(f3d.get_grid().format_time("hms"))
-    mpl.tighten()
+
+    mpl.auto_adjust_subplots()
+    mpl.show()
 
 Iterating Over Time Slices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -84,13 +97,15 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
 .. plot::
     :include-source:
 
-    import numpy as np
-    from matplotlib import pyplot as plt
+    from os import path
 
+    from matplotlib import pyplot as plt
+    import numpy as np
     import viscid
     from viscid.plot import mpl
 
-    f2d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.py_0.xdmf')
+
+    f2d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'))
 
     times = np.array([grid.time for grid in f2d.iter_times(":2")])
     nr_times = len(times)
@@ -100,4 +115,6 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
         mpl.plot(grid["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
                  plot_opts="lin_0,earth")
         mpl.plt.title(grid.format_time(".01f"))
-    mpl.tighten()
+
+    mpl.auto_adjust_subplots()
+    mpl.show()

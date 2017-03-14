@@ -17,10 +17,13 @@ Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log 
 .. plot::
     :include-source:
 
+    from os import path
+
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
     # notice y=0.0, this is different from y=0; y=0 is the 0th index in
     # y, which is this case will be y=-50.0
     pPa_to_dyne_per_cm2 = 1e-11
@@ -31,18 +34,22 @@ Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log 
     T.pretty_name = "T (K)"
     mpl.plot(T['y=0f'], logscale=True, earth=True)
 
+    mpl.show()
+
 Two Plots, One Figure
 ---------------------
 
 .. plot::
     :include-source:
 
-    from matplotlib import pyplot as plt
+    from os import path
 
+    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     ax1 = plt.subplot2grid((2, 1), (0, 0))
 
@@ -58,3 +65,5 @@ Two Plots, One Figure
 
     plt.xlim((-20, 20))
     plt.ylim((-10, 10))
+
+    mpl.show()

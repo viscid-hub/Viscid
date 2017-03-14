@@ -11,16 +11,24 @@ Plotting 2D streamlines. Note that using matplotlib to make streamlines from a 2
 .. plot::
     :include-source:
 
+    from os import path
+
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    viscid.calculator.evaluator.enabled = True
+
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     mpl.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
     mpl.streamplot(f3d['v']['z=0f'], arrowsize=2, density=2)
 
     mpl.plt.xlim(-20, 20)
     mpl.plt.ylim(-10, 10)
+
+    mpl.show()
 
 Quivers
 -------
@@ -30,16 +38,21 @@ Quivers are another way to show vector fields, but in many cases, it will be use
 .. plot::
     :include-source:
 
+    from os import path
+
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     mpl.plot(f3d['pp']['z=0f'], cbarlabel="Pressure", logscale=True, earth=True)
     mpl.plot2d_quiver(f3d['v']['x=::2, y=::2, z=0f'])
 
     mpl.plt.xlim(-20, 20)
     mpl.plt.ylim(-10, 10)
+
+    mpl.show()
 
 Uniform Quivers
 ---------------
@@ -49,10 +62,16 @@ If your data has a very nonuniform grid, it may be useful to interpolate your da
 .. plot::
     :include-source:
 
+    from os import path
+
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    viscid.calculator.evaluator.enabled = True
+
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     mpl.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
     new_grid = viscid.Volume((-20, -20, 0), (20, 20, 0), n=(16, 16, 1))
@@ -61,3 +80,5 @@ If your data has a very nonuniform grid, it may be useful to interpolate your da
 
     mpl.plt.xlim(-20, 20)
     mpl.plt.ylim(-10, 10)
+
+    mpl.show()

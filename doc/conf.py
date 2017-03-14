@@ -328,8 +328,9 @@ os.environ['ETS_TOOLKIT'] = 'null'
 
 # plot configuration
 plot_pre_code = r"""# this is for finding the path to the sample data
-import sys
 import os
+import sys
+
 _viscid_root = os.path.realpath('../viscid/')
 if not _viscid_root in sys.path:
     sys.path.append(_viscid_root)
@@ -338,15 +339,15 @@ import viscid
 
 # not sure why recalling post_rc_actions() is necessary in sphinx
 viscid.mpl_style.use_styles = ["seaborn-talk", "seaborn-ticks",
-                               "viscid-colorblind"]
+                               "viscid-default", "viscid-colorblind"]
 viscid.mpl_style.post_rc_actions()
 
 # some examples change this, so make sure it's off by default
-from viscid import readers
-from viscid.readers import openggcm
+viscid.readers.unload_all_files()
+viscid.readers.openggcm.GGCMFile.read_log_file = False
+viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = False
 
-readers.unload_all_files()
-openggcm.GGCMGrid.mhd_to_gse_on_read = False
+del sys, os, viscid
 """
 
 plot_formats = ["png"]

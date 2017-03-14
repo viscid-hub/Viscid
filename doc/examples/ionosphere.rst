@@ -4,12 +4,15 @@ Ionosphere Plots
 .. plot::
     :include-source:
 
-    from matplotlib import pyplot as plt
+    from os import path
 
+    from matplotlib import pyplot as plt
     import viscid
+    from viscid import sample_dir
     from viscid.plot import mpl
 
-    iono_file = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.iof.xdmf')
+
+    iono_file = viscid.load_file(path.join(sample_dir, 'sample_xdmf.iof.xdmf'))
 
     fac_tot = 1e9 * iono_file["fac_tot"]
 
@@ -37,4 +40,6 @@ Ionosphere Plots
                  xytext=(-0.1, 1.0), fontsize=18)
 
     plt.gcf().set_size_inches(10, 5.0)
-    mpl.tighten()
+
+    mpl.auto_adjust_subplots()
+    mpl.show()

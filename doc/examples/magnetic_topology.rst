@@ -16,14 +16,18 @@ This algorithm takes a 2d map in the uv space of a seed generator and iterativel
 .. plot::
     :include-source:
 
-    import numpy as np
+    from os import path
 
+    import numpy as np
     import viscid
     from viscid.plot import mpl
 
+
+    viscid.readers.openggcm.GGCMFile.read_log_file = True
     viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
     B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
 
     # for this method, seeds must be a SeedGen subclass, not a field subset
@@ -47,6 +51,8 @@ This algorithm takes a 2d map in the uv space of a seed generator and iterativel
     # since seeds is a Field, we can use it to determine mhd|gse
     mpl.plot_earth(B['y=0f'])
 
+    mpl.show()
+
 
 Bit-or algorithm
 ~~~~~~~~~~~~~~~~
@@ -56,14 +62,18 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
 .. plot::
     :include-source:
 
-    import numpy as np
+    from os import path
 
+    import numpy as np
     import viscid
     from viscid.plot import mpl
 
+
+    viscid.readers.openggcm.GGCMFile.read_log_file = True
     viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
     B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
 
     # for this method, seeds must be a SeedGen subclass, not a field subset
@@ -99,19 +109,25 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
     # since seeds is a Field, we can use it to determine mhd|gse
     mpl.plot_earth(B['y=0f'])
 
+    mpl.show()
+
 The bit-or algorithm can has another interface that just takes a topology field. It can be used this way:
 
 .. plot::
     :include-source:
 
-    import numpy as np
+    from os import path
 
+    import numpy as np
     import viscid
     from viscid.plot import mpl
 
+
+    viscid.readers.openggcm.GGCMFile.read_log_file = True
     viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
     B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
 
     # Fields can be used as seeds to get one seed per grid point
@@ -145,3 +161,5 @@ The bit-or algorithm can has another interface that just takes a topology field.
 
     # since seeds is a Field, we can use it to determine mhd|gse
     mpl.plot_earth(seeds.slice_reduce(":"))
+
+    mpl.show()
