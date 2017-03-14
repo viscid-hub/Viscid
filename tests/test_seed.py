@@ -2,12 +2,14 @@
 
 from __future__ import division, print_function
 import argparse
+import os
 import sys
 
-from viscid_test_common import sample_dir, next_plot_fname
+from viscid_test_common import next_plot_fname
 
 import numpy as np
 import viscid
+from viscid import sample_dir
 
 
 _global_ns = dict()
@@ -92,7 +94,7 @@ def main():
     # plot3d = True
     # args.show = True
 
-    img = np.load(sample_dir + "/logo.npy")
+    img = np.load(os.path.join(sample_dir, "logo.npy"))
     x = np.linspace(-1, 1, img.shape[0])
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
@@ -161,7 +163,7 @@ def main():
 
     if 1:
         viscid.logger.info('Testing RectilinearMeshPoints...')
-        f = viscid.load_file(sample_dir + '/sample_xdmf.3d.[-1].xdmf')
+        f = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[-1].xdmf'))
         slc = 'x=-40f:12f, y=-10f:10f, z=-10f:10f'
         b = f['b'][slc]
         z = b.get_crd('z')

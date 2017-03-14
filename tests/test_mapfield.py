@@ -3,10 +3,12 @@
 
 from __future__ import print_function
 import argparse
+import os
 
-from viscid_test_common import sample_dir, assert_similar
+from viscid_test_common import assert_similar
 
 import viscid
+from viscid import sample_dir
 from viscid import vutil
 
 
@@ -14,7 +16,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     args = vutil.common_argparse(parser)  # pylint: disable=unused-variable
 
-    fiof = viscid.load_file(sample_dir + '/sample_xdmf.iof.xdmf')
+    fiof = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.iof.xdmf'))
 
     fac = fiof['fac_tot']
 

@@ -7,7 +7,7 @@ import argparse
 
 import numpy as np
 
-from viscid_test_common import sample_dir, next_plot_fname
+from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import vutil
@@ -36,7 +36,7 @@ def main():
     b['z'] = -Zcc
 
     # save an hdf5 file with companion xdmf file
-    h5_fname = sample_dir + "/test.h5"
+    h5_fname = os.path.join(viscid.sample_dir, "test.h5")
     viscid.save_fields(h5_fname, [psi, b])
 
     # load the companion xdmf file

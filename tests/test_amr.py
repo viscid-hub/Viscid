@@ -3,8 +3,9 @@
 
 from __future__ import print_function
 import argparse
+import os
 
-from viscid_test_common import sample_dir, next_plot_fname
+from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import vutil
@@ -12,7 +13,7 @@ from viscid.plot import mpl
 
 
 def run_test(show=False):
-    f = viscid.load_file(sample_dir + "/amr.xdmf")
+    f = viscid.load_file(os.path.join(viscid.sample_dir, "amr.xdmf"))
     plot_kwargs = dict(patchec='y')
     mpl.plot(f['f'], "z=0.0f", **plot_kwargs)
 

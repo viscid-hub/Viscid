@@ -1,7 +1,7 @@
 """
 Usage:
 
-from viscid_test_common import test_dir, sample_dir, plot_dir, get_test_name
+from viscid_test_common import test_dir, plot_dir, get_test_name
 test_name = get_test_name(__file__)
 """
 
@@ -18,7 +18,7 @@ NPLOT = {}
 
 # useful paths
 test_dir = os.path.dirname(__file__)
-sample_dir = test_dir + "/../sample"
+# sample_dir = test_dir + "/../sample"  # replaced by viscid.sample_dir
 plot_dir = test_dir + "/plots"
 ref_dir = test_dir + "/ref_plots"
 

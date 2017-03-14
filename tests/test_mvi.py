@@ -4,11 +4,13 @@ streamlines or something """
 
 from __future__ import print_function
 import argparse
+import os
 
-from viscid_test_common import sample_dir, next_plot_fname, xfail
+from viscid_test_common import next_plot_fname, xfail
 
 import numpy as np
 import viscid
+from viscid import sample_dir
 from viscid import vutil
 try:
     from viscid.plot import mvi
@@ -30,8 +32,8 @@ def main():
     parser.add_argument("--interact", "-i", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = viscid.load_file(sample_dir + '/sample_xdmf.3d.[0].xdmf')
-    f_iono = viscid.load_file(sample_dir + "/sample_xdmf.iof.[0].xdmf")
+    f3d = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[0].xdmf'))
+    f_iono = viscid.load_file(os.path.join(sample_dir, "sample_xdmf.iof.[0].xdmf"))
 
     b = f3d["b"]
     v = f3d["v"]

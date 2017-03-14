@@ -4,13 +4,15 @@ streamlines or something """
 
 from __future__ import print_function
 import argparse
+import os
 import sys
 import warnings
 
-from viscid_test_common import sample_dir, xfail
+from viscid_test_common import xfail
 
 import numpy as np
 import viscid
+from viscid import sample_dir
 from viscid import vutil
 
 try:
@@ -34,7 +36,7 @@ def main():
     if _HAS_SCIPY:
         warnings.filterwarnings("ignore", category=OptimizeWarning)
 
-    f = viscid.load_file(sample_dir + '/sample_xdmf.3d.[0].xdmf')
+    f = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[0].xdmf'))
     mp = viscid.get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
                             slc="x=7f:12.0f, y=-6f:6f, z=-6f:6f",
                             cache=False)

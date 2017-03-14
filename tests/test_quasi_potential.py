@@ -7,7 +7,7 @@ from __future__ import print_function
 import argparse
 import sys
 
-from viscid_test_common import sample_dir, next_plot_fname, xfail
+from viscid_test_common import next_plot_fname, xfail
 
 import numpy as np
 import viscid
