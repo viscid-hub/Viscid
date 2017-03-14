@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 import os
+import sys
 # from xml.etree import ElementTree
 
 import numpy as np
@@ -502,14 +503,17 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             _name, _val = self._parse_information(information)
             target.set_info(_name, _val)
 
-if __name__ == '__main__':
-    import sys
-    # import os
+
+def _main():
     import viscid
 
-    _viscid_root = os.path.dirname(viscid.__file__)
-    f = FileXDMF(_viscid_root + '/../../sample/local_0001.py_0.xdmf')
+    f = FileXDMF(os.path.join(viscid.sample_dir, 'local_0001.py_0.xdmf'))
     sys.stderr.write("{0}\n".format(f))
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(_main())
 
 ##
 ## EOF
