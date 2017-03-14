@@ -17,11 +17,18 @@ from distutils import log
 # from distutils.core import setup
 # from distutils.extension import Extension
 from distutils import sysconfig
+import json
+import shutil
 
 import numpy as np
 from numpy.distutils.core import setup
 from numpy.distutils.extension import Extension as Extension
 npExtension = Extension
+
+
+INSTALL_MANIFEST = '_install_manifest.json'
+RECORD_FNAME = '_temp_install_list.txt'
+
 
 try:
     from Cython.Build import cythonize
@@ -33,6 +40,7 @@ if sys.version_info >= (3, 0):
     PY3K = True
 else:
     PY3K = False
+
 
 # listing the sources
 cmdclass = {}
@@ -46,6 +54,7 @@ pkgs = ['viscid',
        ]
 
 scripts = glob(os.path.join('scripts', '*'))
+
 
 # list of extension objects
 ext_mods = []
@@ -128,6 +137,21 @@ try:
     use_cython = True
 except ValueError:
     use_cython = False
+
+# prepare a cute hack to get an `uninstall`
+desired_record_fname = ''
+if 'install' in sys.argv:
+    try:
+        i = sys.argv.index('--record')
+        sys.argv.pop(i)
+        desired_record_fname = sys.argv[i]
+        sys.argv.pop(i)
+    except ValueError:
+        pass
+    except IndexError:
+        print("error: --record must be followed by a filename")
+        sys.exit(4)
+    sys.argv += ['--record', RECORD_FNAME]
 
 # check for multicore build
 _nprocs = 1
@@ -316,6 +340,34 @@ try:
                       ('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle')),
                       ('viscid/sample', glob("sample/*"))]
          )
+
+    # if installed, store list of installed files in a json file - this
+    # manifest is used to implement an uninstall
+    if os.path.isfile(RECORD_FNAME):
+        try:
+            with open(INSTALL_MANIFEST, 'r') as fin:
+                inst_manifest = json.load(fin)
+        except IOError:
+            inst_manifest = dict()
+
+        with open(RECORD_FNAME) as fin:
+            file_list = [line.strip() for line in fin]
+
+        for fname in file_list:
+            if "__main__.py" in fname:
+                pkg_instdir = os.path.dirname(fname)
+                break
+
+        inst_manifest[sys.executable] = dict(pkg_instdir=pkg_instdir,
+                                             file_list=file_list)
+
+        with open(INSTALL_MANIFEST, 'w') as fout:
+            json.dump(inst_manifest, fout, indent=2)
+
+        if desired_record_fname:
+            shutil.copy(RECORD_FNAME, desired_record_fname)
+        os.remove(RECORD_FNAME)
+
 except SystemExit as e:
     if os.uname()[0] == 'Darwin':
         print('\n'
