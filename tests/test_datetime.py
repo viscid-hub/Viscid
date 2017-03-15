@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Test some of the datetime64 parsing"""
 
 from __future__ import division, print_function
 import argparse
@@ -12,8 +13,8 @@ import viscid
 from viscid.plot import mpl
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Test divergence")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = viscid.vutil.common_argparse(parser)
     # args.show = True
@@ -74,7 +75,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

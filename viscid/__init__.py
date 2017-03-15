@@ -16,6 +16,7 @@ Attributes:
 
 from __future__ import print_function
 import logging
+import os
 import re
 import signal
 import sys
@@ -27,7 +28,7 @@ from viscid import _rc
 from viscid.compat.vimportlib import import_module
 
 
-__version__ = """0.98.2"""
+__version__ = """0.98.3"""
 
 __all__ = ['amr_field',
            'amr_grid',
@@ -119,6 +120,19 @@ import_injector(__all__, globals(), package="viscid")
 # now add some other random things into the __all__ namespace
 __all__.append("logger")
 
+# set the sample_dir so that it always points to something useful
+# - for installed distribution
+sample_dir = os.path.join(os.path.dirname(__file__), 'sample')
+# - for in-place distribution
+if not os.path.isdir(sample_dir):
+    sample_dir = os.path.join(os.path.dirname(__file__), '..', 'sample')
+    sample_dir = os.path.abspath(sample_dir)
+# - is there a 3rd option? this shouldn't happen
+if not os.path.isdir(sample_dir):
+    sample_dir = "SAMPLE-DIR-NOT-FOUND"
+
+__all__.append("sample_dir")
+
 # now this is just too cute to pass up :)
 if sys.version_info[0] >= 3:
     # hide setting to a unicode variable name in an exec b/c otherwise
@@ -134,6 +148,5 @@ _rc.load_rc_file("~/.viscidrc")
 def _set_trace(seg, frame):  # pylint: disable=unused-argument
     import pdb
     pdb.set_trace()
-# import os
 # print("Trigger pdb with: kill -SIGUSR2", os.getpid())
 signal.signal(signal.SIGUSR2, _set_trace)

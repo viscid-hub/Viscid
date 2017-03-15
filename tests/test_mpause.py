@@ -1,16 +1,17 @@
 #!/usr/bin/env python
-""" Try to convert a Field to a mayavi type and plot
-streamlines or something """
+"""Test extracting magnetopause info from 3d OpenGGCM data"""
 
 from __future__ import print_function
 import argparse
+import os
 import sys
 import warnings
 
-from viscid_test_common import sample_dir, xfail
+from viscid_test_common import xfail
 
 import numpy as np
 import viscid
+from viscid import sample_dir
 from viscid import vutil
 
 try:
@@ -20,14 +21,21 @@ except ImportError:
     _HAS_SCIPY = False
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Test calc")
+# The magnetopause tools only work in GSE crds. Usually these flags
+# should be set in your rc file. See the corresponding page in the
+# tutorial for more information
+viscid.readers.openggcm.GGCMFile.read_log_file = True
+viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
+
+
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     _ = vutil.common_argparse(parser)
 
     if _HAS_SCIPY:
         warnings.filterwarnings("ignore", category=OptimizeWarning)
 
-    f = viscid.load_file(sample_dir + '/sample_xdmf.3d.[0].xdmf')
+    f = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[0].xdmf'))
     mp = viscid.get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
                             slc="x=7f:12.0f, y=-6f:6f, z=-6f:6f",
                             cache=False)
@@ -64,7 +72,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

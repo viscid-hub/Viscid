@@ -1,8 +1,13 @@
 #!/usr/bin/env python
-""" test parallel streamlines with both threads and processes """
+"""Test parallel streamlines with both threads and processes
+
+This test asserts that the result on any number of processes is almost
+equal. In principle, they should be exactly equal.
+"""
 
 from __future__ import print_function
 import argparse
+import sys
 
 import numpy as np
 
@@ -17,8 +22,8 @@ def do(timeit, func, *args, **kwargs):
     else:
         return func(*args, **kwargs)
 
-def main():
-    parser = argparse.ArgumentParser()
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeit", '-t', action="store_true")
     args = viscid.vutil.common_argparse(parser, default_verb=0)
 
@@ -49,8 +54,10 @@ def main():
             np.testing.assert_almost_equal(l0[i], l1[i])
             np.testing.assert_almost_equal(l0[i], l2[i])
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

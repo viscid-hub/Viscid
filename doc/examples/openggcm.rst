@@ -9,32 +9,41 @@ This is just one way to customize the OpenGGCM reader. For more, check out :clas
 .. plot::
     :include-source:
 
+    from os import path
+
     import viscid
-    from viscid.readers import openggcm
     from viscid.plot import mpl
 
-    openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+    viscid.readers.openggcm.GGCMFile.read_log_file = True
+    viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
+
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
     pp = f3d["pp"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"]
     mpl.plot(pp, plot_opts="log,x_-30_15", earth=True)
     mpl.plt.title(pp.format_time("UT"))
+
+    mpl.show()
 
 Time Series
 -----------
 .. plot::
     :include-source:
 
-    import numpy as np
-    from matplotlib import pyplot as plt
+    from os import path
+
     import matplotlib.dates as mdates
-
+    from matplotlib import pyplot as plt
+    import numpy as np
     import viscid
-    from viscid.readers import openggcm
 
-    openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
-    f2d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.py_0.xdmf')
+    viscid.readers.openggcm.GGCMFile.read_log_file = True
+    viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
+
+
+    f2d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'))
 
     ntimes = f2d.nr_times()
     t = [None] * ntimes
@@ -51,3 +60,5 @@ Time Series
     plt.gca().xaxis.set_major_formatter(dateFmt)
     plt.gcf().autofmt_xdate()
     plt.gca().grid(True)
+
+    plt.show()

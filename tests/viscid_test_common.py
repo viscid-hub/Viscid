@@ -1,7 +1,7 @@
 """
 Usage:
 
-from viscid_test_common import test_dir, sample_dir, plot_dir, get_test_name
+from viscid_test_common import test_dir, plot_dir, get_test_name
 test_name = get_test_name(__file__)
 """
 
@@ -18,7 +18,7 @@ NPLOT = {}
 
 # useful paths
 test_dir = os.path.dirname(__file__)
-sample_dir = test_dir + "/../sample"
+# sample_dir = test_dir + "/../sample"  # replaced by viscid.sample_dir
 plot_dir = test_dir + "/plots"
 ref_dir = test_dir + "/ref_plots"
 
@@ -38,12 +38,20 @@ except KeyError:
 
 # set default plot style
 import viscid  # pylint: disable=unused-import
+
+# Set some nice defaut matplotlib styles. Usually these flags should be
+# set in your rc file. See the corresponding page in the tutorial for more
+# information.
 try:
     from matplotlib import style
-    style.use("seaborn-notebook")
+    style.use("seaborn-talk")
+    style.use("seaborn-white")
+    style.use("viscid-default")
+    style.use("viscid-colorblind")
 except (ImportError, ValueError):
     from viscid.plot import vseaborn
-    vseaborn.context = "notebook"
+    vseaborn.context = "talk"
+
 
 # do some common string handling
 def get_test_name(main__file__):

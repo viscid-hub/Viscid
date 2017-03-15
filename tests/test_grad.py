@@ -1,8 +1,13 @@
 #!/usr/bin/env python
-""" Tests gradient && curvature """
+"""Test gradient and curvature calculation
+
+To verify that the results are accurate, one should compare the results
+with the reference plots.
+"""
 
 from __future__ import print_function
 import argparse
+import sys
 
 import numpy as np
 
@@ -13,8 +18,8 @@ from viscid import vutil
 from viscid.plot import mpl
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Test grad")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prof", action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
@@ -76,8 +81,10 @@ def main():
     if args.show:
         mpl.show()
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

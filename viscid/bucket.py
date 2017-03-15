@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
+import sys
 
 # from viscid.vutil import tree_prefix
 from viscid.compat import OrderedDict
@@ -230,12 +231,12 @@ class Bucket(object):
     def __str__(self):
         return self.handle_string()
 
-if __name__ == '__main__':
+
+def _main():
     import os
     import viscid
 
-    _viscid_root = os.path.dirname(viscid.__file__)
-    sample_dir = _viscid_root + "/../../sample/"
+    sample_dir = os.path.join(viscid.sample_dir, "local_0001")
     sample_prefix = sample_dir + "local_0001"
     fnpy0 = sample_prefix + ".py_0.xdmf"
     fn3dfa = sample_prefix + ".3df.xdmf"
@@ -264,8 +265,13 @@ if __name__ == '__main__':
 
     print("done")
 
-# a=re.findall('(\S+)\s*=\s*(?:[\'"](.*?)[\'"]|(.*?))(?:\s|$)',
-#    'key="value" delim=" " socrates k=v', flags=0); print(a)
+    # a=re.findall('(\S+)\s*=\s*(?:[\'"](.*?)[\'"]|(.*?))(?:\s|$)',
+    #    'key="value" delim=" " socrates k=v', flags=0); print(a)
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(_main())
 
 ##
 ## EOF

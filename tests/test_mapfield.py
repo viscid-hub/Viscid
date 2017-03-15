@@ -1,20 +1,26 @@
 #!/usr/bin/env python
-""" test a ggcm grid wrapper """
+"""Test transformations between map representations
+
+Results are verrified as accurate by assert.
+"""
 
 from __future__ import print_function
 import argparse
+import sys
+import os
 
-from viscid_test_common import sample_dir, assert_similar
+from viscid_test_common import assert_similar
 
 import viscid
+from viscid import sample_dir
 from viscid import vutil
 
 
-def main():
+def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     args = vutil.common_argparse(parser)  # pylint: disable=unused-variable
 
-    fiof = viscid.load_file(sample_dir + '/sample_xdmf.iof.xdmf')
+    fiof = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.iof.xdmf'))
 
     fac = fiof['fac_tot']
 
@@ -44,8 +50,10 @@ def main():
     fac_mf_T = viscid.as_mapfield(fac, order=('lat', 'lon'))
     assert_similar(fac_mf_T, fac_mf.T)
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

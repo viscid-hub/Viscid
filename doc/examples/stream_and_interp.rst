@@ -9,9 +9,9 @@ A more in-depth example of using and plotting streamlines can be found in the :d
     :include-source:
 
     import numpy as np
-
     import viscid
     from viscid.plot import mpl
+
 
     B = viscid.make_dipole(twod=True)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
@@ -28,6 +28,8 @@ A more in-depth example of using and plotting streamlines can be found in the :d
     mpl.plot2d_lines(lines, topo_colors, symdir='y')
     mpl.plt.ylim(-0.5, 0.5)
 
+    mpl.show()
+
 
 Interpolation
 =============
@@ -38,16 +40,19 @@ Interpolating Onto a Volume
 .. plot::
     :include-source:
 
-    import numpy as np
+    from os import path
 
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     seeds = viscid.Volume((-20, 1, -20), (30, 1, 20), n=(64, 5, 64))
     b = viscid.interp_trilin(f3d['b'], seeds)
     mpl.plot(viscid.magnitude(b)['y=0f'], logscale=True, earth=True)
+
+    mpl.show()
 
 
 Interpolating Onto a Sphere
@@ -58,15 +63,18 @@ By default, spheres ore plotted in 2D via their phi (x-axis) and theta (y-axis).
 .. plot::
     :include-source:
 
-    import numpy as np
+    from os import path
 
     import viscid
     from viscid.plot import mpl
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     b = viscid.interp_trilin(f3d['bz'], viscid.Sphere(p0=(0, 0, 0), r=7.0))
     mpl.plot(b, lin=0, hemisphere='north')
+
+    mpl.show()
 
 
 Interpolating Vectors Onto a Plane
@@ -75,14 +83,18 @@ Interpolating Vectors Onto a Plane
 .. plot::
     :include-source:
 
-    import numpy as np
+    from os import path
 
+    import numpy as np
     import viscid
     from viscid.plot import mpl
 
+
+    viscid.readers.openggcm.GGCMFile.read_log_file = True
     viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = 'auto'
 
-    f3d = viscid.load_file(_viscid_root + '/../../sample/sample_xdmf.3d.xdmf')
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
     # make N and L directions for LMN magnetopause boundary normal crds
     p0 = (9.0, 0.0, 1.5)
@@ -100,4 +112,5 @@ Interpolating Vectors Onto a Plane
 
     mpl.plot(viscid.magnitude(j))
     mpl.streamplot(b)
-    mpl.plt.show()
+
+    mpl.show()

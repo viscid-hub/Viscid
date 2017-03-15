@@ -21,105 +21,6 @@ except ImportError as e:
 read_ascii = False
 
 
-class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method
-    """Jimmy's run length encoding files"""
-    _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3df)" \
-                r"\.([0-9]{6})\s*$"
-
-    _file_wrapper = None
-    _data_item_templates = None
-    _def_fld_center = "Cell"
-
-    def __init__(self, filename, **kwargs):
-        super(GGCMFileJrrleMHD, self).__init__(filename, **kwargs)
-
-    def _shape_discovery_hack(self, filename):
-        with JrrleFileWrapper(filename) as f:
-            _, meta = f.inquire_next()
-        return meta['dims']
-
-    def _parse_file(self, filename, parent_node):
-        # we do minimal file parsing here for performance. we just
-        # make data wrappers from the templates we got from the first
-        # file in the group, and package them up into grids
-
-        # find the time from the first field's meta data
-        self._file_wrapper = JrrleFileWrapper(filename)
-
-        int_time = int(re.match(self._detector, filename).group(3))
-        time = float(int_time)
-
-        _grid = self._make_grid(parent_node, name="<JrrleGrid>",
-                                **self._grid_opts)
-        self.time = time
-        _grid.time = time
-        _grid.set_crds(self._crds)
-
-        templates = self._fld_templates
-        if templates is None:
-            templates = self._make_template(filename)
-
-        # make a DataWrapper and a Field for each template that we
-        # have from the first file that we parsed, then add it to
-        # the _grid
-        if self._iono:
-            data_wrapper = JrrleDataWrapper
-        else:
-            data_wrapper = JrrleDataWrapper
-
-        for item in templates:
-            data = data_wrapper(self._file_wrapper, item['fld_name'],
-                                item['shape'])
-            fld = self._make_field(_grid, "Scalar", item['fld_name'],
-                                   self._crds, data,
-                                   center=self._def_fld_center, time=time,
-                                   zyx_native=True)
-            _grid.add_field(fld)
-        return _grid
-
-    def _make_template(self, filename):
-        """read meta data for all fields in a file to get
-        a list of field names and shapes, all the required info
-        to make a JrrleDataWrapper
-        """
-        with JrrleFileWrapper(filename) as f:
-            f.inquire_all_fields()
-            template = []
-
-            meta = None
-            for fld_name, meta in f.fields_seen.items():
-                d = dict(fld_name=fld_name,
-                         shape=meta['dims'])
-                template.append(d)
-
-            if meta is not None:
-                if self.find_info('basetime', default=None) is None:
-                    basetime, _ = self.parse_timestring(meta['timestr'])
-                    if self.parents:
-                        self.parents[0].set_info("basetime", basetime)
-                    else:
-                        self.set_info("basetime", basetime)
-
-        return template
-
-    @classmethod
-    def collective_name_from_group(cls, fnames):
-        fname0 = fnames[0]
-        basename = os.path.basename(fname0)
-        run = re.match(cls._detector, basename).group(1)
-        fldtype = re.match(cls._detector, basename).group(2)
-        new_basename = "{0}.{1}".format(run, fldtype)
-        return os.path.join(os.path.dirname(fname0), new_basename)
-
-
-class GGCMFileJrrleIono(GGCMFileJrrleMHD):  # pylint: disable=abstract-method
-    """Jimmy's run length encoding files"""
-    _detector = r"^\s*(.*)\.(iof)\.([0-9]{6})\s*$"
-    _iono = True
-    _grid_type = grid.Grid
-    _def_fld_center = "Node"
-
-
 class JrrleFileWrapper(FortranFile):
     """Interface for actually opening / reading a jrrle file"""
     fields_seen = None
@@ -284,6 +185,103 @@ class JrrleDataWrapper(vfile.DataWrapper):
 
     def __getitem__(self, item):
         return self.__array__().__getitem__(item)
+
+
+class GGCMFileJrrleMHD(openggcm.GGCMFileFortran):  # pylint: disable=abstract-method
+    """Jimmy's run length encoding files"""
+    _detector = r"^\s*(.*)\.(p[xyz]_[0-9]+|3df)" \
+                r"\.([0-9]{6})\s*$"
+
+    _fwrapper_type = JrrleFileWrapper
+    _data_item_templates = None
+    _def_fld_center = "Cell"
+
+    def __init__(self, filename, **kwargs):
+        super(GGCMFileJrrleMHD, self).__init__(filename, **kwargs)
+
+    def _shape_discovery_hack(self, filename):
+        with self.get_file_wrapper(filename) as f:
+            _, meta = f.inquire_next()
+        return meta['dims']
+
+    def _parse_file(self, filename, parent_node):
+        # we do minimal file parsing here for performance. we just
+        # make data wrappers from the templates we got from the first
+        # file in the group, and package them up into grids
+
+        # find the time from the first field's meta data
+        int_time = int(re.match(self._detector, filename).group(3))
+        time = float(int_time)
+
+        _grid = self._make_grid(parent_node, name="<JrrleGrid>",
+                                **self._grid_opts)
+        self.time = time
+        _grid.time = time
+        _grid.set_crds(self._crds)
+
+        templates = self._fld_templates
+        if templates is None:
+            templates = self._make_template(filename)
+
+        # make a DataWrapper and a Field for each template that we
+        # have from the first file that we parsed, then add it to
+        # the _grid
+        if self._iono:
+            data_wrapper = JrrleDataWrapper
+        else:
+            data_wrapper = JrrleDataWrapper
+
+        for item in templates:
+            data = data_wrapper(self.get_file_wrapper(filename),
+                                item['fld_name'], item['shape'])
+            fld = self._make_field(_grid, "Scalar", item['fld_name'],
+                                   self._crds, data,
+                                   center=self._def_fld_center, time=time,
+                                   zyx_native=True)
+            _grid.add_field(fld)
+        return _grid
+
+    def _make_template(self, filename):
+        """read meta data for all fields in a file to get
+        a list of field names and shapes, all the required info
+        to make a JrrleDataWrapper
+        """
+        with self.get_file_wrapper(filename) as f:
+            f.inquire_all_fields()
+            template = []
+
+            meta = None
+            for fld_name, meta in f.fields_seen.items():
+                d = dict(fld_name=fld_name,
+                         shape=meta['dims'])
+                template.append(d)
+
+            if meta is not None:
+                if self.find_info('basetime', default=None) is None:
+                    basetime, _ = self.parse_timestring(meta['timestr'])
+                    if self.parents:
+                        self.parents[0].set_info("basetime", basetime)
+                    else:
+                        self.set_info("basetime", basetime)
+
+        return template
+
+    @classmethod
+    def collective_name_from_group(cls, fnames):
+        fname0 = fnames[0]
+        basename = os.path.basename(fname0)
+        run = re.match(cls._detector, basename).group(1)
+        fldtype = re.match(cls._detector, basename).group(2)
+        new_basename = "{0}.{1}".format(run, fldtype)
+        return os.path.join(os.path.dirname(fname0), new_basename)
+
+
+class GGCMFileJrrleIono(GGCMFileJrrleMHD):  # pylint: disable=abstract-method
+    """Jimmy's run length encoding files"""
+    _detector = r"^\s*(.*)\.(iof)\.([0-9]{6})\s*$"
+    _iono = True
+    _grid_type = grid.Grid
+    _def_fld_center = "Node"
 
 
 # class JrrleIonoDataWrapper(JrrleDataWrapper):

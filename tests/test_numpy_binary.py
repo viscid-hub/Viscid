@@ -7,7 +7,7 @@ import argparse
 
 import numpy as np
 
-from viscid_test_common import sample_dir, next_plot_fname
+from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import vutil
@@ -35,7 +35,7 @@ def main():
     b['y'] = Ycc
     b['z'] = -Zcc
 
-    fname = sample_dir + '/test.npz'
+    fname = os.path.join(viscid.sample_dir, 'test.npz')
     viscid.save_fields(fname, [psi, b])
 
     f = viscid.load_file(fname)

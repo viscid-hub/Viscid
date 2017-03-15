@@ -1,16 +1,26 @@
 #!/usr/bin/env python
+"""Test interpolation with the gamut of seed generators"""
 
 from __future__ import division, print_function
 import argparse
+import os
 import sys
 
-from viscid_test_common import sample_dir, next_plot_fname
+from viscid_test_common import next_plot_fname
 
 import numpy as np
 import viscid
+from viscid import sample_dir
 
 
 _global_ns = dict()
+
+
+# The reference plots are made in GSE crds (for the RectilinearMeshPoints
+# test). Usually these flags should be set in your rc file. See the
+# corresponding page in the tutorial for more information.
+viscid.readers.openggcm.GGCMFile.read_log_file = True
+viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
 
 
 def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
@@ -71,8 +81,8 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         pass
 
 
-def main():
-    parser = argparse.ArgumentParser()
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--notwo", dest='notwo', action="store_true")
     parser.add_argument("--nothree", dest='nothree', action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
@@ -85,7 +95,7 @@ def main():
     # plot3d = True
     # args.show = True
 
-    img = np.load(sample_dir + "/logo.npy")
+    img = np.load(os.path.join(sample_dir, "logo.npy"))
     x = np.linspace(-1, 1, img.shape[0])
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
@@ -154,7 +164,7 @@ def main():
 
     if 1:
         viscid.logger.info('Testing RectilinearMeshPoints...')
-        f = viscid.load_file(sample_dir + '/sample_xdmf.3d.[-1].xdmf')
+        f = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[-1].xdmf'))
         slc = 'x=-40f:12f, y=-10f:10f, z=-10f:10f'
         b = f['b'][slc]
         z = b.get_crd('z')
@@ -208,7 +218,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

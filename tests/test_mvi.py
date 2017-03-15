@@ -1,14 +1,16 @@
 #!/usr/bin/env python
-""" Try to convert a Field to a mayavi type and plot
-streamlines or something """
+"""Test the gamut of Mayavi plots"""
 
 from __future__ import print_function
 import argparse
+import os
+import sys
 
-from viscid_test_common import sample_dir, next_plot_fname, xfail
+from viscid_test_common import next_plot_fname, xfail
 
 import numpy as np
 import viscid
+from viscid import sample_dir
 from viscid import vutil
 try:
     from viscid.plot import mvi
@@ -16,18 +18,22 @@ except ImportError:
     xfail("Mayavi not installed")
 
 
-# uncomment to test MHD coordinates
-# viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = False
+# In this test, the OpenGGCM reader needs to read the log file
+# in order to determine the crds when doing the cotr transformation.
+# In general, this flag is useful to put in your viscidrc file, see
+# the corresponding page in the tutorial for more information.
+viscid.readers.openggcm.GGCMFile.read_log_file = True
+viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Test calc")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     parser.add_argument("--interact", "-i", action="store_true")
     args = vutil.common_argparse(parser)
 
-    f3d = viscid.load_file(sample_dir + '/sample_xdmf.3d.[0].xdmf')
-    f_iono = viscid.load_file(sample_dir + "/sample_xdmf.iof.[0].xdmf")
+    f3d = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[0].xdmf'))
+    f_iono = viscid.load_file(os.path.join(sample_dir, "sample_xdmf.iof.[0].xdmf"))
 
     b = f3d["b"]
     v = f3d["v"]
@@ -181,8 +187,10 @@ def main():
     except AttributeError:
         pass
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

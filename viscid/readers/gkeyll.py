@@ -107,6 +107,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
 
     SAVE_ONLY = False
 
+    _fwrapper = None
     _crds = None
     _fld_templates = None
 
@@ -177,6 +178,19 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
         fldtype = re.match(cls._detector, basename).group(2)
         new_basename = "{0}.{1}.STAR.h5".format(run, fldtype)
         return os.path.join(os.path.dirname(fname0), new_basename)
+
+    def get_file_wrapper(self, filename):
+        if self._fwrapper is None:
+            # self._fwrapper = GGCMFortbinFileWrapper(filename)
+            return h5py.File(filename, 'r')
+        else:
+            raise NotImplementedError()
+        #     assert (self._fwrapper.filename == filename or
+        #             glob2(self._fwrapper.filename) == glob2(filename))
+        # return self._fwrapper
+
+    def set_file_wrapper(self, wrapper):
+        raise NotImplementedError("This must be done at file init")
 
     def load(self, fname):
         if isinstance(fname, list):
@@ -254,7 +268,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
 
     def _make_template(self, filename):
         """"""
-        with h5py.File(filename, 'r') as f:
+        with self.get_file_wrapper(filename) as f:
             shape = f["StructGridField"].shape
             sshape = shape[:-1]
             nr_fields = shape[-1] - 2  # len(sshape)  # why - 2?

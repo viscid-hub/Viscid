@@ -7,7 +7,7 @@
   subroutine seek(unit,offset,whence,status)
     implicit none
     integer unit
-    integer offset
+    INTEGER*8 offset
     integer whence
     integer status
     !f2py intent(in) unit
@@ -29,7 +29,7 @@
   subroutine tell(unit,offset)
     implicit none
     integer unit
-    integer offset
+    INTEGER*8 offset
     !f2py intent(in) unit
     !f2py intent(out) offset
     offset = -1

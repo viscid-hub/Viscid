@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-""" Tests calculator magnitude function on synthetic vector data...
-If numexpr or cython are not installed, the test fails
-The test also fails if the two results aren't almost exactly equal """
+"""Test calculator magnitude function on synthetic vector data"""
 
 from __future__ import print_function
 import argparse
@@ -55,8 +53,8 @@ def run_mag_test(fld, title="", show=False):
     if show:
         mpl.mplshow()
 
-def main():
-    parser = argparse.ArgumentParser(description="Test calc")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
     dtype = 'float32'
@@ -84,8 +82,10 @@ def main():
     # print("inline: ", timereps(10, Div1inline, [vx, vy, vz]))
     # print(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024**2)
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

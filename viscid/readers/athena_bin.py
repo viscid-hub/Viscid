@@ -10,6 +10,7 @@ import re
 
 import numpy as np
 
+from viscid import glob2
 from viscid.readers import vfile
 from viscid.readers.vfile_bucket import ContainerFile
 from viscid.readers import athena
@@ -24,7 +25,7 @@ class AthenaBinFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
 
     _collection = None
 
-    _file_wrapper = None
+    _fwrapper = None
     float_type_name = None
     var_type = None
     _crds = None
@@ -51,6 +52,19 @@ class AthenaBinFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
     def collective_name_from_group(cls, fnames):
         return athena.athena_collective_name_from_group(cls._detector,
                                                         fnames)
+
+    def get_file_wrapper(self, filename):
+        if self._fwrapper is None:
+            self._fwrapper = AthenaBinFileWrapper(filename,
+                                                  float_type_name=self.float_type_name,
+                                                  var_type=self.var_type)
+        else:
+            assert (self._fwrapper.filename == filename or
+                    glob2(self._fwrapper.filename) == glob2(filename))
+        return self._fwrapper
+
+    def set_file_wrapper(self, wrapper):
+        raise NotImplementedError("This must be done at file init")
 
     def load(self, fname):
         if isinstance(fname, list):
@@ -97,12 +111,9 @@ class AthenaBinFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
         # file in the group, and package them up into grids
 
         # find the time from the first field's meta data
-        self._file_wrapper = AthenaBinFileWrapper(filename,
-                                                  float_type_name=self.float_type_name,
-                                                  var_type=self.var_type)
-
-        self._file_wrapper.read_header()
-        time = self._file_wrapper.time
+        _file_wrapper = self.get_file_wrapper(filename)
+        _file_wrapper.read_header()
+        time = _file_wrapper.time
 
         _grid = self._make_grid(parent_node, name="<AthenaGrid>")
         self.time = time
@@ -114,13 +125,13 @@ class AthenaBinFile(athena.AthenaFile, ContainerFile):  # pylint: disable=abstra
         # the _grid
         data_wrapper = AthenaBinDataWrapper
 
-        for i, fld_name in enumerate(self._file_wrapper.fld_names):
+        for i, fld_name in enumerate(_file_wrapper.fld_names):
             if self._def_fld_center.lower() == "cell":
                 shape = self._crds.shape_cc
             else:
                 shape = self._crds.shape_nc
 
-            data = data_wrapper(self._file_wrapper, fld_name,
+            data = data_wrapper(_file_wrapper, fld_name,
                                 shape[::-1], i)
             fld = self._make_field(_grid, "Scalar", fld_name,
                                    self._crds, data, time=time,

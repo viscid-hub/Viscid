@@ -21,7 +21,7 @@ inplace:
 build:
 	python ./setup.py build_ext ${BUILD_ARGS}
 
-install:
+install: uninstall
 	python ./setup.py install ${BUILD_ARGS}
 
 clean:
@@ -33,7 +33,7 @@ test: inplace public-doccheck
 	VISCID_TEST_INPLACE=1 bash tests/viscid_runtests ${CHECK_ARGS}
 
 instcheck: insttest
-insttest: public-doccheck
+insttest: install public-doccheck
 	@echo "Note: Running tests using first Viscid in PYTHONPATH. Build was not"
 	@echo "      implicitly refreshed."
 	@echo "PYTHONPATH = ${PYTHONPATH}"
@@ -72,3 +72,5 @@ doc-clean:
 public-doccheck:
 	make -C doc public-doccheck
 
+uninstall:
+	python uninstall.py

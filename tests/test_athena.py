@@ -1,24 +1,27 @@
 #!/usr/bin/env python
-""" test a ggcm grid wrapper """
+"""Test the Athena bin and tab readers"""
 
 from __future__ import print_function
 import argparse
+import sys
+import os
 
-from viscid_test_common import sample_dir, next_plot_fname
+from viscid_test_common import next_plot_fname
 
 import viscid
+from viscid import sample_dir
 from viscid import vutil
 from viscid.plot import mpl
 from viscid.plot.mpl import plt
 
 
-def main():
+def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
     ####### test binary files
-    f_bin = viscid.load_file(sample_dir + '/ath_sample.*.bin')
+    f_bin = viscid.load_file(os.path.join(sample_dir, 'ath_sample.*.bin'))
 
     for i, grid in enumerate(f_bin.iter_times(":")):
         plt.subplot2grid((2, 2), (0, i))
@@ -34,7 +37,7 @@ def main():
     plt.clf()
 
     ####### test ascii files
-    f_tab = viscid.load_file(sample_dir + '/ath_sample.*.tab')
+    f_tab = viscid.load_file(os.path.join(sample_dir, 'ath_sample.*.tab'))
 
     for i, grid in enumerate(f_tab.iter_times(":")):
         plt.subplot2grid((2, 2), (0, i))
@@ -49,8 +52,10 @@ def main():
         mpl.show()
     plt.clf()
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

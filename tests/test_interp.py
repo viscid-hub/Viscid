@@ -1,10 +1,12 @@
 #!/usr/bin/env python
+"""Test Cython interpolation"""
 
 from __future__ import division, print_function
 import argparse
+import os
 import sys
 
-from viscid_test_common import sample_dir, next_plot_fname
+from viscid_test_common import next_plot_fname
 
 import numpy as np
 import viscid
@@ -20,13 +22,12 @@ def run_test(fld, seeds, kind, show=False):
     if show:
         mpl.show()
 
-
-def main():
-    parser = argparse.ArgumentParser()
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = viscid.vutil.common_argparse(parser, default_verb=0)
 
-    img = np.load(sample_dir + "/logo.npy")
+    img = np.load(os.path.join(viscid.sample_dir, "logo.npy"))
     x = np.linspace(-1, 1, img.shape[0])
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
@@ -41,7 +42,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF
