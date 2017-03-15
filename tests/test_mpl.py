@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-""" kick the tires on making matplotlib plots """
+"""Kick the tires on making some simple matplotlib plots"""
 
 from __future__ import print_function
 import argparse
+import sys
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -14,7 +15,9 @@ from viscid import logger
 from viscid import vutil
 from viscid.plot import mpl
 
+
 dtype = 'float64'
+
 
 def run_mpl_testA(show=False):
     logger.info("2D cell centered tests")
@@ -78,17 +81,18 @@ def run_mpl_testB(show=False):
     if show:
         mpl.mplshow()
 
-def main():
-    parser = argparse.ArgumentParser(description="Test calc")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
     run_mpl_testA(show=args.show)
     run_mpl_testB(show=args.show)
 
+    return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

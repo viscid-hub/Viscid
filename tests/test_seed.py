@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Test interpolation with the gamut of seed generators"""
 
 from __future__ import division, print_function
 import argparse
@@ -80,8 +81,8 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         pass
 
 
-def main():
-    parser = argparse.ArgumentParser()
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--notwo", dest='notwo', action="store_true")
     parser.add_argument("--nothree", dest='nothree', action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
@@ -217,7 +218,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-""" kick the tires on the amr machinery """
+"""Kick the tires on the amr machinery"""
 
 from __future__ import print_function
 import argparse
+import sys
 import os
 
 from viscid_test_common import next_plot_fname
@@ -21,15 +22,17 @@ def run_test(show=False):
     if show:
         mpl.show()
 
-def main():
-    parser = argparse.ArgumentParser(description="Test calc")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
     run_test(show=args.show)
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

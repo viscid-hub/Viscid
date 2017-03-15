@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-""" test making and plotting streamlines """
+"""Test streamline calculation and plots"""
 
 from __future__ import print_function
 import argparse
+import sys
 
 import numpy as np
 
@@ -73,7 +74,7 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
         pass
 
 def _main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--notwo", dest='notwo', action="store_true")
     parser.add_argument("--nothree", dest='nothree', action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
@@ -103,8 +104,10 @@ def _main():
         from viscid.plot import mvi
         mvi.mlab.close(_global_ns['figure'])
 
+    return 0
+
 if __name__ == "__main__":
-    _main()
+    sys.exit(_main())
 
 ##
 ## EOF

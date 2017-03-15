@@ -1,6 +1,8 @@
 #!/usr/bin/env python
-"""Try to convert a Field to a mayavi type and plot
-streamlines or something
+"""Test calculating a quasipotential
+
+This amounts to calculating streamlines and interpolating a field onto
+those lines.
 """
 
 from __future__ import print_function
@@ -36,8 +38,8 @@ def make_arcade(eps, xl=(-10.0, 0.0, -10.0), xh=(10.0, 20.0, 10.0),
 
     return b, e
 
-def main():
-    parser = argparse.ArgumentParser(description="Test quasi potential")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
@@ -96,8 +98,10 @@ def main():
     except AttributeError:
         pass
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

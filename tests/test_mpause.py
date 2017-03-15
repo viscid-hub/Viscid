@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-""" Try to convert a Field to a mayavi type and plot
-streamlines or something """
+"""Test extracting magnetopause info from 3d OpenGGCM data"""
 
 from __future__ import print_function
 import argparse
@@ -29,8 +28,8 @@ viscid.readers.openggcm.GGCMFile.read_log_file = True
 viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Test calc")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     _ = vutil.common_argparse(parser)
 
     if _HAS_SCIPY:
@@ -73,7 +72,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

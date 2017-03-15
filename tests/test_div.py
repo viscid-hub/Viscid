@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-""" Tests calculator divergence function on synthetic vector data...
-If numexpr or cython are not installed, the test fails
-The test also fails if the two results aren't almost exactly equal, or
-if the result isn't close enough to the analytical divergence
+"""Tests divergence function on synthetic vector data
+
+A warning is printed if the results aren't close to the analytic
+result, but the test still passes. To verify that the results are
+accurate, one should compare the results with the reference plots.
+
 There is a systematic error in this case because the initial condition is
-sign waves and we use a central difference divergence """
+sign waves and we use central differences
+"""
 
 from __future__ import print_function
 import argparse
@@ -14,7 +17,7 @@ from timeit import default_timer as time
 import numpy as np
 import matplotlib.pyplot as plt
 
-from viscid_test_common import next_plot_fname, xfail
+from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import logger
@@ -26,6 +29,7 @@ try:
     HAS_NUMEXPR = True
 except ImportError:
     HAS_NUMEXPR = False
+
 
 def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     t0 = time()
@@ -58,8 +62,8 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     if show:
         mpl.mplshow()
 
-def main():
-    parser = argparse.ArgumentParser(description="Test divergence")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--prof", action="store_true")
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
@@ -112,9 +116,10 @@ def main():
     v_cc = v_nc.as_centered('cell')
     run_div_test(v_cc, exact_cc, title="Cell Centered", show=args.show)
 
+    return 0
 
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

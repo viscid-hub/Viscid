@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Test Fields' numpy compatability """
+"""Test sending Fields through Numpy functions"""
 
 from __future__ import print_function
 import sys
@@ -16,7 +16,8 @@ import viscid
 from viscid import vutil
 from viscid.plot import mpl
 
-def main():
+
+def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
@@ -109,8 +110,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    errcode = main()
-    sys.exit(errcode)
+    sys.exit(_main())
 
 ##
 ## EOF

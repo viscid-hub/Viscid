@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-""" test loading a gnuplot styled 1d ascii datafile """
+"""Load and plot a 1d ascii datafile (gnuplot format)"""
 from __future__ import print_function
 import argparse
+import sys
 import os
 
 from viscid_test_common import next_plot_fname
@@ -11,8 +12,8 @@ from viscid import vutil
 from viscid.plot import mpl
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Test xdmf")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
@@ -22,8 +23,10 @@ def main():
     if args.show:
         mpl.show()
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

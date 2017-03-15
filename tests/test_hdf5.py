@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-""" test loading a numpy npz binary file """
+"""Test saving fields to an HDF5 + XDMF pair"""
 
 from __future__ import print_function
-import os
 import argparse
+import os
+import sys
 
 import numpy as np
 
@@ -14,8 +15,9 @@ from viscid import vutil
 from viscid.plot import mpl
 from viscid.plot.mpl import plt
 
-def main():
-    parser = argparse.ArgumentParser(description="Test xdmf")
+
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     parser.add_argument("--keep", action="store_true")
     args = vutil.common_argparse(parser)
@@ -57,8 +59,10 @@ def main():
         os.remove(h5_fname)
         os.remove(xdmf_fname)
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

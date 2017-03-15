@@ -1,8 +1,12 @@
 #!/usr/bin/env python
-""" kick the tires on making matplotlib plots """
+"""Test a bunch of Field slice edge cases
+
+Both cell and node centered fields are tested.
+"""
 
 from __future__ import print_function
 import argparse
+import sys
 
 import numpy as np
 
@@ -10,6 +14,7 @@ import viscid_test_common  # pylint: disable=unused-import
 
 import viscid
 from viscid import vutil
+
 
 def test_slice(selection, fld, dat_shape, nc_shape=None, cc_shape=None,
                data=None):
@@ -22,8 +27,8 @@ def test_slice(selection, fld, dat_shape, nc_shape=None, cc_shape=None,
     if data:
         assert np.all(slced_fld == data)
 
-def main():
-    parser = argparse.ArgumentParser(description="Test slice")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     args = vutil.common_argparse(parser)  # pylint: disable=unused-variable
 
     # CELL CENTERED TESTS
@@ -148,9 +153,11 @@ def main():
     test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
     test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
 
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

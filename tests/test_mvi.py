@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-""" Try to convert a Field to a mayavi type and plot
-streamlines or something """
+"""Test the gamut of Mayavi plots"""
 
 from __future__ import print_function
 import argparse
 import os
+import sys
 
 from viscid_test_common import next_plot_fname, xfail
 
@@ -26,8 +26,8 @@ viscid.readers.openggcm.GGCMFile.read_log_file = True
 viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Test calc")
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     parser.add_argument("--interact", "-i", action="store_true")
     args = vutil.common_argparse(parser)
@@ -187,8 +187,10 @@ def main():
     except AttributeError:
         pass
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

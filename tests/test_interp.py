@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+"""Test Cython interpolation"""
 
 from __future__ import division, print_function
 import argparse
@@ -21,9 +22,8 @@ def run_test(fld, seeds, kind, show=False):
     if show:
         mpl.show()
 
-
-def main():
-    parser = argparse.ArgumentParser()
+def _main():
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = viscid.vutil.common_argparse(parser, default_verb=0)
 
@@ -42,7 +42,7 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(_main())
 
 ##
 ## EOF

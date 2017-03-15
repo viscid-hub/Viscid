@@ -1,8 +1,14 @@
 #!/usr/bin/env python
-""" test a ggcm grid wrapper """
+"""Test reading / plotting OpenGGCM xdmf files
+
+Note that the business end of this test is in `ggcm_test_common`. Also,
+in `ggcm_test_common`, you'll find how to subclass a standard grid or
+reader to inject specific behavior.
+"""
 
 from __future__ import print_function
 import argparse
+import sys
 import os
 
 import ggcm_test_common
@@ -12,7 +18,7 @@ from viscid import sample_dir
 from viscid import vutil
 
 
-def main():
+def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
@@ -29,8 +35,10 @@ def main():
     fiof = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.iof.xdmf'))
     ggcm_test_common.run_test_iof(fiof, __file__, show=args.show)
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF

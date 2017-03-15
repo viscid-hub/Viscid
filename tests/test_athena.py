@@ -1,8 +1,9 @@
 #!/usr/bin/env python
-""" test a ggcm grid wrapper """
+"""Test the Athena bin and tab readers"""
 
 from __future__ import print_function
 import argparse
+import sys
 import os
 
 from viscid_test_common import next_plot_fname
@@ -14,7 +15,7 @@ from viscid.plot import mpl
 from viscid.plot.mpl import plt
 
 
-def main():
+def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
@@ -51,8 +52,10 @@ def main():
         mpl.show()
     plt.clf()
 
+    return 0
+
 if __name__ == "__main__":
-    main()
+    sys.exit(_main())
 
 ##
 ## EOF
