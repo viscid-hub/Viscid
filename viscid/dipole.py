@@ -258,7 +258,6 @@ def dipole_map_value(fld, pts, r=1.0, fillna=None, cotr=None,
         fld (Field): values to interpolate onto the mapped pts
         pts (ndarray): 3xN for N (x, y, z) points that will be mapped
         r (float): radius of resulting map
-        root (TYPE): which root to use in dipole formula
         cotr (None): if given, use cotr to perform mapping in sm
         crd_system (str): crd system of pts
         notilt1967 (bool): used if automagically making a cotr object
