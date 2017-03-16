@@ -657,8 +657,13 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
     if figure is None:
         figure = mlab.gcf()
 
+    fld = viscid.as_spherefield(fld, order=('phi', 'theta'), units='deg')
+    phil, thetal = fld.xl
+    phih, thetah = fld.xh
     nphi, ntheta = fld.shape
+
     sphere = viscid.Sphere([0, 0, 0], r=radius, ntheta=ntheta, nphi=nphi,
+                           thetalim=(thetal, thetah), philim=(phil, phih),
                            theta_phi=False)
     verts, arr = sphere.wrap_mesh(fld.data)
 
