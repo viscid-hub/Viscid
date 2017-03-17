@@ -80,6 +80,7 @@ subroutine read_jrrle1d(iu,a1,nx,l1,read_ascii,success)
   integer nn
   character*80 rec
 
+  nn = nx
   rid=0.0
   if((iu.lt.0).or.(iu.gt.32768))then
      write(0,*)'Exception: Ambiguous I/O unit number.'
@@ -148,6 +149,7 @@ subroutine read_jrrle2d(iu,a1,nx,l1,read_ascii,success)
   integer nn,nx1,ny1
   character*80 rec
 
+  nn = nx
   rid=0.0
   if((iu.lt.0).or.(iu.gt.32768))then
      write(0,*)'Exception: Ambiguous I/O unit number.'
@@ -217,6 +219,7 @@ subroutine read_jrrle3d(iu,a1,nx,l1,read_ascii,success)
   integer nn,nx1,ny1,nz1
   character*80 rec
 
+  nn = nx
   rid=0.0
   if((iu.lt.0).or.(iu.gt.32768))then
      write(0,*)'Exception: Ambiguous I/O unit number.'
@@ -369,21 +372,34 @@ subroutine rdn2( fileNo,a,n,cid,it,rid )
   ! character decoding
   !.---------------------------------------
   real a(*)
+  integer n
   character*8 cid
   character*4 did
+  character*8 nid
   real a1(0:63)
   integer intRec1(0:63),intRec2(0:63),i3(0:63)
   integer q
   integer fileNo
 
-  read( UNIT=fileNo,FMT='(a,i8,3e14.7,i8,a)',ERR=100,END=900 ) &
-       did,n,zmin,zmax,rid,it,cid
+  read( UNIT=fileNo,FMT='(a4,a8,3e14.7,i8,a)',ERR=100,END=900 ) &
+       did,nid,zmin,zmax,rid,it,cid
   ! The format of the header record is as follows:
   ! 1, 4 char string                                    ( did )
   ! 8 chars to 1 int                                    ( n )
   ! 3 times 14 chars to double w/ 7 digits precision    ( zmin,zmax,rid )
   ! 8 chars to 1 int                                    ( it )
   ! 1, 8 char string                                    ( cid )
+
+  ! if nid is "********" then the number of grid cells is too large for
+  ! the jrrle format, so we need to assume that the value passed in as
+  ! `n` is correct, or else all is lost
+  if (nid.ne."********") then
+    read(nid,'(i8)') nid_asint
+    if (nid_asint.ne.n) then
+      write(0,*)'rdn2: nid (nid_asint) .ne. n ', nid, nid_asint, n
+    endif
+    n = nid_asint
+  endif
 
   ! try read again, if we don't have WRN2 data
   if( did.ne.'WRN2' ) then
