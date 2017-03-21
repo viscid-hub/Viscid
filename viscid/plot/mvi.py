@@ -1372,6 +1372,9 @@ def savefig(*args, **kwargs):
 def interact(stack_depth=0, **kwargs):
     viscid.vlab.interact(stack_depth=stack_depth + 1, mvi_ns=True, **kwargs)
 
+plot3d_lines = plot_lines
+plot_lines3d = plot_lines
+
 ##
 ## EOF
 ##
