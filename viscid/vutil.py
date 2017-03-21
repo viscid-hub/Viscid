@@ -936,6 +936,8 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
             scalars = viscid.interp_trilin(scalars, vertices)
             if scalars.size != N:
                 raise ValueError("Scalars was not a scalar field")
+        elif isinstance(scalars, (list, tuple)):
+            scalars = np.concatenate(scalars)
 
         scalars = np.atleast_2d(scalars)
 
