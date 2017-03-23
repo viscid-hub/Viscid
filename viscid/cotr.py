@@ -88,7 +88,7 @@ except ImportError:
 
 
 __all__ = ['as_nvec', 'make_rotation', 'make_translation', 'get_rotation_wxyz',
-           'get_crd_system', 'Cotr', 'as_cotr', 'cotr_transform',
+           'as_crd_system', 'Cotr', 'as_cotr', 'cotr_transform',
            'get_dipole_moment', 'get_dipole_moment_ang', 'get_dipole_angles']
 
 
@@ -287,37 +287,39 @@ def get_rotation_wxyz(mat, check_inverse=True, quick=True):
 
     return np.array([angleB, u[0], u[1], u[2]])
 
-def get_crd_system(thing, default=None):
+def as_crd_system(thing, default=_NOT_GIVEN):
     """Try to figure out a crd_system for thing
 
     Args:
         thing: Either a string with a crd_system abbreviation, or
             something that that can do thing.find_info('crd_system')
+        default (str): fallback value
 
     Returns:
         str: crd system abbreviation, stripped and lower case
-    """
-    # FIXME: this decision tree is atrocious
-    try:
-        crd_system = thing.find_info('crd_system')
-    except AttributeError:
-        # thing has no find_info attribute
-        try:
-            crd_system = thing.strip().lower()
-        except AttributeError:
-            # thing isn't a string
-            crd_system = default
-    except KeyError:
-        # thing.find_info didn't return anything for 'crd_system'
-        crd_system = default
 
+    Raises:
+        TypeError: if no default supplied and thing can't be turned
+            into a crd_system
+    """
+    if hasattr(thing, "__as_crd_system__"):
+        crd_system = thing.__as_crd_system__()
+    elif hasattr(thing, "find_info") and thing.find_info("crd_system", None):
+        crd_system = thing.find_info("crd_system")
+    else:
+        crd_system = thing
     # post-process crd_system
     try:
         crd_system = crd_system.strip().lower()
     except AttributeError:
-        pass
+        if crd_system is None:
+            pass
+        elif default is _NOT_GIVEN:
+            raise TypeError("Cound not decipher crd_system: {0}"
+                            "".format(crd_system))
+        else:
+            crd_system = as_crd_system(default)
     # TODO: check that it's a valid crd_system?
-
     return crd_system
 
 
@@ -641,8 +643,8 @@ class Cotr(object):
         Returns:
             ndarray: self.rdim x self.rdim transformation matrix
         """
-        from_system = get_crd_system(from_system)
-        to_system = get_crd_system(to_system)
+        from_system = as_crd_system(from_system)
+        to_system = as_crd_system(to_system)
 
         xform = "->".join([from_system, to_system])
 
@@ -680,8 +682,8 @@ class Cotr(object):
             ndarray: vec in new crd system shaped either (3, ) or
                 (3, N) mirroring the shape of vec
         """
-        from_system = get_crd_system(from_system)
-        to_system = get_crd_system(to_system)
+        from_system = as_crd_system(from_system)
+        to_system = as_crd_system(to_system)
 
         in_vec = np.asarray(vec)
         vec = as_nvec(in_vec, ndim=self.rdim)

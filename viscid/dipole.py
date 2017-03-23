@@ -75,7 +75,7 @@ def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
 
     B = field.empty([x, y, z], nr_comps=3, name=name, center='cell',
                     layout='interlaced', dtype=dtype)
-    B.set_info('crd_system', viscid.get_crd_system(crd_system))
+    B.set_info('crd_system', viscid.as_crd_system(crd_system))
     return fill_dipole(B, m=m, strength=strength)
 
 def fill_dipole(B, m=(0, 0, -DEFAULT_STRENGTH), strength=None, mask=None):
@@ -214,7 +214,7 @@ def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
     if len(pts.shape) == 1:
         pts = pts.reshape((3, 1))
 
-    crd_system = viscid.get_crd_system(crd_system)
+    crd_system = viscid.as_crd_system(crd_system)
     if cotr is None:
         cotr = viscid.Cotr(dip_tilt=0.0, dip_gsm=0.0)  #     pylint: disable=not-callable
     elif viscid.is_datetime_like(cotr):
@@ -267,7 +267,7 @@ def dipole_map_value(fld, pts, r=1.0, fillna=None, cotr=None,
         ndarray: ndarray of mapped values, one for each of the N points
     """
     if crd_system is None:
-        crd_system = viscid.get_crd_system(fld, 'gse')
+        crd_system = viscid.as_crd_system(fld, 'gse')
 
     if fld.is_spherical:
         # TODO: verify that crd_system works as expected for ionosphere

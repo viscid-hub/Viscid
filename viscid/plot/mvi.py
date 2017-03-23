@@ -637,7 +637,7 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
             conjunction with crd_system
         crd_system (str, other): Used if rotate is datetime-like. Can
             be one of ('gse', 'mhd'), or anything that returns from
-            :py:func:`viscid.get_crd_system`.
+            :py:func:`viscid.as_crd_system`.
         notilt1967 (bool): is 1 Jan 1967 the special notilt time? Only
             used if rotate is datetime-like and a new Cotr object is
             constructed. If rotate is a Cotr object, then this option
@@ -1057,7 +1057,7 @@ def plot_blue_marble(r=1.0, figure=None, nphi=128, ntheta=64, map_style=None,
             conjunction with crd_system
         crd_system (str, other): Used if rotate is datetime-like. Can
             be one of ('gse', 'mhd'), or anything that returns from
-            :py:func:`viscid.get_crd_system`.
+            :py:func:`viscid.as_crd_system`.
         notilt1967 (bool): is 1 Jan 1967 the special notilt time? Only
             used if rotate is datetime-like and a new Cotr object is
             constructed. If rotate is a Cotr object, then this option
@@ -1119,7 +1119,7 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
         nightcol (tuple, optional): color of nightside (RGB)
         res (optional): rosolution of teh sphere
         crd_system (str, other): One of ('mhd', 'gse'), or anything
-            that returns from :py:func:`viscid.get_crd_system`.
+            that returns from :py:func:`viscid.as_crd_system`.
 
     Returns:
         Tuple (day, night) as vtk sources
@@ -1127,7 +1127,7 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
     if figure is None:
         figure = mlab.gcf()
 
-    crd_system = viscid.get_crd_system(crd_system)
+    crd_system = viscid.as_crd_system(crd_system)
     if crd_system == "mhd":
         theta_dusk, theta_dawn = 270, 90
     elif crd_system == "gse":
