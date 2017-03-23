@@ -80,20 +80,24 @@ import numpy as np
 try:
     from viscid.npdatetime import (as_datetime64, as_datetime, as_timedelta,  # pylint: disable=import-error
                                    linspace_datetime64, datetime64_as_years,
-                                   format_datetime)
+                                   format_datetime, is_datetime_like)
 except ImportError:
     from npdatetime import (as_datetime64, as_datetime, as_timedelta,  # pylint: disable=import-error
                             linspace_datetime64, datetime64_as_years,
-                            format_datetime)
+                            format_datetime, is_datetime_like)
 
 
 __all__ = ['as_nvec', 'make_rotation', 'make_translation', 'get_rotation_wxyz',
-           'get_crd_system', 'Cotr', 'cotr_transform', 'get_dipole_moment',
-           'get_dipole_moment_ang', 'get_dipole_angles']
+           'get_crd_system', 'Cotr', 'as_cotr', 'cotr_transform',
+           'get_dipole_moment', 'get_dipole_moment_ang', 'get_dipole_angles']
 
 
 # note that these globals are used immutably (ie, not rc file configurable)
 DEFAULT_STRENGTH = 1.0 / 3.0574e-5  # Strength of earth's dipole in nT
+
+
+class _NOT_GIVEN(object):
+    pass
 
 
 # IGRF values are in nT and come from:
@@ -450,6 +454,9 @@ class Cotr(object):
                 self._emat_cache[-i] = eye
                 self._emat_cache[i] = eye
 
+    def __as_cotr__(self):
+        return self
+
     @property
     def sun_ecliptic_longitude(self):
         # evidently self.ut should really be TDT here, but the error in
@@ -738,6 +745,44 @@ class Cotr(object):
         """
         return self.dip_tilt, self.dip_gsm
 
+def as_cotr(thing=None, default=_NOT_GIVEN):
+    """Try to make cotr into a Cotr instance
+
+    Inputs understood are:
+      - None for North-South dipole
+      - anything with a __cotr__ method
+      - datetimes or similar, specifies the time for finding dip angles
+      - mapping (dict or similar), passed to Cotr constructor as kwargs
+
+    Args:
+        thing (None, Cotr, time, dict): something to turn into a Cotr
+        default: fallback value
+
+    Returns:
+        Cotr instance
+
+    Raises:
+        TypeError: if no default supplied and thing can't be turned
+            into a Cotr instance
+    """
+    if thing is None:
+        cotr = Cotr(dip_tilt=0.0, dip_gsm=0.0)
+    elif hasattr(thing, "__as_cotr__"):
+        cotr = thing.__as_cotr__()
+    elif is_datetime_like(thing):
+        cotr = Cotr(time=thing)
+    elif hasattr(thing, "find_info") and thing.find_info("cotr", None):
+        cotr = as_cotr(thing.find_info("cotr"))  # recursive
+    else:
+        try:
+            cotr = Cotr(**thing)
+        except TypeError:
+            if default is _NOT_GIVEN:
+                raise TypeError("Cound not decipher cotr: {0}".format(cotr))
+            else:
+                # recursive to support default == None -> 0 tilt Cotr
+                cotr = as_cotr(default)
+    return cotr
 
 def cotr_transform(date_time, from_system, to_system, vec, notilt1967=True):
     """Transform a vector from one system to another
