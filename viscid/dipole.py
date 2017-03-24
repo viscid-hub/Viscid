@@ -228,8 +228,7 @@ def xyz2lsrlp(pts, cotr=None, crd_system='gse'):
 
     return np.concatenate([lshell, pts_rlp], axis=0)
 
-def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
-               as_spherical=False):
+def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', as_spherical=False):
     """Map pts along an ideal dipole to radius r
 
     lambda = 90deg - theta; r = L cos^2(lambda)
@@ -241,7 +240,6 @@ def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
         r (float): radius to map to
         cotr (None): if given, use cotr to perform mapping to / from sm
         crd_system (str): crd system of pts
-        notilt1967 (bool): used if automagically making a cotr object
         as_spherical(bool): if True, then the return array is
         (t, theta, phi) with theta in the range [0, 180] and phi
         [0, 360] (in degrees)
@@ -282,7 +280,7 @@ def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
     return ret
 
 def dipole_map_value(fld, pts, r=1.0, fillna=None, cotr=None,
-                     crd_system=None, notilt1967=True, interp_kind='linear'):
+                     crd_system=None, interp_kind='linear'):
     """Map values assuming they're constant along ideal dipole lines
 
     Args:
@@ -291,7 +289,6 @@ def dipole_map_value(fld, pts, r=1.0, fillna=None, cotr=None,
         r (float): radius of resulting map
         cotr (None): if given, use cotr to perform mapping in sm
         crd_system (str): crd system of pts
-        notilt1967 (bool): used if automagically making a cotr object
         interp_kind (str): how to interpolate fld onto source points
 
     Returns:
@@ -310,7 +307,7 @@ def dipole_map_value(fld, pts, r=1.0, fillna=None, cotr=None,
     # pts should be shaped 3xNX*NY*NZ or similar such that the points
     # are in the same order as the flattened c-contiguous array
     mapped_pts = dipole_map(pts, r=r, cotr=cotr, crd_system=crd_system,
-                            notilt1967=notilt1967, as_spherical=fld.is_spherical)
+                            as_spherical=fld.is_spherical)
     ret = viscid.interp(fld, mapped_pts, kind=interp_kind, wrap=False)
     if fillna is not None:
         ret[np.isnan(ret)] = fillna

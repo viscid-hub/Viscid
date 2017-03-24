@@ -396,8 +396,9 @@ class Cotr(object):
                 angle (psi in degrees, positive points north pole
                 duskward)
             notilt1967 (bool): if True, then all transforms (except
-                <->mhd transforms) are set to the identity. This is
-                the special OpenGGCM no-dipole-tilt-time.
+                <->mhd transforms) are set to the identity if time is
+                Jan 1 1967. This is the special OpenGGCM
+                no-dipole-tilt-time.
         """
         self._emat_cache = dict()
         self._xform_cache = dict()

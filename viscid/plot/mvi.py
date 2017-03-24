@@ -621,7 +621,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
     return surface
 
 def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
-                    rotate=None, crd_system="gse", notilt1967=True, **kwargs):
+                    rotate=None, crd_system="gse", **kwargs):
     """Plot an ionospheric field
 
     Args:
@@ -638,10 +638,6 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
         crd_system (str, other): Used if rotate is datetime-like. Can
             be one of ('gse', 'mhd'), or anything that returns from
             :py:func:`viscid.as_crd_system`.
-        notilt1967 (bool): is 1 Jan 1967 the special notilt time? Only
-            used if rotate is datetime-like and a new Cotr object is
-            constructed. If rotate is a Cotr object, then this option
-            does nothing.
         **kwargs: passed to :py:func:`mayavi.mlab.mesh`
 
     Keyword Arguments:
@@ -690,8 +686,7 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
     apply_cmap(m, **cmap_kwargs)
 
     m.actor.actor.rotate_z(180)
-    _apply_rotation(m, 'sm', rotate, crd_system=crd_system,
-                    notilt1967=notilt1967)
+    _apply_rotation(m, 'sm', rotate, crd_system=crd_system)
 
     return m
 
@@ -1018,12 +1013,11 @@ def insert_filter(filtr, module_manager):
     filtr.parent.children.remove(module_manager)
     filtr.children.append(module_manager)
 
-def _apply_rotation(obj, from_system, rotate=None, crd_system='gse',
-                    notilt1967=True):
+def _apply_rotation(obj, from_system, rotate=None, crd_system='gse'):
     if hasattr(rotate, "get_rotation_wxyz"):
         rotate = rotate.get_rotation_wxyz(from_system, crd_system)
     elif viscid.is_datetime_like(rotate):
-        cotr = viscid.Cotr(rotate, notilt1967=notilt1967)  # pylint: disable=not-callable
+        cotr = viscid.Cotr(rotate)  # pylint: disable=not-callable
         rotate = cotr.get_rotation_wxyz(from_system, crd_system)
     else:
         cotr = viscid.Cotr()  # pylint: disable=not-callable
@@ -1035,8 +1029,7 @@ def _apply_rotation(obj, from_system, rotate=None, crd_system='gse',
     obj.actor.actor.rotate_wxyz(*rotate)
 
 def plot_blue_marble(r=1.0, figure=None, nphi=128, ntheta=64, map_style=None,
-                     lines=False, res=2, rotate=None, crd_system='gse',
-                     notilt1967=True):
+                     lines=False, res=2, rotate=None, crd_system='gse'):
     """Plot Earth using the Natural Earth dataset maps
 
     Args:
@@ -1058,10 +1051,6 @@ def plot_blue_marble(r=1.0, figure=None, nphi=128, ntheta=64, map_style=None,
         crd_system (str, other): Used if rotate is datetime-like. Can
             be one of ('gse', 'mhd'), or anything that returns from
             :py:func:`viscid.as_crd_system`.
-        notilt1967 (bool): is 1 Jan 1967 the special notilt time? Only
-            used if rotate is datetime-like and a new Cotr object is
-            constructed. If rotate is a Cotr object, then this option
-            does nothing.
 
     Returns:
         (VTKDataSource, mayavi.modules.surface.Surface)
@@ -1098,8 +1087,7 @@ def plot_blue_marble(r=1.0, figure=None, nphi=128, ntheta=64, map_style=None,
 
     # rotate 180deg b/c i can't rotate the texture to make the prime meridian
     surf.actor.actor.rotate_z(180)
-    _apply_rotation(surf, 'geo', rotate, crd_system=crd_system,
-                    notilt1967=notilt1967)
+    _apply_rotation(surf, 'geo', rotate, crd_system=crd_system)
 
     add_source(src, figure=figure)
 
