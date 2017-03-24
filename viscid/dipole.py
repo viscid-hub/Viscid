@@ -241,8 +241,8 @@ def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', as_spherical=False):
         cotr (None): if given, use cotr to perform mapping to / from sm
         crd_system (str): crd system of pts
         as_spherical(bool): if True, then the return array is
-        (t, theta, phi) with theta in the range [0, 180] and phi
-        [0, 360] (in degrees)
+            (t, theta, phi) with theta in the range [0, 180] and phi
+            [0, 360] (in degrees)
 
     Returns:
         ndarray: 3xN array of N (x, y, z) points all at a distance

@@ -436,6 +436,10 @@ class Cotr(object):
         years = datetime64_as_years(time)
         notilt = notilt1967 and np.abs(years - 1967.0) < 0.0006
 
+        # do i really want the self._disable_mag_crds part of this? what
+        # if i want dip_gsm set by the time, and dip_tilt set by hand...
+        # would anyone ever want that? is it really more natural to say that
+        # if you specify dip_tilt or dip_gsm then both ignore the time?
         if self._disable_mag_crds or notilt:
             dip_tilt = 0.0 if dip_tilt is None else dip_tilt
             dip_gsm = 0.0 if dip_gsm is None else dip_gsm
