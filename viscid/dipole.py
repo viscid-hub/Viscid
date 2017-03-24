@@ -76,6 +76,7 @@ def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
     B = field.empty([x, y, z], nr_comps=3, name=name, center='cell',
                     layout='interlaced', dtype=dtype)
     B.set_info('crd_system', viscid.as_crd_system(crd_system))
+    B.set_info('cotr', viscid.dipole_moment2cotr(m, crd_system=crd_system))
     return fill_dipole(B, m=m, strength=strength)
 
 def fill_dipole(B, m=(0, 0, -DEFAULT_STRENGTH), strength=None, mask=None):

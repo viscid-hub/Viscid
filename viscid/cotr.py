@@ -89,7 +89,8 @@ except ImportError:
 
 __all__ = ['as_nvec', 'make_rotation', 'make_translation', 'get_rotation_wxyz',
            'as_crd_system', 'Cotr', 'as_cotr', 'cotr_transform',
-           'get_dipole_moment', 'get_dipole_moment_ang', 'get_dipole_angles']
+           'get_dipole_moment', 'get_dipole_moment_ang', 'get_dipole_angles',
+           'dipole_moment2cotr']
 
 
 # note that these globals are used immutably (ie, not rc file configurable)
@@ -855,6 +856,22 @@ def get_dipole_angles(date_time, notilt1967=True):
     """
     c = Cotr(date_time, notilt1967=notilt1967)
     return c.get_dipole_angles()
+
+def dipole_moment2cotr(m, crd_system='gse'):
+    """Turn dipole moment vector into a Cotr instance
+
+    Args:
+        m (sequence): dipole moment as sequence with length 3
+        crd_system (str): crd_system of m
+
+    Returns:
+        Cotr instance
+    """
+    assert as_crd_system(crd_system) in ('gse', 'mhd')
+    m = Cotr(dip_tilt=0.0, dip_gsm=0.0).transform(crd_system, 'gse', m)
+    gsm = np.rad2deg(np.arctan2(m[1], m[2]))
+    tilt = np.rad2deg(np.arctan2(m[0], np.linalg.norm(m[1:])))
+    return Cotr(dip_tilt=tilt, dip_gsm=gsm)
 
 
 def _main():
