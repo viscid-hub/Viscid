@@ -1016,11 +1016,8 @@ def insert_filter(filtr, module_manager):
 def _apply_rotation(obj, from_system, rotate=None, crd_system='gse'):
     if hasattr(rotate, "get_rotation_wxyz"):
         rotate = rotate.get_rotation_wxyz(from_system, crd_system)
-    elif viscid.is_datetime_like(rotate):
-        cotr = viscid.Cotr(rotate)  # pylint: disable=not-callable
-        rotate = cotr.get_rotation_wxyz(from_system, crd_system)
     else:
-        cotr = viscid.Cotr()  # pylint: disable=not-callable
+        cotr = viscid.as_cotr(rotate)
         rotate = cotr.get_rotation_wxyz(from_system, crd_system)
 
     if len(rotate) != 4:
