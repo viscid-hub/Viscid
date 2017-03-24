@@ -19,7 +19,7 @@ except ImportError:
 
 
 __all__ = ['guess_dipole_moment', 'make_dipole', 'fill_dipole',
-           'set_in_region', 'make_spherical_mask', 'dipole_map',
+           'set_in_region', 'make_spherical_mask', 'xyz2lsrlp', 'dipole_map',
            'dipole_map_value']
 
 
@@ -188,6 +188,45 @@ def make_spherical_mask(fld, rmin=0.0, rmax=None, rsq=None):
             fld = fld['x']
         return fld.wrap_field(mask, dtype='bool')
 
+def _precondition_pts(pts):
+    """Make sure pts are a 2d ndarray with length 3 in 1st dim"""
+    pts = np.asarray(pts)
+    if len(pts.shape) == 1:
+        pts = pts.reshape((3, 1))
+    return pts
+
+def xyz2lsrlp(pts, cotr=None, crd_system='gse'):
+    """Ceovert x, y, z -> l-shell, r, lambda, phi [sm coords]
+
+      - r, theta, phi = viscid.cart2sph(pts in x, y, z)
+      - lambda = 90deg - theta
+      - r = L cos^2(lambda)
+
+    Args:
+        pts (ndarray): 3xN for N (x, y, z) points
+        cotr (None): if given, use cotr to perform mapping to / from sm
+        crd_system (str): crd system of pts
+
+    Returns:
+        ndarray: 4xN array of N (l-shell, r, lamda, phi) points
+    """
+    pts = _precondition_pts(pts)
+    crd_system = viscid.as_crd_system(crd_system)
+    cotr = viscid.as_cotr(cotr)
+
+    # pts -> sm coords
+    pts_sm = cotr.transform(crd_system, 'sm', pts)
+    del pts
+
+    # sm xyz -> r theta phi
+    pts_rlp = viscid.cart2sph(pts_sm)
+    # theta -> lamda (latitude)
+    pts_rlp[1, :] = 0.5 * np.pi - pts_rlp[1, :]
+    # get the L-shell from lamda and r
+    lshell = pts_rlp[0:1, :] / np.cos(pts_rlp[1:2, :])**2
+
+    return np.concatenate([lshell, pts_rlp], axis=0)
+
 def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
                as_spherical=False):
     """Map pts along an ideal dipole to radius r
@@ -210,34 +249,25 @@ def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
         ndarray: 3xN array of N (x, y, z) points all at a distance
             r_mapped from the center of the dipole
     """
-    pts = np.asarray(pts)
-    if len(pts.shape) == 1:
-        pts = pts.reshape((3, 1))
-
+    pts = _precondition_pts(pts)
     crd_system = viscid.as_crd_system(crd_system)
-    if cotr is None:
-        cotr = viscid.Cotr(dip_tilt=0.0, dip_gsm=0.0)  #     pylint: disable=not-callable
-    elif viscid.is_datetime_like(cotr):
-        cotr = viscid.Cotr(cotr, notilt1967=notilt1967)  # pylint: disable=not-callable
-    pts_sm = cotr.transform(crd_system, 'sm', pts)
+    cotr = viscid.as_cotr(cotr)
+
+    lsrlp = xyz2lsrlp(pts, cotr=cotr, crd_system=crd_system)
     del pts
 
-    pts_rlp = viscid.cart2sph(pts_sm)
-    pts_rlp[1, :] = 0.5 * np.pi - pts_rlp[1, :]  # theta -> lamda (latitude)
-    l_shell = pts_rlp[0:1, :] / np.cos(pts_rlp[1:2, :])**2
     # this masking causes trouble
-    # pts_rlp = np.ma.masked_where(np.repeat(r < l_shell, 3, axis=0), pts_rlp)
-    # pts_rlp = np.ma.masked_where(np.array([[r] * 3]).T > l_shell, pts_rlp)
-    del pts_sm
+    # lsrlp = np.ma.masked_where(r lsrlp[0:1, :], lsrlp)
+    # lsrlp = np.ma.masked_where(np.array([[r] * 3]).T > lsrlp[0:1, :], lsrlp)
 
     # rlp: r, lamda (latitude), phi
-    rlp_mapped = np.empty_like(pts_rlp)
+    rlp_mapped = np.empty_like(lsrlp[1:, :])
     rlp_mapped[0, :] = r
     # root is determined by sign of latitude in sm?
-    root = np.sign(pts_rlp[1:2, :])
-    rlp_mapped[1, :] = root * np.arccos(np.sqrt(r / l_shell))
-    rlp_mapped[2, :] = pts_rlp[2, :]
-    del pts_rlp, l_shell
+    root = np.sign(lsrlp[2:3, :])
+    rlp_mapped[1, :] = root * np.arccos(np.sqrt(r / lsrlp[0:1, :]))
+    rlp_mapped[2, :] = lsrlp[3:4, :]
+    del lsrlp
 
     rlp_mapped[1, :] = 0.5 * np.pi - rlp_mapped[1, :]    # lamda (latitude) -> theta
 
