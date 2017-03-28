@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 import argparse
+from itertools import count, cycle
 import sys
 
 import numpy as np
@@ -73,6 +74,43 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
     except ImportError:
         pass
 
+def lines_and_lsps(B, seeds, cotr=None, **kwargs):
+    """Return a list of streamlines and the l-shell,phi for each point"""
+    tstats = dict()
+    lines, _ = viscid.timeit(viscid.calc_streamlines, B, seeds,
+                             timeit_quiet=True, timeit_stats=tstats,
+                             **kwargs)
+    walltime = tstats['max']
+    # lsrlps = [viscid.xyz2lsrlp(line, cotr=cotr, crd_system=B) for line in lines]
+    lsrlps = [viscid.xyz2lsrlp(line, cotr=cotr, crd_system=B) for line in lines]
+    lsps = [np.array(lsrlp[(0, 3), :]) for lsrlp in lsrlps]
+    return lines, lsps, walltime
+
+def format_data_range(dset):
+    # x0 = np.percentile(dset, 0)
+    x25 = np.percentile(dset, 25)
+    x50 = np.percentile(dset, 50)
+    x75 = np.percentile(dset, 75)
+    # x100 = np.percentile(dset, 100)
+
+    # return ("{0:.2e} <-- {1:.2e} -< {2:.2e} >- {3:.2e} --> {4:.2e}"
+    #         "".format(x0, x25, x50, x75, x100))
+    # return "{0:.2e} <- {1:.2e} -> {2:.2e}".format(x25, x50, x75)
+    return (r"{0:.2e} $\leftarrow$ {1:.2e} $\rightarrow$ {2:.2e}"
+            r"".format(x25, x50, x75))
+
+def set_violin_colors(v):
+    from viscid.plot import mpl
+
+    cycler = cycle(mpl.get_current_colorcycle())
+    colors = []
+    for b in v['bodies']:
+        c = next(cycler)
+        b.set_color(c)
+        colors.append(c)
+    return colors
+
+
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--notwo", dest='notwo', action="store_true")
@@ -83,6 +121,7 @@ def _main():
     plot2d = not args.notwo
     plot3d = not args.nothree
 
+    #################################################
     viscid.logger.info("Testing field lines on 2d field...")
     B = viscid.make_dipole(twod=True)
     line = viscid.seed.Line((0.2, 0.0, 0.0), (1.0, 0.0, 0.0), 10)
@@ -91,6 +130,7 @@ def _main():
     run_test(B, line, plot2d=plot2d, plot3d=plot3d, title='2D', show=args.show,
              ibound=0.07, obound0=obound0, obound1=obound1)
 
+    #################################################
     viscid.logger.info("Testing field lines on 3d field...")
     B = viscid.make_dipole(m=[0.2, 0.3, -0.9])
     sphere = viscid.seed.Sphere((0.0, 0.0, 0.0), 2.0, ntheta=20, nphi=10)
@@ -98,6 +138,229 @@ def _main():
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
     run_test(B, sphere, plot2d=plot2d, plot3d=plot3d, title='3D', show=args.show,
              ibound=0.07, obound0=obound0, obound1=obound1, method=viscid.RK12)
+
+    # The Remainder of this test makes sure higher order methods are indeed
+    # more accurate than lower order methods... this could find a bug in
+    # the integrators
+
+    ##################################################
+    # test accuracy of streamlines in an ideal dipole
+    cotr = viscid.Cotr(dip_tilt=15.0, dip_gsm=21.0)  # pylint: disable=not-callable
+    m = cotr.get_dipole_moment(crd_system='gse')
+    seeds = viscid.seed.Sphere((0.0, 0.0, 0.0), 2.0, pole=-m, ntheta=25, nphi=25,
+                               thetalim=(5, 90), philim=(5, 360), phi_endpoint=False)
+    B = viscid.make_dipole(m=m, crd_system='gse', n=(256, 256, 256),
+                           l=(-25, -25, -25), h=(25, 25, 25))
+
+    seeds_xyz = seeds.get_points()
+    # seeds_lsp = viscid.xyz2lsrlp(seeds_xyz, cotr=cotr, crd_system=B)[(0, 3), :]
+    seeds_lsp = viscid.xyz2lsrlp(seeds_xyz, cotr=cotr, crd_system=B)[(0, 3), :]
+
+    e1_lines, e1_lsps, t_e1 = lines_and_lsps(B, seeds, method=viscid.EULER1,
+                                             ibound=1.0, cotr=cotr)
+    e1a_lines, e1a_lsps, t_e1a = lines_and_lsps(B, seeds, method=viscid.EULER1A,
+                                                ibound=1.0, cotr=cotr)
+    rk2_lines, rk2_lsps, t_rk2 = lines_and_lsps(B, seeds, method=viscid.RK2,
+                                                ibound=1.0, cotr=cotr)
+    rk12_lines, rk12_lsps, t_rk12 = lines_and_lsps(B, seeds, method=viscid.RK12,
+                                                   ibound=1.0, cotr=cotr)
+
+    def _calc_rel_diff(_lsp, _ideal_lsp, _d):
+        _diffs = []
+        for _ilsp, _iideal in zip(_lsp, _ideal_lsp.T):
+            _a = _ilsp[_d, :]
+            _b = _iideal[_d]
+            _diffs.append((_a - _b) / _b)
+        return _diffs
+
+    lshell_diff_e1 = _calc_rel_diff(e1_lsps, seeds_lsp, 0)
+    phi_diff_e1 = _calc_rel_diff(e1_lsps, seeds_lsp, 1)
+
+    lshell_diff_e1a = _calc_rel_diff(e1a_lsps, seeds_lsp, 0)
+    phi_diff_e1a = _calc_rel_diff(e1a_lsps, seeds_lsp, 1)
+
+    lshell_diff_rk2 = _calc_rel_diff(rk2_lsps, seeds_lsp, 0)
+    phi_diff_rk2 = _calc_rel_diff(rk2_lsps, seeds_lsp, 1)
+
+    lshell_diff_rk12 = _calc_rel_diff(rk12_lsps, seeds_lsp, 0)
+    phi_diff_rk12 = _calc_rel_diff(rk12_lsps, seeds_lsp, 1)
+
+    methods = ['Euler 1', 'Euler 1 Adaptive Step', 'Runge Kutta 2',
+               'Runge Kutta 12 Adaptive Step']
+    wall_ts = [t_e1, t_e1a, t_rk2, t_rk12]
+    lshell_diffs = [np.abs(np.concatenate(lshell_diff_e1, axis=0)),
+                    np.abs(np.concatenate(lshell_diff_e1a, axis=0)),
+                    np.abs(np.concatenate(lshell_diff_rk2, axis=0)),
+                    np.abs(np.concatenate(lshell_diff_rk12, axis=0))]
+    phi_diffs = [np.abs(np.concatenate(phi_diff_e1, axis=0)),
+                 np.abs(np.concatenate(phi_diff_e1a, axis=0)),
+                 np.abs(np.concatenate(phi_diff_rk2, axis=0)),
+                 np.abs(np.concatenate(phi_diff_rk12, axis=0))]
+    npts = [len(lsd) for lsd in lshell_diffs]
+    lshell_75 = [np.percentile(lsdiff, 75) for lsdiff in lshell_diffs]
+
+    # # 3D DEBUG PLOT::
+    # from viscid.plot import mvi
+    # mvi.clf()
+    # mvi.plot3d_lines(e1_lines, scalars=[np.abs(s) for s in lshell_diff_e1])
+    # mvi.colorbar(title="Relative L-Shell Error (as fraction)")
+    # mvi.show()
+
+    # # 3D DEBUG PLOT:: this one is for going deep
+    # mvi.clf()
+    # earth1 = viscid.seed.Sphere((0.0, 0.0, 0.0), 1.0, pole=-m, ntheta=60, nphi=120,
+    #                             thetalim=(15, 165), philim=(0, 360))
+    # ls1 = viscid.xyz2lsrlp(earth1.get_points(), cotr=cotr, crd_system='gse')[0, :]
+    # earth2 = viscid.seed.Sphere((0.0, 0.0, 0.0), 2.0, pole=-m, ntheta=60, nphi=120,
+    #                             thetalim=(15, 165), philim=(0, 360))
+    # ls2 = viscid.xyz2lsrlp(earth2.get_points(), cotr=cotr, crd_system='gse')[0, :]
+    # earth4 = viscid.seed.Sphere((0.0, 0.0, 0.0), 4.0, pole=-m, ntheta=60, nphi=120,
+    #                             thetalim=(15, 165), philim=(0, 360))
+    # ls4 = viscid.xyz2lsrlp(earth4.get_points(), cotr=cotr, crd_system='gse')[0, :]
+    # clim = [2.0, 6.0]
+    # mvi.mesh_from_seeds(earth1, scalars=ls1, clim=clim, logscale=True)
+    # mvi.mesh_from_seeds(earth2, scalars=ls2, clim=clim, logscale=True, opacity=0.5)
+    # mvi.mesh_from_seeds(earth4, scalars=ls2, clim=clim, logscale=True, opacity=0.25)
+    # mvi.plot3d_lines(e1_lines, scalars=[_e1_lsp[0, :] for _e1_lsp in e1_lsps],
+    #                  clim=clim, logscale=True)
+    # mvi.colorbar(title="L-Shell")
+    # mvi.show()
+
+    assert lshell_75[1] < lshell_75[0], "Euler 1a should have less error than Euler 1"
+    assert lshell_75[2] < lshell_75[1], "RK2 should have less error than Euler 1a"
+    assert lshell_75[3] < lshell_75[2], "RK 12 should have less error than RK2"
+
+    try:
+        from viscid.plot import mpl
+
+        _ = mpl.plt.figure(figsize=(15, 8))
+        ax1 = mpl.subplot(121)
+        v = mpl.plt.violinplot(lshell_diffs, showextrema=False, showmedians=False,
+                               vert=False)
+        colors = set_violin_colors(v)
+        xl, xh = mpl.plt.gca().get_xlim()
+        for i, txt, c in zip(count(), methods, colors):
+            t_txt = ", took {0:.2e} seconds".format(wall_ts[i])
+            stat_txt = format_data_range(lshell_diffs[i])
+            mpl.plt.text(xl + 0.35 * (xh - xl), i + 1.15, txt + t_txt, color=c)
+            mpl.plt.text(xl + 0.35 * (xh - xl), i + 0.85, stat_txt, color=c)
+        ax1.get_yaxis().set_visible(False)
+        mpl.plt.title('L-Shell')
+        mpl.plt.xlabel('Relative Difference from Ideal (as fraction)')
+
+        ax2 = mpl.subplot(122)
+        v = mpl.plt.violinplot(phi_diffs, showextrema=False, showmedians=False,
+                               vert=False)
+        colors = set_violin_colors(v)
+        xl, xh = mpl.plt.gca().get_xlim()
+        for i, txt, c in zip(count(), methods, colors):
+            t_txt = ", took {0:.2e} seconds".format(wall_ts[i])
+            stat_txt = format_data_range(phi_diffs[i])
+            mpl.plt.text(xl + 0.35 * (xh - xl), i + 1.15, txt + t_txt, color=c)
+            mpl.plt.text(xl + 0.35 * (xh - xl), i + 0.85, stat_txt, color=c)
+        ax2.get_yaxis().set_visible(False)
+        mpl.plt.title('Longitude')
+        mpl.plt.xlabel('Relative Difference from Ideal (as fraction)')
+
+        mpl.auto_adjust_subplots()
+
+        mpl.savefig(next_plot_fname(__file__))
+        if args.show:
+            mpl.show()
+
+        _ = mpl.plt.figure(figsize=(13, 10))
+
+        ## wall time for each method
+        mpl.subplot(221)
+        mpl.plt.scatter(range(len(methods)), wall_ts, color=colors,
+                        s=150, marker='s', edgecolors='none')
+        for i, meth in enumerate(methods):
+            meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
+            mpl.plt.annotate(meth, (i, wall_ts[i]), xytext=(0, 15.0),
+                             color=colors[i], horizontalalignment='center',
+                             verticalalignment='bottom',
+                             textcoords='offset points')
+        mpl.plt.ylabel("Wall Time (s)")
+        x_padding = 0.5
+        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        yl, yh = np.min(wall_ts), np.max(wall_ts)
+        y_padding = 0.4 * (yh - yl)
+        mpl.plt.ylim(yl - y_padding, yh + y_padding)
+        mpl.plt.gca().get_xaxis().set_visible(False)
+        for _which in ('right', 'top'):
+            mpl.plt.gca().spines[_which].set_color('none')
+
+        ## number of points calculated for each method
+        mpl.subplot(222)
+        mpl.plt.scatter(range(len(methods)), npts, color=colors,
+                        s=150, marker='s', edgecolors='none')
+        for i, meth in enumerate(methods):
+            meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
+            mpl.plt.annotate(meth, (i, npts[i]), xytext=(0, 15.0),
+                             color=colors[i], horizontalalignment='center',
+                             verticalalignment='bottom',
+                             textcoords='offset points')
+        mpl.plt.ylabel("Number of Streamline Points Calculated")
+        x_padding = 0.5
+        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        yl, yh = np.min(npts), np.max(npts)
+        y_padding = 0.4 * (yh - yl)
+        mpl.plt.ylim(yl - y_padding, yh + y_padding)
+        mpl.plt.gca().get_xaxis().set_visible(False)
+        for _which in ('right', 'top'):
+            mpl.plt.gca().spines[_which].set_color('none')
+
+        ## Wall time per segment, this should show the overhead of the method
+        mpl.subplot(223)
+        wall_t_per_seg = np.asarray(wall_ts) / np.asarray(npts)
+        mpl.plt.scatter(range(len(methods)), wall_t_per_seg, color=colors,
+                        s=150, marker='s', edgecolors='none')
+        for i, meth in enumerate(methods):
+            meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
+            mpl.plt.annotate(meth, (i, wall_t_per_seg[i]), xytext=(0, 15.0),
+                             color=colors[i], horizontalalignment='center',
+                             verticalalignment='bottom',
+                             textcoords='offset points')
+        mpl.plt.ylabel("Wall Time Per Line Segment")
+        x_padding = 0.5
+        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        yl, yh = np.min(wall_t_per_seg), np.max(wall_t_per_seg)
+        y_padding = 0.4 * (yh - yl)
+        mpl.plt.ylim(yl - y_padding, yh + y_padding)
+        mpl.plt.gca().get_xaxis().set_visible(False)
+        mpl.plt.gca().xaxis.set_major_formatter(viscid.plot.mpl_extra.steve_axfmt)
+        for _which in ('right', 'top'):
+            mpl.plt.gca().spines[_which].set_color('none')
+
+        ## 75th percentile of l-shell error for each method
+        mpl.subplot(224)
+        mpl.plt.scatter(range(len(methods)), lshell_75, color=colors,
+                        s=150, marker='s', edgecolors='none')
+        mpl.plt.yscale('log')
+
+        for i, meth in enumerate(methods):
+            meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
+            mpl.plt.annotate(meth, (i, lshell_75[i]), xytext=(0, 15.0),
+                             color=colors[i], horizontalalignment='center',
+                             verticalalignment='bottom',
+                             textcoords='offset points')
+        mpl.plt.ylabel("75th Percentile of Relative L-Shell Error")
+        x_padding = 0.5
+        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        ymin, ymax = np.min(lshell_75), np.max(lshell_75)
+        mpl.plt.ylim(0.75 * ymin, 2.5 * ymax)
+        mpl.plt.gca().get_xaxis().set_visible(False)
+        for _which in ('right', 'top'):
+            mpl.plt.gca().spines[_which].set_color('none')
+
+        mpl.auto_adjust_subplots(subplot_params=dict(wspace=0.25, hspace=0.15))
+
+        mpl.savefig(next_plot_fname(__file__))
+        if args.show:
+            mpl.show()
+
+    except ImportError:
+        pass
 
     # prevent weird xorg bad-instructions on tear down
     if 'figure' in _global_ns and _global_ns['figure'] is not None:
