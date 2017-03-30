@@ -49,7 +49,8 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
             fig = _global_ns['figure']
             mvi.clf()
         except KeyError:
-            fig = mvi.figure(size=[1200, 800], offscreen=not show)
+            fig = mvi.figure(size=[1200, 800], offscreen=not show,
+                             bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
             _global_ns['figure'] = fig
 
         fld_mag = np.log(viscid.magnitude(_fld))
@@ -78,8 +79,7 @@ def lines_and_lsps(B, seeds, cotr=None, **kwargs):
     """Return a list of streamlines and the l-shell,phi for each point"""
     tstats = dict()
     lines, _ = viscid.timeit(viscid.calc_streamlines, B, seeds,
-                             timeit_quiet=True, timeit_stats=tstats,
-                             **kwargs)
+                             timeit_quiet=True, timeit_stats=tstats, **kwargs)
     walltime = tstats['max']
     # lsrlps = [viscid.xyz2lsrlp(line, cotr=cotr, crd_system=B) for line in lines]
     lsrlps = [viscid.xyz2lsrlp(line, cotr=cotr, crd_system=B) for line in lines]
@@ -121,8 +121,8 @@ def _main():
     plot2d = not args.notwo
     plot3d = not args.nothree
 
-    #################################################
-    viscid.logger.info("Testing field lines on 2d field...")
+    # #################################################
+    # viscid.logger.info("Testing field lines on 2d field...")
     B = viscid.make_dipole(twod=True)
     line = viscid.seed.Line((0.2, 0.0, 0.0), (1.0, 0.0, 0.0), 10)
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
@@ -150,19 +150,23 @@ def _main():
     seeds = viscid.seed.Sphere((0.0, 0.0, 0.0), 2.0, pole=-m, ntheta=25, nphi=25,
                                thetalim=(5, 90), philim=(5, 360), phi_endpoint=False)
     B = viscid.make_dipole(m=m, crd_system='gse', n=(256, 256, 256),
-                           l=(-25, -25, -25), h=(25, 25, 25))
+                           l=(-25, -25, -25), h=(25, 25, 25), dtype='f8')
 
     seeds_xyz = seeds.get_points()
     # seeds_lsp = viscid.xyz2lsrlp(seeds_xyz, cotr=cotr, crd_system=B)[(0, 3), :]
     seeds_lsp = viscid.xyz2lsrlp(seeds_xyz, cotr=cotr, crd_system=B)[(0, 3), :]
 
-    e1_lines, e1_lsps, t_e1 = lines_and_lsps(B, seeds, method=viscid.EULER1,
+    e1_lines, e1_lsps, t_e1 = lines_and_lsps(B, seeds, method='euler1',
                                              ibound=1.0, cotr=cotr)
-    e1a_lines, e1a_lsps, t_e1a = lines_and_lsps(B, seeds, method=viscid.EULER1A,
+    rk2_lines, rk2_lsps, t_rk2 = lines_and_lsps(B, seeds, method='rk2',
                                                 ibound=1.0, cotr=cotr)
-    rk2_lines, rk2_lsps, t_rk2 = lines_and_lsps(B, seeds, method=viscid.RK2,
+    rk4_lines, rk4_lsps, t_rk4 = lines_and_lsps(B, seeds, method='rk4',
                                                 ibound=1.0, cotr=cotr)
-    rk12_lines, rk12_lsps, t_rk12 = lines_and_lsps(B, seeds, method=viscid.RK12,
+    e1a_lines, e1a_lsps, t_e1a = lines_and_lsps(B, seeds, method='euler1a',
+                                                ibound=1.0, cotr=cotr)
+    rk12_lines, rk12_lsps, t_rk12 = lines_and_lsps(B, seeds, method='rk12',
+                                                   ibound=1.0, cotr=cotr)
+    rk45_lines, rk45_lsps, t_rk45 = lines_and_lsps(B, seeds, method='rk45',
                                                    ibound=1.0, cotr=cotr)
 
     def _calc_rel_diff(_lsp, _ideal_lsp, _d):
@@ -176,37 +180,45 @@ def _main():
     lshell_diff_e1 = _calc_rel_diff(e1_lsps, seeds_lsp, 0)
     phi_diff_e1 = _calc_rel_diff(e1_lsps, seeds_lsp, 1)
 
-    lshell_diff_e1a = _calc_rel_diff(e1a_lsps, seeds_lsp, 0)
-    phi_diff_e1a = _calc_rel_diff(e1a_lsps, seeds_lsp, 1)
-
     lshell_diff_rk2 = _calc_rel_diff(rk2_lsps, seeds_lsp, 0)
     phi_diff_rk2 = _calc_rel_diff(rk2_lsps, seeds_lsp, 1)
+
+    lshell_diff_rk4 = _calc_rel_diff(rk4_lsps, seeds_lsp, 0)
+    phi_diff_rk4 = _calc_rel_diff(rk4_lsps, seeds_lsp, 1)
+
+    lshell_diff_e1a = _calc_rel_diff(e1a_lsps, seeds_lsp, 0)
+    phi_diff_e1a = _calc_rel_diff(e1a_lsps, seeds_lsp, 1)
 
     lshell_diff_rk12 = _calc_rel_diff(rk12_lsps, seeds_lsp, 0)
     phi_diff_rk12 = _calc_rel_diff(rk12_lsps, seeds_lsp, 1)
 
-    methods = ['Euler 1', 'Euler 1 Adaptive Step', 'Runge Kutta 2',
-               'Runge Kutta 12 Adaptive Step']
-    wall_ts = [t_e1, t_e1a, t_rk2, t_rk12]
+    lshell_diff_rk45 = _calc_rel_diff(rk45_lsps, seeds_lsp, 0)
+    phi_diff_rk45 = _calc_rel_diff(rk45_lsps, seeds_lsp, 1)
+
+    methods = ['Euler 1', 'Runge Kutta 2', 'Runge Kutta 4',
+               'Euler 1 Adaptive Step', 'Runge Kutta 12 Adaptive Step',
+               'Runge Kutta 45 Adaptive Step']
+    wall_ts = [t_e1, t_rk2, t_rk4, t_e1a, t_rk12, t_rk45]
+    all_lines = [e1_lines, rk2_lines, rk4_lines, e1a_lines, rk12_lines,
+                 rk45_lines]
+    all_lshell_diffs = [lshell_diff_e1, lshell_diff_rk2, lshell_diff_rk4,
+                        lshell_diff_e1a, lshell_diff_rk12, lshell_diff_rk45]
     lshell_diffs = [np.abs(np.concatenate(lshell_diff_e1, axis=0)),
-                    np.abs(np.concatenate(lshell_diff_e1a, axis=0)),
                     np.abs(np.concatenate(lshell_diff_rk2, axis=0)),
-                    np.abs(np.concatenate(lshell_diff_rk12, axis=0))]
+                    np.abs(np.concatenate(lshell_diff_rk4, axis=0)),
+                    np.abs(np.concatenate(lshell_diff_e1a, axis=0)),
+                    np.abs(np.concatenate(lshell_diff_rk12, axis=0)),
+                    np.abs(np.concatenate(lshell_diff_rk45, axis=0))]
     phi_diffs = [np.abs(np.concatenate(phi_diff_e1, axis=0)),
-                 np.abs(np.concatenate(phi_diff_e1a, axis=0)),
                  np.abs(np.concatenate(phi_diff_rk2, axis=0)),
-                 np.abs(np.concatenate(phi_diff_rk12, axis=0))]
+                 np.abs(np.concatenate(phi_diff_rk4, axis=0)),
+                 np.abs(np.concatenate(phi_diff_e1a, axis=0)),
+                 np.abs(np.concatenate(phi_diff_rk12, axis=0)),
+                 np.abs(np.concatenate(phi_diff_rk45, axis=0))]
     npts = [len(lsd) for lsd in lshell_diffs]
     lshell_75 = [np.percentile(lsdiff, 75) for lsdiff in lshell_diffs]
 
-    # # 3D DEBUG PLOT::
-    # from viscid.plot import mvi
-    # mvi.clf()
-    # mvi.plot3d_lines(e1_lines, scalars=[np.abs(s) for s in lshell_diff_e1])
-    # mvi.colorbar(title="Relative L-Shell Error (as fraction)")
-    # mvi.show()
-
-    # # 3D DEBUG PLOT:: this one is for going deep
+    # # 3D DEBUG PLOT:: for really getting under the covers
     # mvi.clf()
     # earth1 = viscid.seed.Sphere((0.0, 0.0, 0.0), 1.0, pole=-m, ntheta=60, nphi=120,
     #                             thetalim=(15, 165), philim=(0, 360))
@@ -226,13 +238,18 @@ def _main():
     # mvi.colorbar(title="L-Shell")
     # mvi.show()
 
-    assert lshell_75[1] < lshell_75[0], "Euler 1a should have less error than Euler 1"
-    assert lshell_75[2] < lshell_75[1], "RK2 should have less error than Euler 1a"
-    assert lshell_75[3] < lshell_75[2], "RK 12 should have less error than RK2"
+    assert lshell_75[1] < lshell_75[0], "RK2 should have less error than Euler"
+    assert lshell_75[2] < lshell_75[1], "RK4 should have less error than RK2"
+    assert lshell_75[3] < lshell_75[0], "Euler 1a should have less error than Euler 1"
+    assert lshell_75[4] < lshell_75[0], "RK 12 should have less error than Euler 1"
+    assert lshell_75[5] < lshell_75[1], "RK 45 should have less error than RK2"
 
     try:
+        if not plot2d:
+            raise ImportError
         from viscid.plot import mpl
 
+        # stats on error for all points on all lines
         _ = mpl.plt.figure(figsize=(15, 8))
         ax1 = mpl.subplot(121)
         v = mpl.plt.violinplot(lshell_diffs, showextrema=False, showmedians=False,
@@ -264,10 +281,34 @@ def _main():
 
         mpl.auto_adjust_subplots()
 
-        mpl.savefig(next_plot_fname(__file__))
+        mpl.savefig(next_plot_fname(__file__, series='q2'))
         if args.show:
             mpl.show()
 
+        # stats for ds for all points on all lines
+        _ = mpl.plt.figure(figsize=(10, 8))
+        ax1 = mpl.subplot(111)
+
+        ds = [np.concatenate([np.linalg.norm(_l[:, 1:] - _l[:, :-1], axis=0)
+                              for _l in lines]) for lines in all_lines]
+        v = mpl.plt.violinplot(ds, showextrema=False, showmedians=False,
+                               vert=False)
+        colors = set_violin_colors(v)
+        xl, xh = mpl.plt.gca().get_xlim()
+        for i, txt, c in zip(count(), methods, colors):
+            stat_txt = format_data_range(ds[i])
+            mpl.plt.text(xl + 0.01 * (xh - xl), i + 1.15, txt, color=c)
+            mpl.plt.text(xl + 0.01 * (xh - xl), i + 0.85, stat_txt, color=c)
+        ax1.get_yaxis().set_visible(False)
+        mpl.plt.xscale('log')
+        mpl.plt.title('Step Size')
+        mpl.plt.xlabel('Absolute Step Size')
+        mpl.savefig(next_plot_fname(__file__, series='q2'))
+        if args.show:
+            mpl.show()
+
+
+        # random other information
         _ = mpl.plt.figure(figsize=(13, 10))
 
         ## wall time for each method
@@ -355,12 +396,45 @@ def _main():
 
         mpl.auto_adjust_subplots(subplot_params=dict(wspace=0.25, hspace=0.15))
 
-        mpl.savefig(next_plot_fname(__file__))
+        mpl.savefig(next_plot_fname(__file__, series='q2'))
         if args.show:
             mpl.show()
 
     except ImportError:
         pass
+
+    try:
+        if not plot3d:
+            raise ImportError
+        from viscid.plot import mvi
+
+        try:
+            fig = _global_ns['figure']
+            mvi.clf()
+        except KeyError:
+            fig = mvi.figure(size=[1200, 800], offscreen=not args.show,
+                             bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
+            _global_ns['figure'] = fig
+
+        for i, method in zip(count(), methods):
+            # if i in (3, 4):
+            #     next_plot_fname(__file__, series='q3')
+            #     print(i, "::", [line.shape[1] for line in all_lines[i]])
+            #     # continue
+            mvi.clf()
+            _lshell_diff = [np.abs(s) for s in all_lshell_diffs[i]]
+            mvi.plot3d_lines(all_lines[i], scalars=_lshell_diff)
+            mvi.colorbar(title="Relative L-Shell Error (as fraction)")
+            mvi.title(method, size=0.5)
+            mvi.orientation_axes()
+            mvi.view(azimuth=40, elevation=140, distance=80.0,
+                     focalpoint=[0, 0, 0])
+            mvi.savefig(next_plot_fname(__file__, series='q3'))
+            if args.show:
+                mvi.show()
+    except ImportError:
+        pass
+
 
     # prevent weird xorg bad-instructions on tear down
     if 'figure' in _global_ns and _global_ns['figure'] is not None:
