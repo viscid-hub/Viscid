@@ -937,7 +937,14 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
             if scalars.size != N:
                 raise ValueError("Scalars was not a scalar field")
         elif isinstance(scalars, (list, tuple)):
-            scalars = np.concatenate(scalars)
+            try:
+                scalars = np.concatenate(scalars)
+            except ValueError:
+                scalars_asarr = np.asarray(scalars)
+                if scalars_asarr.dtype.kind in ('S', 'U'):
+                    scalars = scalars_asarr
+                else:
+                    raise
 
         scalars = np.atleast_2d(scalars)
 
