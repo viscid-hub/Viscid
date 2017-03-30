@@ -1662,6 +1662,11 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
                 for j in range(scalars.shape[0]):
                     fine_scalars[i][j, :] = np.interp(t_fine, t_coarse,
                                                       coarse_scalars[j, :])
+            except ValueError:
+                # this happens in scipy's interp1d if this line has exactly 1
+                # vertex
+                fine_verts[i][j, :] = coarse_verts[j, :]
+                fine_scalars[i][j, :] = coarse_scalars[j, :]
 
             new_start = np.sum(np.ceil((verts_per_line[:i] - 1) * subsample) + 1)
 
