@@ -111,13 +111,16 @@ def wrap_crds(crdtype, clist, **kwargs):
     except TypeError:
         raise NotImplementedError("can not decipher crds: {0}".format(crdtype))
 
-def extend_arr_by_half(x, full_arr=True):
+def extend_arr_by_half(x, full_arr=True, default_width=1e-5):
     """sandwich array with two new values w/ no change in dx"""
     x = viscid.asarray_datetime64(x, conservative=True)
 
     if full_arr:
-        dxl = x[1] - x[0]
-        dxh = x[-1] - x[-2]
+        if len(x) > 1:
+            dxl = x[1] - x[0]
+            dxh = x[-1] - x[-2]
+        else:
+            dxl = dxh = default_width
         ret = np.concatenate([[x[0] - dxl], x, [x[-1] + dxh]])
     else:
         xl, xh, nx = x
@@ -730,7 +733,7 @@ class StructuredCrds(Coordinates):
     #     else:
     #         return self.get_crd(axis, center=center)[slc].reshape(-1)
 
-    def extend_by_half(self):
+    def extend_by_half(self, default_width=1e-5):
         """Extend coordinates half a grid cell in all directions
 
         Used for turning node centered fields to cell centered without
@@ -742,7 +745,8 @@ class StructuredCrds(Coordinates):
         axes = self.axes
         crds_cc = self.get_crds_cc()
         for i, x in enumerate(crds_cc):
-            crds_cc[i] = extend_arr_by_half(x, full_arr=True)
+            crds_cc[i] = extend_arr_by_half(x, full_arr=True,
+                                            default_width=default_width)
         new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
         return type(self)(new_clist)
 
@@ -1485,7 +1489,7 @@ class UniformCrds(StructuredCrds):
     #     except TypeError:
     #         return proxy_crd
 
-    def extend_by_half(self):
+    def extend_by_half(self, default_width=1e-5):
         """Extend coordinates half a grid cell in all directions
 
         Used for turning node centered fields to cell centered without
@@ -1497,6 +1501,7 @@ class UniformCrds(StructuredCrds):
         axes = self.axes
         xl, xh = self.get_xl(), self.get_xh()
         dx = (xh - xl) / self.shape_nc
+        dx = np.choose(np.abs(dx) > 0, [default_width, dx])
         xl -= 0.5 * dx
         xh += 0.5 * dx
         nx = self.shape_nc + 1
