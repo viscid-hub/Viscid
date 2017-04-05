@@ -271,12 +271,16 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
         with self.get_file_wrapper(filename) as f:
             shape = f["StructGridField"].shape
             sshape = shape[:-1]
-            nr_fields = shape[-1] - 2  # len(sshape)  # why - 2?
+            nr_fields = shape[-1]
 
             try:
                 type_info = _type_info[nr_fields]
             except KeyError:
-                raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
+                try:
+                    # if the two scalar corrections potentials are stored
+                    type_info = _type_info[nr_fields - 2]
+                except KeyError:
+                    raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
 
             template = []
             # TODO: use nr_fields to figure out the names of the fields?
