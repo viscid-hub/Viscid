@@ -25,7 +25,7 @@ from viscid.coordinate import wrap_crds
 
 
 base_hydro_names = ['rho', 'rhoux', 'rhouy', 'rhouz', 'e']
-base_hydro_pretty_names = [r'$\rho$', r'$\rhou_x$', r'$\rhou_y$', r'$\rhou_z$',
+base_hydro_pretty_names = [r'$\rho$', r'$\rho u_x$', r'$\rho u_y$', r'$\rho u_z$',
                            r'$e$']
 
 base_5m_names = ['rho_e', 'rhoux_e', 'rhouy_e', 'rhouz_e', 'e_e',
@@ -374,10 +374,10 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
                 try:
                     # if the two scalar corrections potentials are stored
                     type_info = dict(_type_info[nr_fields - 2])
-                    type_info['names'].append('EXTRA1')
-                    type_info['pretty_names'].append('EXTRA1')
-                    type_info['names'].append('EXTRA2')
-                    type_info['pretty_names'].append('EXTRA2')
+                    type_info['names'].append('phi_E')
+                    type_info['pretty_names'].append(r'$\Phi_E$')
+                    type_info['names'].append('phi_B')
+                    type_info['pretty_names'].append(r'$\Phi_B$')
                 except KeyError:
                     raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
 
