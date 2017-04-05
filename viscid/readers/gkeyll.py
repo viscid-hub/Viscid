@@ -88,6 +88,42 @@ class GkeyllGrid(grid.Grid):
         uz_e.pretty_name = r'$u_{z,e}$'
         return uz_e
 
+    def _get_Pxx_e(self):
+        Pxx_e = self['pxx_e'] - self['rhoux_e']*self['rhoux_e'] / self['rho_e']
+        Pxx_e.name = 'Pxx_e'
+        Pxx_e.pretty_name = r'$P_{xx,e}$'
+        return Pxx_e
+
+    def _get_Pyy_e(self):
+        Pyy_e = self['pyy_e'] - self['rhoux_e']*self['rhoux_e'] / self['rho_e']
+        Pyy_e.name = 'Pyy_e'
+        Pyy_e.pretty_name = r'$P_{yy,e}$'
+        return Pyy_e
+
+    def _get_Pzz_e(self):
+        Pzz_e = self['pzz_e'] - self['rhoux_e']*self['rhoux_e'] / self['rho_e']
+        Pzz_e.name = 'Pzz_e'
+        Pzz_e.pretty_name = r'$P_{zz,e}$'
+        return Pzz_e
+
+    def _get_Pxy_e(self):
+        Pxy_e = self['pxy_e'] - self['rhoux_e']*self['rhouy_e'] / self['rho_e']
+        Pxy_e.name = 'Pxy_e'
+        Pxy_e.pretty_name = r'$P_{xy,e}$'
+        return Pxy_e
+
+    def _get_Pxz_e(self):
+        Pxz_e = self['pxz_e'] - self['rhoux_e']*self['rhouz_e'] / self['rho_e']
+        Pxz_e.name = 'Pxz_e'
+        Pxz_e.pretty_name = r'$P_{xz,e}$'
+        return Pxz_e
+
+    def _get_Pyz_e(self):
+        Pyz_e = self['pyz_e'] - self['rhouy_e']*self['rhouz_e'] / self['rho_e']
+        Pyz_e.name = 'Pyz_e'
+        Pyz_e.pretty_name = r'$P_{yz,e}$'
+        return Pyz_e
+
     def _get_ux_i(self):
         ux_i = self['rhoux_i'] / self['rho_i']
         ux_i.name = 'ux_i'
@@ -105,6 +141,54 @@ class GkeyllGrid(grid.Grid):
         uz_i.name = 'uz_i'
         uz_i.pretty_name = r'$u_{z,i}$'
         return uz_i
+
+    def _get_Pxx_i(self):
+        Pxx_i = self['pxx_i'] - self['rhoux_i']*self['rhoux_i'] / self['rho_i']
+        Pxx_i.name = 'Pxx_i'
+        Pxx_i.pretty_name = r'$P_{xx,i}$'
+        return Pxx_i
+
+    def _get_Pyy_i(self):
+        Pyy_i = self['pyy_i'] - self['rhoux_i']*self['rhoux_i'] / self['rho_i']
+        Pyy_i.name = 'Pyy_i'
+        Pyy_i.pretty_name = r'$P_{yy,i}$'
+        return Pyy_i
+
+    def _get_Pzz_i(self):
+        Pzz_i = self['pzz_i'] - self['rhoux_i']*self['rhoux_i'] / self['rho_i']
+        Pzz_i.name = 'Pzz_i'
+        Pzz_i.pretty_name = r'$P_{zz,i}$'
+        return Pzz_i
+
+    def _get_Pxy_i(self):
+        Pxy_i = self['pxy_i'] - self['rhoux_i']*self['rhouy_i'] / self['rho_i']
+        Pxy_i.name = 'Pxy_i'
+        Pxy_i.pretty_name = r'$P_{xy,i}$'
+        return Pxy_i
+
+    def _get_Pxz_i(self):
+        Pxz_i = self['pxz_i'] - self['rhoux_i']*self['rhouz_i'] / self['rho_i']
+        Pxz_i.name = 'Pxz_i'
+        Pxz_i.pretty_name = r'$P_{xz,i}$'
+        return Pxz_i
+
+    def _get_Pyz_i(self):
+        Pyz_i = self['pyz_i'] - self['rhouy_i']*self['rhouz_i'] / self['rho_i']
+        Pyz_i.name = 'Pyz_i'
+        Pyz_i.pretty_name = r'$P_{yz,i}$'
+        return Pyz_i
+
+    def _get_u_e(self):
+        # get from [ux_e, uy_e, uz_e]
+        return self._assemble_vector("u", suffix='_e',
+                                        _force_layout=self.force_vector_layout,
+                                         pretty_name='u_e')
+
+    def _get_u_i(self):
+        # get from [ux_i, uy_i, uz_i]
+        return self._assemble_vector("u", suffix='_i',
+                                        _force_layout=self.force_vector_layout,
+                                         pretty_name='u_i')
 
     def _get_b(self):
         # get from [Bx, By, Bz]
