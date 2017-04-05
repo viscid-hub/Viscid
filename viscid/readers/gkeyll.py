@@ -378,8 +378,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
                     type_info['pretty_names'].append('EXTRA1')
                     type_info['names'].append('EXTRA2')
                     type_info['pretty_names'].append('EXTRA2')
-                except KeyError:
-                    raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
+                    type_info = _type_info[nr_fields - 2]
 
             template = []
             # TODO: use nr_fields to figure out the names of the fields?
