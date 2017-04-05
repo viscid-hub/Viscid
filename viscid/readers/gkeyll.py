@@ -298,20 +298,16 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             upper = h5file['StructGrid'].attrs['vsUpperBounds'][idx]
             num = h5file['StructGrid'].attrs['vsNumCells'][idx]
             return [lower, upper, num + 1]
+        elif gridType in ['rectilinear']:
+            crd_arr = h5file['StructGrid/axis%d'%idx][:]
+            return crd_arr
         elif gridType in ['structured']:
-            raise NotImplementedError()
-            # nr_flds = h5file['StructGrid'].shape[-1] - nr_crds
-            # slc = [0] * nr_crds + [nr_flds + idx]
-            # slc[idx] = slice(None)
-            # crd_arr = h5file['StructGrid'][tuple(slc)]
-            crd_arr = h5file['StructGrid'][idx]
-            # make crd_arr node centered
-            dxl = crd_arr[1] - crd_arr[0]
-            dxh = crd_arr[-1] - crd_arr[-2]
-            crd_arr = np.concatenate([[crd_arr[0] - dxl],
-                                      crd_arr,
-                                      [crd_arr[-1] + dxh]])
-            crd_arr = 0.5 * (crd_arr[1:] + crd_arr[:-1])
+            if idx == 0:
+                crd_arr = h5file['StructGrid'][:,0,0,0]
+            elif idx == 1:
+                crd_arr = h5file['StructGrid'][0,:,0,1]
+            elif idx == 2:
+                crd_arr = h5file['StructGrid'][0,0,:,2]
             return crd_arr
 
     def make_crds(self, fname):
