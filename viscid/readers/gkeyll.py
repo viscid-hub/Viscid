@@ -63,6 +63,13 @@ _type_info = {len(base_hydro_names): {'field_type': 'hydro',
 
 class GkeyllGrid(grid.Grid):
     """"""
+    def _assemble_vector(self, base_name, comp_names="xyz", suffix="",
+                         forget_source=False, **kwargs):
+        opts = dict(forget_source=forget_source, **kwargs)
+        # caching behavior depends on self.longterm_field_caches
+        comps = [self[base_name + c + suffix] for c in comp_names]
+        return field.scalar_fields_to_vector(comps, name=base_name, **opts)
+
     def _get_ux_e(self):
         ux_e = self['rhoux_e'] / self['rho_e']
         ux_e.name = 'ux_e'
@@ -99,6 +106,10 @@ class GkeyllGrid(grid.Grid):
         uz_i.pretty_name = r'$u_{z,i}$'
         return uz_i
 
+    def _get_b(self):
+        # get from [Bx, By, Bz]
+        return self._assemble_vector("B", _force_layout=self.force_vector_layout,
+                                         pretty_name="b")
 
 class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
     """"""
