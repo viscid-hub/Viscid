@@ -3,7 +3,7 @@ dist
 .ghpages/
 
 MANIFEST
-_install_manifest.json
+.install_manifest.json
 viscid.sublime-workspace
 
 sample/test.npz

@@ -26,8 +26,8 @@ from numpy.distutils.extension import Extension as Extension
 npExtension = Extension
 
 
-INSTALL_MANIFEST = '_install_manifest.json'
-RECORD_FNAME = '_temp_install_list.txt'
+INSTALL_MANIFEST = '.install_manifest.json'
+RECORD_FNAME = '.temp_install_list.txt'
 
 
 try:
@@ -40,6 +40,13 @@ if sys.version_info >= (3, 0):
     PY3K = True
 else:
     PY3K = False
+
+
+try:
+    FileNotFoundError
+except NameError:
+    class FileNotFoundError(Exception):
+        pass
 
 
 # listing the sources
@@ -347,7 +354,7 @@ try:
         try:
             with open(INSTALL_MANIFEST, 'r') as fin:
                 inst_manifest = json.load(fin)
-        except IOError:
+        except (IOError, FileNotFoundError):
             inst_manifest = dict()
 
         with open(RECORD_FNAME) as fin:
