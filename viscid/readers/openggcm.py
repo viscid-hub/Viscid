@@ -608,7 +608,7 @@ class GGCMFile(object):  # pylint: disable=abstract-method
     # bottle neck, but it seems opening files over sshfs is appropriately
     # buffered, so maybe it's no big deal since we're only reading the
     # "views" printed at the beginning anyway
-    read_log_file = False
+    read_log_file = True
 
     _collection = None
 
