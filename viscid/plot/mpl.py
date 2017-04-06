@@ -1076,7 +1076,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 def plot2d_lines(lines, scalars=None, symdir="", ax=None,
                  show=False, flip_plot=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
-                 marker=None, marker_kwargs=None, **kwargs):
+                 marker=None, colors=None, marker_kwargs=None, **kwargs):
     """Plot a list of lines in 2D
 
     Args:
@@ -1105,6 +1105,8 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
             scalars if subsample > 0. Must be a value recognized by
             :py:func:`scipy.interpolate.interp1d`.
         marker (str): if given, plot the vertices using plt.scatter
+        colors: overrides scalar to color mapping and is passed to
+            matplotlib.collections.LineCollection
         marker_kwargs (dict): additional kwargs for plt.scatter
         **kwargs: passed to matplotlib.collections.LineCollection
 
@@ -1140,6 +1142,12 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
         vert_scalars = verts[zind, :]
         seg_scalars = segments[:, 0, zind]
 
+    if colors is not None:
+        if seg_colors is not None:
+            viscid.logger.warn("plot2d_lines - overriding seg_colors with "
+                               "explicit colors kwarg")
+        seg_colors = colors
+
     line_collection = LineCollection(segments[:, :, [xind, yind]],
                                      array=seg_scalars, colors=seg_colors,
                                      **kwargs)
@@ -1171,7 +1179,7 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
 
 def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
-                 marker='', marker_kwargs=None, **kwargs):
+                 marker='', colors=None, marker_kwargs=None, **kwargs):
     """Plot a list of lines in 3D
 
     Args:
@@ -1198,8 +1206,10 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
             scalars if subsample > 0. Must be a value recognized by
             :py:func:`scipy.interpolate.interp1d`.
         marker (str): if given, plot the vertices using plt.scatter
+        colors: overrides scalar to color mapping and is passed to
+            mpl_toolkits.mplot3d.art3d.Line3DCollection
         marker_kwargs (dict): additional kwargs for plt.scatter
-        **kwargs: passed to matplotlib.collections.LineCollection
+        **kwargs: passed to mpl_toolkits.mplot3d.art3d.Line3DCollection
 
     Returns:
         TYPE: Line3DCollection
@@ -1211,6 +1221,12 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
     r = _prep_lines(lines, scalars=scalars, subsample=subsample,
                     pts_interp=pts_interp, scalar_interp=scalar_interp)
     verts, segments, vert_scalars, seg_scalars, vert_colors, seg_colors, _ = r
+
+    if colors is not None:
+        if seg_colors is not None:
+            viscid.logger.warn("plot3d_lines - overriding seg_colors with "
+                               "explicit colors kwarg")
+        seg_colors = colors
 
     line_collection = Line3DCollection(segments[:, :, [0, 1, 2]],
                                        array=seg_scalars, colors=seg_colors,
