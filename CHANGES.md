@@ -4,7 +4,17 @@ Changes
 0.98.4 dev
 ==========
 
+Changes:
+  - support jrrle files with >= 10^9 grid cells
+  - simplify cotr / dipole interfaces
+  - mpl plotting 2d/3d lines now passes through the `colors` kwarg
+  - better streamline integrators (RK2, RK4, RK45)
+  - streamline test is now quantitative
 
+Bugfixes:
+  - install / uninstall without manifest
+  - no longer fall over when plotting lines with single vertex
+  - fix atleast_3d shape if data is already loaded
 
 0.98.3
 ======
