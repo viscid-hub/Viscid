@@ -180,6 +180,33 @@ class Node(object):
             else:
                 raise
 
+    def find_attr(self, attr_name, default=_NO_DEFAULT_GIVEN):
+        """Breadth first search of parents for attr_name
+
+        Args:
+            attr_name (str): some attribute name
+            default (Any): fallback, possibly raises AttributeError
+                if this is not given
+
+        Raises:
+            AttributeError: if no default given, and no parent found
+                with attr_name
+
+        Returns:
+            The attribute, or default
+        """
+        def _condition(_node, _):
+            return hasattr(_node, attr_name)
+        parent = self._parent_bfs(_condition)
+        if parent is not None:
+            return getattr(parent, attr_name)
+        else:
+            if default is _NO_DEFAULT_GIVEN:
+                raise AttributeError("No parent of {0} has an attribute {1}"
+                                     "".format(self, attr_name))
+            else:
+                return default
+
     ##########################
     # for time related things
 
