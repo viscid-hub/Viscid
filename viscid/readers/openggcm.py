@@ -570,6 +570,16 @@ class GGCMGrid(grid.Grid):
                 fld = viscid.make_ecfc_field_leading(fld, trim_leading=True)
         return fld
 
+    def __as_cotr__(self):
+        if self.has_info("dipoletime"):
+            return viscid.Cotr(time=self.find_info('dipoletime'),
+                               notilt1967=True)
+        elif self.has_info("basetime"):
+            return viscid.Cotr(time=self.find_info('basetime'),
+                               notilt1967=True)
+        else:
+            return viscid.Cotr(dip_tilt=0.0, dip_gsm=0.0)
+
 class GGCMFile(object):  # pylint: disable=abstract-method
     """Mixin some GGCM convenience stuff
 
