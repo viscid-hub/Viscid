@@ -1721,16 +1721,19 @@ class Field(tree.Leaf):
         if nr_sdims >= 3:
             return self
         elif nr_sdims < 3:
-            new_shape = self.sshape + [1] * (3 - nr_sdims)
-            if self.nr_comps:
-                new_shape.insert(self.nr_comp, self.nr_comps)
-
             _cc = (self.iscentered('cell') or self.iscentered('face') or
                    self.iscentered('edge'))
             newcrds = self.crds.atleast_3d(xl, xh, cc=_cc)
-
             ctx = {'crds': newcrds}
+
             if self.is_loaded:
+                if _cc:
+                    new_shape = newcrds.shape_cc
+                else:
+                    new_shape = newcrds.shape_nc
+                if self.nr_comps:
+                    new_shape.insert(self.nr_comp, self.nr_comps)
+
                 return self.wrap(self.data.reshape(new_shape), context=ctx)
             else:
                 return self.wrap(self._src_data, context=ctx)
