@@ -773,23 +773,31 @@ def as_cotr(thing=None, default=_NOT_GIVEN):
         TypeError: if no default supplied and thing can't be turned
             into a Cotr instance
     """
+    cotr = _NOT_GIVEN
+
     if thing is None:
         cotr = Cotr(dip_tilt=0.0, dip_gsm=0.0)
     elif hasattr(thing, "__as_cotr__"):
         cotr = thing.__as_cotr__()
     elif is_datetime_like(thing):
         cotr = Cotr(time=thing)
-    elif hasattr(thing, "find_info") and thing.find_info("cotr", None):
-        cotr = as_cotr(thing.find_info("cotr"))  # recursive
     else:
         try:
-            cotr = Cotr(**thing)
-        except TypeError:
-            if default is _NOT_GIVEN:
-                raise TypeError("Cound not decipher cotr: {0}".format(cotr))
-            else:
-                # recursive to support default == None -> 0 tilt Cotr
-                cotr = as_cotr(default)
+            cotr = thing.find_attr("__as_cotr__")()
+        except AttributeError:
+            if hasattr(thing, "find_info"):
+                if thing.find_info("cotr", None):
+                    cotr = as_cotr(thing.find_info("cotr"))  # recursive
+                elif thing.find_info("dipoletime", None):
+                    cotr = as_cotr(thing.find_info("dipoletime"))  # recursive
+
+    if cotr is _NOT_GIVEN:
+        if default is _NOT_GIVEN:
+            raise TypeError("Cound not decipher cotr: {0}".format(thing))
+        else:
+            # recursive to support default == None -> 0 tilt Cotr
+            cotr = as_cotr(default)
+
     return cotr
 
 def cotr_transform(date_time, from_system, to_system, vec, notilt1967=True):
