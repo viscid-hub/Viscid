@@ -580,6 +580,14 @@ class GGCMGrid(grid.Grid):
         else:
             return viscid.Cotr(dip_tilt=0.0, dip_gsm=0.0)
 
+    def __crd_system__(self):
+        if self.find_info("crd_system", None):
+            crd_system = self.find_info("crd_system")
+        else:
+            crd_system = 'gse'
+        return crd_system
+
+
 class GGCMFile(object):  # pylint: disable=abstract-method
     """Mixin some GGCM convenience stuff
 
