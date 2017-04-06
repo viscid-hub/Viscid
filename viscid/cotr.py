@@ -303,24 +303,29 @@ def as_crd_system(thing, default=_NOT_GIVEN):
         TypeError: if no default supplied and thing can't be turned
             into a crd_system
     """
-    if hasattr(thing, "__as_crd_system__"):
-        crd_system = thing.__as_crd_system__()
-    elif hasattr(thing, "find_info") and thing.find_info("crd_system", None):
-        crd_system = thing.find_info("crd_system")
+    if hasattr(thing, "__crd_system__"):
+        crd_system = thing.__crd_system__()
     else:
-        crd_system = thing
-    # post-process crd_system
+        try:
+            crd_system = thing.find_attr("__crd_system__")()
+        except AttributeError:
+            if hasattr(thing, "find_info") and thing.find_info("crd_system", None):
+                crd_system = thing.find_info("crd_system")
+            else:
+                crd_system = thing
+
+    # post-process crd_system - it must be string-like
     try:
         crd_system = crd_system.strip().lower()
     except AttributeError:
         if crd_system is None:
-            pass
+            crd_system = "Unknown"
         elif default is _NOT_GIVEN:
             raise TypeError("Cound not decipher crd_system: {0}"
                             "".format(crd_system))
         else:
             crd_system = as_crd_system(default)
-    # TODO: check that it's a valid crd_system?
+
     return crd_system
 
 
