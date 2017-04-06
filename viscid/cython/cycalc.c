@@ -12495,347 +12495,6 @@ static CYTHON_INLINE int __pyx_fuse_3_1__pyx_f_6viscid_6cython_6cycalc_closest_i
 }
 
 
-static CYTHON_INLINE int __pyx_f_6viscid_6cython_12misc_inlines_int_min(int __pyx_v_a, int __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-
-  if (((__pyx_v_b < __pyx_v_a) != 0)) {
-    __pyx_t_1 = __pyx_v_b;
-  } else {
-    __pyx_t_1 = __pyx_v_a;
-  }
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE int __pyx_f_6viscid_6cython_12misc_inlines_int_max(int __pyx_v_a, int __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-
-  if (((__pyx_v_b > __pyx_v_a) != 0)) {
-    __pyx_t_1 = __pyx_v_b;
-  } else {
-    __pyx_t_1 = __pyx_v_a;
-  }
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_real_min(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  __pyx_t_5numpy_float32_t __pyx_r;
-  __pyx_t_5numpy_float32_t __pyx_t_1;
-
-  if (((__pyx_v_b < __pyx_v_a) != 0)) {
-    __pyx_t_1 = __pyx_v_b;
-  } else {
-    __pyx_t_1 = __pyx_v_a;
-  }
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_real_min(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  __pyx_t_5numpy_float64_t __pyx_r;
-  __pyx_t_5numpy_float64_t __pyx_t_1;
-
-  if (((__pyx_v_b < __pyx_v_a) != 0)) {
-    __pyx_t_1 = __pyx_v_b;
-  } else {
-    __pyx_t_1 = __pyx_v_a;
-  }
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_real_max(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  __pyx_t_5numpy_float32_t __pyx_r;
-  __pyx_t_5numpy_float32_t __pyx_t_1;
-
-  if (((__pyx_v_b > __pyx_v_a) != 0)) {
-    __pyx_t_1 = __pyx_v_b;
-  } else {
-    __pyx_t_1 = __pyx_v_a;
-  }
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_real_max(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  __pyx_t_5numpy_float64_t __pyx_r;
-  __pyx_t_5numpy_float64_t __pyx_t_1;
-
-  if (((__pyx_v_b > __pyx_v_a) != 0)) {
-    __pyx_t_1 = __pyx_v_b;
-  } else {
-    __pyx_t_1 = __pyx_v_a;
-  }
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  __pyx_t_5numpy_float32_t __pyx_v_atol;
-  __pyx_t_5numpy_float32_t __pyx_v_rtol;
-  int __pyx_r;
-
-  __pyx_v_atol = 1e-6;
-
-  __pyx_v_rtol = 1e-5;
-
-  __pyx_r = (fabs((__pyx_v_a - __pyx_v_b)) <= (__pyx_v_atol + (__pyx_v_rtol * fabs(__pyx_v_b))));
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  __pyx_t_5numpy_float64_t __pyx_v_atol;
-  __pyx_t_5numpy_float64_t __pyx_v_rtol;
-  int __pyx_r;
-
-  __pyx_v_atol = 1e-6;
-
-  __pyx_v_rtol = 1e-5;
-
-  __pyx_r = (fabs((__pyx_v_a - __pyx_v_b)) <= (__pyx_v_atol + (__pyx_v_rtol * fabs(__pyx_v_b))));
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_less_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-  int __pyx_t_3;
-
-  __pyx_t_2 = (__pyx_v_a <= __pyx_v_b);
-  if (!__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_3 = __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
-  __pyx_t_1 = __pyx_t_3;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_less_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-  int __pyx_t_3;
-
-  __pyx_t_2 = (__pyx_v_a <= __pyx_v_b);
-  if (!__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_3 = __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
-  __pyx_t_1 = __pyx_t_3;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_greater_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-  int __pyx_t_3;
-
-  __pyx_t_2 = (__pyx_v_a >= __pyx_v_b);
-  if (!__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_3 = __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
-  __pyx_t_1 = __pyx_t_3;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_greater_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-  int __pyx_t_3;
-
-  __pyx_t_2 = (__pyx_v_a >= __pyx_v_b);
-  if (!__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_3 = __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
-  __pyx_t_1 = __pyx_t_3;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_less_not_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-
-  __pyx_t_2 = (__pyx_v_a < __pyx_v_b);
-  if (__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_2 = (!(__pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
-  __pyx_t_1 = __pyx_t_2;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_less_not_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-
-  __pyx_t_2 = (__pyx_v_a < __pyx_v_b);
-  if (__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_2 = (!(__pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
-  __pyx_t_1 = __pyx_t_2;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
-static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_greater_not_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-
-  __pyx_t_2 = (__pyx_v_a > __pyx_v_b);
-  if (__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_2 = (!(__pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
-  __pyx_t_1 = __pyx_t_2;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_greater_not_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
-  int __pyx_r;
-  int __pyx_t_1;
-  int __pyx_t_2;
-
-  __pyx_t_2 = (__pyx_v_a > __pyx_v_b);
-  if (__pyx_t_2) {
-  } else {
-    __pyx_t_1 = __pyx_t_2;
-    goto __pyx_L3_bool_binop_done;
-  }
-  __pyx_t_2 = (!(__pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
-  __pyx_t_1 = __pyx_t_2;
-  __pyx_L3_bool_binop_done:;
-  __pyx_r = __pyx_t_1;
-  goto __pyx_L0;
-
-
-  /* function exit code */
-  __pyx_L0:;
-  return __pyx_r;
-}
-
-
 /* Python wrapper */
 static CYTHON_UNUSED int __pyx_pw_5numpy_7ndarray_1__getbuffer__(PyObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /*proto*/
 static CYTHON_UNUSED int __pyx_pw_5numpy_7ndarray_1__getbuffer__(PyObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags) {
@@ -14061,6 +13720,347 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   __pyx_r = -1;
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE int __pyx_f_6viscid_6cython_12misc_inlines_int_min(int __pyx_v_a, int __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+
+  if (((__pyx_v_b < __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE int __pyx_f_6viscid_6cython_12misc_inlines_int_max(int __pyx_v_a, int __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+
+  if (((__pyx_v_b > __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_real_min(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  __pyx_t_5numpy_float32_t __pyx_r;
+  __pyx_t_5numpy_float32_t __pyx_t_1;
+
+  if (((__pyx_v_b < __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_real_min(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  __pyx_t_5numpy_float64_t __pyx_r;
+  __pyx_t_5numpy_float64_t __pyx_t_1;
+
+  if (((__pyx_v_b < __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE __pyx_t_5numpy_float32_t __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_real_max(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  __pyx_t_5numpy_float32_t __pyx_r;
+  __pyx_t_5numpy_float32_t __pyx_t_1;
+
+  if (((__pyx_v_b > __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+static CYTHON_INLINE __pyx_t_5numpy_float64_t __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_real_max(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  __pyx_t_5numpy_float64_t __pyx_r;
+  __pyx_t_5numpy_float64_t __pyx_t_1;
+
+  if (((__pyx_v_b > __pyx_v_a) != 0)) {
+    __pyx_t_1 = __pyx_v_b;
+  } else {
+    __pyx_t_1 = __pyx_v_a;
+  }
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  __pyx_t_5numpy_float32_t __pyx_v_atol;
+  __pyx_t_5numpy_float32_t __pyx_v_rtol;
+  int __pyx_r;
+
+  __pyx_v_atol = 1e-6;
+
+  __pyx_v_rtol = 1e-5;
+
+  __pyx_r = (fabs((__pyx_v_a - __pyx_v_b)) <= (__pyx_v_atol + (__pyx_v_rtol * fabs(__pyx_v_b))));
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  __pyx_t_5numpy_float64_t __pyx_v_atol;
+  __pyx_t_5numpy_float64_t __pyx_v_rtol;
+  int __pyx_r;
+
+  __pyx_v_atol = 1e-6;
+
+  __pyx_v_rtol = 1e-5;
+
+  __pyx_r = (fabs((__pyx_v_a - __pyx_v_b)) <= (__pyx_v_atol + (__pyx_v_rtol * fabs(__pyx_v_b))));
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_less_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+
+  __pyx_t_2 = (__pyx_v_a <= __pyx_v_b);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_3 = __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
+  __pyx_t_1 = __pyx_t_3;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_less_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+
+  __pyx_t_2 = (__pyx_v_a <= __pyx_v_b);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_3 = __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
+  __pyx_t_1 = __pyx_t_3;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_greater_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+
+  __pyx_t_2 = (__pyx_v_a >= __pyx_v_b);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_3 = __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
+  __pyx_t_1 = __pyx_t_3;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_greater_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+
+  __pyx_t_2 = (__pyx_v_a >= __pyx_v_b);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_3 = __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b);
+  __pyx_t_1 = __pyx_t_3;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_less_not_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+
+  __pyx_t_2 = (__pyx_v_a < __pyx_v_b);
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_2 = (!(__pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_less_not_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+
+  __pyx_t_2 = (__pyx_v_a < __pyx_v_b);
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_2 = (!(__pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+
+static CYTHON_INLINE int __pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_greater_not_close(__pyx_t_5numpy_float32_t __pyx_v_a, __pyx_t_5numpy_float32_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+
+  __pyx_t_2 = (__pyx_v_a > __pyx_v_b);
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_2 = (!(__pyx_fuse_0__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+static CYTHON_INLINE int __pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_greater_not_close(__pyx_t_5numpy_float64_t __pyx_v_a, __pyx_t_5numpy_float64_t __pyx_v_b) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+
+  __pyx_t_2 = (__pyx_v_a > __pyx_v_b);
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+  __pyx_t_2 = (!(__pyx_fuse_1__pyx_f_6viscid_6cython_12misc_inlines_isclose(__pyx_v_a, __pyx_v_b) != 0));
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+
+  /* function exit code */
+  __pyx_L0:;
   return __pyx_r;
 }
 

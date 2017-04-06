@@ -75,9 +75,7 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     lines, topo = None, None
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
                             maxit=5000, output=streamline.OUTPUT_BOTH,
-                            method=streamline.EULER1,
-                            tol_lo=0.005, tol_hi=0.1,
-                            fac_refine=0.75, fac_coarsen=1.5)
+                            method=streamline.EULER1)
     t1 = time()
     topo_fld = vol.wrap_field(topo, name="CyTopo")
 

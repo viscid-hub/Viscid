@@ -21,7 +21,19 @@ __all__ = ["cyamr", "cycalc", "cyfield", "streamline", "integrate",
 # these are duplicated so that the values are available even if the cython
 # code is not built. In principle, I could parse streamline.pyx to pull
 # out the values, but that seems less than optimal
-_streamline_attrs = dict(TOPOLOGY_MS_NONE=0,
+_streamline_attrs = dict(EULER1=1,  # euler1 non-adaptive
+                         RK2=2,  # rk2 non-adaptive
+                         RK4=3,  # rk4 non-adaptive
+                         EULER1A=4,  # euler 1st order adaptive (huen)
+                         RK12=5,  # euler1 + rk2 adaptive (midpoint)
+                         RK45=6,  # RK-Fehlberg 45 adaptive
+                         DIR_FORWARD=1,
+                         DIR_BACKWARD=2,
+                         DIR_BOTH=3,
+                         OUTPUT_STREAMLINES=1,
+                         OUTPUT_TOPOLOGY=2,
+                         OUTPUT_BOTH=3,
+                         TOPOLOGY_MS_NONE=0,
                          TOPOLOGY_MS_CLOSED=1,
                          TOPOLOGY_MS_OPEN_NORTH=2,
                          TOPOLOGY_MS_OPEN_SOUTH=4,

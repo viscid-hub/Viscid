@@ -4639,13 +4639,13 @@ static PyObject *__pyx_fuse_0__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(str
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __Pyx_PyThreadState_assign
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
 
     __pyx_t_2 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_2) {
@@ -5005,13 +5005,13 @@ static PyObject *__pyx_fuse_1__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(str
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __Pyx_PyThreadState_assign
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
 
     __pyx_t_2 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_2) {
@@ -5372,13 +5372,13 @@ static PyObject *__pyx_fuse_2__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(str
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __Pyx_PyThreadState_assign
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
 
     __pyx_t_2 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_2) {
@@ -5738,13 +5738,13 @@ static PyObject *__pyx_fuse_3__pyx_f_6viscid_6cython_5cyamr__init_cyamrfield(str
     goto __pyx_L10_try_end;
     __pyx_L3_error:;
     __Pyx_PyThreadState_assign
-    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
-    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __PYX_XDEC_MEMVIEW(&__pyx_t_8, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_7, 1);
+    __PYX_XDEC_MEMVIEW(&__pyx_t_11, 1);
 
     __pyx_t_2 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_2) {
