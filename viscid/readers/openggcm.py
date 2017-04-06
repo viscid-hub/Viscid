@@ -570,7 +570,7 @@ class GGCMGrid(grid.Grid):
                 fld = viscid.make_ecfc_field_leading(fld, trim_leading=True)
         return fld
 
-    def __as_cotr__(self):
+    def __cotr__(self):
         if self.has_info("dipoletime"):
             return viscid.Cotr(time=self.find_info('dipoletime'),
                                notilt1967=True)

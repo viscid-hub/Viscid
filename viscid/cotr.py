@@ -462,7 +462,7 @@ class Cotr(object):
                 self._emat_cache[-i] = eye
                 self._emat_cache[i] = eye
 
-    def __as_cotr__(self):
+    def __cotr__(self):
         return self
 
     @property
@@ -777,13 +777,13 @@ def as_cotr(thing=None, default=_NOT_GIVEN):
 
     if thing is None:
         cotr = Cotr(dip_tilt=0.0, dip_gsm=0.0)
-    elif hasattr(thing, "__as_cotr__"):
-        cotr = thing.__as_cotr__()
+    elif hasattr(thing, "__cotr__"):
+        cotr = thing.__cotr__()
     elif is_datetime_like(thing):
         cotr = Cotr(time=thing)
     else:
         try:
-            cotr = thing.find_attr("__as_cotr__")()
+            cotr = thing.find_attr("__cotr__")()
         except AttributeError:
             if hasattr(thing, "find_info"):
                 if thing.find_info("cotr", None):
