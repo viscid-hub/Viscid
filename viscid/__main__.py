@@ -10,9 +10,14 @@ import viscid
 print("Viscid says: importing numpy as np")
 import numpy as np
 
-if 'mpl' in sys.argv or 'pylab' in sys.argv or 'matplotlib' in sys.argv:
-    print("Viscid says: from viscid.plot import mpl")
-    from viscid.plot import mpl
+if ('mpl' in sys.argv or 'pylab' in sys.argv or 'matplotlib' in sys.argv or
+    'vpyplot' in sys.argv or 'vlt' in sys.argv):
+    print("Viscid says: from viscid.plot import vpyplot as vlt")
+    from viscid.plot import vpyplot as vlt
+    print("Viscid says: import matplotlib")
+    import matplotlib
+    print("Viscid says: import matplotlib as mpl")
+    import matplotlib as mpl
     print("Viscid says: from matplotlib import pyplot as plt")
     from matplotlib import pyplot as plt
 
