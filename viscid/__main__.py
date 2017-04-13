@@ -22,7 +22,11 @@ if ('mpl' in sys.argv or 'pylab' in sys.argv or 'matplotlib' in sys.argv or
     from matplotlib import pyplot as plt
 
 if 'mvi' in sys.argv or 'mlab' in sys.argv or 'mayavi' in sys.argv:
-    print("Viscid says: from viscid.plot import mvi")
-    from viscid.plot import mvi
+    print("Viscid says: from viscid.plot import vlab")
+    from viscid.plot import vlab
+    print("Viscid says: import mayavi")
+    import mayavi
+    print("Viscid says: import mayavi as mvi")
+    import mayavi as mvi
     print("Viscid says: from mayavi import mlab")
     from mayavi import mlab
