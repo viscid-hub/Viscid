@@ -763,13 +763,13 @@ def as_cotr(thing=None, default=_NOT_GIVEN):
 
     Inputs understood are:
       - None for North-South dipole
-      - anything with a __cotr__ method
+      - anything with a `__cotr__` method
       - datetimes or similar, specifies the time for finding dip angles
       - mapping (dict or similar), passed to Cotr constructor as kwargs
 
     Args:
-        thing (None, Cotr, time, dict): something to turn into a Cotr
-        default: fallback value
+        thing (obj): something to turn into a Cotr
+        default (None, obj): fallback value
 
     Returns:
         Cotr instance
