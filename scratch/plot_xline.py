@@ -15,8 +15,9 @@ from mayavi import mlab
 # from mayavi.modules.iso_surface import IsoSurface
 # from mayavi.modules.streamline import Streamline
 
+import viscid
 from viscid import logger
-from viscid import vlab, field, coordinate
+from viscid import field, coordinate
 from viscid.tools import topology
 from viscid.calculator import calc
 from viscid.plot import mvi
@@ -163,7 +164,7 @@ if __name__=='__main__':
     shear_msx = None
     xdmf_file = "{0}/{1}.3df.{2}.xdmf".format(dir, run, strtime)
     if path.exists(xdmf_file):
-        f = vlab.load_vfile(xdmf_file)
+        f = viscid.load_file(xdmf_file)
         b = f['b']
         v = f['v']
         xj = f['xj']

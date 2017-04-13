@@ -1033,9 +1033,9 @@ def _main():
                                              "2010-06-22T00:00:00.0", n=49)
         _plot_time_range(solstice_times, path + "solstice")
         pfx = path + "solstice_eq"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
         pfx = path + "solstice_pole"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
 
         # autumnal equinox (earth-sun line @ equator)
         print()
@@ -1044,9 +1044,9 @@ def _main():
                                             "2010-09-24T00:00:00.0", n=49)
         _plot_time_range(equinox_times, path + "equinox")
         pfx = path + "equinox_eq"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
         pfx = path + "equinox_pole"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
 
         # Watching the magnetic pole move year-by-year
         print()
@@ -1055,9 +1055,9 @@ def _main():
         times = [as_datetime64("{0:04d}-06-21".format(y)) for y in years]
         _plot_time_range(times, path + "year")
         pfx = path + "year_eq"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
+        viscid.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
         pfx = path + "year_pole"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
+        viscid.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
 
 if __name__ == "__main__":
     sys.exit(_main())

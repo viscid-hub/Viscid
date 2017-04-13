@@ -1725,7 +1725,7 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
     return verts, segments, scalars, seg_scalars, colors, seg_colors, other
 
 def interact(stack_depth=0, **kwargs):
-    viscid.vlab.interact(stack_depth=stack_depth + 1, mpl_ns=True, **kwargs)
+    viscid.vutil.interact(stack_depth=stack_depth + 1, mpl_ns=True, **kwargs)
 
 # just explicitly bring in some matplotlib functions
 subplot = plt.subplot

@@ -29,7 +29,8 @@ import numpy as np
 
 import viscid
 from viscid.compat import string_types, izip
-from viscid import vutil
+from viscid.vutil import subclass_spider
+from viscid import sliceutil
 
 
 __all__ = ['arrays2crds', 'wrap_crds', 'extend_arr_by_half']
@@ -94,7 +95,7 @@ def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
     return crds
 
 def lookup_crds_type(type_name):
-    for cls in vutil.subclass_spider(Coordinates):
+    for cls in subclass_spider(Coordinates):
         if cls.istype(type_name):
             return cls
     return None
@@ -412,7 +413,7 @@ class StructuredCrds(Coordinates):
             shape = list(shape)
             shape.insert(nr_comp, nr_comps)
             rev.insert(nr_comp, False)
-        first, second = vutil.make_fwd_slice(shape, [], rev)
+        first, second = sliceutil.make_fwd_slice(shape, [], rev)
         return arr[tuple(first)][tuple(second)]
 
     def reflect_slices(self, slices, cc=False, cull_second=True):
@@ -424,7 +425,7 @@ class StructuredCrds(Coordinates):
             shape = self.shape_cc
         else:
             shape = self.shape_nc
-        first, second = vutil.make_fwd_slice(shape, slices, rev,
+        first, second = sliceutil.make_fwd_slice(shape, slices, rev,
                                              cull_second=cull_second)
         return first, second
 
@@ -543,7 +544,7 @@ class StructuredCrds(Coordinates):
 
         for i, slc in enumerate(selection):
             if slc != slice(None):
-                slc = vutil.convert_deprecated_floats(slc, "slc")
+                slc = sliceutil.convert_deprecated_floats(slc, "slc")
 
                 if not isinstance(slc, string_types):
                     raise TypeError(float_err_msg + ":: {0}".format(slc))
@@ -585,7 +586,7 @@ class StructuredCrds(Coordinates):
                 :py:func:`numpy.ndarray.__getitem__`. The catch is the
                 selection could contain etries that look like "0" or
                 "5.0f". These strings are resolved by
-                :py:func:`viscid.vutil.to_slices`.
+                :py:func:`viscid.sliceutil.to_slices`.
         """
         # SIDE-EFFECT: selection won't have any whitespace
         # parse selection if it's a string into a list of selections
@@ -809,7 +810,7 @@ class StructuredCrds(Coordinates):
                 # selection[i] = slice(None)
 
         crd_arrs = crd_arrs_cc if cc else crd_arrs_nc
-        slices = list(vutil.to_slices(crd_arrs, selection))
+        slices = list(sliceutil.to_slices(crd_arrs, selection))
 
         # Figure out what the selection is doing. If the slice reduces
         # out a dimension, put it in reduced. Also apply the slices to
@@ -1019,7 +1020,7 @@ class StructuredCrds(Coordinates):
         # for slices that were specified using a float, set that crd
         # to the desired float instead of the nearest crd as does slice_keep
         for i, slc in enumerate(selection):
-            slc = vutil.convert_deprecated_floats(slc, "slc")
+            slc = sliceutil.convert_deprecated_floats(slc, "slc")
             if isinstance(slc, string_types):
                 assert slc[-1] == 'f'
                 val = np.array(float(slc[:-1]), dtype=self.dtype)

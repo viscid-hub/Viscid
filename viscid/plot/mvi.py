@@ -569,7 +569,7 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
             >>> scalars = viscid.topology2color(topology)
             >>> mvi.plot_lines(lines, scalars, tube_radius=0.02)
             >>> mvi.savefig("dipole.x3d")
-            >>> viscid.vutil.meshlab_convert("dipole.x3d", "dae")
+            >>> viscid.meshlab_convert("dipole.x3d", "dae")
             >>> mvi.show()
 
     Parameters:
@@ -1355,7 +1355,7 @@ def savefig(*args, **kwargs):
         fig.scene.off_screen_rendering = prev_offscreen_state
 
 def interact(stack_depth=0, **kwargs):
-    viscid.vlab.interact(stack_depth=stack_depth + 1, mvi_ns=True, **kwargs)
+    viscid.vutil.interact(stack_depth=stack_depth + 1, mvi_ns=True, **kwargs)
 
 plot3d_lines = plot_lines
 plot_lines3d = plot_lines

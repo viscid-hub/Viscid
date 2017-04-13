@@ -17,9 +17,11 @@ import viscid
 from viscid import logger
 from viscid.compat import string_types, izip_longest
 from viscid import coordinate
-from viscid import vutil
-from viscid import tree
 from viscid.cython import interp_trilin
+from viscid.sliceutil import to_slice
+from viscid import tree
+from viscid.vutil import subclass_spider
+
 
 LAYOUT_DEFAULT = "none"  # do not translate
 LAYOUT_INTERLACED = "interlaced"
@@ -303,7 +305,7 @@ def field_type(fldtype):
     if isclass(fldtype) and issubclass(fldtype, Field):
         return fldtype
     else:
-        for cls in vutil.subclass_spider(Field):
+        for cls in subclass_spider(Field):
             if cls.istype(fldtype):
                 return cls
     logger.error("Field type {0} not understood".format(fldtype))
@@ -1128,7 +1130,7 @@ class Field(tree.Leaf):
 
         if comp_slc is None:
             comp_slc = slice(None)
-        comp_slc = vutil.to_slice(None, comp_slc)
+        comp_slc = to_slice(None, comp_slc)
 
         return selection, comp_slc
 
