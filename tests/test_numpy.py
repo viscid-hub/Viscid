@@ -14,7 +14,7 @@ from viscid_test_common import assert_similar, assert_different, next_plot_fname
 
 import viscid
 from viscid import vutil
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def _main():
@@ -93,17 +93,17 @@ def _main():
     another = np.transpose(mag)
 
     plt.subplot(151)
-    mpl.plot(v['x'])
+    vlt.plot(v['x'])
     plt.subplot(152)
-    mpl.plot(v['y'])
+    vlt.plot(v['y'])
     plt.subplot(153)
-    mpl.plot(mag)
+    vlt.plot(mag)
     plt.subplot(154)
-    mpl.plot(mag2)
+    vlt.plot(mag2)
     plt.subplot(155)
-    mpl.plot(another)
+    vlt.plot(another)
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if args.show:
         plt.show()
 

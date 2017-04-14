@@ -169,11 +169,11 @@ These functions wrap Matplotlib with useful boilerplate type hacks.
 
 .. cssclass:: table-striped
 
-================================================  ===========================================================
-Function                                          Description
-================================================  ===========================================================
-:py:func:`viscid.plot.mpl.auto_adjust_subplots`   Use Matplotlib's tight layout with some necessary hacks
-================================================  ===========================================================
+===================================================  ===========================================================
+Function                                             Description
+===================================================  ===========================================================
+:py:func:`viscid.plot.vpyplot.auto_adjust_subplots`   Use Matplotlib's tight layout with some necessary hacks
+===================================================  ===========================================================
 
 2D Matplotlib Plots
 ~~~~~~~~~~~~~~~~~~~
@@ -185,23 +185,23 @@ These functions wrap Matplotlib with useful boilerplate type hacks.
 ================================================  =============================================================
 Function                                          Description
 ================================================  =============================================================
-:py:func:`viscid.plot.mpl.plot`                   Meta function for plotting :py:class:`viscid.field.Field`
+:py:func:`viscid.plot.vpyplot.plot`               Meta function for plotting :py:class:`viscid.field.Field`
                                                   objects. This one will automatically delegate to
-                                                  :py:func:`viscid.plot.mpl.plot1d_field`,
-                                                  :py:func:`viscid.plot.mpl.plot2d_field`, or
-                                                  :py:func:`viscid.plot.mpl.plot2d_mapfield`.
-:py:func:`viscid.plot.mpl.plot1d_field`           Line plots of a 1D field.
-:py:func:`viscid.plot.mpl.plot2d_field`           Colored plots (pcolormesh, contour, contourf) of 2D fields
-:py:func:`viscid.plot.mpl.plot2d_mapfield`        Plots on the surface of a sphere (like ionosphere plots)
-:py:func:`viscid.plot.mpl.plot_iono`              make annotated polar plots of ionosphere quantities, this
+                                                  :py:func:`viscid.plot.vpyplot.plot1d_field`,
+                                                  :py:func:`viscid.plot.vpyplot.plot2d_field`, or
+                                                  :py:func:`viscid.plot.vpyplot.plot2d_mapfield`.
+:py:func:`viscid.plot.vpyplot.plot1d_field`       Line plots of a 1D field.
+:py:func:`viscid.plot.vpyplot.plot2d_field`       Colored plots (pcolormesh, contour, contourf) of 2D fields
+:py:func:`viscid.plot.vpyplot.plot2d_mapfield`    Plots on the surface of a sphere (like ionosphere plots)
+:py:func:`viscid.plot.vpyplot.plot_iono`          make annotated polar plots of ionosphere quantities, this
                                                   is just a wrapper for plot2d_mapfield that handles small
                                                   annyoances and annotations
-:py:func:`viscid.plot.mpl.plot2d_lines`           Plot a list of colored lines parallel-projected into 2D
-:py:func:`viscid.plot.mpl.plot2d_quiver`          Plot a :py:class:`viscid.field.VectorField` using
+:py:func:`viscid.plot.vpyplot.plot2d_lines`       Plot a list of colored lines parallel-projected into 2D
+:py:func:`viscid.plot.vpyplot.plot2d_quiver`      Plot a :py:class:`viscid.field.VectorField` using
                                                   Matplotlib's quivers.
-:py:func:`viscid.plot.mpl.streamplot`             Plot a :py:class:`viscid.field.VectorField` using
+:py:func:`viscid.plot.vpyplot.streamplot`         Plot a :py:class:`viscid.field.VectorField` using
                                                   Matplotlib's streamplot.
-:py:func:`viscid.plot.mpl.plot_earth`             Plot an Earth with black for nightside and white for dayside
+:py:func:`viscid.plot.vpyplot.plot_earth`         Plot an Earth with black for nightside and white for dayside
 ================================================  =============================================================
 
 3D Matplotlib Plots
@@ -214,8 +214,8 @@ These functions wrap Matplotlib in 3D with useful boilerplate type hacks.
 ===============================================  =============================================================
 Function                                         Description
 ===============================================  =============================================================
-:py:func:`viscid.plot.mpl.plot3d_lines`          Plot a list of colored lines on 3D axes
-:py:func:`viscid.plot.mpl.scatter_3d`            Plot a glyphs on 3D axes
+:py:func:`viscid.plot.vpyplot.plot3d_lines`      Plot a list of colored lines on 3D axes
+:py:func:`viscid.plot.vpyplot.scatter_3d`        Plot a glyphs on 3D axes
 ===============================================  =============================================================
 
 Mayavi

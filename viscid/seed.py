@@ -724,10 +724,11 @@ class Plane(SeedGen):
             >>> mvi.show()
             >>>
             >>> # use lmn to show in-plane / out-of-plane
-            >>> from viscid.plot import mpl
-            >>> mpl.plot(Blmn['z'])  # z means n here
-            >>> mpl.plot2d_quiver(Blmn)
-            >>> mpl.plt.show()
+            >>> from matplotlib import pyplot as plt
+            >>> from viscid.plot import vpyplot as vlt
+            >>> vlt.plot(Blmn['z'])  # z means n here
+            >>> vlt.plot2d_quiver(Blmn)
+            >>> plt.show()
         """
         return np.array([self.Ldir, self.Mdir, self.Ndir]).T
 

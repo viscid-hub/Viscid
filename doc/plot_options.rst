@@ -1,7 +1,7 @@
 Plot Options
 ============
 
-Plot options are given to :py:func:`viscid.plot.mpl.plot` as either keyword arguments, or as a string called `plot_opts`. For the various plot types, what follows should be a comprehensive list of the available options.
+Plot options are given to :py:func:`viscid.plot.vpyplot.plot` as either keyword arguments, or as a string called `plot_opts`. For the various plot types, what follows should be a comprehensive list of the available options.
 
 .. note::
 

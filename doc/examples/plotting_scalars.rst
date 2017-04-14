@@ -7,12 +7,12 @@ The basic idea of Viscid is to convert data files to :class:`viscid.field.Field`
 
 to do simple math using Numpy.
 
-Various shims for plotting fields using matplotlib are provided by :py:mod:`viscid.plot.mpl`. The functions are listed in :doc:`../functions`. For an enumeration of extra plotting keyword arguments, see :doc:`../plot_options`. Also, you can specify keyword arguments that are conusmed by the matplotlib function used to make the plot, i.e., `pyplot.pcolormesh`, `pyplot.contourf`, etc.
+Various shims for plotting fields using matplotlib are provided by :py:mod:`viscid.plot.vpyplot`. The functions are listed in :doc:`../functions`. For an enumeration of extra plotting keyword arguments, see :doc:`../plot_options`. Also, you can specify keyword arguments that are conusmed by the matplotlib function used to make the plot, i.e., `pyplot.pcolormesh`, `pyplot.contourf`, etc.
 
 Plotting Temperature
 --------------------
 
-Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log scale. For a better idea of the different plotting options, refer to :meth:`viscid.plot.mpl.plot2d_field`.
+Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log scale. For a better idea of the different plotting options, refer to :meth:`viscid.plot.vpyplot.plot2d_field`.
 
 .. plot::
     :include-source:
@@ -20,7 +20,7 @@ Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log 
     from os import path
 
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
@@ -32,9 +32,9 @@ Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log 
     T = fac * f3d["pp"] / f3d["rr"]
     T.name = "T"
     T.pretty_name = "T (K)"
-    mpl.plot(T['y=0f'], logscale=True, earth=True)
+    vlt.plot(T['y=0f'], logscale=True, earth=True)
 
-    mpl.show()
+    vlt.show()
 
 Two Plots, One Figure
 ---------------------
@@ -46,7 +46,7 @@ Two Plots, One Figure
 
     from matplotlib import pyplot as plt
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
@@ -54,16 +54,16 @@ Two Plots, One Figure
     ax1 = plt.subplot2grid((2, 1), (0, 0))
 
     # plot pressure with 64 contours on a logscale
-    mpl.plot(f3d["pp"]["y=0.0f"], style="contourf", levels=64,
+    vlt.plot(f3d["pp"]["y=0.0f"], style="contourf", levels=64,
              plot_opts="log, earth")
 
     # plot velocity in x with a colorbar symmetric about 0
     # also, share axes so this plot pans/zooms with the first
     plt.subplot2grid((2, 1), (1, 0), sharex=ax1, sharey=ax1)
-    mpl.plot(f3d["vx"]["y=0.0f"], style="contourf", levels=64,
+    vlt.plot(f3d["vx"]["y=0.0f"], style="contourf", levels=64,
              lin=0, earth=True)
 
     plt.xlim((-20, 20))
     plt.ylim((-10, 10))
 
-    mpl.show()
+    vlt.show()

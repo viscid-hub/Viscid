@@ -3,15 +3,15 @@
 from __future__ import print_function
 from itertools import count
 
-import numpy as np
+import matplotlib.pyplot as plt
 from mayavi import mlab
+import numpy as np
 
 from viscid import field
 from viscid import coordinate
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 from viscid.plot import mvi
 from viscid.calculator import cycalc
-from viscid.plot.mpl import plt
 
 np.seterr(divide='ignore')
 
@@ -171,7 +171,7 @@ def main():
 
         # plt.subplot(121)
         plt.subplot2grid((4, 3), (0 + 2 * di, 0), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['x'], "z={0}i".format(d),
+        vlt.plot(fld['x'], "z={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, yl, yh))
         y1 = - (a1 + b1 * xp) / (c1 + d1 * xp)
         plt.plot(x, (yh - yl) * y1 + yl, 'k')
@@ -180,7 +180,7 @@ def main():
 
         # plt.subplot(122)
         plt.subplot2grid((4, 3), (1 + 2 * di, 0), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['y'], "z={0}i".format(d),
+        vlt.plot(fld['y'], "z={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, yl, yh))
         y2 = - (a2 + b2 * xp) / (c2 + d2 * xp)
         plt.plot(x, (yh - yl) * y2 + yl, 'k')
@@ -231,7 +231,7 @@ def main():
 
         # plt.subplot(121)
         plt.subplot2grid((4, 3), (0 + 2 * di, 1), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['x'], "x={0}i".format(d),
+        vlt.plot(fld['x'], "x={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(yl, yh, zl, zh))
         z1 = - (a1 + b1 * yp) / (c1 + d1 * yp)
         plt.plot(y, (zh - zl) * z1 + zl, 'k')
@@ -240,7 +240,7 @@ def main():
 
         # plt.subplot(122)
         plt.subplot2grid((4, 3), (1 + 2 * di, 1), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['y'], "x={0}i".format(d),
+        vlt.plot(fld['y'], "x={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(yl, yh, zl, zh))
         z1 = - (a2 + b2 * yp) / (c2 + d2 * yp)
         plt.plot(y, (zh - zl) * z1 + zl, 'k')
@@ -291,7 +291,7 @@ def main():
 
         # plt.subplot(121)
         plt.subplot2grid((4, 3), (0 + 2 * di, 2), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['x'], "y={0}i".format(d),
+        vlt.plot(fld['x'], "y={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
         x1 = - (a1 + b1 * zp) / (c1 + d1 * zp)
         plt.plot(z, (xh - xl) * x1 + xl, 'k')
@@ -300,7 +300,7 @@ def main():
 
         # plt.subplot(121)
         plt.subplot2grid((4, 3), (1 + 2 * di, 2), sharex=ax1, sharey=ax1)
-        mpl.plot(fld['y'], "y={0}i".format(d),
+        vlt.plot(fld['y'], "y={0}i".format(d),
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
         x1 = - (a2 + b2 * zp) / (c2 + d2 * zp)
         plt.plot(z, (xh - xl) * x1 + xl, 'k')

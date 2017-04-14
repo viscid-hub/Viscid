@@ -526,7 +526,7 @@ def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
     if banner is None:
         banner = "Interactive Viscid..."
         if mpl_ns:
-            banner += "\n  - Viscid's matplotlib interface available as `mpl`"
+            banner += "\n  - Viscid's matplotlib interface available as `vlt`"
         if mvi_ns:
             banner += "\n  - Viscid's mayavi interface available as `mvi`"
             banner += "\n  - Use mvi.show(...) to interact with Mayavi"
@@ -542,8 +542,8 @@ def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
     if viscid_ns:
         _merge_ns(viscid, ns)
     if mpl_ns:
-        from viscid.plot import mpl
-        _merge_ns(mpl, ns)
+        from viscid.plot import vpyplot as vlt
+        _merge_ns(vlt, ns)
     if mvi_ns:
         from viscid.plot import mvi
         _merge_ns(mvi, ns)

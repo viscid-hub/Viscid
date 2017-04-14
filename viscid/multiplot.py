@@ -66,7 +66,7 @@ def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
                   share_axes=False, show=False, subplot_params=None,
                   first_run_result=None, first_run=False, **kwargs):
     import matplotlib.pyplot as plt
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
     logger.info("Plotting timestep: %d, %g", tind, grid.time)
 
@@ -154,7 +154,7 @@ def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
                 fld_meta[1]["plot_opts"], global_popts)
 
         with grid.get_field(fld_name, slc=fld_slc) as fld:
-            mpl.plot(fld, masknan=True, **fld_meta[1])
+            vlt.plot(fld, masknan=True, **fld_meta[1])
         # print("fld cache", grid[fld_meta[0]]._cache)
 
     if timeformat and timeformat.lower() != "none":
@@ -166,7 +166,7 @@ def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
         subplot_params = first_run_result
     if tighten:
         tighten = dict(rect=[0, 0.03, 1, 0.90])
-    ret = mpl.auto_adjust_subplots(tight_layout=tighten,
+    ret = vlt.auto_adjust_subplots(tight_layout=tighten,
                                    subplot_params=subplot_params)
     if not first_run:
         ret = None

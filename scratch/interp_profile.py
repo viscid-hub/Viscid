@@ -16,7 +16,7 @@ from viscid.calculator import calc
 from viscid.calculator import cycalc
 from viscid.calculator import streamline
 from viscid.calculator import seed
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 def make_dipole(m=None, twod=False):
     dtype = 'float64'
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     s = pstats.Stats("interp.prof")
     s.strip_dirs().sort_stats("cumtime").print_stats()
     # print([line.shape for line in lines])
-    # mpl.scatter_3d(vol.get_points(), interp_vals[:, 2], show=True)
+    # vlt.scatter_3d(vol.get_points(), interp_vals[:, 2], show=True)
 
     interp_field = field.wrap_field(interp_vals, vol.as_coordinates(),  # pylint: disable=undefined-variable
                                     name="interp", fldtype="vector",
@@ -80,9 +80,9 @@ if __name__ == "__main__":
     for interp, exact in zip([bxi, byi, bzi], [bxe, bye, bze]):
         plt.clf()
         plt.subplot(211)
-        mpl.plot(exact, show=False)
+        vlt.plot(exact, show=False)
         plt.subplot(212)
-        mpl.plot(interp, show=True)
+        vlt.plot(interp, show=True)
 
 ##
 ## EOF

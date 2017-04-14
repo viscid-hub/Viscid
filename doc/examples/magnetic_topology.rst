@@ -18,9 +18,10 @@ This algorithm takes a 2d map in the uv space of a seed generator and iterativel
 
     from os import path
 
+    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True
@@ -40,18 +41,18 @@ This algorithm takes a 2d map in the uv space of a seed generator and iterativel
     log_bmag = np.log(viscid.magnitude(B))
     lines, topo = viscid.calc_streamlines(B, seeds, **trace_opts)
 
-    mpl.plot(topo, cmap='afmhot')
+    vlt.plot(topo, cmap='afmhot')
 
-    mpl.plot2d_lines(lines[::79], scalars=log_bmag, symdir='y')
-    mpl.plt.plot(xpts[0], xpts[2], 'y*', ms=20,
+    vlt.plot2d_lines(lines[::79], scalars=log_bmag, symdir='y')
+    plt.plot(xpts[0], xpts[2], 'y*', ms=20,
                  markeredgecolor='k', markeredgewidth=1.0)
-    mpl.plt.xlim(topo.xl[0], topo.xh[0])
-    mpl.plt.ylim(topo.xl[2], topo.xh[2])
+    plt.xlim(topo.xl[0], topo.xh[0])
+    plt.ylim(topo.xl[2], topo.xh[2])
 
     # since seeds is a Field, we can use it to determine mhd|gse
-    mpl.plot_earth(B['y=0f'])
+    vlt.plot_earth(B['y=0f'])
 
-    mpl.show()
+    vlt.show()
 
 
 Bit-or algorithm
@@ -64,9 +65,10 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
 
     from os import path
 
+    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True
@@ -94,22 +96,22 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
                                          output=viscid.OUTPUT_TOPOLOGY)
 
     clim = (np.min(topo), np.max(topo))
-    mpl.plot(topo, cmap='afmhot', clim=clim)
-    mpl.plot(topo_dy, cmap='afmhot', clim=clim, colorbar=None)
-    mpl.plot(topo_nt, cmap='afmhot', clim=clim, colorbar=None)
+    vlt.plot(topo, cmap='afmhot', clim=clim)
+    vlt.plot(topo_dy, cmap='afmhot', clim=clim, colorbar=None)
+    vlt.plot(topo_nt, cmap='afmhot', clim=clim, colorbar=None)
 
-    mpl.plot2d_lines(lines[::79], scalars=log_bmag, symdir='y')
-    mpl.plt.plot(xpts_dy[0], xpts_dy[2], 'y*', ms=20,
+    vlt.plot2d_lines(lines[::79], scalars=log_bmag, symdir='y')
+    plt.plot(xpts_dy[0], xpts_dy[2], 'y*', ms=20,
                  markeredgecolor='k', markeredgewidth=1.0)
-    mpl.plt.plot(xpts_nt[0], xpts_nt[2], 'y*', ms=20,
+    plt.plot(xpts_nt[0], xpts_nt[2], 'y*', ms=20,
                  markeredgecolor='k', markeredgewidth=1.0)
-    mpl.plt.xlim(topo.xl[0], topo.xh[0])
-    mpl.plt.ylim(topo.xl[2], topo.xh[2])
+    plt.xlim(topo.xl[0], topo.xh[0])
+    plt.ylim(topo.xl[2], topo.xh[2])
 
     # since seeds is a Field, we can use it to determine mhd|gse
-    mpl.plot_earth(B['y=0f'])
+    vlt.plot_earth(B['y=0f'])
 
-    mpl.show()
+    vlt.show()
 
 The bit-or algorithm can has another interface that just takes a topology field. It can be used this way:
 
@@ -118,9 +120,10 @@ The bit-or algorithm can has another interface that just takes a topology field.
 
     from os import path
 
+    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True
@@ -148,18 +151,18 @@ The bit-or algorithm can has another interface that just takes a topology field.
 
     clim = (min(np.min(day_topo), np.min(topo)),
             max(np.max(day_topo), np.max(topo)))
-    mpl.plot(topo, cmap='afmhot', clim=clim)
-    mpl.plot(day_topo, cmap='afmhot', clim=clim, colorbar=None)
+    vlt.plot(topo, cmap='afmhot', clim=clim)
+    vlt.plot(day_topo, cmap='afmhot', clim=clim, colorbar=None)
 
-    mpl.plot2d_lines(lines[::79], scalars=log_bmag, symdir='y')
-    mpl.plt.plot(xpts_night[0], xpts_night[1], 'y*', ms=20,
+    vlt.plot2d_lines(lines[::79], scalars=log_bmag, symdir='y')
+    plt.plot(xpts_night[0], xpts_night[1], 'y*', ms=20,
                  markeredgecolor='k', markeredgewidth=1.0)
-    mpl.plt.plot(xpts_day[0], xpts_day[1], 'y*', ms=20,
+    plt.plot(xpts_day[0], xpts_day[1], 'y*', ms=20,
                  markeredgecolor='k', markeredgewidth=1.0)
-    mpl.plt.xlim(topo.xl[0], topo.xh[0])
-    mpl.plt.ylim(topo.xl[2], topo.xh[2])
+    plt.xlim(topo.xl[0], topo.xh[0])
+    plt.ylim(topo.xl[2], topo.xh[2])
 
     # since seeds is a Field, we can use it to determine mhd|gse
-    mpl.plot_earth(seeds.slice_reduce(":"))
+    vlt.plot_earth(seeds.slice_reduce(":"))
 
-    mpl.show()
+    vlt.show()

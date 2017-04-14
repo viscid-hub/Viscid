@@ -6,7 +6,7 @@ elements already on the plot
 """
 
 # Note, this is not in viscid/plot/__init__.py on purpose since it imports
-# pylab - it is instead imported by viscid/plot/mpl.py and made accessable
+# pylab - it is instead imported by viscid/plot/vlt.py and made accessable
 # in its namespace
 
 from __future__ import print_function, division, unicode_literals

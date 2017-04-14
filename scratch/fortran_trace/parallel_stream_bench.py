@@ -8,9 +8,10 @@ import pstats
 from timeit import default_timer as time
 import argparse
 
-import numpy as np
-from mayavi import mlab
 from matplotlib.colors import BoundaryNorm
+import matplotlib.pyplot as plt
+from mayavi import mlab
+import numpy as np
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../../src/viscid/')  # pylint: disable=C0301
 if not _viscid_root in sys.path:
@@ -20,8 +21,7 @@ import tracer
 from viscid import vutil
 from viscid import readers
 from viscid import field
-from viscid.plot import mpl
-from viscid.plot.mpl import plt
+from viscid.plot import vpyplot as vlt
 from viscid.plot import mvi
 from viscid.calculator import streamline
 from viscid.calculator import seed
@@ -95,10 +95,10 @@ def main():
         cmap = plt.get_cmap('spectral')
         levels = [4, 5, 6, 7, 8, 13, 14, 16, 17]
         norm = BoundaryNorm(levels, cmap.N)
-        mpl.plot(topo_flds[-1], "y=0", cmap=cmap, norm=norm, show=False)
-        #mpl.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
-        #mpl.plot_streamlines(lines, topology=topo, show=False)
-        mpl.mplshow()
+        vlt.plot(topo_flds[-1], "y=0", cmap=cmap, norm=norm, show=False)
+        #vlt.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
+        #vlt.plot_streamlines(lines, topology=topo, show=False)
+        vlt.mplshow()
 
         # topo_src = mvi.add_field(topo_fld, center='node')
         # mvi.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,

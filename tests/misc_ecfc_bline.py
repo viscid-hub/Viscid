@@ -15,7 +15,7 @@ import sys
 import numpy as np
 
 import viscid
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def main():
@@ -86,11 +86,11 @@ def main():
         mvi.show()
 
     if True:
-        mpl.subplot(121, projection='polar')
-        mpl.plot(topoN_fc)
-        mpl.subplot(122, projection='polar')
-        mpl.plot(topoS_fc)
-        mpl.show()
+        vlt.subplot(121, projection='polar')
+        vlt.plot(topoN_fc)
+        vlt.subplot(122, projection='polar')
+        vlt.plot(topoS_fc)
+        vlt.show()
 
     return 0
 

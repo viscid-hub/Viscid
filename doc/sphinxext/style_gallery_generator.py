@@ -188,9 +188,10 @@ GALERY_ENTRY_TEMPLATE = """\
 make_single_figure = r"""
 import matplotlib
 from matplotlib.colors import ListedColormap
+import matplotlib.pyplot as plt
 import numpy as np
 import viscid
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 matplotlib.rcParams.update(matplotlib.rcParamsDefault)
 
@@ -199,11 +200,11 @@ fld = viscid.empty((np.linspace(1, 5, 64), np.linspace(1, 5, 64)),
 X, Y = fld.get_crds(shaped=True)
 fld[:, :] = 1e-4 * (np.sin(X)**10 + np.cos(10 + X * Y) * np.cos(X))
 
-with mpl.plt.style.context(("{style}",)):
-    fig = mpl.plt.figure(figsize=(11, 7))
+with plt.style.context(("{style}",)):
+    fig = plt.figure(figsize=(11, 7))
 
-    ax = mpl.plt.subplot2grid((2, 9), (0, 0), rowspan=2)
-    pal = mpl.get_current_colorcycle()
+    ax = plt.subplot2grid((2, 9), (0, 0), rowspan=2)
+    pal = vlt.get_current_colorcycle()
     size = 1
     n = len(pal)
     ax.imshow(np.arange(n).reshape(n, 1), cmap=ListedColormap(list(pal)),
@@ -214,22 +215,22 @@ with mpl.plt.style.context(("{style}",)):
     ax.set_yticklabels([])
     ax.set_ylabel("Color Cycle")
 
-    mpl.plt.subplot2grid((2, 9), (0, 1), rowspan=2, colspan=4)
+    plt.subplot2grid((2, 9), (0, 1), rowspan=2, colspan=4)
     x = np.linspace(0, 2 * np.pi)
     for phase in np.linspace(0, np.pi / 4, n):
-        mpl.plt.plot(x, (1 + np.sqrt(phase)) * np.sin(x - phase),
+        plt.plot(x, (1 + np.sqrt(phase)) * np.sin(x - phase),
                      label=r"$\phi = {{0:.2g}}$".format(phase))
-    mpl.plt.legend(loc=0)
+    plt.legend(loc=0)
 
-    mpl.plt.subplot2grid((2, 9), (0, 5), colspan=4)
-    mpl.plot(fld)
-    mpl.plt.title("Sequential")
+    plt.subplot2grid((2, 9), (0, 5), colspan=4)
+    vlt.plot(fld)
+    plt.title("Sequential")
 
-    mpl.plt.subplot2grid((2, 9), (1, 5), colspan=4)
-    mpl.plot(fld, lin=0)
-    mpl.plt.title("Symmetric")
+    plt.subplot2grid((2, 9), (1, 5), colspan=4)
+    vlt.plot(fld, lin=0)
+    plt.title("Symmetric")
 
-    mpl.auto_adjust_subplots(subplot_params=dict(top=0.93, bottom=0.1))
+    vlt.auto_adjust_subplots(subplot_params=dict(top=0.93, bottom=0.1))
     txt = ("Matplotlib Version: {{0}}\nViscid Version: {{1}}"
            "".format(matplotlib.__version__, viscid.__version__))
     fig.text(0.05, 0.01, txt, color='grey', size='small')
@@ -237,8 +238,8 @@ with mpl.plt.style.context(("{style}",)):
 
 save_single_figure = r"""
     import os
-    mpl.plt.savefig("{img_fname}")
-    mpl.plt.close()
+    plt.savefig("{img_fname}")
+    plt.close()
 """
 
 

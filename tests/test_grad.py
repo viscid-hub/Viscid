@@ -9,13 +9,14 @@ from __future__ import print_function
 import argparse
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from viscid_test_common import next_plot_fname, xfail
 
 import viscid
 from viscid import vutil
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def _main():
@@ -41,45 +42,45 @@ def _main():
     conv = viscid.convective_deriv(b)
     conv.pretty_name = r"(B $\cdot \nabla$) B"
 
-    _ = mpl.plt.figure(figsize=(9, 4.2))
+    _ = plt.figure(figsize=(9, 4.2))
 
-    ax1 = mpl.subplot(231)
-    mpl.plot(b2['z=0f'], logscale=True)
-    mpl.plot(b2['z=0f'], logscale=True, style='contour', levels=10, colors='grey')
-    # mpl.plot2d_quiver(viscid.normalize(b['z=0f']), step=16, pivot='mid')
-    ax2 = mpl.subplot(234)
-    mpl.plot(b2['y=0f'], logscale=True)
-    mpl.plot(b2['y=0f'], logscale=True, style='contour', levels=10, colors='grey')
-    mpl.plot2d_quiver(viscid.normalize(b['y=0f'], preferred='numpy'),
+    ax1 = vlt.subplot(231)
+    vlt.plot(b2['z=0f'], logscale=True)
+    vlt.plot(b2['z=0f'], logscale=True, style='contour', levels=10, colors='grey')
+    # vlt.plot2d_quiver(viscid.normalize(b['z=0f']), step=16, pivot='mid')
+    ax2 = vlt.subplot(234)
+    vlt.plot(b2['y=0f'], logscale=True)
+    vlt.plot(b2['y=0f'], logscale=True, style='contour', levels=10, colors='grey')
+    vlt.plot2d_quiver(viscid.normalize(b['y=0f'], preferred='numpy'),
                       step=16, pivot='mid')
 
-    mpl.subplot(232, sharex=ax1, sharey=ax1)
-    mpl.plot(1e-4 + viscid.magnitude(grad_b2['z=0f']), logscale=True)
-    mpl.plot(1e-4 + viscid.magnitude(grad_b2['z=0f']), logscale=True,
+    vlt.subplot(232, sharex=ax1, sharey=ax1)
+    vlt.plot(1e-4 + viscid.magnitude(grad_b2['z=0f']), logscale=True)
+    vlt.plot(1e-4 + viscid.magnitude(grad_b2['z=0f']), logscale=True,
              style='contour', levels=10, colors='grey')
-    mpl.plot2d_quiver(viscid.normalize(grad_b2['z=0f']), step=16, pivot='mid')
-    mpl.subplot(235, sharex=ax2, sharey=ax2)
-    mpl.plot(1e-4 + viscid.magnitude(grad_b2['y=0f']), logscale=True)
-    mpl.plot(1e-4 + viscid.magnitude(grad_b2['y=0f']), logscale=True,
+    vlt.plot2d_quiver(viscid.normalize(grad_b2['z=0f']), step=16, pivot='mid')
+    vlt.subplot(235, sharex=ax2, sharey=ax2)
+    vlt.plot(1e-4 + viscid.magnitude(grad_b2['y=0f']), logscale=True)
+    vlt.plot(1e-4 + viscid.magnitude(grad_b2['y=0f']), logscale=True,
              style='contour', levels=10, colors='grey')
-    mpl.plot2d_quiver(viscid.normalize(grad_b2['y=0f']), step=16, pivot='mid')
+    vlt.plot2d_quiver(viscid.normalize(grad_b2['y=0f']), step=16, pivot='mid')
 
-    mpl.subplot(233, sharex=ax1, sharey=ax1)
-    mpl.plot(viscid.magnitude(conv['z=0f']), logscale=True)
-    mpl.plot(viscid.magnitude(conv['z=0f']), logscale=True,
+    vlt.subplot(233, sharex=ax1, sharey=ax1)
+    vlt.plot(viscid.magnitude(conv['z=0f']), logscale=True)
+    vlt.plot(viscid.magnitude(conv['z=0f']), logscale=True,
              style='contour', levels=10, colors='grey')
-    mpl.plot2d_quiver(viscid.normalize(conv['z=0f']), step=16, pivot='mid')
-    mpl.subplot(236, sharex=ax2, sharey=ax2)
-    mpl.plot(viscid.magnitude(conv['y=0f']), logscale=True)
-    mpl.plot(viscid.magnitude(conv['y=0f']), logscale=True,
+    vlt.plot2d_quiver(viscid.normalize(conv['z=0f']), step=16, pivot='mid')
+    vlt.subplot(236, sharex=ax2, sharey=ax2)
+    vlt.plot(viscid.magnitude(conv['y=0f']), logscale=True)
+    vlt.plot(viscid.magnitude(conv['y=0f']), logscale=True,
              style='contour', levels=10, colors='grey')
-    mpl.plot2d_quiver(viscid.normalize(conv['y=0f']), step=16, pivot='mid')
+    vlt.plot2d_quiver(viscid.normalize(conv['y=0f']), step=16, pivot='mid')
 
-    mpl.auto_adjust_subplots()
+    vlt.auto_adjust_subplots()
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if args.show:
-        mpl.show()
+        vlt.show()
 
     return 0
 

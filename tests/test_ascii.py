@@ -5,11 +5,13 @@ import argparse
 import sys
 import os
 
+import matplotlib.pyplot as plt
+
 from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import vutil
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def _main():
@@ -18,10 +20,10 @@ def _main():
     args = vutil.common_argparse(parser)
 
     f = viscid.load_file(os.path.join(viscid.sample_dir, "test.asc"))
-    mpl.plot(f['c1'], show=False)
-    mpl.plt.savefig(next_plot_fname(__file__))
+    vlt.plot(f['c1'], show=False)
+    plt.savefig(next_plot_fname(__file__))
     if args.show:
-        mpl.show()
+        vlt.show()
 
     return 0
 

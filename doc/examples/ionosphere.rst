@@ -9,7 +9,7 @@ Ionosphere Plots
     from matplotlib import pyplot as plt
     import viscid
     from viscid import sample_dir
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     iono_file = viscid.load_file(path.join(sample_dir, 'sample_xdmf.iof.xdmf'))
@@ -28,18 +28,18 @@ Ionosphere Plots
                     )
 
     ax1 = plt.subplot(121, projection='polar')
-    mpl.plot(fac_tot, ax=ax1, hemisphere='north', **plot_args)
+    vlt.plot(fac_tot, ax=ax1, hemisphere='north', **plot_args)
     ax1.annotate('(a)', xy=(0, 0), textcoords="axes fraction",
                  xytext=(-0.1, 1.0), fontsize=18)
 
     ax2 = plt.subplot(122, projection='polar')
     plot_args['gridec'] = False
-    mpl.plot(fac_tot, ax=ax2, hemisphere="south", style="contourf",
+    vlt.plot(fac_tot, ax=ax2, hemisphere="south", style="contourf",
              levels=50, extend="both", **plot_args)
     ax2.annotate('(b)', xy=(0, 0), textcoords="axes fraction",
                  xytext=(-0.1, 1.0), fontsize=18)
 
     plt.gcf().set_size_inches(10, 5.0)
 
-    mpl.auto_adjust_subplots()
-    mpl.show()
+    vlt.auto_adjust_subplots()
+    vlt.show()

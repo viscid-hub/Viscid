@@ -14,7 +14,7 @@ from viscid_test_common import next_plot_fname, xfail
 import numpy as np
 import viscid
 from viscid import vutil
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def make_arcade(eps, xl=(-10.0, 0.0, -10.0), xh=(10.0, 20.0, 10.0),
@@ -58,13 +58,13 @@ def _main():
 
     ################################
     # Make 2D Matplotlib plot of Xi
-    mpl.plot(xi, x=(-10, 10), y=(-10, 10), style='contourf', levels=256,
+    vlt.plot(xi, x=(-10, 10), y=(-10, 10), style='contourf', levels=256,
              lin=(2e-4, 1.5718))
-    mpl.plot(xi, x=(-10, 10), y=(-10, 10), style='contour', colors='grey',
+    vlt.plot(xi, x=(-10, 10), y=(-10, 10), style='contour', colors='grey',
              levels=[0.5, 1.0])
-    mpl.savefig(next_plot_fname(__file__))
+    vlt.savefig(next_plot_fname(__file__))
     if args.show:
-        mpl.show()
+        vlt.show()
 
     ############################################################
     # Make 3D mayavi plot of Xi and the 'brightest' field lines

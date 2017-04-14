@@ -21,7 +21,7 @@ from viscid import field, coordinate
 from viscid.tools import topology
 from viscid.calculator import calc
 from viscid.plot import mvi
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 SKIP = 10
 

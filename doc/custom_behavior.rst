@@ -34,7 +34,7 @@ that there is no "viscid.default_cmap" since that is already a matplotlib
 rc parameter ("image.cmap")
 
 * **default_cmap**: Changes the default color maps for plots made using
-  :py:mod:`viscid.plot.mpl`
+  :py:mod:`viscid.plot.vpyplot`
 * **symmetric_cmap**: Changes the default color maps for plots that are
   symmetric about 0
 * **default_cbarfmt**: Change the default tick formatter for colbars

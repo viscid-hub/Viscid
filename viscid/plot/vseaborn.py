@@ -37,9 +37,9 @@ rc = {}  # this one can't be set from rc file
 def activate_from_viscid():
     """You should not need to call this
 
-    This function is called by viscid.plot.mpl at time of import. All
-    you need to do is set the global config options above before
-    importing viscid.plot.mpl. This can be done with the rc file.
+    This function is called by viscid.plot.vpyplot at time of import.
+    All you need to do is set the global config options above before
+    importing `viscid.plot.vpyplot`. This can be done with the rc file.
     """
     if enabled:
         from distutils.version import LooseVersion

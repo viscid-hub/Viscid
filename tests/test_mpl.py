@@ -13,7 +13,7 @@ from viscid_test_common import next_plot_fname
 import viscid
 from viscid import logger
 from viscid import vutil
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 dtype = 'float64'
@@ -34,21 +34,21 @@ def run_mpl_testA(show=False):
     ncols = 1
 
     plt.subplot2grid((nrows, ncols), (0, 0))
-    mpl.plot(fld_s, "y=20f", show=False, plot_opts="lin_0")
+    vlt.plot(fld_s, "y=20f", show=False, plot_opts="lin_0")
     plt.subplot2grid((nrows, ncols), (1, 0))
-    mpl.plot(fld_s, "x=0f:20f,y=0f:5f", earth=True, show=False,
+    vlt.plot(fld_s, "x=0f:20f,y=0f:5f", earth=True, show=False,
              plot_opts="x_-10_0,y_0_7")
     plt.subplot2grid((nrows, ncols), (2, 0))
-    mpl.plot(fld_s, "y=0f", show=False, plot_opts="lin_-1_1")
+    vlt.plot(fld_s, "y=0f", show=False, plot_opts="lin_-1_1")
     plt.subplot2grid((nrows, ncols), (3, 0))
-    mpl.plot(fld_s, "z=0f,x=-20f:0f", earth=True, show=False, plot_opts="lin_-5_5")
+    vlt.plot(fld_s, "z=0f,x=-20f:0f", earth=True, show=False, plot_opts="lin_-5_5")
 
-    mpl.plt.suptitle("2d cell centered")
-    mpl.auto_adjust_subplots()
+    plt.suptitle("2d cell centered")
+    vlt.auto_adjust_subplots()
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if show:
-        mpl.mplshow()
+        vlt.mplshow()
 
 def run_mpl_testB(show=False):
     logger.info("3D node centered tests")
@@ -66,20 +66,20 @@ def run_mpl_testB(show=False):
     ncols = 1
 
     plt.subplot2grid((nrows, ncols), (0, 0))
-    mpl.plot(fld_s, "z=0,x=:30", earth=True, plot_opts="lin_0")
+    vlt.plot(fld_s, "z=0,x=:30", earth=True, plot_opts="lin_0")
     plt.subplot2grid((nrows, ncols), (1, 0))
-    mpl.plot(fld_s, "z=0.75f,x=-4:-1,y=-3f:3f", earth=True)
+    vlt.plot(fld_s, "z=0.75f,x=-4:-1,y=-3f:3f", earth=True)
     plt.subplot2grid((nrows, ncols), (2, 0))
-    mpl.plot(fld_s, "x=-0.5f:,y=-3f:3f,z=0f", earth=True)
+    vlt.plot(fld_s, "x=-0.5f:,y=-3f:3f,z=0f", earth=True)
     plt.subplot2grid((nrows, ncols), (3, 0))
-    mpl.plot(fld_s, "x=0.0f,y=-5.0f:5.0f", earth=True, plot_opts="log,g")
+    vlt.plot(fld_s, "x=0.0f,y=-5.0f:5.0f", earth=True, plot_opts="log,g")
 
-    mpl.plt.suptitle("3d node centered")
-    mpl.auto_adjust_subplots()
+    plt.suptitle("3d node centered")
+    vlt.auto_adjust_subplots()
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if show:
-        mpl.mplshow()
+        vlt.mplshow()
 
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)

@@ -33,18 +33,19 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
     try:
         if not plot2d:
             raise ImportError
-        from viscid.plot import mpl
-        mpl.plt.clf()
-        # mpl.plt.plot(seeds.get_points()[2, :], fld)
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
+        plt.clf()
+        # plt.plot(seeds.get_points()[2, :], fld)
         mpl_plot_kwargs = dict()
         if interpolated_fld.is_spherical():
             mpl_plot_kwargs['hemisphere'] = 'north'
-        mpl.plot(interpolated_fld, **mpl_plot_kwargs)
-        mpl.plt.title(seed_name)
+        vlt.plot(interpolated_fld, **mpl_plot_kwargs)
+        plt.title(seed_name)
 
-        mpl.plt.savefig(next_plot_fname(__file__, series='2d'))
+        plt.savefig(next_plot_fname(__file__, series='2d'))
         if show:
-            mpl.plt.show()
+            plt.show()
     except ImportError:
         pass
 
@@ -182,12 +183,13 @@ def _main():
         try:
             if not plot2d:
                 raise ImportError
-            from viscid.plot import mpl
-            mpl.clf()
-            mpl.plot(vx_sheet, symmetric=True)
-            mpl.plt.savefig(next_plot_fname(__file__, series='2d'))
+            from matplotlib import pyplot as plt
+            from viscid.plot import vpyplot as vlt
+            vlt.clf()
+            vlt.plot(vx_sheet, symmetric=True)
+            plt.savefig(next_plot_fname(__file__, series='2d'))
             if args.show:
-                mpl.show()
+                vlt.show()
         except ImportError:
             pass
 

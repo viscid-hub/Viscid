@@ -13,10 +13,11 @@ is the most comprehensive way to test cell / edge centered fields.
 from __future__ import division, print_function
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 import viscid
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2.2e-6,
@@ -41,13 +42,13 @@ def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2.2e-6,
 
         # plot differences?
         if make_plots:
-            ax1 = mpl.plt.subplot(311)
-            mpl.plot(cc_fld[d]['y=0f'], symmetric=True, earth=True)
-            mpl.plt.subplot(312, sharex=ax1, sharey=ax1)
-            mpl.plot(cc[d]['y=0f'], symmetric=True, earth=True)
-            mpl.plt.subplot(313, sharex=ax1, sharey=ax1)
-            mpl.plot(reldiff[d]['y=0f'], symmetric=True, earth=True)
-            mpl.show()
+            ax1 = plt.subplot(311)
+            vlt.plot(cc_fld[d]['y=0f'], symmetric=True, earth=True)
+            plt.subplot(312, sharex=ax1, sharey=ax1)
+            vlt.plot(cc[d]['y=0f'], symmetric=True, earth=True)
+            plt.subplot(313, sharex=ax1, sharey=ax1)
+            vlt.plot(reldiff[d]['y=0f'], symmetric=True, earth=True)
+            vlt.show()
 
     if any(comp_beyond_limit):
         raise RuntimeError("Tolerance exceeded on ->CC accuracy")
@@ -139,13 +140,13 @@ def main():
 
             # plot differences?
             if make_plots:
-                ax1 = mpl.plt.subplot(311)
-                mpl.plot(divb['y=0f'], symmetric=True, earth=True)
-                mpl.plt.subplot(312, sharex=ax1, sharey=ax1)
-                mpl.plot(divb1['y=0f'], symmetric=True, earth=True)
-                mpl.plt.subplot(313, sharex=ax1, sharey=ax1)
-                mpl.plot(reldiff['y=0f'], symmetric=True, earth=True)
-                mpl.show()
+                ax1 = plt.subplot(311)
+                vlt.plot(divb['y=0f'], symmetric=True, earth=True)
+                plt.subplot(312, sharex=ax1, sharey=ax1)
+                vlt.plot(divb1['y=0f'], symmetric=True, earth=True)
+                plt.subplot(313, sharex=ax1, sharey=ax1)
+                vlt.plot(reldiff['y=0f'], symmetric=True, earth=True)
+                vlt.show()
 
             # Since the coordinates will be different by order dx^2 (i think),
             # there is no way to compare the divB from simulation with the
@@ -178,22 +179,22 @@ def main():
         lines_fc, topo_fc = viscid.calc_streamlines(b_fc, seeds, **sl_kwargs)
 
         if make_plots:
-            mpl.plt.figure(figsize=(10, 6))
+            plt.figure(figsize=(10, 6))
 
-            ax0 = mpl.plt.subplot(211)
+            ax0 = plt.subplot(211)
             topo_cc_colors = viscid.topology2color(topo_cc)
-            mpl.plot(f['pp']['y=0f'], logscale=True, earth=True, cmap='plasma')
-            mpl.plot2d_lines(lines_cc, topo_cc_colors, symdir='y')
+            vlt.plot(f['pp']['y=0f'], logscale=True, earth=True, cmap='plasma')
+            vlt.plot2d_lines(lines_cc, topo_cc_colors, symdir='y')
 
-            ax0 = mpl.plt.subplot(212, sharex=ax0, sharey=ax0)
+            ax0 = plt.subplot(212, sharex=ax0, sharey=ax0)
             topo_fc_colors = viscid.topology2color(topo_fc)
-            mpl.plot(f['pp']['y=0f'], logscale=True, earth=True, cmap='plasma')
-            mpl.plot2d_lines(lines_fc, topo_fc_colors, symdir='y')
+            vlt.plot(f['pp']['y=0f'], logscale=True, earth=True, cmap='plasma')
+            vlt.plot2d_lines(lines_fc, topo_fc_colors, symdir='y')
 
-            mpl.plt.xlim(-20, 10)
-            mpl.plt.ylim(-10, 10)
-            mpl.auto_adjust_subplots()
-            mpl.show()
+            plt.xlim(-20, 10)
+            plt.ylim(-10, 10)
+            vlt.auto_adjust_subplots()
+            vlt.show()
 
     if test_interp:
         # test interpolation with E . B / B
@@ -231,23 +232,23 @@ def main():
         epar_ecfc = viscid.dot(e_ec_interp, b_fc_interp) / viscid.magnitude(b_fc_interp)
 
         if make_plots:
-            # mpl.plt.figure()
-            # ax0 = mpl.plt.subplot(121)
-            # mpl.plot(b_cc['x']['y=0f'], clim=(-40, 40))
-            # mpl.plt.subplot(122, sharex=ax0, sharey=ax0)
-            # mpl.plot(b_fc['x']['y=0f'], clim=(-40, 40))
-            # mpl.show()
+            # plt.figure()
+            # ax0 = plt.subplot(121)
+            # vlt.plot(b_cc['x']['y=0f'], clim=(-40, 40))
+            # plt.subplot(122, sharex=ax0, sharey=ax0)
+            # vlt.plot(b_fc['x']['y=0f'], clim=(-40, 40))
+            # vlt.show()
 
-            mpl.plt.figure(figsize=(14, 5))
-            ax0 = mpl.plt.subplot(131)
-            mpl.plot(epar_cc['y=0f'], symmetric=True, cbarlabel="Epar CC")
-            mpl.plt.subplot(132, sharex=ax0, sharey=ax0)
-            mpl.plot(epar_ecfc['y=0f'], symmetric=True, cbarlabel="Epar ECFC")
-            mpl.plt.subplot(133, sharex=ax0, sharey=ax0)
-            mpl.plot(((epar_cc - epar_ecfc) / epar_cc)['y=0f'], clim=(-10, 10),
+            plt.figure(figsize=(14, 5))
+            ax0 = plt.subplot(131)
+            vlt.plot(epar_cc['y=0f'], symmetric=True, cbarlabel="Epar CC")
+            plt.subplot(132, sharex=ax0, sharey=ax0)
+            vlt.plot(epar_ecfc['y=0f'], symmetric=True, cbarlabel="Epar ECFC")
+            plt.subplot(133, sharex=ax0, sharey=ax0)
+            vlt.plot(((epar_cc - epar_ecfc) / epar_cc)['y=0f'], clim=(-10, 10),
                      cbarlabel="Rel Diff")
-            mpl.auto_adjust_subplots()
-            mpl.show()
+            vlt.auto_adjust_subplots()
+            vlt.show()
 
     return 0
 

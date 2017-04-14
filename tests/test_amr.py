@@ -6,21 +6,23 @@ import argparse
 import sys
 import os
 
+import matplotlib.pyplot as plt
+
 from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import vutil
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def run_test(show=False):
     f = viscid.load_file(os.path.join(viscid.sample_dir, "amr.xdmf"))
     plot_kwargs = dict(patchec='y')
-    mpl.plot(f['f'], "z=0.0f", **plot_kwargs)
+    vlt.plot(f['f'], "z=0.0f", **plot_kwargs)
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if show:
-        mpl.show()
+        vlt.show()
 
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)

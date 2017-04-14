@@ -373,20 +373,21 @@ def _main():
 
     # 2d plots, normals don't look normal in the matplotlib projection
     if False:  # pylint: disable=using-constant-test
-        from viscid.plot import mpl
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
 
         normals = paraboloid_normal(Y, Z, *mp['paraboloid'][0])
         p0 = np.array([x2, Y, Z]).reshape(3, -1)
         p1 = p0 + normals.reshape(3, -1)
 
-        mpl.scatter_3d(np.vstack([x, y, z])[:, ::skip], equal=True)
+        vlt.scatter_3d(np.vstack([x, y, z])[:, ::skip], equal=True)
         for i in range(0, p0.shape[1], skip):
-            mpl.plt.gca().plot([p0[0, i], p1[0, i]],
+            plt.gca().plot([p0[0, i], p1[0, i]],
                                [p0[1, i], p1[1, i]],
                                [p0[2, i], p1[2, i]], color='c')
         # z2 = _ellipsiod(X, Y, *popt)
-        mpl.plt.gca().plot_surface(Y, Z, x2, color='r')
-        mpl.show()
+        plt.gca().plot_surface(Y, Z, x2, color='r')
+        vlt.show()
 
     # mayavi 3d plots, normals look better here
     if True:  # pylint: disable=using-constant-test

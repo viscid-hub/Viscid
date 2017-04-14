@@ -27,16 +27,17 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
     try:
         if not plot2d:
             raise ImportError
-        from viscid.plot import mpl
-        mpl.plt.clf()
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
+        plt.clf()
 
-        mpl.plot2d_lines(lines, scalars=topo_color, symdir='y', marker='^')
+        vlt.plot2d_lines(lines, scalars=topo_color, symdir='y', marker='^')
         if title:
-            mpl.plt.title(title)
+            plt.title(title)
 
-        mpl.plt.savefig(next_plot_fname(__file__, series='2d'))
+        plt.savefig(next_plot_fname(__file__, series='2d'))
         if show:
-            mpl.plt.show()
+            plt.show()
     except ImportError:
         pass
 
@@ -100,9 +101,9 @@ def format_data_range(dset):
             r"".format(x25, x50, x75))
 
 def set_violin_colors(v):
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
-    cycler = cycle(mpl.get_current_colorcycle())
+    cycler = cycle(vlt.get_current_colorcycle())
     colors = []
     for b in v['bodies']:
         c = next(cycler)
@@ -247,158 +248,159 @@ def _main():
     try:
         if not plot2d:
             raise ImportError
-        from viscid.plot import mpl
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
 
         # stats on error for all points on all lines
-        _ = mpl.plt.figure(figsize=(15, 8))
-        ax1 = mpl.subplot(121)
-        v = mpl.plt.violinplot(lshell_diffs, showextrema=False, showmedians=False,
+        _ = plt.figure(figsize=(15, 8))
+        ax1 = vlt.subplot(121)
+        v = plt.violinplot(lshell_diffs, showextrema=False, showmedians=False,
                                vert=False)
         colors = set_violin_colors(v)
-        xl, xh = mpl.plt.gca().get_xlim()
+        xl, xh = plt.gca().get_xlim()
         for i, txt, c in zip(count(), methods, colors):
             t_txt = ", took {0:.2e} seconds".format(wall_ts[i])
             stat_txt = format_data_range(lshell_diffs[i])
-            mpl.plt.text(xl + 0.35 * (xh - xl), i + 1.15, txt + t_txt, color=c)
-            mpl.plt.text(xl + 0.35 * (xh - xl), i + 0.85, stat_txt, color=c)
+            plt.text(xl + 0.35 * (xh - xl), i + 1.15, txt + t_txt, color=c)
+            plt.text(xl + 0.35 * (xh - xl), i + 0.85, stat_txt, color=c)
         ax1.get_yaxis().set_visible(False)
-        mpl.plt.title('L-Shell')
-        mpl.plt.xlabel('Relative Difference from Ideal (as fraction)')
+        plt.title('L-Shell')
+        plt.xlabel('Relative Difference from Ideal (as fraction)')
 
-        ax2 = mpl.subplot(122)
-        v = mpl.plt.violinplot(phi_diffs, showextrema=False, showmedians=False,
+        ax2 = vlt.subplot(122)
+        v = plt.violinplot(phi_diffs, showextrema=False, showmedians=False,
                                vert=False)
         colors = set_violin_colors(v)
-        xl, xh = mpl.plt.gca().get_xlim()
+        xl, xh = plt.gca().get_xlim()
         for i, txt, c in zip(count(), methods, colors):
             t_txt = ", took {0:.2e} seconds".format(wall_ts[i])
             stat_txt = format_data_range(phi_diffs[i])
-            mpl.plt.text(xl + 0.35 * (xh - xl), i + 1.15, txt + t_txt, color=c)
-            mpl.plt.text(xl + 0.35 * (xh - xl), i + 0.85, stat_txt, color=c)
+            plt.text(xl + 0.35 * (xh - xl), i + 1.15, txt + t_txt, color=c)
+            plt.text(xl + 0.35 * (xh - xl), i + 0.85, stat_txt, color=c)
         ax2.get_yaxis().set_visible(False)
-        mpl.plt.title('Longitude')
-        mpl.plt.xlabel('Relative Difference from Ideal (as fraction)')
+        plt.title('Longitude')
+        plt.xlabel('Relative Difference from Ideal (as fraction)')
 
-        mpl.auto_adjust_subplots()
+        vlt.auto_adjust_subplots()
 
-        mpl.savefig(next_plot_fname(__file__, series='q2'))
+        vlt.savefig(next_plot_fname(__file__, series='q2'))
         if args.show:
-            mpl.show()
+            vlt.show()
 
         # stats for ds for all points on all lines
-        _ = mpl.plt.figure(figsize=(10, 8))
-        ax1 = mpl.subplot(111)
+        _ = plt.figure(figsize=(10, 8))
+        ax1 = vlt.subplot(111)
 
         ds = [np.concatenate([np.linalg.norm(_l[:, 1:] - _l[:, :-1], axis=0)
                               for _l in lines]) for lines in all_lines]
-        v = mpl.plt.violinplot(ds, showextrema=False, showmedians=False,
+        v = plt.violinplot(ds, showextrema=False, showmedians=False,
                                vert=False)
         colors = set_violin_colors(v)
-        xl, xh = mpl.plt.gca().get_xlim()
+        xl, xh = plt.gca().get_xlim()
         for i, txt, c in zip(count(), methods, colors):
             stat_txt = format_data_range(ds[i])
-            mpl.plt.text(xl + 0.01 * (xh - xl), i + 1.15, txt, color=c)
-            mpl.plt.text(xl + 0.01 * (xh - xl), i + 0.85, stat_txt, color=c)
+            plt.text(xl + 0.01 * (xh - xl), i + 1.15, txt, color=c)
+            plt.text(xl + 0.01 * (xh - xl), i + 0.85, stat_txt, color=c)
         ax1.get_yaxis().set_visible(False)
-        mpl.plt.xscale('log')
-        mpl.plt.title('Step Size')
-        mpl.plt.xlabel('Absolute Step Size')
-        mpl.savefig(next_plot_fname(__file__, series='q2'))
+        plt.xscale('log')
+        plt.title('Step Size')
+        plt.xlabel('Absolute Step Size')
+        vlt.savefig(next_plot_fname(__file__, series='q2'))
         if args.show:
-            mpl.show()
+            vlt.show()
 
 
         # random other information
-        _ = mpl.plt.figure(figsize=(13, 10))
+        _ = plt.figure(figsize=(13, 10))
 
         ## wall time for each method
-        mpl.subplot(221)
-        mpl.plt.scatter(range(len(methods)), wall_ts, color=colors,
+        vlt.subplot(221)
+        plt.scatter(range(len(methods)), wall_ts, color=colors,
                         s=150, marker='s', edgecolors='none')
         for i, meth in enumerate(methods):
             meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
-            mpl.plt.annotate(meth, (i, wall_ts[i]), xytext=(0, 15.0),
+            plt.annotate(meth, (i, wall_ts[i]), xytext=(0, 15.0),
                              color=colors[i], horizontalalignment='center',
                              verticalalignment='bottom',
                              textcoords='offset points')
-        mpl.plt.ylabel("Wall Time (s)")
+        plt.ylabel("Wall Time (s)")
         x_padding = 0.5
-        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        plt.xlim(-x_padding, len(methods) - x_padding)
         yl, yh = np.min(wall_ts), np.max(wall_ts)
         y_padding = 0.4 * (yh - yl)
-        mpl.plt.ylim(yl - y_padding, yh + y_padding)
-        mpl.plt.gca().get_xaxis().set_visible(False)
+        plt.ylim(yl - y_padding, yh + y_padding)
+        plt.gca().get_xaxis().set_visible(False)
         for _which in ('right', 'top'):
-            mpl.plt.gca().spines[_which].set_color('none')
+            plt.gca().spines[_which].set_color('none')
 
         ## number of points calculated for each method
-        mpl.subplot(222)
-        mpl.plt.scatter(range(len(methods)), npts, color=colors,
+        vlt.subplot(222)
+        plt.scatter(range(len(methods)), npts, color=colors,
                         s=150, marker='s', edgecolors='none')
         for i, meth in enumerate(methods):
             meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
-            mpl.plt.annotate(meth, (i, npts[i]), xytext=(0, 15.0),
+            plt.annotate(meth, (i, npts[i]), xytext=(0, 15.0),
                              color=colors[i], horizontalalignment='center',
                              verticalalignment='bottom',
                              textcoords='offset points')
-        mpl.plt.ylabel("Number of Streamline Points Calculated")
+        plt.ylabel("Number of Streamline Points Calculated")
         x_padding = 0.5
-        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        plt.xlim(-x_padding, len(methods) - x_padding)
         yl, yh = np.min(npts), np.max(npts)
         y_padding = 0.4 * (yh - yl)
-        mpl.plt.ylim(yl - y_padding, yh + y_padding)
-        mpl.plt.gca().get_xaxis().set_visible(False)
+        plt.ylim(yl - y_padding, yh + y_padding)
+        plt.gca().get_xaxis().set_visible(False)
         for _which in ('right', 'top'):
-            mpl.plt.gca().spines[_which].set_color('none')
+            plt.gca().spines[_which].set_color('none')
 
         ## Wall time per segment, this should show the overhead of the method
-        mpl.subplot(223)
+        vlt.subplot(223)
         wall_t_per_seg = np.asarray(wall_ts) / np.asarray(npts)
-        mpl.plt.scatter(range(len(methods)), wall_t_per_seg, color=colors,
+        plt.scatter(range(len(methods)), wall_t_per_seg, color=colors,
                         s=150, marker='s', edgecolors='none')
         for i, meth in enumerate(methods):
             meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
-            mpl.plt.annotate(meth, (i, wall_t_per_seg[i]), xytext=(0, 15.0),
+            plt.annotate(meth, (i, wall_t_per_seg[i]), xytext=(0, 15.0),
                              color=colors[i], horizontalalignment='center',
                              verticalalignment='bottom',
                              textcoords='offset points')
-        mpl.plt.ylabel("Wall Time Per Line Segment")
+        plt.ylabel("Wall Time Per Line Segment")
         x_padding = 0.5
-        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        plt.xlim(-x_padding, len(methods) - x_padding)
         yl, yh = np.min(wall_t_per_seg), np.max(wall_t_per_seg)
         y_padding = 0.4 * (yh - yl)
-        mpl.plt.ylim(yl - y_padding, yh + y_padding)
-        mpl.plt.gca().get_xaxis().set_visible(False)
-        mpl.plt.gca().xaxis.set_major_formatter(viscid.plot.mpl_extra.steve_axfmt)
+        plt.ylim(yl - y_padding, yh + y_padding)
+        plt.gca().get_xaxis().set_visible(False)
+        plt.gca().xaxis.set_major_formatter(viscid.plot.mpl_extra.steve_axfmt)
         for _which in ('right', 'top'):
-            mpl.plt.gca().spines[_which].set_color('none')
+            plt.gca().spines[_which].set_color('none')
 
         ## 75th percentile of l-shell error for each method
-        mpl.subplot(224)
-        mpl.plt.scatter(range(len(methods)), lshell_75, color=colors,
+        vlt.subplot(224)
+        plt.scatter(range(len(methods)), lshell_75, color=colors,
                         s=150, marker='s', edgecolors='none')
-        mpl.plt.yscale('log')
+        plt.yscale('log')
 
         for i, meth in enumerate(methods):
             meth = meth.replace(" Adaptive Step", "\nAdaptive Step")
-            mpl.plt.annotate(meth, (i, lshell_75[i]), xytext=(0, 15.0),
+            plt.annotate(meth, (i, lshell_75[i]), xytext=(0, 15.0),
                              color=colors[i], horizontalalignment='center',
                              verticalalignment='bottom',
                              textcoords='offset points')
-        mpl.plt.ylabel("75th Percentile of Relative L-Shell Error")
+        plt.ylabel("75th Percentile of Relative L-Shell Error")
         x_padding = 0.5
-        mpl.plt.xlim(-x_padding, len(methods) - x_padding)
+        plt.xlim(-x_padding, len(methods) - x_padding)
         ymin, ymax = np.min(lshell_75), np.max(lshell_75)
-        mpl.plt.ylim(0.75 * ymin, 2.5 * ymax)
-        mpl.plt.gca().get_xaxis().set_visible(False)
+        plt.ylim(0.75 * ymin, 2.5 * ymax)
+        plt.gca().get_xaxis().set_visible(False)
         for _which in ('right', 'top'):
-            mpl.plt.gca().spines[_which].set_color('none')
+            plt.gca().spines[_which].set_color('none')
 
-        mpl.auto_adjust_subplots(subplot_params=dict(wspace=0.25, hspace=0.15))
+        vlt.auto_adjust_subplots(subplot_params=dict(wspace=0.25, hspace=0.15))
 
-        mpl.savefig(next_plot_fname(__file__, series='q2'))
+        vlt.savefig(next_plot_fname(__file__, series='q2'))
         if args.show:
-            mpl.show()
+            vlt.show()
 
     except ImportError:
         pass

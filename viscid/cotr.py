@@ -913,7 +913,7 @@ def _main():
         from matplotlib import pyplot as plt
         import matplotlib.dates as mdates
         try:
-            from viscid.plot import mpl
+            from viscid.plot import vpyplot as vlt
         except ImportError:
             pass
 

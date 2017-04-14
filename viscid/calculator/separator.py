@@ -194,21 +194,22 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
                          periodic=periodic)
 
     if plot:
-        from viscid.plot import mpl
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
 
-        mpl.clf()
-        ax0 = mpl.subplot(121)
-        mpl.plot(fld, title=True)
+        vlt.clf()
+        ax0 = vlt.subplot(121)
+        vlt.plot(fld, title=True)
 
-        mpl.subplot(122, sharex=ax0, sharey=ax0)
+        vlt.subplot(122, sharex=ax0, sharey=ax0)
         or_fld = viscid.arrays2field(a, (x, y), name="OR")
-        mpl.plot(or_fld, title=True)
+        vlt.plot(or_fld, title=True)
 
         _x, _y = or_fld.get_crds()
-        mpl.plt.plot(_x[indx], _y[indy], 'ko')
+        plt.plot(_x[indx], _y[indy], 'ko')
 
-        mpl.plt.plot(pts[0], pts[1], 'y^')
-        mpl.plt.show()
+        plt.plot(pts[0], pts[1], 'y^')
+        plt.show()
 
     return pts
 
@@ -326,10 +327,10 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
 
     if _first_recurse and plot:
         from viscid.plot import mvi
-        from viscid.plot import mpl
-        mpl.clf()
+        from viscid.plot import vpyplot as vlt
+        vlt.clf()
         _, all_topo = viscid.calc_streamlines(fld, seed, **trace_opts)
-        mpl.plot(np.bitwise_and(all_topo, 15), show=False)
+        vlt.plot(np.bitwise_and(all_topo, 15), show=False)
         verts, arr = seed.wrap_mesh(all_topo.data)
         mvi.mesh(verts[0], verts[1], verts[2], scalars=arr, opacity=0.75)
 
@@ -444,12 +445,13 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
 
     if plot and not required_uneven_subquads:
         from viscid.plot import mvi
-        from viscid.plot import mpl
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
         _pts3d = seed.to_3d(seed.uv_to_local(np.array([allx, ally])))
         mvi.points3d(_pts3d[0], _pts3d[1], _pts3d[2],
                       all_topo.data.reshape(-1), scale_mode='none',
                       scale_factor=0.02)
-        mpl.plt.scatter(allx, ally, color=np.bitwise_and(all_topo, 15),
+        plt.scatter(allx, ally, color=np.bitwise_and(all_topo, 15),
                         vmin=0, vmax=15, marker='o', edgecolor='y', s=40)
 
     if _first_recurse:
@@ -461,10 +463,11 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
         pts_uv = np.array([xc, yc])
         if plot:
             from viscid.plot import mvi
-            from viscid.plot import mpl
-            mpl.plt.plot(pts_uv[0], pts_uv[1], "y*", ms=20,
+            from matplotlib import pyplot as plt
+            from viscid.plot import vpyplot as vlt
+            plt.plot(pts_uv[0], pts_uv[1], "y*", ms=20,
                          markeredgecolor='k', markeredgewidth=1.0)
-            mpl.show(block=False)
+            vlt.show(block=False)
             mvi.show(stop=True)
         # return seed.to_3d(seed.uv_to_local(pts_uv))
         # if pts_uv.size == 0:

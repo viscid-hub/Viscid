@@ -316,15 +316,15 @@ def pts2polar_mapfield(pts, pts_axes, pts_unit='deg', hemisphere='north'):
         hemisphere, then plots a curve onto the same plot
 
         >>> f = viscid.load_file("$SRC/Viscid/sample/*_xdmf.iof.*.xdmf")
-        >>> mpl.plot(1e9 * f['fac_tot'], symmetric=True)
+        >>> vlt.plot(1e9 * f['fac_tot'], symmetric=True)
         >>> # now make a curve from dawn to dusk spanning 20deg in lat
         >>> N = 64
         >>> pts = np.vstack([np.linspace(-90, 90, N),
                              np.linspace(10, 30, N)])
         >>> pts_polar = viscid.pts2polar_mapfield(pts, ('phi', 'theta'),
                                                   pts_unit='deg')
-        >>> mpl.plt.plot(pts_polar[0], pts_polar[1])
-        >>> mpl.show()
+        >>> plt.plot(pts_polar[0], pts_polar[1])
+        >>> vlt.show()
 
     """
     hemisphere = hemisphere.strip().lower()

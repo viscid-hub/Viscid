@@ -6,13 +6,14 @@ import argparse
 import sys
 import os
 
+import matplotlib.pyplot as plt
+
 from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import sample_dir
 from viscid import vutil
-from viscid.plot import mpl
-from viscid.plot.mpl import plt
+from viscid.plot import vpyplot as vlt
 
 
 def _main():
@@ -25,15 +26,15 @@ def _main():
 
     for i, grid in enumerate(f_bin.iter_times(":")):
         plt.subplot2grid((2, 2), (0, i))
-        mpl.plot(grid['bx'])
+        vlt.plot(grid['bx'])
         plt.subplot2grid((2, 2), (1, i))
-        mpl.plot(grid['by'])
-    mpl.plt.suptitle("athena bin (binary) files")
-    mpl.auto_adjust_subplots(subplot_params=dict(top=0.9))
+        vlt.plot(grid['by'])
+    plt.suptitle("athena bin (binary) files")
+    vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if args.show:
-        mpl.show()
+        vlt.show()
     plt.clf()
 
     ####### test ascii files
@@ -41,15 +42,15 @@ def _main():
 
     for i, grid in enumerate(f_tab.iter_times(":")):
         plt.subplot2grid((2, 2), (0, i))
-        mpl.plot(grid['bx'])
+        vlt.plot(grid['bx'])
         plt.subplot2grid((2, 2), (1, i))
-        mpl.plot(grid['by'])
-    mpl.plt.suptitle("athena tab (ascii) files")
-    mpl.auto_adjust_subplots(subplot_params=dict(top=0.9))
+        vlt.plot(grid['by'])
+    plt.suptitle("athena tab (ascii) files")
+    vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if args.show:
-        mpl.show()
+        vlt.show()
     plt.clf()
 
     return 0

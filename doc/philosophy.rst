@@ -1,7 +1,7 @@
 Philosophy
 ==========
 
-The basic idea is to get the python framework out of your way to help you work. To this end, data files are read into a Numpy ndarray styled object (:class:`viscid.field.Field`), and there are plenty of convenience functions to turn Fields into 2-D plots (:mod:`viscid.plot.mpl`) or 3-D plots (:mod:`viscid.plot.mvi`).
+The basic idea is to get the python framework out of your way to help you work. To this end, data files are read into a Numpy ndarray styled object (:class:`viscid.field.Field`), and there are plenty of convenience functions to turn Fields into 2-D plots (:mod:`viscid.plot.vpyplot`) or 3-D plots (:mod:`viscid.plot.mvi`).
 
 Here are some basic features that all readers try to implement to the best of their ability:
 
