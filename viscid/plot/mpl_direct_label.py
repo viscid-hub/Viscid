@@ -348,7 +348,7 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.0, 1.0),
         if _debug:
             sm = plt.cm.ScalarMappable(cmap='magma',
                                        norm=plt.Normalize(vmin=0, vmax=4))
-            # sm._A = []
+            sm._A = []
             for k, candidate in enumerate(candidates_abs_px):
                 _croot_px = root_px[k, :]
                 _croot_dat = np.array(root_dat[k, :])
