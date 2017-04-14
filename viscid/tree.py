@@ -196,7 +196,8 @@ class Node(object):
             The attribute, or default
         """
         def _condition(_node, _):
-            return hasattr(_node, attr_name)
+            return (hasattr(_node, attr_name) and
+                    getattr(parent, attr_name) is not NotImplemented)
         parent = self._parent_bfs(_condition)
         if parent is not None:
             return getattr(parent, attr_name)
