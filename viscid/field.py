@@ -2204,6 +2204,20 @@ class VectorField(Field):
             self.clear_cache()
         return ret
 
+    def _ow(self, other):
+        # - hack because Fields don't broadcast correctly after a ufunc?
+        # - Vector Hack if other is a scalar field to promote it to a vector
+        #   field so numpy can broadcast interlaced vector flds w/ scalar flds
+        try:
+            if isinstance(other, ScalarField):
+                if self.layout == 'interlaced':
+                    return other.__array__()[..., np.newaxis]
+                elif self.layout == 'flat':
+                    return other.__array__()[np.newaxis, ...]
+            return other.__array__()
+        except AttributeError:
+            return other
+
 
 class MatrixField(Field):
     _TYPE = "matrix"
