@@ -570,6 +570,7 @@ class GGCMGrid(grid.Grid):
                 fld = viscid.make_ecfc_field_leading(fld, trim_leading=True)
         return fld
 
+    @property
     def __cotr__(self):
         if self.has_info("dipoletime"):
             return viscid.Cotr(time=self.find_info('dipoletime'),
@@ -578,13 +579,14 @@ class GGCMGrid(grid.Grid):
             return viscid.Cotr(time=self.find_info('basetime'),
                                notilt1967=True)
         else:
-            return viscid.Cotr(dip_tilt=0.0, dip_gsm=0.0)
+            return NotImplemented
 
+    @property
     def __crd_system__(self):
         if self.find_info("crd_system", None):
             crd_system = self.find_info("crd_system")
         else:
-            crd_system = 'gse'
+            crd_system = NotImplemented
         return crd_system
 
 

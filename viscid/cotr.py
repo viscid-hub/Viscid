@@ -304,10 +304,10 @@ def as_crd_system(thing, default=_NOT_GIVEN):
             into a crd_system
     """
     if hasattr(thing, "__crd_system__"):
-        crd_system = thing.__crd_system__()
+        crd_system = thing.__crd_system__
     else:
         try:
-            crd_system = thing.find_attr("__crd_system__")()
+            crd_system = thing.find_attr("__crd_system__")
         except AttributeError:
             if hasattr(thing, "find_info") and thing.find_info("crd_system", None):
                 crd_system = thing.find_info("crd_system")
@@ -467,6 +467,7 @@ class Cotr(object):
                 self._emat_cache[-i] = eye
                 self._emat_cache[i] = eye
 
+    @property
     def __cotr__(self):
         return self
 
@@ -763,7 +764,7 @@ def as_cotr(thing=None, default=_NOT_GIVEN):
 
     Inputs understood are:
       - None for North-South dipole
-      - anything with a `__cotr__` method
+      - anything with a `__cotr__` property
       - datetimes or similar, specifies the time for finding dip angles
       - mapping (dict or similar), passed to Cotr constructor as kwargs
 
@@ -783,12 +784,12 @@ def as_cotr(thing=None, default=_NOT_GIVEN):
     if thing is None:
         cotr = Cotr(dip_tilt=0.0, dip_gsm=0.0)
     elif hasattr(thing, "__cotr__"):
-        cotr = thing.__cotr__()
+        cotr = thing.__cotr__
     elif is_datetime_like(thing):
         cotr = Cotr(time=thing)
     else:
         try:
-            cotr = thing.find_attr("__cotr__")()
+            cotr = thing.find_attr("__cotr__")
         except AttributeError:
             if hasattr(thing, "find_info"):
                 if thing.find_info("cotr", None):

@@ -2077,6 +2077,14 @@ class Field(tree.Leaf):
         return self.as_layout(LAYOUT_FLAT,
                               force_c_contiguous=force_c_contiguous)
 
+    @property
+    def __crd_system__(self):
+        if self.find_info("crd_system", None):
+            crd_system = self.find_info("crd_system")
+        else:
+            crd_system = NotImplemented
+        return crd_system
+
 
 class ScalarField(Field):
     _TYPE = "scalar"
