@@ -13,7 +13,7 @@ import viscid
 from viscid import sample_dir
 from viscid import vutil
 try:
-    from viscid.plot import mvi
+    from viscid.plot import vlab
 except ImportError:
     xfail("Mayavi not installed")
 
@@ -40,7 +40,7 @@ def _main():
     pp = f3d["pp"]
     e = f3d["e_cc"]
 
-    mvi.figure(size=(1200, 800), offscreen=not args.show)
+    vlab.figure(size=(1200, 800), offscreen=not args.show)
 
     ##########################################################
     # make b a dipole inside 3.1Re and set e = 0 inside 4.0Re
@@ -53,25 +53,25 @@ def _main():
 
     ######################################
     # plot a scalar cut plane of pressure
-    pp_src = mvi.field2source(pp, center='node')
-    scp = mvi.scalar_cut_plane(pp_src, plane_orientation='z_axes', opacity=0.5,
-                               transparent=True, view_controls=False,
-                               cmap="inferno", logscale=True)
+    pp_src = vlab.field2source(pp, center='node')
+    scp = vlab.scalar_cut_plane(pp_src, plane_orientation='z_axes', opacity=0.5,
+                                transparent=True, view_controls=False,
+                                cmap="inferno", logscale=True)
     scp.implicit_plane.normal = [0, 0, -1]
     scp.implicit_plane.origin = [0, 0, 0]
-    cbar = mvi.colorbar(scp, title=pp.name, orientation='vertical')
+    cbar = vlab.colorbar(scp, title=pp.name, orientation='vertical')
 
     ######################################
     # plot a vector cut plane of the flow
-    vcp = mvi.vector_cut_plane(v, scalars=pp_src, plane_orientation='z_axes',
-                               view_controls=False, mode='arrow',
-                               cmap='Greens_r')
+    vcp = vlab.vector_cut_plane(v, scalars=pp_src, plane_orientation='z_axes',
+                                view_controls=False, mode='arrow',
+                                cmap='Greens_r')
     vcp.implicit_plane.normal = [0, 0, -1]
     vcp.implicit_plane.origin = [0, 0, 0]
 
     ##############################
     # plot very faint isosurfaces
-    iso = mvi.iso_surface(pp_src, contours=5, opacity=0.1, cmap=False)
+    iso = vlab.iso_surface(pp_src, contours=5, opacity=0.1, cmap=False)
 
     ##############################################################
     # calculate B field lines && topology in Viscid and plot them
@@ -80,7 +80,7 @@ def _main():
     b_lines, topo = viscid.calc_streamlines(b, seeds, ibound=3.5,
                                             obound0=[-25, -20, -20],
                                             obound1=[15, 20, 20], wrap=True)
-    mvi.plot_lines(b_lines, scalars=viscid.topology2color(topo))
+    vlab.plot_lines(b_lines, scalars=viscid.topology2color(topo))
 
     ######################################################################
     # plot a random circle at geosynchronus orbit with scalars colored
@@ -88,16 +88,16 @@ def _main():
     # a useful toy for debugging
     circle = viscid.Circle(p0=[0, 0, 0], r=6.618, n=128, endpoint=True)
     scalar = np.sin(circle.as_local_coordinates().get_crd('phi'))
-    surf = mvi.plot_line(circle.get_points(), scalars=scalar, clim=0.8,
-                         cmap="Spectral_r")
+    surf = vlab.plot_line(circle.get_points(), scalars=scalar, clim=0.8,
+                          cmap="Spectral_r")
 
     ######################################################################
     # Use Mayavi (VTK) to calculate field lines using an interactive seed
     # These field lines are colored by E parallel
     epar = viscid.project(e, b)
     epar.name = "Epar"
-    bsl2 = mvi.streamline(b, epar, seedtype='sphere', seed_resolution=4,
-                          integration_direction='both', clim=(-0.05, 0.05))
+    bsl2 = vlab.streamline(b, epar, seedtype='sphere', seed_resolution=4,
+                           integration_direction='both', clim=(-0.05, 0.05))
 
     # now tweak the VTK streamlines
     bsl2.stream_tracer.maximum_propagation = 20.
@@ -109,7 +109,7 @@ def _main():
     bsl2.start()
     bsl2.seed.widget.enabled = False
 
-    cbar = mvi.colorbar(bsl2, title=epar.name, orientation='horizontal')
+    cbar = vlab.colorbar(bsl2, title=epar.name, orientation='horizontal')
     cbar.scalar_bar_representation.position = (0.2, 0.01)
     cbar.scalar_bar_representation.position2 = (0.6, 0.14)
 
@@ -122,8 +122,8 @@ def _main():
                                            output=viscid.OUTPUT_TOPOLOGY)
     topo_iono = np.log2(topo_iono)
 
-    m = mvi.mesh_from_seeds(seeds_iono, scalars=topo_iono, opacity=1.0,
-                            clim=(0, 3), color=(0.992, 0.445, 0.0))
+    m = vlab.mesh_from_seeds(seeds_iono, scalars=topo_iono, opacity=1.0,
+                             clim=(0, 3), color=(0.992, 0.445, 0.0))
     m.enable_contours = True
 
     ####################################################################
@@ -132,58 +132,58 @@ def _main():
     # will not be consistant with the field aligned currents
     fac_tot = 1e9 * f_iono['fac_tot']
 
-    m = mvi.plot_ionosphere(fac_tot, bounding_lat=30.0, vmin=-300, vmax=300,
-                            opacity=0.75, rotate=cotr, crd_system=b)
+    m = vlab.plot_ionosphere(fac_tot, bounding_lat=30.0, vmin=-300, vmax=300,
+                             opacity=0.75, rotate=cotr, crd_system=b)
     m.actor.property.backface_culling = True
 
     ########################################################################
     # Add some markers for earth, i.e., real earth, and dayside / nightside
     # representation
-    mvi.plot_blue_marble(r=1.0, lines=False, ntheta=64, nphi=128,
+    vlab.plot_blue_marble(r=1.0, lines=False, ntheta=64, nphi=128,
                          rotate=cotr, crd_system=b)
     # now shade the night side with a transparent black hemisphere
-    mvi.plot_earth_3d(radius=1.01, night_only=True, opacity=0.5, crd_system=b)
+    vlab.plot_earth_3d(radius=1.01, night_only=True, opacity=0.5, crd_system=b)
 
     ####################
     # Finishing Touches
-    # mvi.axes(pp_src, nb_labels=5)
-    oa = mvi.orientation_axes()
+    # vlab.axes(pp_src, nb_labels=5)
+    oa = vlab.orientation_axes()
     oa.marker.set_viewport(0.75, 0.75, 1.0, 1.0)
 
     # note that resize won't work if the current figure has the
     # off_screen_rendering flag set
-    # mvi.resize([1200, 800])
-    mvi.view(azimuth=45, elevation=70, distance=35.0, focalpoint=[-2, 0, 0])
+    # vlab.resize([1200, 800])
+    vlab.view(azimuth=45, elevation=70, distance=35.0, focalpoint=[-2, 0, 0])
 
     ##############
     # Save Figure
 
     # print("saving png")
-    # mvi.savefig('mayavi_msphere_sample.png')
+    # vlab.savefig('mayavi_msphere_sample.png')
     # print("saving x3d")
     # # x3d files can be turned into COLLADA files with meshlab, and
     # # COLLADA (.dae) files can be opened in OS X's preview
     # #
-    # # IMPORTANT: for some reason, using bounding_lat in mvi.plot_ionosphere
+    # # IMPORTANT: for some reason, using bounding_lat in vlab.plot_ionosphere
     # #            causes a segfault when saving x3d files
     # #
-    # mvi.savefig('mayavi_msphere_sample.x3d')
+    # vlab.savefig('mayavi_msphere_sample.x3d')
     # print("done")
 
-    mvi.savefig(next_plot_fname(__file__))
+    vlab.savefig(next_plot_fname(__file__))
 
     ###########################
     # Interact Programatically
     if args.interact:
-        mvi.interact()
+        vlab.interact()
 
     #######################
     # Interact Graphically
     if args.show:
-        mvi.show()
+        vlab.show()
 
     try:
-        mvi.mlab.close()
+        vlab.mlab.close()
     except AttributeError:
         pass
 

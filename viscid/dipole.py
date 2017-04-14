@@ -336,29 +336,29 @@ def _main():
     mapped_ptsSN = dipole_map(ptsSN)
 
     try:
-        from viscid.plot import mvi
+        from viscid.plot import vlab
         colors1 = np.array([(0.6, 0.2, 0.2),
                             (0.2, 0.2, 0.6),
                             (0.6, 0.6, 0.2),
                             (0.2, 0.6, 0.6)])
         colors2 = colors1 * 0.5
 
-        mvi.points3d(ptsNP, scale_factor=0.4, color=tuple(colors1[0]))
-        mvi.points3d(ptsNN, scale_factor=0.4, color=tuple(colors1[1]))
-        mvi.points3d(ptsSP, scale_factor=0.4, color=tuple(colors1[2]))
-        mvi.points3d(ptsSN, scale_factor=0.4, color=tuple(colors1[3]))
+        vlab.points3d(ptsNP, scale_factor=0.4, color=tuple(colors1[0]))
+        vlab.points3d(ptsNN, scale_factor=0.4, color=tuple(colors1[1]))
+        vlab.points3d(ptsSP, scale_factor=0.4, color=tuple(colors1[2]))
+        vlab.points3d(ptsSN, scale_factor=0.4, color=tuple(colors1[3]))
 
-        mvi.points3d(mapped_ptsNP, scale_factor=0.4, color=tuple(colors2[0]))
-        mvi.points3d(mapped_ptsNN, scale_factor=0.4, color=tuple(colors2[1]))
-        mvi.points3d(mapped_ptsSP, scale_factor=0.4, color=tuple(colors2[2]))
-        mvi.points3d(mapped_ptsSN, scale_factor=0.4, color=tuple(colors2[3]))
+        vlab.points3d(mapped_ptsNP, scale_factor=0.4, color=tuple(colors2[0]))
+        vlab.points3d(mapped_ptsNN, scale_factor=0.4, color=tuple(colors2[1]))
+        vlab.points3d(mapped_ptsSP, scale_factor=0.4, color=tuple(colors2[2]))
+        vlab.points3d(mapped_ptsSN, scale_factor=0.4, color=tuple(colors2[3]))
 
         b = make_dipole()
 
-        mvi.plot_lines(viscid.calc_streamlines(b, mapped_ptsNP, ibound=0.5)[0])
-        mvi.plot_lines(viscid.calc_streamlines(b, mapped_ptsNN, ibound=0.5)[0])
+        vlab.plot_lines(viscid.calc_streamlines(b, mapped_ptsNP, ibound=0.5)[0])
+        vlab.plot_lines(viscid.calc_streamlines(b, mapped_ptsNN, ibound=0.5)[0])
 
-        mvi.show()
+        vlab.show()
 
     except ImportError:
         print("Mayavi not installed, no 3D plots", file=sys.stderr)

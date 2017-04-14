@@ -560,17 +560,17 @@ def plot_lines(lines, scalars=None, style="tube", figure=None,
         will want to use :py:func:`viscid.topology2color`::
 
             >>> import viscid
-            >>> from viscid.plot import mvi
+            >>> from viscid.plot import vlab
             >>>
             >>> B = viscid.make_dipole()
             >>> seeds = viscid.Line([-4, 0, 0], [4, 0, 0])
             >>> lines, topology = viscid.calc_streamlines(B, seeds,
             >>>                                           ibound=0.05)
             >>> scalars = viscid.topology2color(topology)
-            >>> mvi.plot_lines(lines, scalars, tube_radius=0.02)
-            >>> mvi.savefig("dipole.x3d")
+            >>> vlab.plot_lines(lines, scalars, tube_radius=0.02)
+            >>> vlab.savefig("dipole.x3d")
             >>> viscid.meshlab_convert("dipole.x3d", "dae")
-            >>> mvi.show()
+            >>> vlab.show()
 
     Parameters:
         lines (list): See :py:func:`lines2source`
@@ -1308,9 +1308,9 @@ def resize(size, figure=None):
         if mlab.options.offscreen:
             figure.scene.set_size(size)
         elif figure.scene.off_screen_rendering:
-            viscid.logger.warn("viscid.plot.mvi.resize doesn't work for "
+            viscid.logger.warn("viscid.plot.vlab.resize doesn't work for "
                                "figures that are off-screened this way. Try "
-                               "creating the figure with viscid.plot.mvi."
+                               "creating the figure with viscid.plot.vlab."
                                "figure(size=(w, h), offscreen=True)")
         else:
             toolkit = mayavi.ETSConfig.toolkit

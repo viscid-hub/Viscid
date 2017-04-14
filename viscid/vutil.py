@@ -528,8 +528,8 @@ def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
         if mpl_ns:
             banner += "\n  - Viscid's matplotlib interface available as `vlt`"
         if mvi_ns:
-            banner += "\n  - Viscid's mayavi interface available as `mvi`"
-            banner += "\n  - Use mvi.show(...) to interact with Mayavi"
+            banner += "\n  - Viscid's mayavi interface available as `vlab`"
+            banner += "\n  - Use vlab.show(...) to interact with Mayavi"
             banner += "\n  - FYI, all Mayavi objects all have trait_names()"
         banner += "\n  - Use Ctrl-D (eof) to end interaction"
 
@@ -545,8 +545,8 @@ def interact(banner=None, ipython=True, stack_depth=0, global_ns=None,
         from viscid.plot import vpyplot as vlt
         _merge_ns(vlt, ns)
     if mvi_ns:
-        from viscid.plot import mvi
-        _merge_ns(mvi, ns)
+        from viscid.plot import vlab
+        _merge_ns(vlab, ns)
 
     call_frame = sys._getframe(stack_depth).f_back  # pylint: disable=protected-access
 

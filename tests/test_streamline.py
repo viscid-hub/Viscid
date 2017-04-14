@@ -44,13 +44,13 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
     try:
         if not plot3d:
             raise ImportError
-        from viscid.plot import mvi
+        from viscid.plot import vlab
 
         try:
             fig = _global_ns['figure']
-            mvi.clf()
+            vlab.clf()
         except KeyError:
-            fig = mvi.figure(size=[1200, 800], offscreen=not show,
+            fig = vlab.figure(size=[1200, 800], offscreen=not show,
                              bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
             _global_ns['figure'] = fig
 
@@ -60,18 +60,18 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
             #       so one can't use topo_color on a mesh surface. This
             #       is a limitation of mayavi. To actually plot a specific
             #       set of colors on a mesh, one must use a texture
-            mesh = mvi.mesh_from_seeds(_seeds, scalars=topo, opacity=0.6)
+            mesh = vlab.mesh_from_seeds(_seeds, scalars=topo, opacity=0.6)
             mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
-        mvi.plot_lines(lines, scalars=fld_mag, tube_radius=0.01,
+        vlab.plot_lines(lines, scalars=fld_mag, tube_radius=0.01,
                        cmap='viridis')
         if title:
-            mvi.title(title)
+            vlab.title(title)
 
-        mvi.savefig(next_plot_fname(__file__, series='3d'))
+        vlab.savefig(next_plot_fname(__file__, series='3d'))
         if show:
-            mvi.show()
+            vlab.show()
 
     except ImportError:
         pass
@@ -220,7 +220,7 @@ def _main():
     lshell_75 = [np.percentile(lsdiff, 75) for lsdiff in lshell_diffs]
 
     # # 3D DEBUG PLOT:: for really getting under the covers
-    # mvi.clf()
+    # vlab.clf()
     # earth1 = viscid.seed.Sphere((0.0, 0.0, 0.0), 1.0, pole=-m, ntheta=60, nphi=120,
     #                             thetalim=(15, 165), philim=(0, 360))
     # ls1 = viscid.xyz2lsrlp(earth1.get_points(), cotr=cotr, crd_system='gse')[0, :]
@@ -231,13 +231,13 @@ def _main():
     #                             thetalim=(15, 165), philim=(0, 360))
     # ls4 = viscid.xyz2lsrlp(earth4.get_points(), cotr=cotr, crd_system='gse')[0, :]
     # clim = [2.0, 6.0]
-    # mvi.mesh_from_seeds(earth1, scalars=ls1, clim=clim, logscale=True)
-    # mvi.mesh_from_seeds(earth2, scalars=ls2, clim=clim, logscale=True, opacity=0.5)
-    # mvi.mesh_from_seeds(earth4, scalars=ls2, clim=clim, logscale=True, opacity=0.25)
-    # mvi.plot3d_lines(e1_lines, scalars=[_e1_lsp[0, :] for _e1_lsp in e1_lsps],
+    # vlab.mesh_from_seeds(earth1, scalars=ls1, clim=clim, logscale=True)
+    # vlab.mesh_from_seeds(earth2, scalars=ls2, clim=clim, logscale=True, opacity=0.5)
+    # vlab.mesh_from_seeds(earth4, scalars=ls2, clim=clim, logscale=True, opacity=0.25)
+    # vlab.plot3d_lines(e1_lines, scalars=[_e1_lsp[0, :] for _e1_lsp in e1_lsps],
     #                  clim=clim, logscale=True)
-    # mvi.colorbar(title="L-Shell")
-    # mvi.show()
+    # vlab.colorbar(title="L-Shell")
+    # vlab.show()
 
     assert lshell_75[1] < lshell_75[0], "RK2 should have less error than Euler"
     assert lshell_75[2] < lshell_75[1], "RK4 should have less error than RK2"
@@ -408,14 +408,14 @@ def _main():
     try:
         if not plot3d:
             raise ImportError
-        from viscid.plot import mvi
+        from viscid.plot import vlab
 
         try:
             fig = _global_ns['figure']
-            mvi.clf()
+            vlab.clf()
         except KeyError:
-            fig = mvi.figure(size=[1200, 800], offscreen=not args.show,
-                             bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
+            fig = vlab.figure(size=[1200, 800], offscreen=not args.show,
+                              bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
             _global_ns['figure'] = fig
 
         for i, method in zip(count(), methods):
@@ -423,25 +423,25 @@ def _main():
             #     next_plot_fname(__file__, series='q3')
             #     print(i, "::", [line.shape[1] for line in all_lines[i]])
             #     # continue
-            mvi.clf()
+            vlab.clf()
             _lshell_diff = [np.abs(s) for s in all_lshell_diffs[i]]
-            mvi.plot3d_lines(all_lines[i], scalars=_lshell_diff)
-            mvi.colorbar(title="Relative L-Shell Error (as fraction)")
-            mvi.title(method, size=0.5)
-            mvi.orientation_axes()
-            mvi.view(azimuth=40, elevation=140, distance=80.0,
-                     focalpoint=[0, 0, 0])
-            mvi.savefig(next_plot_fname(__file__, series='q3'))
+            vlab.plot3d_lines(all_lines[i], scalars=_lshell_diff)
+            vlab.colorbar(title="Relative L-Shell Error (as fraction)")
+            vlab.title(method, size=0.5)
+            vlab.orientation_axes()
+            vlab.view(azimuth=40, elevation=140, distance=80.0,
+                      focalpoint=[0, 0, 0])
+            vlab.savefig(next_plot_fname(__file__, series='q3'))
             if args.show:
-                mvi.show()
+                vlab.show()
     except ImportError:
         pass
 
 
     # prevent weird xorg bad-instructions on tear down
     if 'figure' in _global_ns and _global_ns['figure'] is not None:
-        from viscid.plot import mvi
-        mvi.mlab.close(_global_ns['figure'])
+        from viscid.plot import vlab
+        vlab.mlab.close(_global_ns['figure'])
 
     return 0
 

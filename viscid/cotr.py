@@ -899,7 +899,7 @@ def _main():
     It makes 3d plots using both Viscid and Mayavi
     """
     plot_mpl = True
-    plot_mvi = True
+    plot_vlab = True
     crd_system = 'gse'
 
     dtfmt = "%Y-%m-%d %H:%M"
@@ -986,39 +986,39 @@ def _main():
         # plt.plot(times, m[:, 2], label='M$_{2}$')
         # plt.show()
 
-    if plot_mvi:
+    if plot_vlab:
         import os
         import viscid
-        from viscid.plot import mvi
+        from viscid.plot import vlab
 
-        mvi.figure(size=(768, 768), fgcolor=(0, 0, 0), bgcolor=(1, 1, 1),
-                   offscreen=True)
+        vlab.figure(size=(768, 768), fgcolor=(0, 0, 0), bgcolor=(1, 1, 1),
+                    offscreen=True)
 
         def _plot_time_range(times, figname):
             for i, t in enumerate(times):
-                mvi.clf()
+                vlab.clf()
                 cotr = Cotr(t)
 
-                mvi.plot_blue_marble(r=1.0, rotate=t, crd_system=crd_system,
-                                     nphi=256, ntheta=128, res=4, lines=True)
+                vlab.plot_blue_marble(r=1.0, rotate=t, crd_system=crd_system,
+                                      nphi=256, ntheta=128, res=4, lines=True)
 
-                mvi.plot_earth_3d(radius=1.005, crd_system=crd_system,
-                                  night_only=True, opacity=0.5)
+                vlab.plot_earth_3d(radius=1.005, crd_system=crd_system,
+                                   night_only=True, opacity=0.5)
 
                 mag_north = cotr.transform('sm', crd_system, [0, 0, 1.0])
 
-                mvi.mlab.points3d(*mag_north, scale_factor=0.05, mode='sphere',
-                                  color=(0.992, 0.455, 0.0), resolution=32)
-                mvi.orientation_axes(line_width=4.0)
+                vlab.mlab.points3d(*mag_north, scale_factor=0.05, mode='sphere',
+                                   color=(0.992, 0.455, 0.0), resolution=32)
+                vlab.orientation_axes(line_width=4.0)
 
-                mvi.mlab.text(0.325, 0.95, viscid.format_datetime(t))
+                vlab.mlab.text(0.325, 0.95, viscid.format_datetime(t))
 
-                mvi.view(azimuth=0.0, elevation=90.0, distance=5.0,
-                         focalpoint=[0, 0, 0])
-                mvi.savefig("{0}_eq_{1:06d}.png".format(figname, i))
-                mvi.view(azimuth=0.0, elevation=0.0, distance=5.0,
-                         focalpoint=[0, 0, 0])
-                mvi.savefig("{0}_pole_{1:06d}.png".format(figname, i))
+                vlab.view(azimuth=0.0, elevation=90.0, distance=5.0,
+                          focalpoint=[0, 0, 0])
+                vlab.savefig("{0}_eq_{1:06d}.png".format(figname, i))
+                vlab.view(azimuth=0.0, elevation=0.0, distance=5.0,
+                          focalpoint=[0, 0, 0])
+                vlab.savefig("{0}_pole_{1:06d}.png".format(figname, i))
 
         path = os.path.expanduser("~/Desktop/day/{0}/".format(crd_system))
         if not os.path.exists(path):

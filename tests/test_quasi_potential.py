@@ -70,31 +70,31 @@ def _main():
     # Make 3D mayavi plot of Xi and the 'brightest' field lines
     # as well as some other field lines for context
     try:
-        from viscid.plot import mvi
+        from viscid.plot import vlab
     except ImportError:
         xfail("Mayavi not installed")
 
-    mvi.figure(size=[1200, 800], offscreen=not args.show)
+    vlab.figure(size=[1200, 800], offscreen=not args.show)
 
     inds = np.argsort(xi_dat)[-64:]
     inds = np.concatenate([inds, np.arange(len(xi_dat))[::71]])
-    s = mvi.plot_lines(b_lines[inds], scalars=epar, cmap='viridis')
-    mvi.mesh_from_seeds(seeds, scalars=xi, cmap='inferno')
-    mvi.colorbar(s, orientation='horizontal', title=epar.pretty_name)
-    # mvi.streamline(b, scalars=e, seedtype='sphere', seed_resolution=4,
-    #                integration_direction='both')
+    s = vlab.plot_lines(b_lines[inds], scalars=epar, cmap='viridis')
+    vlab.mesh_from_seeds(seeds, scalars=xi, cmap='inferno')
+    vlab.colorbar(s, orientation='horizontal', title=epar.pretty_name)
+    # vlab.streamline(b, scalars=e, seedtype='sphere', seed_resolution=4,
+    #                 integration_direction='both')
 
-    oa = mvi.orientation_axes()
+    oa = vlab.orientation_axes()
     oa.marker.set_viewport(0.75, 0.75, 1.0, 1.0)
-    mvi.view(roll=0, azimuth=90, elevation=25, distance=30.0,
+    vlab.view(roll=0, azimuth=90, elevation=25, distance=30.0,
              focalpoint=[0, 2, 0])
 
-    mvi.savefig(next_plot_fname(__file__))
+    vlab.savefig(next_plot_fname(__file__))
     if args.show:
-        mvi.show()
+        vlab.show()
 
     try:
-        mvi.mlab.close()
+        vlab.mlab.close()
     except AttributeError:
         pass
 

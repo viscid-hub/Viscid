@@ -20,7 +20,7 @@ Dependencies
 + Truly Optional
 
   + Seaborn
-  + Mayavi2 (if you want to make 3d plots using viscid.plot.mvi)
+  + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
   + PyYaml (rc file and plot options can parse using yaml)
 
 + Optional for developers

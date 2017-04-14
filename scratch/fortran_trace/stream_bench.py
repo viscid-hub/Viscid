@@ -23,7 +23,7 @@ from viscid import vutil
 from viscid import readers
 from viscid import field
 from viscid.plot import vpyplot as vlt
-from viscid.plot import mvi
+from viscid.plot import vlab
 from viscid.calculator import streamline
 from viscid.calculator import seed
 # import topo_numba
@@ -87,10 +87,10 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     # # vlt.plot_streamlines(lines, topology=topo, show=False)
     # vlt.mplshow()
 
-    # topo_src = mvi.add_field(topo_fld, center='node')
-    # mvi.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,
-    #                tube_radius=0.02)
-    # mvi.plod_earth_3d(mlab.pipeline)
+    # topo_src = vlab.add_field(topo_fld, center='node')
+    # vlab.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,
+    #                 tube_radius=0.02)
+    # vlab.plod_earth_3d(mlab.pipeline)
     # mlab.show()
 
     nsegs = 1  # keep from divding by 0 is no streamlines

@@ -10,7 +10,7 @@ import numpy as np
 from viscid import field
 from viscid import coordinate
 from viscid.plot import vpyplot as vlt
-from viscid.plot import mvi
+from viscid.plot import vlab
 from viscid.calculator import cycalc
 
 np.seterr(divide='ignore')
@@ -106,9 +106,9 @@ def main():
     fig = mlab.figure(size=(1150, 850),
                       bgcolor=(1.0, 1.0, 1.0),
                       fgcolor=(0.0, 0.0, 0.0))
-    f1_src = mvi.add_field(bx)
-    f2_src = mvi.add_field(by)
-    f3_src = mvi.add_field(bz)
+    f1_src = vlab.add_field(bx)
+    f2_src = vlab.add_field(by)
+    f3_src = vlab.add_field(bz)
     mlab.pipeline.iso_surface(f1_src, contours=[0.0],
                               opacity=1.0, color=(1.0, 0.0, 0.0))
     mlab.pipeline.iso_surface(f2_src, contours=[0.0],

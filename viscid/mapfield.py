@@ -520,7 +520,7 @@ def great_circle(p1, p2, origin=(0, 0, 0), n=32):
 def _main():
     try:
         # raise ImportError
-        from viscid.plot import mvi
+        from viscid.plot import vlab
         _HAS_MVI = True
     except ImportError:
         _HAS_MVI = False
@@ -539,7 +539,7 @@ def _main():
             print("              last_point:", circ[:, -1], "!= P2")
 
         if _HAS_MVI:
-            mvi.plot_lines([circ], tube_radius=0.02, color=color)
+            vlab.plot_lines([circ], tube_radius=0.02, color=color)
 
     print("TEST 1")
     _test([1, 0, 0], [0, 1, 0], r1=1.0, r2=1.0, color=(0.8, 0.8, 0.2))
@@ -556,9 +556,9 @@ def _main():
           color=(0.2, 0.2, 0.8))
 
     if _HAS_MVI:
-        mvi.plot_blue_marble(r=1.0, lines=False, ntheta=64, nphi=128)
-        mvi.plot_earth_3d(radius=1.01, night_only=True, opacity=0.5)
-        mvi.show()
+        vlab.plot_blue_marble(r=1.0, lines=False, ntheta=64, nphi=128)
+        vlab.plot_earth_3d(radius=1.01, night_only=True, opacity=0.5)
+        vlab.show()
 
     return 0
 
