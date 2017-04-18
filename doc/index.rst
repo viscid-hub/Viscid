@@ -80,6 +80,7 @@ Contents
 
   installation
   philosophy
+  creating_fields
   functions
   plot_options
   mpl_style_gallery

@@ -27,9 +27,11 @@ Function                             Description
 :py:func:`viscid.arrays2field`       Field from arrays for data and coordinates
 :py:func:`viscid.dat2field`          Field from data array
 :py:func:`viscid.empty`              Make an empty field from coordinate arrays
+:py:func:`viscid.full`               Make an initialized field from coordinate arrays
 :py:func:`viscid.zeros`              Make an field of 0s from coordinate arrays
 :py:func:`viscid.ones`               Make an field of 1s from coordinate arrays
 :py:func:`viscid.empty_like`         Make an empty field like another
+:py:func:`viscid.full_like`          Make an initialized field like another
 :py:func:`viscid.zeros_like`         Make a field of 1s like another
 :py:func:`viscid.ones_like`          Make a field of 0s like another
 ===================================  ===========================================================

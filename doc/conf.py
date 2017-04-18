@@ -145,6 +145,7 @@ html_theme_options = {
     'navbar_dropdown_links':
         [("Tutorial", [("Installation", "installation"),
                        ("Philosophy", "philosophy"),
+                       ("Creating Fields", "creating_fields"),
                        ("Useful Functions", "functions"),
                        ("Plot Options", "plot_options"),
                        ("Matplotlib Style Gallery", "mpl_style_gallery"),
