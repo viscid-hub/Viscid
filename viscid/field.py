@@ -35,7 +35,7 @@ __all__ = ['arrays2field', 'dat2field', 'full', 'empty', 'zeros', 'ones',
            'scalar_fields_to_vector', 'wrap_field']
 
 
-def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
+def arrays2field(crd_arrs, dat_arr, name="NoName", center=None,
                  crd_type=None, crd_names="xyzuvw"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.
 
@@ -45,10 +45,10 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
     :py:func:`viscid.field.wrap_field`.
 
     Args:
-        dat_arr (ndarray): data with len(crd_arrs) or len(crd_arrs) + 1
-            dimensions
         crd_arrs (list of ndarrays): xyz list of ndarrays that
             describe the node centered coordnates of the field
+        dat_arr (ndarray): data with len(crd_arrs) or len(crd_arrs) + 1
+            dimensions
         name (str): some name
         center (str, None): If not None, translate field to this
             centering (node or cell)
@@ -120,7 +120,7 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
         raise ValueError("Unknown type: {0}".format(fldtype))
 
     crd_arrs = [np.arange(s).astype(dat_arr.dtype) for s in sshape]
-    return arrays2field(dat_arr, crd_arrs, name=name, center=center)
+    return arrays2field(crd_arrs, dat_arr, name=name, center=center)
 
 def full(crds, fill_value, dtype="f8", name="NoName", center="cell",
          layout=LAYOUT_FLAT, nr_comps=0, crd_type=None, crd_names="xyzuvw",

@@ -32,7 +32,7 @@ def _main():
     x = np.linspace(-1, 1, img.shape[0])
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
-    logo = viscid.arrays2field(img, [x, y, z])
+    logo = viscid.arrays2field([x, y, z], img)
 
     seeds = viscid.Volume([-0.8, -0.8, 0.0], [0.8, 0.8, 0.0],
                           n=[64, 64, 1])

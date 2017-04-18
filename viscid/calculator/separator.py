@@ -202,7 +202,7 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
         vlt.plot(fld, title=True)
 
         vlt.subplot(122, sharex=ax0, sharey=ax0)
-        or_fld = viscid.arrays2field(a, (x, y), name="OR")
+        or_fld = viscid.arrays2field((x, y), a, name="OR")
         vlt.plot(or_fld, title=True)
 
         _x, _y = or_fld.get_crds()

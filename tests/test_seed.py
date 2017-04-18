@@ -100,7 +100,7 @@ def _main():
     x = np.linspace(-1, 1, img.shape[0])
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
-    logo = viscid.arrays2field(img, [x, y, z])
+    logo = viscid.arrays2field([x, y, z], img)
 
     if 1:
         viscid.logger.info('Testing Line...')

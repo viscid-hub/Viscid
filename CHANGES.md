@@ -14,6 +14,9 @@ Changes:
   - streamline test is now quantitative
   - More numpy operations between scalar and vector fields now work. Before, scalar fields wouldn't broadcast to the shape of interlaced vector fields.
 
+Backward Incompatible Changes:
+  - reorder 1st two arguments of viscid.arrays2field
+
 Bugfixes:
   - install / uninstall without manifest
   - no longer fall over when plotting lines with single vertex
