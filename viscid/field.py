@@ -30,9 +30,9 @@ LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
 
-__all__ = ['arrays2field', 'dat2field', 'empty', 'zeros', 'ones',
-           'empty_like', 'zeros_like', 'ones_like', 'scalar_fields_to_vector',
-           'wrap_field']
+__all__ = ['arrays2field', 'dat2field', 'full', 'empty', 'zeros', 'ones',
+           'full_like', 'empty_like', 'zeros_like', 'ones_like',
+           'scalar_fields_to_vector', 'wrap_field']
 
 
 def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
@@ -122,10 +122,10 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
     crd_arrs = [np.arange(s).astype(dat_arr.dtype) for s in sshape]
     return arrays2field(dat_arr, crd_arrs, name=name, center=center)
 
-def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
-          nr_comps=0, crd_type=None, crd_names="xyzuvw", _initial_vals="empty",
-          **kwargs):
-    """Analogous to `numpy.empty` (uninitialized array)
+def full(crds, fill_value, dtype="f8", name="NoName", center="cell",
+         layout=LAYOUT_FLAT, nr_comps=0, crd_type=None, crd_names="xyzuvw",
+         **kwargs):
+    """Analogous to `numpy.full`
 
     Parameters:
         crds (Coordinates, list, or tuple): Can be a coordinates
@@ -133,6 +133,8 @@ def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
             coordinate arrays. Or, if it's just a list or tuple of
             integers, those integers are taken to be the nz,ny,nx shape
             and the coordinates will be fill with :py:func:`np.arange`.
+        fill_value (number, None): Initial value of array. None
+            indicates uninitialized (i.e., `numpy.empty`)
         dtype (optional): some way to describe numpy dtype of data
         name (str): a way to refer to the field programatically
         center (str, optional): cell or node, there really isn't
@@ -173,17 +175,30 @@ def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
         else:
             shape = [nr_comps] + list(sshape)
 
-    if _initial_vals == "empty":
+    if fill_value is None:
         dat = np.empty(shape, dtype=dtype)
-    elif _initial_vals == "zeros":
-        dat = np.zeros(shape, dtype=dtype)
-    elif _initial_vals == "ones":
-        dat = np.ones(shape, dtype=dtype)
     else:
-        raise ValueError("_initial_vals only accepts empty, zeros, ones; not {0}"
-                         "".format(_initial_vals))
+        if hasattr(np, "full"):
+            dat = np.full(shape, fill_value, dtype=dtype)
+        elif hasattr(np, "filled"):
+            dat = np.filled(shape, fill_value, dtype=dtype)
+        else:
+            raise RuntimeError("Please update Numpy; your version has neither "
+                               "`numpy.full` nor `numpy.filled`")
     return wrap_field(dat, crds, name=name, fldtype=fldtype, center=center,
                       **kwargs)
+
+def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
+          nr_comps=0, **kwargs):
+    """Analogous to `numpy.empty`
+
+    Returns:
+        new uninitialized :class:`Field`
+
+    See Also: :meth:`full`
+    """
+    return full(crds, None, dtype=dtype, name=name, center=center,
+                layout=layout, nr_comps=nr_comps, **kwargs)
 
 def zeros(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
           nr_comps=0, **kwargs):
@@ -192,10 +207,10 @@ def zeros(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
     Returns:
         new :class:`Field` initialized to 0
 
-    See Also: :meth:`empty`
+    See Also: :meth:`full`
     """
-    return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
-                 nr_comps=nr_comps, _initial_vals="zeros", **kwargs)
+    return full(crds, 0.0, dtype=dtype, name=name, center=center,
+                layout=layout, nr_comps=nr_comps, **kwargs)
 
 def ones(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
          nr_comps=0, **kwargs):
@@ -204,58 +219,71 @@ def ones(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
     Returns:
         new :class:`Field` initialized to 1
 
-    See Also: :meth:`empty`
+    See Also: :meth:`full`
     """
-    return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
-                 nr_comps=nr_comps, _initial_vals="ones", **kwargs)
+    return full(crds, 1.0, dtype=dtype, name=name, center=center,
+                layout=layout, nr_comps=nr_comps, **kwargs)
 
-def empty_like(fld, name="NoName", **kwargs):
-    """Analogous to `numpy.empty_like`
+def full_like(fld, fill_value, name="NoName", **kwargs):
+    """Analogous to `numpy.full_like`
 
-    Makes a new, unitilialized :class:`Field`. Copies as much meta data
-    as it can from `fld`.
+    Makes a new :class:`Field` initialized to fill_value. Copies as
+    much meta data as it can from `fld`.
 
     Parameters:
         fld: field to get coordinates / metadata from
+        fill_value (number, None): initial value, or None to leave
+            data uninitialized
         name: name for this field
         **kwargs: passed through to :class:`Field` constructor
 
     Returns:
-        new uninitialized :class:`Field`
+        new :class:`Field`
     """
-    dat = np.empty(fld.shape, dtype=fld.dtype)
+    if fill_value is None:
+        dat = np.empty(fld.shape, dtype=fld.dtype)
+    else:
+        if hasattr(np, "full"):
+            dat = np.full(fld.shape, fill_value, dtype=fld.dtype)
+        elif hasattr(np, "filled"):
+            dat = np.filled(fld.shape, fill_value, dtype=fld.dtype)
+        else:
+            raise RuntimeError("Please update Numpy; your version has neither "
+                               "`numpy.full` nor `numpy.filled`")
     c = kwargs.pop("center", fld.center)
     t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
-def zeros_like(fld, name="NoName", **kwargs):
+def empty_like(fld, **kwargs):
+    """Analogous to `numpy.empty_like`
+
+    Returns:
+        new uninitialized :class:`Field`
+
+    See Also: :meth:`full_like`
+    """
+    return full_like(fld, None, **kwargs)
+
+def zeros_like(fld, **kwargs):
     """Analogous to `numpy.zeros_like`
 
     Returns:
-        new :class:`Field` initialized to 0
+        new :class:`Field` filled with zeros
 
-    See Also: :meth:`empty_like`
+    See Also: :meth:`full_like`
     """
-    dat = np.zeros(fld.shape, dtype=fld.dtype)
-    c = kwargs.pop("center", fld.center)
-    t = kwargs.pop("time", fld.time)
-    return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
-                      time=t, parents=[fld], **kwargs)
+    return full_like(fld, 0.0, **kwargs)
 
-def ones_like(fld, name="NoName", **kwargs):
+def ones_like(fld, **kwargs):
     """Analogous to `numpy.ones_like`
 
     Returns:
-        new :class:`Field` initialized to 1
+        new :class:`Field` filled with ones
 
-    See Also: :meth:`empty_like`
+    See Also: :meth:`full_like`
     """
-    dat = np.ones(fld.shape, dtype=fld.dtype)
-    c = kwargs.pop("center", fld.center)
-    t = kwargs.pop("time", fld.time)
-    return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
-                      time=t, parents=[fld], **kwargs)
+    return full_like(fld, 1.0, **kwargs)
 
 def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
     """Convert scalar fields to a vector field
