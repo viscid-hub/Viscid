@@ -1,6 +1,9 @@
 Useful Functions
 ================
 
+.. contents::
+  :local:
+
 Utility Functions
 -----------------
 

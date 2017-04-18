@@ -3,6 +3,9 @@ Plot Options
 
 Plot options are given to :py:func:`viscid.plot.vpyplot.plot` as either keyword arguments, or as a string called `plot_opts`. For the various plot types, what follows should be a comprehensive list of the available options.
 
+.. contents::
+  :local:
+
 .. note::
 
   For all options, supplying no arguments implies one argument with the value True.
@@ -31,7 +34,8 @@ All options can be passed as strings with one of two formats. First, the string 
 
   plot_opts = "{lin: [-1.0, 1.0], gridec: k}"
 
-Here are some options that should work for all functions:
+Universal
+---------
 
 .. cssclass:: table-striped
 
