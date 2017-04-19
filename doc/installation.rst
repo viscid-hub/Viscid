@@ -105,6 +105,12 @@ Choice 1 (installed)
     make
     make install
 
+to kick the tires, use
+
+.. code-block:: bash
+
+    make check
+
 to pull updates from github in the future, use
 
 .. code-block:: bash
@@ -124,6 +130,12 @@ Choice 2 (inplace)
     export PYTHONPATH="${PYTHONPATH}:${PWD}/Viscid"
     echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ~/.bashrc
     echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ~/.bashrc
+
+to kick the tires, use
+
+.. code-block:: bash
+
+    make check
 
 to pull updates from github in the future, use
 
