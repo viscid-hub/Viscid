@@ -170,7 +170,7 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.0, 1.0),
                  n_candidates=32, alpha=1.0, _debug=False, **kwargs):
     """Apply labels directly to series in liu of a legend
 
-    The `choices` offsets are as follows:
+    The `choices` offsets are as follows::
 
         ---------------------
         |  02  |  12  | 22  |
