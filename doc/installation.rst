@@ -63,7 +63,7 @@ This should be done in whatever directory you want to store the Viscid source co
 
 .. code-block:: bash
 
-    git clone git@github.com:KristoforMaynard/Viscid.git
+    git clone https://github.com/KristoforMaynard/Viscid.git
     mkdir -p ~/.config/matplotlib
     cp Viscid/resources/viscidrc ~/.viscidrc
 
@@ -109,7 +109,7 @@ to kick the tires, use
 
 .. code-block:: bash
 
-    make check
+    make instcheck
 
 to pull updates from github in the future, use
 
