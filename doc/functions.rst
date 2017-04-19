@@ -178,6 +178,10 @@ These functions wrap Matplotlib with useful boilerplate type hacks.
 Function                                              Description
 ====================================================  ===========================================================
 :py:func:`viscid.plot.vpyplot.auto_adjust_subplots`   Use Matplotlib's tight layout with some necessary hacks
+:py:func:`viscid.plot.vpyplot.apply_labels`           Write labels onto a plot similar to a legend, but place
+                                                      the labels next to the data. This adheres to the principle
+                                                      that you shouldn't make the reader learn a key just to
+                                                      read a single plot.
 ====================================================  ===========================================================
 
 2D Matplotlib Plots

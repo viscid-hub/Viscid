@@ -5,3 +5,5 @@ viscid.plot.vpyplot module
     :members:
     :undoc-members:
     :show-inheritance:
+
+    .. autofunction:: viscid.plot.vpyplot.apply_labels
