@@ -132,7 +132,7 @@ Function                                          Description
 Magnetosphere Tools
 ~~~~~~~~~~~~~~~~~~~
 
-Some tools for dealing with magnetospheric specific things. Refer to :doc:`../examples/magnetopause` for an example
+Some tools for dealing with magnetospheric specific things. Refer to :doc:`../tutorial/magnetopause` for an example
 
 .. cssclass:: table-striped
 
@@ -146,7 +146,7 @@ Function                                       Description
 Magnetic Topology and Separator Tools
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For using the separator tools, you may want to refer to :doc:`../examples/magnetic_topology`.
+For using the separator tools, you may want to refer to :doc:`../tutorial/magnetic_topology`.
 
 .. cssclass:: table-striped
 
@@ -232,7 +232,7 @@ Mayavi
 
 Mayavi is the preferred library for making 3D plots with Viscid. It's a little unwieldy, but for the moment, it's still the best Python interface to VTK. Mayavi has two ways to learn how to change details about the objects in a given scene (the documentation reads like somebody was shooting buckshot). The first is to make the change interactively while using the record feature. The other is to throw `import IPython; IPython.embed()` into your script and go splunking. Most Mayavi objects come from Traited VTK, which means they have a `print_traits()` method. This method will print out all the attributes that you may want to tweak, and then some.
 
-Between the :doc:`examples/mayavi`, and the functions you see below, you should be able figure out most things without too much hastle.
+Between the :doc:`tutorial/mayavi`, and the functions you see below, you should be able figure out most things without too much hastle.
 
 Mayavi Wrappers
 ~~~~~~~~~~~~~~~

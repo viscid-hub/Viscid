@@ -1,9 +1,10 @@
-Examples
+Tutorial
 ========
 
 .. toctree::
   :maxdepth: 2
 
+  creating_fields
   slicing
   plotting_scalars
   plotting_vectors
