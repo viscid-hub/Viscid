@@ -452,7 +452,7 @@ def format_time(time, fmt='.02f', basetime=None):
     Returns:
         str
     """
-    time = as_datetime(time)
+    dttime = as_datetime(time)
     ret = ""
 
     if basetime is None:
@@ -464,21 +464,21 @@ def format_time(time, fmt='.02f', basetime=None):
     if fmt in ('dhms', 'dhmss', 'hms', 'hmss'):
         # These are special time-style formatters
         if fmt.startswith('d'):
-            days = int(as_timedelta64(time) / np.timedelta64(1, 'D'))
+            days = int(as_timedelta64(dttime) / np.timedelta64(1, 'D'))
             if days == 1:
                 days_str = '{0} day'.format(days)
             else:
                 days_str = '{0} days '.format(days)
         else:
             days_str = ''
-        ret = datetime.strftime(time, days_str + '%H:%M:%S')
+        ret = datetime.strftime(dttime, days_str + '%H:%M:%S')
         if fmt.endswith('ss'):
-            _tt = as_timedelta(as_datetime64(time) - basetime).total_seconds()
+            _tt = as_timedelta(as_datetime64(dttime) - basetime).total_seconds()
             ret += " ({0:06d})".format(int(_tt))
     elif '%' not in fmt:
         # if there's no % symbol, then it's probably not a strftime format,
         # so use fmt as normal string formatting of total_seconds
-        _tt = as_timedelta(as_datetime64(time) - basetime).total_seconds()
+        _tt = (as_datetime64(time) - basetime) / np.timedelta64(1, 's')
         ret = "{0:{1}}".format(_tt, fmt.strip())
     else:
         if not fmt:
@@ -488,7 +488,7 @@ def format_time(time, fmt='.02f', basetime=None):
             msec_fmt = re.findall(r"%\.?([0-9]*)f", fmt)
             fmt = re.sub(r"%\.?([0-9]*)f", "%f", fmt)
 
-        tstr = datetime.strftime(time, fmt)
+        tstr = datetime.strftime(dttime, fmt)
 
         # now go back and for any %f -> [0-9]{6}, reformat the precision
         it = list(izip(msec_fmt, re.finditer("[0-9]{6}", tstr)))
