@@ -373,7 +373,11 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             except KeyError:
                 try:
                     # if the two scalar corrections potentials are stored
-                    type_info = _type_info[nr_fields - 2]
+                    type_info = dict(_type_info[nr_fields - 2])
+                    type_info['names'].append('EXTRA1')
+                    type_info['pretty_names'].append('EXTRA1')
+                    type_info['names'].append('EXTRA2')
+                    type_info['pretty_names'].append('EXTRA2')
                 except KeyError:
                     raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
 
@@ -389,7 +393,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
 
     @staticmethod
     def _get_single_crd(h5file, idx, nr_crds):
-        gridType = h5file['StructGrid'].attrs['vsKind']
+        gridType = h5file['StructGrid'].attrs['vsKind'].decode()
         if gridType in ['uniform']:
             if idx >= len(h5file['StructGrid'].attrs['vsNumCells']):
                 raise IndexError()
@@ -402,12 +406,15 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             return crd_arr
         elif gridType in ['structured']:
             if idx == 0:
-                crd_arr = h5file['StructGrid'][:,0,0,0]
+                crd_arr = h5file['StructGrid'][:, 0, 0, 0]
             elif idx == 1:
-                crd_arr = h5file['StructGrid'][0,:,0,1]
+                crd_arr = h5file['StructGrid'][0, :, 0, 1]
             elif idx == 2:
-                crd_arr = h5file['StructGrid'][0,0,:,2]
+                crd_arr = h5file['StructGrid'][0, 0, :, 2]
             return crd_arr
+        else:
+            raise RuntimeError("Gkeyll StructGrid.vsKind not understood: {0}"
+                               "".format(repr(gridType)))
 
     def make_crds(self, fname):
         with h5py.File(fname, 'r') as f:
@@ -422,7 +429,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
                 except IndexError:
                     pass
 
-            if f['StructGrid'].attrs['vsKind'] in ['uniform']:
+            if f['StructGrid'].attrs['vsKind'].decode() in ['uniform']:
                 # FIXME: this goes xyz -> zyx
                 crds = wrap_crds("uniform_cartesian", clist)
             else:
