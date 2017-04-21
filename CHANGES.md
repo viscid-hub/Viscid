@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.98.4 dev
-==========
+0.98.4
+======
 
 Changes:
   - Moved `viscid.plot.mpl` -> `viscid.plot.vpyplot` and `viscid.plot.mvi` -> `viscid.plot.vlab`. The old names are too similar to shorthand names for matplotlib and mayavi. Importing mpl and mvi will still work, but a warning will appear suggesting a better import statement.
