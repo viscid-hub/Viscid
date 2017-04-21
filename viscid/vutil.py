@@ -356,7 +356,8 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
                 scalars = np.frombuffer(np.char.decode(scalars, 'hex'), dtype='u1')
             except LookupError:
                 import codecs
-                scalars = np.frombuffer(codecs.decode(scalars, 'hex'), dtype='u1')
+                scalars = np.frombuffer(codecs.decode(scalars, 'hex_codec'),
+                                        dtype='u1')
             scalars = scalars.reshape(-1, 3).T
         elif scalars.shape[0] == 1:
             # normal scalars
