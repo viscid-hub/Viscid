@@ -63,29 +63,29 @@ def main():
 
                     if args.show:
                         from matplotlib import pyplot as plt
-                        from viscid.plot import mpl
+                        from viscid.plot import vpyplot as vlt
 
                         ax0 = plt.subplot(331)
                         plt.title("File A")
-                        mpl.plot(flda, "x=0", show=False)
+                        vlt.plot(flda, "x=0", show=False)
                         plt.subplot(332, sharex=ax0, sharey=ax0)
                         plt.title("File B")
-                        mpl.plot(fldb, "x=0", show=False)
+                        vlt.plot(fldb, "x=0", show=False)
                         plt.subplot(333, sharex=ax0, sharey=ax0)
                         plt.title("Difference")
-                        mpl.plot(diff, "x=0", show=False)
+                        vlt.plot(diff, "x=0", show=False)
                         ax0 = plt.subplot(334)
-                        mpl.plot(flda, "y=0", show=False)
+                        vlt.plot(flda, "y=0", show=False)
                         plt.subplot(335, sharex=ax0, sharey=ax0)
-                        mpl.plot(fldb, "y=0", show=False)
+                        vlt.plot(fldb, "y=0", show=False)
                         plt.subplot(336, sharex=ax0, sharey=ax0)
-                        mpl.plot(diff, "y=0", show=False)
+                        vlt.plot(diff, "y=0", show=False)
                         ax0 = plt.subplot(337)
-                        mpl.plot(flda, "z=0", show=False)
+                        vlt.plot(flda, "z=0", show=False)
                         plt.subplot(338, sharex=ax0, sharey=ax0)
-                        mpl.plot(fldb, "z=0", show=False)
+                        vlt.plot(fldb, "z=0", show=False)
                         plt.subplot(339, sharex=ax0, sharey=ax0)
-                        mpl.plot(diff, "z=0", show=False)
+                        vlt.plot(diff, "z=0", show=False)
                         plt.show()
                 else:
                     logging.info("field '{0}' equal".format(flda.name))
