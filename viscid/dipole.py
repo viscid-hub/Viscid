@@ -18,7 +18,7 @@ except ImportError:
     _HAS_NUMEXPR = False
 
 
-__all__ = ['guess_dipole_moment', 'make_dipole', 'fill_dipole',
+__all__ = ['guess_dipole_moment', 'make_dipole', 'fill_dipole', 'calc_dip',
            'set_in_region', 'make_spherical_mask', 'xyz2lsrlp', 'dipole_map',
            'dipole_map_value']
 
@@ -117,6 +117,9 @@ def fill_dipole(B, m=(0, 0, -DEFAULT_STRENGTH), strength=None, mask=None):
     mx, my, mz = m  # pylint: disable=W0612
 
     # geneate a dipole field for the entire grid
+    # Note: this is almost the exact same as calc_dip, but since components
+    # are done one-at-a-time, it requires less memory since it copies the
+    # result of each component into Bdip separately
     if _HAS_NUMEXPR:
         for i, cn in enumerate("xyz"):
             _X, _Y, _Z = _crd_lst[i]
@@ -137,6 +140,67 @@ def fill_dipole(B, m=(0, 0, -DEFAULT_STRENGTH), strength=None, mask=None):
     if mask:
         B.data[...] = np.choose(mask.astype('i'), [B, Bdip])
     return B
+
+def calc_dip(pts, m=(0, 0, -DEFAULT_STRENGTH), strength=None, crd_system='gse',
+             dtype=None):
+    """Calculate a dipole field at various points
+
+    Args:
+        pts (ndarray): Nx3 array of points at which to calculate the
+            dipole. Should use the same crd system as `m`
+        m (sequence, datetime): dipole moment
+        strength (None, float): If given, rescale m to this magnitude
+        crd_system (str): Something from which cotr can divine the
+            coordinate system for both `pts` and `m`. This is only used
+            if m is given as a datetime and we need to figure out the
+            dipole moment at a given time in a given crd system
+        dtype (str, np.dtype): dtype of the result, defaults to
+            the same datatype as `pts`
+
+    Returns:
+        ndarray: Nx3 dipole field vectors for N points
+    """
+    pts = np.asarray(pts, dtype=dtype)
+    if len(pts.shape) == 1:
+        pts = pts.reshape(1, 3)
+        single_pt = True
+    else:
+        single_pt = False
+
+    if dtype is None:
+        dtype = pts.dtype
+
+    one = np.array([1.0], dtype=dtype)  # pylint: disable=W0612
+    three = np.array([3.0], dtype=dtype)  # pylint: disable=W0612
+    if viscid.is_datetime_like(m):
+        m = viscid.get_dipole_moment(m, crd_system=crd_system)
+    else:
+        m = np.asarray(m, dtype=dtype)
+
+    if strength is not None:
+        m = (strength / np.linalg.norm(m)) * m
+    mx, my, mz = m  # pylint: disable=W0612
+
+    m = m.reshape(1, 3)
+
+    # geneate a dipole field for the entire grid
+    # Note: this is almost the same as fill_dipole, but all components
+    #       are calculated simultaneously, and so this uses more memory
+    if _HAS_NUMEXPR:
+        _X, _Y, _Z = pts.T
+        rsq = ne.evaluate("_X**2 + _Y**2 + _Z**2")  # pylint: disable=W0612
+        mdotr = ne.evaluate("mx * _X + my * _Y + mz * _Z")  # pylint: disable=W0612
+        Bdip = ne.evaluate("((three * pts * mdotr / rsq) - m) / rsq**1.5")
+    else:
+        _X, _Y, _Z = pts.T
+        rsq = _X**2 + _Y**2 + _Z**2
+        mdotr = mx * _X + my * _Y + mz * _Z
+        Bdip = ((three * pts * mdotr / rsq) - m) / rsq**1.5
+
+    if single_pt:
+        Bdip = Bdip[0, :]
+
+    return Bdip
 
 def set_in_region(a, b, alpha=1.0, beta=1.0, mask=None, out=None):
     """set `ret = alpha * a + beta * b` where mask is True"""
