@@ -99,6 +99,19 @@ def group_ggcm_files_common(detector, fnames):
             info_group = [info]
     info_groups.append(info_group)
 
+    # for those of us that are lazy with our glob patterns, we may catch
+    # a run-level xdmf file with a bunch of time-slice-level xdmf files,
+    # i.e., both `RUN.3d.000001.xdmf` and `RUN.3d.xdmf` (which includes
+    # the time slices). So, go through the groups if there are time slices
+    # in that group, make sure there's no run-level xdmf file
+    for grp in info_groups:
+        fnames = [f['fname'] for f in grp]
+        times = [re.match(detector, f).group(3) for f in fnames]
+        if any(t is not None for t in times):
+            for j in reversed(list(range(len(fnames)))):
+                if times[j] is None:
+                    grp.pop(j)
+
     # turn info_groups into groups of just file names
     groups = []
     for info_group in info_groups:
