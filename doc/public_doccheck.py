@@ -13,8 +13,8 @@ import types  # from types import BufferType, ModuleType
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), "..")))
 
 import viscid
-# from viscid.plot import mpl
-# from viscid.plot import mvi
+# from viscid.plot import vpyplot as vlt
+# from viscid.plot import vlab
 
 
 def main():

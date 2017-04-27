@@ -19,7 +19,7 @@ except ImportError:
 
 
 __all__ = ['guess_dipole_moment', 'make_dipole', 'fill_dipole',
-           'set_in_region', 'make_spherical_mask', 'dipole_map',
+           'set_in_region', 'make_spherical_mask', 'xyz2lsrlp', 'dipole_map',
            'dipole_map_value']
 
 
@@ -47,11 +47,12 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
     # pole *= 0.133 * np.dot(pole, b_cap.data.reshape(-1, 3)[idx, :]) * r**3
 
     if plot:
-        from viscid.plot import mpl
-        mpl.plot(viscid.magnitude(b_cap))
-        mpl.plot(viscid.magnitude(b_cap), style='contour', levels=10,
-                 colors='k', colorbar=False, ax=mpl.plt.gca())
-        mpl.show()
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
+        vlt.plot(viscid.magnitude(b_cap))
+        vlt.plot(viscid.magnitude(b_cap), style='contour', levels=10,
+                 colors='k', colorbar=False, ax=plt.gca())
+        vlt.show()
     return pole
 
 def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
@@ -75,7 +76,8 @@ def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
 
     B = field.empty([x, y, z], nr_comps=3, name=name, center='cell',
                     layout='interlaced', dtype=dtype)
-    B.set_info('crd_system', viscid.get_crd_system(crd_system))
+    B.set_info('crd_system', viscid.as_crd_system(crd_system))
+    B.set_info('cotr', viscid.dipole_moment2cotr(m, crd_system=crd_system))
     return fill_dipole(B, m=m, strength=strength)
 
 def fill_dipole(B, m=(0, 0, -DEFAULT_STRENGTH), strength=None, mask=None):
@@ -188,8 +190,46 @@ def make_spherical_mask(fld, rmin=0.0, rmax=None, rsq=None):
             fld = fld['x']
         return fld.wrap_field(mask, dtype='bool')
 
-def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
-               as_spherical=False):
+def _precondition_pts(pts):
+    """Make sure pts are a 2d ndarray with length 3 in 1st dim"""
+    pts = np.asarray(pts)
+    if len(pts.shape) == 1:
+        pts = pts.reshape((3, 1))
+    return pts
+
+def xyz2lsrlp(pts, cotr=None, crd_system='gse'):
+    """Ceovert x, y, z -> l-shell, r, lambda, phi [sm coords]
+
+      - r, theta, phi = viscid.cart2sph(pts in x, y, z)
+      - lambda = 90deg - theta
+      - r = L cos^2(lambda)
+
+    Args:
+        pts (ndarray): 3xN for N (x, y, z) points
+        cotr (None): if given, use cotr to perform mapping to / from sm
+        crd_system (str): crd system of pts
+
+    Returns:
+        ndarray: 4xN array of N (l-shell, r, lamda, phi) points
+    """
+    pts = _precondition_pts(pts)
+    crd_system = viscid.as_crd_system(crd_system)
+    cotr = viscid.as_cotr(cotr)
+
+    # pts -> sm coords
+    pts_sm = cotr.transform(crd_system, 'sm', pts)
+    del pts
+
+    # sm xyz -> r theta phi
+    pts_rlp = viscid.cart2sph(pts_sm)
+    # theta -> lamda (latitude)
+    pts_rlp[1, :] = 0.5 * np.pi - pts_rlp[1, :]
+    # get the L-shell from lamda and r
+    lshell = pts_rlp[0:1, :] / np.cos(pts_rlp[1:2, :])**2
+
+    return np.concatenate([lshell, pts_rlp], axis=0)
+
+def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', as_spherical=False):
     """Map pts along an ideal dipole to radius r
 
     lambda = 90deg - theta; r = L cos^2(lambda)
@@ -201,43 +241,33 @@ def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
         r (float): radius to map to
         cotr (None): if given, use cotr to perform mapping to / from sm
         crd_system (str): crd system of pts
-        notilt1967 (bool): used if automagically making a cotr object
         as_spherical(bool): if True, then the return array is
-        (t, theta, phi) with theta in the range [0, 180] and phi
-        [0, 360] (in degrees)
+            (t, theta, phi) with theta in the range [0, 180] and phi
+            [0, 360] (in degrees)
 
     Returns:
         ndarray: 3xN array of N (x, y, z) points all at a distance
             r_mapped from the center of the dipole
     """
-    pts = np.asarray(pts)
-    if len(pts.shape) == 1:
-        pts = pts.reshape((3, 1))
+    pts = _precondition_pts(pts)
+    crd_system = viscid.as_crd_system(crd_system)
+    cotr = viscid.as_cotr(cotr)
 
-    crd_system = viscid.get_crd_system(crd_system)
-    if cotr is None:
-        cotr = viscid.Cotr(dip_tilt=0.0, dip_gsm=0.0)  #     pylint: disable=not-callable
-    elif viscid.is_datetime_like(cotr):
-        cotr = viscid.Cotr(cotr, notilt1967=notilt1967)  # pylint: disable=not-callable
-    pts_sm = cotr.transform(crd_system, 'sm', pts)
+    lsrlp = xyz2lsrlp(pts, cotr=cotr, crd_system=crd_system)
     del pts
 
-    pts_rlp = viscid.cart2sph(pts_sm)
-    pts_rlp[1, :] = 0.5 * np.pi - pts_rlp[1, :]  # theta -> lamda (latitude)
-    l_shell = pts_rlp[0:1, :] / np.cos(pts_rlp[1:2, :])**2
     # this masking causes trouble
-    # pts_rlp = np.ma.masked_where(np.repeat(r < l_shell, 3, axis=0), pts_rlp)
-    # pts_rlp = np.ma.masked_where(np.array([[r] * 3]).T > l_shell, pts_rlp)
-    del pts_sm
+    # lsrlp = np.ma.masked_where(r lsrlp[0:1, :], lsrlp)
+    # lsrlp = np.ma.masked_where(np.array([[r] * 3]).T > lsrlp[0:1, :], lsrlp)
 
     # rlp: r, lamda (latitude), phi
-    rlp_mapped = np.empty_like(pts_rlp)
+    rlp_mapped = np.empty_like(lsrlp[1:, :])
     rlp_mapped[0, :] = r
     # root is determined by sign of latitude in sm?
-    root = np.sign(pts_rlp[1:2, :])
-    rlp_mapped[1, :] = root * np.arccos(np.sqrt(r / l_shell))
-    rlp_mapped[2, :] = pts_rlp[2, :]
-    del pts_rlp, l_shell
+    root = np.sign(lsrlp[2:3, :])
+    rlp_mapped[1, :] = root * np.arccos(np.sqrt(r / lsrlp[0:1, :]))
+    rlp_mapped[2, :] = lsrlp[3:4, :]
+    del lsrlp
 
     rlp_mapped[1, :] = 0.5 * np.pi - rlp_mapped[1, :]    # lamda (latitude) -> theta
 
@@ -251,24 +281,22 @@ def dipole_map(pts, r=1.0, cotr=None, crd_system='gse', notilt1967=True,
     return ret
 
 def dipole_map_value(fld, pts, r=1.0, fillna=None, cotr=None,
-                     crd_system=None, notilt1967=True, interp_kind='linear'):
+                     crd_system=None, interp_kind='linear'):
     """Map values assuming they're constant along ideal dipole lines
 
     Args:
         fld (Field): values to interpolate onto the mapped pts
         pts (ndarray): 3xN for N (x, y, z) points that will be mapped
         r (float): radius of resulting map
-        root (TYPE): which root to use in dipole formula
         cotr (None): if given, use cotr to perform mapping in sm
         crd_system (str): crd system of pts
-        notilt1967 (bool): used if automagically making a cotr object
         interp_kind (str): how to interpolate fld onto source points
 
     Returns:
         ndarray: ndarray of mapped values, one for each of the N points
     """
     if crd_system is None:
-        crd_system = viscid.get_crd_system(fld, 'gse')
+        crd_system = viscid.as_crd_system(fld, 'gse')
 
     if fld.is_spherical:
         # TODO: verify that crd_system works as expected for ionosphere
@@ -280,7 +308,7 @@ def dipole_map_value(fld, pts, r=1.0, fillna=None, cotr=None,
     # pts should be shaped 3xNX*NY*NZ or similar such that the points
     # are in the same order as the flattened c-contiguous array
     mapped_pts = dipole_map(pts, r=r, cotr=cotr, crd_system=crd_system,
-                            notilt1967=notilt1967, as_spherical=fld.is_spherical)
+                            as_spherical=fld.is_spherical)
     ret = viscid.interp(fld, mapped_pts, kind=interp_kind, wrap=False)
     if fillna is not None:
         ret[np.isnan(ret)] = fillna
@@ -308,29 +336,29 @@ def _main():
     mapped_ptsSN = dipole_map(ptsSN)
 
     try:
-        from viscid.plot import mvi
+        from viscid.plot import vlab
         colors1 = np.array([(0.6, 0.2, 0.2),
                             (0.2, 0.2, 0.6),
                             (0.6, 0.6, 0.2),
                             (0.2, 0.6, 0.6)])
         colors2 = colors1 * 0.5
 
-        mvi.points3d(ptsNP, scale_factor=0.4, color=tuple(colors1[0]))
-        mvi.points3d(ptsNN, scale_factor=0.4, color=tuple(colors1[1]))
-        mvi.points3d(ptsSP, scale_factor=0.4, color=tuple(colors1[2]))
-        mvi.points3d(ptsSN, scale_factor=0.4, color=tuple(colors1[3]))
+        vlab.points3d(ptsNP, scale_factor=0.4, color=tuple(colors1[0]))
+        vlab.points3d(ptsNN, scale_factor=0.4, color=tuple(colors1[1]))
+        vlab.points3d(ptsSP, scale_factor=0.4, color=tuple(colors1[2]))
+        vlab.points3d(ptsSN, scale_factor=0.4, color=tuple(colors1[3]))
 
-        mvi.points3d(mapped_ptsNP, scale_factor=0.4, color=tuple(colors2[0]))
-        mvi.points3d(mapped_ptsNN, scale_factor=0.4, color=tuple(colors2[1]))
-        mvi.points3d(mapped_ptsSP, scale_factor=0.4, color=tuple(colors2[2]))
-        mvi.points3d(mapped_ptsSN, scale_factor=0.4, color=tuple(colors2[3]))
+        vlab.points3d(mapped_ptsNP, scale_factor=0.4, color=tuple(colors2[0]))
+        vlab.points3d(mapped_ptsNN, scale_factor=0.4, color=tuple(colors2[1]))
+        vlab.points3d(mapped_ptsSP, scale_factor=0.4, color=tuple(colors2[2]))
+        vlab.points3d(mapped_ptsSN, scale_factor=0.4, color=tuple(colors2[3]))
 
         b = make_dipole()
 
-        mvi.plot_lines(viscid.calc_streamlines(b, mapped_ptsNP, ibound=0.5)[0])
-        mvi.plot_lines(viscid.calc_streamlines(b, mapped_ptsNN, ibound=0.5)[0])
+        vlab.plot_lines(viscid.calc_streamlines(b, mapped_ptsNP, ibound=0.5)[0])
+        vlab.plot_lines(viscid.calc_streamlines(b, mapped_ptsNN, ibound=0.5)[0])
 
-        mvi.show()
+        vlab.show()
 
     except ImportError:
         print("Mayavi not installed, no 3D plots", file=sys.stderr)

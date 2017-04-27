@@ -30,10 +30,10 @@ def _main():
     for nu in (False, True):
         viscid.logger.info("Test set, nonuniform = {0}".format(nu))
         b = viscid.make_dipole(l=(-20, -6.4, -6.4), h=(20, 6.4, 6.4),
-                                   n=(256, 128, 128), dtype='f4', nonuniform=nu)
+                               n=(256, 128, 128), dtype='f4', nonuniform=nu)
         seed = viscid.Circle(p0=(0, 0, 0), pole=(0, 0, 1), r=5.5, n=int(1e4))
 
-        kwargs = dict()
+        kwargs = dict(method='euler1')
 
         viscid.logger.info("Serial test...")
         l0, t0 = do(args.timeit, viscid.calc_streamlines, b, seed,

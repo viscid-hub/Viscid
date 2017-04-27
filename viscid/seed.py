@@ -687,10 +687,10 @@ class Plane(SeedGen):
             >>> lmn[2] = 0.0
             >>> xyz = p0 + np.dot(lmn_to_xyz, lmn)
             >>>
-            >>> from viscid.plot import mvi
-            >>> mvi.mesh_from_seeds(plane)
-            >>> mvi.points3d(xyz[0], xyz[1], xyz[2])
-            >>> mvi.show()
+            >>> from viscid.plot import vlab
+            >>> vlab.mesh_from_seeds(plane)
+            >>> vlab.points3d(xyz[0], xyz[1], xyz[2])
+            >>> vlab.show()
 
             >>> # Transform vector compenents from xyz to lmn
             >>> import numpy as np
@@ -714,20 +714,21 @@ class Plane(SeedGen):
             >>> Blmn = B_interp.wrap(Blmn)
             >>>
             >>> # use xyz to show in 3d via mayavi
-            >>> from viscid.plot import mvi
+            >>> from viscid.plot import vlab
             >>> verts, s = plane.wrap_mesh(Blmn['z'].data)
-            >>> mvi.mesh(verts[0], verts[1], verts[2], scalars=s)
+            >>> vlab.mesh(verts[0], verts[1], verts[2], scalars=s)
             >>> verts, vx, vy, vz = plane.wrap_mesh(B_interp['x'].data,
-            >>>                                     B_interp['y'].data,
-            >>>                                     B_interp['z'].data)
-            >>> mvi.quiver3d(verts[0], verts[1], verts[2], vx, vy, vz)
-            >>> mvi.show()
+            >>>                                      B_interp['y'].data,
+            >>>                                      B_interp['z'].data)
+            >>> vlab.quiver3d(verts[0], verts[1], verts[2], vx, vy, vz)
+            >>> vlab.show()
             >>>
             >>> # use lmn to show in-plane / out-of-plane
-            >>> from viscid.plot import mpl
-            >>> mpl.plot(Blmn['z'])  # z means n here
-            >>> mpl.plot2d_quiver(Blmn)
-            >>> mpl.plt.show()
+            >>> from matplotlib import pyplot as plt
+            >>> from viscid.plot import vpyplot as vlt
+            >>> vlt.plot(Blmn['z'])  # z means n here
+            >>> vlt.plot2d_quiver(Blmn)
+            >>> plt.show()
         """
         return np.array([self.Ldir, self.Mdir, self.Ndir]).T
 
@@ -918,7 +919,7 @@ class Sphere(SeedGen):
         # square away crd system
         if crd_system:
             if hasattr(crd_system, 'find_info'):
-                crd_system = viscid.get_crd_system(crd_system, 'none')
+                crd_system = viscid.as_crd_system(crd_system, 'none')
         else:
             crd_system = 'none'
         if crd_system.strip().lower() == 'gse':

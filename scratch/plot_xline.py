@@ -15,12 +15,13 @@ from mayavi import mlab
 # from mayavi.modules.iso_surface import IsoSurface
 # from mayavi.modules.streamline import Streamline
 
+import viscid
 from viscid import logger
-from viscid import vlab, field, coordinate
+from viscid import field, coordinate
 from viscid.tools import topology
 from viscid.calculator import calc
-from viscid.plot import mvi
-from viscid.plot import mpl
+from viscid.plot import vlab
+from viscid.plot import vpyplot as vlt
 
 SKIP = 10
 
@@ -140,7 +141,7 @@ if __name__=='__main__':
     topo_arr = None
     if path.exists(itopfile):
         topo_fld = topology.load_topo(itopfile, ihemfile)
-        topo_src = mvi.add_field(topo_fld, center='node')
+        topo_src = vlab.add_field(topo_fld, center='node')
         mlab.axes(topo_src)
 
         # p1 = mlab.pipeline.scalar_cut_plane(topo_src, plane_orientation='x_axes',
@@ -163,7 +164,7 @@ if __name__=='__main__':
     shear_msx = None
     xdmf_file = "{0}/{1}.3df.{2}.xdmf".format(dir, run, strtime)
     if path.exists(xdmf_file):
-        f = vlab.load_vfile(xdmf_file)
+        f = viscid.load_file(xdmf_file)
         b = f['b']
         v = f['v']
         xj = f['xj']
@@ -171,7 +172,7 @@ if __name__=='__main__':
         resampled_topo_fld = None
         if stream_color == "itop" and topo_fld is not None:
             resampled_topo_fld = resample_field(f['rr'], topo_fld, "Topology")
-            #itop_src = mvi.add_field(itop_fld, center='node')
+            #itop_src = vlab.add_field(itop_fld, center='node')
             #ptop = mlab.pipeline.scalar_cut_plane(itop_src, plane_orientation='y_axes',
             #                                 transparent=True, opacity=1.0, view_controls=False)
             #ptop.module_manager.scalar_lut_manager.show_scalar_bar = True
@@ -189,9 +190,9 @@ if __name__=='__main__':
             xpt_x, xpt_y, xpt_z = topology.find_xpoint_fast(topo_fld, ix, iy, iz)
             mlab.points3d(xpt_x, xpt_y, xpt_z, color=(.8, 0, 0), scale_factor=0.15)
 
-        bsrc = mvi.field2source(b, center='node')
-        vsrc = mvi.field2source(v, center='node')
-        xjsrc = mvi.field2source(xj, center='node')
+        bsrc = vlab.field2source(b, center='node')
+        vsrc = vlab.field2source(v, center='node')
+        xjsrc = vlab.field2source(xj, center='node')
 
         # xjmag = mlab.pipeline.extract_vector_norm(xjsrc)
         # xjcut = mlab.pipeline.scalar_cut_plane(xjmag, plane_orientation='y_axes',
@@ -301,7 +302,7 @@ if __name__=='__main__':
         logger.warn("Meeting file {0} not found".format(meeting_file))
 
     #mlab.colorbar(orientation='vertical')
-    mvi.plot_earth_3d()
+    vlab.plot_earth_3d()
     mlab.view(focalpoint=(0, 0, 0))
     mlab.show(stop=False)
 

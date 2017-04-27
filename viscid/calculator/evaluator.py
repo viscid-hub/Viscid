@@ -181,18 +181,18 @@ def _evaluate_numpy(grid, result_name, eqn, slc=None):
 if __name__ == "__main__":
     import os
     import viscid
-    from viscid.plot import mpl
-    from viscid.plot.mpl import plt
+    import matplotlib.pyplot as plt
+    from viscid.plot import vpyplot as vlt
     enabled = True
     _d = os.path.dirname(viscid.__file__)
     _g = viscid.load_file(_d + "/../sample/sample.py_0.xdmf").get_grid()
     plt.subplot(211)
     _fld = evaluate(_g, "speed", "sqrt(vx**2 + vy**2 + sqrt(vz**4))")
-    mpl.plot(_fld, show=False)
+    vlt.plot(_fld, show=False)
     plt.subplot(212)
     _fld = evaluate(_g, "speed", "sqrt(vx**2 + vy**2 + sqrt(vz**4))",
                     try_numexpr=False)
-    mpl.plot(_fld, show=True)
+    vlt.plot(_fld, show=True)
 
 ##
 ## EOF

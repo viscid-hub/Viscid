@@ -80,20 +80,25 @@ import numpy as np
 try:
     from viscid.npdatetime import (as_datetime64, as_datetime, as_timedelta,  # pylint: disable=import-error
                                    linspace_datetime64, datetime64_as_years,
-                                   format_datetime)
+                                   format_datetime, is_datetime_like)
 except ImportError:
     from npdatetime import (as_datetime64, as_datetime, as_timedelta,  # pylint: disable=import-error
                             linspace_datetime64, datetime64_as_years,
-                            format_datetime)
+                            format_datetime, is_datetime_like)
 
 
 __all__ = ['as_nvec', 'make_rotation', 'make_translation', 'get_rotation_wxyz',
-           'get_crd_system', 'Cotr', 'cotr_transform', 'get_dipole_moment',
-           'get_dipole_moment_ang', 'get_dipole_angles']
+           'as_crd_system', 'Cotr', 'as_cotr', 'cotr_transform',
+           'get_dipole_moment', 'get_dipole_moment_ang', 'get_dipole_angles',
+           'dipole_moment2cotr']
 
 
 # note that these globals are used immutably (ie, not rc file configurable)
 DEFAULT_STRENGTH = 1.0 / 3.0574e-5  # Strength of earth's dipole in nT
+
+
+class _NOT_GIVEN(object):
+    pass
 
 
 # IGRF values are in nT and come from:
@@ -283,36 +288,43 @@ def get_rotation_wxyz(mat, check_inverse=True, quick=True):
 
     return np.array([angleB, u[0], u[1], u[2]])
 
-def get_crd_system(thing, default=None):
+def as_crd_system(thing, default=_NOT_GIVEN):
     """Try to figure out a crd_system for thing
 
     Args:
         thing: Either a string with a crd_system abbreviation, or
             something that that can do thing.find_info('crd_system')
+        default (str): fallback value
 
     Returns:
         str: crd system abbreviation, stripped and lower case
-    """
-    # FIXME: this decision tree is atrocious
-    try:
-        crd_system = thing.find_info('crd_system')
-    except AttributeError:
-        # thing has no find_info attribute
-        try:
-            crd_system = thing.strip().lower()
-        except AttributeError:
-            # thing isn't a string
-            crd_system = default
-    except KeyError:
-        # thing.find_info didn't return anything for 'crd_system'
-        crd_system = default
 
-    # post-process crd_system
+    Raises:
+        TypeError: if no default supplied and thing can't be turned
+            into a crd_system
+    """
+    if hasattr(thing, "__crd_system__"):
+        crd_system = thing.__crd_system__
+    else:
+        try:
+            crd_system = thing.find_attr("__crd_system__")
+        except AttributeError:
+            if hasattr(thing, "find_info") and thing.find_info("crd_system", None):
+                crd_system = thing.find_info("crd_system")
+            else:
+                crd_system = thing
+
+    # post-process crd_system - it must be string-like
     try:
         crd_system = crd_system.strip().lower()
     except AttributeError:
-        pass
-    # TODO: check that it's a valid crd_system?
+        if crd_system is None:
+            crd_system = "Unknown"
+        elif default is _NOT_GIVEN:
+            raise TypeError("Cound not decipher crd_system: {0}"
+                            "".format(crd_system))
+        else:
+            crd_system = as_crd_system(default)
 
     return crd_system
 
@@ -389,8 +401,9 @@ class Cotr(object):
                 angle (psi in degrees, positive points north pole
                 duskward)
             notilt1967 (bool): if True, then all transforms (except
-                <->mhd transforms) are set to the identity. This is
-                the special OpenGGCM no-dipole-tilt-time.
+                <->mhd transforms) are set to the identity if time is
+                Jan 1 1967. This is the special OpenGGCM
+                no-dipole-tilt-time.
         """
         self._emat_cache = dict()
         self._xform_cache = dict()
@@ -428,6 +441,10 @@ class Cotr(object):
         years = datetime64_as_years(time)
         notilt = notilt1967 and np.abs(years - 1967.0) < 0.0006
 
+        # do i really want the self._disable_mag_crds part of this? what
+        # if i want dip_gsm set by the time, and dip_tilt set by hand...
+        # would anyone ever want that? is it really more natural to say that
+        # if you specify dip_tilt or dip_gsm then both ignore the time?
         if self._disable_mag_crds or notilt:
             dip_tilt = 0.0 if dip_tilt is None else dip_tilt
             dip_gsm = 0.0 if dip_gsm is None else dip_gsm
@@ -449,6 +466,10 @@ class Cotr(object):
             for i in (1, 2, 5):
                 self._emat_cache[-i] = eye
                 self._emat_cache[i] = eye
+
+    @property
+    def __cotr__(self):
+        return self
 
     @property
     def sun_ecliptic_longitude(self):
@@ -634,8 +655,8 @@ class Cotr(object):
         Returns:
             ndarray: self.rdim x self.rdim transformation matrix
         """
-        from_system = get_crd_system(from_system)
-        to_system = get_crd_system(to_system)
+        from_system = as_crd_system(from_system)
+        to_system = as_crd_system(to_system)
 
         xform = "->".join([from_system, to_system])
 
@@ -673,8 +694,8 @@ class Cotr(object):
             ndarray: vec in new crd system shaped either (3, ) or
                 (3, N) mirroring the shape of vec
         """
-        from_system = get_crd_system(from_system)
-        to_system = get_crd_system(to_system)
+        from_system = as_crd_system(from_system)
+        to_system = as_crd_system(to_system)
 
         in_vec = np.asarray(vec)
         vec = as_nvec(in_vec, ndim=self.rdim)
@@ -738,6 +759,52 @@ class Cotr(object):
         """
         return self.dip_tilt, self.dip_gsm
 
+def as_cotr(thing=None, default=_NOT_GIVEN):
+    """Try to make cotr into a Cotr instance
+
+    Inputs understood are:
+      - None for North-South dipole
+      - anything with a `__cotr__` property
+      - datetimes or similar, specifies the time for finding dip angles
+      - mapping (dict or similar), passed to Cotr constructor as kwargs
+
+    Args:
+        thing (obj): something to turn into a Cotr
+        default (None, obj): fallback value
+
+    Returns:
+        Cotr instance
+
+    Raises:
+        TypeError: if no default supplied and thing can't be turned
+            into a Cotr instance
+    """
+    cotr = _NOT_GIVEN
+
+    if thing is None:
+        cotr = Cotr(dip_tilt=0.0, dip_gsm=0.0)
+    elif hasattr(thing, "__cotr__"):
+        cotr = thing.__cotr__
+    elif is_datetime_like(thing):
+        cotr = Cotr(time=thing)
+    else:
+        try:
+            cotr = thing.find_attr("__cotr__")
+        except AttributeError:
+            if hasattr(thing, "find_info"):
+                if thing.find_info("cotr", None):
+                    cotr = as_cotr(thing.find_info("cotr"))  # recursive
+                elif thing.find_info("dipoletime", None):
+                    cotr = as_cotr(thing.find_info("dipoletime"))  # recursive
+
+    if cotr is _NOT_GIVEN:
+        if default is _NOT_GIVEN:
+            raise TypeError("Cound not decipher cotr: {0}".format(thing))
+        else:
+            # recursive to support default == None -> 0 tilt Cotr
+            cotr = as_cotr(default)
+
+    return cotr
 
 def cotr_transform(date_time, from_system, to_system, vec, notilt1967=True):
     """Transform a vector from one system to another
@@ -809,6 +876,22 @@ def get_dipole_angles(date_time, notilt1967=True):
     c = Cotr(date_time, notilt1967=notilt1967)
     return c.get_dipole_angles()
 
+def dipole_moment2cotr(m, crd_system='gse'):
+    """Turn dipole moment vector into a Cotr instance
+
+    Args:
+        m (sequence): dipole moment as sequence with length 3
+        crd_system (str): crd_system of m
+
+    Returns:
+        Cotr instance
+    """
+    assert as_crd_system(crd_system) in ('gse', 'mhd')
+    m = Cotr(dip_tilt=0.0, dip_gsm=0.0).transform(crd_system, 'gse', m)
+    gsm = np.rad2deg(np.arctan2(m[1], m[2]))
+    tilt = np.rad2deg(np.arctan2(m[0], np.linalg.norm(m[1:])))
+    return Cotr(dip_tilt=tilt, dip_gsm=gsm)
+
 
 def _main():
     """This _main is a faux unit-test of cotr
@@ -816,7 +899,7 @@ def _main():
     It makes 3d plots using both Viscid and Mayavi
     """
     plot_mpl = True
-    plot_mvi = True
+    plot_vlab = True
     crd_system = 'gse'
 
     dtfmt = "%Y-%m-%d %H:%M"
@@ -830,7 +913,7 @@ def _main():
         from matplotlib import pyplot as plt
         import matplotlib.dates as mdates
         try:
-            from viscid.plot import mpl
+            from viscid.plot import vpyplot as vlt
         except ImportError:
             pass
 
@@ -903,39 +986,39 @@ def _main():
         # plt.plot(times, m[:, 2], label='M$_{2}$')
         # plt.show()
 
-    if plot_mvi:
+    if plot_vlab:
         import os
         import viscid
-        from viscid.plot import mvi
+        from viscid.plot import vlab
 
-        mvi.figure(size=(768, 768), fgcolor=(0, 0, 0), bgcolor=(1, 1, 1),
-                   offscreen=True)
+        vlab.figure(size=(768, 768), fgcolor=(0, 0, 0), bgcolor=(1, 1, 1),
+                    offscreen=True)
 
         def _plot_time_range(times, figname):
             for i, t in enumerate(times):
-                mvi.clf()
+                vlab.clf()
                 cotr = Cotr(t)
 
-                mvi.plot_blue_marble(r=1.0, rotate=t, crd_system=crd_system,
-                                     nphi=256, ntheta=128, res=4, lines=True)
+                vlab.plot_blue_marble(r=1.0, rotate=t, crd_system=crd_system,
+                                      nphi=256, ntheta=128, res=4, lines=True)
 
-                mvi.plot_earth_3d(radius=1.005, crd_system=crd_system,
-                                  night_only=True, opacity=0.5)
+                vlab.plot_earth_3d(radius=1.005, crd_system=crd_system,
+                                   night_only=True, opacity=0.5)
 
                 mag_north = cotr.transform('sm', crd_system, [0, 0, 1.0])
 
-                mvi.mlab.points3d(*mag_north, scale_factor=0.05, mode='sphere',
-                                  color=(0.992, 0.455, 0.0), resolution=32)
-                mvi.orientation_axes(line_width=4.0)
+                vlab.mlab.points3d(*mag_north, scale_factor=0.05, mode='sphere',
+                                   color=(0.992, 0.455, 0.0), resolution=32)
+                vlab.orientation_axes(line_width=4.0)
 
-                mvi.mlab.text(0.325, 0.95, viscid.format_datetime(t))
+                vlab.mlab.text(0.325, 0.95, viscid.format_datetime(t))
 
-                mvi.view(azimuth=0.0, elevation=90.0, distance=5.0,
-                         focalpoint=[0, 0, 0])
-                mvi.savefig("{0}_eq_{1:06d}.png".format(figname, i))
-                mvi.view(azimuth=0.0, elevation=0.0, distance=5.0,
-                         focalpoint=[0, 0, 0])
-                mvi.savefig("{0}_pole_{1:06d}.png".format(figname, i))
+                vlab.view(azimuth=0.0, elevation=90.0, distance=5.0,
+                          focalpoint=[0, 0, 0])
+                vlab.savefig("{0}_eq_{1:06d}.png".format(figname, i))
+                vlab.view(azimuth=0.0, elevation=0.0, distance=5.0,
+                          focalpoint=[0, 0, 0])
+                vlab.savefig("{0}_pole_{1:06d}.png".format(figname, i))
 
         path = os.path.expanduser("~/Desktop/day/{0}/".format(crd_system))
         if not os.path.exists(path):
@@ -950,9 +1033,9 @@ def _main():
                                              "2010-06-22T00:00:00.0", n=49)
         _plot_time_range(solstice_times, path + "solstice")
         pfx = path + "solstice_eq"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
         pfx = path + "solstice_pole"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
 
         # autumnal equinox (earth-sun line @ equator)
         print()
@@ -961,9 +1044,9 @@ def _main():
                                             "2010-09-24T00:00:00.0", n=49)
         _plot_time_range(equinox_times, path + "equinox")
         pfx = path + "equinox_eq"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
         pfx = path + "equinox_pole"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
+        viscid.make_animation(pfx + '.mp4', pfx, framerate=23.976, yes=1)
 
         # Watching the magnetic pole move year-by-year
         print()
@@ -972,9 +1055,9 @@ def _main():
         times = [as_datetime64("{0:04d}-06-21".format(y)) for y in years]
         _plot_time_range(times, path + "year")
         pfx = path + "year_eq"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
+        viscid.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
         pfx = path + "year_pole"
-        viscid.vutil.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
+        viscid.make_animation(pfx + '.mp4', pfx, yes=1, framerate=8)
 
 if __name__ == "__main__":
     sys.exit(_main())

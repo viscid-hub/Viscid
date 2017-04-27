@@ -12,10 +12,11 @@ This test depends on 3 runs:
 from __future__ import division, print_function
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 import viscid
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def compare_vectors(orig_fld, cmp_fld, catol=1e-8, rtol=2e-6,
@@ -38,14 +39,14 @@ def compare_vectors(orig_fld, cmp_fld, catol=1e-8, rtol=2e-6,
 
         # plot differences?
         if make_plots:
-            mpl.plt.clf()
-            ax1 = mpl.plt.subplot(311)
-            mpl.plot(orig_fld[d]['y=0f'], symmetric=True, earth=True)
-            mpl.plt.subplot(312, sharex=ax1, sharey=ax1)
-            mpl.plot(cmp_fld[d]['y=0f'], symmetric=True, earth=True)
-            mpl.plt.subplot(313, sharex=ax1, sharey=ax1)
-            mpl.plot(reldiff[d]['y=0f'], symmetric=True, earth=True)
-            mpl.show()
+            plt.clf()
+            ax1 = plt.subplot(311)
+            vlt.plot(orig_fld[d]['y=0f'], symmetric=True, earth=True)
+            plt.subplot(312, sharex=ax1, sharey=ax1)
+            vlt.plot(cmp_fld[d]['y=0f'], symmetric=True, earth=True)
+            plt.subplot(313, sharex=ax1, sharey=ax1)
+            vlt.plot(reldiff[d]['y=0f'], symmetric=True, earth=True)
+            vlt.show()
 
     # if any(comp_beyond_limit):
     #     raise RuntimeError("Tolerance exceeded on ->CC accuracy")
@@ -101,15 +102,15 @@ def main():
         compare_vectors(bD["x=1:-1, y=1:-1, z=1:-1"], b1D.as_cell_centered(),
                         make_plots=True)
 
-        # mpl.plt.clf()
+        # plt.clf()
         # dkwargs = dict(symmetric=True, earth=True, clim=(-1e2, 1e2))
-        # ax1 = mpl.plt.subplot(311)
-        # mpl.plot(viscid.div(b1)['y=0f'], **dkwargs)
-        # mpl.plt.subplot(312, sharex=ax1, sharey=ax1)
-        # mpl.plot(viscid.div(b)['y=0f'], **dkwargs)
-        # mpl.plt.subplot(313, sharex=ax1, sharey=ax1)
-        # mpl.plot(viscid.div(b1D)['y=0f'], **dkwargs)
-        # mpl.show()
+        # ax1 = plt.subplot(311)
+        # vlt.plot(viscid.div(b1)['y=0f'], **dkwargs)
+        # plt.subplot(312, sharex=ax1, sharey=ax1)
+        # vlt.plot(viscid.div(b)['y=0f'], **dkwargs)
+        # plt.subplot(313, sharex=ax1, sharey=ax1)
+        # vlt.plot(viscid.div(b1D)['y=0f'], **dkwargs)
+        # vlt.show()
 
         bD = b1D = mask5 = mask1_5 = None
 
@@ -145,16 +146,16 @@ def main():
         viscid.set_in_region(divb, divb, alpha=0.0, beta=0.0, out=divb,
                              mask=viscid.make_spherical_mask(divb, rmax=5.0))
 
-        mpl.plt.clf()
-        ax1 = mpl.subplot(311)
-        mpl.plot(div_b['y=0f'], symmetric=True, earth=True)
-        mpl.subplot(312, sharex=ax1, sharey=ax1)
-        # mpl.plot(div_b1['y=0f'], symmetric=True, earth=True)
-        mpl.plot(div_b2['y=0f'], symmetric=True, earth=True)
-        mpl.subplot(313, sharex=ax1, sharey=ax1)
-        mpl.plot(divb['y=0f'], symmetric=True, earth=True)
+        plt.clf()
+        ax1 = vlt.subplot(311)
+        vlt.plot(div_b['y=0f'], symmetric=True, earth=True)
+        vlt.subplot(312, sharex=ax1, sharey=ax1)
+        # vlt.plot(div_b1['y=0f'], symmetric=True, earth=True)
+        vlt.plot(div_b2['y=0f'], symmetric=True, earth=True)
+        vlt.subplot(313, sharex=ax1, sharey=ax1)
+        vlt.plot(divb['y=0f'], symmetric=True, earth=True)
 
-        mpl.show()
+        vlt.show()
 
     return 0
 

@@ -15,7 +15,7 @@ import sys
 import numpy as np
 
 import viscid
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def main():
@@ -73,24 +73,24 @@ def main():
                                      **bl_kwargs)
 
     if True:
-        from viscid.plot import mvi
-        mesh = mvi.mesh_from_seeds(seedsN, scalars=topoN_fc)
+        from viscid.plot import vlab
+        mesh = vlab.mesh_from_seeds(seedsN, scalars=topoN_fc)
         mesh.actor.property.backface_culling = True
-        # mvi.plot_lines(blines_cc, scalars="#000000", tube_radius=0.03)
-        mvi.plot_lines(blinesN_fc, scalars=viscid.topology2color(topoN_fc),
-                       opacity=0.7)
+        # vlab.plot_lines(blines_cc, scalars="#000000", tube_radius=0.03)
+        vlab.plot_lines(blinesN_fc, scalars=viscid.topology2color(topoN_fc),
+                        opacity=0.7)
 
-        mvi.plot_blue_marble(r=1.0)
-        mvi.plot_earth_3d(radius=1.01, crd_system=b, night_only=True,
-                          opacity=0.5)
-        mvi.show()
+        vlab.plot_blue_marble(r=1.0)
+        vlab.plot_earth_3d(radius=1.01, crd_system=b, night_only=True,
+                           opacity=0.5)
+        vlab.show()
 
     if True:
-        mpl.subplot(121, projection='polar')
-        mpl.plot(topoN_fc)
-        mpl.subplot(122, projection='polar')
-        mpl.plot(topoS_fc)
-        mpl.show()
+        vlt.subplot(121, projection='polar')
+        vlt.plot(topoN_fc)
+        vlt.subplot(122, projection='polar')
+        vlt.plot(topoS_fc)
+        vlt.show()
 
     return 0
 

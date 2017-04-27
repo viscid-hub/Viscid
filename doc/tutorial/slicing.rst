@@ -14,7 +14,7 @@ The best way to show the utility of this extended syntax is by example, so here 
     from os import path
 
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
@@ -22,9 +22,9 @@ The best way to show the utility of this extended syntax is by example, so here 
     # Notice that slices by location are done by appending an 'f' to the
     # slice. This means "y=0" is not the same as "y=0f".
     pp = f3d["pp"]["x = 5:-25, y = 0.0f, z = -8.0f:10.0f:2"]
-    mpl.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
+    vlt.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
 
-    mpl.show()
+    vlt.show()
 
 Temporal Slices
 ---------------
@@ -64,30 +64,31 @@ Single Time Slice
 
     from os import path
 
+    from matplotlib import pyplot as plt
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    ax1 = mpl.plt.subplot2grid((2, 1), (0, 0))
+    ax1 = plt.subplot2grid((2, 1), (0, 0))
     f3d.activate_time(0)
 
     # notice y=0.0, this is different from y=0; y=0 is the 0th index in
     # y, which is this case will be y=-50.0
-    mpl.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+    vlt.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
              style="contourf", levels=50, plot_opts="lin_0,earth")
-    mpl.plt.title(f3d.get_grid().format_time("UT"))
+    plt.title(f3d.get_grid().format_time("UT"))
 
     # share axes so this plot pans/zooms with the first
-    mpl.plt.subplot2grid((2, 1), (1, 0), sharex=ax1, sharey=ax1)
+    plt.subplot2grid((2, 1), (1, 0), sharex=ax1, sharey=ax1)
     f3d.activate_time(-1)
-    mpl.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+    vlt.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
              style="contourf", levels=50, plot_opts="lin_0,earth")
-    mpl.plt.title(f3d.get_grid().format_time("hms"))
+    plt.title(f3d.get_grid().format_time("hms"))
 
-    mpl.auto_adjust_subplots()
-    mpl.show()
+    vlt.auto_adjust_subplots()
+    vlt.show()
 
 Iterating Over Time Slices
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -102,7 +103,7 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
     from matplotlib import pyplot as plt
     import numpy as np
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     f2d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'))
@@ -112,9 +113,9 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
 
     for i, grid in enumerate(f2d.iter_times(":2")):
         plt.subplot2grid((nr_times, 1), (i, 0))
-        mpl.plot(grid["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+        vlt.plot(grid["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
                  plot_opts="lin_0,earth")
-        mpl.plt.title(grid.format_time(".01f"))
+        plt.title(grid.format_time(".01f"))
 
-    mpl.auto_adjust_subplots()
-    mpl.show()
+    vlt.auto_adjust_subplots()
+    vlt.show()

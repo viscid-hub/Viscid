@@ -22,12 +22,13 @@ import shutil
 
 import numpy as np
 from numpy.distutils.core import setup
+import numpy.distutils.fcompiler
 from numpy.distutils.extension import Extension as Extension
 npExtension = Extension
 
 
-INSTALL_MANIFEST = '_install_manifest.json'
-RECORD_FNAME = '_temp_install_list.txt'
+INSTALL_MANIFEST = '.install_manifest.json'
+RECORD_FNAME = '.temp_install_list.txt'
 
 
 try:
@@ -40,6 +41,13 @@ if sys.version_info >= (3, 0):
     PY3K = True
 else:
     PY3K = False
+
+
+try:
+    FileNotFoundError
+except NameError:
+    class FileNotFoundError(Exception):
+        pass
 
 
 # listing the sources
@@ -288,12 +296,21 @@ if has_cython and use_cython:
     ext_mods = cythonize(ext_mods, nthreads=_nprocs)
 
 # make fortran extension instances
-for d in fort_defs:
-    if d is None:
-        continue
-    src_lst = d[1]
-    ext_mods += [npExtension(d[0], src_lst, extra_compile_args=fort_fcflags,
-                             extra_link_args=fort_ldflags, **d[2])]
+try:
+    fc = numpy.distutils.fcompiler.new_fcompiler(dry_run=True)
+except ValueError:
+    fc = None
+
+if fc is None:
+    # warn the user at the very end so they're more likely to see the warning
+    pass
+else:
+    for d in fort_defs:
+        if d is None:
+            continue
+        src_lst = d[1]
+        ext_mods += [npExtension(d[0], src_lst, extra_compile_args=fort_fcflags,
+                                 extra_link_args=fort_ldflags, **d[2])]
 
 # hack for OSX pythons that are compiled with gcc symlinked to llvm-gcc
 if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
@@ -347,7 +364,7 @@ try:
         try:
             with open(INSTALL_MANIFEST, 'r') as fin:
                 inst_manifest = json.load(fin)
-        except IOError:
+        except (IOError, FileNotFoundError):
             inst_manifest = dict()
 
         with open(RECORD_FNAME) as fin:
@@ -379,6 +396,17 @@ except SystemExit as e:
               '/usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"'
               '      \n', file=sys.stderr)
     raise
+
+# warn the user at the end if the fortran code was not built
+if fc is None:
+    print("\n"
+          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+          "WARNING: No fortran compiler found. Modules that depend on Fortran \n"
+          "         code will not work (eg, the jrrle reader), but this may \n"
+          "         or may not be a problem for you since most of Viscid \n"
+          "         does not depend on Fortran.\n"
+          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+          "\n", file=sys.stderr)
 
 ##
 ## EOF

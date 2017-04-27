@@ -33,50 +33,51 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
     try:
         if not plot2d:
             raise ImportError
-        from viscid.plot import mpl
-        mpl.plt.clf()
-        # mpl.plt.plot(seeds.get_points()[2, :], fld)
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
+        plt.clf()
+        # plt.plot(seeds.get_points()[2, :], fld)
         mpl_plot_kwargs = dict()
         if interpolated_fld.is_spherical():
             mpl_plot_kwargs['hemisphere'] = 'north'
-        mpl.plot(interpolated_fld, **mpl_plot_kwargs)
-        mpl.plt.title(seed_name)
+        vlt.plot(interpolated_fld, **mpl_plot_kwargs)
+        plt.title(seed_name)
 
-        mpl.plt.savefig(next_plot_fname(__file__, series='2d'))
+        plt.savefig(next_plot_fname(__file__, series='2d'))
         if show:
-            mpl.plt.show()
+            plt.show()
     except ImportError:
         pass
 
     try:
         if not plot3d:
             raise ImportError
-        from viscid.plot import mvi
+        from viscid.plot import vlab
 
         try:
             fig = _global_ns['figure']
-            mvi.clf()
+            vlab.clf()
         except KeyError:
-            fig = mvi.figure(size=[1200, 800], offscreen=not show)
+            fig = vlab.figure(size=[1200, 800], offscreen=not show)
             _global_ns['figure'] = fig
 
         try:
-            mesh = mvi.mesh_from_seeds(seeds, scalars=interpolated_fld)
+            mesh = vlab.mesh_from_seeds(seeds, scalars=interpolated_fld)
             mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
 
         pts = seeds.get_points()
-        p = mvi.points3d(pts[0], pts[1], pts[2], interpolated_fld.flat_data,
-                         scale_mode='none', scale_factor=0.02)
-        mvi.axes(p)
-        mvi.title(seed_name)
+        p = vlab.points3d(pts[0], pts[1], pts[2], interpolated_fld.flat_data,
+                          scale_mode='none', scale_factor=0.02)
+        vlab.axes(p)
+        vlab.title(seed_name)
         if view_kwargs:
-            mvi.view(**view_kwargs)
+            vlab.view(**view_kwargs)
 
-        mvi.savefig(next_plot_fname(__file__, series='3d'))
+        vlab.savefig(next_plot_fname(__file__, series='3d'))
         if show:
-            mvi.show()
+            vlab.show()
     except ImportError:
         pass
 
@@ -99,7 +100,7 @@ def _main():
     x = np.linspace(-1, 1, img.shape[0])
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
-    logo = viscid.arrays2field(img, [x, y, z])
+    logo = viscid.arrays2field([x, y, z], img)
 
     if 1:
         viscid.logger.info('Testing Line...')
@@ -182,38 +183,39 @@ def _main():
         try:
             if not plot2d:
                 raise ImportError
-            from viscid.plot import mpl
-            mpl.clf()
-            mpl.plot(vx_sheet, symmetric=True)
-            mpl.plt.savefig(next_plot_fname(__file__, series='2d'))
+            from matplotlib import pyplot as plt
+            from viscid.plot import vpyplot as vlt
+            vlt.clf()
+            vlt.plot(vx_sheet, symmetric=True)
+            plt.savefig(next_plot_fname(__file__, series='2d'))
             if args.show:
-                mpl.show()
+                vlt.show()
         except ImportError:
             pass
 
         try:
             if not plot3d:
                 raise ImportError
-            from viscid.plot import mvi
-            mvi.clf()
-            mesh = mvi.mesh_from_seeds(sheet_seed, scalars=vx_sheet,
-                                       clim=(-400, 400))
-            mvi.plot_earth_3d(crd_system=b)
-            mvi.view(azimuth=+90.0 + 45.0, elevation=90.0 - 25.0,
-                     distance=30.0, focalpoint=(-10.0, +1.0, +1.0))
+            from viscid.plot import vlab
+            vlab.clf()
+            mesh = vlab.mesh_from_seeds(sheet_seed, scalars=vx_sheet,
+                                        clim=(-400, 400))
+            vlab.plot_earth_3d(crd_system=b)
+            vlab.view(azimuth=+90.0 + 45.0, elevation=90.0 - 25.0,
+                      distance=30.0, focalpoint=(-10.0, +1.0, +1.0))
 
-            mvi.title("RectilinearMeshPoints")
-            mvi.savefig(next_plot_fname(__file__, series='3d'))
+            vlab.title("RectilinearMeshPoints")
+            vlab.savefig(next_plot_fname(__file__, series='3d'))
             if args.show:
-                mvi.show()
+                vlab.show()
 
         except ImportError:
             pass
 
     # prevent weird xorg bad-instructions on tear down
     if 'figure' in _global_ns and _global_ns['figure'] is not None:
-        from viscid.plot import mvi
-        mvi.mlab.close(_global_ns['figure'])
+        from viscid.plot import vlab
+        vlab.mlab.close(_global_ns['figure'])
 
     return 0
 

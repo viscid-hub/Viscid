@@ -14,15 +14,15 @@ import argparse
 import sys
 from timeit import default_timer as time
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import logger
 from viscid import vutil
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 try:
     import numexpr as ne
@@ -51,16 +51,16 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
 
     for i, p in enumerate(planes):
         plt.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
-        mpl.plot(result_numexpr, p, show=False)
+        vlt.plot(result_numexpr, p, show=False)
         plt.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
-        mpl.plot(result_diff, p, show=False)
+        vlt.plot(result_diff, p, show=False)
 
-    mpl.plt.suptitle(title)
-    mpl.auto_adjust_subplots(subplot_params=dict(top=0.9))
+    plt.suptitle(title)
+    vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if show:
-        mpl.mplshow()
+        vlt.mplshow()
 
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)

@@ -7,7 +7,14 @@ import shutil
 import sys
 
 
-INSTALL_MANIFEST = '_install_manifest.json'
+INSTALL_MANIFEST = '.install_manifest.json'
+
+
+try:
+    FileNotFoundError
+except NameError:
+    class FileNotFoundError(Exception):
+        pass
 
 
 def _main():
@@ -15,8 +22,13 @@ def _main():
     verb = True
 
     # read the install manifest
-    with open(INSTALL_MANIFEST, 'r') as fin:
-        inst_manifest = json.load(fin)
+    try:
+        with open(INSTALL_MANIFEST, 'r') as fin:
+            inst_manifest = json.load(fin)
+    except (IOError, FileNotFoundError):
+        print("Uninstall Error: Manifest not found, `make install` must be "
+              "run first.", file=sys.stderr)
+        return 0
 
     if sys.executable in inst_manifest:
         # remove the whole package directory, which now should just

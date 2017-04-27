@@ -17,9 +17,11 @@ import viscid
 from viscid import logger
 from viscid.compat import string_types, izip_longest
 from viscid import coordinate
-from viscid import vutil
-from viscid import tree
 from viscid.cython import interp_trilin
+from viscid.sliceutil import to_slice
+from viscid import tree
+from viscid.vutil import subclass_spider
+
 
 LAYOUT_DEFAULT = "none"  # do not translate
 LAYOUT_INTERLACED = "interlaced"
@@ -28,12 +30,12 @@ LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
 
-__all__ = ['arrays2field', 'dat2field', 'empty', 'zeros', 'ones',
-           'empty_like', 'zeros_like', 'ones_like', 'scalar_fields_to_vector',
-           'wrap_field']
+__all__ = ['arrays2field', 'dat2field', 'full', 'empty', 'zeros', 'ones',
+           'full_like', 'empty_like', 'zeros_like', 'ones_like',
+           'scalar_fields_to_vector', 'wrap_field']
 
 
-def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
+def arrays2field(crd_arrs, dat_arr, name="NoName", center=None,
                  crd_type=None, crd_names="xyzuvw"):
     """Turn arrays into fields so they can be used in viscid.plot, etc.
 
@@ -43,10 +45,10 @@ def arrays2field(dat_arr, crd_arrs, name="NoName", center=None,
     :py:func:`viscid.field.wrap_field`.
 
     Args:
-        dat_arr (ndarray): data with len(crd_arrs) or len(crd_arrs) + 1
-            dimensions
         crd_arrs (list of ndarrays): xyz list of ndarrays that
             describe the node centered coordnates of the field
+        dat_arr (ndarray): data with len(crd_arrs) or len(crd_arrs) + 1
+            dimensions
         name (str): some name
         center (str, None): If not None, translate field to this
             centering (node or cell)
@@ -118,12 +120,12 @@ def dat2field(dat_arr, name="NoName", fldtype="scalar", center=None,
         raise ValueError("Unknown type: {0}".format(fldtype))
 
     crd_arrs = [np.arange(s).astype(dat_arr.dtype) for s in sshape]
-    return arrays2field(dat_arr, crd_arrs, name=name, center=center)
+    return arrays2field(crd_arrs, dat_arr, name=name, center=center)
 
-def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
-          nr_comps=0, crd_type=None, crd_names="xyzuvw", _initial_vals="empty",
-          **kwargs):
-    """Analogous to `numpy.empty` (uninitialized array)
+def full(crds, fill_value, dtype="f8", name="NoName", center="cell",
+         layout=LAYOUT_FLAT, nr_comps=0, crd_type=None, crd_names="xyzuvw",
+         **kwargs):
+    """Analogous to `numpy.full`
 
     Parameters:
         crds (Coordinates, list, or tuple): Can be a coordinates
@@ -131,6 +133,8 @@ def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
             coordinate arrays. Or, if it's just a list or tuple of
             integers, those integers are taken to be the nz,ny,nx shape
             and the coordinates will be fill with :py:func:`np.arange`.
+        fill_value (number, None): Initial value of array. None
+            indicates uninitialized (i.e., `numpy.empty`)
         dtype (optional): some way to describe numpy dtype of data
         name (str): a way to refer to the field programatically
         center (str, optional): cell or node, there really isn't
@@ -171,17 +175,30 @@ def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
         else:
             shape = [nr_comps] + list(sshape)
 
-    if _initial_vals == "empty":
+    if fill_value is None:
         dat = np.empty(shape, dtype=dtype)
-    elif _initial_vals == "zeros":
-        dat = np.zeros(shape, dtype=dtype)
-    elif _initial_vals == "ones":
-        dat = np.ones(shape, dtype=dtype)
     else:
-        raise ValueError("_initial_vals only accepts empty, zeros, ones; not {0}"
-                         "".format(_initial_vals))
+        if hasattr(np, "full"):
+            dat = np.full(shape, fill_value, dtype=dtype)
+        elif hasattr(np, "filled"):
+            dat = np.filled(shape, fill_value, dtype=dtype)
+        else:
+            raise RuntimeError("Please update Numpy; your version has neither "
+                               "`numpy.full` nor `numpy.filled`")
     return wrap_field(dat, crds, name=name, fldtype=fldtype, center=center,
                       **kwargs)
+
+def empty(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
+          nr_comps=0, **kwargs):
+    """Analogous to `numpy.empty`
+
+    Returns:
+        new uninitialized :class:`Field`
+
+    See Also: :meth:`full`
+    """
+    return full(crds, None, dtype=dtype, name=name, center=center,
+                layout=layout, nr_comps=nr_comps, **kwargs)
 
 def zeros(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
           nr_comps=0, **kwargs):
@@ -190,10 +207,10 @@ def zeros(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
     Returns:
         new :class:`Field` initialized to 0
 
-    See Also: :meth:`empty`
+    See Also: :meth:`full`
     """
-    return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
-                 nr_comps=nr_comps, _initial_vals="zeros", **kwargs)
+    return full(crds, 0.0, dtype=dtype, name=name, center=center,
+                layout=layout, nr_comps=nr_comps, **kwargs)
 
 def ones(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
          nr_comps=0, **kwargs):
@@ -202,58 +219,71 @@ def ones(crds, dtype="f8", name="NoName", center="cell", layout=LAYOUT_FLAT,
     Returns:
         new :class:`Field` initialized to 1
 
-    See Also: :meth:`empty`
+    See Also: :meth:`full`
     """
-    return empty(crds, dtype=dtype, name=name, center=center, layout=layout,
-                 nr_comps=nr_comps, _initial_vals="ones", **kwargs)
+    return full(crds, 1.0, dtype=dtype, name=name, center=center,
+                layout=layout, nr_comps=nr_comps, **kwargs)
 
-def empty_like(fld, name="NoName", **kwargs):
-    """Analogous to `numpy.empty_like`
+def full_like(fld, fill_value, name="NoName", **kwargs):
+    """Analogous to `numpy.full_like`
 
-    Makes a new, unitilialized :class:`Field`. Copies as much meta data
-    as it can from `fld`.
+    Makes a new :class:`Field` initialized to fill_value. Copies as
+    much meta data as it can from `fld`.
 
     Parameters:
         fld: field to get coordinates / metadata from
+        fill_value (number, None): initial value, or None to leave
+            data uninitialized
         name: name for this field
         **kwargs: passed through to :class:`Field` constructor
 
     Returns:
-        new uninitialized :class:`Field`
+        new :class:`Field`
     """
-    dat = np.empty(fld.shape, dtype=fld.dtype)
+    if fill_value is None:
+        dat = np.empty(fld.shape, dtype=fld.dtype)
+    else:
+        if hasattr(np, "full"):
+            dat = np.full(fld.shape, fill_value, dtype=fld.dtype)
+        elif hasattr(np, "filled"):
+            dat = np.filled(fld.shape, fill_value, dtype=fld.dtype)
+        else:
+            raise RuntimeError("Please update Numpy; your version has neither "
+                               "`numpy.full` nor `numpy.filled`")
     c = kwargs.pop("center", fld.center)
     t = kwargs.pop("time", fld.time)
     return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
                       time=t, parents=[fld], **kwargs)
 
-def zeros_like(fld, name="NoName", **kwargs):
+def empty_like(fld, **kwargs):
+    """Analogous to `numpy.empty_like`
+
+    Returns:
+        new uninitialized :class:`Field`
+
+    See Also: :meth:`full_like`
+    """
+    return full_like(fld, None, **kwargs)
+
+def zeros_like(fld, **kwargs):
     """Analogous to `numpy.zeros_like`
 
     Returns:
-        new :class:`Field` initialized to 0
+        new :class:`Field` filled with zeros
 
-    See Also: :meth:`empty_like`
+    See Also: :meth:`full_like`
     """
-    dat = np.zeros(fld.shape, dtype=fld.dtype)
-    c = kwargs.pop("center", fld.center)
-    t = kwargs.pop("time", fld.time)
-    return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
-                      time=t, parents=[fld], **kwargs)
+    return full_like(fld, 0.0, **kwargs)
 
-def ones_like(fld, name="NoName", **kwargs):
+def ones_like(fld, **kwargs):
     """Analogous to `numpy.ones_like`
 
     Returns:
-        new :class:`Field` initialized to 1
+        new :class:`Field` filled with ones
 
-    See Also: :meth:`empty_like`
+    See Also: :meth:`full_like`
     """
-    dat = np.ones(fld.shape, dtype=fld.dtype)
-    c = kwargs.pop("center", fld.center)
-    t = kwargs.pop("time", fld.time)
-    return wrap_field(dat, fld.crds, name=name, fldtype=fld.fldtype, center=c,
-                      time=t, parents=[fld], **kwargs)
+    return full_like(fld, 1.0, **kwargs)
 
 def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
     """Convert scalar fields to a vector field
@@ -303,7 +333,7 @@ def field_type(fldtype):
     if isclass(fldtype) and issubclass(fldtype, Field):
         return fldtype
     else:
-        for cls in vutil.subclass_spider(Field):
+        for cls in subclass_spider(Field):
             if cls.istype(fldtype):
                 return cls
     logger.error("Field type {0} not understood".format(fldtype))
@@ -1128,7 +1158,7 @@ class Field(tree.Leaf):
 
         if comp_slc is None:
             comp_slc = slice(None)
-        comp_slc = vutil.to_slice(None, comp_slc)
+        comp_slc = to_slice(None, comp_slc)
 
         return selection, comp_slc
 
@@ -1603,18 +1633,18 @@ class Field(tree.Leaf):
     ## convert centering
     # Note: these are kind of specific to cartesian connected grids
 
-    def as_centered(self, center):
+    def as_centered(self, center, default_width=1e-5):
         if not center or self.iscentered(center):
             fld = self
         elif center.lower() == "cell":
-            fld = self.as_cell_centered()
+            fld = self.as_cell_centered(default_width=default_width)
         elif center.lower() == "node":
             fld = self.as_node_centered()
         else:
             raise NotImplementedError("can only give field as cell or node")
         return fld
 
-    def as_cell_centered(self):
+    def as_cell_centered(self, default_width=1e-5):
         """Convert field to cell centered field without discarding
         any data; this goes through hacky pains to make sure the data
         is the same as self (including the state of cachedness)"""
@@ -1623,7 +1653,7 @@ class Field(tree.Leaf):
 
         elif self.iscentered('node'):
             # construct new crds
-            new_crds = self._src_crds.extend_by_half()
+            new_crds = self._src_crds.extend_by_half(default_width=default_width)
 
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
@@ -1721,16 +1751,19 @@ class Field(tree.Leaf):
         if nr_sdims >= 3:
             return self
         elif nr_sdims < 3:
-            new_shape = self.sshape + [1] * (3 - nr_sdims)
-            if self.nr_comps:
-                new_shape.insert(self.nr_comp, self.nr_comps)
-
             _cc = (self.iscentered('cell') or self.iscentered('face') or
                    self.iscentered('edge'))
             newcrds = self.crds.atleast_3d(xl, xh, cc=_cc)
-
             ctx = {'crds': newcrds}
+
             if self.is_loaded:
+                if _cc:
+                    new_shape = newcrds.shape_cc
+                else:
+                    new_shape = newcrds.shape_nc
+                if self.nr_comps:
+                    new_shape.insert(self.nr_comp, self.nr_comps)
+
                 return self.wrap(self.data.reshape(new_shape), context=ctx)
             else:
                 return self.wrap(self._src_data, context=ctx)
@@ -2074,6 +2107,14 @@ class Field(tree.Leaf):
         return self.as_layout(LAYOUT_FLAT,
                               force_c_contiguous=force_c_contiguous)
 
+    @property
+    def __crd_system__(self):
+        if self.find_info("crd_system", None):
+            crd_system = self.find_info("crd_system")
+        else:
+            crd_system = NotImplemented
+        return crd_system
+
 
 class ScalarField(Field):
     _TYPE = "scalar"
@@ -2190,6 +2231,20 @@ class VectorField(Field):
         if not was_loaded and ret is not self:
             self.clear_cache()
         return ret
+
+    def _ow(self, other):
+        # - hack because Fields don't broadcast correctly after a ufunc?
+        # - Vector Hack if other is a scalar field to promote it to a vector
+        #   field so numpy can broadcast interlaced vector flds w/ scalar flds
+        try:
+            if isinstance(other, ScalarField):
+                if self.layout == 'interlaced':
+                    return other.__array__()[..., np.newaxis]
+                elif self.layout == 'flat':
+                    return other.__array__()[np.newaxis, ...]
+            return other.__array__()
+        except AttributeError:
+            return other
 
 
 class MatrixField(Field):

@@ -8,9 +8,10 @@ import subprocess as sub
 import copy as _copy
 import os
 
+import viscid
 from viscid import readers
 from viscid import vutil
-from viscid import vlab
+
 
 def _ensure_value(namespace, name, value):
     if getattr(namespace, name, None) is None:
@@ -100,9 +101,9 @@ def main():
             reader_opts[k] = v
 
     file_ = readers.load_file(args.file, **reader_opts)
-    vlab.multiplot(file_, plot_vars=args.plot_vars, nr_procs=args.np,
-                   time_slice=args.t, share_axes=(not args.own),
-                   global_popts=global_popts, show=args.show, kwopts=kwopts)
+    viscid.multiplot(file_, plot_vars=args.plot_vars, nr_procs=args.np,
+                     time_slice=args.t, share_axes=(not args.own),
+                     global_popts=global_popts, show=args.show, kwopts=kwopts)
 
     if args.animate:
         sub.Popen("ffmpeg -r {0} -i {2}_%06d.png -pix_fmt yuv420p "

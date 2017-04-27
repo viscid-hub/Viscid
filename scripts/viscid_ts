@@ -10,9 +10,7 @@ import matplotlib
 import viscid
 from viscid import logger
 from viscid import vutil
-from viscid import coordinate
-from viscid import field
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 # plt.rc('axes', color_cycle=list("brcykmg"))
 
@@ -129,54 +127,54 @@ def main():
 
     # wrap fields?
     all_plot_kwargs = dict(nolabels=True)
-    mpl.plot_opts_to_kwargs(global_popts, all_plot_kwargs)
+    vlt.plot_opts_to_kwargs(global_popts, all_plot_kwargs)
 
     for j, plot_var in enumerate(args.plot_vars):
         ts_as_fld = viscid.arrays2field(plot_arrs[j], t, name=plot_names[j])
 
         plot_kwargs = all_plot_kwargs.copy()
         plot_kwargs['label'] = plot_names[j]
-        mpl.plot_opts_to_kwargs(plot_var[1]['plot_opts'], plot_kwargs)
+        vlt.plot_opts_to_kwargs(plot_var[1]['plot_opts'], plot_kwargs)
 
         if not args.one:
-            mpl.plt.subplot2grid((n_pvars, 1), (j, 0))
-            mpl.plt.ylabel(plot_names[j])
+            vlt.plt.subplot2grid((n_pvars, 1), (j, 0))
+            vlt.plt.ylabel(plot_names[j])
 
-        mpl.plot(ts_as_fld, **plot_kwargs)
+        vlt.plot(ts_as_fld, **plot_kwargs)
 
         # format the time axis on the last plot
         if j == n_pvars - 1:
             def timeTicks(t, pos):  # pylint: disable=unused-argument
                 return file_.format_time(style=args.timeformat, time=t)
             formatter = matplotlib.ticker.FuncFormatter(timeTicks)
-            mpl.plt.gca().xaxis.set_major_formatter(formatter)
+            vlt.plt.gca().xaxis.set_major_formatter(formatter)
             if args.rotateticklabels:
-                mpl.plt.gcf().autofmt_xdate()
+                vlt.plt.gcf().autofmt_xdate()
         else:
-            mpl.plt.gca().set_xticklabels([])
+            vlt.plt.gca().set_xticklabels([])
 
     if args.one:
-        mpl.plt.legend(loc=0)
+        vlt.plt.legend(loc=0)
 
     if not args.nofname:
         if args.one:
-            mpl.plt.title(file_.fname)
+            vlt.plt.title(file_.fname)
         else:
-            mpl.plt.suptitle(file_.fname)
+            vlt.plt.suptitle(file_.fname)
 
     if not args.rotateticklabels:
-        mpl.plt.xlabel("time")
+        vlt.plt.xlabel("time")
     if args.x is not None:
-        mpl.plt.xlim(*[float(x) for x in args.x.split('_')])
+        vlt.plt.xlim(*[float(x) for x in args.x.split('_')])
     if args.y is not None:
-        mpl.plt.ylim(*[float(y) for y in args.y.split('_')])
+        vlt.plt.ylim(*[float(y) for y in args.y.split('_')])
 
     # plt.tight_layout()
 
     if args.show:
-        mpl.plt.show()
+        vlt.plt.show()
     else:
-        mpl.plt.savefig("{0}.{1}".format(args.prefix, args.format))
+        vlt.plt.savefig("{0}.{1}".format(args.prefix, args.format))
 
 if __name__ == "__main__":
     main()

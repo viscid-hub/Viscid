@@ -42,15 +42,18 @@ cimport numpy as cnp
 from viscid.cython.cyfield cimport MAX_FLOAT, real_t
 from viscid.cython.cyamr cimport FusedAMRField, make_cyamrfield, activate_patch
 from viscid.cython.cyfield cimport CyField, FusedField, make_cyfield
-from viscid.cython.integrate cimport _c_euler1, _c_rk2, _c_rk12, _c_euler1a
+from viscid.cython.integrate cimport (_c_euler1, _c_rk2, _c_rk4,
+                                      _c_euler1a, _c_rk12, _c_rk45)
 
 
 EULER1 = 1  # euler1 non-adaptive
 RK2 = 2  # rk2 non-adaptive
-RK12 = 3  # euler1 + rk2 adaptive
-EULER1A = 4  # euler 1st order adaptive
-METHOD = {"euler": EULER1, "euler1": EULER1, "rk2": RK2, "rk12": RK12,
-          "euler1a": EULER1A}
+RK4 = 3  # rk4 non-adaptive
+EULER1A = 4  # euler 1st order adaptive (huen)
+RK12 = 5  # euler1 + rk2 adaptive (midpoint)
+RK45 = 6  # RK-Fehlberg 45 adaptive
+METHOD = {"euler": EULER1, "euler1": EULER1, "rk2": RK2, "rk4": RK4,
+          "euler1a": EULER1A, "rk12": RK12, "rk45": RK45}
 
 DIR_FORWARD = 1
 DIR_BACKWARD = 2
@@ -167,7 +170,11 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
 
     Keyword Arguments:
         ds0 (float): initial spatial step for streamlines (if 0.0, it
-            will be half the minimum d[xyz])
+            will be ds0_frac * the minimum d[xyz])
+        ds0_frac (float): If an absolute spatial step `ds0` is
+            not given, then it will be set to `ds0_frac * min_dx`
+            where `min_dx` is the smallest dimenstion of the smallest
+            grid cell of the `vfield`. Defaults to 0.5.
         ibound (float): Inner boundary as distance from (0, 0, 0)
         obound0 (array-like): lower corner of outer boundary (x, y, z)
         obound1 (array-like): upper corner of outer boundary (x, y, z)
@@ -177,16 +184,23 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
         stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
         output (int): which output to provide, one of
             OUTPUT_STREAMLINE, OUTPUT_TOPOLOGY, or OUTPUT_BOTH
-        method (int): integrator, one of EULER1, EULER1a (adaptive),
-            RK2, RK12 (adaptive)
-        tol_lo (float): lower acuracy tolerance for adaptive
-            integrators. More acurate than this, ds goes up.
-        tol_hi (float): upper acuracy tolerance for adaptive
-            integrators. Less acurate than this, ds goes down.
-        fac_refine (float): When refining ds \*= fac_refine
-        fac_coarsen (float): When coarsening ds \*= fac_coarsen
-        smallest_step (float): smallest spatial step
-        largest_step (float): largest spatial step
+        method (int): integrator, one of EULER1, RK2, RK4,
+            EULER1a (adaptive), RK12 (adaptive, midpoint),
+            RK45 (adaptive, Fehlberg). Note that sometimes RK45
+            is faster than lower order adaptive methods since it
+            can take much larger step sizes
+        max_error (float): max allowed error between methods for
+            adaptive integrators. This should be as a fraction of ds
+            (i.e., between 0 and 1). The default value is 4e-2 for
+            euler1a, 1.5e-2 for rk12, and 1e-5 for rk45.
+        smallest_ds (float): smallest absolute spatial step. If not set
+            then `smallest_ds = smallest_ds_frac * ds0`
+        largest_ds (float): largest absolute spatial step. If not set
+            then `largest_ds = largest_ds_frac * ds0`
+        smallest_ds_frac (float): smallest spatial step as fraction
+            of ds0
+        largest_ds_frac (float): largest spatial step as fraction
+            of ds0
         topo_style (str): how to map end point bitmask to a topology.
             'msphere' means map to ``TOPOLOGY_MS_*`` and 'generic'
             means leave topology as a bitmask of ``END_*``
@@ -217,6 +231,13 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
     if seed_center.lower() in ('face', 'edge'):
         seed_center = 'cell'
     kwargs['seed_center'] = seed_center
+
+    # allow method kwarg to come in as a string
+    if 'method' in kwargs:
+        try:
+            kwargs['method'] = METHOD[kwargs['method'].lower().strip()]
+        except AttributeError:
+            pass
 
     nr_streams = seed.get_nr_points(center=seed_center)
     nr_procs = parallel.sanitize_nr_procs(nr_procs)
@@ -286,14 +307,14 @@ def _streamline_fused_wrapper(FusedAMRField fld, int nr_streams, seed,
 @cython.wraparound(True)
 def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                    int nr_streams, seed, seed_slice=(None, ),
-                   real_t ds0=0.0, real_t ibound=0.0, obound0=None, obound1=None,
-                   real_t obound_r=0.0, int stream_dir=_C_DIR_BOTH,
-                   int output=_C_OUTPUT_BOTH, int method=EULER1,
-                   int maxit=90000, real_t max_length=1e30,
-                   real_t tol_lo=1e-3, real_t tol_hi=1e-2,
-                   real_t fac_refine=0.5, real_t fac_coarsen=1.25,
-                   real_t smallest_step=1e-4, real_t largest_step=1e2,
-                   str topo_style="msphere", str seed_center="cell"):
+                   real_t ds0=0.0, real_t ds0_frac=0.5, real_t ibound=0.0,
+                   obound0=None, obound1=None, real_t obound_r=0.0,
+                   int stream_dir=_C_DIR_BOTH, int output=_C_OUTPUT_BOTH,
+                   int method=EULER1, int maxit=90000, real_t max_length=1e30,
+                   real_t smallest_ds=0.0, real_t largest_ds=0.0,
+                   real_t smallest_ds_frac=1e-2, real_t largest_ds_frac=1e2,
+                   real_t max_error=0.0, str topo_style="msphere",
+                   str seed_center="cell"):
     r""" Start calculating a streamline at x0
 
     Args:
@@ -330,10 +351,9 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
 
         # just for c
         int (*integrate_func)(FusedField fld, real_t x[3], real_t *ds,
-                              real_t tol_lo, real_t tol_hi,
-                              real_t fac_refine, real_t fac_coarsen,
-                              real_t smallest_step, real_t largest_step,
-                              real_t vscale[3], int cached_idx3[3]) nogil except -1
+                              real_t max_error, real_t smallest_ds,
+                              real_t largest_ds, real_t vscale[3],
+                              int cached_idx3[3]) nogil except -1
         int (*end_flags_to_topology)(int _end_flags) nogil
 
         int i, j, it
@@ -403,17 +423,34 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
             vscale[i] = 1.0
 
     if ds0 == 0.0:
-        ds0 = 0.5 * amrfld.min_dx
+        ds0 = ds0_frac * amrfld.min_dx
+
+    if smallest_ds == 0.0:
+        smallest_ds = smallest_ds_frac * ds0
+    if largest_ds == 0.0:
+        largest_ds = largest_ds_frac * ds0
+
+    if max_error == 0.0:
+        if method == EULER1A:
+            max_error = 4e-2
+        if method == RK12:
+            max_error = 1.5e-2
+        elif method == RK45:
+            max_error = 1e-5
 
     # which integrator are we using?
     if method == EULER1:
         integrate_func = _c_euler1[FusedField, real_t]
     elif method == RK2:
         integrate_func = _c_rk2[FusedField, real_t]
-    elif method == RK12:
-        integrate_func = _c_rk12[FusedField, real_t]
+    elif method == RK4:
+        integrate_func = _c_rk4[FusedField, real_t]
     elif method == EULER1A:
         integrate_func = _c_euler1a[FusedField, real_t]
+    elif method == RK12:
+        integrate_func = _c_rk12[FusedField, real_t]
+    elif method == RK45:
+        integrate_func = _c_rk45[FusedField, real_t]
     else:
         raise ValueError("unknown integration method")
 
@@ -489,9 +526,8 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                             patch = amrfld.active_patch
 
                     ret = integrate_func(patch, s, &ds,
-                                         tol_lo, tol_hi, fac_refine , fac_coarsen,
-                                         smallest_step, largest_step, vscale,
-                                         cached_idx3)
+                                         max_error, smallest_ds, largest_ds,
+                                         vscale, cached_idx3)
 
                     if fabs(ds) >= pre_ds:
                         stream_length += pre_ds
@@ -501,7 +537,10 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                     # if i_stream == 0:
                     #     print(s[2], s[1], s[0])
                     # ret is non 0 when |v_mv| == 0
+
                     if ret != 0:
+                        # with gil:
+                        #     print("ret != 0", i_stream, i, it, pre_ds, ds)
                         done = _C_END_ZERO_LENGTH
                         break
 

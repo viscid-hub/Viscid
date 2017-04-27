@@ -13,14 +13,14 @@ Dependencies
 + Highly Recommended
 
   + H5py (if reading hdf5 files)
-  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.mpl)
+  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.vpyplot)
   + Scipy (gives Viscid special powers :))
   + Numexpr (for the calculator.necalc module)
 
 + Truly Optional
 
   + Seaborn
-  + Mayavi2 (if you want to make 3d plots using viscid.plot.mvi)
+  + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
   + PyYaml (rc file and plot options can parse using yaml)
 
 + Optional for developers
@@ -63,7 +63,7 @@ This should be done in whatever directory you want to store the Viscid source co
 
 .. code-block:: bash
 
-    git clone git@github.com:KristoforMaynard/Viscid.git
+    git clone https://github.com/KristoforMaynard/Viscid.git
     mkdir -p ~/.config/matplotlib
     cp Viscid/resources/viscidrc ~/.viscidrc
 
@@ -105,6 +105,12 @@ Choice 1 (installed)
     make
     make install
 
+to kick the tires, use
+
+.. code-block:: bash
+
+    make instcheck
+
 to pull updates from github in the future, use
 
 .. code-block:: bash
@@ -124,6 +130,12 @@ Choice 2 (inplace)
     export PYTHONPATH="${PYTHONPATH}:${PWD}/Viscid"
     echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ~/.bashrc
     echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ~/.bashrc
+
+to kick the tires, use
+
+.. code-block:: bash
+
+    make check
 
 to pull updates from github in the future, use
 

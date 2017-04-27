@@ -13,7 +13,8 @@ from viscid.compat import string_types
 from viscid.bucket import Bucket
 from viscid import tree
 from viscid import vutil
-from viscid.vutil import tree_prefix, to_slice
+from viscid.vutil import tree_prefix
+from viscid.sliceutil import to_slice
 
 class Dataset(tree.Node):
     """Datasets contain grids or other datasets

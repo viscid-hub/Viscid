@@ -8,9 +8,10 @@ import pstats
 from timeit import default_timer as time
 import argparse
 
-import numpy as np
-from mayavi import mlab
 from matplotlib.colors import BoundaryNorm
+import matplotlib.pyplot as plt
+from mayavi import mlab
+import numpy as np
 
 _viscid_root = os.path.realpath(os.path.dirname(__file__) + '/../../src/viscid/')  # pylint: disable=C0301
 if not _viscid_root in sys.path:
@@ -21,9 +22,8 @@ import tracer
 from viscid import vutil
 from viscid import readers
 from viscid import field
-from viscid.plot import mpl
-from viscid.plot import mvi
-from viscid.plot.mpl import plt
+from viscid.plot import vpyplot as vlt
+from viscid.plot import vlab
 from viscid.calculator import streamline
 from viscid.calculator import seed
 # import topo_numba
@@ -75,24 +75,22 @@ def trace_cython(fld_bx, fld_by, fld_bz):
     lines, topo = None, None
     lines, topo = streamline.streamlines(B, vol, ds0=0.02, ibound=3.7,
                             maxit=5000, output=streamline.OUTPUT_BOTH,
-                            method=streamline.EULER1,
-                            tol_lo=0.005, tol_hi=0.1,
-                            fac_refine=0.75, fac_coarsen=1.5)
+                            method=streamline.EULER1)
     t1 = time()
     topo_fld = vol.wrap_field(topo, name="CyTopo")
 
     # cmap = plt.get_cmap('spectral')
     # levels = [4, 5, 6, 7, 8, 13, 14, 16, 17]
     # norm = BoundaryNorm(levels, cmap.N)
-    # mpl.plot(topo_fld, "y=0", cmap=cmap, norm=norm, show=False)
-    # # mpl.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
-    # # mpl.plot_streamlines(lines, topology=topo, show=False)
-    # mpl.mplshow()
+    # vlt.plot(topo_fld, "y=0", cmap=cmap, norm=norm, show=False)
+    # # vlt.plot_streamlines2d(lines[::5], "y", topology=topo[::5], show=False)
+    # # vlt.plot_streamlines(lines, topology=topo, show=False)
+    # vlt.mplshow()
 
-    # topo_src = mvi.add_field(topo_fld, center='node')
-    # mvi.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,
-    #                tube_radius=0.02)
-    # mvi.plod_earth_3d(mlab.pipeline)
+    # topo_src = vlab.add_field(topo_fld, center='node')
+    # vlab.plot_lines(mlab.pipeline, lines[::5], topo[::5], opacity=0.8,
+    #                 tube_radius=0.02)
+    # vlab.plod_earth_3d(mlab.pipeline)
     # mlab.show()
 
     nsegs = 1  # keep from divding by 0 is no streamlines

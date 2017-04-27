@@ -63,6 +63,13 @@ _type_info = {len(base_hydro_names): {'field_type': 'hydro',
 
 class GkeyllGrid(grid.Grid):
     """"""
+    def _assemble_vector(self, base_name, comp_names="xyz", suffix="",
+                         forget_source=False, **kwargs):
+        opts = dict(forget_source=forget_source, **kwargs)
+        # caching behavior depends on self.longterm_field_caches
+        comps = [self[base_name + c + suffix] for c in comp_names]
+        return field.scalar_fields_to_vector(comps, name=base_name, **opts)
+
     def _get_ux_e(self):
         ux_e = self['rhoux_e'] / self['rho_e']
         ux_e.name = 'ux_e'
@@ -80,6 +87,42 @@ class GkeyllGrid(grid.Grid):
         uz_e.name = 'uz_e'
         uz_e.pretty_name = r'$u_{z,e}$'
         return uz_e
+
+    def _get_Pxx_e(self):
+        Pxx_e = self['pxx_e'] - self['rhoux_e']*self['rhoux_e'] / self['rho_e']
+        Pxx_e.name = 'Pxx_e'
+        Pxx_e.pretty_name = r'$P_{xx,e}$'
+        return Pxx_e
+
+    def _get_Pyy_e(self):
+        Pyy_e = self['pyy_e'] - self['rhoux_e']*self['rhoux_e'] / self['rho_e']
+        Pyy_e.name = 'Pyy_e'
+        Pyy_e.pretty_name = r'$P_{yy,e}$'
+        return Pyy_e
+
+    def _get_Pzz_e(self):
+        Pzz_e = self['pzz_e'] - self['rhoux_e']*self['rhoux_e'] / self['rho_e']
+        Pzz_e.name = 'Pzz_e'
+        Pzz_e.pretty_name = r'$P_{zz,e}$'
+        return Pzz_e
+
+    def _get_Pxy_e(self):
+        Pxy_e = self['pxy_e'] - self['rhoux_e']*self['rhouy_e'] / self['rho_e']
+        Pxy_e.name = 'Pxy_e'
+        Pxy_e.pretty_name = r'$P_{xy,e}$'
+        return Pxy_e
+
+    def _get_Pxz_e(self):
+        Pxz_e = self['pxz_e'] - self['rhoux_e']*self['rhouz_e'] / self['rho_e']
+        Pxz_e.name = 'Pxz_e'
+        Pxz_e.pretty_name = r'$P_{xz,e}$'
+        return Pxz_e
+
+    def _get_Pyz_e(self):
+        Pyz_e = self['pyz_e'] - self['rhouy_e']*self['rhouz_e'] / self['rho_e']
+        Pyz_e.name = 'Pyz_e'
+        Pyz_e.pretty_name = r'$P_{yz,e}$'
+        return Pyz_e
 
     def _get_ux_i(self):
         ux_i = self['rhoux_i'] / self['rho_i']
@@ -99,6 +142,58 @@ class GkeyllGrid(grid.Grid):
         uz_i.pretty_name = r'$u_{z,i}$'
         return uz_i
 
+    def _get_Pxx_i(self):
+        Pxx_i = self['pxx_i'] - self['rhoux_i']*self['rhoux_i'] / self['rho_i']
+        Pxx_i.name = 'Pxx_i'
+        Pxx_i.pretty_name = r'$P_{xx,i}$'
+        return Pxx_i
+
+    def _get_Pyy_i(self):
+        Pyy_i = self['pyy_i'] - self['rhoux_i']*self['rhoux_i'] / self['rho_i']
+        Pyy_i.name = 'Pyy_i'
+        Pyy_i.pretty_name = r'$P_{yy,i}$'
+        return Pyy_i
+
+    def _get_Pzz_i(self):
+        Pzz_i = self['pzz_i'] - self['rhoux_i']*self['rhoux_i'] / self['rho_i']
+        Pzz_i.name = 'Pzz_i'
+        Pzz_i.pretty_name = r'$P_{zz,i}$'
+        return Pzz_i
+
+    def _get_Pxy_i(self):
+        Pxy_i = self['pxy_i'] - self['rhoux_i']*self['rhouy_i'] / self['rho_i']
+        Pxy_i.name = 'Pxy_i'
+        Pxy_i.pretty_name = r'$P_{xy,i}$'
+        return Pxy_i
+
+    def _get_Pxz_i(self):
+        Pxz_i = self['pxz_i'] - self['rhoux_i']*self['rhouz_i'] / self['rho_i']
+        Pxz_i.name = 'Pxz_i'
+        Pxz_i.pretty_name = r'$P_{xz,i}$'
+        return Pxz_i
+
+    def _get_Pyz_i(self):
+        Pyz_i = self['pyz_i'] - self['rhouy_i']*self['rhouz_i'] / self['rho_i']
+        Pyz_i.name = 'Pyz_i'
+        Pyz_i.pretty_name = r'$P_{yz,i}$'
+        return Pyz_i
+
+    def _get_u_e(self):
+        # get from [ux_e, uy_e, uz_e]
+        return self._assemble_vector("u", suffix='_e',
+                                        _force_layout=self.force_vector_layout,
+                                         pretty_name='u_e')
+
+    def _get_u_i(self):
+        # get from [ux_i, uy_i, uz_i]
+        return self._assemble_vector("u", suffix='_i',
+                                        _force_layout=self.force_vector_layout,
+                                         pretty_name='u_i')
+
+    def _get_b(self):
+        # get from [Bx, By, Bz]
+        return self._assemble_vector("B", _force_layout=self.force_vector_layout,
+                                         pretty_name="b")
 
 class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
     """"""
@@ -271,12 +366,20 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
         with self.get_file_wrapper(filename) as f:
             shape = f["StructGridField"].shape
             sshape = shape[:-1]
-            nr_fields = shape[-1] - 2  # len(sshape)  # why - 2?
+            nr_fields = shape[-1]
 
             try:
                 type_info = _type_info[nr_fields]
             except KeyError:
-                raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
+                try:
+                    # if the two scalar corrections potentials are stored
+                    type_info = dict(_type_info[nr_fields - 2])
+                    type_info['names'].append('EXTRA1')
+                    type_info['pretty_names'].append('EXTRA1')
+                    type_info['names'].append('EXTRA2')
+                    type_info['pretty_names'].append('EXTRA2')
+                except KeyError:
+                    raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
 
             template = []
             # TODO: use nr_fields to figure out the names of the fields?
@@ -290,7 +393,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
 
     @staticmethod
     def _get_single_crd(h5file, idx, nr_crds):
-        gridType = h5file['StructGrid'].attrs['vsKind']
+        gridType = h5file['StructGrid'].attrs['vsKind'].decode()
         if gridType in ['uniform']:
             if idx >= len(h5file['StructGrid'].attrs['vsNumCells']):
                 raise IndexError()
@@ -298,21 +401,20 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             upper = h5file['StructGrid'].attrs['vsUpperBounds'][idx]
             num = h5file['StructGrid'].attrs['vsNumCells'][idx]
             return [lower, upper, num + 1]
-        elif gridType in ['structured']:
-            raise NotImplementedError()
-            # nr_flds = h5file['StructGrid'].shape[-1] - nr_crds
-            # slc = [0] * nr_crds + [nr_flds + idx]
-            # slc[idx] = slice(None)
-            # crd_arr = h5file['StructGrid'][tuple(slc)]
-            crd_arr = h5file['StructGrid'][idx]
-            # make crd_arr node centered
-            dxl = crd_arr[1] - crd_arr[0]
-            dxh = crd_arr[-1] - crd_arr[-2]
-            crd_arr = np.concatenate([[crd_arr[0] - dxl],
-                                      crd_arr,
-                                      [crd_arr[-1] + dxh]])
-            crd_arr = 0.5 * (crd_arr[1:] + crd_arr[:-1])
+        elif gridType in ['rectilinear']:
+            crd_arr = h5file['StructGrid/axis%d'%idx][:]
             return crd_arr
+        elif gridType in ['structured']:
+            if idx == 0:
+                crd_arr = h5file['StructGrid'][:, 0, 0, 0]
+            elif idx == 1:
+                crd_arr = h5file['StructGrid'][0, :, 0, 1]
+            elif idx == 2:
+                crd_arr = h5file['StructGrid'][0, 0, :, 2]
+            return crd_arr
+        else:
+            raise RuntimeError("Gkeyll StructGrid.vsKind not understood: {0}"
+                               "".format(repr(gridType)))
 
     def make_crds(self, fname):
         with h5py.File(fname, 'r') as f:
@@ -327,7 +429,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
                 except IndexError:
                     pass
 
-            if f['StructGrid'].attrs['vsKind'] in ['uniform']:
+            if f['StructGrid'].attrs['vsKind'].decode() in ['uniform']:
                 # FIXME: this goes xyz -> zyx
                 crds = wrap_crds("uniform_cartesian", clist)
             else:

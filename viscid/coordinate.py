@@ -29,7 +29,8 @@ import numpy as np
 
 import viscid
 from viscid.compat import string_types, izip
-from viscid import vutil
+from viscid.vutil import subclass_spider
+from viscid import sliceutil
 
 
 __all__ = ['arrays2crds', 'wrap_crds', 'extend_arr_by_half']
@@ -94,7 +95,7 @@ def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
     return crds
 
 def lookup_crds_type(type_name):
-    for cls in vutil.subclass_spider(Coordinates):
+    for cls in subclass_spider(Coordinates):
         if cls.istype(type_name):
             return cls
     return None
@@ -111,13 +112,16 @@ def wrap_crds(crdtype, clist, **kwargs):
     except TypeError:
         raise NotImplementedError("can not decipher crds: {0}".format(crdtype))
 
-def extend_arr_by_half(x, full_arr=True):
+def extend_arr_by_half(x, full_arr=True, default_width=1e-5):
     """sandwich array with two new values w/ no change in dx"""
     x = viscid.asarray_datetime64(x, conservative=True)
 
     if full_arr:
-        dxl = x[1] - x[0]
-        dxh = x[-1] - x[-2]
+        if len(x) > 1:
+            dxl = x[1] - x[0]
+            dxh = x[-1] - x[-2]
+        else:
+            dxl = dxh = default_width
         ret = np.concatenate([[x[0] - dxl], x, [x[-1] + dxh]])
     else:
         xl, xh, nx = x
@@ -409,7 +413,7 @@ class StructuredCrds(Coordinates):
             shape = list(shape)
             shape.insert(nr_comp, nr_comps)
             rev.insert(nr_comp, False)
-        first, second = vutil.make_fwd_slice(shape, [], rev)
+        first, second = sliceutil.make_fwd_slice(shape, [], rev)
         return arr[tuple(first)][tuple(second)]
 
     def reflect_slices(self, slices, cc=False, cull_second=True):
@@ -421,7 +425,7 @@ class StructuredCrds(Coordinates):
             shape = self.shape_cc
         else:
             shape = self.shape_nc
-        first, second = vutil.make_fwd_slice(shape, slices, rev,
+        first, second = sliceutil.make_fwd_slice(shape, slices, rev,
                                              cull_second=cull_second)
         return first, second
 
@@ -540,7 +544,7 @@ class StructuredCrds(Coordinates):
 
         for i, slc in enumerate(selection):
             if slc != slice(None):
-                slc = vutil.convert_deprecated_floats(slc, "slc")
+                slc = sliceutil.convert_deprecated_floats(slc, "slc")
 
                 if not isinstance(slc, string_types):
                     raise TypeError(float_err_msg + ":: {0}".format(slc))
@@ -582,7 +586,7 @@ class StructuredCrds(Coordinates):
                 :py:func:`numpy.ndarray.__getitem__`. The catch is the
                 selection could contain etries that look like "0" or
                 "5.0f". These strings are resolved by
-                :py:func:`viscid.vutil.to_slices`.
+                :py:func:`viscid.sliceutil.to_slices`.
         """
         # SIDE-EFFECT: selection won't have any whitespace
         # parse selection if it's a string into a list of selections
@@ -730,7 +734,7 @@ class StructuredCrds(Coordinates):
     #     else:
     #         return self.get_crd(axis, center=center)[slc].reshape(-1)
 
-    def extend_by_half(self):
+    def extend_by_half(self, default_width=1e-5):
         """Extend coordinates half a grid cell in all directions
 
         Used for turning node centered fields to cell centered without
@@ -742,7 +746,8 @@ class StructuredCrds(Coordinates):
         axes = self.axes
         crds_cc = self.get_crds_cc()
         for i, x in enumerate(crds_cc):
-            crds_cc[i] = extend_arr_by_half(x, full_arr=True)
+            crds_cc[i] = extend_arr_by_half(x, full_arr=True,
+                                            default_width=default_width)
         new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
         return type(self)(new_clist)
 
@@ -805,7 +810,7 @@ class StructuredCrds(Coordinates):
                 # selection[i] = slice(None)
 
         crd_arrs = crd_arrs_cc if cc else crd_arrs_nc
-        slices = list(vutil.to_slices(crd_arrs, selection))
+        slices = list(sliceutil.to_slices(crd_arrs, selection))
 
         # Figure out what the selection is doing. If the slice reduces
         # out a dimension, put it in reduced. Also apply the slices to
@@ -1015,7 +1020,7 @@ class StructuredCrds(Coordinates):
         # for slices that were specified using a float, set that crd
         # to the desired float instead of the nearest crd as does slice_keep
         for i, slc in enumerate(selection):
-            slc = vutil.convert_deprecated_floats(slc, "slc")
+            slc = sliceutil.convert_deprecated_floats(slc, "slc")
             if isinstance(slc, string_types):
                 assert slc[-1] == 'f'
                 val = np.array(float(slc[:-1]), dtype=self.dtype)
@@ -1485,7 +1490,7 @@ class UniformCrds(StructuredCrds):
     #     except TypeError:
     #         return proxy_crd
 
-    def extend_by_half(self):
+    def extend_by_half(self, default_width=1e-5):
         """Extend coordinates half a grid cell in all directions
 
         Used for turning node centered fields to cell centered without
@@ -1497,6 +1502,7 @@ class UniformCrds(StructuredCrds):
         axes = self.axes
         xl, xh = self.get_xl(), self.get_xh()
         dx = (xh - xl) / self.shape_nc
+        dx = np.choose(np.abs(dx) > 0, [default_width, dx])
         xl -= 0.5 * dx
         xh += 0.5 * dx
         nx = self.shape_nc + 1

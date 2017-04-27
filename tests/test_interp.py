@@ -8,19 +8,20 @@ import sys
 
 from viscid_test_common import next_plot_fname
 
+from matplotlib import pyplot as plt
 import numpy as np
 import viscid
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 
 def run_test(fld, seeds, kind, show=False):
-    mpl.plt.clf()
-    mpl.plot(viscid.interp(fld, seeds, kind=kind))
-    mpl.plt.title(kind)
+    plt.clf()
+    vlt.plot(viscid.interp(fld, seeds, kind=kind))
+    plt.title(kind)
 
-    mpl.plt.savefig(next_plot_fname(__file__))
+    plt.savefig(next_plot_fname(__file__))
     if show:
-        mpl.show()
+        vlt.show()
 
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -31,7 +32,7 @@ def _main():
     x = np.linspace(-1, 1, img.shape[0])
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
-    logo = viscid.arrays2field(img, [x, y, z])
+    logo = viscid.arrays2field([x, y, z], img)
 
     seeds = viscid.Volume([-0.8, -0.8, 0.0], [0.8, 0.8, 0.0],
                           n=[64, 64, 1])

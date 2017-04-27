@@ -1,7 +1,7 @@
 Plotting Vector Quantities
 ==========================
 
-Various shims for plotting fields using matplotlib are provided by :py:mod:`viscid.plot.mpl`. The functions are listed in :doc:`../functions`. For an enumeration of extra plotting keyword arguments, see :doc:`../plot_options`. Also, you can specify keyword arguments that are conusmed by the matplotlib function used to make the plot, i.e., `pyplot.streamline`, `pyplot.quiver`, etc.
+Various shims for plotting fields using matplotlib are provided by :py:mod:`viscid.plot.vpyplot`. The functions are listed in :doc:`../functions`. For an enumeration of extra plotting keyword arguments, see :doc:`../plot_options`. Also, you can specify keyword arguments that are conusmed by the matplotlib function used to make the plot, i.e., `pyplot.streamline`, `pyplot.quiver`, etc.
 
 Streamplot
 ----------
@@ -13,8 +13,9 @@ Plotting 2D streamlines. Note that using matplotlib to make streamlines from a 2
 
     from os import path
 
+    from matplotlib import pyplot as plt
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     viscid.calculator.evaluator.enabled = True
@@ -22,13 +23,13 @@ Plotting 2D streamlines. Note that using matplotlib to make streamlines from a 2
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    mpl.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
-    mpl.streamplot(f3d['v']['z=0f'], arrowsize=2, density=2)
+    vlt.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
+    vlt.streamplot(f3d['v']['z=0f'], arrowsize=2, density=2)
 
-    mpl.plt.xlim(-20, 20)
-    mpl.plt.ylim(-10, 10)
+    plt.xlim(-20, 20)
+    plt.ylim(-10, 10)
 
-    mpl.show()
+    vlt.show()
 
 Quivers
 -------
@@ -40,19 +41,20 @@ Quivers are another way to show vector fields, but in many cases, it will be use
 
     from os import path
 
+    from matplotlib import pyplot as plt
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    mpl.plot(f3d['pp']['z=0f'], cbarlabel="Pressure", logscale=True, earth=True)
-    mpl.plot2d_quiver(f3d['v']['x=::2, y=::2, z=0f'])
+    vlt.plot(f3d['pp']['z=0f'], cbarlabel="Pressure", logscale=True, earth=True)
+    vlt.plot2d_quiver(f3d['v']['x=::2, y=::2, z=0f'])
 
-    mpl.plt.xlim(-20, 20)
-    mpl.plt.ylim(-10, 10)
+    plt.xlim(-20, 20)
+    plt.ylim(-10, 10)
 
-    mpl.show()
+    vlt.show()
 
 Uniform Quivers
 ---------------
@@ -64,8 +66,9 @@ If your data has a very nonuniform grid, it may be useful to interpolate your da
 
     from os import path
 
+    from matplotlib import pyplot as plt
     import viscid
-    from viscid.plot import mpl
+    from viscid.plot import vpyplot as vlt
 
 
     viscid.calculator.evaluator.enabled = True
@@ -73,12 +76,12 @@ If your data has a very nonuniform grid, it may be useful to interpolate your da
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    mpl.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
+    vlt.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
     new_grid = viscid.Volume((-20, -20, 0), (20, 20, 0), n=(16, 16, 1))
     v = viscid.interp_trilin(f3d['v'], new_grid)
-    mpl.plot2d_quiver(v['z=0f'])
+    vlt.plot2d_quiver(v['z=0f'])
 
-    mpl.plt.xlim(-20, 20)
-    mpl.plt.ylim(-10, 10)
+    plt.xlim(-20, 20)
+    plt.ylim(-10, 10)
 
-    mpl.show()
+    vlt.show()

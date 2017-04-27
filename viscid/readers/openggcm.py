@@ -99,6 +99,19 @@ def group_ggcm_files_common(detector, fnames):
             info_group = [info]
     info_groups.append(info_group)
 
+    # for those of us that are lazy with our glob patterns, we may catch
+    # a run-level xdmf file with a bunch of time-slice-level xdmf files,
+    # i.e., both `RUN.3d.000001.xdmf` and `RUN.3d.xdmf` (which includes
+    # the time slices). So, go through the groups if there are time slices
+    # in that group, make sure there's no run-level xdmf file
+    for grp in info_groups:
+        fnames = [f['fname'] for f in grp]
+        times = [re.match(detector, f).group(3) for f in fnames]
+        if any(t is not None for t in times):
+            for j in reversed(list(range(len(fnames)))):
+                if times[j] is None:
+                    grp.pop(j)
+
     # turn info_groups into groups of just file names
     groups = []
     for info_group in info_groups:
@@ -570,6 +583,26 @@ class GGCMGrid(grid.Grid):
                 fld = viscid.make_ecfc_field_leading(fld, trim_leading=True)
         return fld
 
+    @property
+    def __cotr__(self):
+        if self.has_info("dipoletime"):
+            return viscid.Cotr(time=self.find_info('dipoletime'),
+                               notilt1967=True)
+        elif self.has_info("basetime"):
+            return viscid.Cotr(time=self.find_info('basetime'),
+                               notilt1967=True)
+        else:
+            return NotImplemented
+
+    @property
+    def __crd_system__(self):
+        if self.find_info("crd_system", None):
+            crd_system = self.find_info("crd_system")
+        else:
+            crd_system = NotImplemented
+        return crd_system
+
+
 class GGCMFile(object):  # pylint: disable=abstract-method
     """Mixin some GGCM convenience stuff
 
@@ -590,7 +623,7 @@ class GGCMFile(object):  # pylint: disable=abstract-method
     # bottle neck, but it seems opening files over sshfs is appropriately
     # buffered, so maybe it's no big deal since we're only reading the
     # "views" printed at the beginning anyway
-    read_log_file = False
+    read_log_file = True
 
     _collection = None
 

@@ -5,7 +5,7 @@ import os
 import sys
 
 import viscid
-from viscid.plot import mpl
+from viscid.plot import vpyplot as vlt
 
 def main():
     f = viscid.load_file("~/dev/work/tmedium/*.3d.[-1].xdmf")
@@ -29,14 +29,14 @@ def main():
 
     pargs = dict(logscale=True, earth=True)
 
-    # mpl.clf()
-    # ax1 = mpl.subplot(211)
-    # mpl.plot(f['pp']['y=0f'], **pargs)
-    # # mpl.plot(viscid.magnitude(f['b_cc']['y=0f']), **pargs)
-    # # mpl.show()
-    # mpl.subplot(212, sharex=ax1, sharey=ax1)
-    # mpl.plot(viscid.magnitude(viscid.fc2cc(f['b_fc'])['y=0f']), **pargs)
-    # mpl.show()
+    # vlt.clf()
+    # ax1 = vlt.subplot(211)
+    # vlt.plot(f['pp']['y=0f'], **pargs)
+    # # vlt.plot(viscid.magnitude(f['b_cc']['y=0f']), **pargs)
+    # # vlt.show()
+    # vlt.subplot(212, sharex=ax1, sharey=ax1)
+    # vlt.plot(viscid.magnitude(viscid.fc2cc(f['b_fc'])['y=0f']), **pargs)
+    # vlt.show()
 
     basename = './tmediumR.3d.{0:06d}'.format(int(grid.time))
     viscid.save_fields(basename + '.h5', [b_cc, b_fc, e_cc, e_ec, pp])
@@ -45,14 +45,14 @@ def main():
 
     pargs = dict(logscale=True, earth=True)
 
-    mpl.clf()
-    ax1 = mpl.subplot(211)
-    mpl.plot(f2['pp']['y=0f'], style='contour', levels=5, colorbar=None,
+    vlt.clf()
+    ax1 = vlt.subplot(211)
+    vlt.plot(f2['pp']['y=0f'], style='contour', levels=5, colorbar=None,
              colors='k', **pargs)
-    mpl.plot(viscid.magnitude(f2['b_cc']['y=0f']), **pargs)
-    mpl.subplot(212, sharex=ax1, sharey=ax1)
-    mpl.plot(viscid.magnitude(viscid.fc2cc(f2['b_fc'])['y=0f']), **pargs)
-    mpl.show()
+    vlt.plot(viscid.magnitude(f2['b_cc']['y=0f']), **pargs)
+    vlt.subplot(212, sharex=ax1, sharey=ax1)
+    vlt.plot(viscid.magnitude(viscid.fc2cc(f2['b_fc'])['y=0f']), **pargs)
+    vlt.show()
 
     os.remove(basename + '.h5')
     os.remove(basename + '.xdmf')

@@ -147,7 +147,7 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
     except (IOError, KeyError):
         mp_info = {}
 
-        crd_system = viscid.get_crd_system(b, None)
+        crd_system = viscid.as_crd_system(b, None)
         if crd_system != 'gse':
             raise RuntimeError("get_mp_info can't work in MHD crds, "
                                "switch to GSE please")
@@ -373,45 +373,46 @@ def _main():
 
     # 2d plots, normals don't look normal in the matplotlib projection
     if False:  # pylint: disable=using-constant-test
-        from viscid.plot import mpl
+        from matplotlib import pyplot as plt
+        from viscid.plot import vpyplot as vlt
 
         normals = paraboloid_normal(Y, Z, *mp['paraboloid'][0])
         p0 = np.array([x2, Y, Z]).reshape(3, -1)
         p1 = p0 + normals.reshape(3, -1)
 
-        mpl.scatter_3d(np.vstack([x, y, z])[:, ::skip], equal=True)
+        vlt.scatter_3d(np.vstack([x, y, z])[:, ::skip], equal=True)
         for i in range(0, p0.shape[1], skip):
-            mpl.plt.gca().plot([p0[0, i], p1[0, i]],
+            plt.gca().plot([p0[0, i], p1[0, i]],
                                [p0[1, i], p1[1, i]],
                                [p0[2, i], p1[2, i]], color='c')
         # z2 = _ellipsiod(X, Y, *popt)
-        mpl.plt.gca().plot_surface(Y, Z, x2, color='r')
-        mpl.show()
+        plt.gca().plot_surface(Y, Z, x2, color='r')
+        vlt.show()
 
     # mayavi 3d plots, normals look better here
     if True:  # pylint: disable=using-constant-test
-        from viscid.plot import mvi
-        mvi.points3d(x[::skip], y[::skip], z[::skip], scale_factor=0.25,
-                     color=(0.0, 0.0, 1.0))
+        from viscid.plot import vlab
+        vlab.points3d(x[::skip], y[::skip], z[::skip], scale_factor=0.25,
+                      color=(0.0, 0.0, 1.0))
 
         mp_width = mp['mp_width']['x=0']
         mp_sheath_edge = mp['mp_sheath_edge']['x=0']
         mp_sphere_edge = mp_sheath_edge - mp_width
 
-        mvi.mesh(x2, Y, Z, scalars=mp_width.data)
-        mvi.mesh(mp_sheath_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
-        mvi.mesh(mp_sphere_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
+        vlab.mesh(x2, Y, Z, scalars=mp_width.data)
+        vlab.mesh(mp_sheath_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
+        vlab.mesh(mp_sphere_edge.data, Y, Z, opacity=0.75, color=(0.75, ) * 3)
 
         n = paraboloid_normal(Y, Z, *mp['paraboloid'][0]).reshape(3, -1)[:, ::skip]
-        mvi.quiver3d(x2.reshape(-1)[::skip],
-                     Y.reshape(-1)[::skip],
-                     Z.reshape(-1)[::skip],
-                     n[0], n[1], n[2], color=(1, 0, 0))
-        mvi.quiver3d(x2.reshape(-1)[::skip],
-                     Y.reshape(-1)[::skip],
-                     Z.reshape(-1)[::skip],
-                     minvar_n[0], minvar_n[1], minvar_n[2], color=(0, 0, 1))
-        mvi.show()
+        vlab.quiver3d(x2.reshape(-1)[::skip],
+                      Y.reshape(-1)[::skip],
+                      Z.reshape(-1)[::skip],
+                      n[0], n[1], n[2], color=(1, 0, 0))
+        vlab.quiver3d(x2.reshape(-1)[::skip],
+                      Y.reshape(-1)[::skip],
+                      Z.reshape(-1)[::skip],
+                      minvar_n[0], minvar_n[1], minvar_n[2], color=(0, 0, 1))
+        vlab.show()
 
 if __name__ == "__main__":
     import sys  # pylint: disable=wrong-import-position,wrong-import-order

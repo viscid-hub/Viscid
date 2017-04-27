@@ -1,6 +1,9 @@
 Useful Functions
 ================
 
+.. contents::
+  :local:
+
 Utility Functions
 -----------------
 
@@ -24,9 +27,11 @@ Function                             Description
 :py:func:`viscid.arrays2field`       Field from arrays for data and coordinates
 :py:func:`viscid.dat2field`          Field from data array
 :py:func:`viscid.empty`              Make an empty field from coordinate arrays
+:py:func:`viscid.full`               Make an initialized field from coordinate arrays
 :py:func:`viscid.zeros`              Make an field of 0s from coordinate arrays
 :py:func:`viscid.ones`               Make an field of 1s from coordinate arrays
 :py:func:`viscid.empty_like`         Make an empty field like another
+:py:func:`viscid.full_like`          Make an initialized field like another
 :py:func:`viscid.zeros_like`         Make a field of 1s like another
 :py:func:`viscid.ones_like`          Make a field of 0s like another
 ===================================  ===========================================================
@@ -127,7 +132,7 @@ Function                                          Description
 Magnetosphere Tools
 ~~~~~~~~~~~~~~~~~~~
 
-Some tools for dealing with magnetospheric specific things. Refer to :doc:`../examples/magnetopause` for an example
+Some tools for dealing with magnetospheric specific things. Refer to :doc:`../tutorial/magnetopause` for an example
 
 .. cssclass:: table-striped
 
@@ -141,7 +146,7 @@ Function                                       Description
 Magnetic Topology and Separator Tools
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For using the separator tools, you may want to refer to :doc:`../examples/magnetic_topology`.
+For using the separator tools, you may want to refer to :doc:`../tutorial/magnetic_topology`.
 
 .. cssclass:: table-striped
 
@@ -169,11 +174,15 @@ These functions wrap Matplotlib with useful boilerplate type hacks.
 
 .. cssclass:: table-striped
 
-================================================  ===========================================================
-Function                                          Description
-================================================  ===========================================================
-:py:func:`viscid.plot.mpl.auto_adjust_subplots`   Use Matplotlib's tight layout with some necessary hacks
-================================================  ===========================================================
+====================================================  ===========================================================
+Function                                              Description
+====================================================  ===========================================================
+:py:func:`viscid.plot.vpyplot.auto_adjust_subplots`   Use Matplotlib's tight layout with some necessary hacks
+:py:func:`viscid.plot.vpyplot.apply_labels`           Write labels onto a plot similar to a legend, but place
+                                                      the labels next to the data. This adheres to the principle
+                                                      that you shouldn't make the reader learn a key just to
+                                                      read a single plot.
+====================================================  ===========================================================
 
 2D Matplotlib Plots
 ~~~~~~~~~~~~~~~~~~~
@@ -185,23 +194,23 @@ These functions wrap Matplotlib with useful boilerplate type hacks.
 ================================================  =============================================================
 Function                                          Description
 ================================================  =============================================================
-:py:func:`viscid.plot.mpl.plot`                   Meta function for plotting :py:class:`viscid.field.Field`
+:py:func:`viscid.plot.vpyplot.plot`               Meta function for plotting :py:class:`viscid.field.Field`
                                                   objects. This one will automatically delegate to
-                                                  :py:func:`viscid.plot.mpl.plot1d_field`,
-                                                  :py:func:`viscid.plot.mpl.plot2d_field`, or
-                                                  :py:func:`viscid.plot.mpl.plot2d_mapfield`.
-:py:func:`viscid.plot.mpl.plot1d_field`           Line plots of a 1D field.
-:py:func:`viscid.plot.mpl.plot2d_field`           Colored plots (pcolormesh, contour, contourf) of 2D fields
-:py:func:`viscid.plot.mpl.plot2d_mapfield`        Plots on the surface of a sphere (like ionosphere plots)
-:py:func:`viscid.plot.mpl.plot_iono`              make annotated polar plots of ionosphere quantities, this
+                                                  :py:func:`viscid.plot.vpyplot.plot1d_field`,
+                                                  :py:func:`viscid.plot.vpyplot.plot2d_field`, or
+                                                  :py:func:`viscid.plot.vpyplot.plot2d_mapfield`.
+:py:func:`viscid.plot.vpyplot.plot1d_field`       Line plots of a 1D field.
+:py:func:`viscid.plot.vpyplot.plot2d_field`       Colored plots (pcolormesh, contour, contourf) of 2D fields
+:py:func:`viscid.plot.vpyplot.plot2d_mapfield`    Plots on the surface of a sphere (like ionosphere plots)
+:py:func:`viscid.plot.vpyplot.plot_iono`          make annotated polar plots of ionosphere quantities, this
                                                   is just a wrapper for plot2d_mapfield that handles small
                                                   annyoances and annotations
-:py:func:`viscid.plot.mpl.plot2d_lines`           Plot a list of colored lines parallel-projected into 2D
-:py:func:`viscid.plot.mpl.plot2d_quiver`          Plot a :py:class:`viscid.field.VectorField` using
+:py:func:`viscid.plot.vpyplot.plot2d_lines`       Plot a list of colored lines parallel-projected into 2D
+:py:func:`viscid.plot.vpyplot.plot2d_quiver`      Plot a :py:class:`viscid.field.VectorField` using
                                                   Matplotlib's quivers.
-:py:func:`viscid.plot.mpl.streamplot`             Plot a :py:class:`viscid.field.VectorField` using
+:py:func:`viscid.plot.vpyplot.streamplot`         Plot a :py:class:`viscid.field.VectorField` using
                                                   Matplotlib's streamplot.
-:py:func:`viscid.plot.mpl.plot_earth`             Plot an Earth with black for nightside and white for dayside
+:py:func:`viscid.plot.vpyplot.plot_earth`         Plot an Earth with black for nightside and white for dayside
 ================================================  =============================================================
 
 3D Matplotlib Plots
@@ -214,8 +223,8 @@ These functions wrap Matplotlib in 3D with useful boilerplate type hacks.
 ===============================================  =============================================================
 Function                                         Description
 ===============================================  =============================================================
-:py:func:`viscid.plot.mpl.plot3d_lines`          Plot a list of colored lines on 3D axes
-:py:func:`viscid.plot.mpl.scatter_3d`            Plot a glyphs on 3D axes
+:py:func:`viscid.plot.vpyplot.plot3d_lines`      Plot a list of colored lines on 3D axes
+:py:func:`viscid.plot.vpyplot.scatter_3d`        Plot a glyphs on 3D axes
 ===============================================  =============================================================
 
 Mayavi
@@ -223,7 +232,7 @@ Mayavi
 
 Mayavi is the preferred library for making 3D plots with Viscid. It's a little unwieldy, but for the moment, it's still the best Python interface to VTK. Mayavi has two ways to learn how to change details about the objects in a given scene (the documentation reads like somebody was shooting buckshot). The first is to make the change interactively while using the record feature. The other is to throw `import IPython; IPython.embed()` into your script and go splunking. Most Mayavi objects come from Traited VTK, which means they have a `print_traits()` method. This method will print out all the attributes that you may want to tweak, and then some.
 
-Between the :doc:`examples/mayavi`, and the functions you see below, you should be able figure out most things without too much hastle.
+Between the :doc:`tutorial/mayavi`, and the functions you see below, you should be able figure out most things without too much hastle.
 
 Mayavi Wrappers
 ~~~~~~~~~~~~~~~
@@ -235,36 +244,36 @@ Chances are that you want to use these functions. They let you make most Mayavi 
 ===============================================  =================================================================
 Function                                         Description
 ===============================================  =================================================================
-:py:func:`viscid.plot.mvi.plot_lines`            Plot colored lines in 3D
-:py:func:`viscid.plot.mvi.scalar_cut_plane`      Make a scalar cut plane of a Field or existing Mayavi source
-:py:func:`viscid.plot.mvi.vector_cut_plane`      Make a vector cut plane of a Field or existing Mayavi source
+:py:func:`viscid.plot.vlab.plot_lines`           Plot colored lines in 3D
+:py:func:`viscid.plot.vlab.scalar_cut_plane`     Make a scalar cut plane of a Field or existing Mayavi source
+:py:func:`viscid.plot.vlab.vector_cut_plane`     Make a vector cut plane of a Field or existing Mayavi source
                                                  with optional scalar data.
-:py:func:`viscid.plot.mvi.mesh`                  Make a mesh from a 2D array of vertices with optional scalar
+:py:func:`viscid.plot.vlab.mesh`                 Make a mesh from a 2D array of vertices with optional scalar
                                                  data
-:py:func:`viscid.plot.mvi.mesh_from_seeds`       Make a mesh from a Viscid SeedGen object with optional scalar
+:py:func:`viscid.plot.vlab.mesh_from_seeds`      Make a mesh from a Viscid SeedGen object with optional scalar
                                                  data. Useful for displaying the result of interpolating a field
                                                  onto a plane or sphere.
-:py:func:`viscid.plot.mvi.streamline`            Use the interactive Mayavi (VTK) streamline tracer with optional
+:py:func:`viscid.plot.vlab.streamline`           Use the interactive Mayavi (VTK) streamline tracer with optional
                                                  scalar data
-:py:func:`viscid.plot.mvi.iso_surface`           Make volumetric contours of a Field or existing Mayavi source
-:py:func:`viscid.plot.mvi.points3d`              Plot a list of points
-:py:func:`viscid.plot.mvi.quiver3d`              Plot a list of vector arrows with optional scalar data
-:py:func:`viscid.plot.mvi.colorbar`              Wrap `mayavi.mlab.colorbar`, then change the colormap if any
-                                                 :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
-:py:func:`viscid.plot.mvi.scalarbar`             Wrap `mayavi.mlab.scalarbar`, then change the colormap if any
-                                                 :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
-:py:func:`viscid.plot.mvi.vectorbar`             Wrap `mayavi.mlab.vectorbar`, then change the colormap if any
-                                                 :py:func:`viscid.plot.mvi.apply_cmap` kwargs are provided
-:py:func:`viscid.plot.mvi.fancy_axes`            Make axes with 3 shaded walls and a grid similar to what
+:py:func:`viscid.plot.vlab.iso_surface`          Make volumetric contours of a Field or existing Mayavi source
+:py:func:`viscid.plot.vlab.points3d`             Plot a list of points
+:py:func:`viscid.plot.vlab.quiver3d`             Plot a list of vector arrows with optional scalar data
+:py:func:`viscid.plot.vlab.colorbar`             Wrap `mayavi.mlab.colorbar`, then change the colormap if any
+                                                 :py:func:`viscid.plot.vlab.apply_cmap` kwargs are provided
+:py:func:`viscid.plot.vlab.scalarbar`            Wrap `mayavi.mlab.scalarbar`, then change the colormap if any
+                                                 :py:func:`viscid.plot.vlab.apply_cmap` kwargs are provided
+:py:func:`viscid.plot.vlab.vectorbar`            Wrap `mayavi.mlab.vectorbar`, then change the colormap if any
+                                                 :py:func:`viscid.plot.vlab.apply_cmap` kwargs are provided
+:py:func:`viscid.plot.vlab.fancy_axes`           Make axes with 3 shaded walls and a grid similar to what
                                                  matplotlib and paraview have
-:py:func:`viscid.plot.mvi.axes`                  Wrap `mayavi.mlab.axes`
-:py:func:`viscid.plot.mvi.xlabel`                Wrap `mayavi.mlab.xlabel`
-:py:func:`viscid.plot.mvi.ylabel`                Wrap `mayavi.mlab.ylabel`
-:py:func:`viscid.plot.mvi.zlabel`                Wrap `mayavi.mlab.zlabel`
-:py:func:`viscid.plot.mvi.title`                 Wrap `mayavi.mlab.title`
-:py:func:`viscid.plot.mvi.outline`               Wrap `mayavi.mlab.outline`
-:py:func:`viscid.plot.mvi.orientation_axes`      Wrap `mayavi.mlab.orientation_axes`, adds the little xyz arrows
-:py:func:`viscid.plot.mvi.view`                  Wrap `mayavi.mlab.view`, adjusts the focal point, distance, and
+:py:func:`viscid.plot.vlab.axes`                 Wrap `mayavi.mlab.axes`
+:py:func:`viscid.plot.vlab.xlabel`               Wrap `mayavi.mlab.xlabel`
+:py:func:`viscid.plot.vlab.ylabel`               Wrap `mayavi.mlab.ylabel`
+:py:func:`viscid.plot.vlab.zlabel`               Wrap `mayavi.mlab.zlabel`
+:py:func:`viscid.plot.vlab.title`                Wrap `mayavi.mlab.title`
+:py:func:`viscid.plot.vlab.outline`              Wrap `mayavi.mlab.outline`
+:py:func:`viscid.plot.vlab.orientation_axes`     Wrap `mayavi.mlab.orientation_axes`, adds the little xyz arrows
+:py:func:`viscid.plot.vlab.view`                 Wrap `mayavi.mlab.view`, adjusts the focal point, distance, and
                                                  various angles of the camera
 ===============================================  =================================================================
 
@@ -278,9 +287,9 @@ These functions make some commonly used objects.
 ===============================================  =================================================================
 Function                                         Description
 ===============================================  =================================================================
-:py:func:`viscid.plot.mvi.plot_ionosphere`       Plot an ionospheric Field in 3D on the surface of a sphere
-:py:func:`viscid.plot.mvi.plot_blue_marble`      Plot an Earth using the blue marble NASA image
-:py:func:`viscid.plot.mvi.plot_earth_3d`         Plot an Earth with black for nightside and white for dayside
+:py:func:`viscid.plot.vlab.plot_ionosphere`      Plot an ionospheric Field in 3D on the surface of a sphere
+:py:func:`viscid.plot.vlab.plot_blue_marble`     Plot an Earth using the blue marble NASA image
+:py:func:`viscid.plot.vlab.plot_earth_3d`        Plot an Earth with black for nightside and white for dayside
 ===============================================  =================================================================
 
 Mayavi Workarounds
@@ -295,10 +304,10 @@ Mayavi has various platform specific bugs. These will try to apply workarounds s
 ===============================================  =================================================================
 Function                                         Description
 ===============================================  =================================================================
-:py:func:`viscid.plot.mvi.clf`                   Uses some hacks to clear a figure and make sure memory is freed
-:py:func:`viscid.plot.mvi.remove_source`         Safely remove a specific vtk source (and its memory)
-:py:func:`viscid.plot.mvi.resize`                default resize is unreliable on OS X / Linux
-:py:func:`viscid.plot.mvi.savefig`               offscreen rendering hack
+:py:func:`viscid.plot.vlab.clf`                  Uses some hacks to clear a figure and make sure memory is freed
+:py:func:`viscid.plot.vlab.remove_source`        Safely remove a specific vtk source (and its memory)
+:py:func:`viscid.plot.vlab.resize`               default resize is unreliable on OS X / Linux
+:py:func:`viscid.plot.vlab.savefig`              offscreen rendering hack
 ===============================================  =================================================================
 
 Mayavi Pipeline
@@ -311,12 +320,12 @@ Here are some functions to quickly bring Viscid datastructures into the Mayavi p
 ===============================================  =================================================================
 Function                                         Description
 ===============================================  =================================================================
-:py:func:`viscid.plot.mvi.add_source`            Given a VTKDataSource, add it to a figure
-:py:func:`viscid.plot.mvi.add_lines`             Given a list of lines, add them to a figure as a data source
-:py:func:`viscid.plot.mvi.add_field`             Given a :py:class:`viscid.field.Field`, add it to a figure as
+:py:func:`viscid.plot.vlab.add_source`           Given a VTKDataSource, add it to a figure
+:py:func:`viscid.plot.vlab.add_lines`            Given a list of lines, add them to a figure as a data source
+:py:func:`viscid.plot.vlab.add_field`            Given a :py:class:`viscid.field.Field`, add it to a figure as
                                                  a data source
-:py:func:`viscid.plot.mvi.insert_filter`         Insert a filter above a module_manager.
-:py:func:`viscid.plot.mvi.apply_cmap`            Apply a colormap to an existing Mayavi object. This also lets
+:py:func:`viscid.plot.vlab.insert_filter`        Insert a filter above a module_manager.
+:py:func:`viscid.plot.vlab.apply_cmap`           Apply a colormap to an existing Mayavi object. This also lets
                                                  you quickly rescale the limits on the colorbar, or switch to a
                                                  log scale.
 ===============================================  =================================================================

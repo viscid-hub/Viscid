@@ -104,7 +104,7 @@ class GGCMFileXDMF(openggcm.GGCMFile, xdmf.FileXDMF):  # pylint: disable=abstrac
             try:
                 timestr = self._child_files[0].find_item('openggcm*/time_str')
                 basetime, _ = self.parse_timestring(timestr.decode())
-            except KeyError:
+            except (KeyError, ValueError):
                 # if no basetime found, then use the special no dip tilt time
                 # this is a selfish hack in that old files that I saved
                 # will usually use this as basetime

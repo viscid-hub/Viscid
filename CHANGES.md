@@ -1,6 +1,27 @@
 Changes
 -------
 
+0.98.4
+======
+
+Changes:
+  - Moved `viscid.plot.mpl` -> `viscid.plot.vpyplot` and `viscid.plot.mvi` -> `viscid.plot.vlab`. The old names are too similar to shorthand names for matplotlib and mayavi. Importing mpl and mvi will still work, but a warning will appear suggesting a better import statement.
+  - Removed `viscid.vlab` and moved functions from `viscid.vutil` into more specific modules. Consider just using the top-level `viscid` namespace if this affects you.
+  - support jrrle files with >= 10^9 grid cells
+  - simplify cotr / dipole interfaces
+  - mpl plotting 2d/3d lines now passes through the `colors` kwarg
+  - better streamline integrators (RK2, RK4, RK45)
+  - streamline test is now quantitative
+  - More numpy operations between scalar and vector fields now work. Before, scalar fields wouldn't broadcast to the shape of interlaced vector fields.
+
+Backward Incompatible Changes:
+  - reorder 1st two arguments of viscid.arrays2field
+
+Bugfixes:
+  - install / uninstall without manifest
+  - no longer fall over when plotting lines with single vertex
+  - fix atleast_3d shape if data is already loaded
+
 0.98.3
 ======
 

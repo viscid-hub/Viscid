@@ -196,7 +196,8 @@ def _main():
     print("LMN matrix:\n", lmn, sep='')
 
     ##########
-    from viscid.plot import mpl
+    from matplotlib import pyplot as plt
+    from viscid.plot import vpyplot as vlt
     p0 = np.array((xm, ym, zm)).reshape((3,))
     pl = p0 + 0.25 * lmn[:, 0]
     pm = p0 + 0.25 * lmn[:, 1]
@@ -207,22 +208,22 @@ def _main():
     print("pm", pm)
     print("pn", pn)
 
-    mpl.subplot(211)
-    mpl.plot2d_quiver(B['z=0f'])
-    mpl.plt.plot([p0[0], pl[0]], [p0[1], pl[1]], color='r', ls='-')
-    mpl.plt.plot([p0[0], pm[0]], [p0[1], pm[1]], color='c', ls='-')
-    mpl.plt.plot([p0[0], pn[0]], [p0[1], pn[1]], color='b', ls='-')
-    mpl.plt.ylabel("Y")
+    vlt.subplot(211)
+    vlt.plot2d_quiver(B['z=0f'])
+    plt.plot([p0[0], pl[0]], [p0[1], pl[1]], color='r', ls='-')
+    plt.plot([p0[0], pm[0]], [p0[1], pm[1]], color='c', ls='-')
+    plt.plot([p0[0], pn[0]], [p0[1], pn[1]], color='b', ls='-')
+    plt.ylabel("Y")
 
-    mpl.subplot(212)
-    mpl.plot2d_quiver(B['y=0f'])
-    mpl.plt.plot([p0[0], pl[0]], [p0[2], pl[2]], color='r', ls='-')
-    mpl.plt.plot([p0[0], pm[0]], [p0[2], pm[2]], color='c', ls='-')
-    mpl.plt.plot([p0[0], pn[0]], [p0[2], pn[2]], color='b', ls='-')
-    mpl.plt.xlabel("X")
-    mpl.plt.ylabel("Z")
+    vlt.subplot(212)
+    vlt.plot2d_quiver(B['y=0f'])
+    plt.plot([p0[0], pl[0]], [p0[2], pl[2]], color='r', ls='-')
+    plt.plot([p0[0], pm[0]], [p0[2], pm[2]], color='c', ls='-')
+    plt.plot([p0[0], pn[0]], [p0[2], pn[2]], color='b', ls='-')
+    plt.xlabel("X")
+    plt.ylabel("Z")
 
-    mpl.show()
+    vlt.show()
     ##########
 
     return 0
