@@ -74,8 +74,8 @@ Scalar Field With Custom Coordinate Names
     vlt.auto_adjust_subplots()
     plt.show()
 
-Scalar Field On Same Grid As Existing Field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Scalar Field On The Same Grid As An Existing Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
     :include-source:
@@ -138,8 +138,8 @@ Vector Field
     vlt.auto_adjust_subplots()
     plt.show()
 
-Vector Field On The Same Grid As Existing Scalar Field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Vector Field On The Same Grid As An Existing Scalar Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
     :include-source:
@@ -171,7 +171,7 @@ Vector Field On The Same Grid As Existing Scalar Field
     vlt.auto_adjust_subplots()
     plt.show()
 
-Datetime time-series
+Datetime Time-Series
 ~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
