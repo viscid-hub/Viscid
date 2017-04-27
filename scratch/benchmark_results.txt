@@ -1,0 +1,28 @@
+interp_nearest
+--------------
+Timing interp_nearest
+<function viscid.cython.cycalc.interp_nearest> stats (10 runs):
+  Min: 0.0589, Mean: 0.0716, Median: 0.0646, Max: 0.101
+Cython Min: 0.0589203489944
+
+interp_trilin
+-------------
+Timing interp_trilin
+<function fort_tools.fort_shims.fort_interp_trilin> stats (10 runs):
+  Min: 0.0463, Mean: 0.0547, Median: 0.0531, Max: 0.0772
+<function viscid.cython.cycalc.interp_trilin> stats (10 runs):
+  Min: 0.0695, Mean: 0.073, Median: 0.0734, Max: 0.075
+@ Cython is 1.50x slower than Fortran
+
+streamline
+----------
+Timing streamline
+<function fort_tools.fort_shims.fort_topology> stats (6 runs):
+  Min: 0.321, Mean: 0.329, Median: 0.328, Max: 0.337
+<function viscid.cython.streamline.calc_streamlines> stats (6 runs):
+  Min: 0.473, Mean: 0.486, Median: 0.48, Max: 0.52
+Segs Fortran 2687658
+Segs Cython  2687934
+Fortran took 1.19e-07 sec/seg
+Cython took 1.76e-07 sec/seg
+@ Cython is 1.47x slower than Fortran
