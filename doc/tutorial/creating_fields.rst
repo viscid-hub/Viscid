@@ -138,8 +138,8 @@ Vector Field
     vlt.auto_adjust_subplots()
     plt.show()
 
-Vector Field On On Same Grid As Existing Scalar Field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Vector Field On The Same Grid As Existing Scalar Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
     :include-source:
