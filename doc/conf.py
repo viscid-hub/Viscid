@@ -147,6 +147,7 @@ html_theme_options = {
                         ("Philosophy", "philosophy"),
                         ("Useful Functions", "functions"),
                         ("Plot Options", "plot_options"),
+                        ("Tips & Tricks", "tips_and_tricks"),
                         ("Matplotlib Style Gallery", "mpl_style_gallery"),
                         ("RC file", "custom_behavior"),
                         ("Command Line Tools", "command_line"),

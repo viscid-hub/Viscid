@@ -64,9 +64,15 @@ def load_file(fname, force_reload=False, **kwargs):
     """Load a file
 
     Parameters:
+        fnames (list): single file name, or list of files that are part
+            of the same time series. Glob patterns and slices are
+            accepted, see :doc:`/tips_and_tricks` for more info.
         fname (str): a file name, relative to CWD
         force_reload (bool): Force reload if file is already in memory
         **kwargs: passed to the VFile constructor
+
+    See Also:
+        * :doc:`/tips_and_tricks`
 
     Returns:
         A VFile instance
@@ -77,14 +83,18 @@ def load_files(fnames, force_reload=False, **kwargs):
     """Load a list of files
 
     Parameters:
-        fnames (list): list of file names, glob patterns accepted
+        fnames (list): list of file names. Glob patterns and slices are
+            accepted, see :doc:`/tips_and_tricks` for more info.
         force_reload (bool): Force reload if file is already in memory
         **kwargs: passed to the VFile constructor
+
+    See Also:
+        * :doc:`/tips_and_tricks`
 
     Returns:
         A list of VFile instances. The length may not be the same
         as the length of fnames, and the order may not be the same
-        in order to accomidate globs and file grouping.
+        in order to accommodate globs and file grouping.
     """
     return __filebucket__.load_files(fnames, force_reload=force_reload,
                                      **kwargs)

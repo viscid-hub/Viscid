@@ -7,12 +7,16 @@ Useful Functions
 Utility Functions
 -----------------
 
-================================  ===============================================
-Function                          Description
-================================  ===============================================
-:py:func:`viscid.interact`        Stop the program and get an interactive prompt
-                                  at any point (uses ipython if it's installed).
-================================  ===============================================
+===================================  ===============================================
+Function                             Description
+===================================  ===============================================
+:py:func:`viscid.load_file`          Load a single file, or glob of a single time
+                                     series
+:py:func:`viscid.load_files`         Load multiple files
+:py:func:`viscid.unload_all_files`   Clear the cache of loaded files
+:py:func:`viscid.interact`           Stop the program and get an interactive prompt
+                                     at any point (uses IPython if it's installed).
+===================================  ===============================================
 
 Fields
 ------
