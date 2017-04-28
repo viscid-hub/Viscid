@@ -1,6 +1,5 @@
-
 FC=gfortran
-F2PY=f2py
+F2PY := $(shell [ $(which f2py3) ] && echo "f2py3" || echo "f2py")
 
 %.f: %.for
 	fppn -c -- $< >$@
@@ -15,11 +14,7 @@ tracer: tracer.f90
 	# $(FC) -o $@ $^
 	$(F2PY) -c -m $@ $^
 
-for_bench: for_bench.f90
-	# $(FC) -o $@ $^
-	$(F2PY) -c -m $@ $^
-
-all: tracer for_bench
+all: tracer
 
 clean:
 	rm -f *.o *.so

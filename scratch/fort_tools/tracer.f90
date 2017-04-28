@@ -1,5 +1,50 @@
 ! -*- f90 -*-
 
+!SUBROUTINE ffort_interp_trilin(a, b, gx, gy, gz, ptsx, ptsy, ptsz, nx, ny, nz, npts)
+!  IMPLICIT NONE
+!
+!  INTEGER, INTENT(IN) :: nx, ny, nz
+!  INTEGER, INTENT(IN) :: npts
+!  REAL, INTENT(IN) :: a(nx, ny, nz)
+!  REAL, INTENT(IN) :: gx(nx), gy(ny), gz(nz)
+!  REAL, INTENT(IN) :: ptsx(npts), ptsy(npts), ptsz(npts)
+!  REAL, INTENT(INOUT) :: b(npts)
+!
+
+!---------------------------------------------------------------
+SUBROUTINE get_topo_at(topo, nsegs, ptsx, ptsy, ptsz, bx, by, bz, gx, gy, gz, &
+                       npts, nx, ny, nz)
+!---------------------------------------------------------------
+  IMPLICIT NONE
+
+  INTEGER, INTENT(IN) :: npts
+  INTEGER, INTENT(IN) :: nx, ny, nz
+  REAL, INTENT(IN) :: gx(nx), gy(ny), gz(nz)
+  REAL, INTENT(IN) :: bx(nx, ny, nz), by(nx, ny, nz), bz(nx, ny, nz)
+  REAL, INTENT(IN) :: ptsx(npts), ptsy(npts), ptsz(npts)
+  INTEGER, INTENT(INOUT) :: topo(npts)
+  INTEGER, INTENT(INOUT) :: nsegs
+
+  REAL :: x, y, z
+  REAL :: vl(3, 100000)
+  INTEGER :: i
+  INTEGER :: nv, ifl, ihem
+  INTEGER :: nopen, nclose, nsw
+
+  nopen = 0
+  nclose = 0
+  nsw = 0
+
+  do i=1, npts
+    x = ptsx(i)
+    y = ptsy(i)
+    z = ptsz(i)
+
+    call xcl4(gx, gy, gz, bx, by, bz, x, y, z, ifl, ihem, 0, 100, 2, vl, nv, nx, ny, nz, nsegs)
+    topo(i) = ifl
+  end do
+END SUBROUTINE
+
 !---------------------------------------------------------------
 SUBROUTINE get_topo(gx, gy, gz, bx, by, bz, topo, x1, x2, y1, y2, z1, z2, &
                     nx, ny, nz, outnx, outny, outnz, nsegs)
@@ -15,20 +60,9 @@ SUBROUTINE get_topo(gx, gy, gz, bx, by, bz, topo, x1, x2, y1, y2, z1, z2, &
   INTEGER, INTENT(INOUT) :: nsegs
   REAL :: x, y, z
   REAL :: vl(3, 100000)
-  ! REAL :: vl2(3, 100000)
   INTEGER :: ix, iy, iz
   INTEGER :: nv, ifl, ihem
   INTEGER :: nopen, nclose, nsw
-  ! INTEGER :: nsegs
-
-  ! x1 = -2.0
-  ! x2 = 8.0
-  ! y1 = -12.0
-  ! y2 = 0.0
-  ! z1 = -5.0
-  ! z2 = 5.0
-
-  !write(0,*) 'bound2:  ', x1, x2, y1, y2, z1, z2
 
   nopen = 0
   nclose = 0
@@ -43,27 +77,9 @@ SUBROUTINE get_topo(gx, gy, gz, bx, by, bz, topo, x1, x2, y1, y2, z1, z2, &
 
         call xcl4(gx, gy, gz, bx, by, bz, x, y, z, ifl, ihem, 0, 100, 2, vl, nv, nx, ny, nz, nsegs)
         topo(ix, iy, iz) = ifl
-
-        ! if(ifl.eq.0) then
-        !   nclose = nclose + 1
-        ! endif
-        ! if(ifl.eq.1) then
-        !   nopen = nopen + 1
-        ! endif
-        ! if(ifl.eq.2) then
-        !   nsw = nsw + 1
-        ! endif
-
-        ! if(ix.eq.iy) then
-        !   write(0, *) x, y, z, ix, iy, iz, ifl
-        ! endif
-
       end do
     end do
   end do
-
-  WRITE (*, *) "Total segments calculated: ", nsegs
-
 END SUBROUTINE
 
 
@@ -315,6 +331,31 @@ SUBROUTINE trace2(gx, gy, gz, bx, by, bz, &
 
 END SUBROUTINE
 
+SUBROUTINE ffort_interp_trilin(a, b, gx, gy, gz, ptsx, ptsy, ptsz, nx, ny, nz, npts)
+  IMPLICIT NONE
+
+  INTEGER, INTENT(IN) :: nx, ny, nz
+  INTEGER, INTENT(IN) :: npts
+  REAL, INTENT(IN) :: a(nx, ny, nz)
+  REAL, INTENT(IN) :: gx(nx), gy(ny), gz(nz)
+  REAL, INTENT(IN) :: ptsx(npts), ptsy(npts), ptsz(npts)
+  REAL, INTENT(INOUT) :: b(npts)
+
+  INTEGER :: i
+  INTEGER :: iout
+  REAL :: val = 0
+
+  iout = 0
+
+  DO i = 1, npts
+    call ipol3a(a, val, gx, gy, gz, ptsx(i), ptsy(i), ptsz(i), iout, nx, ny, nz)
+    if(iout.gt.0) then
+      return
+    endif
+    b(i) = val
+  END DO
+
+END SUBROUTINE
 
 SUBROUTINE ipol3a(a,b,gx,gy,gz,x,y,z,iout, nx,ny,nz)
   IMPLICIT NONE
@@ -335,6 +376,7 @@ SUBROUTINE ipol3a(a,b,gx,gy,gz,x,y,z,iout, nx,ny,nz)
   call closest_ind(gz, nz, z, iz, iout)
 
   if(iout.gt.0) then
+    write(*, *) "IOUT:", iout
     return
   endif
 

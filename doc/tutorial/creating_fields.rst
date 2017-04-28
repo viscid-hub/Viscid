@@ -1,7 +1,7 @@
 Creating Fields
 ===============
 
-There are a few ways to easily get the benifits of using :py:class:`viscid.Field` (coordinate aware ndarrays). The easiest is to use readers built into Viscid (through :py:func:`viscid.load_file`). If there is no reader for your data format, you can easily wrap arrays in a number of ways...
+There are a few ways to easily get the benefits of using :py:class:`viscid.Field` (coordinate aware ndarrays). The easiest is to use readers built into Viscid (through :py:func:`viscid.load_file`). If there is no reader for your data format, you can easily wrap arrays in a number of ways...
 
 .. contents::
   :local:
@@ -62,7 +62,7 @@ Scalar Field With Custom Coordinate Names
 
     # create a new field, this time it's node centered
     fld = viscid.empty([a, b], crd_names=('axis-a', 'axis-b'), center='node',
-                       name="Oscilations", pretty_name="Oscilations $[W/m^2]$")
+                       name="Oscillations", pretty_name="Oscillations $[W/m^2]$")
 
     # fill the field with data... shaped crds are a lightweight way
     # to broadcast to the field's shape
@@ -74,8 +74,8 @@ Scalar Field With Custom Coordinate Names
     vlt.auto_adjust_subplots()
     plt.show()
 
-Scalar Field On The Same Grid As An Existing Field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Scalar Field On The Same Grid As A Scalar Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
     :include-source:
@@ -90,7 +90,7 @@ Scalar Field On The Same Grid As An Existing Field
     b = np.linspace(1.0, 2.0, 32)**2
 
     fld1 = viscid.empty([a, b], crd_names=('axis-a', 'axis-b'), center='node',
-                        name="Fld1", pretty_name="Oscilations $[W/m^2]$")
+                        name="Fld1", pretty_name="Oscillations $[W/m^2]$")
     A, B = fld1.get_crds(shaped=True)
     fld1[...] = np.sin(4 * A) + B + 0.5
 
@@ -138,8 +138,8 @@ Vector Field
     vlt.auto_adjust_subplots()
     plt.show()
 
-Vector Field On The Same Grid As An Existing Scalar Field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Vector Field On The Same Grid As A Scalar Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
     :include-source:
@@ -188,7 +188,7 @@ Datetime Time-Series
                                    '2010-06-23T21:00:00.0', 256)
 
     fld = viscid.empty([t], crd_names=['t'], center='node', name="TSeries",
-                       pretty_name="Shadow Lengith [Smoots]")
+                       pretty_name="Shadow Length [Smoots]")
 
     t_sec = (fld.get_crd('t') - fld.get_crd('t')[0]) / np.timedelta64(1, 's')
     fld[:] = (0.02 * np.sin(t_sec / (0.15 * 3600.0)) +
