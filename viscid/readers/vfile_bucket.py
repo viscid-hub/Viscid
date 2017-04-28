@@ -156,8 +156,11 @@ class VFileBucket(Bucket):
 
     def remove_all_items(self, do_unload=True):
         if do_unload:
-            for val in self.values():
-                val.unload()
+            for val in list(self.values()):
+                try:
+                    val.unload()
+                except KeyError:
+                    pass
         super(VFileBucket, self).remove_all_items()
 
     def __getitem__(self, handle):
