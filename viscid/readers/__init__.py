@@ -31,8 +31,8 @@ from viscid.readers import athena_xdmf
 from viscid.readers import ggcm_jrrle
 
 
-__all__ = ['load_file', 'load_files', 'unload_file', 'reload_file', 'get_file',
-           'save_grid', 'save_field', 'save_fields']
+__all__ = ['load_file', 'load_files', 'unload_file', 'unload_all_files',
+           'reload_file', 'get_file', 'save_grid', 'save_field', 'save_fields']
 
 
 __filebucket__ = vfile_bucket.VFileBucket()
@@ -121,4 +121,5 @@ def save_fields(fname, flds, **kwargs):
     ftype.save_fields(fname, flds, **kwargs)
 
 def unload_all_files():
+    """Hammer-of-Thor the cache"""
     __filebucket__.remove_all_items()
