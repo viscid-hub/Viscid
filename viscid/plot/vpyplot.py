@@ -648,6 +648,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         # unless otherwise specified, use_gridspec for colorbar
         if "use_gridspec" not in colorbar:
             colorbar["use_gridspec"] = True
+        if "ax" not in colorbar:
+            colorbar["ax"] = ax
 
         if "ticks" not in colorbar:
             if vscale == "log":
