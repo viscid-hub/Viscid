@@ -60,31 +60,34 @@ def load(fnames):
     else:
         return files[0]
 
-def load_file(fname, **kwargs):
+def load_file(fname, force_reload=True, **kwargs):
     """Load a file
 
     Parameters:
         fname (str): a file name, relative to CWD
-        kwargs: passed to the VFile constructor
+        force_reload (bool): Force reload if file is already in memory
+        **kwargs: passed to the VFile constructor
 
     Returns:
         A VFile instance
     """
-    return __filebucket__.load_file(fname, **kwargs)
+    return __filebucket__.load_file(fname, force_reload=force_reload, **kwargs)
 
-def load_files(fnames, **kwargs):
+def load_files(fnames, force_reload=True, **kwargs):
     """Load a list of files
 
     Parameters:
         fnames (list): list of file names, glob patterns accepted
-        kwargs: passed to the VFile constructor
+        force_reload (bool): Force reload if file is already in memory
+        **kwargs: passed to the VFile constructor
 
     Returns:
         A list of VFile instances. The length may not be the same
         as the length of fnames, and the order may not be the same
         in order to accomidate globs and file grouping.
     """
-    return __filebucket__.load_files(fnames, **kwargs)
+    return __filebucket__.load_files(fnames, force_reload=force_reload,
+                                     **kwargs)
 
 def unload_file(handle):
     """call unload on the handle in the bucket"""

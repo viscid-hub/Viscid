@@ -37,7 +37,7 @@ class VFileBucket(Bucket):
             return fls[0]
 
     def load_files(self, fnames, index_handle=True, file_type=None,
-                   _add_ref=False, **kwargs):
+                   force_reload=False, _add_ref=False, **kwargs):
         """Load files, and add them to the bucket
 
         Initialize obj before it's put into the list, whatever is returned
@@ -115,6 +115,8 @@ class VFileBucket(Bucket):
 
                 try:
                     f = self[handle_name]
+                    if force_reload:
+                        f.reload()
                 except KeyError:
                     try:
                         f = ftype(group, parent_bucket=self, **kwargs)
