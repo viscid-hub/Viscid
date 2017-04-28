@@ -6,7 +6,7 @@ Spatial Slices
 
 Fields can be sliced just like Numpy ndarrays, but you can also use an extended syntax to ask for a physical location instead of an index in the array. This extended syntax is to provide a string with a number followed by an 'f' in place of an integer that is usually found in slices. For even further convenience, you can specify the entire slice as a string and specify the slice dimension by component name.
 
-The best way to show the utility of this extended syntax is by example, so here goes. This example snips off the fist 5 cells and last 25 cells in x and extracts the `y = 0.0` plane. In the z-direction, the field is sliced every other grid cell between `z = -8` and `z = 10.0`. Here, x, y, and z are coordinate names, so for example, in ionosphere grids, one would use 'lat' and 'lon'.
+The best way to show the utility of this extended syntax is by example, so here goes. This example snips off the fist 5 cells and last 25 cells in x and extracts the :code:`y = 0.0` plane. In the z-direction, the field is sliced every other grid cell between :code:`z = -8` and :code:`z = 10.0`. Here, x, y, and z are coordinate names, so in ionosphere grids, one would use 'lat' and 'lon'.
 
 .. plot::
     :include-source:
@@ -19,6 +19,8 @@ The best way to show the utility of this extended syntax is by example, so here 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
+    # snip off the first 5 and last 25 cells in x, and grab every other cell
+    # in z between z = -8.0 and z = 10.0 (in space, not index).
     # Notice that slices by location are done by appending an 'f' to the
     # slice. This means "y=0" is not the same as "y=0f".
     pp = f3d["pp"]["x = 5:-25, y = 0.0f, z = -8.0f:10.0f:2"]

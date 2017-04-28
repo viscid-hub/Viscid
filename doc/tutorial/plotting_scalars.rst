@@ -51,19 +51,20 @@ Two Plots, One Figure
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    ax1 = plt.subplot2grid((2, 1), (0, 0))
+    fig, axes = plt.subplots(1, 2, sharex=True, sharey=True)
 
     # plot pressure with 64 contours on a logscale
     vlt.plot(f3d["pp"]["y=0.0f"], style="contourf", levels=64,
-             plot_opts="log, earth")
+             plot_opts="log, earth", ax=axes[0])
 
     # plot velocity in x with a colorbar symmetric about 0
     # also, share axes so this plot pans/zooms with the first
-    plt.subplot2grid((2, 1), (1, 0), sharex=ax1, sharey=ax1)
     vlt.plot(f3d["vx"]["y=0.0f"], style="contourf", levels=64,
-             lin=0, earth=True)
+             lin=0, earth=True, ax=axes[1])
 
     plt.xlim((-20, 20))
     plt.ylim((-10, 10))
+
+    vlt.auto_adjust_subplots()
 
     vlt.show()

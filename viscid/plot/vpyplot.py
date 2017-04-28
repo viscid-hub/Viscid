@@ -543,6 +543,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     if colorbar:
         if not isinstance(colorbar, dict):
             colorbar = {}
+        else:
+            colorbar = dict(colorbar)
     else:
         colorbar = None
 
