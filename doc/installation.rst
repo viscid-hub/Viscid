@@ -117,7 +117,8 @@ to pull updates from github in the future, use
 
     git pull
     make
-    make install
+    make install  # or, if you don't have write permissions,
+                  # try `make install INSTALL_ARGS='--user'`
 
 Choice 2 (inplace)
 ^^^^^^^^^^^^^^^^^^
