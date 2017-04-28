@@ -1,6 +1,11 @@
 Command Line Utilities
 ======================
 
+viscid
+------
+
+``viscid`` is a shell script that is a shortcut for :code:`python -im viscid.__main__`. This script defaults to IPython, and it tries to make sure the python and viscid versions jive regardless of PATH or PYTHONPATH. You can also specify :code:`mpl` or :code:`vlab` as arguments to automatically import matplotlib or mayavi.
+
 viscid_2d
 ---------
 
