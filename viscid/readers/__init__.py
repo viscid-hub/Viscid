@@ -60,7 +60,7 @@ def load(fnames):
     else:
         return files[0]
 
-def load_file(fname, force_reload=True, **kwargs):
+def load_file(fname, force_reload=False, **kwargs):
     """Load a file
 
     Parameters:
@@ -73,7 +73,7 @@ def load_file(fname, force_reload=True, **kwargs):
     """
     return __filebucket__.load_file(fname, force_reload=force_reload, **kwargs)
 
-def load_files(fnames, force_reload=True, **kwargs):
+def load_files(fnames, force_reload=False, **kwargs):
     """Load a list of files
 
     Parameters:
