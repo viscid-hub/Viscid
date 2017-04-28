@@ -4,7 +4,8 @@ Changes
 0.98.6 dev
 ==========
 
-
+Bugfix:
+  - Fix regression with colorbar axes (if the same colorbar dict was given to > 1 call to `viscid.plot.vpyplot.plot`).
 
 0.98.5
 ======
