@@ -1,7 +1,7 @@
 Plotting Scalar Quantities
 ==========================
 
-The basic idea of Viscid is to convert data files to :class:`viscid.field.Field` objects and pass them to a convenience function for plotting. It is useful to note that Field objects have most of the same functionalty as Numpy's `ndarrays`. That is, you can say::
+The basic idea of Viscid is to convert data files to :class:`viscid.field.Field` objects and pass them to a convenience function for plotting. It is useful to note that Field objects have most of the same functionality as Numpy's `ndarrays`. That is, you can say::
 
     field_momentum = field_density * field_velocity
 

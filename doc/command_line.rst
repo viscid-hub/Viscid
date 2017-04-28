@@ -34,7 +34,7 @@ viscid_ts
 viscid_diff
 -----------
 
-``viscid_diff`` is a command line script for diffing two files. By default it's very terse, but it can be made fairly verbose. The example below diffs two timestps from the same run. A more useful use case for this utility is diffing two different runs that you expect to be equal, but you get the idea.
+``viscid_diff`` is a command line script for diffing two files. By default it's very terse, but it can be made fairly verbose. The example below diffs two timesteps from the same run. A more useful use case for this utility is diffing two different runs that you expect to be equal, but you get the idea.
 
 ``viscid_diff --show *.3df.{000200,000201}.xdmf rr``
 

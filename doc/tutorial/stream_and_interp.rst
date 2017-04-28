@@ -1,7 +1,7 @@
 Streamlines
 ===========
 
-Streamlines require a VectorField and a seed generator. If you just want a single streamline, you can also use an (x, y, z) tuple. For a more comprehensive list of seed generators, check out :doc:`../functions` or to see them in actuon, run `Viscid/tests/test_seed.py`.
+Streamlines require a VectorField and a seed generator. If you just want a single streamline, you can also use an (x, y, z) tuple. For a more comprehensive list of seed generators, check out :doc:`../functions` or to see them in action, run `Viscid/tests/test_seed.py`.
 
 A more in-depth example of using and plotting streamlines can be found in the :doc:`quasi_potential`.
 

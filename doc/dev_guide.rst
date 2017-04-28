@@ -8,14 +8,14 @@ Please, if you edit the code, use `PEP 8 <https://www.python.org/dev/peps/pep-00
 
 + Lines should be less than 92 characters long, but if you're pushing over 80, then think about whether or not you're doing too much on one line.
 
-+ Additional whitespace around parenthases and operators should be used to line up successive lines of math if that makes the math operation more clear. Note that this says additional, i.e., don't start dropping spaces after commas. An example is doing cross products; the code should be written such that it's visually clear that the lines calculating the components of the vector are cyclic permutations.
++ Additional whitespace around parentheses and operators should be used to line up successive lines of math if that makes the math operation more clear. Note that this says additional, i.e., don't start dropping spaces after commas. An example is doing cross products; the code should be written such that it's visually clear that the lines calculating the components of the vector are cyclic permutations.
 
 Continuous integration will pass commits and pull requests through `Flake8 <https://flake8.readthedocs.org/en/latest>`_ with a generous amount of ignored rules. See `Viscid/Makefile` for the list of rules that are ignored.
 
 Continuous Integration
 ----------------------
 
-This project uses `Travis-CI <http://travis-ci.org>`_ for continuous integration. By default, tests run whenever commits are pushed or pull requests are made to the main git repository on GitHub. Test summary pages are automatically uploaded to GitHub Pages in the `summary` directory. In additon, commits to `master` and `dev` automatically update the html documentation and push the changes to GitHub Pages.
+This project uses `Travis-CI <http://travis-ci.org>`_ for continuous integration. By default, tests run whenever commits are pushed or pull requests are made to the main git repository on GitHub. Test summary pages are automatically uploaded to GitHub Pages in the `summary` directory. In addition, commits to `master` and `dev` automatically update the html documentation and push the changes to GitHub Pages.
 
 Forks can use Travis-CI by enabling it for their own GitHub accounts. The caveat is that commits to `master` and `dev` from forked repositories will not update GitHub Pages.
 

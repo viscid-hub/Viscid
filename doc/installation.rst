@@ -40,7 +40,7 @@ Quickstart
 Installing Anaconda (optional but recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `Anaconda Python Distribution <https://store.continuum.io/cshop/anaconda/>`_ makes installing dependancies as easy as running one shell command.
+The `Anaconda Python Distribution <https://store.continuum.io/cshop/anaconda/>`_ makes installing dependencies as easy as running one shell command.
 
 .. code-block:: bash
 
@@ -67,10 +67,10 @@ This should be done in whatever directory you want to store the Viscid source co
     mkdir -p ~/.config/matplotlib
     cp Viscid/resources/viscidrc ~/.viscidrc
 
-Installing Dependancies
+Installing Dependencies
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are using Anaconda to manage your dependancies, you can use the default Viscid environment to automatically install all Viscid's dependancies,
+If you are using Anaconda to manage your dependencies, you can use the default Viscid environment to automatically install all Viscid's dependencies,
 
 .. code-block:: bash
 

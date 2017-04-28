@@ -6,7 +6,7 @@ Spatial Slices
 
 Fields can be sliced just like Numpy ndarrays, but you can also use an extended syntax to ask for a physical location instead of an index in the array. This extended syntax is to provide a string with a number followed by an 'f' in place of an integer that is usually found in slices. For even further convenience, you can specify the entire slice as a string and specify the slice dimension by component name.
 
-The best way to show the utility of this extended syntax is by example, so here goes. This example snips off the fist 5 cells and last 25 cells in x and extracts the `y = 0.0` plane. In the z-direciton, the field is sliced every other grid cell between `z = -8` and `z = 10.0`. Here, x, y, and z are coordinate names, so for example, in ionosphere grids, one would use 'lat' and 'lon'.
+The best way to show the utility of this extended syntax is by example, so here goes. This example snips off the fist 5 cells and last 25 cells in x and extracts the `y = 0.0` plane. In the z-direction, the field is sliced every other grid cell between `z = -8` and `z = 10.0`. Here, x, y, and z are coordinate names, so for example, in ionosphere grids, one would use 'lat' and 'lon'.
 
 .. plot::
     :include-source:

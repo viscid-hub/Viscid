@@ -20,7 +20,7 @@ Multiple arguments are given to keywords as a tuple:
 
   kwargs = {'lin': (-1.0, 1.0), 'gridec': 'k'}
 
-All options can be passed as strings with one of two formats. First, the string can be a list of comma separated options with underscore separatod arguments:
+All options can be passed as strings with one of two formats. First, the string can be a list of comma separated options with underscore separated arguments:
 
 .. code-block:: python
 
@@ -67,8 +67,8 @@ xlabel         str               Specific label for the x axis
 ylabel         str               Specific label for the y axis
 majorfmt       ticker.Formatter  Formatter for major axes (x and y)
 minorfmt       ticker.Formatter  Formatter for minor axes (x and y)
-majorloc       ticker.Locator    Locator for major axes (x and y)
-minorloc       ticker.Locator    Locator for minor axes (x and y)
+majorloc       ticker.Locater    Locater for major axes (x and y)
+minorloc       ticker.Locater    Locater for minor axes (x and y)
 datefmt        str               date format string in the datetime.strftime format
 timefmt        str               time format string in the datetime.strftime format
                                  (used for timedeltas)
