@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.98.5 dev
-==========
+0.98.5
+======
 
 Bugfix:
   - Colorbars added to incorrect axis after using `plt.subplots`
