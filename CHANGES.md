@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.98.7 dev
-==========
+0.98.7
+======
 
 Changes:
   - calls to `viscid.load_file` and `viscid.load_files` automatically force reload by default
