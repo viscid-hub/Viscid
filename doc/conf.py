@@ -147,6 +147,7 @@ html_theme_options = {
                         ("Philosophy", "philosophy"),
                         ("Useful Functions", "functions"),
                         ("Plot Options", "plot_options"),
+                        ("Tips & Tricks", "tips_and_tricks"),
                         ("Matplotlib Style Gallery", "mpl_style_gallery"),
                         ("RC file", "custom_behavior"),
                         ("Command Line Tools", "command_line"),
@@ -202,7 +203,7 @@ html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 # html_static_path = ['_static']
-html_static_path = ['styles/_thumbs']
+html_static_path = ['styles/_thumbs', 'static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

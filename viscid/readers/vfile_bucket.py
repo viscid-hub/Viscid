@@ -37,7 +37,7 @@ class VFileBucket(Bucket):
             return fls[0]
 
     def load_files(self, fnames, index_handle=True, file_type=None,
-                   _add_ref=False, **kwargs):
+                   force_reload=False, _add_ref=False, **kwargs):
         """Load files, and add them to the bucket
 
         Initialize obj before it's put into the list, whatever is returned
@@ -115,6 +115,8 @@ class VFileBucket(Bucket):
 
                 try:
                     f = self[handle_name]
+                    if force_reload:
+                        f.reload()
                 except KeyError:
                     try:
                         f = ftype(group, parent_bucket=self, **kwargs)
@@ -154,8 +156,11 @@ class VFileBucket(Bucket):
 
     def remove_all_items(self, do_unload=True):
         if do_unload:
-            for val in self.values():
-                val.unload()
+            for val in list(self.values()):
+                try:
+                    val.unload()
+                except KeyError:
+                    pass
         super(VFileBucket, self).remove_all_items()
 
     def __getitem__(self, handle):

@@ -451,7 +451,8 @@ def slice_globbed_filenames(glob_pattern):
     Examples:
         If a directory contains files,
 
-            file.010.txt  file.020.txt  file.030.txt  file.040.txt
+        >>> os.listdir()
+        ["file.010.txt", "file.020.txt", "file.030.txt", "file.040.txt"]
 
         then sliced globs can look like
 
@@ -515,7 +516,11 @@ def slice_globbed_filenames(glob_pattern):
 
 
 def glob2(glob_pattern, *args, **kwargs):
-    """Wrap slice_globbed_filenames, but return [] on no match"""
+    """Wrap slice_globbed_filenames, but return [] on no match
+
+    See Also:
+        * :py:func:`slice_globbed_filenames`
+    """
     try:
         return slice_globbed_filenames(glob_pattern, *args, **kwargs)
     except IOError:

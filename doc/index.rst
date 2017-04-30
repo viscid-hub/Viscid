@@ -82,6 +82,7 @@ Contents
   philosophy
   functions
   plot_options
+  tips_and_tricks
   mpl_style_gallery
   custom_behavior
   command_line

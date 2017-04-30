@@ -1142,7 +1142,7 @@ def plot_earth_3d(figure=None, daycol=(1, 1, 1), nightcol=(0, 0, 0),
 
 def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
            fit=None, **kwargs):
-    """Display a mayavi figure inline in an ipython notebook.
+    """Display a mayavi figure inline in an Jupyter Notebook.
 
     This function takes a screenshot of a figure and blits it to a matplotlib
     figure using matplotlib.pyplot.imshow()

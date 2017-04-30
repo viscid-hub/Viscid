@@ -31,8 +31,8 @@ from viscid.readers import athena_xdmf
 from viscid.readers import ggcm_jrrle
 
 
-__all__ = ['load_file', 'load_files', 'unload_file', 'reload_file', 'get_file',
-           'save_grid', 'save_field', 'save_fields']
+__all__ = ['load_file', 'load_files', 'unload_file', 'unload_all_files',
+           'reload_file', 'get_file', 'save_grid', 'save_field', 'save_fields']
 
 
 __filebucket__ = vfile_bucket.VFileBucket()
@@ -60,31 +60,44 @@ def load(fnames):
     else:
         return files[0]
 
-def load_file(fname, **kwargs):
+def load_file(fname, force_reload=False, **kwargs):
     """Load a file
 
     Parameters:
+        fnames (list): single file name, or list of files that are part
+            of the same time series. Glob patterns and slices are
+            accepted, see :doc:`/tips_and_tricks` for more info.
         fname (str): a file name, relative to CWD
-        kwargs: passed to the VFile constructor
+        force_reload (bool): Force reload if file is already in memory
+        **kwargs: passed to the VFile constructor
+
+    See Also:
+        * :doc:`/tips_and_tricks`
 
     Returns:
         A VFile instance
     """
-    return __filebucket__.load_file(fname, **kwargs)
+    return __filebucket__.load_file(fname, force_reload=force_reload, **kwargs)
 
-def load_files(fnames, **kwargs):
+def load_files(fnames, force_reload=False, **kwargs):
     """Load a list of files
 
     Parameters:
-        fnames (list): list of file names, glob patterns accepted
-        kwargs: passed to the VFile constructor
+        fnames (list): list of file names. Glob patterns and slices are
+            accepted, see :doc:`/tips_and_tricks` for more info.
+        force_reload (bool): Force reload if file is already in memory
+        **kwargs: passed to the VFile constructor
+
+    See Also:
+        * :doc:`/tips_and_tricks`
 
     Returns:
         A list of VFile instances. The length may not be the same
         as the length of fnames, and the order may not be the same
-        in order to accomidate globs and file grouping.
+        in order to accommodate globs and file grouping.
     """
-    return __filebucket__.load_files(fnames, **kwargs)
+    return __filebucket__.load_files(fnames, force_reload=force_reload,
+                                     **kwargs)
 
 def unload_file(handle):
     """call unload on the handle in the bucket"""
@@ -118,4 +131,5 @@ def save_fields(fname, flds, **kwargs):
     ftype.save_fields(fname, flds, **kwargs)
 
 def unload_all_files():
+    """Hammer-of-Thor the cache"""
     __filebucket__.remove_all_items()

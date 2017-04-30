@@ -44,7 +44,7 @@ Scalar Field
     vlt.auto_adjust_subplots()
     plt.show()
 
-Scalar Field With Custom Coordinate Names
+Scalar Field with Custom Coordinate Names
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
@@ -74,8 +74,8 @@ Scalar Field With Custom Coordinate Names
     vlt.auto_adjust_subplots()
     plt.show()
 
-Scalar Field On The Same Grid As A Scalar Field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Scalar Field on the Same Grid as an Existing Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::
     :include-source:
@@ -138,7 +138,7 @@ Vector Field
     vlt.auto_adjust_subplots()
     plt.show()
 
-Vector Field On The Same Grid As A Scalar Field
+Vector Field on the Same Grid as a Scalar Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. plot::

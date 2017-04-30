@@ -94,7 +94,7 @@ An alternative to activating this environment for each session is to prepend you
 Building / Installing Viscid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now you have two choices about how you want to use Viscid. If you intend to edit viscid to your own liking then I recommend using it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
+Now you have two choices about how you want to use Viscid. If you intend to edit viscid then I recommend using it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
 
 Choice 1 (installed)
 ^^^^^^^^^^^^^^^^^^^^
@@ -103,7 +103,8 @@ Choice 1 (installed)
 
     cd Viscid
     make
-    make install
+    make install  # or, if you don't have write permission,
+                  # try `make install INSTALL_ARGS='--user'`
 
 to kick the tires, use
 
@@ -117,7 +118,8 @@ to pull updates from github in the future, use
 
     git pull
     make
-    make install
+    make install  # or, if you don't have write permission,
+                  # try `make install INSTALL_ARGS='--user'`
 
 Choice 2 (inplace)
 ^^^^^^^^^^^^^^^^^^
