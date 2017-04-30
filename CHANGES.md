@@ -6,6 +6,7 @@ Changes
 
 Changes:
   - calls to `viscid.load_file` and `viscid.load_files` automatically force reload by default
+  - various html doc fixes
 
 0.98.6
 ======
