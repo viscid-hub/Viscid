@@ -310,7 +310,10 @@ class StructuredCrds(Coordinates):
         if self._dtype:
             return self._dtype
         else:
-            return self[self.axes[0]].dtype
+            if self._Pcrds is not None:
+                return self[self.axes[0]].dtype
+            elif self._src_crds_nc:
+                return None
 
     @dtype.setter
     def dtype(self, dtype):
