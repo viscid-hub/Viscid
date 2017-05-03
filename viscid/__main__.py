@@ -3,15 +3,18 @@
 from __future__ import print_function
 import sys
 
-print("Viscid says: from viscid import *")
-from viscid import *
-import viscid
-
-print("Viscid says: importing numpy as np")
+print("Viscid says: import numpy")
+import numpy
+print("Viscid says: import numpy as np")
 import numpy as np
 
+print("Viscid says: import viscid")
+import viscid
+print("Viscid says: from viscid import *")
+from viscid import *
+
 if ('mpl' in sys.argv or 'pylab' in sys.argv or 'matplotlib' in sys.argv or
-    'vpyplot' in sys.argv or 'vlt' in sys.argv):
+    'plt' in sys.argv or 'vpyplot' in sys.argv or 'vlt' in sys.argv):
     print("Viscid says: from viscid.plot import vpyplot as vlt")
     from viscid.plot import vpyplot as vlt
     print("Viscid says: import matplotlib")
@@ -21,7 +24,8 @@ if ('mpl' in sys.argv or 'pylab' in sys.argv or 'matplotlib' in sys.argv or
     print("Viscid says: from matplotlib import pyplot as plt")
     from matplotlib import pyplot as plt
 
-if 'mvi' in sys.argv or 'mlab' in sys.argv or 'mayavi' in sys.argv:
+if ('mvi' in sys.argv or 'mlab' in sys.argv or 'mayavi' in sys.argv or
+    'vlab' in sys.argv):
     print("Viscid says: from viscid.plot import vlab")
     from viscid.plot import vlab
     print("Viscid says: import mayavi")
