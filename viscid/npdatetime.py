@@ -58,7 +58,7 @@ __all__ = ['as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
            'datetime64_as_years',
            'asarray_datetime64', 'linspace_datetime64',
            'round_time', 'regularize_time',
-           'most_precise_tdiff',
+           'most_precise_tdiff', 'time_sum', 'time_diff',
            'is_datetime_like', 'is_timedelta_like', 'is_time_like']
 
 
@@ -576,6 +576,66 @@ def regularize_time(tlst, unit=None, most_precise=False, allow_rounding=True,
         else:
             return ret
 
+def time_sum(t0, tdelta, unit=None, most_precise=False, allow_rounding=True,
+             allow0=True):
+    """Add timedelta64 to datetime64 at highest precision w/o overflow
+
+    Notes:
+        * If `allow_rounding`, then the result may not be in `unit`. If
+          you rather raise an OverflowError, give `allow_rounding=False`
+        * If t0 can not be represented using the same units as tdelta,
+          then tdelta could be rounded to 0. If you rather raise a
+          PrecisionError, then give `allow0=False`
+
+    Args:
+        t0 (datetime64): starting date
+        tdelta (timedelta64): timedelta to add
+        unit (str): If given, regularize all times to this unit,
+            otherwise, regularize them to the most precise of the
+            bunch
+        most_precise (bool): If True, then convert all times to the
+            most precise unit that fits all the times
+        allow_rounding (bool): if tdelta is too small to be represented
+            in the same unit as t0, then round it to the finest unit
+            that fits both t0 and tdelta
+        allow0 (bool): If False, and a value is rounded to 0 in a given
+            unit, then raise a PrecisionError
+
+    Returns:
+        datetime64: t0 + tdelta
+    """
+    t0 = as_datetime64(t0)
+    tdelta = as_timedelta64(tdelta)
+    t0, tdelta = regularize_time([t0, tdelta], unit=unit,
+                                 most_precise=most_precise,
+                                 allow_rounding=allow_rounding,
+                                 allow0=allow0)
+    return t0 + tdelta
+
+def time_diff(t1, t2, unit=None, most_precise=False):
+    """Diff two datetime64s at highest precision w/o overflow
+
+    Note:
+        If `allow_rounding`, then the result may not be in `unit`. If
+        you rather raise an OverflowError, give `allow_rounding=False`
+
+    Args:
+        t1 (datetime64): `t1` for `t1 - t2`
+        t2 (datetime64): `t2` for `t1 - t2`
+        unit (str): If given, regularize all times to this unit,
+            otherwise, regularize them to the most precise of the
+            bunch
+        most_precise (bool): If True, then convert all times to the
+            most precise unit that fits all the times
+
+    Returns:
+        timedelta64: t1 - t2
+    """
+    t1 = as_datetime64(t1)
+    t2 = as_datetime64(t2)
+    t1, t2 = regularize_time([t1, t2], unit=unit, most_precise=most_precise)
+    return t1 - t2
+
 def most_precise_tdiff(t1, t2):
     """return t1 - t2 with the best precision it can and still be
     able to represent both dt1 and dt2
@@ -786,6 +846,7 @@ def _main():
 
     d0 = as_datetime64('2010-06-21')
     d1 = as_datetime64('2014-12-15T03:00:00.0003')
+    d2 = as_datetime64('1970-01-01', 'as')
     t0 = as_timedelta64(60, 'm')
     t1 = as_timedelta64(121, 'us')
     t2 = as_timedelta64(1536, 'as')
@@ -839,16 +900,37 @@ def _main():
     else:
         assert 0, "rounding 1536 atto secs -> secs should have caused an error"
 
+    #
+    # TEST `time_sum`
+    #
+
+    print(d0, "+", t1, "=", time_sum(d0, t1))
+    print(d0, "+", t2, "=", time_sum(d0, t2))
+
     try:
-        _ = round_time(l0, 'as', allow0=False)
+        time_sum(d0, t2, allow0=False)
+    except PrecisionError:
+        pass
+    else:
+        assert 0, "rounding 1536 atto secs -> us should have caused an error"
+
+    try:
+        time_sum(d0, t2, allow_rounding=False)
     except OverflowError:
         pass
     else:
         assert 0, "2010-06-21 should not be representable in atto secs"
 
     #
-    # TEST functions that now depend on `round_time` and `regularize_time`
+    # TEST `time_diff`
     #
+
+    print(d0, "-", d1, "=", time_diff(d0, d1))
+    print(d0, "-", d1, "=", time_diff(d0, d1, most_precise=True))
+    print(d0, "-", d1, "=", time_diff(d0, d1, unit='s'))
+    print(d0, "-", d2, "=", time_diff(d0, d2))
+    print(d0, "-", d2, "=", time_diff(d0, d2, unit='s'))
+    print(d0, "-", d2, "=", time_diff(d0, d2, unit='Y'))
 
 if __name__ == "__main__":
     sys.exit(_main())
