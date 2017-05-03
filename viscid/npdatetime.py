@@ -54,7 +54,7 @@ __all__ = ['as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
            'to_datetime64', 'to_timedelta64', 'to_datetime', 'to_timedelta',
            'as_isotime', 'to_isotime', 'format_time', 'format_datetime',
            'is_valid_datetime64', 'is_valid_timedelta64',
-           'round_datetime', 'round_timedelta', 'round_time',
+           'datetime_as_seconds', 'timedelta_as_seconds', 'time_as_seconds',
            'asarray_datetime64', 'linspace_datetime64', 'most_precise_tdiff',
            'datetime64_as_years',
            'is_datetime_like', 'is_timedelta_like',
@@ -400,7 +400,7 @@ def is_valid_timedelta64(arr, unit=None):
     except ValueError:
         return False
 
-def round_datetime(a, decimals=0):
+def datetime_as_seconds(a, decimals=0):
     """round datetime a to the nearest dicimals seconds"""
     a_as_dt64 = as_datetime64(a)
     _epoch = as_datetime64(a_as_dt64, unit='s')
@@ -408,17 +408,17 @@ def round_datetime(a, decimals=0):
     rounded = np.round(frac, decimals)
     return as_datetime64(_epoch + as_timedelta64(rounded, unit='s'))
 
-def round_timedelta(a, decimals=0):
+def timedelta_as_seconds(a, decimals=0):
     """round timedelta a to the nearest dicimals seconds"""
     rounded = np.round(as_timedelta(a).total_seconds(), decimals)
     return as_timedelta64(rounded, unit='s')
 
-def round_time(a, decimals=0):
+def time_as_seconds(a, decimals=0):
     """round a to the nearest dicimals seconds"""
     if is_datetime_like(a):
-        return round_datetime(a, decimals=decimals)
+        return datetime_as_seconds(a, decimals=decimals)
     elif is_timedelta_like(a, conservative=True):
-        return round_timedelta(a, decimals=decimals)
+        return timedelta_as_seconds(a, decimals=decimals)
     else:
         return np.round(a, decimals=decimals)
 

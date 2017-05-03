@@ -679,7 +679,7 @@ class GGCMFile(object):  # pylint: disable=abstract-method
         t = float(timestr[0])
         uttime = viscid.as_datetime64(timestr[2])
         basetime = uttime - viscid.as_timedelta64(t, 's')
-        basetime = viscid.round_time(basetime, 1)
+        basetime = viscid.time_as_seconds(basetime, 1)
         return basetime, uttime
 
 class GGCMFileFortran(GGCMFile, ContainerFile):  # pylint: disable=abstract-method
