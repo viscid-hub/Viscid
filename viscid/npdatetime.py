@@ -50,7 +50,8 @@ else:
     string_types = basestring,  # pylint: disable=undefined-variable
 
 
-__all__ = ['as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
+__all__ = ['PrecisionError',
+           'as_datetime64', 'as_timedelta64', 'as_datetime', 'as_timedelta',
            'to_datetime64', 'to_timedelta64', 'to_datetime', 'to_timedelta',
            'as_isotime', 'to_isotime', 'format_time', 'format_datetime',
            'is_valid_datetime64', 'is_valid_timedelta64',
