@@ -59,7 +59,7 @@ __all__ = ['PrecisionError',
            'datetime64_as_years',
            'asarray_datetime64', 'linspace_datetime64',
            'round_time', 'regularize_time',
-           'most_precise_tdiff', 'time_sum', 'time_diff',
+           'time_sum', 'time_diff',
            'is_datetime_like', 'is_timedelta_like', 'is_time_like']
 
 
@@ -114,47 +114,6 @@ def _is_dateunit(dtype):
 
 def _is_timeunit(dtype):
     return _is_datetime64(dtype) and _get_unit(dtype) in TIME_UNITS
-
-def _most_precise_diff(dt1, dt2):
-    """return dt1 - dt2 with the best precision it can and still be
-    able to represent both dt1 and dt2
-    """
-    # try to represent the diff with various precision and stop when
-    # we reach a unit that doesn't overflow the timedelta unit
-
-    diff = dt1 - dt2
-    unit_idx = -1
-    for i, unit in enumerate(TIME_UNITS):
-        try:
-            diff_tmp = diff.astype(_format_unit(unit, base=DELTA_BASE))
-            # overflowing into the sign bit doesn't raise an OverflowError,
-            # so we do this the explicitly
-            if diff == diff_tmp.astype(diff.dtype):
-                diff = diff_tmp
-                unit_idx = i
-                break
-        except OverflowError:
-            pass
-
-    if unit_idx < 0:
-        raise OverflowError("The interval {0} - {1} can not be represented as "
-                            "a timedelta with time units".format(dt1, dt2))
-
-    # now make the resolution more coarse until it can represent both
-    # dt1 and dt2 as an absolute time in the same unit
-    best_unit = None
-    ss = (dt1, dt2)
-    for unit in TIME_UNITS[unit_idx:]:
-        diff = diff.astype(_format_unit(unit, base=DELTA_BASE))
-        if all(t.astype(datetime) == (t + diff - diff).astype(datetime) for t in ss):
-            best_unit = unit
-            break
-
-    if best_unit is None:
-        raise OverflowError("Could not find best unit for difference {0} - {1}"
-                            "".format(dt1, dt2))
-
-    return best_unit, diff.astype(_format_unit(unit, base=DELTA_BASE))
 
 def _as_datetime64_scalar(time, unit=None):
     unit_args = [unit] if unit else []
@@ -367,23 +326,11 @@ def linspace_datetime64(start, stop, n, endpoint=True, unit=None):
     """Make an evenly space ndarray from start to stop with n values"""
     start = as_datetime64(start, unit=unit)
     stop = as_datetime64(stop, unit=unit)
+    start, stop = regularize_time([start, stop], most_precise=True)
 
-    # make start - stop as precise as you can
-    if unit:
-        diff = stop - start
-    else:
-        unit, diff = _most_precise_diff(stop, start)
-        start = start.astype(_format_unit(unit))
-        stop = stop.astype(_format_unit(unit))
-
-    if endpoint:
-        dx = diff / max(n - 1, 1)
-    else:
-        dx = diff / max(n, 1)
-
-    arr = np.empty((n,), dtype=start.dtype)
-    arr[:] = start + np.arange(n) * dx
-    return arr
+    fltarr = np.linspace(start.astype('i8'), stop.astype('i8'), n,
+                         endpoint=endpoint, dtype='f8')
+    return np.round(fltarr, 0).astype('i8').astype(start.dtype)
 
 def _get_base_unit(t):
     name = t.dtype.name
@@ -636,12 +583,6 @@ def time_diff(t1, t2, unit=None, most_precise=False):
     t2 = as_datetime64(t2)
     t1, t2 = regularize_time([t1, t2], unit=unit, most_precise=most_precise)
     return t1 - t2
-
-def most_precise_tdiff(t1, t2):
-    """return t1 - t2 with the best precision it can and still be
-    able to represent both dt1 and dt2
-    """
-    return _most_precise_diff(as_datetime64(t1), as_datetime64(t2))
 
 def is_valid_datetime64(arr, unit=None):
     """Returns True iff arr can be made into a datetime64 array"""
@@ -932,6 +873,14 @@ def _main():
     print(d0, "-", d2, "=", time_diff(d0, d2))
     print(d0, "-", d2, "=", time_diff(d0, d2, unit='s'))
     print(d0, "-", d2, "=", time_diff(d0, d2, unit='Y'))
+
+    #
+    # TEST linspace_datetime64
+    #
+    lst = linspace_datetime64(as_datetime64('1930-03-04'),
+                               as_datetime64('2010-02-14T12:30:00'),
+                               10)
+    print(lst, lst.dtype)
 
 if __name__ == "__main__":
     sys.exit(_main())
