@@ -771,11 +771,12 @@ def is_timedelta_like(val, conservative=False):
     if conservative:
         if val is None:
             return False
-        try:
-            int(val)
-            return False
-        except (ValueError, TypeError):
-            pass
+        if isinstance(val, string_types):
+            try:
+                int(val)
+                return False
+            except (ValueError, TypeError):
+                pass
         return _check_like(val, (np.timedelta64, ), (timedelta, ),
                            is_valid_timedelta64)
     else:
