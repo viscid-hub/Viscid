@@ -28,7 +28,7 @@ from viscid import _rc
 from viscid.compat.vimportlib import import_module
 
 
-__version__ = """0.98.7"""
+__version__ = """0.98.8"""
 
 __all__ = ['amr_field',
            'amr_grid',
@@ -37,6 +37,7 @@ __all__ = ['amr_field',
            'cotr',
            'dataset',
            'dipole',
+           'extools',
            'field',
            'fluidtrace',
            'grid',
@@ -46,6 +47,7 @@ __all__ = ['amr_field',
            'parallel',
            'pyeval',
            'seed',
+           'sliceutil',
            'tree',
            'verror',
            'vjson',

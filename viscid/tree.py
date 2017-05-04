@@ -246,7 +246,7 @@ class Node(object):
         return viscid.as_timedelta(self.time, unit='s')
 
     def time_as_datetime64(self):
-        return self.basetime + self.time_as_timedelta64()
+        return viscid.time_sum(self.basetime, self.time_as_timedelta64())
 
     def time_as_datetime(self):
         return viscid.as_datetime(self.time_as_datetime64())

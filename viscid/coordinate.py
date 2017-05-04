@@ -145,7 +145,7 @@ class Coordinates(object):
 
     _axes = ["x", "y", "z"]
 
-    __crds = None
+    _Pcrds = None
     meta = None
     _units_validated = False
     _units = None
@@ -310,7 +310,10 @@ class StructuredCrds(Coordinates):
         if self._dtype:
             return self._dtype
         else:
-            return self[self.axes[0]].dtype
+            if self._Pcrds is not None:
+                return self[self.axes[0]].dtype
+            elif self._src_crds_nc:
+                return None
 
     @dtype.setter
     def dtype(self, dtype):
@@ -353,9 +356,9 @@ class StructuredCrds(Coordinates):
     @property
     def _crds(self):
         "!!! BIG NOTE: THIS PROPERTY IS STILL PRIVATE !!!"
-        if self.__crds is None:
+        if self._Pcrds is None:
             self._fill_crds_dict()
-        return self.__crds
+        return self._Pcrds
 
     def clear_crds(self):
         self._src_crds_nc = {}
@@ -363,11 +366,11 @@ class StructuredCrds(Coordinates):
         self.clear_cache()
         # for d in self.axes:
         #     for sfx in self.SUFFIXES:
-        #         self.__crds[d + sfx] = None
-        #         self.__crds[d.upper() + sfx] = None
+        #         self._Pcrds[d + sfx] = None
+        #         self._Pcrds[d.upper() + sfx] = None
 
     def clear_cache(self):
-        self.__crds = None
+        self._Pcrds = None
 
     def _set_crds(self, clist):
         """ called with a list of lists:
@@ -432,7 +435,7 @@ class StructuredCrds(Coordinates):
     def _fill_crds_dict(self):
         """ do the math to calc node, cell, face, edge crds from
         the src crds """
-        self.__crds = {}
+        self._Pcrds = {}
 
         # get node centered crds from the src crds
         sfx = self._CENTER["node"]
@@ -456,11 +459,11 @@ class StructuredCrds(Coordinates):
             # ====================================================================
 
             flatarr, openarr = self._ogrid_single(ind, arr)
-            self.__crds[axis.lower()] = flatarr
-            self.__crds[axis.upper()] = openarr
+            self._Pcrds[axis.lower()] = flatarr
+            self._Pcrds[axis.upper()] = openarr
             # now with suffix
-            self.__crds[axis.lower() + sfx] = flatarr
-            self.__crds[axis.upper() + sfx] = openarr
+            self._Pcrds[axis.lower() + sfx] = flatarr
+            self._Pcrds[axis.upper() + sfx] = openarr
 
         # recalculate all cell centers, and refresh face / edges
         sfx = self._CENTER["cell"]
@@ -469,18 +472,18 @@ class StructuredCrds(Coordinates):
             if a in self._src_crds_cc:
                 ccarr = self._src_crds_cc[a]
             elif self.shape[i] == 1:
-                ccarr = self.__crds[a]
+                ccarr = self._Pcrds[a]
             else:
                 # doing the cc math this way also works for datetime objects
-                ccarr = self.__crds[a][:-1] + 0.5 * (self.__crds[a][1:] -
-                                                     self.__crds[a][:-1])
+                ccarr = self._Pcrds[a][:-1] + 0.5 * (self._Pcrds[a][1:] -
+                                                     self._Pcrds[a][:-1])
             flatarr, openarr = self._ogrid_single(a, ccarr)
-            self.__crds[a + sfx] = flatarr
-            self.__crds[a.upper() + sfx] = openarr
+            self._Pcrds[a + sfx] = flatarr
+            self._Pcrds[a.upper() + sfx] = openarr
 
         # ok, so this is a little recursive, but it's ok since we set
-        # __crds above, note however that now we only have nc and cc
-        # crds in __crds
+        # _Pcrds above, note however that now we only have nc and cc
+        # crds in _Pcrds
         crds_nc = self.get_crds_nc()
         crds_nc_shaped = self.get_crds_nc(shaped=True)
         crds_cc = self.get_crds_cc()
@@ -489,28 +492,28 @@ class StructuredCrds(Coordinates):
         # store references to face and edge centers while we're here
         sfx = self._CENTER["face"]
         for i, a in enumerate(self.axes):
-            self.__crds[a + sfx] = [None] * 3
-            self.__crds[a.upper() + sfx] = [None] * 3
+            self._Pcrds[a + sfx] = [None] * 3
+            self._Pcrds[a.upper() + sfx] = [None] * 3
             for j, d in enumerate(self.axes):  # pylint: disable=W0612
                 if i == j:
-                    self.__crds[a + sfx][j] = crds_nc[i][:-1]
-                    self.__crds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
+                    self._Pcrds[a + sfx][j] = crds_nc[i][:-1]
+                    self._Pcrds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
                 else:
-                    self.__crds[a + sfx][j] = crds_cc[i]
-                    self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
+                    self._Pcrds[a + sfx][j] = crds_cc[i]
+                    self._Pcrds[a.upper() + sfx][j] = crds_cc_shaped[i]
 
         # same as face, but swap nc with cc
         sfx = self._CENTER["edge"]
         for i, a in enumerate(self.axes):
-            self.__crds[a + sfx] = [None] * 3
-            self.__crds[a.upper() + sfx] = [None] * 3
+            self._Pcrds[a + sfx] = [None] * 3
+            self._Pcrds[a.upper() + sfx] = [None] * 3
             for j in range(3):
                 if i != j:
-                    self.__crds[a + sfx][j] = crds_nc[i][:-1]
-                    self.__crds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
+                    self._Pcrds[a + sfx][j] = crds_nc[i][:-1]
+                    self._Pcrds[a.upper() + sfx][j] = self._sm1(crds_nc_shaped[i])
                 else:
-                    self.__crds[a + sfx][j] = crds_cc[i]
-                    self.__crds[a.upper() + sfx][j] = crds_cc_shaped[i]
+                    self._Pcrds[a + sfx][j] = crds_cc[i]
+                    self._Pcrds[a.upper() + sfx][j] = crds_cc_shaped[i]
 
     @staticmethod
     def _sm1(a):

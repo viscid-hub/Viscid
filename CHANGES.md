@@ -1,6 +1,17 @@
 Changes
 -------
 
+0.98.8
+======
+
+Changes:
+  - refactor `round_time` -> `time_as_seconds`, `round_timedelta` -> `timedelta_as_seconds`, and `round_datetime` -> `datetime_as_seconds`
+  - add `round_time()` to round datetime64/timedelta64 to more coarse units
+  - add `regularize_time()` to put a list of datetime64s/timedelta64s in the same time unit
+  - add `time_sum()` and `time_diff()` to do add/subtract dates/times of any units and only raise exceptions if you explicitly ask for them
+  - remove `most_precise_diff()` - it has been superceeded by `time_diff()`
+  - add `extools` and `sliceutil` to root level __all__, oops
+
 0.98.7
 ======
 
