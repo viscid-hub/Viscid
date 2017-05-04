@@ -415,15 +415,16 @@ def round_time(tlst, unit, allow0=True):
           rather raise a PrecisionError, then give `allow0=False`.
 
     Args:
-        tlst (time, list): single or list of datetime64 or timedelta64
+        tlst (timelike, list): single or list of datetime64 or
+            timedelta64
         unit (str): units of result will be at least as coarse as
             this unit
         allow0 (bool): If False, then raise PrecisionError if a value
             has been truncated to 0
 
     Returns:
-        time or list: `tlst` rounded to a unit at least as coarse as
-            `unit`
+        timelike or list: `tlst` rounded to a unit at least as coarse
+            as `unit`
     """
     cfunc_lookup = {'datetime64': as_datetime64,
                     'timedelta64': as_timedelta64}
@@ -466,7 +467,8 @@ def regularize_time(tlst, unit=None, most_precise=False, allow_rounding=True,
           rather raise a PrecisionError, then give `allow0=False`.
 
     Args:
-        tlst (time, list): single or list of datetime64 or timedelta64
+        tlst (timelike, list): single or list of datetime64 or
+            timedelta64
         unit (str): If given, regularize all times to this unit,
             otherwise, regularize them to the most precise of the
             bunch
@@ -479,7 +481,7 @@ def regularize_time(tlst, unit=None, most_precise=False, allow_rounding=True,
             has been rounded to 0
 
     Returns:
-        time or list: single or list of times all in the same unit
+        timelike or list: single or list of times all in the same unit
     """
     cfunc_lookup = {'datetime64': as_datetime64,
                     'timedelta64': as_timedelta64}
