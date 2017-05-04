@@ -1,2 +1,6 @@
 {# Import the theme's layout. #}
 {% extends "!layout.html" %}
+
+{% if not bootswatch_css_custom %}
+  {% set bootswatch_css_custom = ['_static/my-css.css'] %}
+{% endif %}
