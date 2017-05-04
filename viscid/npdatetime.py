@@ -144,6 +144,8 @@ def _as_datetime64_scalar(time, unit=None):
                 time += 'Z'
 
         scalar = np.datetime64(time, *unit_args)
+    elif unit_args and hasattr(time, 'astype'):
+        scalar = time.astype(_format_unit(unit_args[0]))
     else:
         scalar = np.datetime64(time, *unit_args)
     return scalar
