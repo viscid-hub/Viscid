@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.98.8 dev
-==========
+0.98.8
+======
 
 Changes:
   - refactor `round_time` -> `time_as_seconds`, `round_timedelta` -> `timedelta_as_seconds`, and `round_datetime` -> `datetime_as_seconds`
