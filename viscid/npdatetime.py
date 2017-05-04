@@ -648,20 +648,21 @@ def format_time(time, fmt='.02f', basetime=None):
     Args:
         t (float): time
         style (str): for this method, can be::
-          -----------------------   -------   ------------------------------
-          style                     time      string
-          -----------------------   -------   ------------------------------
-          'hms'                     90015.0   "25:00:15.000"
-          'hmss'                    90015.0   "25:00:15.000 (090015)"
-          'dhms'                      900.0   "0 days 00:15:00.000"
-          'dhmss'                     900.0   "0 days 00:15:00.000 (000900)"
-          '.02f'                      900.0   '900.00'
-          '%Y-%m-%d %H:%M:%S'         900.0   '1970-01-01 00:15:00'
-          '%Y-%m-%d %H:%M:%S.%1f'     900.0   '1970-01-01 00:15:00.0'
-          -----------------------   -------   ------------------------------
 
-          Note that the last one can involve any formatting strings
-          understood by datetime.strftime
+              -----------------------   -------   ----------------------------
+              style                     time      string
+              -----------------------   -------   ----------------------------
+              'hms'                     90015.0   "25:00:15"
+              'hmss'                    90015.0   "25:00:15 (090015)"
+              'dhms'                      900.0   "0 days 00:15:00"
+              'dhmss'                     900.0   "0 days 00:15:00 (000900)"
+              '.02f'                      900.0   '900.00'
+              '%Y-%m-%d %H:%M:%S'         900.0   '1970-01-01 00:15:00'
+              '%Y-%m-%d %H:%M:%S.%1f'     900.0   '1970-01-01 00:15:00.0'
+              -----------------------   -------   ----------------------------
+
+            Note that the last one can involve any formatting strings
+            understood by datetime.strftime
         basetime (np.datetime64): if formatting just number of seconds
             from something like ".02f", then use this time as 0 seconds
 
