@@ -1111,7 +1111,10 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
             :py:func:`scipy.interpolate.interp1d`.
         marker (str): if given, plot the vertices using plt.scatter
         colors: overrides scalar to color mapping and is passed to
-            matplotlib.collections.LineCollection
+            matplotlib.collections.LineCollection. Note that
+            LineCollection only accepts rgba tuples (ie, no generic
+            strings). To give colors using one or more hex strings,
+            use `scalars='#0f0f0f'` or similar.
         marker_kwargs (dict): additional kwargs for plt.scatter
         **kwargs: passed to matplotlib.collections.LineCollection
 
@@ -1212,7 +1215,10 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
             :py:func:`scipy.interpolate.interp1d`.
         marker (str): if given, plot the vertices using plt.scatter
         colors: overrides scalar to color mapping and is passed to
-            mpl_toolkits.mplot3d.art3d.Line3DCollection
+            mpl_toolkits.mplot3d.art3d.Line3DCollection. Note that this
+            only accepts rgba tuples (ie, no generic strings). To give
+            colors using one or more hex strings, use
+            `scalars='#0f0f0f'` or similar.
         marker_kwargs (dict): additional kwargs for plt.scatter
         **kwargs: passed to mpl_toolkits.mplot3d.art3d.Line3DCollection
 
