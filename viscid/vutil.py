@@ -265,12 +265,22 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
             data for N points along the line. N need not be the same
             for all lines. Can alse be 6xN such that lines[:][3:, :]
             are interpreted as rgb colors
-        scalars (ndarray, list): Can have shape 1xN for a single scalar
-            or 3xN for an rgb color for each point. If the shape is
-            1xNlines, the scalar is broadcast so the whole line gets
-            the same value, and likewise for 3xNlines and rgb colors.
-            Can also be a list of hex color (#ffffff) strings.
-            Otherwise, scalars is reshaped to -1xN.
+        scalars (sequence): can be one of::
+
+              - single hex color (ex, `#FD7400`)
+              - sequence of Nlines hex colors
+              - single rgb(a) tuple
+              - sequence of Nlines rgb(a) sequences
+              - sequence of N values that go with each vertex and will
+                be mapped with a colormap
+              - sequence of Nlines values that go each line and will
+                be mapped with a colormap
+              - Field. If `np.prod(fld.shape) in (N, nlines)` then the
+                field is interpreted as a simple sequence of values
+                (ie, the topology result from calc_streamlines for
+                coloring each line). Otherwise, the field is
+                interpolated onto each vertex.
+
         do_connections (bool): Whether or not to make connections array
         other (dict): a dictionary of other arrays that should be
             reshaped and the like the same way scalars is
@@ -281,7 +291,7 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
         * vertices (ndarray): 3xN array of N xyz points. N is the sum
             of the lengths of all the lines
         * scalars (ndarray): N array of scalars, 3xN array of uint8
-            rgb values, or None
+            rgb values, 4xN array of uint8 rgba values, or None
         * connections (ndarray): Nx2 array of ints (indices along
             axis 1 of vertices) describing the forward and backward
             connectedness of the lines, or None
@@ -309,18 +319,14 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
 
     if scalars is not None:
         if isinstance(scalars, viscid.field.Field):
-            scalars = viscid.interp_trilin(scalars, vertices)
-            if scalars.size != N:
-                raise ValueError("Scalars was not a scalar field")
+            if np.prod(scalars.shape) in (nlines, N):
+                scalars = np.asarray(scalars).reshape(-1)
+            else:
+                scalars = viscid.interp_trilin(scalars, vertices)
+                if scalars.size != N:
+                    raise ValueError("Scalars was not a scalar field")
         elif isinstance(scalars, (list, tuple)):
-            try:
-                scalars = np.concatenate(scalars)
-            except ValueError:
-                scalars_asarr = np.asarray(scalars)
-                if scalars_asarr.dtype.kind in ('S', 'U'):
-                    scalars = scalars_asarr
-                else:
-                    raise
+            scalars = np.asarray(scalars)
 
         scalars = np.atleast_2d(scalars)
 
@@ -335,19 +341,36 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
             # catch these so they're not interpreted as colors if
             # nlines == 1 and N == 3; ie. 1 line with 3 points
             scalars = scalars.reshape(1, N)
-        elif scalars.shape == (3, nlines) or scalars.shape == (nlines, 3):
-            # one rgb color for each line, so broadcast it
-            if scalars.shape == (3, nlines):
+        elif scalars.shape in [(3, nlines), (nlines, 3), (4, nlines), (nlines, 4)]:
+            # one rgb(a) color for each line, so broadcast it
+            if (scalars.shape in [(3, nlines), (4, nlines)] and
+                scalars.shape not in [(3, 3), (4, 4)]):
+                # the guard against shapes (3, 3) and (4, 4) mean that
+                # these square shapes are assumed Nlines x {3,4}
                 scalars = scalars.T
+            nccomps = scalars.shape[1]  # 3 for rgb, 4 for rgba
             colors = []
             for i, ni in enumerate(npts):
-                c = scalars[i].reshape(3, 1).repeat(ni, axis=1)
+                c = scalars[i].reshape(nccomps, 1).repeat(ni, axis=1)
                 colors.append(c)
             scalars = np.concatenate(colors, axis=1)
+        elif scalars.shape in [(3, N), (N, 3), (4, N), (N, 4)]:
+            # one rgb(a) color for each vertex
+            if (scalars.shape in [(3, N), (4, N)] and
+                scalars.shape not in [(3, 3), (4, 4)]):
+                # the guard against shapes (3, 3) and (4, 4) mean that
+                # these square shapes are assumed N x {3,4}
+                scalars = scalars.T
+        elif scalars.shape in [(1, 3), (3, 1), (1, 4), (4, 1)]:
+            # interpret a single rgb(a) color, and repeat/broadcast it
+            scalars = scalars.reshape([-1, 1]).repeat(N, axis=1)
         else:
             scalars = scalars.reshape(-1, N)
 
+        # scalars now has shape (1, N), (3, N), or (4, N)
+
         if scalars.dtype.kind in ['S', 'U']:
+            # interperate strings as hex colors
             # translate hex colors (#ff00ff) into rgb values
             scalars = np.char.lstrip(scalars, '#').astype('S6')
             scalars = np.char.zfill(scalars, 6)
@@ -360,11 +383,11 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
                                         dtype='u1')
             scalars = scalars.reshape(-1, 3).T
         elif scalars.shape[0] == 1:
-            # normal scalars
+            # normal scalars, cast them down to a single dimension
             scalars = scalars.reshape(-1)
-        elif scalars.shape[0] == 3:
+        elif scalars.shape[0] in (3, 4):
             # The scalars encode rgb data, standardize the result to a
-            # 3xN ndarray of 1 byte unsigned ints (chars)
+            # 3xN or 4xN ndarray of 1 byte unsigned ints [0..255]
             if np.all(scalars >= 0) and np.all(scalars <= 1):
                 scalars = (255 * scalars).round().astype('u1')
             elif np.all(scalars >= 0) and np.all(scalars < 256):
@@ -376,6 +399,10 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
         else:
             raise ValueError("Scalars should either be a number, or set of "
                              "rgb values, shape is {0}".format(scalars.shape))
+
+        # scalars should now have shape (N, ) or be a uint8 array with shape
+        # (3, N) or (4, N) encoding an rgb(a) color for each point [0..255]
+        # ... done with scalars...
 
     # broadcast / reshape additional arrays given in other
     if other:
