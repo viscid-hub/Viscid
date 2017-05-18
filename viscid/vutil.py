@@ -257,6 +257,58 @@ def str_to_value(s):
                 pass
     return ret
 
+def _hexchar2int(arr):
+    # this np.char.decode(..., 'hex') doesn't work for py3k; kinda silly
+    try:
+        return np.frombuffer(np.char.decode(arr, 'hex'), dtype='u1')
+    except LookupError:
+        import codecs
+        return np.frombuffer(codecs.decode(arr, 'hex_codec'), dtype='u1')
+
+def _string_colors_as_hex(scalars):
+    if isinstance(scalars, viscid.string_types):
+        scalars = [scalars]
+
+    # 24bit rgb or 32bit rgba strings only
+    hex_char_re = r"#[0-9a-fA-F]{6,8}"
+    allhex = all(re.match(hex_char_re, s) for s in scalars)
+
+    # if not all hex color codes, then process all colors through
+    # and make them all 24/32 bit rgba hex codes
+    if not allhex:
+        nompl_err_str = ("Matplotlib must be installed to use "
+                         "color names. Please either install "
+                         "matplotlib or use hex color codes.")
+        cc = None
+        scalars_as_hex = []
+        for s in scalars:
+            if re.match(hex_char_re, s):
+                # already 24bit rgb or 32bit rgba hex
+                s_hex = s
+            elif re.match(r"#[0-9a-fA-F]{3,4}", s):
+                #  12bit rgb or 16bit rgba hex
+                s_hex = "#" + "".join(_s + _s for _s in s[1:])
+            else:
+                # matplotlib / html color string
+                if cc is None:
+                    try:
+                        import matplotlib.colors
+                        cc = matplotlib.colors.ColorConverter()
+                    except ImportError:
+                        raise RuntimeError(nompl_err_str)
+                s_rgba = np.asarray(cc.to_rgba(s))
+                s_rgba = np.round(255 * s_rgba).astype('i')
+                s_hex = ("#{0[0]:02x}{0[1]:02x}{0[2]:02x}"
+                         "{0[3]:02x}".format(s_rgba))
+            scalars_as_hex.append(s_hex)
+        scalars = scalars_as_hex
+
+    # fill the alpha channel if any of the scalars have a 4th
+    # bytes-worth of data
+    if any(len(s) == 9 for s in scalars):
+        scalars = [s.ljust(9, 'f') for s in scalars]
+    return np.asarray(scalars)
+
 def prepare_lines(lines, scalars=None, do_connections=False, other=None):
     """Concatenate and standardize a list of lines
 
@@ -318,6 +370,8 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
         vertices = vertices[:3, :]
 
     if scalars is not None:
+        scalars_are_strings = False
+
         if isinstance(scalars, viscid.field.Field):
             if np.prod(scalars.shape) in (nlines, N):
                 scalars = np.asarray(scalars).reshape(-1)
@@ -325,8 +379,15 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
                 scalars = viscid.interp_trilin(scalars, vertices)
                 if scalars.size != N:
                     raise ValueError("Scalars was not a scalar field")
-        elif isinstance(scalars, (list, tuple)):
-            scalars = np.asarray(scalars)
+        elif isinstance(scalars, (list, tuple, viscid.string_types, np.ndarray)):
+            # string types need some extra massaging
+            if any(isinstance(s, viscid.string_types) for s in scalars):
+                assert all(isinstance(s, viscid.string_types) for s in scalars)
+
+                scalars_are_strings = True
+                scalars = _string_colors_as_hex(scalars)
+            else:
+                scalars = np.asarray(scalars)
 
         scalars = np.atleast_2d(scalars)
 
@@ -369,19 +430,22 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
 
         # scalars now has shape (1, N), (3, N), or (4, N)
 
-        if scalars.dtype.kind in ['S', 'U']:
-            # interperate strings as hex colors
-            # translate hex colors (#ff00ff) into rgb values
-            scalars = np.char.lstrip(scalars, '#').astype('S6')
-            scalars = np.char.zfill(scalars, 6)
-            # this np.char.decode(..., 'hex') doesn't work for py3k; kinda silly
-            try:
-                scalars = np.frombuffer(np.char.decode(scalars, 'hex'), dtype='u1')
-            except LookupError:
-                import codecs
-                scalars = np.frombuffer(codecs.decode(scalars, 'hex_codec'),
-                                        dtype='u1')
-            scalars = scalars.reshape(-1, 3).T
+        if scalars_are_strings:
+            # translate hex colors (#ff00ff) into rgb(a) values
+            scalars = np.char.lstrip(scalars, '#')
+            strlens = np.char.str_len(scalars)
+            min_strlen, max_strlen = np.min(strlens), np.max(strlens)
+
+            if min_strlen == max_strlen == 8:
+                # 32-bit rgba  (two hex chars per channel)
+                scalars = _hexchar2int(scalars.astype('S8')).reshape(-1, 4).T
+            elif min_strlen == max_strlen == 6:
+                # 24-bit rgb (two hex chars per channel)
+                scalars = _hexchar2int(scalars.astype('S6')).reshape(-1, 3).T
+            else:
+                raise NotImplementedError("This should never happen as "
+                                          "scalars as colors should already "
+                                          "be preprocessed appropriately")
         elif scalars.shape[0] == 1:
             # normal scalars, cast them down to a single dimension
             scalars = scalars.reshape(-1)
