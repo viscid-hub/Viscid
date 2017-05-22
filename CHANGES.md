@@ -4,7 +4,9 @@ Changes
 0.99.0 dev
 ==========
 
-
+Changes:
+  - add max_t to streamlines
+  - streamlines are now truncated at max_length and max_t. This means ds can be non-uniform even for non-adaptive interators.
 
 0.98.9
 ======

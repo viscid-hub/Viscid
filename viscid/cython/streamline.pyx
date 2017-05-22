@@ -64,24 +64,25 @@ OUTPUT_TOPOLOGY = 2
 OUTPUT_BOTH = 3  # = OUTPUT_STREAMLINES | OUTPUT_TOPOLOGY
 
 # topology will be 1+ of these flags binary or-ed together
-#                                bit #    4 2 0 8 6 4 2 0  Notes         bit
-END_NONE = 0                         # 0b0000000000000000 not ended yet    X
-END_IBOUND = 1                       # 0b0000000000000001                  0
-END_IBOUND_NORTH = 2 | END_IBOUND    # 0b0000000000000011  == 3            1
-END_IBOUND_SOUTH = 4 | END_IBOUND    # 0b0000000000000101  == 5            2
-END_OBOUND = 8                       # 0b0000000000001000                  3
-END_OBOUND_XL = 16 | END_OBOUND      # 0b0000000000011000  == 24           4
-END_OBOUND_XH = 32 | END_OBOUND      # 0b0000000000101000  == 40           5
-END_OBOUND_YL = 64 | END_OBOUND      # 0b0000000001001000  == 72           6
-END_OBOUND_YH = 128 | END_OBOUND     # 0b0000000010001000  == 136          7
-END_OBOUND_ZL = 256 | END_OBOUND     # 0b0000000100001000  == 264          8
-END_OBOUND_ZH = 512 | END_OBOUND     # 0b0000001000001000  == 520          9
-END_OBOUND_R = 1024 | END_OBOUND     # 0b0000010000001000  == 1032        10
-END_CYCLIC = 2048                    # 0b0000100000000000  !!NOT USED!!   11
-END_OTHER = 4096                     # 0b0001000000000000                 12
-END_MAXIT = 8192 | END_OTHER         # 0b0011000000000000  == 12288       13
-END_MAX_LENGTH = 16384 | END_OTHER   # 0b0101000000000000  == 20480       14
-END_ZERO_LENGTH = 32768 | END_OTHER  # 0b1001000000000000  == 36864       15
+#                                bit #     4 2 0 8 6 4 2 0  Notes         bit
+END_NONE = 0                         # 0b00000000000000000 not ended yet    X
+END_IBOUND = 1                       # 0b00000000000000001                  0
+END_IBOUND_NORTH = 2 | END_IBOUND    # 0b00000000000000011  == 3            1
+END_IBOUND_SOUTH = 4 | END_IBOUND    # 0b00000000000000101  == 5            2
+END_OBOUND = 8                       # 0b00000000000001000                  3
+END_OBOUND_XL = 16 | END_OBOUND      # 0b00000000000011000  == 24           4
+END_OBOUND_XH = 32 | END_OBOUND      # 0b00000000000101000  == 40           5
+END_OBOUND_YL = 64 | END_OBOUND      # 0b00000000001001000  == 72           6
+END_OBOUND_YH = 128 | END_OBOUND     # 0b00000000010001000  == 136          7
+END_OBOUND_ZL = 256 | END_OBOUND     # 0b00000000100001000  == 264          8
+END_OBOUND_ZH = 512 | END_OBOUND     # 0b00000001000001000  == 520          9
+END_OBOUND_R = 1024 | END_OBOUND     # 0b00000010000001000  == 1032        10
+END_CYCLIC = 2048                    # 0b00000100000000000  !!NOT USED!!   11
+END_OTHER = 4096                     # 0b00001000000000000                 12
+END_MAXIT = 8192 | END_OTHER         # 0b00011000000000000  == 12288       13
+END_MAX_LENGTH = 16384 | END_OTHER   # 0b00101000000000000  == 20480       14
+END_MAX_T = 32768 | END_OTHER        # 0b01001000000000000  == 36864       15
+END_ZERO_LENGTH = 65536 | END_OTHER  # 0b10001000000000000  == 69632       16
 
 # IMPORTANT! If TOPOLOGY_MS_* values change, make sure to also change the
 # values in viscid/cython/__init__.py since those are used if the cython
@@ -130,6 +131,7 @@ cdef:
     int _C_END_OTHER = END_OTHER
     int _C_END_MAXIT = END_MAXIT
     int _C_END_MAX_LENGTH = END_MAX_LENGTH
+    int _C_END_MAX_T = END_MAX_T
     int _C_END_ZERO_LENGTH = END_ZERO_LENGTH
     # topology bitmask
     int _C_TOPOLOGY_MS_NONE = TOPOLOGY_MS_NONE
@@ -148,6 +150,13 @@ _global_fld = None
 def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
                      threads=True, chunk_factor=1, wrap=True, **kwargs):
     r"""Trace streamlines
+
+    Warning:
+        For streamlines that reach max_length or max_t, the line
+        segments at the ends will be trimmed. This may be confusing
+        when using a non-adaptive integrator (ds will be different
+        for the 1st and last segments). Bear this in mind when doing
+        math on the result.
 
     Args:
         vfield: A VectorField with 3 components,  If this field is not
@@ -180,7 +189,10 @@ def calc_streamlines(vfield, seed, nr_procs=1, force_subprocess=False,
         obound1 (array-like): upper corner of outer boundary (x, y, z)
         obound_r (float): Outer boundary as distance from (0, 0, 0)
         maxit (int): maximum number of line segments
-        max_length (float): maximum streamline length
+        max_length (float): maximum streamline length (\int ds)
+        max_t (float): max value for t (\int ds / v). I.e., stop a
+            streamline after a fluid element travels dt along a
+            streamline. This has no obvious use for mag field lines.
         stream_dir (int): one of DIR_FORWARD, DIR_BACKWARD, DIR_BOTH
         output (int): which output to provide, one of
             OUTPUT_STREAMLINE, OUTPUT_TOPOLOGY, or OUTPUT_BOTH
@@ -311,7 +323,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                    obound0=None, obound1=None, real_t obound_r=0.0,
                    int stream_dir=_C_DIR_BOTH, int output=_C_OUTPUT_BOTH,
                    int method=EULER1, int maxit=90000, real_t max_length=1e30,
-                   real_t smallest_ds=0.0, real_t largest_ds=0.0,
+                   real_t max_t=0.0, real_t smallest_ds=0.0, real_t largest_ds=0.0,
                    real_t smallest_ds_frac=1e-2, real_t largest_ds_frac=1e2,
                    real_t max_error=0.0, str topo_style="msphere",
                    str seed_center="cell"):
@@ -350,7 +362,7 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         FusedField patch = amrfld.active_patch
 
         # just for c
-        int (*integrate_func)(FusedField fld, real_t x[3], real_t *ds,
+        int (*integrate_func)(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
                               real_t max_error, real_t smallest_ds,
                               real_t largest_ds, real_t vscale[3],
                               int cached_idx3[3]) nogil except -1
@@ -367,20 +379,26 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         int end_flags
         int done  # streamline has ended for some reason
         real_t stream_length
+        real_t stream_t
         int d  # direction of streamline 1 | -1
-        real_t pre_ds
+        real_t abs_ds, pre_ds
         real_t ds
+        real_t abs_dt
+        real_t dt
+        real_t *dt_ptr
+        real_t step_trim = 1.0
+        real_t step_trim_t = 1.0
         real_t rsq, distsq
 
         int _dir_d[2]
         real_t x0[3]
         real_t s[3]
+        real_t s0[3]
         real_t vscale[3]
         int line_ends[2]
 
         int[:] topology_mv = None
         real_t[:, ::1] line_mv = None
-        real_t[:] dx
         real_t[:, ::1] seed_pts
 
         int cached_idx3[3]
@@ -429,6 +447,11 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
         smallest_ds = smallest_ds_frac * ds0
     if largest_ds == 0.0:
         largest_ds = largest_ds_frac * ds0
+
+    if max_t > 0.0:
+        dt_ptr = &dt
+    else:
+        dt_ptr = NULL
 
     if max_error == 0.0:
         if method == EULER1A:
@@ -503,6 +526,9 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
 
                 ds = d * ds0
                 stream_length = 0.0
+                stream_t = 0.0
+                dt = 0.0
+                step_trim = 1.0
 
                 s[0] = x0[0]
                 s[1] = x0[1]
@@ -525,18 +551,42 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                             activate_patch[FusedAMRField, real_t](amrfld, s)
                             patch = amrfld.active_patch
 
-                    ret = integrate_func(patch, s, &ds,
+                    # cache the most recent step segment in an easy-to-access
+                    # place in case we want to shorten the segment to conform
+                    # to max_length or max_t
+                    s0[0] = s[0]
+                    s0[1] = s[1]
+                    s0[2] = s[2]
+
+                    ret = integrate_func(patch, s, &ds, dt_ptr,
                                          max_error, smallest_ds, largest_ds,
                                          vscale, cached_idx3)
 
                     if fabs(ds) >= pre_ds:
-                        stream_length += pre_ds
+                        abs_ds = pre_ds
                     else:
-                        stream_length += fabs(ds)
+                        abs_ds = fabs(ds)
 
-                    # if i_stream == 0:
-                    #     print(s[2], s[1], s[0])
-                    # ret is non 0 when |v_mv| == 0
+                    if max_t > 0.0:
+                        abs_dt = fabs(dt)
+
+                    # have we gone too far in space / time? Note that we do
+                    # not re-adjust dt/ds so so that classify_endpoints will
+                    # certainly return !0
+                    if max_length > 0.0 and stream_length + abs_ds > max_length:
+                        step_trim = (max_length - stream_length) / abs_ds
+                    if max_t > 0.0 and stream_t + abs_dt > max_t:
+                        step_trim_t = (max_t - stream_t) / abs_dt
+                        if step_trim_t < step_trim:
+                            step_trim = step_trim_t
+
+                    if step_trim < 1.0:
+                        s[0] = s0[0] + step_trim * (s[0] - s0[0])
+                        s[1] = s0[1] + step_trim * (s[1] - s0[1])
+                        s[2] = s0[2] + step_trim * (s[2] - s0[2])
+
+                    stream_length += abs_ds
+                    stream_t += abs_dt
 
                     if ret != 0:
                         # with gil:
@@ -551,9 +601,9 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
                     it += d
 
                     # end conditions
-                    done = classify_endpoint(s, stream_length, ibound,
+                    done = classify_endpoint(s, stream_length, stream_t, ibound,
                                              c_obound0, c_obound1, obound_r,
-                                             max_length, ds, x0)
+                                             max_length, max_t, &ds, dt_ptr, x0)
 
                     if done:
                         break
@@ -580,9 +630,9 @@ def _py_streamline(FusedAMRField amrfld, FusedField active_patch,
 
     return lines, topology_ndarr
 
-cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
-                           real_t obound0[3], real_t obound1[3], real_t obound_r,
-                           real_t max_length, real_t ds, real_t pt0[3]) nogil:
+cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t t,
+        real_t ibound, real_t obound0[3], real_t obound1[3], real_t obound_r,
+        real_t max_length, real_t max_t, real_t *ds, real_t *dt, real_t pt0[3]) nogil:
     cdef int done = _C_END_NONE
     cdef real_t rsq = pt[0]**2 + pt[1]**2 + pt[2]**2
 
@@ -605,14 +655,16 @@ cdef inline int classify_endpoint(real_t pt[3], real_t length, real_t ibound,
         done = _C_END_OBOUND_YH
     elif pt[2] > obound1[2]:
         done = _C_END_OBOUND_ZH
-    elif length > max_length:
+    elif max_length > 0.0 and length >= max_length:
         done = _C_END_MAX_LENGTH
+    elif max_t > 0.0 and t >= max_t:
+        done = _C_END_MAX_T
 
-    # if we are within 0.05 * ds of the initial position
+    # if we are within 0.05 * ds[0] of the initial position
     # distsq = (pt0[0] - pt[0])**2 + \
     #          (pt0[1] - pt[1])**2 + \
     #          (pt0[2] - pt[2])**2
-    # if distsq < (0.05 * ds)**2:
+    # if distsq < (0.05 * ds[0])**2:
     #     # print("cyclic field line")
     #     done = _C_END_CYCLIC
     #     break
