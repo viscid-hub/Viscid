@@ -11,6 +11,20 @@ from viscid import coordinate
 
 # ne.set_num_threads(1)  # for performance checking
 
+
+def _normalize_scalar_dtype(s, arrs):
+    # cast python scalars to an appropriate numpy dtype
+    if isinstance(s, (int, float, complex)):
+        ndarrs = [_a for _a in arrs if hasattr(_a, 'dtype')]
+        flt_arrs = [_a for _a in ndarrs if _a.dtype.kind in 'fc']
+        int_arrs = [_a for _a in ndarrs if _a.dtype.kind in 'i']
+        if flt_arrs and isinstance(s, (int, float, complex)):
+            s = np.asarray(s).astype(np.common_type(*flt_arrs))
+        elif int_arrs and isinstance(s, (int, )):
+            s = np.asarray(s).astype(max([_a.dtype for _a in int_arrs]))
+    return s
+
+
 class VneCalc(object):
     expr = None
     local_dict = None
@@ -31,7 +45,7 @@ class VneCalc(object):
 
         for name, val in self.local_dict.items():
             if isinstance(val, int):
-                ldict[name] = args[val]
+                ldict[name] = _normalize_scalar_dtype(args[val], args)
             else:
                 ldict[name] = val
 
@@ -57,6 +71,11 @@ def scale(a, fld):
     a = np.asarray(a, dtype=fld.dtype)
     b = fld.data  # pylint: disable=unused-variable
     return fld.wrap(ne.evaluate("a * b"))
+
+def axpby(a, x, b, y):
+    a = _normalize_scalar_dtype(a, [x, y])
+    b = _normalize_scalar_dtype(b, [x, y])
+    return ne.evaluate("a * x + b * y")
 
 def abs_max(fld):
     a = fld.data  # pylint: disable=W0612
