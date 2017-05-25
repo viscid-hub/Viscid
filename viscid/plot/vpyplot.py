@@ -1114,7 +1114,8 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
             matplotlib.collections.LineCollection. Note that
             LineCollection only accepts rgba tuples (ie, no generic
             strings). To give colors using one or more hex strings,
-            use `scalars='#0f0f0f'` or similar.
+            use `scalars='#0f0f0f'` or similar. Use `colors=zloc`
+            to color vertices with out-of-plane position.
         marker_kwargs (dict): additional kwargs for plt.scatter
         **kwargs: passed to matplotlib.collections.LineCollection
 
@@ -1126,6 +1127,11 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     """
     if not ax:
         ax = plt.gca()
+
+    if scalars == 'zloc':
+        colors = 'zloc'
+        scalars = None
+
     r = _prep_lines(lines, scalars=scalars, subsample=subsample,
                     pts_interp=pts_interp, scalar_interp=scalar_interp)
     verts, segments, vert_scalars, seg_scalars, vert_colors, seg_colors, _ = r
@@ -1146,11 +1152,12 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     if flip_plot:
         xind, yind = yind, xind
 
-    if seg_scalars is None and seg_colors is None and zind is not None:
+    if colors == 'zloc':
+        assert zind is not None
         vert_scalars = verts[zind, :]
         seg_scalars = segments[:, 0, zind]
-
-    if colors is not None:
+        colors = None
+    elif colors is not None:
         if seg_colors is not None:
             viscid.logger.warn("plot2d_lines - overriding seg_colors with "
                                "explicit colors kwarg")
