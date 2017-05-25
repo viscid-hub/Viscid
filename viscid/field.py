@@ -1762,6 +1762,7 @@ class Field(tree.Leaf):
                 else:
                     new_shape = newcrds.shape_nc
                 if self.nr_comps:
+                    new_shape = list(new_shape)
                     new_shape.insert(self.nr_comp, self.nr_comps)
 
                 return self.wrap(self.data.reshape(new_shape), context=ctx)
