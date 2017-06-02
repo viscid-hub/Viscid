@@ -148,13 +148,13 @@ html_theme_options = {
                        ("Slicing Fields", "tutorial/slicing"),
                        ("Plotting Scalars", "tutorial/plotting_scalars"),
                        ("Plotting Vectors", "tutorial/plotting_vectors"),
+                       ("3D Plots (Mayavi)", "tutorial/mayavi"),
+                       ("OpenGGCM Specific", "tutorial/openggcm"),
+                       ("Ionosphere", "tutorial/ionosphere"),
                        ("Streamline and Interpolation", "tutorial/stream_and_interp"),
                        ("Magnetic Topology", "tutorial/magnetic_topology"),
-                       ("Quasi Potential", "tutorial/quasi_potential"),
                        ("Magnetopause", "tutorial/magnetopause"),
-                       ("Ionosphere", "tutorial/ionosphere"),
-                       ("OpenGGCM Specific", "tutorial/openggcm"),
-                       ("3D Plots (Mayavi)", "tutorial/mayavi"),
+                       ("Quasi Potential", "tutorial/quasi_potential"),
                       ]
          )
         ]

@@ -80,16 +80,14 @@ Contents
 
   installation
   philosophy
+  tutorial/index
+  tips_and_tricks
   functions
   plot_options
-  tips_and_tricks
   mpl_style_gallery
   custom_behavior
-  command_line
   dev_guide
   extending_readers
-
-  tutorial/index
 
 .. toctree::
   :maxdepth: 1

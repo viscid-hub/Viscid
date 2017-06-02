@@ -8,10 +8,11 @@ Tutorial
   slicing
   plotting_scalars
   plotting_vectors
+  mayavi
+  openggcm
+  ionosphere
   stream_and_interp
   magnetic_topology
-  quasi_potential
   magnetopause
-  ionosphere
-  openggcm
-  mayavi
+  quasi_potential
+  command_line

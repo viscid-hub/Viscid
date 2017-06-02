@@ -19,7 +19,7 @@ viscid_2d
     --slice x=-20.0f:15.0f,y=0.0f,z=-10.0f:10.0f -t T1:00:00.0 -s 7,15 --tighten \
     $DEV/src/Viscid/sample/*.py_0.xdmf
 
-.. image:: images/sample_2d.png
+.. image:: ../images/sample_2d.png
     :align: center
     :width: 75%
 
@@ -32,7 +32,7 @@ viscid_ts
     --slice x=9.5,y=0.0f,z=0.0f --timeformat hms --rl -t T1:00:00.0:T1:20:00.0 \
     --nofname $MNT/trillian/scratch/da*e3/target/*.py_0.xdmf
 
-.. image:: images/sample_ts.png
+.. image:: ../images/sample_ts.png
     :align: center
 
 
@@ -43,7 +43,7 @@ viscid_diff
 
 ``viscid_diff --show *.3df.{000200,000201}.xdmf rr``
 
-.. image:: images/viscid_diff_ex.png
+.. image:: ../images/viscid_diff_ex.png
     :align: center
 
 
