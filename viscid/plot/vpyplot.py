@@ -1128,7 +1128,7 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     if not ax:
         ax = plt.gca()
 
-    if scalars == 'zloc':
+    if isinstance(scalars, viscid.string_types) and scalars == 'zloc':
         colors = 'zloc'
         scalars = None
 
