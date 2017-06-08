@@ -1078,6 +1078,11 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         mplshow()
     return p, None
 
+def plot2d_line(line, scalars=None, **kwargs):
+    if scalars is not None:
+        scalars = [scalars]
+    return plot2d_lines([line], scalars=scalars, **kwargs)
+
 def plot2d_lines(lines, scalars=None, symdir="", ax=None,
                  show=False, flip_plot=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
@@ -1191,6 +1196,11 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
         plt.show()
 
     return line_collection
+
+def plot3d_line(line, scalars=None, **kwargs):
+    if scalars is not None:
+        scalars = [scalars]
+    return plot3d_lines([line], scalars=scalars, **kwargs)
 
 def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
@@ -1763,8 +1773,11 @@ mplshow = show
 
 # man, i was really indecisive about these names... luckily, everything's
 # a reference in Python :)
+plot_line = plot3d_line
 plot_lines = plot3d_lines
+plot_line3d = plot3d_line
 plot_lines3d = plot3d_lines
+plot_line2d = plot2d_line
 plot_lines2d = plot2d_lines
 plot_streamlines = plot3d_lines
 plot_streamlines2d = plot2d_lines
