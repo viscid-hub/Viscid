@@ -138,7 +138,7 @@ def _main():
     obound0 = np.array([-4, -4, -4], dtype=B.data.dtype)
     obound1 = np.array([4, 4, 4], dtype=B.data.dtype)
     run_test(B, sphere, plot2d=plot2d, plot3d=plot3d, title='3D', show=args.show,
-             ibound=0.07, obound0=obound0, obound1=obound1, method=viscid.RK12)
+             ibound=0.12, obound0=obound0, obound1=obound1, method=viscid.RK12)
 
     # The Remainder of this test makes sure higher order methods are indeed
     # more accurate than lower order methods... this could find a bug in
