@@ -386,10 +386,24 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
 
                 scalars_are_strings = True
                 scalars = _string_colors_as_hex(scalars)
+            elif isinstance(scalars, np.ndarray):
+                scalars = scalars
             else:
-                scalars = np.asarray(scalars)
+                for i, si in enumerate(scalars):
+                    if not isinstance(si, np.ndarray):
+                        scalars[i] = np.asarray(si)
+                    scalars[i] = np.atleast_2d(scalars[i])
+                try:
+                    scalars = np.concatenate(scalars, axis=0)
+                except ValueError:
+                    scalars = np.concatenate(scalars, axis=1)
 
         scalars = np.atleast_2d(scalars)
+
+        if scalars.dtype == np.dtype('object'):
+            raise RuntimeError("Scalars must be numbers, tuples of numbers "
+                               "that indicate rgb(a), or hex strings - they "
+                               "must not be python objects")
 
         if scalars.shape == (1, 1):
             scalars = scalars.repeat(N, axis=1)

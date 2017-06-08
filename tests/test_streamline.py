@@ -437,7 +437,6 @@ def _main():
     except ImportError:
         pass
 
-
     # prevent weird xorg bad-instructions on tear down
     if 'figure' in _global_ns and _global_ns['figure'] is not None:
         from viscid.plot import vlab

@@ -545,6 +545,8 @@ def iso_surface(src, backface_culling=True, **kwargs):
 
 def plot_line(line, scalars=None, **kwargs):
     """Wrap :py:func:`plot_lines` for a single line"""
+    if scalars is not None:
+        scalars = [scalars]
     return plot_lines([line], scalars=scalars, **kwargs)
 
 def plot_lines(lines, scalars=None, style="tube", figure=None,

@@ -1719,7 +1719,8 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
                 # this happens in scipy's interp1d if this line has exactly 1
                 # vertex
                 fine_verts[i][j, :] = coarse_verts[j, :]
-                fine_scalars[i][j, :] = coarse_scalars[j, :]
+                if coarse_scalars.shape[0] > 0:
+                    fine_scalars[i][j, :] = coarse_scalars[j, :]
 
             new_start = np.sum(np.ceil((verts_per_line[:i] - 1) * subsample) + 1)
 

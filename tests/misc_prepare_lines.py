@@ -88,6 +88,11 @@ def _main():
         viscid.logger.debug('---')
 
         do_test(lines,
+                scalars=None,
+                txt='given None',
+                show=args.show)
+
+        do_test(lines,
                 scalars='#ff0000',
                 txt='given a single 24bit rgb hex color',
                 show=args.show)
