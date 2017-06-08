@@ -60,6 +60,15 @@ _type_info = {len(base_hydro_names): {'field_type': 'hydro',
                                     'names': base_10m_names,
                                     'pretty_names': base_10m_pretty_names}}
 
+def create_type_info(nr_fields):
+    type_info = dict()
+    type_info['field_type'] = 'unknown'
+    type_info['names'] = []
+    type_info['pretty_names'] = []
+    for ncomp in range(nr_fields):
+        type_info['names'].append('Q%d'%ncomp)
+        type_info['pretty_names'].append(r'$\rm{Q%d}$'%ncomp)
+    return type_info
 
 class GkeyllGrid(grid.Grid):
     """"""
@@ -378,8 +387,8 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
                     type_info['pretty_names'].append(r'$\Phi_E$')
                     type_info['names'].append('phi_B')
                     type_info['pretty_names'].append(r'$\Phi_B$')
-                except KeyError:
-                    raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
+                except:
+                    type_info = create_type_info(nr_fields)
 
             template = []
             # TODO: use nr_fields to figure out the names of the fields?
