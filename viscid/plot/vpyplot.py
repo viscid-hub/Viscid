@@ -1275,7 +1275,7 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
 
     return line_collection
 
-def plot2d_quiver(fld, step=1, **kwargs):
+def plot2d_quiver(fld, step=1, ax=None, **kwargs):
     """Put quivers on a 2D plot
 
     The quivers will be plotted in the 2D plane of fld, so if fld
@@ -1323,9 +1323,12 @@ def plot2d_quiver(fld, step=1, **kwargs):
     xl, xm = vl.get_crds(lm, shaped=True)
     xl, xm = np.broadcast_arrays(xl, xm)
 
-    return plt.quiver(xl, xm, vl, vm, **kwargs)
+    if ax is None:
+        ax = plt.gca()
 
-def streamplot(fld, **kwargs):
+    return ax.quiver(xl, xm, vl, vm, **kwargs)
+
+def streamplot(fld, ax=None, **kwargs):
     """Plot 2D streamlines with :py:func:`matplotlib.pyplot.streamplot`
 
     Args:
@@ -1392,7 +1395,10 @@ def streamplot(fld, **kwargs):
     vl = vl.slice_reduce(':')
     vm = vm.slice_reduce(':')
 
-    return plt.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    if ax is None:
+        ax = plt.gca()
+
+    return ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
 
 def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     """Plot scattered points on a matplotlib 3d plot
@@ -1470,9 +1476,9 @@ def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
            'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
     return ret
 
-def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
+def plot_earth(plane_spec, ax=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="gse",
-               zorder=10):
+               zorder=10, axis=None):
     """Plot a black and white Earth to show sunward direction
 
     Parameters:
@@ -1515,24 +1521,27 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
         return None
     radius = np.sqrt(scale**2 - value**2)
 
-    if not axis:
-        axis = plt.gca()
+    if not ax:
+        if axis:
+            ax = axis
+        else:
+            ax = plt.gca()
 
     if crd_system == "gse":
         rot = 180
 
     if plane == 'y' or plane == 'z':
-        axis.add_patch(mpatches.Wedge((0, 0), radius, 90 + rot, 270 + rot,
-                                      ec=nightcol, fc=daycol, zorder=zorder))
-        axis.add_patch(mpatches.Wedge((0, 0), radius, 270 + rot, 450 + rot,
-                                      ec=nightcol, fc=nightcol, zorder=zorder))
+        ax.add_patch(mpatches.Wedge((0, 0), radius, 90 + rot, 270 + rot,
+                                    ec=nightcol, fc=daycol, zorder=zorder))
+        ax.add_patch(mpatches.Wedge((0, 0), radius, 270 + rot, 450 + rot,
+                                    ec=nightcol, fc=nightcol, zorder=zorder))
     elif plane == 'x':
         if value < 0:
-            axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
-                                           fc=daycol, zorder=zorder))
+            ax.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
+                                         fc=daycol, zorder=zorder))
         else:
-            axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
-                                           fc=nightcol, zorder=zorder))
+            ax.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
+                                         fc=nightcol, zorder=zorder))
     return None
 
 def get_current_colorcycle():
