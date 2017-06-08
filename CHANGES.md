@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.98.9 dev
-==========
+0.98.9
+======
 
 Changes:
   - Misc. matplotlib 2d line plot bug fixes
