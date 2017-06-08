@@ -66,7 +66,7 @@ Viscid, so these two modules can be ripped out and used more generally.
 Please note that Viscid is MIT licensed, which requires attribution.
 
 The MIT License (MIT)
-Copyright (c) 2016 Kristofor Maynard
+Copyright (c) 2017 Kristofor Maynard
 
 """
 

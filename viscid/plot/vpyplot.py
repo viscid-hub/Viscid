@@ -1078,6 +1078,11 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         mplshow()
     return p, None
 
+def plot2d_line(line, scalars=None, **kwargs):
+    if scalars is not None:
+        scalars = [scalars]
+    return plot2d_lines([line], scalars=scalars, **kwargs)
+
 def plot2d_lines(lines, scalars=None, symdir="", ax=None,
                  show=False, flip_plot=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
@@ -1111,7 +1116,11 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
             :py:func:`scipy.interpolate.interp1d`.
         marker (str): if given, plot the vertices using plt.scatter
         colors: overrides scalar to color mapping and is passed to
-            matplotlib.collections.LineCollection
+            matplotlib.collections.LineCollection. Note that
+            LineCollection only accepts rgba tuples (ie, no generic
+            strings). To give colors using one or more hex strings,
+            use `scalars='#0f0f0f'` or similar. Use `colors=zloc`
+            to color vertices with out-of-plane position.
         marker_kwargs (dict): additional kwargs for plt.scatter
         **kwargs: passed to matplotlib.collections.LineCollection
 
@@ -1123,6 +1132,11 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     """
     if not ax:
         ax = plt.gca()
+
+    if isinstance(scalars, viscid.string_types) and scalars == 'zloc':
+        colors = 'zloc'
+        scalars = None
+
     r = _prep_lines(lines, scalars=scalars, subsample=subsample,
                     pts_interp=pts_interp, scalar_interp=scalar_interp)
     verts, segments, vert_scalars, seg_scalars, vert_colors, seg_colors, _ = r
@@ -1143,11 +1157,12 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     if flip_plot:
         xind, yind = yind, xind
 
-    if seg_scalars is None and seg_colors is None and zind is not None:
+    if colors == 'zloc':
+        assert zind is not None
         vert_scalars = verts[zind, :]
         seg_scalars = segments[:, 0, zind]
-
-    if colors is not None:
+        colors = None
+    elif colors is not None:
         if seg_colors is not None:
             viscid.logger.warn("plot2d_lines - overriding seg_colors with "
                                "explicit colors kwarg")
@@ -1182,6 +1197,11 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
 
     return line_collection
 
+def plot3d_line(line, scalars=None, **kwargs):
+    if scalars is not None:
+        scalars = [scalars]
+    return plot3d_lines([line], scalars=scalars, **kwargs)
+
 def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
                  marker='', colors=None, marker_kwargs=None, **kwargs):
@@ -1212,7 +1232,10 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
             :py:func:`scipy.interpolate.interp1d`.
         marker (str): if given, plot the vertices using plt.scatter
         colors: overrides scalar to color mapping and is passed to
-            mpl_toolkits.mplot3d.art3d.Line3DCollection
+            mpl_toolkits.mplot3d.art3d.Line3DCollection. Note that this
+            only accepts rgba tuples (ie, no generic strings). To give
+            colors using one or more hex strings, use
+            `scalars='#0f0f0f'` or similar.
         marker_kwargs (dict): additional kwargs for plt.scatter
         **kwargs: passed to mpl_toolkits.mplot3d.art3d.Line3DCollection
 
@@ -1262,7 +1285,7 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
 
     return line_collection
 
-def plot2d_quiver(fld, step=1, **kwargs):
+def plot2d_quiver(fld, step=1, ax=None, **kwargs):
     """Put quivers on a 2D plot
 
     The quivers will be plotted in the 2D plane of fld, so if fld
@@ -1310,9 +1333,12 @@ def plot2d_quiver(fld, step=1, **kwargs):
     xl, xm = vl.get_crds(lm, shaped=True)
     xl, xm = np.broadcast_arrays(xl, xm)
 
-    return plt.quiver(xl, xm, vl, vm, **kwargs)
+    if ax is None:
+        ax = plt.gca()
 
-def streamplot(fld, **kwargs):
+    return ax.quiver(xl, xm, vl, vm, **kwargs)
+
+def streamplot(fld, ax=None, **kwargs):
     """Plot 2D streamlines with :py:func:`matplotlib.pyplot.streamplot`
 
     Args:
@@ -1379,7 +1405,10 @@ def streamplot(fld, **kwargs):
     vl = vl.slice_reduce(':')
     vm = vm.slice_reduce(':')
 
-    return plt.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    if ax is None:
+        ax = plt.gca()
+
+    return ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
 
 def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     """Plot scattered points on a matplotlib 3d plot
@@ -1457,9 +1486,9 @@ def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
            'bottom': p.bottom, 'hspace': p.hspace, 'wspace': p.wspace}
     return ret
 
-def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
+def plot_earth(plane_spec, ax=None, scale=1.0, rot=0,
                daycol='w', nightcol='k', crd_system="gse",
-               zorder=10):
+               zorder=10, axis=None):
     """Plot a black and white Earth to show sunward direction
 
     Parameters:
@@ -1502,24 +1531,27 @@ def plot_earth(plane_spec, axis=None, scale=1.0, rot=0,
         return None
     radius = np.sqrt(scale**2 - value**2)
 
-    if not axis:
-        axis = plt.gca()
+    if not ax:
+        if axis:
+            ax = axis
+        else:
+            ax = plt.gca()
 
     if crd_system == "gse":
         rot = 180
 
     if plane == 'y' or plane == 'z':
-        axis.add_patch(mpatches.Wedge((0, 0), radius, 90 + rot, 270 + rot,
-                                      ec=nightcol, fc=daycol, zorder=zorder))
-        axis.add_patch(mpatches.Wedge((0, 0), radius, 270 + rot, 450 + rot,
-                                      ec=nightcol, fc=nightcol, zorder=zorder))
+        ax.add_patch(mpatches.Wedge((0, 0), radius, 90 + rot, 270 + rot,
+                                    ec=nightcol, fc=daycol, zorder=zorder))
+        ax.add_patch(mpatches.Wedge((0, 0), radius, 270 + rot, 450 + rot,
+                                    ec=nightcol, fc=nightcol, zorder=zorder))
     elif plane == 'x':
         if value < 0:
-            axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
-                                           fc=daycol, zorder=zorder))
+            ax.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
+                                         fc=daycol, zorder=zorder))
         else:
-            axis.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
-                                           fc=nightcol, zorder=zorder))
+            ax.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
+                                         fc=nightcol, zorder=zorder))
     return None
 
 def get_current_colorcycle():
@@ -1687,7 +1719,8 @@ def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
                 # this happens in scipy's interp1d if this line has exactly 1
                 # vertex
                 fine_verts[i][j, :] = coarse_verts[j, :]
-                fine_scalars[i][j, :] = coarse_scalars[j, :]
+                if coarse_scalars.shape[0] > 0:
+                    fine_scalars[i][j, :] = coarse_scalars[j, :]
 
             new_start = np.sum(np.ceil((verts_per_line[:i] - 1) * subsample) + 1)
 
@@ -1741,8 +1774,11 @@ mplshow = show
 
 # man, i was really indecisive about these names... luckily, everything's
 # a reference in Python :)
+plot_line = plot3d_line
 plot_lines = plot3d_lines
+plot_line3d = plot3d_line
 plot_lines3d = plot3d_lines
+plot_line2d = plot2d_line
 plot_lines2d = plot2d_lines
 plot_streamlines = plot3d_lines
 plot_streamlines2d = plot2d_lines

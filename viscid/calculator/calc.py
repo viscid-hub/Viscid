@@ -28,10 +28,10 @@ try:
 except ImportError as e:
     has_numexpr = False
 
-__all__ = ['neg', 'scale', 'add', 'diff', 'mul', 'relative_diff', 'abs_diff',
-           'abs_val', 'abs_max', 'abs_min', 'magnitude', 'dot', 'cross', 'grad',
-           'convective_deriv', 'div', 'curl', 'normalize', 'project',
-           'project_vector', 'project_along_line', 'resample_lines',
+__all__ = ['neg', 'scale', 'add', 'diff', 'mul', 'axpby', 'relative_diff',
+           'abs_diff', 'abs_val', 'abs_max', 'abs_min', 'magnitude', 'dot',
+           'cross', 'grad', 'convective_deriv', 'div', 'curl', 'normalize',
+           'project', 'project_vector', 'project_along_line', 'resample_lines',
            'integrate_along_line', 'integrate_along_lines', 'jacobian_at_point',
            'jacobian_at_ind', 'jacobian_eig_at_point', 'jacobian_eig_at_ind',
            'div_at_point', 'curl_at_point', 'extend_boundaries',
@@ -120,6 +120,7 @@ scale = BinaryOperation("scale", "*=", doc="Callable, scales a")
 add = BinaryOperation("add", "+", doc="Callable, calculates a + b")
 diff = BinaryOperation("diff", "-", doc="Callable, calculates a - b")
 mul = BinaryOperation("mul", "*", doc="Callable, calculates a * b")
+axpby = Operation("axpby", "+", doc="Callable, calculates a * x + b * y")
 relative_diff = BinaryOperation("relative diff", "%-",
                                 doc="Callable, calculates abs(a - b) / a")
 abs_diff = BinaryOperation("abs diff", "|-|", doc="Callable, calculates abs(a - b)")
@@ -144,6 +145,7 @@ if has_numexpr:
     add.add_implementation("numexpr", necalc.add)
     diff.add_implementation("numexpr", necalc.diff)
     mul.add_implementation("numexpr", necalc.mul)
+    axpby.add_implementation("numexpr", necalc.axpby)
     relative_diff.add_implementation("numexpr", necalc.relative_diff)
     abs_diff.add_implementation("numexpr", necalc.abs_diff)
     abs_val.add_implementation("numexpr", necalc.abs_val)
@@ -164,6 +166,7 @@ scale.add_implementation("numpy", lambda a, b: np.asarray(a, dtype=b.dtype) * b)
 add.add_implementation("numpy", lambda a, b: a + b)
 diff.add_implementation("numpy", lambda a, b: a - b)
 mul.add_implementation("numpy", lambda a, b: a * b)
+axpby.add_implementation("numpy", lambda a, x, b, y: a * x + b * y)
 relative_diff.add_implementation("numpy", lambda a, b: (a - b) / a)
 abs_diff.add_implementation("numpy", lambda a, b: np.abs(a - b))
 abs_val.add_implementation("numpy", np.abs)

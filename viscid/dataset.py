@@ -4,6 +4,7 @@
 from __future__ import print_function
 import re
 from itertools import chain
+from operator import itemgetter
 
 import numpy as np
 
@@ -230,7 +231,7 @@ class DatasetTemporal(Dataset):
         # this keeps the children in time order
         self.prepare_child(child)
         self.children.append((child.time, child))
-        self.children.sort()
+        self.children.sort(key=itemgetter(0))
         # binary in sorting... maybe more efficient?
         # bisect.insort(self.children, (child.time, child))
         if set_active:

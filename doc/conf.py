@@ -59,7 +59,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Viscid'
-copyright = u'2016, Kristofor Maynard'
+copyright = u'2017, Kristofor Maynard'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -143,29 +143,18 @@ html_theme_options = {
     'bootstrap_version': "3",
     # 'navbar_links': [],
     'navbar_dropdown_links':
-        [("Reference", [("Installation", "installation"),
-                        ("Philosophy", "philosophy"),
-                        ("Useful Functions", "functions"),
-                        ("Plot Options", "plot_options"),
-                        ("Tips & Tricks", "tips_and_tricks"),
-                        ("Matplotlib Style Gallery", "mpl_style_gallery"),
-                        ("RC file", "custom_behavior"),
-                        ("Command Line Tools", "command_line"),
-                        ("Developer's Guide", "dev_guide"),
-                        ("Extending Readers", "extending_readers"),
-                       ]
-         ),
-         ("Tutorial", [("Creating Fields", "tutorial/creating_fields"),
+        [("Tutorial", [("Installation", "installation"),
+                       ("Creating Fields", "tutorial/creating_fields"),
                        ("Slicing Fields", "tutorial/slicing"),
                        ("Plotting Scalars", "tutorial/plotting_scalars"),
                        ("Plotting Vectors", "tutorial/plotting_vectors"),
+                       ("3D Plots (Mayavi)", "tutorial/mayavi"),
+                       ("OpenGGCM Specific", "tutorial/openggcm"),
+                       ("Ionosphere", "tutorial/ionosphere"),
                        ("Streamline and Interpolation", "tutorial/stream_and_interp"),
                        ("Magnetic Topology", "tutorial/magnetic_topology"),
-                       ("Quasi Potential", "tutorial/quasi_potential"),
                        ("Magnetopause", "tutorial/magnetopause"),
-                       ("Ionosphere", "tutorial/ionosphere"),
-                       ("OpenGGCM Specific", "tutorial/openggcm"),
-                       ("3D Plots (Mayavi)", "tutorial/mayavi"),
+                       ("Quasi Potential", "tutorial/quasi_potential"),
                       ]
          )
         ]

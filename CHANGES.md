@@ -1,6 +1,14 @@
 Changes
 -------
 
+0.98.9
+======
+
+Changes:
+  - Misc. matplotlib 2d line plot bug fixes
+  - Reorganize html docs (more logical layout is better)
+  - Update revoked github token
+
 0.98.8
 ======
 
