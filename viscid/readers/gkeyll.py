@@ -368,6 +368,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             fld = field.wrap_field(h5_data, self._crds, meta['fld_name'],
                                    center="cell", pretty_name=meta['pretty_name'])
             _grid.add_field(fld)
+        _grid.set_info('field_type', self.get_info('field_type'))
         return _grid
 
     def _make_template(self, filename):
