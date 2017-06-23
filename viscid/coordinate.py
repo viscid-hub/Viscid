@@ -121,6 +121,8 @@ def extend_arr_by_half(x, full_arr=True, default_width=1e-5):
             dxl = x[1] - x[0]
             dxh = x[-1] - x[-2]
         else:
+            if x.dtype.type in (np.datetime64, np.timedelta64):
+                default_width = np.timedelta64(1, x.dtype.str[4:-1])
             dxl = dxh = default_width
         ret = np.concatenate([[x[0] - dxl], x, [x[-1] + dxh]])
     else:
@@ -1505,6 +1507,7 @@ class UniformCrds(StructuredCrds):
         axes = self.axes
         xl, xh = self.get_xl(), self.get_xh()
         dx = (xh - xl) / self.shape_nc
+        # FIXME: I don't think this will extend datetime64/timedelta64 axes
         dx = np.choose(np.abs(dx) > 0, [default_width, dx])
         xl -= 0.5 * dx
         xh += 0.5 * dx
