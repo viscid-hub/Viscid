@@ -47,7 +47,7 @@ The `Anaconda Python Distribution <https://store.continuum.io/cshop/anaconda/>`_
     if [ "$(uname -s)" == "Linux" ]; then
       wget -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
     elif [ "$(uname -s)" == "Darwin" ]; then
-      curl https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh > miniconda.sh
+      curl -o miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
     fi
     bash miniconda.sh -b -p $HOME/local/anaconda
     rm miniconda.sh
