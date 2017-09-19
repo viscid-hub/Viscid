@@ -7,7 +7,7 @@ import numpy as np
 import viscid
 
 
-__all__ = ["minvar", "minvar_around",
+__all__ = ["minvar", "minvar_series", "minvar_around",
            "find_minvar_lmn", "find_minvar_lmn_around"]
 
 
@@ -35,12 +35,34 @@ def minvar(B, p1, p2, n=40):
     line = viscid.Line(p1, p2, n)
     b = viscid.interp_trilin(B, line)
 
-    m = np.empty((3, 3))
+    return minvar_series(b.data)
+
+def minvar_series(arr, warn_finite=True):
+    """Find minimum variance eigenvectors of vector series
+
+    Args:
+        arr (ndarray): vector time series with shape (nsamples, 3)
+
+    Returns:
+        (evals, evecs)
+        All are ordered toward increasing eigenvalue magnitude. `evecs`
+        is a 2d array where the vectors are columns (2nd axis), i.e.,
+        the min variance eigenvector is evecs[0, :]
+    """
+    mask = np.all(np.isfinite(arr), axis=1, keepdims=False)
+    if np.sum(mask) < 3:
+        if warn_finite:
+            viscid.logger.warn("Minvar says you need > 3 finite samples")
+        return [np.full([3], np.nan, dtype=arr.dtype),
+                np.full([3, 3], np.nan, dtype=arr.dtype)]
+
+    arr = arr[mask]
+    m = np.zeros((3, 3))
     for i in range(3):
         for j in range(i+1):
-            bibj = np.average(b[:, i] * b[:, j])
-            m[i, j] = bibj - (np.average(b[:, i]) * np.average(b[:, j]))
-            m[j, i] = bibj - (np.average(b[:, i]) * np.average(b[:, j]))
+            bibj = np.mean(arr[:, i] * arr[:, j])
+            m[i, j] = bibj - (np.mean(arr[:, i]) * np.mean(arr[:, j]))
+            m[j, i] = bibj - (np.mean(arr[:, i]) * np.mean(arr[:, j]))
 
     evals, evecs = np.linalg.eig(m)
     eval_mags = np.abs(evals)
