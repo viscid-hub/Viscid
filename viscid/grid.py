@@ -51,7 +51,7 @@ class Grid(tree.Node):
 
     def __init__(self, *args, **kwargs):
         super(Grid, self).__init__(*args, **kwargs)
-        self.fields = Bucket(ordered=True)
+        self._fields = Bucket(ordered=True)
 
     @staticmethod
     def null_transform(something):
@@ -59,12 +59,19 @@ class Grid(tree.Node):
 
     @property
     def field_names(self):
-        return self.fields.get_primary_handles()
+        return self._fields.get_primary_handles()
 
     @property
     def crds(self):
+        if self._src_crds is None:
+            for fld in self._fields.values():
+                fld_crds = fld.crds
+                if fld_crds is not None:
+                    self._src_crds = fld_crds
+
         if self._crds is None:
             self._crds = self._src_crds.apply_reflections()
+
         return self._crds
 
     @crds.setter
@@ -99,19 +106,16 @@ class Grid(tree.Node):
         fields, so any grid crd transforms won't be set
         """
         for f in fields:
-            if isinstance(f, field.VectorField):
-                f.layout = self.force_vector_layout
-            self.prepare_child(f)
-            self.fields[f.name] = f
+            self[f.name] = f
 
     def remove_all_items(self):
-        for fld in self.fields:
+        for fld in self._fields:
             self.tear_down_child(fld)
-        self.fields = Bucket(ordered=True)
+        self._fields = Bucket(ordered=True)
 
     def clear_cache(self):
         """clear the cache on all child fields"""
-        for fld in self.fields:
+        for fld in self._fields:
             fld.clear_cache()
 
     def nr_times(self, *args, **kwargs):  # pylint: disable=W0613,R0201
@@ -137,15 +141,15 @@ class Grid(tree.Node):
         # Note: using 'with' here is better than making a shell copy
         if named is not None:
             for name in named:
-                with self.fields[name] as f:
+                with self._fields[name] as f:
                     yield f
         else:
-            for fld in self.fields:
+            for fld in self._fields:
                 with fld as f:
                     yield f
 
     def print_tree(self, depth=-1, prefix=""):  # pylint: disable=W0613
-        self.fields.print_tree(prefix=prefix + tree_prefix)
+        self._fields.print_tree(prefix=prefix + tree_prefix)
 
     ##################################
     ## Utility methods to get at crds
@@ -209,9 +213,9 @@ class Grid(tree.Node):
 
         try:
             if force_longterm_caches or self.longterm_field_caches:
-                ret = self.fields[fldname]
+                ret = self._fields[fldname]
             else:
-                ret = self.fields[fldname].shell_copy(force=False)
+                ret = self._fields[fldname].shell_copy(force=False)
         except KeyError:
             func = "_get_" + fldname
             if hasattr(self, func):
@@ -238,10 +242,10 @@ class Grid(tree.Node):
         return self
 
     def __contains__(self, item):
-        return item in self.fields
+        return item in self._fields
 
     def __len__(self):
-        return len(self.fields)
+        return len(self._fields)
 
     def __getitem__(self, item):
         """ returns a field by name, or if no field is found, a coordinate by
@@ -256,10 +260,14 @@ class Grid(tree.Node):
                 raise KeyError(item)
 
     def __setitem__(self, fldname, fld):
-        self.fields[fldname] = fld
+        if isinstance(fld, field.VectorField):
+            fld.layout = self.force_vector_layout
+        self.prepare_child(fld)
+        self._fields[fldname] = fld
 
     def __delitem__(self, fldname):
-        self.fields.__delitem__(fldname)
+        self.tear_down_child(self._fields[fldname])
+        self._fields.__delitem__(fldname)
 
     def __str__(self):
         return "<Grid name={0}>".format(self.name)
