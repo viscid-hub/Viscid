@@ -281,6 +281,9 @@ class SeedGen(object):
         """Make a 3xN ndarray of N xyz points"""
         return self.to_3d(self._make_local_points())
 
+    def __array__(self, *args, **kwargs):
+        return self.get_points()
+
     def points(self, **kwargs):
         """Alias for :py:meth:`get_points`"""
         return self.get_points(**kwargs)

@@ -1182,6 +1182,9 @@ class StructuredCrds(Coordinates):
         """
         return self.get_crds(axes=axes, center="face", shaped=shaped)
 
+    def __array__(self, *args, **kwargs):
+        return self.get_points()
+
     def points(self, center=None, **kwargs):
         return self.get_points(center=center, **kwargs)
 
