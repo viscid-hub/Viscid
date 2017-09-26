@@ -1398,7 +1398,7 @@ def streamplot(fld, ax=None, **kwargs):
     for other in ['linewidth', 'color']:
         try:
             if isinstance(kwargs[other], viscid.field.Field):
-                kwargs[other] = kwargs[other].data
+                kwargs[other] = kwargs[other].data.T
         except KeyError:
             pass
 
