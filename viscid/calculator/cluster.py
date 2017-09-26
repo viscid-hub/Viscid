@@ -7,7 +7,7 @@ from itertools import count
 import numpy as np
 
 
-__all__ = ['distance_to_clusters', 'cluster']
+__all__ = ['distance_to_clusters', 'find_clusters']
 
 
 def distance_to_clusters(point, clusters, alt=()):
@@ -32,8 +32,8 @@ def distance_to_clusters(point, clusters, alt=()):
     wraps = np.sign(wraps)
     return dists, wraps
 
-def cluster(indx, indy, x, y, multiple=True, periodic=(False, False),
-            diagonals=True):
+def find_clusters(indx, indy, x, y, multiple=True, periodic=(False, False),
+                  diagonals=True):
     """Cluster and average groups of neighboring points
 
     TODO: If absolutely necessary, could do some K-means clustering
@@ -135,7 +135,7 @@ def _main():
     y = np.linspace(0, Ly, Ny, endpoint=True)
     ix = [0,      0, Nx - 1, Nx - 1, Nx - 4]  # pylint: disable=bad-whitespace
     iy = [0, Ny - 1,      0, Ny - 1, Ny - 4]  # pylint: disable=bad-whitespace
-    pts = cluster(ix, iy, x, y, multiple=True, periodic="01")
+    pts = fin_clusters(ix, iy, x, y, multiple=True, periodic="01")
     print(pts.shape)
     print(pts)
 

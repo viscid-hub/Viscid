@@ -9,10 +9,10 @@ from viscid import logger
 from viscid import parallel
 
 
-__all__ = ['multiplot']
+__all__ = ['make_multiplot']
 
 
-def multiplot(vfile, plot_func=None, nr_procs=1, time_slice=":", **kwargs):
+def make_multiplot(vfile, plot_func=None, nr_procs=1, time_slice=":", **kwargs):
     """Make lots of plots
 
     Calls plot_func (or `_do_multiplot` if plot_func is None) with 2

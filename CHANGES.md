@@ -8,6 +8,10 @@ Changes:
   - add max_t to streamlines
   - streamlines are now truncated at max_length and max_t. This means ds can be non-uniform even for non-adaptive interators.
 
+Refactors:
+  - viscid.multiplot.multiplot -> viscid.multiplot.make_multiplot
+  - viscid.calculator.cluster.cluster -> viscid.calculator.cluster.find_clusters
+
 0.98.9
 ======
 
