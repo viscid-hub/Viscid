@@ -764,7 +764,7 @@ def is_datetime_like(val, conservative=False):  # pylint: disable=unused-argumen
         return False
     if conservative:
         try:
-            int(val)
+            float(val)
             return False
         except (ValueError, TypeError):
             pass
@@ -778,7 +778,7 @@ def is_timedelta_like(val, conservative=False):
             return False
         if isinstance(val, string_types):
             try:
-                int(val)
+                float(val)
                 return False
             except (ValueError, TypeError):
                 pass
