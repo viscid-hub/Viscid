@@ -40,9 +40,12 @@ class Dataset(tree.Node):
         """info is for information that is shared for a whole
         tree, from vfile all the way down to fields
         """
-        super(Dataset, self).__init__(*args, **kwargs)
-        self.children = Bucket(ordered=True)
+        super(Dataset, self).__init__(**kwargs)
+        if self.children is None:
+            self.children = Bucket(ordered=True)
         self.active_child = None
+        for arg in args:
+            self.add(arg)
 
     def add(self, child, set_active=True):
         self.prepare_child(child)
@@ -215,12 +218,11 @@ class DatasetTemporal(Dataset):
     # _all_times = None
 
     def __init__(self, *args, **kwargs):
-        super(DatasetTemporal, self).__init__(*args, **kwargs)
         # ok, i want more control over my childen than a bucket can give
-        # TODO: it's kind of a kludge to create a bucket then destroy it
-        # so soon, but it's not a big deal
+        # FIXME: this is kind of not cool since children is a public
+        # attribute yet it's a different type here
         self.children = []
-        # self._all_times = []
+        super(DatasetTemporal, self).__init__(*args, **kwargs)
 
     def add(self, child, set_active=True):
         if child is None:
