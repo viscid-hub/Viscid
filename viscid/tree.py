@@ -2,8 +2,6 @@
 
 from __future__ import print_function
 
-import numpy as np
-
 import viscid
 
 
@@ -252,33 +250,6 @@ class Node(object):
 
     def time_as_datetime(self):
         return viscid.as_datetime(self.time_as_datetime64())
-
-    def t2float(self, t, none_passthrough=False):
-        t_as_s = None
-        try:
-            t = viscid.vutil.str_to_value(t)
-
-            if viscid.is_timedelta_like(t, conservative=True):
-                t_as_s = viscid.as_timedelta(t).total_seconds()
-            elif viscid.is_datetime_like(t, conservative=True):
-                delta_t = viscid.as_datetime64(t) - self.basetime
-                t_as_s = viscid.as_timedelta(delta_t).total_seconds()
-            elif not isinstance(t, (int, np.integer, type(None))):
-                t_as_s = float(t)
-        except AttributeError:
-            if t is None:
-                if none_passthrough:
-                    pass
-                else:
-                    t = 0.0
-            elif isinstance(t, np.datetime64):
-                t_as_s = (t - self.basetime) / np.timedelta64(1, 's')
-            elif isinstance(t, np.timedelta64):
-                t_as_s = t / np.timedelta64(1, 's')
-            else:
-                t_as_s = float(t)
-
-        return t_as_s
 
     def t2datetime64(self, t):
         return viscid.time_sum(self.basetime, viscid.as_timedelta64(t))

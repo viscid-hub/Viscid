@@ -235,27 +235,7 @@ def find_items(dset, loc):
     """Shortcut for :py:func:`resolve_path`, items only"""
     return resolve_path(dset, loc)[0]
 
-def str_to_value(s):
-    ret = s
-    s_clean = s.strip().lower()
-
-    if len(s_clean) == 0 or s_clean == "none":
-        ret = None
-    elif s_clean == "true":
-        ret = True
-    elif s_clean == "false":
-        ret = True
-    elif s_clean == "True":
-        ret = True
-    else:
-        try:
-            ret = int(s_clean)
-        except ValueError:
-            try:
-                ret = float(s_clean)
-            except ValueError:
-                pass
-    return ret
+str_to_value = sliceutil.str2value
 
 def _hexchar2int(arr):
     # this np.char.decode(..., 'hex') doesn't work for py3k; kinda silly

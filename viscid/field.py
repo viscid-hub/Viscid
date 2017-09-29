@@ -1405,7 +1405,8 @@ class Field(tree.Leaf):
 
     def interpolated_slice(self, selection):
         seeds = self.crds.slice_interp(selection, cc=self.iscentered('cell'))
-        fld_dat = interp_trilin(self, seeds)
+        seed_pts = seeds.get_points(center=self.center)
+        fld_dat = interp_trilin(self, seed_pts, wrap=False)
         new_fld = self.wrap(fld_dat, context=dict(crds=seeds))
         new_fld = new_fld.slice_reduce("")
         return new_fld

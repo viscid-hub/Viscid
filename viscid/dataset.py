@@ -15,7 +15,7 @@ from viscid.bucket import Bucket
 from viscid import tree
 from viscid import vutil
 from viscid.vutil import tree_prefix
-from viscid.sliceutil import to_slice
+from viscid.sliceutil import to_slice, selection2values
 
 class Dataset(tree.Node):
     """Datasets contain grids or other datasets
@@ -81,28 +81,52 @@ class Dataset(tree.Node):
             except AttributeError:
                 pass
 
-    def nr_times(self, slice_str=":"):
+    def nr_times(self, slc=slice(None), val_endpoint=True, interior=False,
+                 tdunit='s', tol=100):
         for child in self.children:
             try:
-                return child.nr_times(slice_str)
+                return child.nr_times(slc=slc, val_endpoint=val_endpoint,
+                                      interior=interior, tdunit=tdunit, tol=tol)
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
 
-    def iter_times(self, slice_str=":"):
+    def iter_times(self, slc=slice(None), val_endpoint=True, interior=False,
+                   tdunit='s', tol=100):
         for child in self.children:
             try:
-                return child.iter_times(slice_str)
+                return child.iter_times(slc=slc, val_endpoint=val_endpoint,
+                                        interior=interior, tdunit=tdunit, tol=tol)
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
 
-    def get_times(self, slice_str=":"):
-        return list(self.iter_times(slice_str=slice_str))
+    def tslc_range(self, selection=slice(None), tdunit='s'):
+        """Find endpoints for a time slice selection
 
-    def get_time(self, slice_str=":"):
+        Note:
+            If the selection is slice-by-value, the values are not
+            adjusted to the nearest frame. For this functionality,
+            you will want to use :py:func:`get_times` and pull out the
+            first and last values.
+        """
+        for child in self.children:
+            try:
+                return child.tslc_range(selection=selection, tdunit=tdunit)
+            except AttributeError:
+                pass
+        raise RuntimeError("I find no temporal datasets")
+
+    def get_times(self, slc=slice(None), val_endpoint=True, interior=False,
+                  tdunit='s', tol=100):
+        return list(self.iter_times(slc=slc, val_endpoint=val_endpoint,
+                                    interior=interior, tdunit=tdunit, tol=tol))
+
+    def get_time(self, slc=slice(None), val_endpoint=True, interior=False,
+                 tdunit='s', tol=100):
         try:
-            return next(self.iter_times(slice_str))
+            return next(self.iter_times(slc=slc, val_endpoint=val_endpoint,
+                                        interior=interior, tdunit=tdunit, tol=tol))
         except StopIteration:
             raise RuntimeError("Dataset has no time slices")
 
@@ -261,80 +285,8 @@ class DatasetTemporal(Dataset):
     #############################################################################
     ## here begins a slew of functions that make specifying a time / time slice
     ## super general
-    @staticmethod
-    def _parse_time_slice_str(slc_str):
-        r"""
-        Args:
-            slc_str (str): must be a single string containing a single
-                time slice
-
-        Returns:
-            one of {int, string, or slice (can contain ints,
-            floats, or strings)}
-
-        Note:
-            Individual elements of the slice can look like an int,
-            float with trailing 'f', or they can have the form
-            [A-Z]+[\d:]+\.\d*. This last one is a datetime-like
-            representation with some preceding letters. The preceding
-            letters are
-        """
-        # regex parse the sting into a list of datetime-like strings,
-        # integers, floats, and bare colons that mark the slices
-        # Note: for datetime-like strings, the letters preceeding a datetime
-        # are necessary, otherwise 02:20:30.01 would have more than one meaning
-        rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:T]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+f?)\s*|"
-                r"[-+]?[0-9]+")
-        r = re.compile(rstr, re.I)
-
-        all_times = r.findall(slc_str)
-        if len(all_times) == 1 and all_times[0] != ":":
-            return vutil.str_to_value(all_times[0])
-
-        # fill in implied slice colons, then replace them with something
-        # unique... like !!
-        all_times += [':'] * (2 - all_times.count(':'))
-        all_times = [s if s != ":" else "!!" for s in all_times]
-        # this is kinda silly, but turn all times back into a string,
-        # then split it again, this is the easiest way to parse something
-        # like '1::2'
-        ret = "".join(all_times).split("!!")
-        # convert empty -> None, ints -> ints and floats->floats
-        for i, val in enumerate(ret):
-            ret[i] = vutil.str_to_value(val)
-        if len(ret) > 3:
-            raise ValueError("Could not decipher slice: '{0}'. Perhaps you're "
-                             "missing some letters in front of a time "
-                             "string?".format(slc_str))
-        # trim trailing dots
-        ret = [r.rstrip('.') if hasattr(r, 'rstrip') else r for r in ret]
-        return slice(*ret)
-
-    # deprecated
-    # def as_floating_t(self, t, none_passthrough=False):
-    #     t_as_s = None
-    #     try:
-    #         t = vutil.str_to_value(t)
-
-    #         if viscid.is_timedelta_like(t, conservative=True):
-    #             t_as_s = viscid.as_timedelta(t).total_seconds()
-    #         elif viscid.is_datetime_like(t, conservative=True):
-    #             delta_t = viscid.as_datetime64(t) - self.basetime
-    #             t_as_s = viscid.as_timedelta(delta_t).total_seconds()
-    #         elif not isinstance(t, (int, np.integer, type(None))):
-    #             t_as_s = float(t)
-    #     except AttributeError:
-    #         if t is None:
-    #             if none_passthrough:
-    #                 pass
-    #             else:
-    #                 t = 0.0
-    #         else:
-    #             t_as_s = float(t)
-
-    #     return t_as_s
-
-    def _slice_time(self, slc=":"):
+    def _slice_time(self, slc=slice(None), val_endpoint=True, interior=False,
+                    tdunit='s', tol=100):
         """
         Args:
             slc (str, slice, list): can be a single string containing
@@ -360,37 +312,18 @@ class DatasetTemporal(Dataset):
 
         ret = []
         times = np.array([child[0] for child in self.children])
+
+        try:
+            basetime = self.basetime
+        except viscid.NoBasetimeError:
+            basetime = None
+
         for s in slc:
-            if isinstance(s, string_types):
-                s = self._parse_time_slice_str(s)
-
-            if isinstance(s, slice):
-                single_val = False
-                slc_lst = [s.start, s.stop, s.step]
-            else:
-                single_val = True
-                slc_lst = [s]
-
-            # do translation from string/datetime/etc -> floats
-            for i in range(min(len(slc_lst), 2)):
-                try:
-                    slc_lst[i] = int(slc_lst[i])
-                except (ValueError, TypeError):
-                    # t_as_s = self.as_floating_t(slc_lst[i], none_passthrough=True)
-                    t_as_s = self.t2float(slc_lst[i], none_passthrough=True)
-
-                    if t_as_s is not None:
-                        slc_lst[i] = "{0}f".format(t_as_s)
-
-            if single_val:
-                ret.append(to_slice(times, slc_lst[0]))
-            else:
-                ret.append(to_slice(times, slc_lst))
+            ret.append(to_slice(times, s, val_endpoint=val_endpoint,
+                                interior=interior, epoch=basetime, tdunit=tdunit,
+                                tol=tol))
 
         return ret
-
-    def tslc2intfloat(self, slc):
-        pass
 
     def _time_slice_to_iterator(self, slc):
         """
@@ -414,13 +347,17 @@ class DatasetTemporal(Dataset):
                 child_iter_lst.append([self.children[s]])
         return chain(*child_iter_lst)
 
-    def nr_times(self, slice_str=":"):
-        slc = self._slice_time(slice_str)
+    def nr_times(self, slc=slice(None), val_endpoint=True, interior=False,
+                 tdunit='s', tol=100):
+        slc = self._slice_time(slc=slc, val_endpoint=val_endpoint,
+                               interior=interior, tdunit=tdunit, tol=tol)
         child_iterator = self._time_slice_to_iterator(slc)
         return len(list(child_iterator))
 
-    def iter_times(self, slice_str=":"):
-        slc = self._slice_time(slice_str)
+    def iter_times(self, slc=slice(None), val_endpoint=True, interior=False,
+                   tdunit='s', tol=100):
+        slc = self._slice_time(slc=slc, val_endpoint=val_endpoint,
+                               interior=interior, tdunit=tdunit, tol=tol)
         child_iterator = self._time_slice_to_iterator(slc)
 
         for child in child_iterator:
@@ -431,11 +368,33 @@ class DatasetTemporal(Dataset):
             with child[1].get_grid() as target:
                 yield target
 
-    def get_times(self, slice_str=":"):
-        return list(self.iter_times(slice_str=slice_str))
+    def get_times(self, slc=slice(None), val_endpoint=True, interior=False,
+                  tdunit='s', tol=100):
+        return list(self.iter_times(slc=slc, val_endpoint=val_endpoint,
+                                    interior=interior, tdunit=tdunit, tol=tol))
 
-    def get_time(self, slice_str=":"):
-        return self.get_times(slice_str)[0]
+    def get_time(self, slc=slice(None), val_endpoint=True, interior=False,
+                 tdunit='s', tol=100):
+        return self.get_times(slc=slc, val_endpoint=val_endpoint,
+                              interior=interior, tdunit=tdunit, tol=tol)[0]
+
+    def tslc_range(self, selection=slice(None), tdunit='s'):
+        """Find endpoints for a time slice selection
+
+        Note:
+            If the selection is slice-by-value, the values are not
+            adjusted to the nearest frame. For this functionality,
+            you will want to use :py:func:`get_times` and pull out the
+            first and last values.
+        """
+        times = np.array([child[0] for child in self.children])
+
+        try:
+            basetime = self.basetime
+        except viscid.NoBasetimeError:
+            basetime = None
+
+        return selection2values(times, selection, epoch=basetime, tdunit=tdunit)
 
     ## ok, that's enough for the time stuff
     ########################################
@@ -519,47 +478,3 @@ class DatasetTemporal(Dataset):
     def __iter__(self):
         for child in self.children:
             yield child[1]
-
-    # def __getitem__(self, item):
-    #     """ Get a dataitem or list of dataitems based on time, grid, and
-    #         varname. the 'active' components are given by default, but varname
-    #         is manditory, else how am i supposed to know what to serve up for
-    #         you. Examples:
-    #         dataset[time, 'gridhandle', 'varname'] == DataItem
-    #         dataset['time', 'gridhandle', 'varname'] == DataItem
-    #         dataset[timeslice, 'gridhandle', 'varname'] == list of DataItems
-    #         dataset[time, 'varname'] == DataItem using active grid
-    #         dataset['varname'] == DataItem using active time / active grid
-    #         """
-    #     req_grid = None
-
-    #     if not isinstance(item, tuple):
-    #         item = (item,)
-
-    #     varname = item[-1]
-    #     nr_times = len(item) - 1 # -1 for varname
-    #     try:
-    #         if len(item) > 1:
-    #             req_grid = self.grids[item[-2]]
-    #     except KeyError:
-    #         pass
-    #     if not req_grid:
-    #         req_grid = self.active_grid
-    #         nr_times -= 1
-
-    #     if nr_times == 0:
-    #         grids = [self.grid_by_time(self.active_time)]
-    #     else:
-    #         grids = [self.grid_by_time(t) for t in item[:nr_times]]
-
-    #     if len(grids) == 1:
-    #         return grids[0][varname]
-    #     else:
-    #         return [g[varname] for g in grids]
-
-    # def grid_by_time(self, time):
-    #     """ returns grid for this specific time, time can also be a slice """
-    #     if isinstance(time, slice):
-    #         pass
-    #     else:
-    #         pass
