@@ -155,7 +155,7 @@ def _as_timedelta64_scalar(time, unit=None):
     flt_unit = unit if unit else 's'
     # turn 'H:M:S.ms', 'M:S.ms', 'S.ms' into floating point seconds
     if isinstance(time, string_types):# and ':' in time:
-        time = [float(t) for t in time.split(':')][::-1]
+        time = [float(t) for t in time.lstrip('T').split(':')][::-1]
         if len(time) > 1 and unit is not None:
             raise ValueError("When giving time as a string, units are automatic")
         if len(time) > 3:
@@ -255,6 +255,9 @@ def as_datetime64(time, unit=None):
     elif isinstance(time, (list, tuple)):
         time = np.array([_as_datetime64_scalar(ti, unit=unit) for ti in time],
                         dtype=_format_unit(unit))
+        if time.dtype.kind == 'f':
+            unit = 'ns' if unit is None else unit
+            time = time.astype(_format_unit(unit, base=DATETIME_BASE))
     else:
         time = _as_datetime64_scalar(time, unit=unit)
     return time
@@ -268,10 +271,11 @@ def as_timedelta64(time, unit=None):
         unit (None): This is the unit of the input, the result
             will be the most coarse unit that can store the time
     """
-    # if isinstance(time, np.ndarray):
-    #     time = time.astype(_format_unit(None, base=DELTA_BASE))
     if isinstance(time, (np.ndarray, list, tuple)):
         time = np.array([_as_timedelta64_scalar(ti, unit=unit) for ti in time])
+        if time.dtype.kind == 'f':
+            unit = 'ns' if unit is None else unit
+            time = time.astype(_format_unit(unit, base=DELTA_BASE))
     else:
         time = _as_timedelta64_scalar(time, unit=unit)
     return time
@@ -395,10 +399,14 @@ def _adjust_t_unit(t, unit, cfunc=None, allow0=True):
         # overflowed a 64-bit int completely, an OverflowError has already
         # been raised
         t2 = cfunc(t1, unit=orig_unit)
-        if t != t2:
-            raise OverflowError("Time {0} could not be refined to unit '{1}' "
-                                "because it overflowed into the sign bit ({2})."
-                                "".format(str(t), unit, str(t1)))
+        try:
+            if not np.all(t == t2):
+                raise OverflowError("Time {0} could not be refined to unit '{1}' "
+                                    "because it overflowed into the sign bit ({2})."
+                                    "".format(str(t), unit, str(t1)))
+        except ValueError:
+            import viscid; viscid.interact()
+            raise
     else:
         # we want a less precise unit, i.e., round t to the new unit... raise
         # a PrecisionError if t was rounded to 0
