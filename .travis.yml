@@ -94,6 +94,7 @@ install:
   - 'export prefix="${HOME}/inst/${env_name}"'
 
   - ls ../Viscid/${env_spec}
+  - mkdir -p $HOME/miniconda/envs
   - ls $HOME/miniconda/envs
 
   # if conda package list doesn't match the cached one, just blast
