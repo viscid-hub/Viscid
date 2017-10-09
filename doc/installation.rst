@@ -152,9 +152,20 @@ Known Workarounds
 Ubuntu
 ~~~~~~
 
-If you see an error that contains `GFORTRAN_1.4 not found`, you may need to preempt libgfortran with the system version. The solution is an environment variable that looks something like::
+If you see an error that contains ``GFORTRAN_1.4 not found``, you may need to preempt libgfortran with the system version. The solution is an environment variable that looks something like::
 
     export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+
+If fortran extensions give runtime errors that make no sense, then anaconda probably installed a libgfortran that conflicts with your compiler. One example of this is ``Internal Error: get_unit(): Bad internal unit KIND``. You can try to fix this in one of two ways (both are hacks that probably break various things on your machine)::
+
+    # this has to be done in each conda environment, and again if a package
+    # install / update re-installs libgfortran-ng... super annoying,
+    conda remove --force libgfortran-ng
+
+    # OR, if you have sudo, you can fix this system wide
+    cd /usr/lib/x86_64-linux-gnu
+    sudo ln -s libgfortran.so.3.0.0 libgfortran.so
+    export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so
 
 OS X
 ~~~~

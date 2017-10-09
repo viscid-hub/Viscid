@@ -118,6 +118,7 @@ install:
        source activate ${env_name};
        conda update --all --yes;
      fi'
+  - conda remove --force libgfortran-ng || test 0
 
   # if deplying docs, run tests inplace, this makes preparing the docs
   # faster since cython's fused types makes 8 times too much code, ug!
