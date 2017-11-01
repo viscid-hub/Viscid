@@ -29,6 +29,7 @@ from viscid.readers import athena_tab
 from viscid.readers import athena_hst
 from viscid.readers import athena_xdmf
 from viscid.readers import ggcm_jrrle
+from viscid.readers import vpic
 
 
 __all__ = ['load_file', 'load_files', 'unload_file', 'unload_all_files',
