@@ -386,15 +386,15 @@ try:
         os.remove(RECORD_FNAME)
 
 except SystemExit as e:
-    if os.uname()[0] == 'Darwin':
-        print('\n'
-              'NOTE: OS X has an issue you may be running into.\n'
-              '      If the compile is complaining that it can\'t find\n'
-              '      -lgcc_s.10.5, then run the following:\n'
-              '      \n'
-              '      $ sudo su root -c "mkdir -p /usr/local/lib && ln -s '
-              '/usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"'
-              '      \n', file=sys.stderr)
+    # if os.uname()[0] == 'Darwin':
+    #     print('\n'
+    #           'NOTE: OS X has an issue you may be running into.\n'
+    #           '      If the compile is complaining that it can\'t find\n'
+    #           '      -lgcc_s.10.5, then run the following:\n'
+    #           '      \n'
+    #           '      $ sudo su root -c "mkdir -p /usr/local/lib && ln -s '
+    #           '/usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"'
+    #           '      \n', file=sys.stderr)
     raise
 
 # warn the user at the end if the fortran code was not built

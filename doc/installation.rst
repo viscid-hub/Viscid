@@ -170,6 +170,10 @@ If fortran extensions give runtime errors that make no sense, then anaconda prob
 OS X
 ~~~~
 
+If you have trouble using compiled fortran extensions, like the bad internal unit that happens in Linux, the cause is similar to other *nix systems. The fix is to install the gcc6 package from macports and recompile the extensions (make clean && make). For whatever reason, this version of gcc does not interfere with the libgfortran provided by anaconda on which scipy is built.
+
+If you get an abort trap that says ``PyThreadState_Get: no current thread`` when trying to use mayavi, then this is probably yet another anaconda packaging issue. The solution is to roll back to a different sub-release of python. running this did the trick for me: ``conda install python=3.5.3 pyqt=4``.
+
 If you see a link error that says `-lgcc_s.10.5` can't be found, try running::
 
     sudo su root -c "mkdir -p /usr/local/lib && ln -s /usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"
