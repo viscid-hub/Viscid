@@ -19,10 +19,12 @@ from distutils import log
 from distutils import sysconfig
 import json
 import shutil
+import subprocess
 
 import numpy as np
 from numpy.distutils.core import setup
 import numpy.distutils.fcompiler
+from numpy.distutils.command.build_ext import build_ext
 from numpy.distutils.extension import Extension as Extension
 npExtension = Extension
 
@@ -268,6 +270,56 @@ class Clean(clean):
                                     os.unlink(fn)
 
 cmdclass["clean"] = Clean
+
+
+class BuildExt(build_ext):
+    def run(self):
+        # distutils uses old-style classes??? no super?
+        build_ext.run(self)
+
+        # THIS IS A HACK FOR using anaconda and macports gfortran
+        # Anaconda comes with it's own libgfortran on which scipy is built.
+        # Now, if you use gfortran from macports-gcc6 on MacOS (Darwin),
+        # f2py compiled libraries will want to use the macports libgfortran
+        # at runtime, but for whatever reason, the anaconda version will
+        # preempt the rpath... so here we change the rpath to use the absolute
+        # path to the macports libgfortran for all fortran extensions
+        if os.uname()[0] == 'Darwin':
+            python_exe_dirname = os.path.dirname(sys.executable)
+            is_conda = os.path.isfile(os.path.join(python_exe_dirname, 'conda'))
+
+            _fc = numpy.distutils.fcompiler.new_fcompiler(dry_run=True)
+            fc_linker_path = _fc.executables['linker_so'][0]
+            is_macports_gfortran = fc_linker_path == '/opt/local/bin/gfortran'
+
+            macports_libgfort3_path = '/opt/local/lib/libgcc/libgfortran.3.dylib'
+            has_macports_libgfort3 = os.path.isfile(macports_libgfort3_path)
+            macports_libgfort4_path = '/opt/local/lib/libgcc/libgfortran.4.dylib'
+            has_macports_libgfort4 = os.path.isfile(macports_libgfort4_path)
+
+            f2py_extensions = [ext for ext in self.extensions
+                               if ext.has_f2py_sources()]
+
+            if is_conda and is_macports_gfortran:
+                for ext in f2py_extensions:
+                    if has_macports_libgfort3:
+                        # print('Changing libgfortran3 rpath', file=sys.stderr)
+                        subprocess.check_call(['install_name_tool',
+                                               '-change',
+                                               '@rpath/libgfortran.3.dylib',
+                                               macports_libgfort3_path,
+                                               self.get_ext_fullpath(ext.name)
+                                              ])
+                    if has_macports_libgfort4:
+                        # print('Changing libgfortran4 rpath', file=sys.stderr)
+                        subprocess.check_call(['install_name_tool',
+                                               '-change',
+                                               '@rpath/libgfortran.4.dylib',
+                                               macports_libgfort4_path,
+                                               self.get_ext_fullpath(ext.name)
+                                              ])
+
+cmdclass["build_ext"] = BuildExt
 
 # this is a super hack for a single py2k compatability layer for the futures
 # module. It raises an exception using an old syntax that won't byte-compile
