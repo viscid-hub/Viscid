@@ -108,6 +108,16 @@ def _main():
         run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
 
     if 1:
+        viscid.logger.info('Testing Spline (two knots, i.e., straight line)...')
+        seeds = viscid.Spline([[-1, 1], [-1, 1], [0, 2]], n=5)
+        run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
+
+    if 1:
+        viscid.logger.info('Testing Spline (three knots)...')
+        seeds = viscid.Spline([[-1, 1, 0], [-1, 1, 0], [0, 2, 0]], n=5)
+        run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
+
+    if 1:
         viscid.logger.info('Testing Plane...')
         seeds = viscid.Plane([0.0, 0.0, 0.0], [1, 1, 1], [1, 0, 0], 2, 2,
                              nl=160, nm=170, NL_are_vectors=True)
