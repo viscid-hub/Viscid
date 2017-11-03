@@ -103,6 +103,13 @@ def _main():
     logo = viscid.arrays2field([x, y, z], img)
 
     if 1:
+        viscid.logger.info('Testing Point with user-specified local coordinates...')
+        pts = np.vstack([[-1, -0.5, 0, 0.5, 1], [-1, -0.5, 0, 0.5, 1], [0, 0.5, 1, 1.5, 2]])
+        local_crds = viscid.asarray_datetime64([0, 60, 120, 180, 240], conservative=True)
+        seeds = viscid.Point(pts, local_crds=local_crds)
+        run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
+
+    if 1:
         viscid.logger.info('Testing Line...')
         seeds = viscid.Line([-1, -1, 0], [1, 1, 2], n=5)
         run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
