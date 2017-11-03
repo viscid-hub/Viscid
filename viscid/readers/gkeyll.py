@@ -416,11 +416,19 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             return crd_arr
         elif gridType in ['structured']:
             if idx == 0:
+<<<<<<< HEAD
                 crd_arr = h5file['StructGrid'][:, 0, 0, 0]
             elif idx == 1:
                 crd_arr = h5file['StructGrid'][0, :, 0, 1]
             elif idx == 2:
                 crd_arr = h5file['StructGrid'][0, 0, :, 2]
+=======
+                crd_arr = h5file['StructGrid'][:,0,0,0]
+            elif idx == 1:
+                crd_arr = h5file['StructGrid'][0,:,0,1]
+            elif idx == 2:
+                crd_arr = h5file['StructGrid'][0,0,:,2]
+>>>>>>> 808b058547c74d67db964d91717939320050e8ef
             return crd_arr
         else:
             raise RuntimeError("Gkeyll StructGrid.vsKind not understood: {0}"
