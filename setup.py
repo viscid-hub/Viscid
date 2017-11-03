@@ -23,8 +23,8 @@ import subprocess
 
 import numpy as np
 from numpy.distutils.core import setup
-import numpy.distutils.fcompiler
-from numpy.distutils.command.build_ext import build_ext
+from numpy.distutils.exec_command import exec_command
+from numpy.distutils import fcompiler as _fcompiler
 from numpy.distutils.extension import Extension as Extension
 npExtension = Extension
 
@@ -235,9 +235,10 @@ def clean_other_so_files(valid_so_list, dry_run=False):
 # get clean to remove inplace files
 class Clean(clean):
     def run(self):
-        # distutils uses old-style classes???
-        #super(Clean, self).run()
-        clean.run(self)
+        try:
+            super(Clean, self).run()
+        except TypeError:
+            clean.run(self)
 
         clean_pyc_files(self.dry_run)
 
@@ -271,56 +272,6 @@ class Clean(clean):
 
 cmdclass["clean"] = Clean
 
-
-class BuildExt(build_ext):
-    def run(self):
-        # distutils uses old-style classes??? no super?
-        build_ext.run(self)
-
-        # THIS IS A HACK FOR using anaconda and macports gfortran
-        # Anaconda comes with it's own libgfortran on which scipy is built.
-        # Now, if you use gfortran from macports-gcc6 on MacOS (Darwin),
-        # f2py compiled libraries will want to use the macports libgfortran
-        # at runtime, but for whatever reason, the anaconda version will
-        # preempt the rpath... so here we change the rpath to use the absolute
-        # path to the macports libgfortran for all fortran extensions
-        if os.uname()[0] == 'Darwin':
-            python_exe_dirname = os.path.dirname(sys.executable)
-            is_conda = os.path.isfile(os.path.join(python_exe_dirname, 'conda'))
-
-            _fc = numpy.distutils.fcompiler.new_fcompiler(dry_run=True)
-            fc_linker_path = _fc.executables['linker_so'][0]
-            is_macports_gfortran = fc_linker_path == '/opt/local/bin/gfortran'
-
-            macports_libgfort3_path = '/opt/local/lib/libgcc/libgfortran.3.dylib'
-            has_macports_libgfort3 = os.path.isfile(macports_libgfort3_path)
-            macports_libgfort4_path = '/opt/local/lib/libgcc/libgfortran.4.dylib'
-            has_macports_libgfort4 = os.path.isfile(macports_libgfort4_path)
-
-            f2py_extensions = [ext for ext in self.extensions
-                               if ext.has_f2py_sources()]
-
-            if is_conda and is_macports_gfortran:
-                for ext in f2py_extensions:
-                    if has_macports_libgfort3:
-                        # print('Changing libgfortran3 rpath', file=sys.stderr)
-                        subprocess.check_call(['install_name_tool',
-                                               '-change',
-                                               '@rpath/libgfortran.3.dylib',
-                                               macports_libgfort3_path,
-                                               self.get_ext_fullpath(ext.name)
-                                              ])
-                    if has_macports_libgfort4:
-                        # print('Changing libgfortran4 rpath', file=sys.stderr)
-                        subprocess.check_call(['install_name_tool',
-                                               '-change',
-                                               '@rpath/libgfortran.4.dylib',
-                                               macports_libgfort4_path,
-                                               self.get_ext_fullpath(ext.name)
-                                              ])
-
-cmdclass["build_ext"] = BuildExt
-
 # this is a super hack for a single py2k compatability layer for the futures
 # module. It raises an exception using an old syntax that won't byte-compile
 # on install in py3k. So, to quiet the syntax error, which looks serious even
@@ -349,7 +300,7 @@ if has_cython and use_cython:
 
 # make fortran extension instances
 try:
-    fc = numpy.distutils.fcompiler.new_fcompiler(dry_run=True)
+    fc = _fcompiler.new_fcompiler(dry_run=True)
 except ValueError:
     fc = None
 
@@ -357,6 +308,61 @@ if fc is None:
     # warn the user at the very end so they're more likely to see the warning
     pass
 else:
+    # the folloing gfortran hacks are to work around a treacherous bug when
+    # using anaconda + f2py (numpy) + a local gfortran on MacOS / Linux...
+    # in short, anaconda ships its own libgfortran to make numpy / scipy
+    # work, but this will conflict with default system gfortran compilers...
+    # AND numpy assumes that `gfortran -print-libgcc-file-name` will give the
+    # path to libgfortran (it practice it doesn't on Debian / MacPorts)... SO
+    # we overrid the lib dir discovery with
+    # `gfortran -print-file-name=libgfortran.so` (or dylib) because that will
+    # give us the correct link path, and fortran code that we compile with f2py
+    # will be correctly linked to the lib supplied by OUR compiler
+    if os.uname()[0] in ('Linux', 'Darwin'):
+        def _get_libgfortran_dir(compiler_cmd):
+            if os.uname()[0] == 'Linux':
+                libgfname = 'libgfortran.so'
+            elif os.uname()[0] == 'Darwin':
+                libgfname = 'libgfortran.dylib'
+            else:
+                return None
+            status, output = exec_command(compiler_cmd +
+                                          ['-print-file-name={0}'.format(libgfname)],
+                                          use_tee=0)
+            if not status:
+                return os.path.dirname(output)
+            return None
+
+        from numpy.distutils.fcompiler import gnu as _gnu
+        class GnuFCompilerHack(_gnu.GnuFCompiler):
+            def get_library_dirs(self):
+                try:
+                    opt = super(GnuFCompilerHack, self).get_library_dirs()
+                except TypeError:
+                    opt = _gnu.GnuFCompiler.get_library_dirs(self)
+                libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
+                if libgfortran_dir:
+                    opt.append(libgfortran_dir)
+                return opt
+        class Gnu95FCompilerHack(_gnu.Gnu95FCompiler):
+            def get_library_dirs(self):
+                try:
+                    opt = super(Gnu95FCompilerHack, self).get_library_dirs()
+                except TypeError:
+                    opt = _gnu.Gnu95FCompiler.get_library_dirs(self)
+                libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
+                if libgfortran_dir:
+                    opt.append(libgfortran_dir)
+                return opt
+
+        from numpy.distutils import fcompiler as _fcompiler
+        _fcompiler.load_all_fcompiler_classes()
+        _fcompiler.fcompiler_class['gnu'] = ('gnu', GnuFCompilerHack,
+                                             'GNU Fortran 77 compile Hack')
+        _fcompiler.fcompiler_class['gnu95'] = ('gnu', Gnu95FCompilerHack,
+                                               'GNU Fortran 95 compile Hack')
+
+    # ok, now that that hack is over with, add our fortran extensions
     for d in fort_defs:
         if d is None:
             continue
