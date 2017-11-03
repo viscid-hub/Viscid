@@ -349,16 +349,21 @@ class SeedGen(object):
 
 class Point(SeedGen):
     """Collection of points"""
-    def __init__(self, pts, cache=False, dtype=None):
+    def __init__(self, pts, cache=False, dtype=None, local_crds=None):
         """Seed with an explicit set of points
 
         Args:
             pts (ndarray or list): should look like something that
                 np.array(pts) can turn to an 3xN array of xyz
                 points. This can be Nx3 as long as N != 3.
+            local_crds (ndarray or list) : A list of customized local
+                coordinates. Must of size N, where 3xN is the shape
+                of pts. For example, user can provide an array of type
+                datetime.datetime to represent the time of each point.
         """
         super(Point, self).__init__(cache=cache, dtype=dtype)
         self.pts = pts
+        self.local_crds = local_crds
 
     def get_nr_points(self, **kwargs):
         return self.get_points().shape[-1]
@@ -392,7 +397,10 @@ class Point(SeedGen):
         return self.pts
 
     def _make_local_axes(self):
-        return np.arange(self.nr_points)
+        if self.local_crds is None:
+            return np.arange(self.nr_points)
+        else:
+            return self.local_crds
 
     def as_local_coordinates(self):
         x = self._make_local_axes()
