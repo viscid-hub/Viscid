@@ -307,7 +307,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
 
         basename = os.path.basename(fname0)
         self.set_info('run', re.match(self._detector, basename).group(1))
-        self.set_info('fieldtype', re.match(self._detector, basename).group(2))
+        self.set_info('field_type', re.match(self._detector, basename).group(2))
 
         super(GkeyllFile, self).load(fname1)
 
