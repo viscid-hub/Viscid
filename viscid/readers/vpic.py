@@ -19,20 +19,222 @@ from viscid.readers import vfile
 class VPIC_Grid(grid.Grid):
     # TODO: add any _get_* methods to make retrieving fields more natural
 
+    def _get_ex(self):
+        data = self['Electric Field X']
+        data.pretty_name = "$E_x$"
+        return data
+
+    def _get_ey(self):
+        data = self['Electric Field Y']
+        data.pretty_name = "$E_y$"
+        return data
+
+    def _get_ez(self):
+        data = self['Electric Field Z']
+        data.pretty_name = "$E_z$"
+        return data
+
+    def _get_e(self):
+        ex, ey, ez = self['ex'], self['ey'], self['ez']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([ex, ey, ez], name="E", **opts)
+
+    def _get_dive(self):
+        data = self['Electric Field Divergence Error']
+        data.pretty_name = "$\\nabla\\cdot\\mathbf{E}$"
+        return data
+
     def _get_bx(self):
-        return self['Magnetic Field X']
+        data = self['Magnetic Field X']
+        data.pretty_name = "$B_x$"
+        return data
 
     def _get_by(self):
-        return self['Magnetic Field Y']
+        data = self['Magnetic Field Y']
+        data.pretty_name = "$B_y$"
+        return data
 
     def _get_bz(self):
-        return self['Magnetic Field Z']
+        data = self['Magnetic Field Z']
+        data.pretty_name = "$B_z$"
+        return data
 
     def _get_b(self):
         bx, by, bz = self['bx'], self['by'], self['bz']
         opts = dict(_force_layout=self.force_vector_layout)
         return field.scalar_fields_to_vector([bx, by, bz], name="B", **opts)
 
+    def _get_divb(self):
+        data = self['Magnetic Field Divergence Error']
+        data.pretty_name = "$\\nabla\\cdot\\mathbf{B}$"
+        return data
+
+    def _get_n_q(self):
+        data = self['Charge Density']
+        data.pretty_name = "$n_q$"
+        return data
+
+    # electron
+    def _get_jx_e(self):
+        data = self['Current Density (ehydro) X']
+        data.pretty_name = "$J_{x,e}$"
+        return data
+
+    def _get_jy_e(self):
+        data = self['Current Density (ehydro) Y']
+        data.pretty_name = "$J_{y,e}$"
+        return data
+
+    def _get_jz_e(self):
+        data = self['Current Density (ehydro) Z']
+        data.pretty_name = "$J_{z,e}$"
+        return data
+
+    def _get_j_e(self):
+        jx_e, jy_e, jz_e = self['jx_e'], self['jy_e'], self['jz_e']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([jx_e, jy_e, jz_e], name="J_e", **opts)
+
+    def _get_rhovx_e(self):
+        data = self['Momentum Density (ehydro) X']
+        data.pretty_name = "$\\rho v_x,e}$"
+        return data
+
+    def _get_rhovy_e(self):
+        data = self['Momentum Density (ehydro) Y']
+        data.pretty_name = "$\\rho v_y,e}$"
+        return data
+
+    def _get_rhovz_e(self):
+        data = self['Momentum Density (ehydro) Z']
+        data.pretty_name = "$\\rho v_z,e}$"
+        return data
+
+    def _get_rhov_e(self):
+        rhox_e, rhoy_e, rhoz_e = self['rhovx_e'], self['rhovy_e'], self['rhovz_e']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([rhox_e, rhoy_e, rhoz_e], name="rhov_e", **opts)
+
+    def _get_n_e(self):
+        data = self['Charge Density (ehydro)']
+        data.pretty_name = "$n_{e}$"
+        return data
+
+    def _get_ek_e(self):
+        data = self['Kinetic Energy Density (ehydro)']
+        data.pretty_name = "$e_{k,e}$"
+        return data
+
+    def _get_Pxx_e(self):
+        data = self['Stress Tensor (ehydro) XX']
+        data.pretty_name = "$P_{xx,e}$"
+        return data
+
+    def _get_Pyy_e(self):
+        data = self['Stress Tensor (ehydro) YY']
+        data.pretty_name = "$P_{yy,e}$"
+        return data
+
+    def _get_Pzz_e(self):
+        data = self['Stress Tensor (ehydro) ZZ']
+        data.pretty_name = "$P_{zz,e}$"
+        return data
+
+    def _get_Pzx_e(self):
+        data = self['Stress Tensor (ehydro) ZX']
+        data.pretty_name = "$P_{xz,e}$"
+        return data
+
+    def _get_Pxy_e(self):
+        data = self['Stress Tensor (ehydro) XY']
+        data.pretty_name = "$P_{xy,e}$"
+        return data
+
+    def _get_Pyz_e(self):
+        data = self['Stress Tensor (ehydro) YZ']
+        data.pretty_name = "$P_{yz,e}$"
+        return data
+
+    # ion
+    def _get_jx_i(self):
+        data = self['Current Density (Hhydro) X']
+        data.pretty_name = "$J_{x,i}$"
+        return data
+
+    def _get_jy_i(self):
+        data = self['Current Density (Hhydro) Y']
+        data.pretty_name = "$J_{y,i}$"
+        return data
+
+    def _get_jz_i(self):
+        data = self['Current Density (Hhydro) Z']
+        data.pretty_name = "$J_{z,i}$"
+        return data
+
+    def _get_j_i(self):
+        jx_i, jy_i, jz_i = self['jx_i'], self['jy_i'], self['jz_i']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([jx_i, jy_i, jz_i], name="J_i", **opts)
+
+    def _get_rhovx_i(self):
+        data = self['Momentum Density (Hhydro) X']
+        data.pretty_name = "$\\rho v_x,i}$"
+        return data
+
+    def _get_rhovy_i(self):
+        data = self['Momentum Density (Hhydro) Y']
+        data.pretty_name = "$\\rho v_y,i}$"
+        return data
+
+    def _get_rhovz_i(self):
+        data = self['Momentum Density (Hhydro) Z']
+        data.pretty_name = "$\\rho v_z,i}$"
+        return data
+
+    def _get_rhov_i(self):
+        rhox_i, rhoy_i, rhoz_i = self['rhovx_i'], self['rhovy_i'], self['rhovz_i']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([rhox_i, rhoy_i, rhoz_i], name="rhov_i", **opts)
+
+    def _get_n_i(self):
+        data = self['Charge Density (Hhydro)']
+        data.pretty_name = "$n_{i}$"
+        return data
+
+    def _get_ek_i(self):
+        data = self['Kinetic Energy Density (Hhydro)']
+        data.pretty_name = "$e_{k,i}$"
+        return data
+
+    def _get_Pxx_i(self):
+        data = self['Stress Tensor (Hhydro) XX']
+        data.pretty_name = "$P_{xx,i}$"
+        return data
+
+    def _get_Pyy_i(self):
+        data = self['Stress Tensor (Hhydro) YY']
+        data.pretty_name = "$P_{yy,i}$"
+        return data
+
+    def _get_Pzz_i(self):
+        data = self['Stress Tensor (Hhydro) ZZ']
+        data.pretty_name = "$P_{zz,i}$"
+        return data
+
+    def _get_Pzx_i(self):
+        data = self['Stress Tensor (Hhydro) ZX']
+        data.pretty_name = "$P_{xz,i}$"
+        return data
+
+    def _get_Pxy_i(self):
+        data = self['Stress Tensor (Hhydro) XY']
+        data.pretty_name = "$P_{xy,i}$"
+        return data
+
+    def _get_Pyz_i(self):
+        data = self['Stress Tensor (Hhydro) YZ']
+        data.pretty_name = "$P_{yz,i}$"
+        return data
 
 
 class _VPICGlobalFile(object):
@@ -263,7 +465,7 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
             parent_node = self # FIXME: is this correct?
 
             for i, crds in enumerate(block_crds):
-                _grid = self._make_grid(parent_node, name="<VPIC_Grid>")
+                _grid = self._make_grid(parent_node, name="<VPIC_Gridt {0}>".format(i))
                 _grid.set_crds(crds)
 
                 for fs in [_gfile.fields] + _gfile.species:
@@ -280,15 +482,23 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
                             fld_name += " ({0})".format(fs.basename)
 
                         for icomp in range(descr.n_comps):
-                            if descr.n_comps > 1:
-                                fld_name += ' {0}'.format('XYZUVWABCDEFGHI'[icomp])
+                            if descr.n_comps == 1:
+                                _fld_name = fld_name
+                            else:
+                                if descr.n_comps == 3:
+                                    comps = 'XYZ'
+                                elif descr.n_comps == 6:
+                                    comps = ['XX', 'YY', 'ZZ', 'YZ', 'ZX', 'XY']
+                                else:
+                                    comps = 'ABCDEFGHIJKLMN'
+                                _fld_name = '{0} {1}'.format(fld_name, comps[icomp])
                             # data is a lazy proxy for an ndarray
                             # FIXME: the data type is in descr?
-                            data = data_wrapper_cls(file_wrapper, fld_name,
+                            data = data_wrapper_cls(file_wrapper, _fld_name,
                                                     _gfile.ldims,
                                                     icomp + descr.off,
                                                     np.dtype(np.float32))
-                            _fld = self._make_field(_grid, "Scalar", fld_name,
+                            _fld = self._make_field(_grid, "Scalar", _fld_name,
                                                     crds, data, time=time,
                                                     center='node')
                             _grid.add_field(_fld)
