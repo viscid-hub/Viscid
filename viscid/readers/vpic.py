@@ -19,6 +19,23 @@ from viscid.readers import vfile
 class VPIC_Grid(grid.Grid):
     # TODO: add any _get_* methods to make retrieving fields more natural
 
+    def _get_ex(self):
+        return self['Electric Field X']
+
+    def _get_ey(self):
+        return self['Electric Field Y']
+
+    def _get_ez(self):
+        return self['Electric Field Z']
+
+    def _get_e(self):
+        ex, ey, ez = self['ex'], self['ey'], self['ez']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([ex, ey, ez], name="E", **opts)
+
+    def _get_dive(self):
+        return self['Electric Field Divergence Error']
+
     def _get_bx(self):
         return self['Magnetic Field X']
 
@@ -33,6 +50,117 @@ class VPIC_Grid(grid.Grid):
         opts = dict(_force_layout=self.force_vector_layout)
         return field.scalar_fields_to_vector([bx, by, bz], name="B", **opts)
 
+    def _get_divb(self):
+        return self['Magnetic Field Divergence Error']
+
+    def _get_n_q(self):
+        return self['Charge Density']
+
+    # electron
+    def _get_jx_e(self):
+        return self['Current Density (ehydro) X']
+
+    def _get_jy_e(self):
+        return self['Current Density (ehydro) Y']
+
+    def _get_jz_e(self):
+        return self['Current Density (ehydro) Z']
+
+    def _get_j_e(self):
+        jx_e, jy_e, jz_e = self['jx_e'], self['jy_e'], self['jz_e']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([jx_e, jy_e, jz_e], name="J_e", **opts)
+
+    def _get_rhovx_e(self):
+        return self['Momentum Density (ehydro) X']
+
+    def _get_rhovy_e(self):
+        return self['Momentum Density (ehydro) Y']
+
+    def _get_rhovz_e(self):
+        return self['Momentum Density (ehydro) Z']
+
+    def _get_rhov_e(self):
+        rhox_e, rhoy_e, rhoz_e = self['rhovx_e'], self['rhovy_e'], self['rhovz_e']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([rhox_e, rhoy_e, rhoz_e], name="rhov_e", **opts)
+
+    def _get_n_e(self):
+        return self['Charge Density (ehydro)']
+
+    def _get_ek_e(self):
+        return self['Kinetic Energy Density (ehydro)']
+
+    def _get_Pxx_e(self):
+        return self['Stress Tensor (ehydro) XX']
+
+    def _get_Pyy_e(self):
+        return self['Stress Tensor (ehydro) YY']
+
+    def _get_Pzz_e(self):
+        return self['Stress Tensor (ehydro) ZZ']
+
+    def _get_Pzx_e(self):
+        return self['Stress Tensor (ehydro) ZX']
+
+    def _get_Pxy_e(self):
+        return self['Stress Tensor (ehydro) XY']
+
+    def _get_Pyz_e(self):
+        return self['Stress Tensor (ehydro) YZ']
+
+    # ion
+    def _get_jx_i(self):
+        return self['Current Density (Hhydro) X']
+
+    def _get_jy_i(self):
+        return self['Current Density (Hhydro) Y']
+
+    def _get_jz_i(self):
+        return self['Current Density (Hhydro) Z']
+
+    def _get_j_i(self):
+        jx_i, jy_i, jz_i = self['jx_i'], self['jy_i'], self['jz_i']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([jx_i, jy_i, jz_i], name="J_i", **opts)
+
+    def _get_rhovx_i(self):
+        return self['Momentum Density (Hhydro) X']
+
+    def _get_rhovy_i(self):
+        return self['Momentum Density (Hhydro) Y']
+
+    def _get_rhovz_i(self):
+        return self['Momentum Density (Hhydro) Z']
+
+    def _get_rhov_i(self):
+        rhox_i, rhoy_i, rhoz_i = self['rhovx_i'], self['rhovy_i'], self['rhovz_i']
+        opts = dict(_force_layout=self.force_vector_layout)
+        return field.scalar_fields_to_vector([rhox_i, rhoy_i, rhoz_i], name="rhov_i", **opts)
+
+    def _get_n_i(self):
+        return self['Charge Density (Hhydro)']
+
+    def _get_ik_i(self):
+        return self['Kinetic Energy Density (Hhydro)']
+
+    def _get_Pxx_i(self):
+        return self['Stress Tensor (Hhydro) XX']
+
+    def _get_Pyy_i(self):
+        return self['Stress Tensor (Hhydro) YY']
+
+    def _get_Pzz_i(self):
+        return self['Stress Tensor (Hhydro) ZZ']
+
+    def _get_Pzx_i(self):
+        return self['Stress Tensor (Hhydro) ZX']
+
+    def _get_Pxy_i(self):
+        return self['Stress Tensor (Hhydro) XY']
+
+    def _get_Pyz_i(self):
+        return self['Stress Tensor (Hhydro) YZ']
 
 
 class _VPICGlobalFile(object):
