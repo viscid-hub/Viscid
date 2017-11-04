@@ -280,11 +280,16 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
                             fld_name += " ({0})".format(fs.basename)
 
                         for icomp in range(descr.n_comps):
-                            if descr.n_comps > 1:
-                                _fld_name = '{0} {1}'.format(fld_name,
-                                                             'XYZUVWABCDEFGHI'[icomp])
-                            else:
+                            if descr.n_comps == 1:
                                 _fld_name = fld_name
+                            else:
+                                if descr.n_comps == 3:
+                                    comps = 'XYZ'
+                                elif descr.n_comps == 6:
+                                    comps = ['XX', 'YY', 'ZZ', 'YZ', 'ZX', 'XY']
+                                else:
+                                    comps = 'ABCDEFGHIJKLMN'
+                                _fld_name = '{0} {1}'.format(fld_name, comps[icomp])
                             # data is a lazy proxy for an ndarray
                             # FIXME: the data type is in descr?
                             data = data_wrapper_cls(file_wrapper, _fld_name,
