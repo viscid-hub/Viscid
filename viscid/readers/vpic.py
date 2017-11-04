@@ -263,7 +263,7 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
             parent_node = self # FIXME: is this correct?
 
             for i, crds in enumerate(block_crds):
-                _grid = self._make_grid(parent_node, name="<VPIC_Grid>")
+                _grid = self._make_grid(parent_node, name="<VPIC_Gridt {0}>".format(i))
                 _grid.set_crds(crds)
 
                 for fs in [_gfile.fields] + _gfile.species:
@@ -281,14 +281,17 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
 
                         for icomp in range(descr.n_comps):
                             if descr.n_comps > 1:
-                                fld_name += ' {0}'.format('XYZUVWABCDEFGHI'[icomp])
+                                _fld_name = '{0} {1}'.format(fld_name,
+                                                             'XYZUVWABCDEFGHI'[icomp])
+                            else:
+                                _fld_name = fld_name
                             # data is a lazy proxy for an ndarray
                             # FIXME: the data type is in descr?
-                            data = data_wrapper_cls(file_wrapper, fld_name,
+                            data = data_wrapper_cls(file_wrapper, _fld_name,
                                                     _gfile.ldims,
                                                     icomp + descr.off,
                                                     np.dtype(np.float32))
-                            _fld = self._make_field(_grid, "Scalar", fld_name,
+                            _fld = self._make_field(_grid, "Scalar", _fld_name,
                                                     crds, data, time=time,
                                                     center='node')
                             _grid.add_field(_fld)
