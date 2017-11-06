@@ -92,29 +92,33 @@ show           [bool]            Call :py:func:`pyplot.show` before returning
 
 .. cssclass:: table-striped
 
-==========  ===============   ==================================================
-Option      Arguments         Description
-==========  ===============   ==================================================
-style       str               One of (pcolormesh, pcolor, contour, contourf)
-levels      [int or list]     Number of contours, or list of specific contour
-                              values (contours only)
-g           [bool or color]   Alias for gridec=k or gridec=color
-gridec      color             Color for grid lines (pcolormesh only)
-gridlw      number            Line width for grid lines (pcolormesh only)
-gridaa      [bool]            Antialias grid lines (default: True)
-p           [bool or color]   Alias for patchec=k or patchec=color
-patchec     color             Color for patch boundaries
-patchlw     number            Line width for patch boundaries
-patchaa     [bool]            Antialias patch boundaries (default: True)
-mod         modx, mody        Scale coordinates by some scalar value
-colorbar    [bool or dict]    dict of keyword arguments for
-                              :py:func:`pyplot.colorbar`
-title       bool or str       Put a specific title on the plot, or if true, use
-                              field's pretty_name (suppresses cbarlabel if both
-                              would default to pretty_name)
-cbarlabel   str               Specific label for the color bar
-earth       [bool]            Plot a black and white circle for Earth
-==========  ===============   ==================================================
+============  ===============   ==================================================
+Option        Arguments         Description
+============  ===============   ==================================================
+style         str               One of (pcolormesh, pcolor, contour, contourf)
+levels        [int or list]     Number of contours, or list of specific contour
+                                values (contours only)
+g             [bool or color]   Alias for gridec=k or gridec=color
+gridec        color             Color for grid lines (pcolormesh only)
+gridlw        number            Line width for grid lines (pcolormesh only)
+gridaa        [bool]            Antialias grid lines (default: True)
+p             [bool or color]   Alias for patchec=k or patchec=color
+patchec       color             Color for patch boundaries
+patchlw       number            Line width for patch boundaries
+patchaa       [bool]            Antialias patch boundaries (default: True)
+mod           modx, mody        Scale coordinates by some scalar value
+colorbar      bool              Automatically add a colorbar? Default is True
+cax           mpl Axis          Explicit axis for colorbar, if drawn
+cbar_kwargs   dict              keyword options for pyplot.colorbar. Handles the
+                                additional arguments 'use_grid1' for nicer cax
+                                creation, and 'position' which can be 'left',
+                                'right', 'top' or 'bottom'.
+title         bool or str       Put a specific title on the plot, or if true, use
+                                field's pretty_name (suppresses cbarlabel if both
+                                would default to pretty_name)
+cbarlabel     str               Specific label for the color bar
+earth         [bool]            Plot a black and white circle for Earth
+============  ===============   ==================================================
 
 
 2-D Map Plots

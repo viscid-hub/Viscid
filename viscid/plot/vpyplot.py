@@ -537,7 +537,11 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     patchaa = plot_kwargs.pop("patchaa", True)
     mod = plot_kwargs.pop("mod", None)
     title = plot_kwargs.pop("title", None)
-    colorbar = plot_kwargs.pop("colorbar", True)
+    cax = plot_kwargs.pop("cax", None)
+    cbar = plot_kwargs.pop("cbar", True)
+    colorbar = plot_kwargs.pop("colorbar", cbar)
+    cbar_kwargs = plot_kwargs.pop('colorbar_kwargs', dict())
+    cbar_kwargs = plot_kwargs.pop("cbar_kwargs", cbar_kwargs)
     cbarlabel = plot_kwargs.pop("cbarlabel", None)
     earth = plot_kwargs.pop("earth", False)
 
@@ -563,13 +567,12 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         if not patchec:
             patchec = show_patches
 
-    if colorbar:
-        if not isinstance(colorbar, dict):
-            colorbar = {}
-        else:
-            colorbar = dict(colorbar)
-    else:
-        colorbar = None
+    if isinstance(colorbar, dict):
+        viscid.logger.warning("Deprecation, colorbar options should be passed as "
+                              "cbar_kwargs and colorbar should be True/False.")
+        if cbar_kwargs:
+            viscid.logger.warning("Clobbering cbar_kwargs with colorbar")
+        colorbar, cbar_kwargs = True, colorbar
 
     #########################
     # figure out the norm...
@@ -667,41 +670,59 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax.set_yscale('log')
 
     # figure out the colorbar...
-    if style == "contour":
-        if "colors" in plot_kwargs:
-            colorbar = None
-    if colorbar is not None:
-        # unless otherwise specified, use_gridspec for colorbar
-        if "use_gridspec" not in colorbar:
-            colorbar["use_gridspec"] = True
-        if "ax" not in colorbar:
-            colorbar["ax"] = ax
+    if style == "contour" and "colors" in plot_kwargs:
+        colorbar = False
+    if masknan and all_masked:
+        colorbar = False
 
-        if "ticks" not in colorbar:
+    if colorbar:
+        if 'ax' in cbar_kwargs:
+            viscid.logger.warning("ignoring cbar_kwargs['ax']")
+            cbar_kwargs.pop('ax')
+
+        if cax is not None:
+            if 'cax' in cbar_kwargs:
+                viscid.logger.warning("clobbering colorbar['cax']")
+            cbar_kwargs['cax'] = cax
+
+        if "cax" in cbar_kwargs or not cbar_kwargs.get('use_grid1', True):
+            cax, cbar_kwargs, grid1_kwargs = _make_grid1_cbar_axes(ax, cbar_kwargs,
+                                                                   make_cax=False)
+            cax = cbar_kwargs.pop('cax', None)
+        else:
+            cax, cbar_kwargs, grid1_kwargs = _make_grid1_cbar_axes(ax, cbar_kwargs)
+
+        if "ticks" not in cbar_kwargs:
             if vscale == "log":
-                colorbar["ticks"] = matplotlib.ticker.LogLocator()
+                cbar_kwargs["ticks"] = matplotlib.ticker.LogLocator()
             elif symmetric_vlims:
-                colorbar["ticks"] = matplotlib.ticker.MaxNLocator()
+                cbar_kwargs["ticks"] = matplotlib.ticker.MaxNLocator()
             else:
-                colorbar["ticks"] = matplotlib.ticker.LinearLocator()
+                cbar_kwargs["ticks"] = matplotlib.ticker.LinearLocator()
 
-        cbarfmt = colorbar.pop("format", rcParams.get('viscid.cbarfmt', None))
+        cbarfmt = cbar_kwargs.pop("format", rcParams.get('viscid.cbarfmt', None))
         if cbarfmt == "steve":
             cbarfmt = mpl_extra.steve_cbarfmt
         if cbarfmt:
-            colorbar["format"] = cbarfmt
+            cbar_kwargs["format"] = cbarfmt
 
-        # ok, this way to pass options to colorbar is bad!!!
-        # but it's kind of the cleanest way to affect the colorbar?
-        if masknan and all_masked:
-            cbar = None
-        else:
-            cbar = plt.colorbar(p, **colorbar)
-            if not nolabels and (cbarlabel or not title or
-                                 isinstance(title, string_types)):
-                if not cbarlabel:
-                    cbarlabel = patch0.pretty_name
-                cbar.set_label(cbarlabel)
+        cbar = plt.colorbar(p, cax=cax, **cbar_kwargs)
+
+        _cax_position = grid1_kwargs.get('position', None)
+        if cax and _cax_position == 'top':
+            cax.get_xaxis().set_ticks_position('top')
+            cax.get_xaxis().set_label_position('top')
+        # elif _cax_position == 'left':
+        #     # cax.get_yaxis() is not a thing?
+        #     cax.get_yaxis().set_ticks_position('left')
+        #     cax.get_yaxis().set_label_position('left')
+
+        # apply labels... or not
+        if not nolabels and (cbarlabel or not title or
+                             isinstance(title, string_types)):
+            if not cbarlabel:
+                cbarlabel = patch0.pretty_name
+            cbar.set_label(cbarlabel)
     else:
         cbar = None
 
@@ -727,7 +748,84 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         plot_earth(fld, axis=ax)
     if show:
         mplshow()
+
     return p, cbar
+
+def _make_grid1_cbar_axes(ax, cbar_kwargs, make_cax=True):
+    _use_grid1 = cbar_kwargs.pop('use_grid1', make_cax)
+    assert make_cax == _use_grid1
+
+    orig_cbar_kwargs = dict(cbar_kwargs)
+
+    position = cbar_kwargs.pop('position', None)
+    orientation = cbar_kwargs.pop('orientation', None)
+
+    # figure out consistant position / orientation, and warn if they are
+    # inconsistent
+    if position is None and orientation is None:
+        position = 'right'
+        orientation = 'vertical'
+    # sanity check orientation given position
+    if position in ('top', 'bottom'):
+        if orientation not in (None, 'horizontal'):
+            viscid.logger.warning("Colorbar position is '{0}', but "
+                                  "orientation '{1}' is not horizontal."
+                                  "".format(position, orientation))
+        orientation = 'horizontal'
+    if position in ('left', 'right'):
+        if orientation not in (None, 'vertical'):
+            viscid.logger.warning("Colorbar position is '{0}', but "
+                                  "orientation '{1}' is not vertical."
+                                  "".format(position, orientation))
+        orientation = 'vertical'
+    # sanity check position given orientation
+    if orientation == 'vertical':
+        if position not in ('left', 'right'):
+            if position is not None:
+                viscid.logger.warning("Colorbar orientation is horizontal, "
+                                      "but position '{0}' is neither left nor "
+                                      "right.".format(position))
+            position = 'right'
+    if orientation == 'horizontal':
+        if position not in ('top', 'bottom'):
+            if position is not None:
+                viscid.logger.warning("Colorbar orientation is horizontal, "
+                                      "but position '{0}' is neither left nor "
+                                      "right.".format(position))
+            position = 'bottom'
+
+    cbar_kwargs['orientation'] = orientation
+
+    grid1_kwargs = dict()
+    grid1_kwargs['orientation'] = orientation
+    grid1_kwargs['position'] = position
+    grid1_kwargs['aspect'] = cbar_kwargs.pop('aspect', 20)
+    default_pad = 0.05 if orientation == 'vertical' else 0.15
+    grid1_kwargs['pad'] = cbar_kwargs.pop('pad', default_pad)
+    grid1_kwargs['fraction'] = cbar_kwargs.pop('fraction', 0.10)
+    grid1_kwargs['shrink'] = cbar_kwargs.pop('shrink', 1.0)
+    cax = None
+
+    if make_cax:
+        try:
+            from viscid.plot import _mpl_grid1
+            cax = _mpl_grid1.make_grid1_cax(ax, **grid1_kwargs)
+        except ImportError:
+            viscid.logger.warning("Old matplotlib doesn't have "
+                                  "mpl_toolkits.axes_grid1; falling back to "
+                                  "awkward default colorbar axis.")
+    if cax is None:
+        # prepare to fallback to default mechanism, ie, let plt.colorbar
+        # take all the kwargs and make its own axis
+        cbar_kwargs = orig_cbar_kwargs
+        cbar_kwargs.pop('position')
+        cbar_kwargs['orientation'] = orientation
+        if position in ('top', 'left'):
+            viscid.logger.warning("Ignoring colorbar position '{0}'"
+                                  "".format(position))
+
+    ax.get_figure().sca(ax)
+    return cax, cbar_kwargs, grid1_kwargs
 
 def _mlt_labels(longitude):
     return "{0:g}".format(longitude * 24.0 / 360.0)
@@ -829,6 +927,9 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         show = plot_kwargs.pop('show', False)
         plot_kwargs['nolabels'] = True
         plot_kwargs['axis'] = 'none'
+        # hack to forceably add padding to colorbar so all labels are visible
+        plot_kwargs = _set_default_cbar_pad(plot_kwargs, pad=0.2)
+
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
         ax.set_theta_offset(-90 * np.pi / 180.0)
 
@@ -905,6 +1006,30 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             mplshow()
         return ret
 
+def _set_default_cbar_pad(kwargs, pad=0.2, inplace=True):
+    if not inplace:
+        kwargs = dict(kwargs)
+
+    cbar = kwargs.get('colorbar', True)
+    if isinstance(cbar, dict):
+        set_key = 'colorbar'
+        cbar_kwargs = cbar
+    elif 'cbar_kwargs' in kwargs:
+        set_key = 'cbar_kwargs'
+        cbar_kwargs = kwargs.get('cbar_kwargs')
+    elif 'colorbar_kwargs' in kwargs:
+        set_key = 'colorbar_kwargs'
+        cbar_kwargs = kwargs.get('colorbar_kwargs')
+    else:
+        set_key = 'cbar_kwargs'
+        cbar_kwargs = dict()
+
+    if 'pad' not in cbar_kwargs:
+        cbar_kwargs['pad'] = pad
+        kwargs[set_key] = cbar_kwargs
+
+    return kwargs
+
 def plot_iono(fld, *args, **kwargs):
     """Wrapper for easier annotated ionosphere plots
 
@@ -932,7 +1057,6 @@ def plot_iono(fld, *args, **kwargs):
     """
     kwargs['nolabels'] = True
     scale = kwargs.pop("scale", None)
-    colorbar = kwargs.get("colorbar", True)
     annotations = kwargs.pop("annotations", 'pot').strip().lower()
     units = kwargs.pop("units", '').strip()
     _fontsize = kwargs.pop("fontsize", 12)
@@ -945,12 +1069,7 @@ def plot_iono(fld, *args, **kwargs):
         fld *= scale
     lat = fld.get_crd('lat')
 
-    if colorbar:
-        if not isinstance(colorbar, dict):
-            colorbar = {}
-        if 'pad' not in colorbar:
-            colorbar['pad'] = 0.1
-        kwargs['colorbar'] = colorbar
+    kwargs = _set_default_cbar_pad(kwargs, pad=0.2)
 
     if units:
         units = " " + units
