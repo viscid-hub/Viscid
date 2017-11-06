@@ -56,7 +56,12 @@ symmetric      [bool]            Make the data scale symmetric around 0
 norescale      [bool]            Do not set limit of the data axis explicitly
 x              min, max          Set axis limits using :py:func:`pyplot.set_xlim`
 y              min, max          Set axis limits using :py:func:`pyplot.set_ylim`
-equalaxis      [bool]            Force 1:1 aspect ratio
+axis           str               Arguments for pyplot.axis(). In viscid, this
+                                 defaults to 'image' but can be anything accepted
+                                 by matplotlib.pyplot.axis() or 'none' for no
+                                 call to pyplot.axis(). See matplotlib docs
+                                 for more info. This option can be used to force
+                                 a 1:1 aspect ratio.
 scale          float             Scale data by some scalar value
 masknan        [bool or color]   Mask out NaN values in data with a given color
                                  (default: 'y' for yellow)

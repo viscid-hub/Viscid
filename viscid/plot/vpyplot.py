@@ -157,6 +157,28 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
                 plot_kwargs[opt[0]] = opt[1:]
 
 
+def _pop_axis_opts(plot_kwargs):
+    if 'equalaxis' in plot_kwargs:
+        viscid.logger.warning("equalaxis option deprecated, please specify "
+                              "this axis options explicitly (i.e., axis='equal', "
+                              "axis='image', axis='auto', etc.)")
+        if 'axis' in plot_kwargs:
+            viscid.logger.warning("Clobbering axis option with deprecated "
+                                  "equalaxis option :'(")
+        if plot_kwargs.pop('equalaxis'):
+            plot_kwargs['axis'] = 'equal'
+        else:
+            plot_kwargs['axis'] = 'none'
+    using_default_viscid_axis = 'axis' in plot_kwargs
+    _axis = plot_kwargs.pop("axis", 'image')
+    if _axis is not None:
+        _axis = _axis.strip().lower()
+        if _axis in ('none', ''):
+            _axis = None
+
+    # print('_axis =', _axis)
+    return _axis, using_default_viscid_axis, plot_kwargs
+
 def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     """
     Some plot options will want to call a function after the plot is
@@ -188,9 +210,10 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     if not axis:
         axis = plt.gca()
 
-    if "equalaxis" in plot_kwargs:
-        if plot_kwargs.pop('equalaxis'):
-            actions.append((axis.axis, 'equal'))
+    if 'axis' in plot_kwargs:
+        _axis = plot_kwargs.pop('axis')
+        if _axis is not None:
+            actions.append((axis.axis, _axis))
     if "x" in plot_kwargs:
         actions.append((axis.set_xlim, plot_kwargs.pop('x')))
     if "y" in plot_kwargs:
@@ -273,7 +296,7 @@ def _apply_actions(acts):
         act[0](*act_args)
 
 def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
-                       using_default_equalax):
+                       using_default_viscid_axis):
     new_ax_arrs = [None] * len(ax_arrs)
     datetime_fmt = [None] * len(ax_arrs)
 
@@ -289,13 +312,12 @@ def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
         else:
             new_ax_arrs[i] = XI
 
-    # with time axes, you probably don't want equalax, but only override
+    # with time axes, you probably don't want imageax, but only override
     # this if the user didn't specify with a plot_opt
-    try:
-        if using_default_equalax and any(datetime_fmt):
-            actions.pop(actions.index((ax.axis, 'equal')))
-    except ValueError:
-        pass
+    if using_default_viscid_axis and any(datetime_fmt):
+        for i in reversed(range(len(actions))):
+            if actions[i][0] == ax.axis:
+                actions.pop(i)
 
     # take x and y plot opts and convert them to datetimes
     for i, setter in enumerate([ax.set_xlim, ax.set_ylim]):
@@ -342,7 +364,7 @@ def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
 def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
                    masknan, latlon, flip_plot, patchec, patchlw, patchaa,
                    datefmt, timefmt, autofmt_xdate, all_masked, extra_args,
-                   actions, using_default_equalax, **kwargs):
+                   actions, using_default_viscid_axis, **kwargs):
     """Make a 2d plot of a single patch
 
     Returns:
@@ -394,7 +416,7 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         namex, namey = namey, namex
 
     ax_arrs, datetime_fmt = _prepare_time_axes(ax, [X, Y], datefmt, timefmt,
-                                               actions, using_default_equalax)
+                                               actions, using_default_viscid_axis)
     X, Y = ax_arrs
 
     # datetime_fmt = [False, False]
@@ -477,9 +499,11 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # parse plot_opts
     plot_opts_to_kwargs(plot_opts, plot_kwargs)
-    using_default_equalax = 'equalaxis' not in plot_kwargs
+
+    _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs)
+
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
-                                                   defaults={'equalaxis': True})
+                                                   defaults={'axis': _axis})
 
     # everywhere options
     scale = plot_kwargs.pop("scale", None)
@@ -633,7 +657,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
                                        latlon, flip_plot,
                                        patchec, patchlw, patchaa, datefmt, timefmt,
                                        autofmt_xdate, all_masked, extra_args,
-                                       actions, using_default_equalax, **plot_kwargs)
+                                       actions, using_default_viscid_axis,
+                                       **plot_kwargs)
 
     # apply option actions... this is for setting xlim / xscale / etc.
     _apply_actions(actions)
@@ -692,9 +717,9 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         if title:
             if not isinstance(title, string_types):
                 title = patch0.pretty_name
-            plt.title(title)
-        plt.xlabel(namex)
-        plt.ylabel(namey)
+            ax.set_title(title)
+        ax.set_xlabel(namex)
+        ax.set_ylabel(namey)
 
     _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
                  majorloc=majorloc, minorloc=minorloc)
@@ -804,7 +829,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                            make_periodic=make_periodic)
         show = plot_kwargs.pop('show', False)
         plot_kwargs['nolabels'] = True
-        plot_kwargs['equalaxis'] = False
+        plot_kwargs['axis'] = 'none'
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
         ax.set_theta_offset(-90 * np.pi / 180.0)
 
@@ -856,7 +881,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         show = plot_kwargs.pop('show', False)
         plot_kwargs['latlon'] = True
         plot_kwargs['nolabels'] = True
-        plot_kwargs['equalaxis'] = False
+        plot_kwargs['axis'] = 'none'
         ret = plot2d_field(fld, ax=ax, action_ax=m, **plot_kwargs)
         if axgridec:
             if label_lat:
@@ -989,9 +1014,9 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     # parse plot_opts
     plot_opts_to_kwargs(plot_opts, plot_kwargs)
-    using_default_equalax = 'equalaxis' not in plot_kwargs
+    _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs)
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
-                                                   defaults={'equalaxis': False})
+                                                   defaults={'axis': _axis})
 
     # everywhere options
     scale = plot_kwargs.pop("scale", None)
@@ -1027,7 +1052,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     dat = np.concatenate([blk.data for blk in fld.patches])
 
     ax_arrs, datetime_fmt = _prepare_time_axes(ax, [x, dat], datefmt, timefmt,
-                                               actions, using_default_equalax)
+                                               actions, using_default_viscid_axis)
     x, dat = ax_arrs
 
     if mod:
