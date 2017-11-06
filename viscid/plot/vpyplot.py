@@ -39,7 +39,6 @@ from viscid.plot.mpl_direct_label import apply_labels
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
-has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 vseaborn.activate_from_viscid()
 
 
@@ -220,13 +219,13 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         actions.append((axis.set_ylim, plot_kwargs.pop('y')))
     if "own" in plot_kwargs:
         opt = plot_kwargs.pop('own')
-        logger.warn("own axis doesn't seem to work yet...")
+        logger.warning("own axis doesn't seem to work yet...")
     if "ownx" in plot_kwargs:
         opt = plot_kwargs.pop('ownx')
-        logger.warn("own axis doesn't seem to work yet...")
+        logger.warning("own axis doesn't seem to work yet...")
     if "owny" in plot_kwargs:
         opt = plot_kwargs.pop('owny')
-        logger.warn("own axis doesn't seem to work yet...")
+        logger.warning("own axis doesn't seem to work yet...")
 
     norm_dict = {'crdscale': 'lin',
                  'vscale': 'lin',
@@ -508,8 +507,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     # everywhere options
     scale = plot_kwargs.pop("scale", None)
     masknan = plot_kwargs.pop("masknan", True)
-    flip_plot = plot_kwargs.pop("flip_plot", False)
-    flip_plot = plot_kwargs.pop("flipplot", flip_plot)
+    flip_plot = plot_kwargs.pop("flipplot", False)
+    flip_plot = plot_kwargs.pop("flip_plot", flip_plot)
     nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
@@ -519,20 +518,20 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
     datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
     timefmt = plot_kwargs.pop("timefmt", "%H:%M:%S")
-    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
-    autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
+    autofmt_xdate = plot_kwargs.pop("autofmtxdate", True)
+    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
 
     # 2d plot options
     style = plot_kwargs.pop("style", "pcolormesh")
     levels = plot_kwargs.pop("levels", 10)
-    show_grid = plot_kwargs.pop("show_grid", False)
-    show_grid = plot_kwargs.pop("g", show_grid)
+    show_grid = plot_kwargs.pop("g", False)
+    show_grid = plot_kwargs.pop("show_grid", show_grid)
     gridec = plot_kwargs.pop("gridec", None)
     gridlw = plot_kwargs.pop("gridlw", 0.25)
     gridaa = plot_kwargs.pop("gridaa", True)
-    show_patches = plot_kwargs.pop("show_patches", False)
-    show_patches = plot_kwargs.pop("p", show_patches)
+    show_patches = plot_kwargs.pop("p", False)
+    show_patches = plot_kwargs.pop("show_patches", show_patches)
     patchec = plot_kwargs.pop("patchec", None)
     patchlw = plot_kwargs.pop("patchlw", 0.25)
     patchaa = plot_kwargs.pop("patchaa", True)
@@ -585,8 +584,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         # vmin / vmax will only be nan if all values are nan
         if np.isnan(vmin) or np.isnan(vmax):
-            logger.warn("All-Nan encountered in Field, {0}"
-                        "".format(patch0.name))
+            logger.warning("All-Nan encountered in Field, {0}"
+                           "".format(patch0.name))
             vmin, vmax = 1e38, 1e38
             norm_dict['symmetric'] = False
 
