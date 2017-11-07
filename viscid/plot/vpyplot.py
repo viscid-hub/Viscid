@@ -115,8 +115,9 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     Returns:
         None, the plot_opts are stuffed into plot_kwargs
     """
+    plot_kwargs = dict(plot_kwargs)
     if not plot_opts:
-        return
+        return plot_kwargs
 
     plot_opts = plot_opts.strip()
     if plot_opts[0] == '{' and plot_opts[-1] == '}':
@@ -154,6 +155,7 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
                 except TypeError:
                     pass
                 plot_kwargs[opt[0]] = opt[1:]
+    return plot_kwargs
 
 
 def _pop_axis_opts(plot_kwargs):
@@ -511,7 +513,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax = plt.gca()
 
     # parse plot_opts
-    plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
     _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs)
 
@@ -870,7 +872,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         raise TypeError("plot2d_mapfield doesn't do multi-patch fields yet")
 
     # parse plot_opts
-    plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
     axgridec = plot_kwargs.pop("axgridec", 'grey')
     axgridls = plot_kwargs.pop("axgridls", ':')
@@ -1145,7 +1147,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax = plt.gca()
 
     # parse plot_opts
-    plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
     _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs)
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'axis': _axis})
