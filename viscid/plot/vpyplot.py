@@ -835,7 +835,7 @@ def _make_grid1_cbar_axes(ax, cbar_kwargs, make_cax=True):
         # prepare to fallback to default mechanism, ie, let plt.colorbar
         # take all the kwargs and make its own axis
         cbar_kwargs = orig_cbar_kwargs
-        cbar_kwargs.pop('position')
+        cbar_kwargs.pop('position', None)
         cbar_kwargs['orientation'] = orientation
         if position in ('top', 'left'):
             viscid.logger.warning("Ignoring colorbar position '{0}'"
