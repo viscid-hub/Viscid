@@ -311,51 +311,60 @@ else:
     # the folloing gfortran hacks are to work around a treacherous bug when
     # using anaconda + f2py (numpy) + a local gfortran on MacOS / Linux...
     # in short, anaconda ships its own libgfortran to make numpy / scipy
-    # work, but this will conflict with default system gfortran compilers...
+    # work, but this will conflict with some gfortran compilers...
     # AND numpy assumes that `gfortran -print-libgcc-file-name` will give the
     # path to libgfortran (it practice it doesn't on Debian / MacPorts)... SO
-    # we overrid the lib dir discovery with
+    # we let numpy discover the path to libgfortran using
     # `gfortran -print-file-name=libgfortran.so` (or dylib) because that will
     # give us the correct link path, and fortran code that we compile with f2py
     # will be correctly linked to the lib supplied by OUR compiler
-    if os.uname()[0] in ('Linux', 'Darwin'):
-        def _get_libgfortran_dir(compiler_cmd):
-            if os.uname()[0] == 'Linux':
-                libgfname = 'libgfortran.so'
-            elif os.uname()[0] == 'Darwin':
-                libgfname = 'libgfortran.dylib'
-            else:
-                return None
-            status, output = exec_command(compiler_cmd +
-                                          ['-print-file-name={0}'.format(libgfname)],
-                                          use_tee=0)
-            if not status:
-                return os.path.dirname(output)
-            return None
-
+    if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
         from numpy.distutils.fcompiler import gnu as _gnu
+        from numpy.distutils import fcompiler as _fcompiler
+
+        def _get_libgfortran_dir(compiler_args):
+            if sys.platform[:5] == 'linux':
+                libgfortran_name = 'libgfortran.so'
+            elif sys.platform == 'darwin':
+                libgfortran_name = 'libgfortran.dylib'
+            else:
+                libgfortran_name = None
+
+            libgfortran_dir = None
+            if libgfortran_name:
+                find_lib_arg = ['-print-file-name={0}'.format(libgfortran_name)]
+                status, output = exec_command(compiler_args + find_lib_arg,
+                                              use_tee=0)
+                if not status:
+                    libgfortran_dir = os.path.dirname(output)
+            return libgfortran_dir
+
         class GnuFCompilerHack(_gnu.GnuFCompiler):
             def get_library_dirs(self):
                 try:
                     opt = super(GnuFCompilerHack, self).get_library_dirs()
                 except TypeError:
+                    # old distutils use old-style classes
                     opt = _gnu.GnuFCompiler.get_library_dirs(self)
-                libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
-                if libgfortran_dir:
-                    opt.append(libgfortran_dir)
+                if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
+                    libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
+                    if libgfortran_dir:
+                        opt.append(libgfortran_dir)
                 return opt
+
         class Gnu95FCompilerHack(_gnu.Gnu95FCompiler):
             def get_library_dirs(self):
                 try:
                     opt = super(Gnu95FCompilerHack, self).get_library_dirs()
                 except TypeError:
+                    # old distutils use old-style classes
                     opt = _gnu.Gnu95FCompiler.get_library_dirs(self)
-                libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
-                if libgfortran_dir:
-                    opt.append(libgfortran_dir)
-                return opt
+                if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
+                    libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
+                    if libgfortran_dir:
+                        opt.append(libgfortran_dir)
+                    return opt
 
-        from numpy.distutils import fcompiler as _fcompiler
         _fcompiler.load_all_fcompiler_classes()
         _fcompiler.fcompiler_class['gnu'] = ('gnu', GnuFCompilerHack,
                                              'GNU Fortran 77 compile Hack')
