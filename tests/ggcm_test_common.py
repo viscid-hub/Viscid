@@ -119,7 +119,8 @@ def run_test_iof(f, main__file__, show=False):
                      gridec='gray',
                      label_lat=True,
                      label_mlt=True,
-                     colorbar=dict(pad=0.1)  # pad the colorbar away from the plot
+                     colorbar=True,
+                     cbar_kwargs=dict(pad=0.15)  # pad the colorbar away from the plot
                     )
 
     ax1 = vlt.subplot(121, projection='polar')
