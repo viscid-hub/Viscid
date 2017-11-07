@@ -212,7 +212,17 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     if 'axis' in plot_kwargs:
         _axis = plot_kwargs.pop('axis')
         if _axis is not None:
-            actions.append((axis.axis, _axis))
+            if _axis == 'image':
+                # this is a hack to allow image axes even when we're sharing
+                # the x/y axes... the matplotlib docs warn of unintended
+                # consequences, but I'm not sure what that means... so maybe
+                # a warning is in order?
+                actions.append((axis.autoscale_view, [], dict(tight=True)))
+                actions.append((axis.set_autoscale_on, False))
+                actions.append((axis.set_aspect, 'equal',
+                                dict(adjustable='box-forced', anchor='C')))
+            else:
+                actions.append((axis.axis, _axis))
     if "x" in plot_kwargs:
         actions.append((axis.set_xlim, plot_kwargs.pop('x')))
     if "y" in plot_kwargs:
@@ -292,7 +302,11 @@ def _apply_actions(acts):
         act_args = act[1]
         if not isinstance(act_args, (list, tuple)):
             act_args = [act_args]
-        act[0](*act_args)
+        try:
+            act_kwargs = act[2]
+        except IndexError:
+            act_kwargs = dict()
+        act[0](*act_args, **act_kwargs)
 
 def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
                        using_default_viscid_axis):
