@@ -158,7 +158,7 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     return plot_kwargs
 
 
-def _pop_axis_opts(plot_kwargs):
+def _pop_axis_opts(plot_kwargs, default='none'):
     if 'equalaxis' in plot_kwargs:
         viscid.logger.warning("equalaxis option deprecated, please specify "
                               "this axis options explicitly (i.e., axis='equal', "
@@ -170,8 +170,8 @@ def _pop_axis_opts(plot_kwargs):
             plot_kwargs['axis'] = 'equal'
         else:
             plot_kwargs['axis'] = 'none'
-    using_default_viscid_axis = 'axis' in plot_kwargs
-    _axis = plot_kwargs.pop("axis", 'image')
+    using_default_viscid_axis = 'axis' not in plot_kwargs
+    _axis = plot_kwargs.pop("axis", default)
     if _axis is not None:
         _axis = _axis.strip().lower()
         if _axis in ('none', ''):
@@ -331,7 +331,7 @@ def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
     # this if the user didn't specify with a plot_opt
     if using_default_viscid_axis and any(datetime_fmt):
         for i in reversed(range(len(actions))):
-            if actions[i][0] == ax.axis:
+            if actions[i][0] in (ax.axis, ax.set_aspect):
                 actions.pop(i)
 
     # take x and y plot opts and convert them to datetimes
@@ -515,7 +515,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     # parse plot_opts
     plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
-    _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs)
+    _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs,
+                                                                   default='image')
 
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'axis': _axis})
