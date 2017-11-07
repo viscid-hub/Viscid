@@ -47,12 +47,11 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     nrows = 2
     ncols = len(planes)
     ax = plt.subplot2grid((nrows, ncols), (0, 0))
-    ax.axis("equal")
 
     for i, p in enumerate(planes):
-        plt.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (0, i))
         vlt.plot(result_numexpr, p, show=False)
-        plt.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
+        plt.subplot2grid((nrows, ncols), (1, i))
         vlt.plot(result_diff, p, show=False)
 
     plt.suptitle(title)
