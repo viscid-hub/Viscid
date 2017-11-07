@@ -34,6 +34,11 @@ All options can be passed as strings with one of two formats. First, the string 
 
   plot_opts = "{lin: [-1.0, 1.0], gridec: k}"
 
+Known Issues
+------------
+
+Since Viscid switched to using image axes by default, it has exposed some undesired behavior in matplotlib. Namely, if you call tight_layout, tighten, or auto_adjust_subplots more than once for a figure, then some of the subplots dissapear. The solution is to only call tight_layout once per figure.
+
 Universal
 ---------
 

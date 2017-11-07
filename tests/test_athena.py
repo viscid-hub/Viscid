@@ -24,6 +24,7 @@ def _main():
     ####### test binary files
     f_bin = viscid.load_file(os.path.join(sample_dir, 'ath_sample.*.bin'))
 
+    plt.figure()
     for i, grid in enumerate(f_bin.iter_times(":")):
         plt.subplot2grid((2, 2), (0, i))
         vlt.plot(grid['bx'])
@@ -35,11 +36,12 @@ def _main():
     plt.savefig(next_plot_fname(__file__))
     if args.show:
         vlt.show()
-    plt.clf()
+    plt.close()
 
     ####### test ascii files
     f_tab = viscid.load_file(os.path.join(sample_dir, 'ath_sample.*.tab'))
 
+    plt.figure()
     for i, grid in enumerate(f_tab.iter_times(":")):
         plt.subplot2grid((2, 2), (0, i))
         vlt.plot(grid['bx'])
@@ -51,7 +53,7 @@ def _main():
     plt.savefig(next_plot_fname(__file__))
     if args.show:
         vlt.show()
-    plt.clf()
+    plt.close()
 
     return 0
 

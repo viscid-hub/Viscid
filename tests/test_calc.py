@@ -32,8 +32,9 @@ def run_mag_test(fld, title="", show=False):
     planes = ["z=0", "y=0"]
     nrows = 4
     ncols = len(planes)
+
+    fig = plt.figure()
     ax = plt.subplot2grid((nrows, ncols), (0, 0))
-    ax.axis("equal")
 
     for ind, p in enumerate(planes):
         plt.subplot2grid((nrows, ncols), (0, ind), sharex=ax, sharey=ax)
@@ -46,7 +47,7 @@ def run_mag_test(fld, title="", show=False):
         vlt.plot(mag_ne, p, show=False)
 
     plt.suptitle(title)
-    vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))
+    vlt.auto_adjust_subplots(subplot_params=dict(top=0.9, right=0.9))
     plt.gcf().set_size_inches(6, 7)
 
     plt.savefig(next_plot_fname(__file__))
