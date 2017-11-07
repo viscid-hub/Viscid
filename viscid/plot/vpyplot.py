@@ -955,10 +955,6 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 title = new_fld.pretty_name
             plt.title(title)
         if axgridec:
-            ax.grid(True, color=axgridec, linestyle=axgridls,
-                    linewidth=axgridlw)
-            ax.set_axisbelow(False)
-
             mlt_grid_pos = (0, 45, 90, 135, 180, 225, 270, 315)
             mlt_labels = (24, 3, 6, 9, 12, 15, 18, 21)
             if not label_mlt:
@@ -982,6 +978,9 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 lat_labels = []
             ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
             ax.set_rmax(np.deg2rad(absboundinglat))
+            ax.grid(True, color=axgridec, linestyle=axgridls,
+                    linewidth=axgridlw)
+            ax.set_axisbelow(False)
         else:
             ax.grid(False)
             ax.set_xticklabels([])
