@@ -152,25 +152,10 @@ Known Workarounds
 Ubuntu
 ~~~~~~
 
-If you see an error that contains ``GFORTRAN_1.4 not found``, you may need to preempt libgfortran with the system version. The solution is an environment variable that looks something like::
-
-    export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
-
-If fortran extensions give runtime errors that make no sense, then anaconda probably installed a libgfortran that conflicts with your compiler. One example of this is ``Internal Error: get_unit(): Bad internal unit KIND``. You can try to fix this in one of two ways (both are hacks that probably break various things on your machine)::
-
-    # this has to be done in each conda environment, and again if a package
-    # install / update re-installs libgfortran-ng... super annoying,
-    conda remove --force libgfortran-ng
-
-    # OR, if you have sudo, you can fix this system wide
-    cd /usr/lib/x86_64-linux-gnu
-    sudo ln -s libgfortran.so.3.0.0 libgfortran.so
-    export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so
+All Linux workarounds are currently incorporated in ``setup.py``.
 
 OS X
 ~~~~
-
-If you have trouble using compiled fortran extensions, like the bad internal unit that happens in Linux, the cause is similar to other *nix systems. The fix is to install the gcc6 package from macports and recompile the extensions (make clean && make). For whatever reason, this version of gcc does not interfere with the libgfortran provided by anaconda on which scipy is built.
 
 If you get an abort trap that says ``PyThreadState_Get: no current thread`` when trying to use mayavi, then this is probably yet another anaconda packaging issue. The solution is to roll back to a different sub-release of python. running this did the trick for me: ``conda install python=3.5.3 pyqt=4``.
 
