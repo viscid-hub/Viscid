@@ -73,7 +73,7 @@ class _UnexpectedProjection(TypeError):
 
 
 def make_grid1_cax(ax, position='right', orientation='horizontal', aspect=20.0,
-                   fraction=0.1, pad=0.05, shrink=1.0):
+                   fraction=0.05, pad=0.05, shrink=1.0):
     # validate position && orientation
     if orientation == 'vertical':
         if position not in ('left', 'right'):

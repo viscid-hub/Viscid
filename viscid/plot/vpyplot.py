@@ -819,7 +819,7 @@ def _make_grid1_cbar_axes(ax, cbar_kwargs, make_cax=True):
     grid1_kwargs['aspect'] = cbar_kwargs.pop('aspect', 20)
     default_pad = 0.05 if orientation == 'vertical' else 0.15
     grid1_kwargs['pad'] = cbar_kwargs.pop('pad', default_pad)
-    grid1_kwargs['fraction'] = cbar_kwargs.pop('fraction', 0.10)
+    grid1_kwargs['fraction'] = cbar_kwargs.pop('fraction', 0.05)
     grid1_kwargs['shrink'] = cbar_kwargs.pop('shrink', 1.0)
     cax = None
 
