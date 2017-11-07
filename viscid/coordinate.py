@@ -1193,8 +1193,8 @@ class StructuredCrds(Coordinates):
         shape = [len(c) for c in crds]
         arr = np.empty([len(shape)] + [np.prod(shape)])
         for i, c in enumerate(crds):
-            arr[i, :] = np.repeat(np.tile(c, np.prod(shape[:i])),
-                                  np.prod(shape[i + 1:]))
+            arr[i, :] = np.repeat(np.tile(c, int(np.prod(shape[:i]))),
+                                  int(np.prod(shape[i + 1:])))
         return arr
 
     def as_mesh(self, center="none"):

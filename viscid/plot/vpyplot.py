@@ -1758,7 +1758,8 @@ def _get_projected_axis(ax=None, projection='polar',
             _new_axis = True
         ax = plt.gca()
     if not hasattr(ax, check_attr):
-        ax = plt.subplot(*ax.get_geometry(), projection=projection)
+        ax = plt.subplot(*ax.get_geometry(), projection=projection,
+                         label=str(ax.get_geometry()) + projection)
         if not _new_axis:
             viscid.logger.warn("Clobbering axis for subplot %s; please give a "
                                "%s axis if you indend to use it later.",
