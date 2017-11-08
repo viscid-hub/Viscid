@@ -352,7 +352,7 @@ def _apply_time_axes(fig, ax, datetime_fmt, autofmt_xdate):
             datetime_formatter = mdates.DateFormatter(fmt)
             axis_i.set_major_formatter(datetime_formatter)
             if axis_i is ax.xaxis and autofmt_xdate:
-                plt.gcf().autofmt_xdate()
+                fig.autofmt_xdate()
 
 def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
                  which_axes="xy"):
@@ -461,7 +461,7 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
             datetime_formatter = mdates.DateFormatter(_fmt)
             axis_i.set_major_formatter(datetime_formatter)
             if axis_i is ax.xaxis and autofmt_xdate:
-                plt.gcf().autofmt_xdate()
+                ax.get_figure().autofmt_xdate()
 
     try:
         if masknan:
@@ -1197,7 +1197,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         dat = np.ma.masked_where(np.isnan(dat), dat)
     p = ax.plot(x, dat, **plot_kwargs)
 
-    _apply_time_axes(plt.gcf(), ax, datetime_fmt, autofmt_xdate)
+    _apply_time_axes(ax.get_figure(), ax, datetime_fmt, autofmt_xdate)
     _apply_actions(actions)
 
     ###############################
