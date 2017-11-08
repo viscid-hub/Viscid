@@ -71,9 +71,9 @@ def evaluate(grid, result_name, eqn, try_numexpr=True, slc=None):
         except RuntimeError:
             pass
         except TypeError:
-            logger.warn("Numexpr couldn't understand a math function you "
-                        "tried to use in '{0}', falling back to numpy"
-                        "".format(eqn))
+            logger.warning("Numexpr couldn't understand a math function you "
+                           "tried to use in '{0}', falling back to numpy"
+                           "".format(eqn))
     return _evaluate_numpy(grid, result_name, eqn, slc=slc)
 
 def _evaluate_numexpr(grid, result_name, eqn, slc=None):
@@ -124,7 +124,7 @@ def _evaluate_numexpr(grid, result_name, eqn, slc=None):
         ctx = dict(name=result_name, pretty_name=result_name)
         return flds[0].wrap(arr, context=ctx)
     else:
-        logger.warn("Strange input to numexpr evaluator: %s", eqn)
+        logger.warning("Strange input to numexpr evaluator: %s", eqn)
         return field.wrap_field(arr, grid.crds, name=result_name)
 
 def _evaluate_numpy(grid, result_name, eqn, slc=None):

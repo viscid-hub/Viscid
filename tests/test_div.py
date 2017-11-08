@@ -39,7 +39,7 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
 
     result_diff = viscid.diff(result_numexpr, exact)['x=1:-1, y=1:-1, z=1:-1']
     if not ignore_inexact and not (result_diff.data < 5e-5).all():
-        logger.warn("numexpr result is far from the exact result")
+        logger.warning("numexpr result is far from the exact result")
     logger.info("min/max(abs(numexpr - exact)): %g / %g",
                 np.min(result_diff.data), np.max(result_diff.data))
 

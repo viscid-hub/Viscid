@@ -60,10 +60,10 @@ def fit_paraboloid(fld, p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0), tolerance=0.0):
     if tolerance:
         for n in parab.dtype.names:
             if n != "ax" and  np.abs(parab[1][n] / parab[0][n]) > tolerance:
-                viscid.logger.warn("paraboloid parameter {0} didn't converge to "
-                                   "within {1:g}%\n{0} = {2:g} +/- {3:g}"
-                                   "".format(n, 100 * tolerance, parab[0][n],
-                                             parab[1][n]))
+                viscid.logger.warning("paraboloid parameter {0} didn't converge to "
+                                      "within {1:g}%\n{0} = {2:g} +/- {3:g}"
+                                      "".format(n, 100 * tolerance, parab[0][n],
+                                                parab[1][n]))
     return parab
 
 def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,

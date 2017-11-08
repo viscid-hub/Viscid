@@ -30,8 +30,8 @@ DEFAULT_STRENGTH = 1.0 / 3.0574e-5
 def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
                         cap_ntheta=121, cap_nphi=121, plot=False):
     """guess dipole moment from a B field"""
-    viscid.warn("guess_dipole_moment doesn't seem to do better than 1.6 "
-                "degrees, you may want to use cotr instead.")
+    viscid.logger.warning("guess_dipole_moment doesn't seem to do better than "
+                          "1.6 degrees, you may want to use cotr instead.")
     cap = seed.SphericalCap(r=r, angle=cap_angle, ntheta=cap_ntheta,
                             nphi=cap_nphi)
     b_cap = interp_trilin(b, cap)

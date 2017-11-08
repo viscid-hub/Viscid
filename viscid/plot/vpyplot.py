@@ -619,13 +619,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             if norm_dict['symmetric']:
                 raise ValueError("Can't use symmetric color bar with logscale")
             if vmax <= 0.0:
-                logger.warn("Using log scale on a field with no "
-                            "positive values")
+                logger.warning("Using log scale on a field with no "
+                               "positive values")
                 plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = 1e-20, 1e-20
             elif vmin <= 0.0:
-                logger.warn("Using log scale on a field with values "
-                            "<= 0. Only plotting 4 decades.")
+                logger.warning("Using log scale on a field with values "
+                               "<= 0. Only plotting 4 decades.")
                 plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
@@ -898,10 +898,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         elif np.all(lat <= 0.0):
             hemisphere = "south"
         else:
-            viscid.logger.warn("hemisphere of field {0} is ambiguous, the "
-                               "field contains both. Please specify either "
-                               "north or south (defaulting to North)."
-                               "".format(fld.name))
+            viscid.logger.warning("hemisphere of field {0} is ambiguous, the "
+                                  "field contains both. Please specify either "
+                                  "north or south (defaulting to North)."
+                                  "".format(fld.name))
             hemisphere = 'north'
     # now that we know hemisphere is useful, setup the latlabel array
     if hemisphere in ("north", 'n'):
@@ -1323,8 +1323,8 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
         colors = None
     elif colors is not None:
         if seg_colors is not None:
-            viscid.logger.warn("plot2d_lines - overriding seg_colors with "
-                               "explicit colors kwarg")
+            viscid.logger.warning("plot2d_lines - overriding seg_colors with "
+                                  "explicit colors kwarg")
         seg_colors = colors
 
     line_collection = LineCollection(segments[:, :, [xind, yind]],
@@ -1411,8 +1411,8 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
 
     if colors is not None:
         if seg_colors is not None:
-            viscid.logger.warn("plot3d_lines - overriding seg_colors with "
-                               "explicit colors kwarg")
+            viscid.logger.warning("plot3d_lines - overriding seg_colors with "
+                                  "explicit colors kwarg")
         seg_colors = colors
 
     line_collection = Line3DCollection(segments[:, :, [0, 1, 2]],
@@ -1536,7 +1536,7 @@ def streamplot(fld, ax=None, **kwargs):
     dxl = xl[1:] - xl[:-1]
     dxm = xm[1:] - xm[:-1]
     if not np.allclose(dxl[0], dxl) or not np.allclose(dxm[0], dxm):
-        # viscid.logger.warn("Matplotlib's streamplot is for uniform grids only")
+        # viscid.logger.warning("Matplotlib's streamplot is for uniform grids only")
         vol = viscid.Volume(fld.xl, fld.xh, fld.sshape)
         vl = viscid.interp_trilin(vl, vol, wrap=True)
         vm = viscid.interp_trilin(vm, vol, wrap=True)
@@ -1603,7 +1603,7 @@ def tighten(**kwargs):
     try:
         plt.tight_layout(**kwargs)
     except AttributeError:
-        logger.warn("No matplotlib tight layout support")
+        logger.warning("No matplotlib tight layout support")
 
 def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
     """Wrapper to adjust subplots w/ tight_layout remembering axes lims
@@ -1761,9 +1761,9 @@ def _get_projected_axis(ax=None, projection='polar',
         ax = plt.subplot(*ax.get_geometry(), projection=projection,
                          label=str(ax.get_geometry()) + projection)
         if not _new_axis:
-            viscid.logger.warn("Clobbering axis for subplot %s; please give a "
-                               "%s axis if you indend to use it later.",
-                               ax.get_geometry(), projection)
+            viscid.logger.warning("Clobbering axis for subplot %s; please give a "
+                                  "%s axis if you indend to use it later.",
+                                  ax.get_geometry(), projection)
     return ax
 
 def _get_polar_axis(ax=None):

@@ -1342,7 +1342,7 @@ class UniformCrds(StructuredCrds):
             s = ("DEPRECATION...\n"
                  "Full arrays for uniform crds shouldn't be used due to \n"
                  "finite precision errors")
-            viscid.logger.warn(s)
+            viscid.logger.warning(s)
             _nc_linspace_args = []  # pylint: disable=unreachable
             for _, arr in init_clist:
                 if viscid.is_time_like(arr, conservative=True):

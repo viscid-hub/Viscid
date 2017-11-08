@@ -310,7 +310,7 @@ def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
     if "zyx_native" not in kwargs:
         kwargs["zyx_native"] = False
     else:
-        logger.warn("did you really want to do another transpose?")
+        logger.warning("did you really want to do another transpose?")
 
     vfield = VectorField(name, _crds, fldlist, center=center, time=time,
                          meta=fldlist[0].meta, parents=[fldlist[0]],
@@ -526,8 +526,8 @@ class Field(tree.Leaf):
 
         if "force_layout" not in self.deep_meta:
             if "force_layout" in self.meta:
-                logger.warn("deprecated force_layout syntax: kwarg should "
-                            "be given as _force_layout")
+                logger.warning("deprecated force_layout syntax: kwarg should "
+                               "be given as _force_layout")
                 self.deep_meta["force_layout"] = self.meta["force_layout"]
             else:
                 self.deep_meta["force_layout"] = LAYOUT_DEFAULT
@@ -673,8 +673,8 @@ class Field(tree.Leaf):
         elif self.iscentered("cell"):
             return list(self._src_crds.shape_cc)
         else:
-            # logger.warn("edge/face vectors not implemented, assuming "
-            #             "cell shape")
+            # logger.warning("edge/face vectors not implemented, assuming "
+            #                "cell shape")
             return list(self._src_crds.shape_cc)
 
     @property
@@ -862,8 +862,8 @@ class Field(tree.Leaf):
 
         # if layout is found to be other, i cant do anything with that
         elif src_data_layout == LAYOUT_OTHER:
-            logger.warn("Cannot auto-detect layout; not translating; "
-                        "performance may suffer")
+            logger.warning("Cannot auto-detect layout; not translating; "
+                           "performance may suffer")
             return self._dat_to_ndarray(self._xyz_src_data)
 
         # ok, we demand FLAT arrays, make it so
@@ -1672,9 +1672,9 @@ class Field(tree.Leaf):
             return f
 
         elif not self.nr_comps:
-            viscid.logger.warn("Converting ECFC scalar to cell center has no "
-                               "effect on data. Only coordinates have changed. "
-                               "The result will appear staggered strangely.")
+            viscid.logger.warning("Converting ECFC scalar to cell center has no "
+                                  "effect on data. Only coordinates have changed. "
+                                  "The result will appear staggered strangely.")
             return self.wrap_field(self.data, name=self.name, center='cell')
 
         elif self.iscentered('face'):

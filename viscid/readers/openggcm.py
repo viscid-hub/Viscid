@@ -265,10 +265,10 @@ class GGCMGrid(grid.Grid):
                 else:
                     crd_system = "other"
             except KeyError as e:
-                logger.warn("Could not determine coordiname system; "
-                            "either the logfile is mangled, or "
-                            "the libmrc options I'm using in infer "
-                            "crd system have changed (%s)", e.args[0])
+                logger.warning("Could not determine coordiname system; "
+                               "either the logfile is mangled, or "
+                               "the libmrc options I'm using in infer "
+                               "crd system have changed (%s)", e.args[0])
 
         if crd_system is None:
             crd_system = "unknown"
@@ -282,14 +282,14 @@ class GGCMGrid(grid.Grid):
         request = str(self.mhd_to_gse_on_read).strip().lower()
 
         if request == 'true':
-            viscid.logger.warn("'mhd_to_gse_on_read = true' is deprecated due "
-                               "to lack of clarity. Please use 'auto', or if "
-                               "you really want to always flip the axes, use "
-                               "'force'. Only use 'force' if you are certain, "
-                               "since even non-magnetosphere OpenGGCM grids "
-                               "will be flipped, and you will be confused "
-                               "some day when you open an MHD-in-a-box run, "
-                               "and you have forgetten about this message.")
+            viscid.logger.warning("'mhd_to_gse_on_read = true' is deprecated due "
+                                  "to lack of clarity. Please use 'auto', or if "
+                                  "you really want to always flip the axes, use "
+                                  "'force'. Only use 'force' if you are certain, "
+                                  "since even non-magnetosphere OpenGGCM grids "
+                                  "will be flipped, and you will be confused "
+                                  "some day when you open an MHD-in-a-box run, "
+                                  "and you have forgetten about this message.")
             ret = True
         elif request == 'force':
             ret = True
@@ -316,13 +316,13 @@ class GGCMGrid(grid.Grid):
                                  "conversion, reading the logfile MUST be "
                                  "turned on. ({0})".format(default_action))
                 elif log_fname is None:
-                    logger.warn("Tried to determine coordinate system using "
-                                "logfile parameters, but no logfile found. "
-                                "Copy over the log file to use auto mhd->gse "
-                                "conversion. ({0})".format(default_action))
+                    logger.warning("Tried to determine coordinate system using "
+                                   "logfile parameters, but no logfile found. "
+                                   "Copy over the log file to use auto mhd->gse "
+                                   "conversion. ({0})".format(default_action))
                 else:
-                    logger.warn("Could not determine crd_system used for this "
-                                "grid on disk ({0})".format(default_action))
+                    logger.warning("Could not determine crd_system used for this "
+                                   "grid on disk ({0})".format(default_action))
                 # crd_system is either 'other' or 'unknown'
                 ret = default
         else:
@@ -444,8 +444,8 @@ class GGCMGrid(grid.Grid):
             owner = self.find_info_owner('ggcm_mhd_bbnorm')
             return owner.get_info('ggcm_mhd_bbnorm')
         except KeyError:
-            viscid.logger.warn("Could not find bbnorm, using {0:g}. Maybe "
-                               "your logfile is mangled.".format(DEFAULT_BBNORM))
+            viscid.logger.warning("Could not find bbnorm, using {0:g}. Maybe "
+                                  "your logfile is mangled.".format(DEFAULT_BBNORM))
             return DEFAULT_BBNORM
 
     def _get_b(self):
@@ -652,9 +652,9 @@ class GGCMFile(object):  # pylint: disable=abstract-method
                 # print("**", log_f)
                 self.set_info("_viscid_log_fname", None)
                 if not GGCMFile._already_warned_about_logfile:
-                    logger.warn("You wanted to read parameters from the "
-                                "logfile, but I couldn't find one. Maybe "
-                                "you need to copy it from somewhere?")
+                    logger.warning("You wanted to read parameters from the "
+                                   "logfile, but I couldn't find one. Maybe "
+                                   "you need to copy it from somewhere?")
                     GGCMFile._already_warned_about_logfile = True
         else:
             self.set_info("_viscid_log_fname", False)

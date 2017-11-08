@@ -52,7 +52,7 @@ def minvar_series(arr, warn_finite=True):
     mask = np.all(np.isfinite(arr), axis=1, keepdims=False)
     if np.sum(mask) < 3:
         if warn_finite:
-            viscid.logger.warn("Minvar says you need > 3 finite samples")
+            viscid.logger.warning("Minvar says you need > 3 finite samples")
         return [np.full([3], np.nan, dtype=arr.dtype),
                 np.full([3, 3], np.nan, dtype=arr.dtype)]
 
@@ -75,9 +75,9 @@ def minvar_series(arr, warn_finite=True):
     eval_int = eval_mags[sorted_inds[1]]
     warn_thresh = 0.05
     if (eval_int - eval_min) / eval_min < warn_thresh:
-        viscid.logger.warn("Minvar says minimum and intermediate eigenvalues "
-                           "are too close together: {0:g} - {1:g} < {2:g}%"
-                           "".format(eval_int, eval_min, warn_thresh))
+        viscid.logger.warning("Minvar says minimum and intermediate eigenvalues "
+                              "are too close together: {0:g} - {1:g} < {2:g}%"
+                              "".format(eval_int, eval_min, warn_thresh))
     return evals[sorted_inds], np.array([evec_min, evec_int, evec_max]).T
 
 def minvar_around(B, p0, l=1.0, path_dir=(1, 0, 0), n=40):
@@ -136,8 +136,8 @@ def _minvar_lmn_directions(evec_min, evec_max, l_basis=(0, 0, 1)):
     try:
         l_basis = np.array(l_basis).reshape((3,))
         if np.allclose(n_dir, l_basis / np.linalg.norm(l_basis)):
-            viscid.logger.warn("LMN says l_basis is parallel to normal, using "
-                               "MVAs max eigenvector direction")
+            viscid.logger.warning("LMN says l_basis is parallel to normal, using "
+                                  "MVAs max eigenvector direction")
             raise ValueError
     except ValueError:
         l_basis = np.array(evec_max).reshape((3,))

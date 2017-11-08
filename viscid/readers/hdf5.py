@@ -13,7 +13,7 @@ try:
     HAS_H5PY = True
 except ImportError:
     HAS_H5PY = False
-    logger.warn("h5py library not found, no hdf5 support.")
+    logger.warning("h5py library not found, no hdf5 support.")
 
 
 class H5pyDataWrapper(vfile.DataWrapper):

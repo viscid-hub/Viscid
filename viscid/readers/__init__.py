@@ -52,8 +52,8 @@ def load(fnames):
     """
     # this is not a deprecated warning since by default those aren't shown
     # and i want this to be a loud and clear do not use :)
-    viscid.logger.warn("readers.load is deprecated in favor of load_file or "
-                       "load_files")
+    viscid.logger.warning("readers.load is deprecated in favor of load_file or "
+                          "load_files")
     files = load_files(fnames)
     if isinstance(fnames, (list, tuple)):
         return files

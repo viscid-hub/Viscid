@@ -95,7 +95,7 @@ def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
         nrows, ncols = ncols, nrows
 
     if nrows == 0:
-        logger.warn("I have no variables to plot")
+        logger.warning("I have no variables to plot")
         return
 
     fig = plt.gcf()

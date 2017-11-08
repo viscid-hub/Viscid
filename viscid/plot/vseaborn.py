@@ -46,10 +46,10 @@ def activate_from_viscid():
         import matplotlib
 
         if LooseVersion(matplotlib.__version__) >= LooseVersion("1.5.0"):
-            logger.warn("Using this shim to seaborn for pretty plots "
-                        "is deprecated since you have matplotlib >= 1.5.\n"
-                        "Instead, use matplotlib's style sheets through "
-                        "`viscid.mpl_style`.")
+            logger.warning("Using this shim to seaborn for pretty plots "
+                           "is deprecated since you have matplotlib >= 1.5.\n"
+                           "Instead, use matplotlib's style sheets through "
+                           "`viscid.mpl_style`.")
 
         try:
             import seaborn as real_seaborn
@@ -88,7 +88,7 @@ def activate_from_viscid():
             viscid.plot.mpl_extra.post_rc_actions(show_warning=False)
             viscid.mpl_style.post_rc_actions(show_warning=False)
         except ImportError:
-            logger.warn("seaborn package not installed")
+            logger.warning("seaborn package not installed")
 
 ##
 ## EOF

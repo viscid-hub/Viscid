@@ -47,7 +47,7 @@ def convert_deprecated_floats(value, varname="value"):
              "Slicing by float is deprecated. The slice by value syntax is \n"
              "now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
              "".format(varname, value))
-        logger.warn(s)
+        logger.warning(s)
         value = "{0}f".format(value)
     return value
 

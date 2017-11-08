@@ -24,7 +24,7 @@ try:
         """
         # TODO: ignore if an xincluded xdmf file doesn't exist?
         if base_url:
-            logger.warn("lxml will ignore base_url: %s", base_url)
+            logger.warning("lxml will ignore base_url: %s", base_url)
         return tree.xinclude(**kwargs)
 
 except ImportError:
