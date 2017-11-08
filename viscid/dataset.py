@@ -308,28 +308,29 @@ class DatasetTemporal(Dataset):
         ret = [r.rstrip('.') if hasattr(r, 'rstrip') else r for r in ret]
         return slice(*ret)
 
-    def as_floating_t(self, t, none_passthrough=False):
-        t_as_s = None
-        try:
-            t = vutil.str_to_value(t)
+    # deprecated
+    # def as_floating_t(self, t, none_passthrough=False):
+    #     t_as_s = None
+    #     try:
+    #         t = vutil.str_to_value(t)
 
-            if viscid.is_timedelta_like(t, conservative=True):
-                t_as_s = viscid.as_timedelta(t).total_seconds()
-            elif viscid.is_datetime_like(t, conservative=True):
-                delta_t = viscid.as_datetime64(t) - self.basetime
-                t_as_s = viscid.as_timedelta(delta_t).total_seconds()
-            elif not isinstance(t, (int, np.integer, type(None))):
-                t_as_s = float(t)
-        except AttributeError:
-            if t is None:
-                if none_passthrough:
-                    pass
-                else:
-                    t = 0.0
-            else:
-                t_as_s = float(t)
+    #         if viscid.is_timedelta_like(t, conservative=True):
+    #             t_as_s = viscid.as_timedelta(t).total_seconds()
+    #         elif viscid.is_datetime_like(t, conservative=True):
+    #             delta_t = viscid.as_datetime64(t) - self.basetime
+    #             t_as_s = viscid.as_timedelta(delta_t).total_seconds()
+    #         elif not isinstance(t, (int, np.integer, type(None))):
+    #             t_as_s = float(t)
+    #     except AttributeError:
+    #         if t is None:
+    #             if none_passthrough:
+    #                 pass
+    #             else:
+    #                 t = 0.0
+    #         else:
+    #             t_as_s = float(t)
 
-        return t_as_s
+    #     return t_as_s
 
     def _slice_time(self, slc=":"):
         """
@@ -373,7 +374,8 @@ class DatasetTemporal(Dataset):
                 try:
                     slc_lst[i] = int(slc_lst[i])
                 except (ValueError, TypeError):
-                    t_as_s = self.as_floating_t(slc_lst[i], none_passthrough=True)
+                    # t_as_s = self.as_floating_t(slc_lst[i], none_passthrough=True)
+                    t_as_s = self.t2float(slc_lst[i], none_passthrough=True)
 
                     if t_as_s is not None:
                         slc_lst[i] = "{0}f".format(t_as_s)
@@ -384,6 +386,9 @@ class DatasetTemporal(Dataset):
                 ret.append(to_slice(times, slc_lst))
 
         return ret
+
+    def tslc2intfloat(self, slc):
+        pass
 
     def _time_slice_to_iterator(self, slc):
         """
