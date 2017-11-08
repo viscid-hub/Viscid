@@ -25,10 +25,10 @@ def _main():
     gk_uniform = viscid.load_file(os.path.join(sample_dir,
                                                'sample_gkeyll_uniform_q_*.h5'))
 
-    plt.figure(figsize=(9, 3))
+    _, axes = plt.subplots(1, 2, figsize=(9, 3))
     for i, grid in enumerate(gk_uniform.iter_times(":")):
-        plt.subplot2grid((1, 2), (0, i))
-        vlt.plot(grid['rho_i'], logscale=True, style='contourf', levels=128)
+        vlt.plot(grid['rho_i'], logscale=True, style='contourf', levels=128,
+                 ax=axes[i])
         seeds = viscid.Line((-1.2, 0, 0), (1.4, 0, 0), 8)
         b_lines, _ = viscid.calc_streamlines(grid['b'], seeds, method='euler1',
                                              max_length=20.0)

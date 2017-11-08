@@ -73,20 +73,19 @@ Single Time Slice
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    ax1 = plt.subplot2grid((2, 1), (0, 0))
+    _, axes = plt.subplots(2, 1, sharex=True, sharey=True)
     f3d.activate_time(0)
 
     # notice y=0.0, this is different from y=0; y=0 is the 0th index in
     # y, which is this case will be y=-50.0
     vlt.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
-             style="contourf", levels=50, plot_opts="lin_0,earth")
+             style="contourf", levels=50, plot_opts="lin_0,earth", ax=axes[0])
     plt.title(f3d.get_grid().format_time("UT"))
 
     # share axes so this plot pans/zooms with the first
-    plt.subplot2grid((2, 1), (1, 0), sharex=ax1, sharey=ax1)
     f3d.activate_time(-1)
     vlt.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
-             style="contourf", levels=50, plot_opts="lin_0,earth")
+             style="contourf", levels=50, plot_opts="lin_0,earth", ax=axes[1])
     plt.title(f3d.get_grid().format_time("hms"))
 
     vlt.auto_adjust_subplots()
@@ -113,10 +112,11 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
     times = np.array([grid.time for grid in f2d.iter_times(":2")])
     nr_times = len(times)
 
+    _, axes = plt.subplots(nr_times, 1)
+
     for i, grid in enumerate(f2d.iter_times(":2")):
-        plt.subplot2grid((nr_times, 1), (i, 0))
         vlt.plot(grid["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
-                 plot_opts="lin_0,earth")
+                 plot_opts="lin_0,earth", ax=axes[i])
         plt.title(grid.format_time(".01f"))
 
     vlt.auto_adjust_subplots()

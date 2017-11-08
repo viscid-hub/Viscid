@@ -33,18 +33,13 @@ def run_mag_test(fld, title="", show=False):
     nrows = 4
     ncols = len(planes)
 
-    fig = plt.figure()
-    ax = plt.subplot2grid((nrows, ncols), (0, 0))
+    _, axes = plt.subplots(nrows, ncols, sharex=True, sharey=True, squeeze=False)
 
     for ind, p in enumerate(planes):
-        plt.subplot2grid((nrows, ncols), (0, ind), sharex=ax, sharey=ax)
-        vlt.plot(vx, p, show=False)
-        plt.subplot2grid((nrows, ncols), (1, ind), sharex=ax, sharey=ax)
-        vlt.plot(vy, p, show=False)
-        plt.subplot2grid((nrows, ncols), (2, ind), sharex=ax, sharey=ax)
-        vlt.plot(vz, p, show=False)
-        plt.subplot2grid((nrows, ncols), (3, ind), sharex=ax, sharey=ax)
-        vlt.plot(mag_ne, p, show=False)
+        vlt.plot(vx, p, ax=axes[0, ind], show=False)
+        vlt.plot(vy, p, ax=axes[1, ind], show=False)
+        vlt.plot(vz, p, ax=axes[2, ind], show=False)
+        vlt.plot(mag_ne, p, ax=axes[3, ind], show=False)
 
     plt.suptitle(title)
     vlt.auto_adjust_subplots(subplot_params=dict(top=0.9, right=0.9))

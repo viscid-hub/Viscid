@@ -1940,7 +1940,11 @@ def interact(stack_depth=0, **kwargs):
 
 # just explicitly bring in some matplotlib functions
 subplot = plt.subplot
-subplot2grid = plt.subplot2grid
+subplots = plt.subplots
+def subplot2grid(*args, **kwargs):
+    viscid.logger.warning("pyplot.subplots should be preferred to "
+                          "pyplot.subplot2grid")
+    return plt.subplot2grid(*args, **kwargs)
 clf = plt.clf
 savefig = plt.savefig
 show = plt.show
