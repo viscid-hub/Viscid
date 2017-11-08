@@ -1204,16 +1204,16 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     # set scale based on norm_dict
     vmin, vmax = norm_dict['clim']
     if norm_dict['crdscale'] == 'log':
-        plt.xscale('log')
+        ax.set_xscale('log')
     if norm_dict['vscale'] == 'log':
-        plt.yscale('log')
+        ax.set_yscale('log')
     if norm_dict['symmetric']:
         if norm_dict['vscale'] == 'log':
             raise ValueError("log scale can't be symmetric about 0")
         maxval = max(abs(max(dat)), abs(min(dat)))
         vmin, vmax = -maxval, maxval
     if norm_dict['vscale'] is not None:
-        plt.ylim((vmin, vmax))
+        ax.set_ylim((vmin, vmax))
 
     ########################
     # apply labels and such
@@ -1222,8 +1222,8 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             xlabel = namex
         if ylabel is None:
             ylabel = label
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
 
     _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
                  majorloc=majorloc, minorloc=minorloc)
@@ -1231,7 +1231,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     if legend:
         if isinstance(legend, bool):
             legend = 0
-        plt.legend(loc=0)
+        ax.legend(loc=0)
 
     if show:
         mplshow()
@@ -1592,8 +1592,8 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
         ax.axis("equal")
-    plt.xlabel("x")
-    plt.ylabel("y")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
     if show:
         plt.show()
     return p, None
