@@ -763,6 +763,7 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
     if earth:
         plot_earth(fld, axis=ax)
+    plt.sca(ax)
     if show:
         mplshow()
 
@@ -985,6 +986,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             ax.grid(False)
             ax.set_xticklabels([])
             ax.set_yticklabels([])
+        plt.sca(ax)
         if show:
             mplshow()
         return ret
@@ -1018,6 +1020,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                             linewidth=axgridlw)
         if drawcoastlines:
             m.drawcoastlines(linewidth=0.25)
+        plt.sca(ax)
         if show:
             mplshow()
         return ret
@@ -1233,6 +1236,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             legend = 0
         ax.legend(loc=0)
 
+    plt.sca(ax)
     if show:
         mplshow()
     return p, None
@@ -1351,6 +1355,7 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     else:
         _autolimit_to_vertices(ax, verts[[xind, yind], :])
 
+    plt.sca(ax)
     if show:
         plt.show()
 
@@ -1439,6 +1444,7 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
     else:
         _autolimit_to_vertices(ax, verts)
 
+    plt.sca(ax)
     if show:
         plt.show()
 
@@ -1495,7 +1501,9 @@ def plot2d_quiver(fld, step=1, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
-    return ax.quiver(xl, xm, vl, vm, **kwargs)
+    ret = ax.quiver(xl, xm, vl, vm, **kwargs)
+    plt.sca(ax)
+    return ret
 
 def streamplot(fld, ax=None, **kwargs):
     """Plot 2D streamlines with :py:func:`matplotlib.pyplot.streamplot`
@@ -1567,7 +1575,9 @@ def streamplot(fld, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
-    return ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    ret = ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    plt.sca(ax)
+    return ret
 
 def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     """Plot scattered points on a matplotlib 3d plot
@@ -1594,6 +1604,7 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
         ax.axis("equal")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
+    plt.sca(ax)
     if show:
         plt.show()
     return p, None
@@ -1711,6 +1722,7 @@ def plot_earth(plane_spec, ax=None, scale=1.0, rot=0,
         else:
             ax.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
                                          fc=nightcol, zorder=zorder))
+    plt.sca(ax)
     return None
 
 def get_current_colorcycle():
@@ -1732,6 +1744,7 @@ def show_colorcycle(pal=None, size=1):
     ax.set_yticks([])
     ax.set_xticklabels([])
     ax.set_yticklabels([])
+    plt.sca(ax)
     plt.show()
 
 def show_cmap(cmap=None, size=1, aspect=8):
@@ -1748,6 +1761,7 @@ def show_cmap(cmap=None, size=1, aspect=8):
     ax.set_yticks([])
     ax.set_xticklabels([])
     ax.set_yticklabels([])
+    plt.sca(ax)
     plt.show()
 
 def _get_projected_axis(ax=None, projection='polar',
