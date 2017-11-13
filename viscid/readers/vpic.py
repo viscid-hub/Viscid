@@ -678,11 +678,12 @@ class VPIC_DataWrapper(vfile.DataWrapper):
 
 def _main():
     import viscid
+    from viscid import sample_dir
     from viscid.plot import vpyplot as vlt
     logger.setLevel(viscid.logging.DEBUG)
 
-    f = viscid.load_file('~/Downloads/sample_data/global.vpc')
-    vlt.plot(f['bx'], show=True)
+    f = viscid.load_file(os.path.join(sample_dir, 'vpic_sample', 'global.vpc'))
+    vlt.plot(-f['n_e']['y=0f'], logscale=True, show=True)
 
 if __name__ == "__main__":
     sys.exit(_main())

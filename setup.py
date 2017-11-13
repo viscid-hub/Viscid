@@ -410,6 +410,15 @@ def get_viscid_version(init_py):
                 return m.groups()[1]
 
 try:
+    data_files = []
+    data_files += [('viscid/plot/images', glob("viscid/plot/images/*.jpg"))]
+    data_files += [('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle'))]
+    data_files += [('viscid/sample', glob("sample/*"))]
+    for dirpath, _, fnames in os.walk('sample/vpic_sample'):
+        fnames = [os.path.join(dirpath, fname)
+                  for fname in fnames if not fname.startswith('.')]
+        data_files += [(os.path.join('viscid', dirpath), fnames)]
+
     setup(name='viscid',
           version=get_viscid_version("viscid/__init__.py"),
           description='Visualization in python',
@@ -420,9 +429,7 @@ try:
           include_dirs=[np.get_include()],
           ext_modules=ext_mods,
           scripts=scripts,
-          data_files=[('viscid/plot/images', glob("viscid/plot/images/*.jpg")),
-                      ('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle')),
-                      ('viscid/sample', glob("sample/*"))]
+          data_files=data_files,
          )
 
     # if installed, store list of installed files in a json file - this
