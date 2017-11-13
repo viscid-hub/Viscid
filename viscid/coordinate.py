@@ -538,7 +538,7 @@ class StructuredCrds(Coordinates):
         else:
             raise ValueError()
 
-    def get_slice_extent(self, selections):
+    def get_slice_extent(self, selections, allow_read=False):
         """find value extent of a slice"""
         # IMPORTANT: This does not touch the actual crd arrays to maintain
         #            lazyness
@@ -546,6 +546,9 @@ class StructuredCrds(Coordinates):
         extent = sliceutil.selections2values(None, selections, self.nr_dims)
 
         if np.any(np.isnan(extent)):
+            if allow_read:
+                raise NotImplementedError("Fallback to crd read to find slice "
+                                          "extent is not yet implemented.")
             raise RuntimeError("Can't infer extent for selection [{0}] "
                                "without reading crds".format(selections))
 
