@@ -555,16 +555,23 @@ class Line(SeedGen):
 
 class Spline(SeedGen):
     """A spline of seed points"""
-    def __init__(self, knots, n=20,
-                 cache=False, dtype=None, **kwargs):
+    def __init__(self, knots, n=-5, cache=False, dtype=None, **kwargs):
         """
         Args:
-            knots (list, tuple, or ndarray): `[x, y, z]`
-            n (int): number of points on the sline
-            **kwargs: Arguments to be used by scipy.interpolate.splprep.
+            knots (sequence, ndarray): `[x, y, z]`, 3xN for N knots
+            n (int): number of points on the curve, if negative, then
+                `n = abs(n) * n_knots`
+            **kwargs: Arguments to be used by scipy.interpolate.splprep
         """
         super(Spline, self).__init__(cache=cache, dtype=dtype)
         self.knots = np.asarray(knots, dtype=self.dtype)
+        if self.knots.shape[0] < 3:
+            raise ValueError("Knots should have shape 3xN for N knots")
+            # ndims, npts = self.knots.shape
+            # other = np.zeros((3 - ndims, npts), dtype=self.dtype)
+            # self.knots = np.concatenate([self.knots, other], axis=0)
+        if n < 0:
+            n = -n * self.knots.shape[1]
         self.n = n
         self.splprep_opts = kwargs
 
@@ -582,9 +589,7 @@ class Spline(SeedGen):
 
     def to_3d(self, pts_local, **kwargs):
         import scipy.interpolate as interpolate
-        k = len(self.knots[0]) - 1
-        if "k" in self.splprep_opts.keys():
-            k = min(k, self.splprep_opts.pop("k"))
+        k = self.splprep_opts.pop("k", self.knots.shape[1] - 1)
         tck, u = interpolate.splprep(self.knots, k=k, **self.splprep_opts)
         u = np.linspace(0, 1, self.n + 1, endpoint=True)
         coords = np.vstack(interpolate.splev(u, tck))
@@ -608,12 +613,10 @@ class Spline(SeedGen):
 
     def as_local_coordinates(self):
         pts_local = np.linspace(0.0, 1.0, self.n, endpoint=True)
-        x,y,z = self.to_3d(pts_local)
-        dx = x[1:] - x[:-1]
-        dy = y[1:] - y[:-1]
-        dz = z[1:] - z[:-1]
-        ds = np.zeros_like(x)
-        ds[1:] = np.sqrt(dx**2 + dy**2 + dz**2)
+        x = self.to_3d(pts_local)
+        dx = x[:, 1:] - x[:, :-1]
+        ds = np.zeros_like(x[0])
+        ds[1:] = np.linalg.norm(dx, axis=0)
         s = np.cumsum(ds)
         crd = viscid.wrap_crds("nonuniform_cartesian", (('s', s),))
         return crd
