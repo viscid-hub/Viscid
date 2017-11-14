@@ -8,6 +8,7 @@ File types:
 + OpenGGCM jrrle (3df, p[xyz], iof)
 + OpenGGCM binary (3df, p[xyz], iof)
 + Athena (bin, hst, tab)
++ VPIC
 + ASCII
 
 There is also preliminary support for reading and plotting AMR datasets from XDMF files.

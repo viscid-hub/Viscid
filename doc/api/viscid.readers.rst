@@ -23,6 +23,7 @@ Submodules
    viscid.readers.psc
    viscid.readers.vfile
    viscid.readers.vfile_bucket
+   viscid.readers.vpic
    viscid.readers.xdmf
 
 Module contents
