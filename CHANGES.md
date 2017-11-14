@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.99.0 dev
-==========
+0.99.0
+======
 
 Changes:
   - add max_t to streamlines
