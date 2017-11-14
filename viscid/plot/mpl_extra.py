@@ -138,8 +138,8 @@ def post_rc_actions(show_warning=True):
     import matplotlib
 
     if show_warning:
-        viscid.logger.warn("Setting rc options for mpl_extra is deprecated,\n"
-                           "use viscid.plot.mpl_style interface instead.")
+        viscid.logger.warning("Setting rc options for mpl_extra is deprecated,\n"
+                              "use viscid.plot.mpl_style interface instead.")
 
     if default_cmap:
         matplotlib.rcParams.update({"image.cmap": default_cmap})

@@ -30,18 +30,14 @@ def run_mpl_testA(show=False):
     Xcc, Ycc, Zcc = fld_s.get_crds_cc(shaped=True)  # pylint: disable=unused-variable
     fld_s[:, :, :] = np.sin(Xcc) + np.cos(Ycc)
 
-    nrows = 4
-    ncols = 1
+    _, axes = plt.subplots(4, 1, squeeze=False)
 
-    plt.subplot2grid((nrows, ncols), (0, 0))
-    vlt.plot(fld_s, "y=20f", show=False, plot_opts="lin_0")
-    plt.subplot2grid((nrows, ncols), (1, 0))
-    vlt.plot(fld_s, "x=0f:20f,y=0f:5f", earth=True, show=False,
+    vlt.plot(fld_s, "y=20f", ax=axes[0, 0], show=False, plot_opts="lin_0")
+    vlt.plot(fld_s, "x=0f:20f,y=0f:5f", ax=axes[1, 0], earth=True, show=False,
              plot_opts="x_-10_0,y_0_7")
-    plt.subplot2grid((nrows, ncols), (2, 0))
-    vlt.plot(fld_s, "y=0f", show=False, plot_opts="lin_-1_1")
-    plt.subplot2grid((nrows, ncols), (3, 0))
-    vlt.plot(fld_s, "z=0f,x=-20f:0f", earth=True, show=False, plot_opts="lin_-5_5")
+    vlt.plot(fld_s, "y=0f", ax=axes[2, 0], show=False, plot_opts="lin_-1_1")
+    vlt.plot(fld_s, "z=0f,x=-20f:0f", ax=axes[3, 0], earth=True, show=False,
+             plot_opts="lin_-5_5")
 
     plt.suptitle("2d cell centered")
     vlt.auto_adjust_subplots()
@@ -62,17 +58,13 @@ def run_mpl_testB(show=False):
     fld_s[:, :, :] = np.sin(X) + np.cos(Y) - np.cos(Z)
     # print("shape: ", fld_s.data.shape)
 
-    nrows = 4
-    ncols = 1
+    _, axes = plt.subplots(4, 1, squeeze=False)
 
-    plt.subplot2grid((nrows, ncols), (0, 0))
-    vlt.plot(fld_s, "z=0,x=:30", earth=True, plot_opts="lin_0")
-    plt.subplot2grid((nrows, ncols), (1, 0))
-    vlt.plot(fld_s, "z=0.75f,x=-4:-1,y=-3f:3f", earth=True)
-    plt.subplot2grid((nrows, ncols), (2, 0))
-    vlt.plot(fld_s, "x=-0.5f:,y=-3f:3f,z=0f", earth=True)
-    plt.subplot2grid((nrows, ncols), (3, 0))
-    vlt.plot(fld_s, "x=0.0f,y=-5.0f:5.0f", earth=True, plot_opts="log,g")
+    vlt.plot(fld_s, "z=0,x=:30", ax=axes[0, 0], earth=True, plot_opts="lin_0")
+    vlt.plot(fld_s, "z=0.75f,x=-4:-1,y=-3f:3f", ax=axes[1, 0], earth=True)
+    vlt.plot(fld_s, "x=-0.5f:,y=-3f:3f,z=0f", ax=axes[2, 0], earth=True)
+    vlt.plot(fld_s, "x=0.0f,y=-5.0f:5.0f", ax=axes[3, 0], earth=True,
+             plot_opts="log,g")
 
     plt.suptitle("3d node centered")
     vlt.auto_adjust_subplots()

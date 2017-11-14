@@ -32,8 +32,8 @@ class VFileBucket(Bucket):
             return None
         else:
             if len(fls) > 1:
-                logger.warn("Loaded > 1 file for %s, did you mean to call "
-                            "load_files()?", fname)
+                logger.warning("Loaded > 1 file for %s, did you mean to call "
+                               "load_files()?", fname)
             return fls[0]
 
     def load_files(self, fnames, index_handle=True, file_type=None,
@@ -125,7 +125,7 @@ class VFileBucket(Bucket):
                         s = " IOError on file: {0}\n".format(handle_name)
                         s += "              File Type: {0}\n".format(handle_name)
                         s += "              {0}".format(str(e))
-                        logger.warn(s)
+                        logger.warning(s)
                     except ValueError as e:
                         # ... why am i explicitly catching ValueErrors?
                         # i'm probably breaking something by re-raising
@@ -133,7 +133,7 @@ class VFileBucket(Bucket):
                         s = " ValueError on file load: {0}\n".format(handle_name)
                         s += "              File Type: {0}\n".format(handle_name)
                         s += "              {0}".format(str(e))
-                        logger.warn(s)
+                        logger.warning(s)
                         # re-raise the last expection
                         raise
 
@@ -142,8 +142,8 @@ class VFileBucket(Bucket):
                 file_lst.append(f)
 
         if len(file_lst) == 0:
-            logger.warn("No files loaded for '{0}', is the path "
-                        "correct?".format(orig_fnames))
+            logger.warning("No files loaded for '{0}', is the path "
+                           "correct?".format(orig_fnames))
         return file_lst
 
     def remove_item(self, item, do_unload=True):

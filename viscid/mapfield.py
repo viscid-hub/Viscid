@@ -132,9 +132,9 @@ def fld_lat2theta(fld, base='lat', target='theta', unit='deg'):
     if ret.xh[dcrd] - ret.xl[dcrd] < 0:
         p90 = np.pi / 2 if unit == 'rad' else 90.0
         p180 = np.pi if unit == 'rad' else 180.0
-        viscid.logger.warn("Spherical Fields expect the data to be "
-                           "ordered {0}..-{0} in latitude (theta: 0..{1})"
-                           "".format(p90, p180))
+        viscid.logger.warning("Spherical Fields expect the data to be "
+                              "ordered {0}..-{0} in latitude (theta: 0..{1})"
+                              "".format(p90, p180))
     return ret
 
 def convert_coordinates(fld, order, crd_mapping, units=''):
@@ -280,9 +280,9 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
             if mfld.crds.is_uniform():
                 clist[0][1][1] += phi_diff / clist[0][1][2]
                 if not np.isclose(clist[0][1][1] - clist[0][1][0], 2 * np.pi):
-                    viscid.logger.warn("Tried unsuccessfully to make uniform "
-                                       "polar mapfield periodic: {0:g}"
-                                       "".format(clist[0][1][1] - clist[0][1][0]))
+                    viscid.logger.warning("Tried unsuccessfully to make uniform "
+                                          "polar mapfield periodic: {0:g}"
+                                          "".format(clist[0][1][1] - clist[0][1][0]))
             else:
                 clist[0][1] = np.concatenate([clist[0][1],
                                               [clist[0][1][0] + 2 * np.pi]])
@@ -491,7 +491,7 @@ def great_circle(p1, p2, origin=(0, 0, 0), n=32):
 
     # handle edge case colinear p1 == p2
     if np.isclose(np.linalg.norm(pole), 0.0):
-        viscid.logger.warn("Great circle says p1 and p2 are colinear.")
+        viscid.logger.warning("Great circle says p1 and p2 are colinear.")
         pole = np.array([0, -1, 0])
         if np.isclose(np.linalg.norm(np.cross(pole, p1)), 0.0):
             pole = np.array([0, 0, -1])

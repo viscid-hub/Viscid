@@ -23,8 +23,18 @@ viscid.readers.openggcm.GGCMFile.read_log_file = True
 viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
 
 
+def get_mvi_fig(offscreen=False):
+    from viscid.plot import vlab
+    try:
+        fig = _global_ns['figure']
+        vlab.clf()
+    except KeyError:
+        fig = vlab.figure(size=[1200, 800], offscreen=offscreen)
+        _global_ns['figure'] = fig
+    return fig
+
 def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
-             view_kwargs=None, show=False):
+             view_kwargs=None, show=False, scatter_mpl=False, mesh_mvi=True):
     interpolated_fld = viscid.interp_trilin(fld, seeds)
     seed_name = seeds.__class__.__name__
     if add_title:
@@ -46,6 +56,13 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
         plt.savefig(next_plot_fname(__file__, series='2d'))
         if show:
             plt.show()
+
+        if scatter_mpl:
+            plt.clf()
+            vlt.plot2d_line(seeds.get_points(), fld, symdir='z', marker='o')
+            plt.savefig(next_plot_fname(__file__, series='2d'))
+            if show:
+                plt.show()
     except ImportError:
         pass
 
@@ -54,16 +71,12 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
             raise ImportError
         from viscid.plot import vlab
 
-        try:
-            fig = _global_ns['figure']
-            vlab.clf()
-        except KeyError:
-            fig = vlab.figure(size=[1200, 800], offscreen=not show)
-            _global_ns['figure'] = fig
+        _ = get_mvi_fig(offscreen=not show)
 
         try:
-            mesh = vlab.mesh_from_seeds(seeds, scalars=interpolated_fld)
-            mesh.actor.property.backface_culling = True
+            if mesh_mvi:
+                mesh = vlab.mesh_from_seeds(seeds, scalars=interpolated_fld)
+                mesh.actor.property.backface_culling = True
         except RuntimeError:
             pass
 
@@ -77,7 +90,7 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
 
         vlab.savefig(next_plot_fname(__file__, series='3d'))
         if show:
-            vlab.show()
+            vlab.show(stop=True)
     except ImportError:
         pass
 
@@ -101,6 +114,16 @@ def _main():
     y = np.linspace(-1, 1, img.shape[1])
     z = np.linspace(-1, 1, img.shape[2])
     logo = viscid.arrays2field([x, y, z], img)
+
+    if 1:
+        viscid.logger.info('Testing Point with custom local coordinates...')
+        pts = np.vstack([[-1, -0.5, 0, 0.5, 1],
+                         [-1, -0.5, 0, 0.5, 1],
+                         [ 0,  0.5, 1, 1.5, 2]])
+        local_crds = viscid.asarray_datetime64([0, 60, 120, 180, 240],
+                                               conservative=True)
+        seeds = viscid.Point(pts, local_crds=local_crds)
+        run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
 
     if 1:
         viscid.logger.info('Testing Line...')
@@ -164,6 +187,83 @@ def _main():
         run_test(logo, seeds, plot2d=plot2d, plot3d=plot3d, show=args.show)
 
     if 1:
+        # this spline test is very custom
+        viscid.logger.info('Testing Spline...')
+        try:
+            import scipy.interpolate as interpolate
+        except ImportError:
+            msg = "XFail: ImportError (is scipy installed?)"
+            if plot2d:
+                try:
+                    from matplotlib import pyplot as plt
+                    from viscid.plot import vpyplot as vlt
+                    plt.clf()
+                    plt.annotate(msg, xy=(0.3, 0.4), xycoords='axes fraction')
+                    plt.savefig(next_plot_fname(__file__, series='2d'))
+                    plt.savefig(next_plot_fname(__file__, series='2d'))
+                    plt.savefig(next_plot_fname(__file__, series='3d'))
+                    if args.show:
+                        plt.show()
+                except ImportError:
+                    pass
+        else:
+            knots = np.array([[ 0.2,  0.5, 0.0], [-0.2,  0.5, 0.2],
+                              [-0.2,  0.0, 0.4], [ 0.2,  0.0, 0.2],
+                              [ 0.2, -0.5, 0.0], [-0.2, -0.5, 0.2]]).T
+            seed_name = "Spline"
+            fld = logo
+            seeds = viscid.Spline(knots)
+            seed_pts = seeds.get_points()
+            interp_fld = viscid.interp_trilin(fld, seeds)
+
+            if plot2d:
+                try:
+                    from matplotlib import pyplot as plt
+                    from viscid.plot import vpyplot as vlt
+                    plt.clf()
+                    vlt.plot(interp_fld)
+                    plt.title(seed_name)
+                    plt.savefig(next_plot_fname(__file__, series='2d'))
+                    if args.show:
+                        plt.show()
+
+                    plt.clf()
+                    from matplotlib import rcParams
+                    _ms = rcParams['lines.markersize']
+                    plt.gca().scatter(knots[0, :], knots[1, :],
+                                      s=(2 * _ms)**2, marker='^', color='y')
+                    plt.gca().scatter(seed_pts[0, :], seed_pts[1, :],
+                                      s=(1.5 * _ms)**2, marker='o', color='k')
+                    vlt.plot2d_line(seed_pts, scalars=interp_fld.flat_data,
+                                    symdir='z')
+                    plt.title(seed_name)
+                    plt.savefig(next_plot_fname(__file__, series='2d'))
+                    if args.show:
+                        plt.show()
+                except ImportError:
+                    pass
+            if plot3d:
+                try:
+                    from viscid.plot import vlab
+                    _ = get_mvi_fig(offscreen=not args.show)
+                    vlab.points3d(knots[0], knots[1], knots[2],
+                                  color=(1.0, 1.0, 0), scale_mode='none',
+                                  scale_factor=0.04)
+                    p = vlab.points3d(seed_pts[0], seed_pts[1], seed_pts[2],
+                                      color=(0, 0, 0), scale_mode='none',
+                                      scale_factor=0.03)
+                    vlab.plot_line(seed_pts, scalars=interp_fld.flat_data,
+                                   tube_radius=0.01)
+                    vlab.axes(p)
+                    vlab.title(seed_name)
+                    vlab.mlab.roll(-90.0)
+                    vlab.savefig(next_plot_fname(__file__, series='3d'))
+                    if args.show:
+                        vlab.show(stop=True)
+                except ImportError:
+                    pass
+
+    if 1:
         viscid.logger.info('Testing RectilinearMeshPoints...')
         f = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[-1].xdmf'))
         slc = 'x=-40f:12f, y=-10f:10f, z=-10f:10f'
@@ -197,7 +297,7 @@ def _main():
             if not plot3d:
                 raise ImportError
             from viscid.plot import vlab
-            vlab.clf()
+            _ = get_mvi_fig(offscreen=not args.show)
             mesh = vlab.mesh_from_seeds(sheet_seed, scalars=vx_sheet,
                                         clim=(-400, 400))
             vlab.plot_earth_3d(crd_system=b)
@@ -207,7 +307,7 @@ def _main():
             vlab.title("RectilinearMeshPoints")
             vlab.savefig(next_plot_fname(__file__, series='3d'))
             if args.show:
-                vlab.show()
+                vlab.show(stop=True)
 
         except ImportError:
             pass

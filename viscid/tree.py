@@ -240,16 +240,19 @@ class Node(object):
             self.set_info('time', float(val))
 
     def time_as_timedelta64(self):
-        return viscid.as_timedelta64(self.time, unit='s')
+        return viscid.as_timedelta64(self.time)
 
     def time_as_timedelta(self):
-        return viscid.as_timedelta(self.time, unit='s')
+        return viscid.as_timedelta(self.time)
 
     def time_as_datetime64(self):
-        return viscid.time_sum(self.basetime, self.time_as_timedelta64())
+        return self.t2datetime64(self.time_as_timedelta64())
 
     def time_as_datetime(self):
         return viscid.as_datetime(self.time_as_datetime64())
+
+    def t2datetime64(self, t):
+        return viscid.time_sum(self.basetime, viscid.as_timedelta64(t))
 
     def format_time(self, fmt='.02f', default="Timeless"):
         if self.time is None:

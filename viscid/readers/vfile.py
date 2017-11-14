@@ -86,7 +86,7 @@ class VFile(Dataset):
     def __init__(self, fname, parent_bucket=None, grid_type=None, grid_opts=None,
                  **kwargs):
         """  """
-        super(VFile, self).__init__(fname, **kwargs)
+        super(VFile, self).__init__(name=fname, **kwargs)
 
         if grid_type is not None:
             self._grid_type = grid_type
@@ -163,7 +163,7 @@ class VFile(Dataset):
                 dset_type = self._temporal_dataset_type
             else:
                 raise ValueError("unknown dataset type: {0}".format(dset_type))
-        dset = dset_type(name, **kwargs)
+        dset = dset_type(name=name, **kwargs)
         if parent_node is not None:
             parent_node.prepare_child(dset)
         return dset

@@ -113,6 +113,17 @@ class AMRField(object):
         # calculating xh
         maybe = []
 
+        # detect dimensions that only have one cell (or node) and allow any
+        # slice in that direction, this helps cases where a field mab be
+        # defined or y = [-0.01], but the user tries to slice by 'y=0f'
+        all_xl_nc = np.array([patch.crds.xl_nc for patch in self.patches])
+        all_xh_nc = np.array([patch.crds.xh_nc for patch in self.patches])
+        dim_is_2d = np.all(all_xl_nc == all_xh_nc, axis=0)
+        for idim, is_2d in enumerate(dim_is_2d):
+            if is_2d:
+                all_xl_nc[:, idim] = -np.inf
+                all_xh_nc[:, idim] = np.inf
+
         for i, fld in enumerate(self.patches):
             # - if xl - atol > the extent of the slice in any direction, then
             #   there's no overlap
@@ -125,11 +136,13 @@ class AMRField(object):
             # dimensions that aren't specified in selection... super-kludge
 
             # also, temporarily disable warnings on NaNs in numpy
+            xl_nc = all_xl_nc[i]
+            xh_nc = all_xh_nc[i]
             invalid_err_level = np.geterr()['invalid']
             np.seterr(invalid='ignore')
-            atol = 100 * np.finfo(fld.crds.xl_nc.dtype).eps
-            if (not np.any(np.logical_or(fld.crds.xl_nc - atol > extent[1],
-                                         fld.crds.xh_nc <= extent[0]))):
+            atol = 100 * np.finfo(xl_nc.dtype).eps
+            if (not np.any(np.logical_or(xl_nc - atol > extent[1],
+                                         xh_nc <= extent[0]))):
                 if np.any(np.isclose(fld.crds.xh_nc, extent[0], atol=atol)):
                     maybe.append(i)
                 else:
@@ -143,9 +156,9 @@ class AMRField(object):
             viscid.logger.error("selection {0} not in any patch @ time {1}"
                                 "".format(selection, self.patches[0].time))
             if self.skeleton:
-                s = ("         skeleton: xl= {0} xh = {1}"
-                     "".format(self.skeleton.global_xl,
-                               self.skeleton.global_xh))
+                s = "    xl= {0}".format(self.skeleton.global_xl)
+                viscid.logger.error(s)
+                s = "    xh= {0}".format(self.skeleton.global_xh)
                 viscid.logger.error(s)
             inds = None
             flds = None

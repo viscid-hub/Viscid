@@ -25,7 +25,7 @@ from viscid.coordinate import wrap_crds
 
 
 base_hydro_names = ['rho', 'rhoux', 'rhouy', 'rhouz', 'e']
-base_hydro_pretty_names = [r'$\rho$', r'$\rhou_x$', r'$\rhou_y$', r'$\rhou_z$',
+base_hydro_pretty_names = [r'$\rho$', r'$\rho u_x$', r'$\rho u_y$', r'$\rho u_z$',
                            r'$e$']
 
 base_5m_names = ['rho_e', 'rhoux_e', 'rhouy_e', 'rhouz_e', 'e_e',
@@ -60,6 +60,15 @@ _type_info = {len(base_hydro_names): {'field_type': 'hydro',
                                     'names': base_10m_names,
                                     'pretty_names': base_10m_pretty_names}}
 
+def create_type_info(nr_fields):
+    type_info = dict()
+    type_info['field_type'] = 'unknown'
+    type_info['names'] = []
+    type_info['pretty_names'] = []
+    for ncomp in range(nr_fields):
+        type_info['names'].append('Q%d'%ncomp)
+        type_info['pretty_names'].append(r'$\rm{Q%d}$'%ncomp)
+    return type_info
 
 class GkeyllGrid(grid.Grid):
     """"""
@@ -298,7 +307,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
 
         basename = os.path.basename(fname0)
         self.set_info('run', re.match(self._detector, basename).group(1))
-        self.set_info('fieldtype', re.match(self._detector, basename).group(2))
+        self.set_info('field_type', re.match(self._detector, basename).group(2))
 
         super(GkeyllFile, self).load(fname1)
 
@@ -359,6 +368,7 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
             fld = field.wrap_field(h5_data, self._crds, meta['fld_name'],
                                    center="cell", pretty_name=meta['pretty_name'])
             _grid.add_field(fld)
+        _grid.set_info('field_type', self.get_info('field_type'))
         return _grid
 
     def _make_template(self, filename):
@@ -374,12 +384,12 @@ class GkeyllFile(FileHDF5, ContainerFile):  # pylint: disable=abstract-method
                 try:
                     # if the two scalar corrections potentials are stored
                     type_info = dict(_type_info[nr_fields - 2])
-                    type_info['names'].append('EXTRA1')
-                    type_info['pretty_names'].append('EXTRA1')
-                    type_info['names'].append('EXTRA2')
-                    type_info['pretty_names'].append('EXTRA2')
-                except KeyError:
-                    raise RuntimeError("Could not desipher type (hydro, 5m, 10m)")
+                    type_info['names'].append('phi_E')
+                    type_info['pretty_names'].append(r'$\Phi_E$')
+                    type_info['names'].append('phi_B')
+                    type_info['pretty_names'].append(r'$\Phi_B$')
+                except:
+                    type_info = create_type_info(nr_fields)
 
             template = []
             # TODO: use nr_fields to figure out the names of the fields?

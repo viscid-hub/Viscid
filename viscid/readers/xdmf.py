@@ -181,7 +181,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
                 grd = self._make_dataset(parent_node, name=attrs["Name"])
                 self._inject_info(el, grd)
             else:
-                logger.warn("Unknown collection type %s, ignoring grid", ct)
+                logger.warning("Unknown collection type %s, ignoring grid", ct)
 
             for i, subgrid in enumerate(el.findall("./Grid")):
                 t = times[i] if (times is not None and i < len(times)) else time
@@ -192,8 +192,8 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
 
         elif gt == "Uniform":
             if not (topoattrs and geoattrs):
-                logger.warn("Xdmf Uniform grids must have "
-                            "topology / geometry.")
+                logger.warning("Xdmf Uniform grids must have "
+                               "topology / geometry.")
             else:
                 grd = self._make_grid(parent_node, name=attrs["Name"],
                                       **self._grid_opts)
@@ -206,13 +206,13 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
                     grd.add_field(fld)
 
         elif gt == "Tree":
-            logger.warn("Xdmf Tree Grids not implemented, ignoring "
-                        "this grid")
+            logger.warning("Xdmf Tree Grids not implemented, ignoring "
+                           "this grid")
         elif gt == "Subset":
-            logger.warn("Xdmf Subset Grids not implemented, ignoring "
-                        "this grid")
+            logger.warning("Xdmf Subset Grids not implemented, ignoring "
+                           "this grid")
         else:
-            logger.warn("Unknown grid type %s, ignoring this grid", gt)
+            logger.warning("Unknown grid type %s, ignoring this grid", gt)
 
         # fill attributes / data items
         # if grid and gt == "Uniform":
@@ -342,7 +342,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             crdkwargs["dtype"] = dtyp
             crdkwargs["full_arrays"] = False
         else:
-            logger.warn("Invalid GeometryType: %s", geotype)
+            logger.warning("Invalid GeometryType: %s", geotype)
 
         if topotype in ['3DCoRectMesh', '2DCoRectMesh']:
             crdtype = "uniform_cartesian"
@@ -455,7 +455,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
         if fmt == "Binary":
             raise NotImplementedError("binary xdmf data not implemented")
 
-        logger.warn("Invalid DataItem Format.")
+        logger.warning("Invalid DataItem Format.")
         return (None, None)
 
     def _parse_time(self, timetag):
@@ -483,7 +483,7 @@ class FileXDMF(ContainerFile):  # pylint: disable=abstract-method
             arr = np.array([dat[0] + i * dat[1] for i in range(int(dat[2]))])
             return arr, attrs
         else:
-            logger.warn("invalid TimeType.\n")
+            logger.warning("invalid TimeType.\n")
 
     def _parse_information(self, information):
         """ parse generic information tag """

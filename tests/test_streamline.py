@@ -299,8 +299,10 @@ def _main():
         xl, xh = plt.gca().get_xlim()
         for i, txt, c in zip(count(), methods, colors):
             stat_txt = format_data_range(ds[i])
-            plt.text(xl + 0.01 * (xh - xl), i + 1.15, txt, color=c)
-            plt.text(xl + 0.01 * (xh - xl), i + 0.85, stat_txt, color=c)
+            plt.annotate(txt, xy=(0.55, i / len(methods) + 0.1), color=c,
+                         xycoords='axes fraction')
+            plt.annotate(stat_txt, xy=(0.55, i / len(methods) + 0.04), color=c,
+                         xycoords='axes fraction')
         ax1.get_yaxis().set_visible(False)
         plt.xscale('log')
         plt.title('Step Size')

@@ -639,7 +639,7 @@ def curl_at_point(A, x, y, z, dx=None, dy=None, dz=None):
     return c
 
 def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
-                            order=1):
+                            order=1, invarient_dx=0.0):
     """Extend and pad boundaries of ndarray (leaves new corners @ 0.0)
 
     Args:
@@ -653,6 +653,9 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
             component dimension
         order (int): 0 for repeating boundary values or 1 for linear
             extrapolation
+        invarient_dx (float): if len(arr) == 1 and order == 1, then
+            the array is extended with constant dx, using 0 here is
+            synonymous with 0th order.
 
     Returns:
         ndarray: A new extended / padded ndarray
@@ -682,7 +685,16 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
         src_slc = [slice(None)] * len(v.shape)
         src_slcR = [slice(None)] * len(v.shape)
 
-        if order == 0 or arr.shape[axi] < 2:
+        if arr.shape[axi] < 2 and invarient_dx:
+            for j in range(nl):
+                dest_slc[axi] = slice(nl - 1 - j, nl - 1 - j + 1)
+                src_slc[axi] = slice(nl - j, nl - j + 1)
+                v[dest_slc] = v[src_slc] - invarient_dx
+            for j in range(nh):
+                dest_slc[axi] = slice(ni + j, ni + j + 1)
+                src_slc[axi] = slice(ni - 1 + j, ni - 1 + j + 1)
+                v[dest_slc] = v[src_slc] + invarient_dx
+        elif order == 0:
             if nl:
                 dest_slc[axi] = slice(None, nl)
                 src_slc[axi] = slice(nl, nl + 1)
@@ -691,6 +703,15 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
                 dest_slc[axi] = slice(ni, None)
                 src_slc[axi] = slice(ni - 1, ni)
                 v[dest_slc] = v[src_slc]
+        elif arr.shape[axi] < 2:
+            for j in range(nl):
+                dest_slc[axi] = slice(nl - 1 - j, nl - 1 - j + 1)
+                src_slc[axi] = slice(nl - j, nl - j + 1)
+                v[dest_slc] = v[src_slc] - invarient_dx
+            for j in range(nh):
+                dest_slc[axi] = slice(ni + j, ni + j + 1)
+                src_slc[axi] = slice(ni - 1 + j, ni - 1 + j + 1)
+                v[dest_slc] = v[src_slc] + invarient_dx
         elif order == 1:
             for j in range(nl):
                 dest_slc[axi] = slice(nl - j - 1, nl - j)
@@ -710,13 +731,9 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
     return v
 
 def extend_boundaries(fld, nl=1, nh=1, axes='all', nr_comp=None, order=1,
-                      crd_order=1, crds=None):
+                      crd_order=1, crds=None, invarient_dx=0.0,
+                      crd_invarient_dx=1.0):
     """Extend and pad boundaries of field (leaves new corners @ 0.0)
-
-    Warning:
-        When using crd_order=0 (0 order hold), coordinates will be
-        extended by repeating boundary values, so min_dx will be 0.
-        Keep this in mind if dividing by dx.
 
     Args:
         fld (Field): Field to extend
@@ -730,9 +747,21 @@ def extend_boundaries(fld, nl=1, nh=1, axes='all', nr_comp=None, order=1,
         crd_order (int): extrapolation order for crds; 0 for repeating
             boundary values or 1 for linear extrapolation
         crds (Coordinates): Use these coordinates, no extrapolate them
+        invarient_dx (float): if fld has a single cell in a given
+            dimension, and order == 1, the field is extended with
+            constant dx, using 0 here is synonymous with 0th order
+        invarient_dx (float): if fld has a single cell in a given
+            dimension, and crd_order == 1, the coordinates in that
+            dimension are extended with constant dx, using 0 here is
+            synonymous with crd_order = 0.
 
     Returns:
         ndarray: A new extended / padded ndarray
+
+    Warning:
+        When using crd_order=0 (0 order hold), coordinates will be
+        extended by repeating boundary values, so min_dx will be 0.
+        Keep this in mind if dividing by dx.
     """
     arr_axes = fld.crds.axes
     axis_lookup = dict()
@@ -740,7 +769,7 @@ def extend_boundaries(fld, nl=1, nh=1, axes='all', nr_comp=None, order=1,
         axis_lookup[i] = i
         axis_lookup[ax] = i
     if axes == 'all':
-        axes = list([i for i, s in enumerate(fld.sshape) if s > 1])
+        axes = list([i for i, s in enumerate(fld.sshape)])
     if not isinstance(axes, (list, tuple, viscid.string_types)):
         axes = list(axes)
     axes = [axis_lookup[ax] for ax in axes]
@@ -751,7 +780,8 @@ def extend_boundaries(fld, nl=1, nh=1, axes='all', nr_comp=None, order=1,
         nr_comp = None
 
     new_dat = extend_boundaries_ndarr(fld.data, nl=nl, nh=nh, axes=axes,
-                                      nr_comp=nr_comp, order=order)
+                                      nr_comp=nr_comp, order=order,
+                                      invarient_dx=invarient_dx)
 
     if crds is not None:
         new_crds = crds
@@ -762,9 +792,11 @@ def extend_boundaries(fld, nl=1, nh=1, axes='all', nr_comp=None, order=1,
         for ax, nc, cc in zip(fld.crds.axes, crds_nc, crds_cc):
             if fld.crds.axes.index(ax) in axes:
                 new_nc = extend_boundaries_ndarr(nc, nl=nl, nh=nh, axes=[0],
-                                                 order=crd_order)
+                                                 order=crd_order,
+                                                 invarient_dx=crd_invarient_dx)
                 new_cc = extend_boundaries_ndarr(cc, nl=nl, nh=nh, axes=[0],
-                                                 order=crd_order)
+                                                 order=crd_order,
+                                                 invarient_dx=crd_invarient_dx)
             else:
                 new_nc = nc
                 new_cc = cc

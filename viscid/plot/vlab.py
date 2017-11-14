@@ -975,8 +975,8 @@ def apply_cmap(target, cmap=None, lut=None, alpha=None, mode='scalar',
         symmetric = clim
 
     if logscale and symmetric:
-        viscid.logger.warn("logscale and symmetric are mutually exclusive;"
-                           "ignoring symmetric.")
+        viscid.logger.warning("logscale and symmetric are mutually exclusive;"
+                              "ignoring symmetric.")
 
     if logscale:
         mvi_lut.scale = 'log10'
@@ -1310,10 +1310,10 @@ def resize(size, figure=None):
         if mlab.options.offscreen:
             figure.scene.set_size(size)
         elif figure.scene.off_screen_rendering:
-            viscid.logger.warn("viscid.plot.vlab.resize doesn't work for "
-                               "figures that are off-screened this way. Try "
-                               "creating the figure with viscid.plot.vlab."
-                               "figure(size=(w, h), offscreen=True)")
+            viscid.logger.warning("viscid.plot.vlab.resize doesn't work for "
+                                  "figures that are off-screened this way. Try "
+                                  "creating the figure with viscid.plot.vlab."
+                                  "figure(size=(w, h), offscreen=True)")
         else:
             toolkit = mayavi.ETSConfig.toolkit
 
@@ -1329,11 +1329,11 @@ def resize(size, figure=None):
                 figure.scene.control.Parent.Parent.SetClientSizeWH(w, h)
 
             else:
-                viscid.logger.warn("Unknown mayavi backend {0} (not qt4 or "
-                                   "wx); not resizing.".format(toolkit))
+                viscid.logger.warning("Unknown mayavi backend {0} (not qt4 or "
+                                      "wx); not resizing.".format(toolkit))
 
     except Exception as e:  # pylint: disable=broad-except
-        viscid.logger.warn("Resize didn't work:: {0}".format(repr(e)))
+        viscid.logger.warning("Resize didn't work:: {0}".format(repr(e)))
 
 def hide_window(figure, debug=False):
     """Try to hide the window; only does something on Qt backend"""

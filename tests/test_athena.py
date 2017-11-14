@@ -24,34 +24,32 @@ def _main():
     ####### test binary files
     f_bin = viscid.load_file(os.path.join(sample_dir, 'ath_sample.*.bin'))
 
+    _, axes = plt.subplots(2, 2)
     for i, grid in enumerate(f_bin.iter_times(":")):
-        plt.subplot2grid((2, 2), (0, i))
-        vlt.plot(grid['bx'])
-        plt.subplot2grid((2, 2), (1, i))
-        vlt.plot(grid['by'])
+        vlt.plot(grid['bx'], ax=axes[0, i])
+        vlt.plot(grid['by'], ax=axes[1, i])
     plt.suptitle("athena bin (binary) files")
     vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))
 
     plt.savefig(next_plot_fname(__file__))
     if args.show:
         vlt.show()
-    plt.clf()
+    plt.close()
 
     ####### test ascii files
     f_tab = viscid.load_file(os.path.join(sample_dir, 'ath_sample.*.tab'))
 
+    _, axes = plt.subplots(2, 2)
     for i, grid in enumerate(f_tab.iter_times(":")):
-        plt.subplot2grid((2, 2), (0, i))
-        vlt.plot(grid['bx'])
-        plt.subplot2grid((2, 2), (1, i))
-        vlt.plot(grid['by'])
+        vlt.plot(grid['bx'], ax=axes[0, i])
+        vlt.plot(grid['by'], ax=axes[1, i])
     plt.suptitle("athena tab (ascii) files")
     vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))
 
     plt.savefig(next_plot_fname(__file__))
     if args.show:
         vlt.show()
-    plt.clf()
+    plt.close()
 
     return 0
 

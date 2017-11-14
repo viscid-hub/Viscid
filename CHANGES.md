@@ -1,6 +1,30 @@
 Changes
 -------
 
+0.99.0
+======
+
+Changes:
+  - add max_t to streamlines
+  - streamlines are now truncated at max_length and max_t. This means ds can be non-uniform even for non-adaptive methods.
+  - Preliminary VPIC reader
+  - add seed.Spline
+  - seed.Points can now specipy custom local representation
+  - vpyplot: plt.axis('equal') default changed to plt.axis('image')
+  - vpyplot: by default, colorbars are now added using the axis1 toolkit
+  - Various Gkeyll reader enhancements
+
+Bugfixes:
+  - Most libgfortran compile / runtime errors should now be gone
+  - Vector calculus on faux 2d fields works in more cases
+  - faux 2d AMR fields can now be sliced in invarient dimension
+  - lots of little fixes when slicing with newaxis / ellipsis
+  - lots of little fixes when slicing with datetimes
+
+Refactors:
+  - viscid.multiplot.multiplot -> viscid.multiplot.make_multiplot
+  - viscid.calculator.cluster.cluster -> viscid.calculator.cluster.find_clusters
+
 0.98.9
 ======
 

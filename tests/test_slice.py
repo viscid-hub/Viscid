@@ -3,6 +3,7 @@
 
 Both cell and node centered fields are tested.
 """
+# pylint: disable=invalid-slice-index
 
 from __future__ import print_function
 import argparse
@@ -16,142 +17,110 @@ import viscid
 from viscid import vutil
 
 
-def test_slice(selection, fld, dat_shape, nc_shape=None, cc_shape=None,
-               data=None):
-    slced_fld = fld[selection]
+def test_slice(arr, slc, ref, **kwargs):
+    result = arr[viscid.to_slice(arr, slc, **kwargs)]
 
-    assert nc_shape is None or all(slced_fld.crds.shape_nc == nc_shape)
-    assert cc_shape is None or all(slced_fld.crds.shape_cc == cc_shape)
-    assert slced_fld.data.shape == dat_shape
+    if isinstance(ref, np.ndarray):
+        failed = len(result) != len(ref) or np.any(result != ref)
+    else:
+        failed = result != ref
 
-    if data:
-        assert np.all(slced_fld == data)
+    viscid.logger.debug("{0}: {1}".format(slc, result))
+    if failed:
+        s = ("Slice doesn't match reference\n"
+             "  SLICE:     {0}\n"
+             "  RESULT:    {1}\n"
+             "  REFERENCE: {2}\n".format(slc, result, ref))
+        raise RuntimeError(s)
 
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     args = vutil.common_argparse(parser)  # pylint: disable=unused-variable
 
-    # CELL CENTERED TESTS
-    shape = [30, 40, 50]
-    center = 'cell'
-    fld = viscid.dat2field(np.arange(np.prod(shape)).reshape(shape),
-                           center=center)
-    fld_f = viscid.dat2field(np.arange(np.prod([3] + shape)).reshape([3] + shape),
-                             fldtype='vector', layout='flat', center=center)
-    fld_i = viscid.dat2field(np.arange(np.prod(shape + [3])).reshape(shape + [3]),
-                             fldtype='vector', layout='interlaced', center=center)
+    arr = np.linspace(1.0, 10.0, 8)
 
-    #### SLICE 1
-    selection = np.s_[None, 1, ..., 2]
-    test_slice(selection, fld, (1, 40), nc_shape=(2, 41), cc_shape=(1, 40))
-    test_slice(selection, fld_f, (1, 30, 40), nc_shape=(2, 31, 41), cc_shape=(1, 30, 40))
-    test_slice(selection, fld_i, (1, 40, 50), nc_shape=(2, 41, 51), cc_shape=(1, 40, 50))
+    ###################
+    # slice by integer
 
-    selection = "None, 1, ..., 2"
-    test_slice(selection, fld, (1, 40), nc_shape=(2, 41), cc_shape=(1, 40))
-    test_slice(selection, fld_f, (1, 30, 40), nc_shape=(2, 31, 41), cc_shape=(1, 30, 40))
-    test_slice(selection, fld_i, (1, 40, 50), nc_shape=(2, 41, 51), cc_shape=(1, 40, 50))
+    test_slice(arr, np.s_[2], arr[2])
+    # forward
+    test_slice(arr, np.s_[4:], arr[4:])
+    test_slice(arr, np.s_[2::3], arr[2::3])
+    test_slice(arr, np.s_[:4], arr[:4])
+    test_slice(arr, np.s_[:5:2], arr[:5:2])
+    test_slice(arr, np.s_[2:5:2], arr[2:5:2])
+    test_slice(arr, np.s_[6:5:1], arr[6:5:1])
+    # backward
+    test_slice(arr, np.s_[4::-1], arr[4::-1])
+    test_slice(arr, np.s_[:4:-1], arr[:4:-1])
+    test_slice(arr, np.s_[:4:-2], arr[:4:-2])
+    test_slice(arr, np.s_[2:5:-2], arr[2:5:-2])
+    test_slice(arr, np.s_[6:4:-1], arr[6:4:-1])
+    # forward
+    test_slice(arr, '4:', arr[4:])
+    test_slice(arr, '2::3', arr[2::3])
+    test_slice(arr, ':4', arr[:4])
+    test_slice(arr, ':5:2', arr[:5:2])
+    test_slice(arr, '2:5:2', arr[2:5:2])
+    test_slice(arr, '6:5:1', arr[6:5:1])
+    # backward
+    test_slice(arr, '4::-1', arr[4::-1])
+    test_slice(arr, ':4:-1', arr[:4:-1])
+    test_slice(arr, ':4:-2', arr[:4:-2])
+    test_slice(arr, '2:5:-2', arr[2:5:-2])
+    test_slice(arr, '6:4:-1', arr[6:4:-1])
 
-    #### SLICE 2
-    selection = np.s_[1, ..., None, 2]
-    test_slice(selection, fld, (40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (30, 40, 1), nc_shape=(31, 41, 2), cc_shape=(30, 40, 1))
-    test_slice(selection, fld_i, (40, 50, 1), nc_shape=(41, 51, 2), cc_shape=(40, 50, 1))
+    #################
+    # slice by float
 
-    selection = "1, ..., None, 2"
-    test_slice(selection, fld, (40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (30, 40, 1), nc_shape=(31, 41, 2), cc_shape=(30, 40, 1))
-    test_slice(selection, fld_i, (40, 50, 1), nc_shape=(41, 51, 2), cc_shape=(40, 50, 1))
+    # Note: arr = [  1.           2.28571429   3.57142857   4.85714286
+    #                6.14285714   7.42857143   8.71428571  10.        ]
 
-    #### SLICE 3
-    selection = np.s_[None, ..., None, 1]
-    test_slice(selection, fld, (1, 30, 40, 1), nc_shape=(2, 31, 41, 2),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_f, (3, 1, 30, 40, 1), nc_shape=(2, 31, 41, 2),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_i, (1, 30, 40, 50, 1), nc_shape=(2, 31, 41, 51, 2),
-               cc_shape=(1, 30, 40, 50, 1))
+    test_slice(arr, np.s_['4.0f'], arr[2])
+    test_slice(arr, np.s_['4.0f':], arr[3:])
+    test_slice(arr, np.s_['4.0f'::2], arr[3::2])
+    test_slice(arr, np.s_[:'4.0f':2], arr[:3:2])
+    test_slice(arr, np.s_['2.0f':'7.8f'], arr[1:6])
+    test_slice(arr, np.s_['2.0f':'7.8f':2], arr[1:6:2])
+    test_slice(arr, np.s_['7.8f':'2.0f':-1], arr[5:0:-1])
+    test_slice(arr, np.s_['7.8f':'2.0f':-1], arr[5:1:-1], val_endpoint=False)
+    test_slice(arr, np.s_['7.8f':'2.0f':-2], arr[5:0:-2])
+    test_slice(arr, np.s_['7.8f':'2.0f':-2], arr[5:1:-2], val_endpoint=False)
+    test_slice(arr, np.s_['3.4f':'7.3f'], arr[2:5])
+    test_slice(arr, np.s_['3.4f':'7.3f'], arr[1:6], interior=True)
+    test_slice(arr, np.s_['2.4f':'2.5f'], arr[2:2])
+    test_slice(arr, np.s_['2.1f':'2.5f'], arr[1:2])
+    test_slice(arr, np.s_['2.1f':'2.5f'], arr[1:1], val_endpoint=False)
+    test_slice(arr, np.s_['2.3f':'2.5f'], arr[1:3], interior=True)
 
-    selection = "None, ..., None, 1"
-    test_slice(selection, fld, (1, 30, 40, 1), nc_shape=(2, 31, 41, 2),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_f, (3, 1, 30, 40, 1), nc_shape=(2, 31, 41, 2),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_i, (1, 30, 40, 50, 1), nc_shape=(2, 31, 41, 51, 2),
-               cc_shape=(1, 30, 40, 50, 1))
+    ############################
+    # slice by deprecated float
+    viscid.logger.info("testing deprecated slice-by-value")
+    test_slice(arr, np.s_['4.0'], arr[2])
+    test_slice(arr, np.s_['4.0':], arr[3:])
+    test_slice(arr, np.s_['4.0'::2], arr[3::2])
+    test_slice(arr, np.s_[:'4.0':2], arr[:3:2])
+    test_slice(arr, np.s_['2.0':'7.8'], arr[1:6])
+    test_slice(arr, np.s_['2.0':'7.8':2], arr[1:6:2])
+    test_slice(arr, np.s_['7.8':'2.0':-1], arr[5:0:-1])
+    test_slice(arr, np.s_['7.8':'2.0':-1], arr[5:1:-1], val_endpoint=False)
+    test_slice(arr, np.s_['7.8':'2.0':-2], arr[5:0:-2])
+    test_slice(arr, np.s_['7.8':'2.0':-2], arr[5:1:-2], val_endpoint=False)
+    test_slice(arr, np.s_['3.4':'7.3'], arr[2:5])
+    test_slice(arr, np.s_['3.4':'7.3'], arr[1:6], interior=True)
+    test_slice(arr, np.s_['2.4':'2.5'], arr[2:2])
+    test_slice(arr, np.s_['2.1':'2.5'], arr[1:2])
+    test_slice(arr, np.s_['2.1':'2.5'], arr[1:1], val_endpoint=False)
+    test_slice(arr, np.s_['2.3':'2.5'], arr[1:3], interior=True)
+    viscid.logger.info("done testing deprecated slice-by-value")
 
-    #### SLICE 4
-    selection = "x=0, ..., None, 2"
-    test_slice(selection, fld, (40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (3, 40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
-    test_slice(selection, fld_i, (40, 50, 1), nc_shape=(41, 51, 2), cc_shape=(40, 50, 1))
-
-    #### SLICE 4
-    selection = "x=5f, ..., t=None, 2"
-    test_slice(selection, fld, (40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (3, 40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
-    test_slice(selection, fld_i, (40, 50, 1), nc_shape=(41, 51, 2), cc_shape=(40, 50, 1))
-
-    # NODE CENTERED TESTS
-    shape = [31, 41, 51]
-    center = 'node'
-    fld = viscid.dat2field(np.arange(np.prod(shape)).reshape(shape),
-                           center=center)
-    fld_f = viscid.dat2field(np.arange(np.prod([3] + shape)).reshape([3] + shape),
-                             fldtype='vector', layout='flat', center=center)
-    fld_i = viscid.dat2field(np.arange(np.prod(shape + [3])).reshape(shape + [3]),
-                             fldtype='vector', layout='interlaced', center=center)
-
-    #### SLICE 1
-    selection = np.s_[None, 1, ..., 2]
-    test_slice(selection, fld, (1, 41), nc_shape=(1, 41), cc_shape=(1, 40))
-    test_slice(selection, fld_f, (1, 31, 41), nc_shape=(1, 31, 41), cc_shape=(1, 30, 40))
-    test_slice(selection, fld_i, (1, 41, 51), nc_shape=(1, 41, 51), cc_shape=(1, 40, 50))
-
-    selection = "None, 1, ..., 2"
-    test_slice(selection, fld, (1, 41), nc_shape=(1, 41), cc_shape=(1, 40))
-    test_slice(selection, fld_f, (1, 31, 41), nc_shape=(1, 31, 41), cc_shape=(1, 30, 40))
-    test_slice(selection, fld_i, (1, 41, 51), nc_shape=(1, 41, 51), cc_shape=(1, 40, 50))
-
-    #### SLICE 2
-    selection = np.s_[1, ..., None, 2]
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (31, 41, 1), nc_shape=(31, 41, 1), cc_shape=(30, 40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
-
-    selection = "1, ..., None, 2"
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (31, 41, 1), nc_shape=(31, 41, 1), cc_shape=(30, 40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
-
-    #### SLICE 3
-    selection = np.s_[None, ..., None, 1]
-    test_slice(selection, fld, (1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_f, (3, 1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_i, (1, 31, 41, 51, 1), nc_shape=(1, 31, 41, 51, 1),
-               cc_shape=(1, 30, 40, 50, 1))
-
-    selection = "None, ..., None, 1"
-    test_slice(selection, fld, (1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_f, (3, 1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
-    test_slice(selection, fld_i, (1, 31, 41, 51, 1), nc_shape=(1, 31, 41, 51, 1),
-               cc_shape=(1, 30, 40, 50, 1))
-
-    #### SLICE 4
-    selection = "x=0, ..., None, 2"
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
-
-    #### SLICE 4
-    selection = "x=5f, ..., t=None, 2"
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
+    assert viscid.selection2values(arr, np.s_[2:5]) == (3.5714285714285716,
+                                                        7.4285714285714288)
+    assert viscid.selection2values(None, np.s_[2:5]) == (np.nan, np.nan)
+    assert viscid.selection2values(None, np.s_[:5]) == (-np.inf, np.nan)
+    assert viscid.selection2values(None, np.s_[:5:-1]) == (np.inf, np.nan)
+    assert viscid.selection2values(arr, '2.3f:2.5f') == (2.3, 2.5)
+    assert viscid.selection2values(None, '2.3f:2.5f') == (2.3, 2.5)
 
     return 0
 

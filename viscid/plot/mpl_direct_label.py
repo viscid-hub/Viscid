@@ -375,9 +375,12 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.0, 1.0),
         corners = Bbox(winner_abs_px.T).corners()[(0, 1, 3, 2), :]
         bbox_paths_px += [Path(corners)]
 
-        a = plt.annotate(label, xy=xy_root_dat, xycoords='data',
-                         xytext=xy_txt_offset, textcoords="offset pixels",
-                         color=color, **kwargs)
+        # a = plt.annotate(label, xy=xy_root_dat, xycoords='data',
+        #                  xytext=xy_txt_offset, textcoords="offset pixels",
+        #                  color=color, **kwargs)
+        a = ax.annotate(label, xy=xy_root_dat, xycoords='data',
+                        xytext=xy_txt_offset, textcoords="offset pixels",
+                        color=color, **kwargs)
         annotations.append(a)
     return annotations
 

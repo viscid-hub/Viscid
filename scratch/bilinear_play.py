@@ -121,7 +121,7 @@ def main():
     nullpt = cycalc.interp_trilin(fld, [(0.5, 0.5, 0.5)])
     print("f(0.5, 0.5, 0.5):", nullpt)
 
-    ax1 = plt.subplot2grid((4, 3), (0, 0))
+    _, axes = plt.subplots(4, 3, sharex=True, sharey=True)
     all_roots = []
     positive_roots = []
     ix = iy = iz = 0
@@ -169,18 +169,14 @@ def main():
 
         xp = np.linspace(0.0, 1.0, nx)
 
-        # plt.subplot(121)
-        plt.subplot2grid((4, 3), (0 + 2 * di, 0), sharex=ax1, sharey=ax1)
-        vlt.plot(fld['x'], "z={0}i".format(d),
+        vlt.plot(fld['x'], "z={0}i".format(d), ax=axes[0 + 2 * di, 0],
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, yl, yh))
         y1 = - (a1 + b1 * xp) / (c1 + d1 * xp)
         plt.plot(x, (yh - yl) * y1 + yl, 'k')
         for i, xrt, yrt in zip(count(), roots1, roots2):
             plt.plot(xrt, yrt, markers[i])
 
-        # plt.subplot(122)
-        plt.subplot2grid((4, 3), (1 + 2 * di, 0), sharex=ax1, sharey=ax1)
-        vlt.plot(fld['y'], "z={0}i".format(d),
+        vlt.plot(fld['y'], "z={0}i".format(d), ax=axes[1 + 2 * di, 0],
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, yl, yh))
         y2 = - (a2 + b2 * xp) / (c2 + d2 * xp)
         plt.plot(x, (yh - yl) * y2 + yl, 'k')
@@ -230,8 +226,7 @@ def main():
         yp = np.linspace(0.0, 1.0, ny)
 
         # plt.subplot(121)
-        plt.subplot2grid((4, 3), (0 + 2 * di, 1), sharex=ax1, sharey=ax1)
-        vlt.plot(fld['x'], "x={0}i".format(d),
+        vlt.plot(fld['x'], "x={0}i".format(d), ax=axes[0 + 2 * di, 1],
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(yl, yh, zl, zh))
         z1 = - (a1 + b1 * yp) / (c1 + d1 * yp)
         plt.plot(y, (zh - zl) * z1 + zl, 'k')
@@ -239,8 +234,7 @@ def main():
             plt.plot(yrt, zrt, markers[i])
 
         # plt.subplot(122)
-        plt.subplot2grid((4, 3), (1 + 2 * di, 1), sharex=ax1, sharey=ax1)
-        vlt.plot(fld['y'], "x={0}i".format(d),
+        vlt.plot(fld['y'], "x={0}i".format(d), ax=axes[1 + 2 * di, 1],
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(yl, yh, zl, zh))
         z1 = - (a2 + b2 * yp) / (c2 + d2 * yp)
         plt.plot(y, (zh - zl) * z1 + zl, 'k')
@@ -290,8 +284,7 @@ def main():
         zp = np.linspace(0.0, 1.0, nz)
 
         # plt.subplot(121)
-        plt.subplot2grid((4, 3), (0 + 2 * di, 2), sharex=ax1, sharey=ax1)
-        vlt.plot(fld['x'], "y={0}i".format(d),
+        vlt.plot(fld['x'], "y={0}i".format(d), ax=axes[0 + 2 * di, 2],
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
         x1 = - (a1 + b1 * zp) / (c1 + d1 * zp)
         plt.plot(z, (xh - xl) * x1 + xl, 'k')
@@ -299,8 +292,7 @@ def main():
             plt.plot(xrt, zrt, markers[i])
 
         # plt.subplot(121)
-        plt.subplot2grid((4, 3), (1 + 2 * di, 2), sharex=ax1, sharey=ax1)
-        vlt.plot(fld['y'], "y={0}i".format(d),
+        vlt.plot(fld['y'], "y={0}i".format(d), ax=axes[1 + 2 * di, 2],
                  plot_opts="x={0}_{1},y={2}_{3},lin_-10_10".format(xl, xh, zl, zh))
         x1 = - (a2 + b2 * zp) / (c2 + d2 * zp)
         plt.plot(z, (xh - xl) * x1 + xl, 'k')

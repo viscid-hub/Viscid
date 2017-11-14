@@ -39,21 +39,18 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
 
     result_diff = viscid.diff(result_numexpr, exact)['x=1:-1, y=1:-1, z=1:-1']
     if not ignore_inexact and not (result_diff.data < 5e-5).all():
-        logger.warn("numexpr result is far from the exact result")
+        logger.warning("numexpr result is far from the exact result")
     logger.info("min/max(abs(numexpr - exact)): %g / %g",
                 np.min(result_diff.data), np.max(result_diff.data))
 
     planes = ["y=0f", "z=0f"]
     nrows = 2
     ncols = len(planes)
-    ax = plt.subplot2grid((nrows, ncols), (0, 0))
-    ax.axis("equal")
+    _, axes = plt.subplots(nrows, ncols, squeeze=False)
 
     for i, p in enumerate(planes):
-        plt.subplot2grid((nrows, ncols), (0, i), sharex=ax, sharey=ax)
-        vlt.plot(result_numexpr, p, show=False)
-        plt.subplot2grid((nrows, ncols), (1, i), sharex=ax, sharey=ax)
-        vlt.plot(result_diff, p, show=False)
+        vlt.plot(result_numexpr, p, ax=axes[0, i], show=False)
+        vlt.plot(result_diff, p, ax=axes[1, i], show=False)
 
     plt.suptitle(title)
     vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))

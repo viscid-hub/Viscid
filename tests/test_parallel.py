@@ -33,7 +33,7 @@ def _main():
                                n=(256, 128, 128), dtype='f4', nonuniform=nu)
         seed = viscid.Circle(p0=(0, 0, 0), pole=(0, 0, 1), r=5.5, n=int(1e4))
 
-        kwargs = dict(method='euler1')
+        kwargs = dict(method='euler1', ibound=0.1)
 
         viscid.logger.info("Serial test...")
         l0, t0 = do(args.timeit, viscid.calc_streamlines, b, seed,

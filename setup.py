@@ -19,10 +19,12 @@ from distutils import log
 from distutils import sysconfig
 import json
 import shutil
+import subprocess
 
 import numpy as np
 from numpy.distutils.core import setup
-import numpy.distutils.fcompiler
+from numpy.distutils.exec_command import exec_command
+from numpy.distutils import fcompiler as _fcompiler
 from numpy.distutils.extension import Extension as Extension
 npExtension = Extension
 
@@ -233,9 +235,10 @@ def clean_other_so_files(valid_so_list, dry_run=False):
 # get clean to remove inplace files
 class Clean(clean):
     def run(self):
-        # distutils uses old-style classes???
-        #super(Clean, self).run()
-        clean.run(self)
+        try:
+            super(Clean, self).run()
+        except TypeError:
+            clean.run(self)
 
         clean_pyc_files(self.dry_run)
 
@@ -297,7 +300,7 @@ if has_cython and use_cython:
 
 # make fortran extension instances
 try:
-    fc = numpy.distutils.fcompiler.new_fcompiler(dry_run=True)
+    fc = _fcompiler.new_fcompiler(dry_run=True)
 except ValueError:
     fc = None
 
@@ -305,6 +308,70 @@ if fc is None:
     # warn the user at the very end so they're more likely to see the warning
     pass
 else:
+    # the folloing gfortran hacks are to work around a treacherous bug when
+    # using anaconda + f2py (numpy) + a local gfortran on MacOS / Linux...
+    # in short, anaconda ships its own libgfortran to make numpy / scipy
+    # work, but this will conflict with some gfortran compilers...
+    # AND numpy assumes that `gfortran -print-libgcc-file-name` will give the
+    # path to libgfortran (it practice it doesn't on Debian / MacPorts)... SO
+    # we let numpy discover the path to libgfortran using
+    # `gfortran -print-file-name=libgfortran.so` (or dylib) because that will
+    # give us the correct link path, and fortran code that we compile with f2py
+    # will be correctly linked to the lib supplied by OUR compiler
+    if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
+        from numpy.distutils.fcompiler import gnu as _gnu
+        from numpy.distutils import fcompiler as _fcompiler
+
+        def _get_libgfortran_dir(compiler_args):
+            if sys.platform[:5] == 'linux':
+                libgfortran_name = 'libgfortran.so'
+            elif sys.platform == 'darwin':
+                libgfortran_name = 'libgfortran.dylib'
+            else:
+                libgfortran_name = None
+
+            libgfortran_dir = None
+            if libgfortran_name:
+                find_lib_arg = ['-print-file-name={0}'.format(libgfortran_name)]
+                status, output = exec_command(compiler_args + find_lib_arg,
+                                              use_tee=0)
+                if not status:
+                    libgfortran_dir = os.path.dirname(output)
+            return libgfortran_dir
+
+        class GnuFCompilerHack(_gnu.GnuFCompiler):
+            def get_library_dirs(self):
+                try:
+                    opt = super(GnuFCompilerHack, self).get_library_dirs()
+                except TypeError:
+                    # old distutils use old-style classes
+                    opt = _gnu.GnuFCompiler.get_library_dirs(self)
+                if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
+                    libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
+                    if libgfortran_dir:
+                        opt.append(libgfortran_dir)
+                return opt
+
+        class Gnu95FCompilerHack(_gnu.Gnu95FCompiler):
+            def get_library_dirs(self):
+                try:
+                    opt = super(Gnu95FCompilerHack, self).get_library_dirs()
+                except TypeError:
+                    # old distutils use old-style classes
+                    opt = _gnu.Gnu95FCompiler.get_library_dirs(self)
+                if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
+                    libgfortran_dir = _get_libgfortran_dir(self.compiler_f77)
+                    if libgfortran_dir:
+                        opt.append(libgfortran_dir)
+                    return opt
+
+        _fcompiler.load_all_fcompiler_classes()
+        _fcompiler.fcompiler_class['gnu'] = ('gnu', GnuFCompilerHack,
+                                             'GNU Fortran 77 compile Hack')
+        _fcompiler.fcompiler_class['gnu95'] = ('gnu', Gnu95FCompilerHack,
+                                               'GNU Fortran 95 compile Hack')
+
+    # ok, now that that hack is over with, add our fortran extensions
     for d in fort_defs:
         if d is None:
             continue
@@ -343,6 +410,15 @@ def get_viscid_version(init_py):
                 return m.groups()[1]
 
 try:
+    data_files = []
+    data_files += [('viscid/plot/images', glob("viscid/plot/images/*.jpg"))]
+    data_files += [('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle'))]
+    data_files += [('viscid/sample', glob("sample/*"))]
+    for dirpath, _, fnames in os.walk('sample/vpic_sample'):
+        fnames = [os.path.join(dirpath, fname)
+                  for fname in fnames if not fname.startswith('.')]
+        data_files += [(os.path.join('viscid', dirpath), fnames)]
+
     setup(name='viscid',
           version=get_viscid_version("viscid/__init__.py"),
           description='Visualization in python',
@@ -353,9 +429,7 @@ try:
           include_dirs=[np.get_include()],
           ext_modules=ext_mods,
           scripts=scripts,
-          data_files=[('viscid/plot/images', glob("viscid/plot/images/*.jpg")),
-                      ('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle')),
-                      ('viscid/sample', glob("sample/*"))]
+          data_files=data_files,
          )
 
     # if installed, store list of installed files in a json file - this
@@ -386,15 +460,15 @@ try:
         os.remove(RECORD_FNAME)
 
 except SystemExit as e:
-    if os.uname()[0] == 'Darwin':
-        print('\n'
-              'NOTE: OS X has an issue you may be running into.\n'
-              '      If the compile is complaining that it can\'t find\n'
-              '      -lgcc_s.10.5, then run the following:\n'
-              '      \n'
-              '      $ sudo su root -c "mkdir -p /usr/local/lib && ln -s '
-              '/usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"'
-              '      \n', file=sys.stderr)
+    # if os.uname()[0] == 'Darwin':
+    #     print('\n'
+    #           'NOTE: OS X has an issue you may be running into.\n'
+    #           '      If the compile is complaining that it can\'t find\n'
+    #           '      -lgcc_s.10.5, then run the following:\n'
+    #           '      \n'
+    #           '      $ sudo su root -c "mkdir -p /usr/local/lib && ln -s '
+    #           '/usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"'
+    #           '      \n', file=sys.stderr)
     raise
 
 # warn the user at the end if the fortran code was not built

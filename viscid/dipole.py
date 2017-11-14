@@ -30,8 +30,8 @@ DEFAULT_STRENGTH = 1.0 / 3.0574e-5
 def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
                         cap_ntheta=121, cap_nphi=121, plot=False):
     """guess dipole moment from a B field"""
-    viscid.warn("guess_dipole_moment doesn't seem to do better than 1.6 "
-                "degrees, you may want to use cotr instead.")
+    viscid.logger.warning("guess_dipole_moment doesn't seem to do better than "
+                          "1.6 degrees, you may want to use cotr instead.")
     cap = seed.SphericalCap(r=r, angle=cap_angle, ntheta=cap_ntheta,
                             nphi=cap_nphi)
     b_cap = interp_trilin(b, cap)
@@ -56,8 +56,8 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
     return pole
 
 def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
-                n=None, twod=False, dtype='f8', nonuniform=False,
-                crd_system='gse', name='b'):
+                n=None, center='cell', dtype='f8', twod=False,
+                nonuniform=False, crd_system='gse', name='b'):
     """Generate a dipole field with magnetic moment m [x, y, z]"""
     if l is None:
         l = [-5] * 3
@@ -65,6 +65,10 @@ def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
         h = [5] * 3
     if n is None:
         n = [256] * 3
+
+    if center.strip().lower() == 'cell':
+        n = [ni + 1 for ni in n]
+
     x = np.array(np.linspace(l[0], h[0], n[0]), dtype=dtype)
     y = np.array(np.linspace(l[1], h[1], n[1]), dtype=dtype)
     z = np.array(np.linspace(l[2], h[2], n[2]), dtype=dtype)
@@ -74,7 +78,7 @@ def make_dipole(m=(0, 0, -DEFAULT_STRENGTH), strength=None, l=None, h=None,
     if nonuniform:
         z += 0.01 * ((h[2] - l[2]) / n[2]) * np.sin(np.linspace(0, np.pi, n[2]))
 
-    B = field.empty([x, y, z], nr_comps=3, name=name, center='cell',
+    B = field.empty([x, y, z], nr_comps=3, name=name, center=center,
                     layout='interlaced', dtype=dtype)
     B.set_info('crd_system', viscid.as_crd_system(crd_system))
     B.set_info('cotr', viscid.dipole_moment2cotr(m, crd_system=crd_system))

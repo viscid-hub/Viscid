@@ -39,7 +39,6 @@ from viscid.plot.mpl_direct_label import apply_labels
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
-has_colorbar_gridspec = LooseVersion(__mpl_ver__) > LooseVersion("1.1.1")
 vseaborn.activate_from_viscid()
 
 
@@ -116,8 +115,9 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     Returns:
         None, the plot_opts are stuffed into plot_kwargs
     """
+    plot_kwargs = dict(plot_kwargs)
     if not plot_opts:
-        return
+        return plot_kwargs
 
     plot_opts = plot_opts.strip()
     if plot_opts[0] == '{' and plot_opts[-1] == '}':
@@ -155,7 +155,30 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
                 except TypeError:
                     pass
                 plot_kwargs[opt[0]] = opt[1:]
+    return plot_kwargs
 
+
+def _pop_axis_opts(plot_kwargs, default='none'):
+    if 'equalaxis' in plot_kwargs:
+        viscid.logger.warning("equalaxis option deprecated, please specify "
+                              "this axis options explicitly (i.e., axis='equal', "
+                              "axis='image', axis='auto', etc.)")
+        if 'axis' in plot_kwargs:
+            viscid.logger.warning("Clobbering axis option with deprecated "
+                                  "equalaxis option :'(")
+        if plot_kwargs.pop('equalaxis'):
+            plot_kwargs['axis'] = 'equal'
+        else:
+            plot_kwargs['axis'] = 'none'
+    using_default_viscid_axis = 'axis' not in plot_kwargs
+    _axis = plot_kwargs.pop("axis", default)
+    if _axis is not None:
+        _axis = _axis.strip().lower()
+        if _axis in ('none', ''):
+            _axis = None
+
+    # print('_axis =', _axis)
+    return _axis, using_default_viscid_axis, plot_kwargs
 
 def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     """
@@ -188,22 +211,33 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     if not axis:
         axis = plt.gca()
 
-    if "equalaxis" in plot_kwargs:
-        if plot_kwargs.pop('equalaxis'):
-            actions.append((axis.axis, 'equal'))
+    if 'axis' in plot_kwargs:
+        _axis = plot_kwargs.pop('axis')
+        if _axis is not None:
+            if _axis == 'image':
+                # this is a hack to allow image axes even when we're sharing
+                # the x/y axes... the matplotlib docs warn of unintended
+                # consequences, but I'm not sure what that means... so maybe
+                # a warning is in order?
+                actions.append((axis.autoscale_view, [], dict(tight=True)))
+                actions.append((axis.set_autoscale_on, False))
+                actions.append((axis.set_aspect, 'equal',
+                                dict(adjustable='box-forced', anchor='C')))
+            else:
+                actions.append((axis.axis, _axis))
     if "x" in plot_kwargs:
         actions.append((axis.set_xlim, plot_kwargs.pop('x')))
     if "y" in plot_kwargs:
         actions.append((axis.set_ylim, plot_kwargs.pop('y')))
     if "own" in plot_kwargs:
         opt = plot_kwargs.pop('own')
-        logger.warn("own axis doesn't seem to work yet...")
+        logger.warning("own axis doesn't seem to work yet...")
     if "ownx" in plot_kwargs:
         opt = plot_kwargs.pop('ownx')
-        logger.warn("own axis doesn't seem to work yet...")
+        logger.warning("own axis doesn't seem to work yet...")
     if "owny" in plot_kwargs:
         opt = plot_kwargs.pop('owny')
-        logger.warn("own axis doesn't seem to work yet...")
+        logger.warning("own axis doesn't seem to work yet...")
 
     norm_dict = {'crdscale': 'lin',
                  'vscale': 'lin',
@@ -270,10 +304,14 @@ def _apply_actions(acts):
         act_args = act[1]
         if not isinstance(act_args, (list, tuple)):
             act_args = [act_args]
-        act[0](*act_args)
+        try:
+            act_kwargs = act[2]
+        except IndexError:
+            act_kwargs = dict()
+        act[0](*act_args, **act_kwargs)
 
 def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
-                       using_default_equalax):
+                       using_default_viscid_axis):
     new_ax_arrs = [None] * len(ax_arrs)
     datetime_fmt = [None] * len(ax_arrs)
 
@@ -289,13 +327,12 @@ def _prepare_time_axes(ax, ax_arrs, datefmt, timefmt, actions,
         else:
             new_ax_arrs[i] = XI
 
-    # with time axes, you probably don't want equalax, but only override
+    # with time axes, you probably don't want imageax, but only override
     # this if the user didn't specify with a plot_opt
-    try:
-        if using_default_equalax and any(datetime_fmt):
-            actions.pop(actions.index((ax.axis, 'equal')))
-    except ValueError:
-        pass
+    if using_default_viscid_axis and any(datetime_fmt):
+        for i in reversed(range(len(actions))):
+            if actions[i][0] in (ax.axis, ax.set_aspect):
+                actions.pop(i)
 
     # take x and y plot opts and convert them to datetimes
     for i, setter in enumerate([ax.set_xlim, ax.set_ylim]):
@@ -315,7 +352,7 @@ def _apply_time_axes(fig, ax, datetime_fmt, autofmt_xdate):
             datetime_formatter = mdates.DateFormatter(fmt)
             axis_i.set_major_formatter(datetime_formatter)
             if axis_i is ax.xaxis and autofmt_xdate:
-                plt.gcf().autofmt_xdate()
+                fig.autofmt_xdate()
 
 def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
                  which_axes="xy"):
@@ -342,7 +379,7 @@ def _apply_axfmt(ax, majorfmt=None, minorfmt=None, majorloc=None, minorloc=None,
 def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
                    masknan, latlon, flip_plot, patchec, patchlw, patchaa,
                    datefmt, timefmt, autofmt_xdate, all_masked, extra_args,
-                   actions, using_default_equalax, **kwargs):
+                   actions, using_default_viscid_axis, **kwargs):
     """Make a 2d plot of a single patch
 
     Returns:
@@ -394,7 +431,7 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
         namex, namey = namey, namex
 
     ax_arrs, datetime_fmt = _prepare_time_axes(ax, [X, Y], datefmt, timefmt,
-                                               actions, using_default_equalax)
+                                               actions, using_default_viscid_axis)
     X, Y = ax_arrs
 
     # datetime_fmt = [False, False]
@@ -424,7 +461,7 @@ def _plot2d_single(ax, fld, style, namex, namey, mod, scale,
             datetime_formatter = mdates.DateFormatter(_fmt)
             axis_i.set_major_formatter(datetime_formatter)
             if axis_i is ax.xaxis and autofmt_xdate:
-                plt.gcf().autofmt_xdate()
+                ax.get_figure().autofmt_xdate()
 
     try:
         if masknan:
@@ -476,16 +513,19 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax = plt.gca()
 
     # parse plot_opts
-    plot_opts_to_kwargs(plot_opts, plot_kwargs)
-    using_default_equalax = 'equalaxis' not in plot_kwargs
+    plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
+
+    _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs,
+                                                                   default='image')
+
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
-                                                   defaults={'equalaxis': True})
+                                                   defaults={'axis': _axis})
 
     # everywhere options
     scale = plot_kwargs.pop("scale", None)
     masknan = plot_kwargs.pop("masknan", True)
-    flip_plot = plot_kwargs.pop("flip_plot", False)
-    flip_plot = plot_kwargs.pop("flipplot", flip_plot)
+    flip_plot = plot_kwargs.pop("flipplot", False)
+    flip_plot = plot_kwargs.pop("flip_plot", flip_plot)
     nolabels = plot_kwargs.pop("nolabels", False)
     xlabel = plot_kwargs.pop("xlabel", None)
     ylabel = plot_kwargs.pop("ylabel", None)
@@ -495,26 +535,30 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     minorloc = plot_kwargs.pop("minorloc", rcParams.get("viscid.minorloc", None))
     datefmt = plot_kwargs.pop("datefmt", "%Y-%m-%d %H:%M:%S")
     timefmt = plot_kwargs.pop("timefmt", "%H:%M:%S")
-    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", True)
-    autofmt_xdate = plot_kwargs.pop("autofmtxdate", autofmt_xdate)
+    autofmt_xdate = plot_kwargs.pop("autofmtxdate", True)
+    autofmt_xdate = plot_kwargs.pop("autofmt_xdate", autofmt_xdate)
     show = plot_kwargs.pop("show", False)
 
     # 2d plot options
     style = plot_kwargs.pop("style", "pcolormesh")
     levels = plot_kwargs.pop("levels", 10)
-    show_grid = plot_kwargs.pop("show_grid", False)
-    show_grid = plot_kwargs.pop("g", show_grid)
+    show_grid = plot_kwargs.pop("g", False)
+    show_grid = plot_kwargs.pop("show_grid", show_grid)
     gridec = plot_kwargs.pop("gridec", None)
     gridlw = plot_kwargs.pop("gridlw", 0.25)
     gridaa = plot_kwargs.pop("gridaa", True)
-    show_patches = plot_kwargs.pop("show_patches", False)
-    show_patches = plot_kwargs.pop("p", show_patches)
+    show_patches = plot_kwargs.pop("p", False)
+    show_patches = plot_kwargs.pop("show_patches", show_patches)
     patchec = plot_kwargs.pop("patchec", None)
     patchlw = plot_kwargs.pop("patchlw", 0.25)
     patchaa = plot_kwargs.pop("patchaa", True)
     mod = plot_kwargs.pop("mod", None)
     title = plot_kwargs.pop("title", None)
-    colorbar = plot_kwargs.pop("colorbar", True)
+    cax = plot_kwargs.pop("cax", None)
+    cbar = plot_kwargs.pop("cbar", True)
+    colorbar = plot_kwargs.pop("colorbar", cbar)
+    cbar_kwargs = plot_kwargs.pop('colorbar_kwargs', dict())
+    cbar_kwargs = plot_kwargs.pop("cbar_kwargs", cbar_kwargs)
     cbarlabel = plot_kwargs.pop("cbarlabel", None)
     earth = plot_kwargs.pop("earth", False)
 
@@ -540,13 +584,12 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         if not patchec:
             patchec = show_patches
 
-    if colorbar:
-        if not isinstance(colorbar, dict):
-            colorbar = {}
-        else:
-            colorbar = dict(colorbar)
-    else:
-        colorbar = None
+    if isinstance(colorbar, dict):
+        viscid.logger.warning("Deprecation, colorbar options should be passed as "
+                              "cbar_kwargs and colorbar should be True/False.")
+        if cbar_kwargs:
+            viscid.logger.warning("Clobbering cbar_kwargs with colorbar")
+        colorbar, cbar_kwargs = True, colorbar
 
     #########################
     # figure out the norm...
@@ -561,8 +604,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         # vmin / vmax will only be nan if all values are nan
         if np.isnan(vmin) or np.isnan(vmax):
-            logger.warn("All-Nan encountered in Field, {0}"
-                        "".format(patch0.name))
+            logger.warning("All-Nan encountered in Field, {0}"
+                           "".format(patch0.name))
             vmin, vmax = 1e38, 1e38
             norm_dict['symmetric'] = False
 
@@ -576,13 +619,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             if norm_dict['symmetric']:
                 raise ValueError("Can't use symmetric color bar with logscale")
             if vmax <= 0.0:
-                logger.warn("Using log scale on a field with no "
-                            "positive values")
+                logger.warning("Using log scale on a field with no "
+                               "positive values")
                 plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = 1e-20, 1e-20
             elif vmin <= 0.0:
-                logger.warn("Using log scale on a field with values "
-                            "<= 0. Only plotting 4 decades.")
+                logger.warning("Using log scale on a field with values "
+                               "<= 0. Only plotting 4 decades.")
                 plot_kwargs['logscale_mask_neg'] = True
                 vmin, vmax = vmax / 1e4, vmax
             norm = LogNorm(vmin, vmax)
@@ -633,7 +676,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
                                        latlon, flip_plot,
                                        patchec, patchlw, patchaa, datefmt, timefmt,
                                        autofmt_xdate, all_masked, extra_args,
-                                       actions, using_default_equalax, **plot_kwargs)
+                                       actions, using_default_viscid_axis,
+                                       **plot_kwargs)
 
     # apply option actions... this is for setting xlim / xscale / etc.
     _apply_actions(actions)
@@ -643,41 +687,59 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax.set_yscale('log')
 
     # figure out the colorbar...
-    if style == "contour":
-        if "colors" in plot_kwargs:
-            colorbar = None
-    if colorbar is not None:
-        # unless otherwise specified, use_gridspec for colorbar
-        if "use_gridspec" not in colorbar:
-            colorbar["use_gridspec"] = True
-        if "ax" not in colorbar:
-            colorbar["ax"] = ax
+    if style == "contour" and "colors" in plot_kwargs:
+        colorbar = False
+    if masknan and all_masked:
+        colorbar = False
 
-        if "ticks" not in colorbar:
+    if colorbar:
+        if 'ax' in cbar_kwargs:
+            viscid.logger.warning("ignoring cbar_kwargs['ax']")
+            cbar_kwargs.pop('ax')
+
+        if cax is not None:
+            if 'cax' in cbar_kwargs:
+                viscid.logger.warning("clobbering colorbar['cax']")
+            cbar_kwargs['cax'] = cax
+
+        if "cax" in cbar_kwargs or not cbar_kwargs.get('use_grid1', True):
+            cax, cbar_kwargs, grid1_kwargs = _make_grid1_cbar_axes(ax, cbar_kwargs,
+                                                                   make_cax=False)
+            cax = cbar_kwargs.pop('cax', None)
+        else:
+            cax, cbar_kwargs, grid1_kwargs = _make_grid1_cbar_axes(ax, cbar_kwargs)
+
+        if "ticks" not in cbar_kwargs:
             if vscale == "log":
-                colorbar["ticks"] = matplotlib.ticker.LogLocator()
+                cbar_kwargs["ticks"] = matplotlib.ticker.LogLocator()
             elif symmetric_vlims:
-                colorbar["ticks"] = matplotlib.ticker.MaxNLocator()
+                cbar_kwargs["ticks"] = matplotlib.ticker.MaxNLocator()
             else:
-                colorbar["ticks"] = matplotlib.ticker.LinearLocator()
+                cbar_kwargs["ticks"] = matplotlib.ticker.LinearLocator()
 
-        cbarfmt = colorbar.pop("format", rcParams.get('viscid.cbarfmt', None))
+        cbarfmt = cbar_kwargs.pop("format", rcParams.get('viscid.cbarfmt', None))
         if cbarfmt == "steve":
             cbarfmt = mpl_extra.steve_cbarfmt
         if cbarfmt:
-            colorbar["format"] = cbarfmt
+            cbar_kwargs["format"] = cbarfmt
 
-        # ok, this way to pass options to colorbar is bad!!!
-        # but it's kind of the cleanest way to affect the colorbar?
-        if masknan and all_masked:
-            cbar = None
-        else:
-            cbar = plt.colorbar(p, **colorbar)
-            if not nolabels and (cbarlabel or not title or
-                                 isinstance(title, string_types)):
-                if not cbarlabel:
-                    cbarlabel = patch0.pretty_name
-                cbar.set_label(cbarlabel)
+        cbar = plt.colorbar(p, cax=cax, **cbar_kwargs)
+
+        _cax_position = grid1_kwargs.get('position', None)
+        if cax and _cax_position == 'top':
+            cax.get_xaxis().set_ticks_position('top')
+            cax.get_xaxis().set_label_position('top')
+        # elif _cax_position == 'left':
+        #     # cax.get_yaxis() is not a thing?
+        #     cax.get_yaxis().set_ticks_position('left')
+        #     cax.get_yaxis().set_label_position('left')
+
+        # apply labels... or not
+        if not nolabels and (cbarlabel or not title or
+                             isinstance(title, string_types)):
+            if not cbarlabel:
+                cbarlabel = patch0.pretty_name
+            cbar.set_label(cbarlabel)
     else:
         cbar = None
 
@@ -692,18 +754,96 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         if title:
             if not isinstance(title, string_types):
                 title = patch0.pretty_name
-            plt.title(title)
-        plt.xlabel(namex)
-        plt.ylabel(namey)
+            ax.set_title(title)
+        ax.set_xlabel(namex)
+        ax.set_ylabel(namey)
 
     _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
                  majorloc=majorloc, minorloc=minorloc)
 
     if earth:
         plot_earth(fld, axis=ax)
+    plt.sca(ax)
     if show:
         mplshow()
+
     return p, cbar
+
+def _make_grid1_cbar_axes(ax, cbar_kwargs, make_cax=True):
+    _use_grid1 = cbar_kwargs.pop('use_grid1', make_cax)
+    assert make_cax == _use_grid1
+
+    orig_cbar_kwargs = dict(cbar_kwargs)
+
+    position = cbar_kwargs.pop('position', None)
+    orientation = cbar_kwargs.pop('orientation', None)
+
+    # figure out consistant position / orientation, and warn if they are
+    # inconsistent
+    if position is None and orientation is None:
+        position = 'right'
+        orientation = 'vertical'
+    # sanity check orientation given position
+    if position in ('top', 'bottom'):
+        if orientation not in (None, 'horizontal'):
+            viscid.logger.warning("Colorbar position is '{0}', but "
+                                  "orientation '{1}' is not horizontal."
+                                  "".format(position, orientation))
+        orientation = 'horizontal'
+    if position in ('left', 'right'):
+        if orientation not in (None, 'vertical'):
+            viscid.logger.warning("Colorbar position is '{0}', but "
+                                  "orientation '{1}' is not vertical."
+                                  "".format(position, orientation))
+        orientation = 'vertical'
+    # sanity check position given orientation
+    if orientation == 'vertical':
+        if position not in ('left', 'right'):
+            if position is not None:
+                viscid.logger.warning("Colorbar orientation is horizontal, "
+                                      "but position '{0}' is neither left nor "
+                                      "right.".format(position))
+            position = 'right'
+    if orientation == 'horizontal':
+        if position not in ('top', 'bottom'):
+            if position is not None:
+                viscid.logger.warning("Colorbar orientation is horizontal, "
+                                      "but position '{0}' is neither left nor "
+                                      "right.".format(position))
+            position = 'bottom'
+
+    cbar_kwargs['orientation'] = orientation
+
+    grid1_kwargs = dict()
+    grid1_kwargs['orientation'] = orientation
+    grid1_kwargs['position'] = position
+    grid1_kwargs['aspect'] = cbar_kwargs.pop('aspect', 20)
+    default_pad = 0.05 if orientation == 'vertical' else 0.15
+    grid1_kwargs['pad'] = cbar_kwargs.pop('pad', default_pad)
+    grid1_kwargs['fraction'] = cbar_kwargs.pop('fraction', 0.05)
+    grid1_kwargs['shrink'] = cbar_kwargs.pop('shrink', 1.0)
+    cax = None
+
+    if make_cax:
+        try:
+            from viscid.plot import _mpl_grid1
+            cax = _mpl_grid1.make_grid1_cax(ax, **grid1_kwargs)
+        except ImportError:
+            viscid.logger.warning("Old matplotlib doesn't have "
+                                  "mpl_toolkits.axes_grid1; falling back to "
+                                  "awkward default colorbar axis.")
+    if cax is None:
+        # prepare to fallback to default mechanism, ie, let plt.colorbar
+        # take all the kwargs and make its own axis
+        cbar_kwargs = orig_cbar_kwargs
+        cbar_kwargs.pop('position', None)
+        cbar_kwargs['orientation'] = orientation
+        if position in ('top', 'left'):
+            viscid.logger.warning("Ignoring colorbar position '{0}'"
+                                  "".format(position))
+
+    ax.get_figure().sca(ax)
+    return cax, cbar_kwargs, grid1_kwargs
 
 def _mlt_labels(longitude):
     return "{0:g}".format(longitude * 24.0 / 360.0)
@@ -734,7 +874,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         raise TypeError("plot2d_mapfield doesn't do multi-patch fields yet")
 
     # parse plot_opts
-    plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
     axgridec = plot_kwargs.pop("axgridec", 'grey')
     axgridls = plot_kwargs.pop("axgridls", ':')
@@ -759,10 +899,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         elif np.all(lat <= 0.0):
             hemisphere = "south"
         else:
-            viscid.logger.warn("hemisphere of field {0} is ambiguous, the "
-                               "field contains both. Please specify either "
-                               "north or south (defaulting to North)."
-                               "".format(fld.name))
+            viscid.logger.warning("hemisphere of field {0} is ambiguous, the "
+                                  "field contains both. Please specify either "
+                                  "north or south (defaulting to North)."
+                                  "".format(fld.name))
             hemisphere = 'north'
     # now that we know hemisphere is useful, setup the latlabel array
     if hemisphere in ("north", 'n'):
@@ -804,7 +944,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                            make_periodic=make_periodic)
         show = plot_kwargs.pop('show', False)
         plot_kwargs['nolabels'] = True
-        plot_kwargs['equalaxis'] = False
+        plot_kwargs['axis'] = 'none'
+        # hack to forceably add padding to colorbar so all labels are visible
+        plot_kwargs = _set_default_cbar_pad(plot_kwargs, pad=0.2)
+
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
         ax.set_theta_offset(-90 * np.pi / 180.0)
 
@@ -813,10 +956,6 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 title = new_fld.pretty_name
             plt.title(title)
         if axgridec:
-            ax.grid(True, color=axgridec, linestyle=axgridls,
-                    linewidth=axgridlw)
-            ax.set_axisbelow(False)
-
             mlt_grid_pos = (0, 45, 90, 135, 180, 225, 270, 315)
             mlt_labels = (24, 3, 6, 9, 12, 15, 18, 21)
             if not label_mlt:
@@ -840,10 +979,14 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 lat_labels = []
             ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
             ax.set_rmax(np.deg2rad(absboundinglat))
+            ax.grid(True, color=axgridec, linestyle=axgridls,
+                    linewidth=axgridlw)
+            ax.set_axisbelow(False)
         else:
             ax.grid(False)
             ax.set_xticklabels([])
             ax.set_yticklabels([])
+        plt.sca(ax)
         if show:
             mplshow()
         return ret
@@ -856,7 +999,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         show = plot_kwargs.pop('show', False)
         plot_kwargs['latlon'] = True
         plot_kwargs['nolabels'] = True
-        plot_kwargs['equalaxis'] = False
+        plot_kwargs['axis'] = 'none'
         ret = plot2d_field(fld, ax=ax, action_ax=m, **plot_kwargs)
         if axgridec:
             if label_lat:
@@ -877,9 +1020,34 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                             linewidth=axgridlw)
         if drawcoastlines:
             m.drawcoastlines(linewidth=0.25)
+        plt.sca(ax)
         if show:
             mplshow()
         return ret
+
+def _set_default_cbar_pad(kwargs, pad=0.2, inplace=True):
+    if not inplace:
+        kwargs = dict(kwargs)
+
+    cbar = kwargs.get('colorbar', True)
+    if isinstance(cbar, dict):
+        set_key = 'colorbar'
+        cbar_kwargs = cbar
+    elif 'cbar_kwargs' in kwargs:
+        set_key = 'cbar_kwargs'
+        cbar_kwargs = kwargs.get('cbar_kwargs')
+    elif 'colorbar_kwargs' in kwargs:
+        set_key = 'colorbar_kwargs'
+        cbar_kwargs = kwargs.get('colorbar_kwargs')
+    else:
+        set_key = 'cbar_kwargs'
+        cbar_kwargs = dict()
+
+    if 'pad' not in cbar_kwargs:
+        cbar_kwargs['pad'] = pad
+        kwargs[set_key] = cbar_kwargs
+
+    return kwargs
 
 def plot_iono(fld, *args, **kwargs):
     """Wrapper for easier annotated ionosphere plots
@@ -908,7 +1076,6 @@ def plot_iono(fld, *args, **kwargs):
     """
     kwargs['nolabels'] = True
     scale = kwargs.pop("scale", None)
-    colorbar = kwargs.get("colorbar", True)
     annotations = kwargs.pop("annotations", 'pot').strip().lower()
     units = kwargs.pop("units", '').strip()
     _fontsize = kwargs.pop("fontsize", 12)
@@ -921,12 +1088,7 @@ def plot_iono(fld, *args, **kwargs):
         fld *= scale
     lat = fld.get_crd('lat')
 
-    if colorbar:
-        if not isinstance(colorbar, dict):
-            colorbar = {}
-        if 'pad' not in colorbar:
-            colorbar['pad'] = 0.1
-        kwargs['colorbar'] = colorbar
+    kwargs = _set_default_cbar_pad(kwargs, pad=0.2)
 
     if units:
         units = " " + units
@@ -988,10 +1150,10 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         ax = plt.gca()
 
     # parse plot_opts
-    plot_opts_to_kwargs(plot_opts, plot_kwargs)
-    using_default_equalax = 'equalaxis' not in plot_kwargs
+    plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
+    _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs)
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
-                                                   defaults={'equalaxis': False})
+                                                   defaults={'axis': _axis})
 
     # everywhere options
     scale = plot_kwargs.pop("scale", None)
@@ -1027,7 +1189,7 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     dat = np.concatenate([blk.data for blk in fld.patches])
 
     ax_arrs, datetime_fmt = _prepare_time_axes(ax, [x, dat], datefmt, timefmt,
-                                               actions, using_default_equalax)
+                                               actions, using_default_viscid_axis)
     x, dat = ax_arrs
 
     if mod:
@@ -1038,23 +1200,23 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
         dat = np.ma.masked_where(np.isnan(dat), dat)
     p = ax.plot(x, dat, **plot_kwargs)
 
-    _apply_time_axes(plt.gcf(), ax, datetime_fmt, autofmt_xdate)
+    _apply_time_axes(ax.get_figure(), ax, datetime_fmt, autofmt_xdate)
     _apply_actions(actions)
 
     ###############################
     # set scale based on norm_dict
     vmin, vmax = norm_dict['clim']
     if norm_dict['crdscale'] == 'log':
-        plt.xscale('log')
+        ax.set_xscale('log')
     if norm_dict['vscale'] == 'log':
-        plt.yscale('log')
+        ax.set_yscale('log')
     if norm_dict['symmetric']:
         if norm_dict['vscale'] == 'log':
             raise ValueError("log scale can't be symmetric about 0")
         maxval = max(abs(max(dat)), abs(min(dat)))
         vmin, vmax = -maxval, maxval
     if norm_dict['vscale'] is not None:
-        plt.ylim((vmin, vmax))
+        ax.set_ylim((vmin, vmax))
 
     ########################
     # apply labels and such
@@ -1063,8 +1225,8 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             xlabel = namex
         if ylabel is None:
             ylabel = label
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
 
     _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
                  majorloc=majorloc, minorloc=minorloc)
@@ -1072,8 +1234,9 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     if legend:
         if isinstance(legend, bool):
             legend = 0
-        plt.legend(loc=0)
+        ax.legend(loc=0)
 
+    plt.sca(ax)
     if show:
         mplshow()
     return p, None
@@ -1164,8 +1327,8 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
         colors = None
     elif colors is not None:
         if seg_colors is not None:
-            viscid.logger.warn("plot2d_lines - overriding seg_colors with "
-                               "explicit colors kwarg")
+            viscid.logger.warning("plot2d_lines - overriding seg_colors with "
+                                  "explicit colors kwarg")
         seg_colors = colors
 
     line_collection = LineCollection(segments[:, :, [xind, yind]],
@@ -1192,6 +1355,7 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     else:
         _autolimit_to_vertices(ax, verts[[xind, yind], :])
 
+    plt.sca(ax)
     if show:
         plt.show()
 
@@ -1252,8 +1416,8 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
 
     if colors is not None:
         if seg_colors is not None:
-            viscid.logger.warn("plot3d_lines - overriding seg_colors with "
-                               "explicit colors kwarg")
+            viscid.logger.warning("plot3d_lines - overriding seg_colors with "
+                                  "explicit colors kwarg")
         seg_colors = colors
 
     line_collection = Line3DCollection(segments[:, :, [0, 1, 2]],
@@ -1280,6 +1444,7 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
     else:
         _autolimit_to_vertices(ax, verts)
 
+    plt.sca(ax)
     if show:
         plt.show()
 
@@ -1336,7 +1501,9 @@ def plot2d_quiver(fld, step=1, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
-    return ax.quiver(xl, xm, vl, vm, **kwargs)
+    ret = ax.quiver(xl, xm, vl, vm, **kwargs)
+    plt.sca(ax)
+    return ret
 
 def streamplot(fld, ax=None, **kwargs):
     """Plot 2D streamlines with :py:func:`matplotlib.pyplot.streamplot`
@@ -1377,7 +1544,7 @@ def streamplot(fld, ax=None, **kwargs):
     dxl = xl[1:] - xl[:-1]
     dxm = xm[1:] - xm[:-1]
     if not np.allclose(dxl[0], dxl) or not np.allclose(dxm[0], dxm):
-        # viscid.logger.warn("Matplotlib's streamplot is for uniform grids only")
+        # viscid.logger.warning("Matplotlib's streamplot is for uniform grids only")
         vol = viscid.Volume(fld.xl, fld.xh, fld.sshape)
         vl = viscid.interp_trilin(vl, vol, wrap=True)
         vm = viscid.interp_trilin(vm, vol, wrap=True)
@@ -1398,7 +1565,7 @@ def streamplot(fld, ax=None, **kwargs):
     for other in ['linewidth', 'color']:
         try:
             if isinstance(kwargs[other], viscid.field.Field):
-                kwargs[other] = kwargs[other].data
+                kwargs[other] = kwargs[other].data.T
         except KeyError:
             pass
 
@@ -1408,7 +1575,9 @@ def streamplot(fld, ax=None, **kwargs):
     if ax is None:
         ax = plt.gca()
 
-    return ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    ret = ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    plt.sca(ax)
+    return ret
 
 def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     """Plot scattered points on a matplotlib 3d plot
@@ -1433,8 +1602,9 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
         ax.axis("equal")
-    plt.xlabel("x")
-    plt.ylabel("y")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    plt.sca(ax)
     if show:
         plt.show()
     return p, None
@@ -1444,7 +1614,7 @@ def tighten(**kwargs):
     try:
         plt.tight_layout(**kwargs)
     except AttributeError:
-        logger.warn("No matplotlib tight layout support")
+        logger.warning("No matplotlib tight layout support")
 
 def auto_adjust_subplots(fig=None, tight_layout=True, subplot_params=None):
     """Wrapper to adjust subplots w/ tight_layout remembering axes lims
@@ -1552,6 +1722,7 @@ def plot_earth(plane_spec, ax=None, scale=1.0, rot=0,
         else:
             ax.add_patch(mpatches.Circle((0, 0), radius, ec=nightcol,
                                          fc=nightcol, zorder=zorder))
+    plt.sca(ax)
     return None
 
 def get_current_colorcycle():
@@ -1573,6 +1744,7 @@ def show_colorcycle(pal=None, size=1):
     ax.set_yticks([])
     ax.set_xticklabels([])
     ax.set_yticklabels([])
+    plt.sca(ax)
     plt.show()
 
 def show_cmap(cmap=None, size=1, aspect=8):
@@ -1589,6 +1761,7 @@ def show_cmap(cmap=None, size=1, aspect=8):
     ax.set_yticks([])
     ax.set_xticklabels([])
     ax.set_yticklabels([])
+    plt.sca(ax)
     plt.show()
 
 def _get_projected_axis(ax=None, projection='polar',
@@ -1599,11 +1772,12 @@ def _get_projected_axis(ax=None, projection='polar',
             _new_axis = True
         ax = plt.gca()
     if not hasattr(ax, check_attr):
-        ax = plt.subplot(*ax.get_geometry(), projection=projection)
+        ax = plt.subplot(*ax.get_geometry(), projection=projection,
+                         label=str(ax.get_geometry()) + projection)
         if not _new_axis:
-            viscid.logger.warn("Clobbering axis for subplot %s; please give a "
-                               "%s axis if you indend to use it later.",
-                               ax.get_geometry(), projection)
+            viscid.logger.warning("Clobbering axis for subplot %s; please give a "
+                                  "%s axis if you indend to use it later.",
+                                  ax.get_geometry(), projection)
     return ax
 
 def _get_polar_axis(ax=None):
@@ -1766,7 +1940,11 @@ def interact(stack_depth=0, **kwargs):
 
 # just explicitly bring in some matplotlib functions
 subplot = plt.subplot
-subplot2grid = plt.subplot2grid
+subplots = plt.subplots
+def subplot2grid(*args, **kwargs):
+    viscid.logger.warning("pyplot.subplots should be preferred to "
+                          "pyplot.subplot2grid")
+    return plt.subplot2grid(*args, **kwargs)
 clf = plt.clf
 savefig = plt.savefig
 show = plt.show

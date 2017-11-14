@@ -10,9 +10,9 @@ import viscid
 from viscid.compat import izip
 
 __all__ = ['make_rotation_matrix', 'to_seeds', 'SeedGen', 'Point',
-           'MeshPoints', 'RectilinearMeshPoints', 'Line', 'Plane', 'Volume',
-           'Sphere', 'SphericalCap', 'Circle', 'SphericalPatch',
-           'PolarIonosphere']
+           'MeshPoints', 'RectilinearMeshPoints', 'Line', 'Spline',
+           'Plane', 'Volume', 'Sphere', 'SphericalCap', 'Circle',
+           'SphericalPatch', 'PolarIonosphere']
 
 def to_seeds(pts):
     """Try to turn anything into a set of seeds
@@ -281,6 +281,9 @@ class SeedGen(object):
         """Make a 3xN ndarray of N xyz points"""
         return self.to_3d(self._make_local_points())
 
+    def __array__(self, *args, **kwargs):
+        return self.get_points()
+
     def points(self, **kwargs):
         """Alias for :py:meth:`get_points`"""
         return self.get_points(**kwargs)
@@ -349,16 +352,21 @@ class SeedGen(object):
 
 class Point(SeedGen):
     """Collection of points"""
-    def __init__(self, pts, cache=False, dtype=None):
+    def __init__(self, pts, cache=False, dtype=None, local_crds=None):
         """Seed with an explicit set of points
 
         Args:
             pts (ndarray or list): should look like something that
                 np.array(pts) can turn to an 3xN array of xyz
                 points. This can be Nx3 as long as N != 3.
+            local_crds (ndarray or list) : A list of customized local
+                coordinates. Must of size N, where 3xN is the shape
+                of pts. For example, user can provide an array of type
+                datetime.datetime to represent the time of each point.
         """
         super(Point, self).__init__(cache=cache, dtype=dtype)
         self.pts = pts
+        self.local_crds = local_crds
 
     def get_nr_points(self, **kwargs):
         return self.get_points().shape[-1]
@@ -392,7 +400,10 @@ class Point(SeedGen):
         return self.pts
 
     def _make_local_axes(self):
-        return np.arange(self.nr_points)
+        if self.local_crds is None:
+            return np.arange(self.nr_points)
+        else:
+            return self.local_crds
 
     def as_local_coordinates(self):
         x = self._make_local_axes()
@@ -542,6 +553,76 @@ class Line(SeedGen):
     def as_mesh(self):
         return self.get_points().reshape([3] + list(self.uv_shape))
 
+class Spline(SeedGen):
+    """A spline of seed points"""
+    def __init__(self, knots, n=-5, cache=False, dtype=None, **kwargs):
+        """
+        Args:
+            knots (sequence, ndarray): `[x, y, z]`, 3xN for N knots
+            n (int): number of points on the curve, if negative, then
+                `n = abs(n) * n_knots`
+            **kwargs: Arguments to be used by scipy.interpolate.splprep
+        """
+        super(Spline, self).__init__(cache=cache, dtype=dtype)
+        self.knots = np.asarray(knots, dtype=self.dtype)
+        if self.knots.shape[0] < 3:
+            raise ValueError("Knots should have shape 3xN for N knots")
+            # ndims, npts = self.knots.shape
+            # other = np.zeros((3 - ndims, npts), dtype=self.dtype)
+            # self.knots = np.concatenate([self.knots, other], axis=0)
+        if n < 0:
+            n = -n * self.knots.shape[1]
+        self.n = n
+        self.splprep_opts = kwargs
+
+    def get_nr_points(self, **kwargs):
+        return self.n
+
+    def get_uv_shape(self, **kwargs):
+        return (self.nr_points, 1)
+
+    def get_local_shape(self, **kwargs):
+        return (self.nr_points, )
+
+    def uv_to_local(self, pts_uv):
+        return pts_uv[:, :1]
+
+    def to_3d(self, pts_local, **kwargs):
+        import scipy.interpolate as interpolate
+        k = self.splprep_opts.pop("k", self.knots.shape[1] - 1)
+        tck, u = interpolate.splprep(self.knots, k=k, **self.splprep_opts)
+        u = np.linspace(0, 1, self.n + 1, endpoint=True)
+        coords = np.vstack(interpolate.splev(u, tck))
+        coords = coords[:, (pts_local * self.n).astype(int)].astype(self.dtype)
+        return coords
+
+    def to_local(self, pts_3d):
+        raise NotImplementedError()
+
+    def _make_local_points(self):
+        return self._make_local_axes()
+
+    def _make_uv_axes(self):
+        return np.linspace(0.0, 1.0, self.n), np.array([0.0])
+
+    def _make_local_axes(self):
+        return np.linspace(0.0, 1.0, self.n)
+
+    def as_uv_coordinates(self):
+        raise NotImplementedError()
+
+    def as_local_coordinates(self):
+        pts_local = np.linspace(0.0, 1.0, self.n, endpoint=True)
+        x = self.to_3d(pts_local)
+        dx = x[:, 1:] - x[:, :-1]
+        ds = np.zeros_like(x[0])
+        ds[1:] = np.linalg.norm(dx, axis=0)
+        s = np.cumsum(ds)
+        crd = viscid.wrap_crds("nonuniform_cartesian", (('s', s),))
+        return crd
+
+    def as_mesh(self):
+        return self.get_points().reshape([3] + list(self.uv_shape))
 
 class Plane(SeedGen):
     """A plane of seed points"""

@@ -63,7 +63,7 @@ def run_test_2d(f, main__file__, show=False):
     vlt.subplot(141)
     vlt.plot(f['pp'], slc, logscale=True, **plot_kwargs)
     vlt.plot(np.abs(f['psi']), style='contour', logscale=True, levels=30,
-             linewidths=0.8, colors='grey', linestyles='solid', cbar=None,
+             linewidths=0.8, colors='grey', linestyles='solid', colorbar=None,
              x=(-20, 12))
     vlt.subplot(142)
     vlt.plot(viscid.magnitude(f['bcc']), slc, logscale=True, **plot_kwargs)
@@ -119,7 +119,8 @@ def run_test_iof(f, main__file__, show=False):
                      gridec='gray',
                      label_lat=True,
                      label_mlt=True,
-                     colorbar=dict(pad=0.1)  # pad the colorbar away from the plot
+                     colorbar=True,
+                     cbar_kwargs=dict(pad=0.15)  # pad the colorbar away from the plot
                     )
 
     ax1 = vlt.subplot(121, projection='polar')

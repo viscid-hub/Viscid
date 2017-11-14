@@ -235,27 +235,7 @@ def find_items(dset, loc):
     """Shortcut for :py:func:`resolve_path`, items only"""
     return resolve_path(dset, loc)[0]
 
-def str_to_value(s):
-    ret = s
-    s_clean = s.strip().lower()
-
-    if len(s_clean) == 0 or s_clean == "none":
-        ret = None
-    elif s_clean == "true":
-        ret = True
-    elif s_clean == "false":
-        ret = True
-    elif s_clean == "True":
-        ret = True
-    else:
-        try:
-            ret = int(s_clean)
-        except ValueError:
-            try:
-                ret = float(s_clean)
-            except ValueError:
-                pass
-    return ret
+str_to_value = sliceutil.str2value
 
 def _hexchar2int(arr):
     # this np.char.decode(..., 'hex') doesn't work for py3k; kinda silly
@@ -364,7 +344,7 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
 
     if vertices.shape[0] > 3:
         if scalars is not None:
-            viscid.logger.warn("Overriding line scalars with scalars kwarg")
+            viscid.logger.warning("Overriding line scalars with scalars kwarg")
         else:
             scalars = vertices[3:, :]
         vertices = vertices[:3, :]
@@ -495,8 +475,8 @@ def prepare_lines(lines, scalars=None, do_connections=False, other=None):
                 try:
                     other[key] = arr.reshape(-1, N)
                 except ValueError:
-                    viscid.logger.warn("Unknown dimension, dropping array {0}"
-                                       "".format(key))
+                    viscid.logger.warning("Unknown dimension, dropping array {0}"
+                                          "".format(key))
 
     if do_connections:
         connections = [None] * nlines
@@ -580,8 +560,8 @@ def slice_globbed_filenames(glob_pattern):
     n_slices = len(re.findall(slc_re, glob_pattern))
 
     if n_slices > 1:
-        viscid.logger.warn("Multiple filename slices found, only using the "
-                           "first.")
+        viscid.logger.warning("Multiple filename slices found, only using the "
+                              "first.")
 
     if n_slices:
         m = re.search(slc_re, glob_pattern)

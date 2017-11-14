@@ -47,7 +47,7 @@ The `Anaconda Python Distribution <https://store.continuum.io/cshop/anaconda/>`_
     if [ "$(uname -s)" == "Linux" ]; then
       wget -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
     elif [ "$(uname -s)" == "Darwin" ]; then
-      curl -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
+      curl -o miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
     fi
     bash miniconda.sh -b -p $HOME/local/anaconda
     rm miniconda.sh
@@ -152,12 +152,12 @@ Known Workarounds
 Ubuntu
 ~~~~~~
 
-If you see an error that contains `GFORTRAN_1.4 not found`, you may need to preempt libgfortran with the system version. The solution is an environment variable that looks something like::
-
-    export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+All Linux workarounds are currently incorporated in ``setup.py``.
 
 OS X
 ~~~~
+
+If you get an abort trap that says ``PyThreadState_Get: no current thread`` when trying to use mayavi, then this is probably yet another anaconda packaging issue. The solution is to roll back to a different sub-release of python. running this did the trick for me: ``conda install python=3.5.3 pyqt=4``.
 
 If you see a link error that says `-lgcc_s.10.5` can't be found, try running::
 

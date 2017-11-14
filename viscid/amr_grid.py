@@ -5,6 +5,7 @@ from __future__ import print_function, division
 
 import numpy as np
 
+import viscid
 from viscid.grid import Grid
 from viscid.amr_field import AMRField
 from viscid.cython import CythonNotBuilt
@@ -226,6 +227,15 @@ class AMRGrid(Grid):
         if slc:
             amr_fld = amr_fld.slice_and_keep(slc)
         return amr_fld
+
+    def print_tree(self, depth=-1, prefix=""):
+        tree_prefix = viscid.vutil.tree_prefix
+
+        print("{0}{1}".format(prefix, self))
+        if self._src_grids and depth != 0:
+            print("{0}Grid 0 of {1}".format(prefix, len(self._src_grids)))
+            self._src_grids[0].print_tree(depth=depth - 1,
+                                          prefix=prefix)
 
 
 class AMRPatch(object):

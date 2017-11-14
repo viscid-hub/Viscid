@@ -19,7 +19,7 @@ from viscid.cython.misc_inlines cimport real_min, real_max
 ####   non-adaptive methods   ####
 ##################################
 
-cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,
+cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
                    real_t max_error, real_t smallest_ds, real_t largest_ds,
                    real_t vscale[3], int cached_idx3[3]) nogil except -1:
     """Simplest 1st order euler integration"""
@@ -36,9 +36,13 @@ cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds,
     x[0] += deref(ds) * v[0] / vmag
     x[1] += deref(ds) * v[1] / vmag
     x[2] += deref(ds) * v[2] / vmag
+
+    if dt != NULL:
+        dt[0] += ds[0] / vmag
+
     return 0
 
-cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
+cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
                 real_t max_error, real_t smallest_ds, real_t largest_ds,
                 real_t vscale[3], int cached_idx3[3]) nogil except -1:
     """Runge-Kutta midpoint 2nd order integrator
@@ -105,9 +109,12 @@ cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds,
     x[1] += (w1 * k1[1] + w2 * k2[1])
     x[2] += (w1 * k1[2] + w2 * k2[2])
 
+    if dt != NULL:
+        dt[0] += h / (w1 * kmag1 + w2 * kmag2)
+
     return 0
 
-cdef int _c_rk4(FusedField fld, real_t x[3], real_t *ds,
+cdef int _c_rk4(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
                 real_t max_error, real_t smallest_ds, real_t largest_ds,
                 real_t vscale[3], int cached_idx3[3]) nogil except -1:
     """Runge-Kutta 4th order integrator
@@ -216,6 +223,9 @@ cdef int _c_rk4(FusedField fld, real_t x[3], real_t *ds,
     x[1] += (u1 * k1[1] + u2 * k2[1] + u3 * k3[1] + u4 * k4[1])
     x[2] += (u1 * k1[2] + u2 * k2[2] + u3 * k3[2] + u4 * k4[2])
 
+    if dt != NULL:
+        dt[0] += h / (u1 * kmag1 + u2 * kmag2 + u3 * kmag3 + u4 * kmag4)
+
     return 0
 
 ##############################
@@ -263,7 +273,7 @@ cdef inline int _ts_ctrl(real_t *ds, real_t error_estimate, real_t max_error,
 
     return repeat
 
-cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,
+cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
                     real_t max_error, real_t smallest_ds, real_t largest_ds,
                     real_t vscale[3], int cached_idx3[3]) nogil except -1:
     """Adaptive euler, estimates error with a backward step"""
@@ -334,9 +344,12 @@ cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds,
     x[1] = x2[1]
     x[2] = x2[2]
 
+    if dt != NULL:
+        dt[0] += h / kmag1
+
     return 0
 
-cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
+cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
                  real_t max_error, real_t smallest_ds, real_t largest_ds,
                  real_t vscale[3], int cached_idx3[3]) nogil except -1:
     """Runge-Kutta adaptive midpoint 1st order integrator
@@ -429,9 +442,12 @@ cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds,
     x[1] = x_rk1[1]
     x[2] = x_rk1[2]
 
+    if dt != NULL:
+        dt[0] += h / (w1 * kmag1 + w2 * kmag2)
+
     return 0
 
-cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds,
+cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
                  real_t max_error, real_t smallest_ds, real_t largest_ds,
                  real_t vscale[3], int cached_idx3[3]) nogil except -1:
     """Runge-Kutta-Fehlberg adaptive 4th order integrator
@@ -624,6 +640,10 @@ cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds,
     x[0] = x_rk4[0]
     x[1] = x_rk4[1]
     x[2] = x_rk4[2]
+
+    if dt != NULL:
+        dt[0] += h / (w1 * kmag1 + w2 * kmag2 + w3 * kmag3 + w4 * kmag4 +
+                      w5 * kmag5 + w6 * kmag6)
 
     return 0
 

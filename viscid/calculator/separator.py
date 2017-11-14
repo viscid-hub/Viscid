@@ -190,8 +190,8 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
         if i + 1 >= min_depth and len(indx):
             break
 
-    pts = viscid.cluster(indx, indy, x, y, multiple=multiple,
-                         periodic=periodic)
+    pts = viscid.find_clusters(indx, indy, x, y, multiple=multiple,
+                               periodic=periodic)
 
     if plot:
         from matplotlib import pyplot as plt
