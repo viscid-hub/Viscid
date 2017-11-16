@@ -171,6 +171,10 @@ def as_nvec(arr, ndim=4, init_vals=(0, 0, 0, 1)):
 def make_rotation(theta, axis='z', rdim=3):
     """Make rotation matrix of theta degrees around axis
 
+    Warning:
+        The Hapgood paper uses the convention that rotations around y
+        are right-handed, but rotations around x and z are left handed!
+
     Args:
         theta (float): angle (degrees)
         axis (int, str): one of (0, 'x', 1, 'y', 2, 'z')
