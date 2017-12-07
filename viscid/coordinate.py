@@ -473,8 +473,6 @@ class StructuredCrds(Coordinates):
             # a = self.axis_name(a)  # validate input
             if a in self._src_crds_cc:
                 ccarr = self._src_crds_cc[a]
-            elif self.shape[i] == 1:
-                ccarr = self._Pcrds[a]
             else:
                 # doing the cc math this way also works for datetime objects
                 ccarr = self._Pcrds[a][:-1] + 0.5 * (self._Pcrds[a][1:] -
@@ -1413,7 +1411,10 @@ class UniformCrds(StructuredCrds):
                 atol = 100 * np.finfo(arr.dtype).eps
                 if not np.allclose(diff[0], diff[1:], atol=atol):
                     raise ValueError("Crds are not uniform")
-                _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
+                if len(arr) > 0:
+                    _nc_linspace_args.append([arr[0], arr[-1], len(arr)])
+                else:
+                    _nc_linspace_args.append([np.nan, np.nan, 0])
         else:
             for _, arr in init_clist:
                 if len(arr) != 3:
@@ -1427,10 +1428,9 @@ class UniformCrds(StructuredCrds):
         self._cc_linspace_args = []
         # print("_nc_linspace_args::", _nc_linspace_args)
         for args in _nc_linspace_args:
-            half_dx = 0.5 * (args[1] - args[0]) / args[2]
-            cc_args = [args[0] + half_dx, args[1] - half_dx, args[2] - 1]
-            if cc_args[2] == 0:
-                cc_args[2] = 1
+            half_dx = 0.5 * (args[1] - args[0]) / max(args[2], 1)
+            cc_args = [args[0] + half_dx, args[1] - half_dx,
+                       max(args[2] - 1, 0)]
             self._cc_linspace_args.append(cc_args)
 
         # node centered things
@@ -1452,7 +1452,7 @@ class UniformCrds(StructuredCrds):
         self.shape_cc = np.array([args[2] for args in self._cc_linspace_args],
                                  dtype='int')
         self.L_cc = self.xh_cc - self.xl_cc
-        self.min_dx_cc = self.L_cc / self.shape_cc
+        self.min_dx_cc = self.L_cc / np.clip(self.shape_cc, 1, None)
 
         init_clist = [(axis, None) for axis, _ in init_clist]
         super(UniformCrds, self).__init__(init_clist, dtype=self.dtype,
@@ -1520,13 +1520,16 @@ class UniformCrds(StructuredCrds):
 
         try:
             if len(crd_arr) == 0:
-                viscid.logger.warning("Slice did not select any values")
-                crd_arr = [np.nan]
-
-            nx = len(crd_arr)
-            xl = crd_arr[0]
-            xh = crd_arr[-1]
-            return [xl, xh, nx]
+                # this can happen for some patches of an AMR grid, at which
+                # point this warning is just exposing an implementation detail
+                # which isn't all that useful...
+                # viscid.logger.warning("Slice did not select any values")
+                return [np.nan, np.nan, 0]
+            else:
+                nx = len(crd_arr)
+                xl = crd_arr[0]
+                xh = crd_arr[-1]
+                return [xl, xh, nx]
         except TypeError:
             return crd_arr
 
@@ -1578,7 +1581,7 @@ class UniformCrds(StructuredCrds):
 
     def _newax_cval(self, xl, xh, cc):
         if cc:
-            return [xl, xh, 1]
+            return [xl, xh, 2]
         else:
             x0 = 0.5 * (xl + xh)
             return [x0, x0, 1]

@@ -105,7 +105,12 @@ class AMRField(object):
         if len(self.patches) == 0:
             raise ValueError("AMR field must contain patches to be slicable")
         selection, _ = self.patches[0]._prepare_slice(selection)
-        extent = self.patches[0]._src_crds.get_slice_extent(selection)
+        try:
+            extent = self.patches[0]._src_crds.get_slice_extent(selection)
+        except RuntimeError:
+            raise RuntimeError("Slicing by global index is poorly defined "
+                               "for AMR fields; selection = '{0}'"
+                               "".format(selection))
 
         inds = []
         # these are patches that look like they contain selection
@@ -178,6 +183,13 @@ class AMRField(object):
                      "is just a number... You probably slice_reduced "
                      "a field down to a scalar value")
                 viscid.logger.error(m)
+
+        # prune out fields that got sliced to smithereens
+        for i in reversed(range(len(fld_lst))):
+            if fld_lst[i].size == 0:
+                viscid.logger.debug("finalize amr slice, remove size 0 patch")
+                fld_lst.pop(i)
+
         return AMRField(fld_lst, skeleton)
 
     def patch_indices(self, selection):

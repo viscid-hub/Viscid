@@ -23,6 +23,14 @@ def _main():
 
     f = viscid.load_file(os.path.join(sample_dir, 'vpic_sample', 'global.vpc'))
 
+    # some slices that are good to check
+    vlt.clf()
+    vlt.plot(f['bx']['x=:32.01f'])
+    plt.close()
+    vlt.clf()
+    vlt.plot(f['bx']['x=:33.0f'])
+    plt.close()
+
     _, axes = vlt.subplots(2, 2, figsize=(8, 4))
 
     for i, ti in enumerate([0, -1]):

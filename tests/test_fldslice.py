@@ -104,54 +104,54 @@ def _main():
 
     #### SLICE 1
     selection = np.s_[None, 1, ..., 2]
-    test_slice(selection, fld, (1, 41), nc_shape=(1, 41), cc_shape=(1, 40))
-    test_slice(selection, fld_f, (1, 31, 41), nc_shape=(1, 31, 41), cc_shape=(1, 30, 40))
-    test_slice(selection, fld_i, (1, 41, 51), nc_shape=(1, 41, 51), cc_shape=(1, 40, 50))
+    test_slice(selection, fld, (1, 41), nc_shape=(1, 41), cc_shape=(0, 40))
+    test_slice(selection, fld_f, (1, 31, 41), nc_shape=(1, 31, 41), cc_shape=(0, 30, 40))
+    test_slice(selection, fld_i, (1, 41, 51), nc_shape=(1, 41, 51), cc_shape=(0, 40, 50))
 
     selection = "None, 1, ..., 2"
-    test_slice(selection, fld, (1, 41), nc_shape=(1, 41), cc_shape=(1, 40))
-    test_slice(selection, fld_f, (1, 31, 41), nc_shape=(1, 31, 41), cc_shape=(1, 30, 40))
-    test_slice(selection, fld_i, (1, 41, 51), nc_shape=(1, 41, 51), cc_shape=(1, 40, 50))
+    test_slice(selection, fld, (1, 41), nc_shape=(1, 41), cc_shape=(0, 40))
+    test_slice(selection, fld_f, (1, 31, 41), nc_shape=(1, 31, 41), cc_shape=(0, 30, 40))
+    test_slice(selection, fld_i, (1, 41, 51), nc_shape=(1, 41, 51), cc_shape=(0, 40, 50))
 
     #### SLICE 2
     selection = np.s_[1, ..., None, 2]
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (31, 41, 1), nc_shape=(31, 41, 1), cc_shape=(30, 40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
+    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
+    test_slice(selection, fld_f, (31, 41, 1), nc_shape=(31, 41, 1), cc_shape=(30, 40, 0))
+    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 0))
 
     selection = "1, ..., None, 2"
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (31, 41, 1), nc_shape=(31, 41, 1), cc_shape=(30, 40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
+    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
+    test_slice(selection, fld_f, (31, 41, 1), nc_shape=(31, 41, 1), cc_shape=(30, 40, 0))
+    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 0))
 
     #### SLICE 3
     selection = np.s_[None, ..., None, 1]
     test_slice(selection, fld, (1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
+               cc_shape=(0, 30, 40, 0))
     test_slice(selection, fld_f, (3, 1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
+               cc_shape=(0, 30, 40, 0))
     test_slice(selection, fld_i, (1, 31, 41, 51, 1), nc_shape=(1, 31, 41, 51, 1),
-               cc_shape=(1, 30, 40, 50, 1))
+               cc_shape=(0, 30, 40, 50, 0))
 
     selection = "None, ..., None, 1"
     test_slice(selection, fld, (1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
+               cc_shape=(0, 30, 40, 0))
     test_slice(selection, fld_f, (3, 1, 31, 41, 1), nc_shape=(1, 31, 41, 1),
-               cc_shape=(1, 30, 40, 1))
+               cc_shape=(0, 30, 40, 0))
     test_slice(selection, fld_i, (1, 31, 41, 51, 1), nc_shape=(1, 31, 41, 51, 1),
-               cc_shape=(1, 30, 40, 50, 1))
+               cc_shape=(0, 30, 40, 50, 0))
 
     #### SLICE 4
     selection = "x=0, ..., None, 2"
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
+    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
+    test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
+    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 0))
 
     #### SLICE 4
     selection = "x=5f, ..., t=None, 2"
-    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 1))
-    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 1))
+    test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
+    test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
+    test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 0))
 
     ################################################################
     #### test newaxes with slice_and_keep dims (None == newaxis)
