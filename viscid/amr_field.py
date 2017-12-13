@@ -190,6 +190,24 @@ class AMRField(object):
                 viscid.logger.debug("finalize amr slice, remove size 0 patch")
                 fld_lst.pop(i)
 
+        # look for uneven dimensions in the results and fill them back out
+        axes = [patch.crds.axes for patch in fld_lst]
+        ndims = np.array([len(ax) for ax in axes])
+        ref_axes = axes[np.argmax(ndims)]
+        ref_ndims = np.max(ndims)
+
+        for i, fld in enumerate(fld_lst):
+            if ndims[i] < ref_ndims:
+                putback = []
+                for _ax in ref_axes:
+                    if _ax in axes[i]:
+                        putback.append('{0}=:'.format(_ax))
+                    else:
+                        putback.append('{0}=newaxis'.format(_ax))
+                putback_slice = ','.join(putback)
+                viscid.logger.debug("putback: {0}".format(putback_slice))
+                fld_lst[i] = fld[putback_slice]
+
         return AMRField(fld_lst, skeleton)
 
     def patch_indices(self, selection):
