@@ -1442,6 +1442,7 @@ class UniformCrds(StructuredCrds):
                                  dtype='int')
         self.L_nc = self.xh_nc - self.xl_nc
         self.min_dx_nc = self.L_nc / self.shape_nc
+        self.min_dx_nc = np.ma.masked_values(self.min_dx_nc, 0.0)
 
         # cell centered things
         self.xl_cc = np.array([args[0] for args in self._cc_linspace_args],
@@ -1480,8 +1481,9 @@ class UniformCrds(StructuredCrds):
 
     def get_min_dx(self, axes=None, center='node'):
         """Get a minimum cell width for each axis"""
-        return self._pull_out_axes([self.min_dx_nc, self.min_dx_cc], axes,
-                                   center=center)
+        ret = self._pull_out_axes([self.min_dx_nc, self.min_dx_cc], axes,
+                                  center=center)
+        return np.ma.masked_values(ret, 0.0)
 
     def get_xl(self, axes=None, center='node'):
         return self._pull_out_axes([self.xl_nc, self.xl_cc], axes,
