@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.99.1 dev
-==========
+0.99.1
+======
 
 Bugfixes:
   - uneven amr slices (see #16)
