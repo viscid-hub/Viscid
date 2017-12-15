@@ -4,7 +4,10 @@ Changes
 0.99.1 dev
 ==========
 
-
+Bugfixes:
+  - uneven amr slices (see #16)
+  - length-0 slices (see #16)
+  - slowness of vpic reader (see #20)
 
 0.99.0
 ======
