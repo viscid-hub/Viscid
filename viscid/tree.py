@@ -264,6 +264,13 @@ class Node(object):
             except viscid.NoBasetimeError:
                 return viscid.format_time(self.time_as_timedelta64(), fmt=fmt)
 
+    def resolve(self):
+        return self
+
+    def iter_resolved_children(self):
+        return (child.resolve() for child in self.children)
+
+
 class Leaf(Node):
     """Base class for fields"""
     pass
