@@ -112,7 +112,7 @@ install:
   # if the conda envronment we need isn't cached, create it, otherwise
   # do an update
   - 'if [ ! -d "${envpath}" ]; then
-       conda env create -f ${env_spec};
+       conda env create -qf ${env_spec};
        source activate ${env_name};
        cp ${env_spec} ${cached_env_spec};
      else
