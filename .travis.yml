@@ -73,7 +73,8 @@ before_install:
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
+  # updating conda always causes weird bugs
+  # - conda update -q conda
   # Useful for debugging any issues with conda
   - conda info -a
 
@@ -111,7 +112,7 @@ install:
   # if the conda envronment we need isn't cached, create it, otherwise
   # do an update
   - 'if [ ! -d "${envpath}" ]; then
-       conda env create -f ${env_spec};
+       conda env create -qf ${env_spec};
        source activate ${env_name};
        cp ${env_spec} ${cached_env_spec};
      else

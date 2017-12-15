@@ -17,6 +17,37 @@ from viscid import vutil
 from viscid.vutil import tree_prefix
 from viscid.sliceutil import to_slice, selection2values
 
+
+class DeferredChild(object):
+    def __init__(self, callback, callback_args, callback_kwargs, parent=None,
+                 name='NoName', time=0.0):
+        self.callback = callback
+        self.callback_args = callback_args if callback_args else ()
+        self.callback_kwargs = callback_kwargs if callback_kwargs else {}
+        self.parents = []
+        if parent is not None:
+            self.parents.append(parent)
+        self.name = name
+        self.time = time
+
+    def resolve(self):
+        ret = self.callback(*self.callback_args, **self.callback_kwargs)
+        if self.parents:
+            # this is a little kludgy, but at the moment, prepare_child
+            # is only used to add the parent to the list of a child's parents
+            self.parents[0].prepare_child(ret)
+        return ret
+
+    def clear_cache(self):
+        pass
+
+    def remove_all_items(self):
+        pass
+
+    def print_tree(self, depth=-1, prefix=""):
+        print('{0}{1}'.format(prefix, self))
+
+
 class Dataset(tree.Node):
     """Datasets contain grids or other datasets
 
@@ -52,6 +83,13 @@ class Dataset(tree.Node):
         self.children[child.name] = child
         if set_active:
             self.active_child = child
+
+    def add_deferred(self, key, callback, callback_args=None,
+                     callback_kwargs=None, set_active=True):
+        child = DeferredChild(callback, callback_args=callback_args,
+                              callback_kwargs=callback_kwargs,
+                              parent=self, name=key)
+        self.add(child, set_active=set_active)
 
     def _clear_cache(self):
         for child in self.children:
@@ -93,7 +131,7 @@ class Dataset(tree.Node):
 
     def iter_times(self, slc=slice(None), val_endpoint=True, interior=False,
                    tdunit='s', tol=100):
-        for child in self.children:
+        for child in self.iter_resolved_children():
             try:
                 return child.iter_times(slc=slc, val_endpoint=val_endpoint,
                                         interior=interior, tdunit=tdunit, tol=tol)
@@ -184,7 +222,7 @@ class Dataset(tree.Node):
 
     def get_child(self, item):
         """ get a child from this Dataset,  """
-        return self.children[item]
+        return self.children[item].resolve()
 
     def __getitem__(self, item):
         """ if a child exists with handle, return it, else ask
@@ -197,6 +235,7 @@ class Dataset(tree.Node):
             raise KeyError()
 
     def __delitem__(self, item):
+        # FIXME, is it possable to de-resolve item to a DeferredChild?
         child = self.get_child(item)
         child.clear_cache()
         self.children.remove_item(child)
@@ -210,6 +249,7 @@ class Dataset(tree.Node):
         self.add(child)
 
     def __contains__(self, item):
+        # FIXME, is it possable to de-resolve item to a DeferredChild?
         if item in self.children:
             return True
         # FIXME: this might cause a bug somewhere someday
@@ -225,7 +265,7 @@ class Dataset(tree.Node):
         return None
 
     def __iter__(self):
-        return self.children.__iter__()
+        return self.iter_resolved_children()
 
     # def __next__(self):
     #     raise NotImplementedError()
@@ -262,6 +302,13 @@ class DatasetTemporal(Dataset):
         # bisect.insort(self.children, (child.time, child))
         if set_active:
             self.active_child = child
+
+    def add_deferred(self, time, callback, callback_args=None,
+                     callback_kwargs=None, set_active=True):
+        child = DeferredChild(callback, callback_args=callback_args,
+                              callback_kwargs=callback_kwargs,
+                              parent=self, time=time)
+        self.add(child, set_active=set_active)
 
     def remove_all_items(self):
         for child in self.children:
@@ -458,7 +505,7 @@ class DatasetTemporal(Dataset):
         # print(">> get_child:", item)
         # print(">> slice is:", self._slice_time(item))
         # always just return the first slice's child... is this wrong?
-        child = self.children[self._slice_time(item)[0]][1]
+        child = self.children[self._slice_time(item)[0]][1].resolve()
         return child
 
     def __contains__(self, item):
@@ -475,6 +522,5 @@ class DatasetTemporal(Dataset):
                 pass
         return item in self.active_child
 
-    def __iter__(self):
-        for child in self.children:
-            yield child[1]
+    def iter_resolved_children(self):
+        return (child[1].resolve() for child in self.children)

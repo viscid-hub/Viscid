@@ -16,12 +16,30 @@ from viscid.plot import vpyplot as vlt
 import matplotlib.pyplot as plt
 
 
+# Note:
+#
+# Since this reader uses deferred datasets, you will need to use
+# the following to dump the available field names,
+#
+# >>> import viscid
+# >>> f = viscid.load_file(os.path.join(sample_dir, 'vpic_sample',
+# >>>                                   'global.vpc'))
+# >>> f.get_grid().print_tree()
+
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = vutil.common_argparse(parser)
 
     f = viscid.load_file(os.path.join(sample_dir, 'vpic_sample', 'global.vpc'))
+
+    # some slices that are good to check
+    vlt.clf()
+    vlt.plot(f['bx']['x=:32.01f'])
+    plt.close()
+    vlt.clf()
+    vlt.plot(f['bx']['x=:33.0f'])
+    plt.close()
 
     _, axes = vlt.subplots(2, 2, figsize=(8, 4))
 

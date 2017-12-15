@@ -300,8 +300,8 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
                 "start (={0}) is outside range".format(start)
             assert start is None or (start >= 0 and start <= L), \
                 "start (={0}) is outside range".format(start)
-            assert start is None or stop is None or start < stop, \
-                "bad slice ordering: {0} !< {1}".format(start, stop)
+            assert start is None or stop is None or start == stop == 0 or \
+                start < stop, "bad slice ordering: {0} !< {1}".format(start, stop)
             assert step > 0
             slc = slice(start, stop, step)
 

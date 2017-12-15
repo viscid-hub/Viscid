@@ -1,4 +1,13 @@
 """VPIC binary file reader
+
+Note:
+    Since this reader uses deferred datasets, you will need to use
+    the following to dump the available field names,
+
+    >>> import viscid
+    >>> f = viscid.load_file(os.path.join(sample_dir, 'vpic_sample',
+    >>>                                   'global.vpc'))
+    >>> f.get_grid().print_tree()
 """
 
 from __future__ import print_function
@@ -11,6 +20,7 @@ import sys
 import numpy as np
 
 from viscid import amr_grid, coordinate, field, grid
+from viscid.dataset import Dataset
 from viscid import glob2, logger
 from viscid.readers import vfile
 
@@ -420,6 +430,7 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
                 the data type of the file's data.
             var_type (str): either 'cons' or 'prim'
         """
+        self.last_amr_skeleton = None
         super(VPIC_File, self).__init__(fname, **kwargs)
 
     def load(self, fname):
@@ -438,8 +449,6 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
         data_temporal = self._make_dataset(self, dset_type="temporal",
                                            name="VPIC_TemporalCollection")
 
-        _last_amr_skeleton = None
-
         block_crds = []
         for k in range(_gfile.topology[2]):
             for j in range(_gfile.topology[1]):
@@ -456,15 +465,18 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
         file_wrapper_cls = VPIC_BinFileWrapper
         data_wrapper_cls = VPIC_DataWrapper
 
-        for time in time_list:
-            data_spatial = self._make_dataset(self,
-                                              name='VPIC_SpatialCollection')
-            data_spatial.time = time
+        # normal grid creation would scale like
+        # n_patches * n_timesteps * n_fields, which could take a long while,
+        # so lets make a closure to defer grid creation
+        parent_node = self # FIXME: is this correct?
 
-            parent_node = self # FIXME: is this correct?
+        def spatial_dset_callback(time):
+            dset_spatial = Dataset()
+            dset_spatial.time = time
 
             for i, crds in enumerate(block_crds):
                 _grid = self._make_grid(parent_node, name="<VPIC_Gridt {0}>".format(i))
+                # _grid = VPIC_Grid()
                 _grid.set_crds(crds)
 
                 for fs in [_gfile.fields] + _gfile.species:
@@ -506,14 +518,18 @@ class VPIC_File(vfile.VFile):  # pylint: disable=abstract-method
                                                     center='cell')
                             _grid.add_field(_fld)
 
-                data_spatial.add(_grid)
+                dset_spatial.add(_grid)
 
-            _amr_grid, is_amr = amr_grid.dataset_to_amr_grid(data_spatial,
-                                                             _last_amr_skeleton)
+            _amr_grid, is_amr = amr_grid.dataset_to_amr_grid(dset_spatial,
+                                                             self.last_amr_skeleton)
             if is_amr:
-                _last_amr_skeleton = _amr_grid.skeleton
+                self.last_amr_skeleton = _amr_grid.skeleton
 
-            data_temporal.add(_amr_grid)
+            return _amr_grid
+
+        for time in time_list:
+            data_temporal.add_deferred(time, spatial_dset_callback,
+                                       callback_args=(time,))
 
         data_temporal.activate(0)
         self.add(data_temporal)
