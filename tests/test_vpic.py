@@ -16,6 +16,16 @@ from viscid.plot import vpyplot as vlt
 import matplotlib.pyplot as plt
 
 
+# Note:
+#
+# Since this reader uses deferred datasets, you will need to use
+# the following to dump the available field names,
+#
+# >>> import viscid
+# >>> f = viscid.load_file(os.path.join(sample_dir, 'vpic_sample',
+# >>>                                   'global.vpc'))
+# >>> f.get_grid().print_tree()
+
 def _main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
