@@ -130,11 +130,12 @@ class Dataset(tree.Node):
         raise RuntimeError("I find no temporal datasets")
 
     def iter_times(self, slc=slice(None), val_endpoint=True, interior=False,
-                   tdunit='s', tol=100):
+                   tdunit='s', tol=100, resolved=True):
         for child in self.iter_resolved_children():
             try:
                 return child.iter_times(slc=slc, val_endpoint=val_endpoint,
-                                        interior=interior, tdunit=tdunit, tol=tol)
+                                        interior=interior, tdunit=tdunit, tol=tol,
+                                        resolved=resolved)
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
@@ -158,7 +159,8 @@ class Dataset(tree.Node):
     def get_times(self, slc=slice(None), val_endpoint=True, interior=False,
                   tdunit='s', tol=100):
         return list(self.iter_times(slc=slc, val_endpoint=val_endpoint,
-                                    interior=interior, tdunit=tdunit, tol=tol))
+                                    interior=interior, tdunit=tdunit, tol=tol,
+                                    resolved=False))
 
     def get_time(self, slc=slice(None), val_endpoint=True, interior=False,
                  tdunit='s', tol=100):
@@ -212,7 +214,7 @@ class Dataset(tree.Node):
 
     def get_grid(self, time=None):
         """ recurse down active children to get a field """
-        child = self.active_child
+        child = self.active_child.resolve()
 
         if child is None:
             logger.error("Could not get appropriate child...")
@@ -402,7 +404,7 @@ class DatasetTemporal(Dataset):
         return len(list(child_iterator))
 
     def iter_times(self, slc=slice(None), val_endpoint=True, interior=False,
-                   tdunit='s', tol=100):
+                   tdunit='s', tol=100, resolved=True):
         slc = self._slice_time(slc=slc, val_endpoint=val_endpoint,
                                interior=interior, tdunit=tdunit, tol=tol)
         child_iterator = self._time_slice_to_iterator(slc)
@@ -412,13 +414,19 @@ class DatasetTemporal(Dataset):
             # read have only contained one Grid / AMRGrid. Without get_grid()
             # here, the context manager will unload the file when done, but
             # that's not what we wanted here, we wanted to just clear caches
-            with child[1].get_grid() as target:
+            if resolved:
+                what = child[1].resolve().get_grid()
+            else:
+                what = child[1]
+
+            with what as target:
                 yield target
 
     def get_times(self, slc=slice(None), val_endpoint=True, interior=False,
                   tdunit='s', tol=100):
         return list(self.iter_times(slc=slc, val_endpoint=val_endpoint,
-                                    interior=interior, tdunit=tdunit, tol=tol))
+                                    interior=interior, tdunit=tdunit, tol=tol,
+                                    resolved=False))
 
     def get_time(self, slc=slice(None), val_endpoint=True, interior=False,
                  tdunit='s', tol=100):
@@ -491,7 +499,7 @@ class DatasetTemporal(Dataset):
         if time is not None:
             child = self.get_child(time)
         else:
-            child = self.active_child
+            child = self.active_child.resolve()
 
         if child is None:
             logger.error("Could not get appropriate child...")
