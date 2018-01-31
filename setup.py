@@ -195,8 +195,8 @@ for i, d in enumerate(cy_defs):
         if os.path.isfile(fname):
             cy_defs[i][1][j] = fname
         else:
-            log.warn("{0} not found. Skipping extension: "
-                     "{1}".format(fname, cy_defs[i][0]))
+            log.warning("{0} not found. Skipping extension: "
+                        "{1}".format(fname, cy_defs[i][0]))
             print("To use this extension, please install cython",
                   file=sys.stderr)
             cy_defs[i] = None
