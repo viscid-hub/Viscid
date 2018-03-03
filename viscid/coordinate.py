@@ -475,8 +475,11 @@ class StructuredCrds(Coordinates):
                 ccarr = self._src_crds_cc[a]
             else:
                 # doing the cc math this way also works for datetime objects
-                ccarr = self._Pcrds[a][:-1] + 0.5 * (self._Pcrds[a][1:] -
-                                                     self._Pcrds[a][:-1])
+                if len(self._Pcrds[a]) == 1:
+                    ccarr = self._Pcrds[a]
+                else:
+                    ccarr = self._Pcrds[a][:-1] + 0.5 * (self._Pcrds[a][1:] -
+                                                         self._Pcrds[a][:-1])
             flatarr, openarr = self._ogrid_single(a, ccarr)
             self._Pcrds[a + sfx] = flatarr
             self._Pcrds[a.upper() + sfx] = openarr
