@@ -584,7 +584,7 @@ class StructuredCrds(Coordinates):
 
         if selection is np.newaxis:
             pass
-        elif not selection:
+        elif selection != 0 and not selection:
             selection = slice(None)
         elif isinstance(selection, string_types):
             # # giving the whole slice as a string usually means the
