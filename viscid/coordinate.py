@@ -82,7 +82,7 @@ def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
         is_uniform = False
 
     if crd_type:
-        if 'uniform' in crd_type:
+        if 'uniform' in crd_type and 'nonuniform' not in crd_type:
             assert is_uniform
             crds = wrap_crds(crd_type, uniform_clist, **kwargs)
         else:
