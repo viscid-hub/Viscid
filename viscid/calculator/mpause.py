@@ -56,7 +56,11 @@ def fit_paraboloid(fld, p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0), tolerance=0.0):
                            fld.data.reshape(-1), p0=p0)
     perr = np.sqrt(np.diag(pcov))
     parab = np.recarray([2], dtype=_paraboloid_dt)
-    parab[:] = [popt, perr]
+    # wow.. needing a nested loop to fill a recarray is stooopid,
+    # am i missing something about recarrays?
+    for i, vals in zip(range(len(parab)), [popt, perr]):
+        for name, val in zip(parab.dtype.names, vals):
+            parab[i][name] = val
     if tolerance:
         for n in parab.dtype.names:
             if n != "ax" and  np.abs(parab[1][n] / parab[0][n]) > tolerance:
