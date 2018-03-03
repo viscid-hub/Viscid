@@ -1191,12 +1191,15 @@ def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
 def figure(*args, **kwargs):
     offscreen = kwargs.pop('offscreen', False)
     hide = kwargs.pop('hide', None)
+    size = kwargs.pop('size', kwargs.pop('figsize', None))
+    if size:
+        kwargs['size'] = size
 
     fig = mlab.figure(*args, **kwargs)
     # if size was set, run resize to account for the height of window
     # decorations
-    if 'size' in kwargs:
-        resize(kwargs['size'], figure=fig)
+    if size:
+        resize(size, figure=fig)
     # hide window by default?
     if hide or (hide is None and offscreen):
         hide_window(fig)
