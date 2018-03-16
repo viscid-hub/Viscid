@@ -233,13 +233,20 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         if _axis is not None:
             if _axis == 'image':
                 # this is a hack to allow image axes even when we're sharing
-                # the x/y axes... the matplotlib docs warn of unintended
-                # consequences, but I'm not sure what that means... so maybe
-                # a warning is in order?
+                # the x/y axes
                 actions.append((axis.autoscale_view, [], dict(tight=True)))
                 actions.append((axis.set_autoscale_on, False))
+                has_shared_x = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
+                has_shared_y = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
+                if has_shared_x ^ has_shared_y:
+                    adjustable = 'datalim'
+                elif (LooseVersion(__mpl_ver__) < LooseVersion("2.2")
+                      and (has_shared_x or has_shared_y)):
+                    adjustable = 'box-forced'
+                else:
+                    adjustable = 'box'
                 actions.append((axis.set_aspect, 'equal',
-                                dict(adjustable='box-forced', anchor='C')))
+                                dict(adjustable=adjustable, anchor='C')))
             else:
                 actions.append((axis.axis, _axis))
     if "x" in plot_kwargs:
