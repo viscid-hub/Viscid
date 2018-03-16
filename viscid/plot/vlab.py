@@ -1176,6 +1176,7 @@ def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
         hide_window(figure)
 
     if ax is None:
+        from viscid.plot import vpyplot as _
         from matplotlib import pyplot as plt
         # if there are no figures, and fit is None, then fit
         if fit is None:

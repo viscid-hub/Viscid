@@ -15,12 +15,13 @@ import re
 import sys
 import warnings
 
-from matplotlib import pyplot as plt
 from matplotlib.cbook import is_string_like
 from matplotlib.font_manager import FontProperties
 from matplotlib.path import Path
 from matplotlib.transforms import Bbox
 import numpy as np
+
+from matplotlib import pyplot as plt
 
 
 def estimate_text_size_px(txt, char_aspect_ratio=0.618, line_spacing=1.62,

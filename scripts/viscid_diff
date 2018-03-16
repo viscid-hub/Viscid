@@ -62,8 +62,8 @@ def main():
                     nr_different += 1
 
                     if args.show:
-                        from matplotlib import pyplot as plt
                         from viscid.plot import vpyplot as vlt
+                        from matplotlib import pyplot as plt
 
                         ax0 = plt.subplot(331)
                         plt.title("File A")

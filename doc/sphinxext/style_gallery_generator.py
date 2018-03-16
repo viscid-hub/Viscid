@@ -41,9 +41,10 @@ import re
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import image
-import matplotlib.pyplot as plt
 
 import viscid  # pylint: disable=unused-import
+from viscid.plot import vpyplot as _
+import matplotlib.pyplot as plt
 
 RST_TEMPLATE = """
 
@@ -188,10 +189,10 @@ GALERY_ENTRY_TEMPLATE = """\
 make_single_figure = r"""
 import matplotlib
 from matplotlib.colors import ListedColormap
-import matplotlib.pyplot as plt
 import numpy as np
 import viscid
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 matplotlib.rcParams.update(matplotlib.rcParamsDefault)
 

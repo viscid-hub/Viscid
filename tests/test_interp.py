@@ -8,10 +8,10 @@ import sys
 
 from viscid_test_common import next_plot_fname
 
-from matplotlib import pyplot as plt
 import numpy as np
 import viscid
 from viscid.plot import vpyplot as vlt
+from matplotlib import pyplot as plt
 
 
 def run_test(fld, seeds, kind, show=False):

@@ -914,12 +914,12 @@ def _main():
     print("    - gse:", get_dipole_moment(t, crd_system='mhd', strength=1.0))
 
     if plot_mpl:
-        from matplotlib import pyplot as plt
-        import matplotlib.dates as mdates
         try:
             from viscid.plot import vpyplot as vlt
         except ImportError:
             pass
+        from matplotlib import pyplot as plt
+        import matplotlib.dates as mdates
 
         times = linspace_datetime64("2010-01-01T00:00:00.0",
                                     "2010-06-21T00:00:00.0", n=(365//2*24))

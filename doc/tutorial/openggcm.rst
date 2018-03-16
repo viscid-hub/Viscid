@@ -11,9 +11,9 @@ This is just one way to customize the OpenGGCM reader. For more, check out :clas
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True
@@ -35,9 +35,10 @@ Time Series
     from os import path
 
     import matplotlib.dates as mdates
-    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
+    from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True

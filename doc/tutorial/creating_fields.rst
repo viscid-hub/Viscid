@@ -17,10 +17,10 @@ Scalar Field
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     # Make some coordinate arrays. These happen to have uniform grid spacing.
@@ -50,10 +50,10 @@ Scalar Field with Custom Coordinate Names
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     # now the coordinates are rectilinear, and that's ok too
@@ -80,10 +80,10 @@ Scalar Field on the Same Grid as an Existing Field
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     a = np.linspace(1.0, 2.0, 64)**2
@@ -113,10 +113,10 @@ Vector Field
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     x = np.linspace(-1, 1, 64)
@@ -144,10 +144,10 @@ Vector Field on the Same Grid as a Scalar Field
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     x = np.linspace(-1, 1, 64)
@@ -178,10 +178,10 @@ Datetime Time-Series
     :include-source:
 
     import matplotlib.dates as mdates
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     t = viscid.linspace_datetime64('2010-06-23T03:00:00.0',
@@ -220,10 +220,10 @@ arrays2field
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     x = np.linspace(-1.0, 1.0, 32)
@@ -244,10 +244,10 @@ dat2field
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     x = np.linspace(-1.0, 1.0, 64).reshape(-1, 1)
@@ -268,10 +268,10 @@ Fields that are defined on the same grid at the same point in time can be added 
 .. plot::
     :include-source:
 
-    import matplotlib.pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
 
     grid = viscid.grid.Grid()

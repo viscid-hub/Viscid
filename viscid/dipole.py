@@ -47,8 +47,8 @@ def guess_dipole_moment(b, r=2.0, strength=DEFAULT_STRENGTH, cap_angle=40,
     # pole *= 0.133 * np.dot(pole, b_cap.data.reshape(-1, 3)[idx, :]) * r**3
 
     if plot:
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
         vlt.plot(viscid.magnitude(b_cap))
         vlt.plot(viscid.magnitude(b_cap), style='contour', levels=10,
                  colors='k', colorbar=False, ax=plt.gca())

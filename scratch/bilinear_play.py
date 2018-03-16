@@ -3,13 +3,13 @@
 from __future__ import print_function
 from itertools import count
 
-import matplotlib.pyplot as plt
 from mayavi import mlab
 import numpy as np
 
 from viscid import field
 from viscid import coordinate
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 from viscid.plot import vlab
 from viscid.calculator import cycalc
 

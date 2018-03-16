@@ -65,8 +65,8 @@ def make_multiplot(vfile, plot_func=None, nr_procs=1, time_slice=":", **kwargs):
 def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
                   share_axes=False, show=False, subplot_params=None,
                   first_run_result=None, first_run=False, **kwargs):
-    import matplotlib.pyplot as plt
     from viscid.plot import vpyplot as vlt
+    import matplotlib.pyplot as plt
 
     logger.info("Plotting timestep: %d, %g", tind, grid.time)
 

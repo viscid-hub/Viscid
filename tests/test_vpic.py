@@ -12,7 +12,6 @@ import viscid
 from viscid import sample_dir
 from viscid import vutil
 from viscid.plot import vpyplot as vlt
-
 import matplotlib.pyplot as plt
 
 

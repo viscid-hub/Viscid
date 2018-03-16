@@ -14,10 +14,27 @@ from datetime import datetime
 from distutils.version import LooseVersion
 from itertools import count
 
+import matplotlib
+from matplotlib import rcParams
+# hack for graceful fallback of Qt[45]Agg backends
+__backend = rcParams.get('backend', None)
+if __backend.lower().startswith(('qt4', 'qt5')):
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError:
+        if __backend.lower().startswith('qt4'):
+            __new_backend = __backend.lower().replace('qt4', 'qt5')
+        else:
+            __new_backend = __backend.lower().replace('qt5', 'qt4')
+        try:
+            matplotlib.use(__new_backend, force=True, warn=False)
+            import matplotlib.pyplot as plt
+        except ImportError:
+            matplotlib.use(__backend, force=True, warn=False)
+
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
 from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize, LogNorm, ListedColormap
 import matplotlib.dates as mdates

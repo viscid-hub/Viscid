@@ -27,8 +27,8 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
     try:
         if not plot2d:
             raise ImportError
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
         plt.clf()
 
         vlt.plot2d_lines(lines, scalars=topo_color, symdir='y', marker='^')
@@ -248,8 +248,8 @@ def _main():
     try:
         if not plot2d:
             raise ImportError
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
 
         # stats on error for all points on all lines
         _ = plt.figure(figsize=(15, 8))

@@ -218,8 +218,8 @@ def _main():
     print("LMN matrix:\n", lmn, sep='')
 
     ##########
-    from matplotlib import pyplot as plt
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
     p0 = np.array((xm, ym, zm)).reshape((3,))
     pl = p0 + 0.25 * lmn[:, 0]
     pm = p0 + 0.25 * lmn[:, 1]

@@ -13,9 +13,9 @@ Plotting 2D streamlines. Note that using matplotlib to make streamlines from a 2
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     viscid.calculator.evaluator.enabled = True
@@ -46,9 +46,9 @@ Quivers are another way to show vector fields, but in many cases, it will be use
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
@@ -73,9 +73,9 @@ If your data has a very nonuniform grid, it may be useful to interpolate your da
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     viscid.calculator.evaluator.enabled = True

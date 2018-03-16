@@ -377,8 +377,8 @@ def _main():
 
     # 2d plots, normals don't look normal in the matplotlib projection
     if False:  # pylint: disable=using-constant-test
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
 
         normals = paraboloid_normal(Y, Z, *mp['paraboloid'][0])
         p0 = np.array([x2, Y, Z]).reshape(3, -1)

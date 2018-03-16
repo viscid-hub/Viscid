@@ -6,13 +6,12 @@ import argparse
 import sys
 import os
 
-import matplotlib.pyplot as plt
-
 from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid import vutil
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 
 def run_test(show=False):

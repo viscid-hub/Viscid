@@ -6,10 +6,10 @@ Ionosphere Plots
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import viscid
     from viscid import sample_dir
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     iono_file = viscid.load_file(path.join(sample_dir, 'sample_xdmf.iof.xdmf'))
