@@ -5,7 +5,6 @@ from __future__ import print_function
 import os
 import argparse
 
-from matplotlib import pyplot as plt
 import numpy as np
 
 from viscid_test_common import next_plot_fname
@@ -13,6 +12,7 @@ from viscid_test_common import next_plot_fname
 import viscid
 from viscid import vutil
 from viscid.plot import vpyplot as vlt
+from matplotlib import pyplot as plt
 
 
 def main():

@@ -5,13 +5,13 @@ from __future__ import division, print_function
 import argparse
 import sys
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from viscid_test_common import next_plot_fname
 
 import viscid
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 
 def _main():

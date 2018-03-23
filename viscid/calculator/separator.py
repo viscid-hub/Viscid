@@ -194,8 +194,8 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
                                periodic=periodic)
 
     if plot:
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
 
         vlt.clf()
         ax0 = vlt.subplot(121)
@@ -445,8 +445,8 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
 
     if plot and not required_uneven_subquads:
         from viscid.plot import vlab
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
         _pts3d = seed.to_3d(seed.uv_to_local(np.array([allx, ally])))
         vlab.points3d(_pts3d[0], _pts3d[1], _pts3d[2],
                       all_topo.data.reshape(-1), scale_mode='none',
@@ -463,8 +463,8 @@ def _get_sep_pts_bisect(fld, seed, trace_opts=None, min_depth=3, max_depth=7,
         pts_uv = np.array([xc, yc])
         if plot:
             from viscid.plot import vlab
-            from matplotlib import pyplot as plt
             from viscid.plot import vpyplot as vlt
+            from matplotlib import pyplot as plt
             plt.plot(pts_uv[0], pts_uv[1], "y*", ms=20,
                          markeredgecolor='k', markeredgewidth=1.0)
             vlt.show(block=False)

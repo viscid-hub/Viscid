@@ -25,8 +25,8 @@ def do_test(lines, scalars, show=False, txt=""):
                                                  width=50))
 
     try:
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
 
         vlt.clf()
         vlt.plot_lines(lines, scalars=scalars)

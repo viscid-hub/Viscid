@@ -13,11 +13,11 @@ is the most comprehensive way to test cell / edge centered fields.
 from __future__ import division, print_function
 import sys
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 import viscid
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 
 def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2.2e-6,

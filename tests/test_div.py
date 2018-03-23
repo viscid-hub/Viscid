@@ -14,7 +14,6 @@ import argparse
 import sys
 from timeit import default_timer as time
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from viscid_test_common import next_plot_fname
@@ -23,6 +22,7 @@ import viscid
 from viscid import logger
 from viscid import vutil
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 try:
     import numexpr as ne

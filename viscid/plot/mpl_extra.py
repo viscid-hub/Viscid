@@ -163,6 +163,7 @@ steve_axfmt = SteveScalarFormatter(max_sigfigs=2, useOffset=False)
 
 def _main():
     """Kick the tires on our perceptual colormaps"""
+    from viscid.plot import vpyplot as vlt
     from matplotlib import pyplot as plt
     from matplotlib import gridspec
     try:

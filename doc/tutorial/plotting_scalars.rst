@@ -44,9 +44,9 @@ Two Plots, One Figure
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))

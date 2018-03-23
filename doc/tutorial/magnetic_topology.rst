@@ -18,10 +18,10 @@ This algorithm takes a 2d map in the uv space of a seed generator and iterativel
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True
@@ -65,10 +65,10 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True
@@ -120,10 +120,10 @@ The bit-or algorithm can has another interface that just takes a topology field.
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     viscid.readers.openggcm.GGCMFile.read_log_file = True

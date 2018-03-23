@@ -137,6 +137,7 @@ sys.path.append("_themes")
 import sphinx_bootstrap_theme
 html_theme = 'bootstrap'
 html_theme_options = {
+    'nosidebar': True,
     'source_link_position': "footer",
     'bootswatch_theme': "flatly",
     'navbar_sidebarrel': False,

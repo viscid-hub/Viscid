@@ -1,6 +1,11 @@
 Changes
 -------
 
+0.99.2
+======
+
+  - Bugfixes and matplotlib workarounds
+
 0.99.1
 ======
 

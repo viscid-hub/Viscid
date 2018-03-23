@@ -33,7 +33,7 @@ from viscid.vutil import subclass_spider
 from viscid import sliceutil
 
 
-__all__ = ['arrays2crds', 'wrap_crds', 'extend_arr_by_half']
+__all__ = ['arrays2crds', 'wrap_crds', 'extend_arr']
 
 
 def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
@@ -82,7 +82,7 @@ def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
         is_uniform = False
 
     if crd_type:
-        if 'uniform' in crd_type:
+        if 'uniform' in crd_type and 'nonuniform' not in crd_type:
             assert is_uniform
             crds = wrap_crds(crd_type, uniform_clist, **kwargs)
         else:
@@ -112,26 +112,43 @@ def wrap_crds(crdtype, clist, **kwargs):
     except TypeError:
         raise NotImplementedError("can not decipher crds: {0}".format(crdtype))
 
-def extend_arr_by_half(x, full_arr=True, default_width=1e-5):
-    """sandwich array with two new values w/ no change in dx"""
+def extend_arr(x, n=1, cell_fraction=1.0, full_arr=True, default_width=1e-5,
+               width_arr=None):
+    """TODO: docstring"""
     x = viscid.asarray_datetime64(x, conservative=True)
+
+    try:
+        n_low, n_high = n
+    except TypeError:
+        n_low, n_high = n, n
+
+    if width_arr is None:
+        width_arr = x
 
     if full_arr:
         if len(x) > 1:
-            dxl = x[1] - x[0]
-            dxh = x[-1] - x[-2]
+            dxl = cell_fraction * (width_arr[1] - width_arr[0])
+            dxh = cell_fraction * (width_arr[-1] - width_arr[-2])
         else:
-            if x.dtype.type in (np.datetime64, np.timedelta64):
-                default_width = np.timedelta64(1, x.dtype.str[4:-1])
-            dxl = dxh = default_width
-        ret = np.concatenate([[x[0] - dxl], x, [x[-1] + dxh]])
+            dxl = cell_fraction * default_width
+            dxh = cell_fraction * default_width
+
+        arr_low = [x[0] - (i + 1) * dxl for i in range(n_low)][::-1]
+        arr_high = [x[-1] + (i + 1) * dxh for i in range(n_high)]
+        ret = np.concatenate([arr_low, x, arr_high])
     else:
+        if cell_fraction != 1.0:
+            raise ValueError("Linspace arrays require extension with "
+                             "cell_fraction == 1.0")
         xl, xh, nx = x
         nx = int(nx)
-        dx = (xh - xl) / nx
-        xl -= 0.5 * dx
-        xh += 0.5 * dx
-        nx += 1
+        if nx > 1:
+            dx = (xh - xl) / (nx - 1)
+        else:
+            dx = default_width
+        xl -= (n_low * cell_fraction) * dx
+        xh += (n_high * cell_fraction) * dx
+        nx += n_low + n_high
         ret = np.array([xl, xh, nx], dtype=x.dtype)
     return ret
 
@@ -475,8 +492,11 @@ class StructuredCrds(Coordinates):
                 ccarr = self._src_crds_cc[a]
             else:
                 # doing the cc math this way also works for datetime objects
-                ccarr = self._Pcrds[a][:-1] + 0.5 * (self._Pcrds[a][1:] -
-                                                     self._Pcrds[a][:-1])
+                if len(self._Pcrds[a]) == 1:
+                    ccarr = self._Pcrds[a]
+                else:
+                    ccarr = self._Pcrds[a][:-1] + 0.5 * (self._Pcrds[a][1:] -
+                                                         self._Pcrds[a][:-1])
             flatarr, openarr = self._ogrid_single(a, ccarr)
             self._Pcrds[a + sfx] = flatarr
             self._Pcrds[a.upper() + sfx] = openarr
@@ -584,7 +604,7 @@ class StructuredCrds(Coordinates):
 
         if selection is np.newaxis:
             pass
-        elif not selection:
+        elif selection != 0 and not selection:
             selection = slice(None)
         elif isinstance(selection, string_types):
             # # giving the whole slice as a string usually means the
@@ -787,7 +807,7 @@ class StructuredCrds(Coordinates):
     #     else:
     #         return self.get_crd(axis, center=center)[slc].reshape(-1)
 
-    def extend_by_half(self, default_width=1e-5):
+    def nc2cc(self, default_width=1e-5):
         """Extend coordinates half a grid cell in all directions
 
         Used for turning node centered fields to cell centered without
@@ -797,11 +817,12 @@ class StructuredCrds(Coordinates):
             New coordinates instance with same type as self
         """
         axes = self.axes
+        crds_nc = self.get_crds_nc()
         crds_cc = self.get_crds_cc()
-        for i, x in enumerate(crds_cc):
-            crds_cc[i] = extend_arr_by_half(x, full_arr=True,
-                                            default_width=default_width)
-        new_clist = [(ax, nc) for ax, nc in zip(axes, crds_cc)]
+        for i, x_cc in enumerate(crds_cc):
+            crds_nc[i] = extend_arr(x_cc, default_width=default_width,
+                                    width_arr=crds_nc[i])
+        new_clist = [(ax, nc) for ax, nc in zip(axes, crds_nc)]
         return type(self)(new_clist)
 
     def _make_slice(self, selection, cc=False):
@@ -1559,7 +1580,7 @@ class UniformCrds(StructuredCrds):
     #     except TypeError:
     #         return proxy_crd
 
-    def extend_by_half(self, default_width=1e-5):
+    def nc2cc(self, default_width=1e-5):
         """Extend coordinates half a grid cell in all directions
 
         Used for turning node centered fields to cell centered without
@@ -1674,6 +1695,39 @@ class UnstructuredCrds(Coordinates):
     def __init__(self, **kwargs):
         super(UnstructuredCrds, self).__init__(**kwargs)
         raise NotImplementedError()
+
+def _main():
+    print("full array")
+    x = np.arange(4)
+    print(viscid.extend_arr(x))
+    print(viscid.extend_arr(x, n=2))
+    print(viscid.extend_arr(x, n=1, cell_fraction=0.5))
+    print(viscid.extend_arr(x, n=2, cell_fraction=0.5))
+    print(viscid.extend_arr(x, n=1, cell_fraction=0.25))
+    print(viscid.extend_arr(x, n=2, cell_fraction=0.25))
+    print(viscid.extend_arr(x, n=(2, 3), cell_fraction=0.25))
+
+    print('full array single value')
+    x = np.array([0.0])
+    print(viscid.extend_arr(x))
+    print(viscid.extend_arr(x, n=2))
+    print(viscid.extend_arr(x, n=1, cell_fraction=0.5))
+    print(viscid.extend_arr(x, n=(2, 3), cell_fraction=0.5))
+
+    print("linspace array")
+    x = [0.0, 3.0, 4]
+    print(np.linspace(*viscid.extend_arr(x, full_arr=False)))
+    print(np.linspace(*viscid.extend_arr(x, full_arr=False, n=2)))
+    print(np.linspace(*viscid.extend_arr(x, full_arr=False, n=(2, 3))))
+
+    print("linspace array, single value")
+    x = np.array([0.0, 0.0, 1])
+    print(np.linspace(*viscid.extend_arr(x, full_arr=False)))
+    print(np.linspace(*viscid.extend_arr(x, full_arr=False, n=2)))
+    print(np.linspace(*viscid.extend_arr(x, full_arr=False, n=(2, 3))))
+
+if __name__ == "__main__":
+    _main()
 
 ##
 ## EOF

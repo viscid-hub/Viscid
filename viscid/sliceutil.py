@@ -46,7 +46,7 @@ def _warn_deprecated_float(val, varname='value'):
          "Slicing by float is deprecated. The slice by value syntax is \n"
          "now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
          "".format(varname, val))
-    logger.warn(s)  # pylint: disable=deprecated-method
+    logger.warning(s)
 
 def _standardize_slcval(val, epoch=None, tdunit='s'):
     """Standardize things that can appear in a slice
@@ -415,8 +415,8 @@ def extract_index(arr, start=None, stop=None, step=None, val_endpoint=True,
     stop = _standardize_slcval(stop, epoch=epoch, tdunit=tdunit)
 
     if interior and not val_endpoint:
-        logger.warn("For interior slices, val_endpoint must be True, I'll change "
-                    "that for you.")
+        logger.warning("For interior slices, val_endpoint must be True, I'll "
+                       "change that for you.")
         val_endpoint = True
 
     try:

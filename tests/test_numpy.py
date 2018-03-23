@@ -7,7 +7,6 @@ import argparse
 # import resource
 
 import numpy as np
-import matplotlib.pyplot as plt
 # from matplotlib.colors import LogNorm
 
 from viscid_test_common import assert_similar, assert_different, next_plot_fname
@@ -15,6 +14,7 @@ from viscid_test_common import assert_similar, assert_different, next_plot_fname
 import viscid
 from viscid import vutil
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 
 def _main():

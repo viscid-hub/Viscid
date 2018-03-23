@@ -8,10 +8,10 @@ A more in-depth example of using and plotting streamlines can be found in the :d
 .. plot::
     :include-source:
 
-    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     B = viscid.make_dipole(twod=True)

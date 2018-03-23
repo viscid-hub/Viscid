@@ -805,8 +805,8 @@ class Plane(SeedGen):
             >>> vlab.show()
             >>>
             >>> # use lmn to show in-plane / out-of-plane
-            >>> from matplotlib import pyplot as plt
             >>> from viscid.plot import vpyplot as vlt
+            >>> from matplotlib import pyplot as plt
             >>> vlt.plot(Blmn['z'])  # z means n here
             >>> vlt.plot2d_quiver(Blmn)
             >>> plt.show()

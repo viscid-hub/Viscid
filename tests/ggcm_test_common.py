@@ -3,11 +3,11 @@ from __future__ import print_function
 from viscid_test_common import next_plot_fname
 
 import matplotlib.dates as mdates
-import matplotlib.pyplot as plt
 import numpy as np
 import viscid
 from viscid.readers import openggcm
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 # These two class definitions are examples of how to override a
 # built-in reader and implement some convenience getters for

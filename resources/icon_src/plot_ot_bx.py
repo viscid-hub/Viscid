@@ -1,7 +1,7 @@
-import matplotlib.pyplot as plt
 import seaborn as sns
 import viscid
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 f = viscid.load_file('./otico_001.3d.xdmf')
 

@@ -6,7 +6,6 @@ import argparse
 import sys
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from viscid_test_common import next_plot_fname
 
@@ -14,6 +13,7 @@ import viscid
 from viscid import logger
 from viscid import vutil
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 
 dtype = 'float64'

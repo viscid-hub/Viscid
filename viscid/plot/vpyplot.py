@@ -14,10 +14,27 @@ from datetime import datetime
 from distutils.version import LooseVersion
 from itertools import count
 
+import matplotlib
+from matplotlib import rcParams
+# hack for graceful fallback of Qt[45]Agg backends
+__backend = rcParams.get('backend', None)
+if __backend.lower().startswith(('qt4', 'qt5')):
+    try:
+        import matplotlib.pyplot as plt
+    except ImportError:
+        if __backend.lower().startswith('qt4'):
+            __new_backend = __backend.lower().replace('qt4', 'qt5')
+        else:
+            __new_backend = __backend.lower().replace('qt5', 'qt4')
+        try:
+            matplotlib.use(__new_backend, force=True, warn=False)
+            import matplotlib.pyplot as plt
+        except ImportError:
+            matplotlib.use(__backend, force=True, warn=False)
+
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib import rcParams
 from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize, LogNorm, ListedColormap
 import matplotlib.dates as mdates
@@ -216,13 +233,20 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
         if _axis is not None:
             if _axis == 'image':
                 # this is a hack to allow image axes even when we're sharing
-                # the x/y axes... the matplotlib docs warn of unintended
-                # consequences, but I'm not sure what that means... so maybe
-                # a warning is in order?
+                # the x/y axes
                 actions.append((axis.autoscale_view, [], dict(tight=True)))
                 actions.append((axis.set_autoscale_on, False))
+                has_shared_x = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
+                has_shared_y = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
+                if has_shared_x ^ has_shared_y:
+                    adjustable = 'datalim'
+                elif (LooseVersion(__mpl_ver__) < LooseVersion("2.2")
+                      and (has_shared_x or has_shared_y)):
+                    adjustable = 'box-forced'
+                else:
+                    adjustable = 'box'
                 actions.append((axis.set_aspect, 'equal',
-                                dict(adjustable='box-forced', anchor='C')))
+                                dict(adjustable=adjustable, anchor='C')))
             else:
                 actions.append((axis.axis, _axis))
     if "x" in plot_kwargs:

@@ -30,8 +30,8 @@ cdef int _c_euler1(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
     v[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x, cached_idx3)
     vmag = sqrt(v[0]**2 + v[1]**2 + v[2]**2)
     if vmag == 0.0 or isnan(vmag):
-        # logger.warn("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
-        #                 x[0], x[1], x[2], vx, vy, vz, vmag))
+        # logger.warning("vmag issue at: {0} {1} {2}, [{3}, {4}, {5}] == |{6}|".format(
+        #                x[0], x[1], x[2], vx, vy, vz, vmag))
         return 1
     x[0] += deref(ds) * v[0] / vmag
     x[1] += deref(ds) * v[1] / vmag
@@ -83,7 +83,7 @@ cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
     k1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
     kmag1 = sqrt(k1[0]**2 + k1[1]**2 + k1[2]**2)
     if kmag1 == 0.0 or isnan(kmag1):
-        # logger.warn("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logger.warning("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
     k1[0] *= h / kmag1
     k1[1] *= h / kmag1
@@ -99,7 +99,7 @@ cdef int _c_rk2(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
     k2[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x2, cached_idx3)
     kmag2 = sqrt(k2[0]**2 + k2[1]**2 + k2[2]**2)
     if kmag2 == 0.0 or isnan(kmag2):
-        # logger.warn("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logger.warning("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
     k2[0] *= h / kmag2
     k2[1] *= h / kmag2
@@ -165,7 +165,7 @@ cdef int _c_rk4(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
     k1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
     kmag1 = sqrt(k1[0]**2 + k1[1]**2 + k1[2]**2)
     if kmag1 == 0.0 or isnan(kmag1):
-        # logger.warn("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logger.warning("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
     k1[0] *= h / kmag1
     k1[1] *= h / kmag1
@@ -181,7 +181,7 @@ cdef int _c_rk4(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
     k2[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x2, cached_idx3)
     kmag2 = sqrt(k2[0]**2 + k2[1]**2 + k2[2]**2)
     if kmag2 == 0.0 or isnan(kmag2):
-        # logger.warn("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logger.warning("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
     k2[0] *= h / kmag2
     k2[1] *= h / kmag2
@@ -197,7 +197,7 @@ cdef int _c_rk4(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
     k3[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x3, cached_idx3)
     kmag3 = sqrt(k3[0]**2 + k3[1]**2 + k3[2]**2)
     if kmag3 == 0.0 or isnan(kmag3):
-        # logger.warn("kmag3 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logger.warning("kmag3 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
     k3[0] *= h / kmag3
     k3[1] *= h / kmag3
@@ -213,7 +213,7 @@ cdef int _c_rk4(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
     k4[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x4, cached_idx3)
     kmag4 = sqrt(k4[0]**2 + k4[1]**2 + k4[2]**2)
     if kmag4 == 0.0 or isnan(kmag4):
-        # logger.warn("kmag4 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+        # logger.warning("kmag4 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
         return 1
     k4[0] *= h / kmag4
     k4[1] *= h / kmag4
@@ -302,7 +302,7 @@ cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
         kmag1 = sqrt(k1[0]**2 + k1[1]**2 + k1[2]**2)
         if kmag1 == 0.0 or isnan(kmag1):
-            # logger.warn("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k1[0] *= h / kmag1
         k1[1] *= h / kmag1
@@ -318,7 +318,7 @@ cdef int _c_euler1a(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k2[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x2, cached_idx3)
         kmag2 = sqrt(k2[0]**2 + k2[1]**2 + k2[2]**2)
         if kmag2 == 0.0 or isnan(kmag2):
-            # logger.warn("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k2[0] *= h / kmag2
         k2[1] *= h / kmag2
@@ -398,7 +398,7 @@ cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
         kmag1 = sqrt(k1[0]**2 + k1[1]**2 + k1[2]**2)
         if kmag1 == 0.0 or isnan(kmag1):
-            # logger.warn("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k1[0] *= h / kmag1
         k1[1] *= h / kmag1
@@ -414,7 +414,7 @@ cdef int _c_rk12(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k2[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x2, cached_idx3)
         kmag2 = sqrt(k2[0]**2 + k2[1]**2 + k2[2]**2)
         if kmag2 == 0.0 or isnan(kmag2):
-            # logger.warn("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k2[0] *= h / kmag2
         k2[1] *= h / kmag2
@@ -526,7 +526,7 @@ cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k1[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x1, cached_idx3)
         kmag1 = sqrt(k1[0]**2 + k1[1]**2 + k1[2]**2)
         if kmag1 == 0.0 or isnan(kmag1):
-            # logger.warn("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag1 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k1[0] *= h / kmag1
         k1[1] *= h / kmag1
@@ -542,7 +542,7 @@ cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k2[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x2, cached_idx3)
         kmag2 = sqrt(k2[0]**2 + k2[1]**2 + k2[2]**2)
         if kmag2 == 0.0 or isnan(kmag2):
-            # logger.warn("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag2 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k2[0] *= h / kmag2
         k2[1] *= h / kmag2
@@ -558,7 +558,7 @@ cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k3[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x3, cached_idx3)
         kmag3 = sqrt(k3[0]**2 + k3[1]**2 + k3[2]**2)
         if kmag3 == 0.0 or isnan(kmag3):
-            # logger.warn("kmag3 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag3 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k3[0] *= h / kmag3
         k3[1] *= h / kmag3
@@ -574,7 +574,7 @@ cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k4[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x4, cached_idx3)
         kmag4 = sqrt(k4[0]**2 + k4[1]**2 + k4[2]**2)
         if kmag4 == 0.0 or isnan(kmag4):
-            # logger.warn("kmag4 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag4 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k4[0] *= h / kmag4
         k4[1] *= h / kmag4
@@ -590,7 +590,7 @@ cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k5[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x5, cached_idx3)
         kmag5 = sqrt(k5[0]**2 + k5[1]**2 + k5[2]**2)
         if kmag5 == 0.0 or isnan(kmag5):
-            # logger.warn("kmag5 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag5 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k5[0] *= h / kmag5
         k5[1] *= h / kmag5
@@ -606,7 +606,7 @@ cdef int _c_rk45(FusedField fld, real_t x[3], real_t *ds, real_t *dt,
         k6[2] = vscale[2] * _c_interp_trilin[FusedField, real_t](fld, 2, x6, cached_idx3)
         kmag6 = sqrt(k6[0]**2 + k6[1]**2 + k6[2]**2)
         if kmag6 == 0.0 or isnan(kmag6):
-            # logger.warn("kmag6 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
+            # logger.warning("kmag6 issue at: {0} {1} {2}".format(x[0], x[1], x[2]))
             return 1
         k6[0] *= h / kmag6
         k6[1] *= h / kmag6

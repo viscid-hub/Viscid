@@ -66,9 +66,9 @@ Single Time Slice
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
@@ -101,10 +101,10 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
 
     from os import path
 
-    from matplotlib import pyplot as plt
     import numpy as np
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     f2d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'))

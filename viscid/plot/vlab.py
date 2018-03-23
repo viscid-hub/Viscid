@@ -19,6 +19,10 @@ import viscid
 from viscid import field
 
 
+# anything placed in here is not multiprocessing-safe
+_global_ns = dict()
+
+
 def add_source(src, figure=None):
     """Add a vtk data source to a figure
 
@@ -1172,6 +1176,7 @@ def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
         hide_window(figure)
 
     if ax is None:
+        from viscid.plot import vpyplot as _
         from matplotlib import pyplot as plt
         # if there are no figures, and fit is None, then fit
         if fit is None:
@@ -1189,20 +1194,38 @@ def to_mpl(figure=None, ax=None, size=None, antialiased=True, hide=True,
     ax.axis('off')
 
 def figure(*args, **kwargs):
+    global_fig = kwargs.pop('global_fig', False)
     offscreen = kwargs.pop('offscreen', False)
     hide = kwargs.pop('hide', None)
+    size = kwargs.pop('size', kwargs.pop('figsize', None))
+    if size:
+        kwargs['size'] = size
 
-    fig = mlab.figure(*args, **kwargs)
-    # if size was set, run resize to account for the height of window
-    # decorations
-    if 'size' in kwargs:
-        resize(kwargs['size'], figure=fig)
-    # hide window by default?
-    if hide or (hide is None and offscreen):
-        hide_window(fig)
-    # send it offscreen?
-    if offscreen:
-        make_fig_offscreen(fig, hide=False)
+    fig = None
+
+    if global_fig:
+        fig = _global_ns.get('global_fig', None)
+        if fig is not None and fig.scene is None:
+            del _global_ns['global_fig']
+            fig = None
+
+    # make new figure
+    if fig is None:
+        fig = mlab.figure(*args, **kwargs)
+        # if size was set, run resize to account for the height of window
+        # decorations
+        if size:
+            resize(size, figure=fig)
+        # hide window by default?
+        if hide or (hide is None and offscreen):
+            hide_window(fig)
+        # send it offscreen?
+        if offscreen:
+            make_fig_offscreen(fig, hide=False)
+
+    if global_fig:
+        _global_ns['global_fig'] = fig
+
     return fig
 
 def make_fig_offscreen(figure, hide=True):

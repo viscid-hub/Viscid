@@ -43,8 +43,8 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
     try:
         if not plot2d:
             raise ImportError
-        from matplotlib import pyplot as plt
         from viscid.plot import vpyplot as vlt
+        from matplotlib import pyplot as plt
         plt.clf()
         # plt.plot(seeds.get_points()[2, :], fld)
         mpl_plot_kwargs = dict()
@@ -195,8 +195,8 @@ def _main():
             msg = "XFail: ImportError (is scipy installed?)"
             if plot2d:
                 try:
-                    from matplotlib import pyplot as plt
                     from viscid.plot import vpyplot as vlt
+                    from matplotlib import pyplot as plt
                     plt.clf()
                     plt.annotate(msg, xy=(0.3, 0.4), xycoords='axes fraction')
                     plt.savefig(next_plot_fname(__file__, series='2d'))
@@ -218,8 +218,8 @@ def _main():
 
             if plot2d:
                 try:
-                    from matplotlib import pyplot as plt
                     from viscid.plot import vpyplot as vlt
+                    from matplotlib import pyplot as plt
                     plt.clf()
                     vlt.plot(interp_fld)
                     plt.title(seed_name)
@@ -283,8 +283,8 @@ def _main():
         try:
             if not plot2d:
                 raise ImportError
-            from matplotlib import pyplot as plt
             from viscid.plot import vpyplot as vlt
+            from matplotlib import pyplot as plt
             vlt.clf()
             vlt.plot(vx_sheet, symmetric=True)
             plt.savefig(next_plot_fname(__file__, series='2d'))

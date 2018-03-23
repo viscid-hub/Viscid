@@ -9,7 +9,6 @@ from __future__ import print_function
 import argparse
 import sys
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 from viscid_test_common import next_plot_fname, xfail
@@ -17,6 +16,7 @@ from viscid_test_common import next_plot_fname, xfail
 import viscid
 from viscid import vutil
 from viscid.plot import vpyplot as vlt
+import matplotlib.pyplot as plt
 
 
 def _main():
