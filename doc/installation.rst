@@ -84,12 +84,16 @@ Note that in order to use Viscid, you will need to activate the virtual environm
 
     source activate viscid27  # or viscid35mayavi, etc.
 
-An alternative to activating this environment for each session is to prepend your PATH in your ~/.bashrc with
+An alternative to activating this environment for each session is to prepend PATH in your profile with
 
 .. code-block:: bash
 
-    export PATH="~/local/anaconda/envs/viscid27:${PATH}"
-    echo "export PATH=~/local/anaconda/envs/viscid27:"'${PATH}' >> ~/.bashrc
+    profile="${HOME}/.bashrc"
+    echo "export PATH=~/local/anaconda/envs/viscid27:"'${PATH}' >> ${profile}
+    echo 'export CONDA_DEFAULT_ENV="$(basename "$(cd "$(dirname "$(which python)")/.."; pwd)")"' >> ${profile}
+    echo 'export CONDA_PREFIX="$(cd "$(dirname "$(which python)")/.."; pwd)"' >> ${profile}
+    source ${profile}
+
 
 Building / Installing Viscid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -128,10 +132,11 @@ Choice 2 (inplace)
 
     cd Viscid
     make inplace
-    export PATH="${PATH}:${PWD}/Viscid/scripts"
-    export PYTHONPATH="${PYTHONPATH}:${PWD}/Viscid"
-    echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ~/.bashrc
-    echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ~/.bashrc
+
+    profile="${HOME}/.bashrc"
+    echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ${profile}
+    echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ${profile}
+    source ${profile}
 
 to kick the tires, use
 
