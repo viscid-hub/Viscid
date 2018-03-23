@@ -1654,7 +1654,7 @@ class Field(tree.Leaf):
 
         elif self.iscentered('node'):
             # construct new crds
-            new_crds = self._src_crds.extend_by_half(default_width=default_width)
+            new_crds = self._src_crds.nc2cc(default_width=default_width)
 
             # this is similar to a shell copy, but it's intimately
             # linked to self as a parent
