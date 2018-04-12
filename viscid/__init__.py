@@ -146,10 +146,11 @@ if sys.version_info[0] >= 3:
 # apply settings in the rc file
 _rc.load_rc_file("~/.viscidrc")
 
-# this block is useful for debugging, ie, immediately do a pdb.set_trace()
-# on the SIGUSR2 signal
-def _set_trace(seg, frame):  # pylint: disable=unused-argument
-    import pdb
-    pdb.set_trace()
-# print("Trigger pdb with: kill -SIGUSR2", os.getpid())
-signal.signal(signal.SIGUSR2, _set_trace)
+if hasattr(signal, 'SIGINFO'):
+    # this is useful for debugging, ie, immediately do a pdb.set_trace()
+    # on the SIGINFO signal
+    def _set_trace(seg, frame):  # pylint: disable=unused-argument
+        import pdb
+        pdb.set_trace()
+    signal.signal(signal.SIGINFO, _set_trace)
+    # print("Trigger pdb with SIGINFO (ctrl + T)")
