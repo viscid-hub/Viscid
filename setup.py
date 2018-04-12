@@ -74,7 +74,10 @@ ext_mods = []
 # appended if building with cython, and .c will be appended
 # if using pre-generated c files
 # dict are kwargs that go into the Extension() constructor
-cy_ccflags = ["-Wno-unused-function"]
+if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
+    cy_ccflags = ["-Wno-unused-function"]
+else:
+    cy_ccflags = [""]
 cy_ldflags = []
 cy_defs = []
 cy_defs.append(["viscid.cython.cycalc",
