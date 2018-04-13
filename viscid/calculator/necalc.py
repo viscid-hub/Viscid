@@ -75,7 +75,7 @@ def scale(a, fld):
 def axpby(a, x, b, y):
     a = _normalize_scalar_dtype(a, [x, y])
     b = _normalize_scalar_dtype(b, [x, y])
-    return ne.evaluate("a * x + b * y")
+    return x.wrap(ne.evaluate("a * x + b * y"))
 
 def abs_max(fld):
     a = fld.data  # pylint: disable=W0612
