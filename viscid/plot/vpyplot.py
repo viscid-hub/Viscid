@@ -1329,17 +1329,7 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     verts, segments, vert_scalars, seg_scalars, vert_colors, seg_colors, _ = r
     # alpha = other['alpha']
 
-    symdir = symdir.strip().lower()
-    if segments.shape[2] == 2:
-        xind, yind, zind = 0, 1, None
-    elif symdir == 'x':
-        xind, yind, zind = 1, 2, 0
-    elif symdir == 'y':
-        xind, yind, zind = 0, 2, 1
-    elif symdir == 'z':
-        xind, yind, zind = 0, 1, 2
-    else:
-        raise ValueError("For 3d lines, symdir should be x, y, or z")
+    xind, yind, zind = _xyzind_from_symdir(segments, symdir)
 
     if flip_plot:
         xind, yind = yind, xind
@@ -1623,6 +1613,8 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     x = points[0]
     y = points[1]
     z = points[2]
+    if c == 'zloc':
+        c = z
     p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
         ax.axis("equal")
@@ -1853,6 +1845,40 @@ def _autolimit_to_vertices(ax, verts):
                 ax.set_zlim(bottom=zmax)
             if zmin < zlim[1]:
                 ax.set_zlim(top=zmin)
+
+def _xyzind_from_symdir(arr, symdir):
+    symdir = symdir.strip().lower()
+
+    if symdir:
+        if arr.shape[0] < 3:
+            raise ValueError("specifying symdir assumes arr is 3d")
+        if symdir == 'x':
+            xind, yind, zind = 1, 2, 0
+        elif symdir == 'y':
+            xind, yind, zind = 0, 2, 1
+        elif symdir == 'z':
+            xind, yind, zind = 0, 1, 2
+        else:
+            raise ValueError("symdir '{0}' not in 'xyz'".format(symdir))
+    else:
+        xy_inds = list(range(arr.shape[0]))
+        i = arr.shape[0] - 1
+        while i >= 0 and len(xy_inds) > 2:
+            if np.allclose(arr[i, :], arr[i, 0]):
+                xy_inds.pop(i)
+            i -= 1
+
+        if len(xy_inds) > 2:
+            xy_inds = [0, 1]
+        elif len(xy_inds) < 2:
+            xy_inds = [0, 0]
+        xind, yind = xy_inds
+
+        if arr.shape[0] > 2:
+            zind = min(set(range(arr.shape[0])) - set(xy_inds))
+        else:
+            zind = None
+    return xind, yind, zind
 
 def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
                 scalar_interp='linear', other=None):
