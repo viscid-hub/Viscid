@@ -1273,7 +1273,8 @@ def plot2d_line(line, scalars=None, **kwargs):
 def plot2d_lines(lines, scalars=None, symdir="", ax=None,
                  show=False, flip_plot=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
-                 marker=None, colors=None, marker_kwargs=None, **kwargs):
+                 marker=None, colors=None, marker_kwargs=None,
+                 axis='none', equal=False, **kwargs):
     """Plot a list of lines in 2D
 
     Args:
@@ -1369,6 +1370,11 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     else:
         _autolimit_to_vertices(ax, verts[[xind, yind], :])
 
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
+
     plt.sca(ax)
     if show:
         plt.show()
@@ -1382,7 +1388,8 @@ def plot3d_line(line, scalars=None, **kwargs):
 
 def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
-                 marker='', colors=None, marker_kwargs=None, **kwargs):
+                 marker='', colors=None, marker_kwargs=None,
+                 axis='none', equal=False, **kwargs):
     """Plot a list of lines in 3D
 
     Args:
@@ -1458,13 +1465,18 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
     else:
         _autolimit_to_vertices(ax, verts)
 
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
+
     plt.sca(ax)
     if show:
         plt.show()
 
     return line_collection
 
-def plot2d_quiver(fld, step=1, ax=None, **kwargs):
+def plot2d_quiver(fld, step=1, ax=None, axis='none', equal=False, **kwargs):
     """Put quivers on a 2D plot
 
     The quivers will be plotted in the 2D plane of fld, so if fld
@@ -1516,10 +1528,14 @@ def plot2d_quiver(fld, step=1, ax=None, **kwargs):
         ax = plt.gca()
 
     ret = ax.quiver(xl, xm, vl, vm, **kwargs)
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
     plt.sca(ax)
     return ret
 
-def streamplot(fld, ax=None, **kwargs):
+def streamplot(fld, ax=None, axis='none', equal=False, **kwargs):
     """Plot 2D streamlines with :py:func:`matplotlib.pyplot.streamplot`
 
     Args:
@@ -1590,6 +1606,10 @@ def streamplot(fld, ax=None, **kwargs):
         ax = plt.gca()
 
     ret = ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
     plt.sca(ax)
     return ret
 
@@ -1624,9 +1644,9 @@ def scatter_2d(points, c='k', symdir='', flip_plot=False, ax=None, show=False,
 
     p = ax.scatter(x, y, c=c, **kwargs)
 
-    if equal and axis.strip().lower() == 'none':
+    if equal:
         axis = 'image'
-    if axis.strip().lower() != 'none':
+    if axis.strip().lower() not in ('none', ''):
         ax.axis(axis)
 
     ax.set_xlabel("xyz"[xind])
@@ -1636,7 +1656,8 @@ def scatter_2d(points, c='k', symdir='', flip_plot=False, ax=None, show=False,
         plt.show()
     return p, None
 
-def scatter_3d(points, c='k', ax=None, show=False, equal=False, **kwargs):
+def scatter_3d(points, c='k', ax=None, show=False, axis='none', equal=False,
+               **kwargs):
     """Plot scattered points on a matplotlib 3d plot
 
     Parameters:
@@ -1660,7 +1681,9 @@ def scatter_3d(points, c='k', ax=None, show=False, equal=False, **kwargs):
         c = z
     p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
-        ax.axis("equal")
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     plt.sca(ax)
