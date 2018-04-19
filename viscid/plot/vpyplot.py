@@ -1593,7 +1593,50 @@ def streamplot(fld, ax=None, **kwargs):
     plt.sca(ax)
     return ret
 
-def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
+def scatter_2d(points, c='k', symdir='', flip_plot=False, ax=None, show=False,
+               axis='none', equal=False, **kwargs):
+    """Plot scattered points on a matplotlib 3d plot
+
+    Parameters:
+        points: something shaped 3xN for N points, where 3 are the
+            xyz cartesian directions in that order
+        c (str, optional): color (in matplotlib format)
+        ax (matplotlib Axis, optional): axis on which to plot (should
+            be a 3d axis)
+        show (bool, optional): show
+        kwargs: passed along to :meth:`plt.statter`
+    """
+    if not ax:
+        ax = plt.gca()
+
+    xind, yind, zind = _xyzind_from_symdir(points, symdir)
+
+    if flip_plot:
+        xind, yind = yind, xind
+
+    x = points[xind, :]
+    y = points[yind, :]
+
+    if c == 'zloc':
+        if zind is None:
+            raise RuntimeError("No 3rd dimension to pull colors from")
+        c = points[zind, :]
+
+    p = ax.scatter(x, y, c=c, **kwargs)
+
+    if equal and axis.strip().lower() == 'none':
+        axis = 'image'
+    if axis.strip().lower() != 'none':
+        ax.axis(axis)
+
+    ax.set_xlabel("xyz"[xind])
+    ax.set_ylabel("xyz"[yind])
+    plt.sca(ax)
+    if show:
+        plt.show()
+    return p, None
+
+def scatter_3d(points, c='k', ax=None, show=False, equal=False, **kwargs):
     """Plot scattered points on a matplotlib 3d plot
 
     Parameters:
