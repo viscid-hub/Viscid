@@ -1770,6 +1770,30 @@ class Field(tree.Leaf):
             else:
                 return self.wrap(self._src_data, context=ctx)
 
+    def atmost_nd(self, n):
+        axes = list(self.crds.axes)
+        removed_axes = []
+        remaining_axes = list(axes)
+        slc = []
+
+        for i, ni in enumerate(self.sshape):
+            if ni == 1:
+                slc.append('{0}=0'.format(axes[i]))
+                removed_axes.append(axes[i])
+                remaining_axes.remove(axes[i])
+            if len(self.sshape) - len(slc) <= n:
+                break
+
+        while len(self.sshape) - len(slc) > n:
+            slc.append('{0}=0f'.format(remaining_axes[-1]))
+            removed_axes.append(remaining_axes[-1])
+            remaining_axes.pop(-1)
+
+        if not slc:
+            return self
+        else:
+            return self[','.join(slc)]
+
     #######################
     ## emulate a container
 
