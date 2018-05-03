@@ -35,13 +35,17 @@ def _main():
         # be populated with empty subdirectories
         file_list = inst_manifest[sys.executable]['file_list']
         for fname in file_list:
-            if verb:
-                print("Removing:", fname, file=sys.stderr)
-
-            try:
+            if os.path.isdir(fname):
+                if verb:
+                    print("Remove tree:", fname, file=sys.stderr)
+                shutil.rmtree(fname, ignore_errors=False)
+            elif os.path.isfile(fname):
+                if verb:
+                    print("Removing:", fname, file=sys.stderr)
                 os.remove(fname)
-            except FileNotFoundError:
-                pass
+            else:
+                if verb:
+                    print("Ignoring:", fname, "(file DNE)", file=sys.stderr)
 
         # remove the whole package directory, which now should just
         # be populated with empty subdirectories
