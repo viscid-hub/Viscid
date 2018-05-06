@@ -80,11 +80,17 @@ class AMRField(object):
 
     @property
     def xl(self):
-        return np.min(self.skeleton.xl, axis=0)
+        if self.skeleton:
+            return np.min(self.skeleton.xl, axis=0)
+        else:
+            return np.min(np.vstack([p.xl for p in self.patches]), axis=1)
 
     @property
     def xh(self):
-        return np.max(self.skeleton.xh, axis=0)
+        if self.skeleton:
+            return np.max(self.skeleton.xh, axis=0)
+        else:
+            return np.max(np.vstack([p.xh for p in self.patches]), axis=1)
 
     def get_slice_extent(self, selection):
         extent = self.patches[0]._src_crds.get_slice_extent(selection)
