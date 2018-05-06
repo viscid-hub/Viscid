@@ -39,7 +39,7 @@ def _main():
     plt.xlim(*viscid.as_datetime(t[[0, -1]]).tolist())
     # 2D plot
     vlt.subplot(122)
-    vlt.plot(f0, x=(t[0], t[-1]))
+    vlt.plot(f0, x=(t[0], t[-1]), y=(y[0], y[-1]))
 
     plt.suptitle("datetime64")
     vlt.auto_adjust_subplots(subplot_params=dict(top=0.9))

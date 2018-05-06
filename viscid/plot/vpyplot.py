@@ -539,8 +539,39 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     # parse plot_opts
     plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
+    # guess a good default value for 'axis'... i am so sorry for this logic
+    # but i'm kinda playing the stanly cup in a sandbox here
+    _xl = np.array(fld.xl[:2])
+    _xh = np.array(fld.xh[:2])
+    if 'x' in plot_kwargs:
+        _xl[0], _xh[0] = plot_kwargs['x']
+    if 'y' in plot_kwargs:
+        _xl[1], _xh[1] = plot_kwargs['y']
+    _xy_L = np.abs(_xh - _xl)
+    if any(viscid.is_time_like(_xli, conservative=True) for _xli in _xy_L):
+        _axis_def = 'none'
+    else:
+        _aspect = float(max(_xy_L)) / min(_xy_L)
+        _axis_def = 'image' if _aspect <= 4.0 else 'none'
+    # take a step back and go through any shared axes... if any of the
+    # shared axes use 'image', 'equal', or 'box', then this axis should too
+    shared_axes = set(ax.get_shared_x_axes().get_siblings(ax))
+    shared_axes |= set(ax.get_shared_x_axes().get_siblings(ax))
+    for sax in shared_axes:
+        _asp = sax.get_aspect()
+        _adj = sax.get_adjustable()
+        _anc = sax.get_anchor()
+        _aso = sax.get_autoscale_on()
+        if _asp == 'equal' and _adj == 'datalim' and _aso:
+            _axis_def = 'equal'
+            break
+        elif (_asp == 'equal' and _adj in ('box', 'box-forced') and _anc == 'C'
+              and not _aso):
+            _axis_def = 'image'
+            break
+
     _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs,
-                                                                   default='image')
+                                                                   default=_axis_def)
 
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'axis': _axis})
