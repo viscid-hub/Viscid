@@ -106,9 +106,11 @@ Choice 1 (installed)
 .. code-block:: bash
 
     cd Viscid
-    make
-    make install  # or, if you don't have write permission,
-                  # try `make install INSTALL_ARGS='--user'`
+    python setup.py install
+    # the above line is synonymous with `make install`
+
+    # or, if you don't have write permission, try
+    # python setup.py install --user
 
 to kick the tires, use
 
@@ -121,9 +123,10 @@ to pull updates from github in the future, use
 .. code-block:: bash
 
     git pull
-    make
-    make install  # or, if you don't have write permission,
-                  # try `make install INSTALL_ARGS='--user'`
+    python setup.py install
+
+    # or, if you don't have write permission, try
+    # python setup.py install --user
 
 Choice 2 (inplace)
 ^^^^^^^^^^^^^^^^^^
@@ -131,8 +134,10 @@ Choice 2 (inplace)
 .. code-block:: bash
 
     cd Viscid
-    make inplace
+    python setup.py build_ext -i
+    # the above line is synonymous with `make inplace`
 
+    # To set environment variables in Bash
     profile="${HOME}/.bashrc"
     echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ${profile}
     echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ${profile}
@@ -149,7 +154,7 @@ to pull updates from github in the future, use
 .. code-block:: bash
 
     git pull
-    make inplace
+    python setup.py build_ext -i
 
 Known Workarounds
 -----------------
