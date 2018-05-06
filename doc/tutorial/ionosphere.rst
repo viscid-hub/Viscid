@@ -28,16 +28,15 @@ Ionosphere Plots
                      cbar_kwargs=dict(pad=0.15)  # pad the colorbar away from the plot
                     )
 
-    ax1 = plt.subplot(121, projection='polar')
-    vlt.plot(fac_tot, ax=ax1, hemisphere='north', **plot_args)
-    ax1.annotate('(a)', xy=(0, 0), textcoords="axes fraction",
+    _, (ax0, ax1) = plt.subplots(1, 2, subplot_kw=dict(projection='polar'))
+    vlt.plot(fac_tot, ax=ax0, hemisphere='north', **plot_args)
+    ax0.annotate('(a)', xy=(0, 0), textcoords="axes fraction",
                  xytext=(-0.1, 1.0), fontsize=18)
 
-    ax2 = plt.subplot(122, projection='polar')
     plot_args['gridec'] = False
-    vlt.plot(fac_tot, ax=ax2, hemisphere="south", style="contourf",
+    vlt.plot(fac_tot, ax=ax1, hemisphere="south", style="contourf",
              levels=50, extend="both", **plot_args)
-    ax2.annotate('(b)', xy=(0, 0), textcoords="axes fraction",
+    ax1.annotate('(b)', xy=(0, 0), textcoords="axes fraction",
                  xytext=(-0.1, 1.0), fontsize=18)
 
     plt.gcf().set_size_inches(10, 5.0)

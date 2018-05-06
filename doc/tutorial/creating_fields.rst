@@ -99,11 +99,9 @@ Scalar Field on the Same Grid as an Existing Field
                             pretty_name="Fld 2 $[W/m^2]$")
     fld2[...] = np.sin(8 * A) - B - 0.5
 
-    plt.figure(figsize=(12, 5))
-    plt.subplot(121)
-    vlt.plot(fld1, g='#7C1607')
-    plt.subplot(122)
-    vlt.plot(fld2, g='#7C1607')
+    _, (ax0, ax1) = plt.subplots(1, 2, figsize=(12, 5))
+    vlt.plot(fld1, g='#7C1607', ax=ax0)
+    vlt.plot(fld2, g='#7C1607', ax=ax1)
     vlt.auto_adjust_subplots()
     plt.show()
 
@@ -285,10 +283,8 @@ Fields that are defined on the same grid at the same point in time can be added 
     grid['a'][...] = 1.0 + np.sin(4 * X) + np.cos(8 * Y) + 2.0 * X * Y
     grid['b'][...] = np.sin(4 * X) - np.cos(8 * Y) - 2.0 * X * Y
 
-    plt.figure(figsize=(12, 5))
-    plt.subplot(121)
-    vlt.plot(grid['a'])
-    plt.subplot(122)
-    vlt.plot(grid['b'])
+    _, (ax0, ax1) = plt.subplots(1, 2, figsize=(12, 5))
+    vlt.plot(grid['a'], ax=ax0)
+    vlt.plot(grid['b'], ax=ax1)
     vlt.auto_adjust_subplots()
     plt.show()
