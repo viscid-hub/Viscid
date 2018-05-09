@@ -2028,6 +2028,13 @@ class Field(tree.Leaf):
     def argsort(self, axis=-1, kind='quicksort', order=None, **kwargs):
         kwargs.update(axis=axis, kind=kind, order=order)
         return self.wrap(self.data.argsort(**kwargs), npkwargs=kwargs)
+    def clip(self, min=None, max=None, out=None, **kwargs):
+        kwargs.update(min=min, max=max, out=out)
+        return self.wrap(self.data.clip(**kwargs), npkwargs=kwargs)
+    def conj(self, **kwargs):
+        return self.wrap(self.data.conj(**kwargs), npkwargs=kwargs)
+    def conjugate(self, **kwargs):
+        return self.wrap(self.data.conjugate(**kwargs), npkwargs=kwargs)
     def cumprod(self, axis=None, dtype=None, order=None, **kwargs):
         kwargs.update(axis=axis, dtype=dtype, order=order)
         return self.wrap(self.data.cumprod(**kwargs), npkwargs=kwargs)
@@ -2040,11 +2047,19 @@ class Field(tree.Leaf):
         return self.wrap(self.data.mean(**kwargs), npkwargs=kwargs)
     def min(self, **kwargs):
         return self.wrap(self.data.min(**kwargs), npkwargs=kwargs)
+    def nonzero(self, **kwargs):
+        return self.data.nonzero(**kwargs)
     def partition(self, kth, axis=-1, **kwargs):
         kwargs.update(kth=kth, axis=axis)
         return self.wrap(self.data.partition(**kwargs), npkwargs=kwargs)
     def prod(self, **kwargs):
         return self.wrap(self.data.prod(**kwargs), npkwargs=kwargs)
+    def ptp(self, axis=None, out=None, **kwargs):
+        kwargs.update(axis=axis, out=out)
+        return self.wrap(self.data.ptp(**kwargs), npkwargs=kwargs)
+    def round(self, decimals=0, out=None, **kwargs):
+        kwargs.update(decimals=decimals, out=out)
+        return self.wrap(self.data.round(**kwargs), npkwargs=kwargs)
     def std(self, **kwargs):
         return self.wrap(self.data.std(**kwargs), npkwargs=kwargs)
     def sum(self, **kwargs):
