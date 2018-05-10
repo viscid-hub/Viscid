@@ -59,7 +59,10 @@ make clean
 make html
 
 msg="Automatic doc update ${branch}:${tags}"
-${root_dir}/deploy_ghpages -cd "docs/${branch}" -m "${msg}" "${html_dir}"/*
+${root_dir}/deploy_ghpages -cd "docs/${branch}"                \
+                           -r "KristoforMaynard/Viscid-docs"   \
+                           -m "${msg}"                         \
+                           "${html_dir}"/*
 
 ##
 ## EOF

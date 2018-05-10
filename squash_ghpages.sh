@@ -25,7 +25,7 @@ squash_sha_cache=".ghp_squash_sha"
 # access to the repository, and ideally they should know what
 # they are doing... this script will do a soft reset and ammend
 # a commmit followed by a force push upstream.
-repo="git@github.com:KristoforMaynard/Viscid.git"
+repo="git@github.com:KristoforMaynard/Viscid-docs.git"
 
 # make sure we're on the dev branch
 cd ${root_dir}

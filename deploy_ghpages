@@ -13,8 +13,7 @@ msg="Automated Deployment"
 dest_dir=""
 files=""
 
-upstream_slug="KristoforMaynard/Viscid"
-TRAVIS_REPO_SLUG="${TRAVIS_REPO_SLUG:-${upstream_slug}}"
+repo_slug=""
 
 # usage: abs_path="$(abspath ${relative_path} [${start}])"
 # `start` is the path that the relative path is relative to; it defaults to ${PWD}
@@ -35,6 +34,7 @@ Copy and commit a set of files to the gh-pages branch
     -m MSG      commit message
 
   Required Arguments:
+    -r REPO     github repository slug, i.e., "user/repo"
     -d DEST     Destination directory relative to root on the gh-pages
                 branch
     file*       One or more files to move to DEST and commit
@@ -46,13 +46,14 @@ exit $1
 ##################
 # parse arguments
 OPTIND=1
-while getopts "h?pcm:d:" arg; do
+while getopts "h?pcm:r:d:" arg; do
   case $arg in
     h|\?)
       print_usage 0;;
     p) pretend=1;;
     c) doclean=1;;
     m) msg=${OPTARG};;
+    r) repo_slug=${OPTARG};;
     d) dest_dir=${OPTARG};;
     *) print_usage 1;;
   esac
@@ -61,7 +62,23 @@ shift $((OPTIND-1))
 
 files=(); for f in "$@"; do files+=("${f}"); done
 
-if [ -z "${dest_dir}" ] || [ ${#files[@]} -eq 0 ]; then print_usage 1; fi
+if [ -z "${dest_dir}" ]; then
+  echo "Error, missing DEST" >&2
+  echo "" >&2
+  print_usage 1
+fi
+
+if [ ${#files[@]} -eq 0 ]; then
+  echo "Error, you must supply one or more FILES" >&2
+  echo "" >&2
+  print_usage 2
+fi
+
+if [ "${repo_slug}" == "" ]; then
+  echo "Error, missing REPO" >&2
+  echo "" >&2
+  print_usage 3
+fi
 
 ###################
 # now we may begin
@@ -73,29 +90,31 @@ else
 fi
 
 if [[ -n ${TRAVIS} && -n ${CONTINUOUS_INTEGRATION} ]]; then
-  if [ "${TRAVIS_REPO_SLUG}" != "${upstream_slug}" ]; then
-    echo ">> slug: '${TRAVIS_REPO_SLUG}' != '${upstream_slug}' (upstream),"
-    echo ">> i.e., this repo is not eligible for doc deployment. "
-    echo ">> Quietly exiting now..."
-    exit 0
-  elif [ -n "$GH_TOKEN" ]; then
-    repo="https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git"
-    git config --global user.name "Travis-CI"
-    git config --global user.email "nobody@travis-ci.org"
-    git config --global push.default simple
-  else
-    echo ">> I'm lost..."
-    exit 10
-  fi
+  # ok, so now on travis-ci, you will need to create an encrypted
+  # file that contains a private rsa key. In the before-install
+  # phase, you'll need to decrypt that file into ~/.ssh/id_rsa
+  # and give the correct permission to ~/.ssh (700) and
+  # ~/.ssh/id_rsa (600). Then, you can add the public key to the
+  # target repository's deployment keys on github.
+  repo="git@github.com:${repo_slug}.git"
+  git config --global user.name "Travis-CI"
+  git config --global user.email "nobody@travis-ci.org"
+  git config --global push.default simple
 else
   # this scipt is probably being run locally, so let's assume the user
   # has set up passwordless access to github with an account that can
   # push to the upstream repo
-  repo="git@github.com:${TRAVIS_REPO_SLUG}.git"
+  repo="git@github.com:${repo_slug}.git"
 fi
 
 echo "using repo::" ${repo}
 git clone -b gh-pages ${repo} "${ghp_dir}"
+
+if [ ! -d ${ghp_dir} ]; then
+  echo "Repo directory doesn't exist, the clone must have failed." >&2
+  exit 30
+fi
+
 cd "${ghp_dir}"
 
 if [[ ${doclean} && -d "${dest_dir}" ]]; then
