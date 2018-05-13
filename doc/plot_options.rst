@@ -101,6 +101,7 @@ show           [bool]            Call :py:func:`pyplot.show` before returning
 Option        Arguments         Description
 ============  ===============   ==================================================
 style         str               One of (pcolormesh, pcolor, contour, contourf)
+tightlim      bool              If True, then set axes limits to data limits
 levels        [int or list]     Number of contours, or list of specific contour
                                 values (contours only)
 g             [bool or color]   Alias for gridec=k or gridec=color

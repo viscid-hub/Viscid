@@ -575,6 +575,15 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs,
                                                                    default=_axis_def)
 
+    tightlim = plot_kwargs.pop('tightlim', plot_kwargs.pop('tightlims', True))
+    if tightlim:
+        _xl = np.array(fld.xl[:2])
+        _xh = np.array(fld.xh[:2])
+        if 'x' not in plot_kwargs:
+            plot_kwargs['x'] = (fld.xl[0], fld.xh[0])
+        if 'y' not in plot_kwargs:
+            plot_kwargs['y'] = (fld.xl[1], fld.xh[1])
+
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'axis': _axis})
 
