@@ -53,6 +53,8 @@ from viscid import vutil
 from viscid.plot import mpl_style  # pylint: disable=unused-import
 from viscid.plot import mpl_extra
 from viscid.plot.mpl_direct_label import apply_labels
+from viscid.plot.from_seaborn import despine
+
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__

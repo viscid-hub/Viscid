@@ -186,6 +186,8 @@ Function                                              Description
                                                       the labels next to the data. This adheres to the principle
                                                       that you shouldn't make the reader learn a key just to
                                                       read a single plot.
+:py:func:`viscid.plot.vpyplot.despine`                Remove some spines to reduce chart clutter, this is the
+                                                      exact same as seaborn's despine.
 ====================================================  ===========================================================
 
 2D Matplotlib Plots
