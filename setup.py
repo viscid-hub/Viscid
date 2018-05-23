@@ -441,17 +441,27 @@ try:
                   for fname in fnames if not fname.startswith('.')]
         data_files += [(os.path.join('viscid', dirpath), fnames)]
 
+    version = get_viscid_version("viscid/__init__.py")
+    url = "https://github.com/KristoforMaynard/Viscid"
+    download_url = "{0}/archive/{1}.zip".format(url, version)
+
     setup(name='viscid',
-          version=get_viscid_version("viscid/__init__.py"),
-          description='Visualization in python',
+          version=version,
+          description='Visualizes gridded data in python',
           author='Kris Maynard',
           author_email='k.maynard@unh.edu',
+          license='MIT',
+          url=url,
+          download_url=download_url,
+          keywords=['visualization', 'physics'],
+          install_requires=['numpy>=1.9'],
           packages=pkgs,
           cmdclass=cmdclass,
           include_dirs=[np.get_include()],
           ext_modules=ext_mods,
           scripts=scripts,
           data_files=data_files,
+          zip_safe=False
          )
 
     # if installed, store list of installed files in a json file - this
