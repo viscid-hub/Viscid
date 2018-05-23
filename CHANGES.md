@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.99.3 dev
-==========
+0.99.3
+======
 
   - python-only install always works, even on windows
   - only use equal axis by default if aspect ratio <= 4; this may change plot appearance unexpectedly
