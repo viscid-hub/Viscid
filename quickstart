@@ -84,11 +84,11 @@ viscid_dir="$(abspath "$(dirname ${0})")"
 
 if [ "$(uname)" == "Darwin" ]; then
   anaconda_prefix="${anaconda_prefix:-${HOME}/Library/anaconda}"
-  conda_url="https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
+  conda_url="https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh"
   envs="${envs:-viscid35mayavi,viscid35,viscid27}"
 elif [ "$(uname)" == "Linux" ]; then
   anaconda_prefix="${anaconda_prefix:-${HOME}/local/anaconda}"
-  conda_url="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+  conda_url="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
   envs="${envs:-viscid27,viscid35mayavi,viscid35}"
 else
   echo "MacOSX / Linux only"

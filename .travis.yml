@@ -66,9 +66,9 @@ before_install:
   ## Now setup the Anaconda tools
   # it saves some download time to use the same python iff 2.7
   - 'if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-       export CONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh";
+       export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh";
      else
-       export CONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh";
+       export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh";
      fi'
   # linux has wget, OS X has curl... such is life
   - 'if [[ "$(which wget &>/dev/null && echo $?)" == "0" ]]; then
