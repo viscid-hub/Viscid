@@ -1294,10 +1294,18 @@ class StructuredCrds(Coordinates):
         return np.array([np.min(dx) for dx in self.get_dx(axes, center=center)])
 
     def get_xl(self, axes=None, center='node'):
-        return np.array([x[0] for x in self.get_crds(axes, center=center)])
+        _lst = [x[0] for x in self.get_crds(axes, center=center)]
+        try:
+            return np.array(_lst)
+        except ValueError:
+            return np.array(_lst, dtype='object')
 
     def get_xh(self, axes=None, center='node'):
-        return np.array([x[-1] for x in self.get_crds(axes, center=center)])
+        _lst = [x[-1] for x in self.get_crds(axes, center=center)]
+        try:
+            return np.array(_lst)
+        except ValueError:
+            return np.array(_lst, dtype='object')
 
     def get_L(self, axes=None, center='node'):
         """Get lengths"""

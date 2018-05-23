@@ -2,18 +2,17 @@
 """For matplotlib: Instead of a legend, label the data directly
 
 This module takes care to position labels so not to overlap other
-elements already on the plot
+elements already on the plot. Simply calling :py:func`apply_labels`
+should act like a call to :py:func:`matplotlib.pyplot.legend`
 """
 
 # Note, this is not in viscid/plot/__init__.py on purpose since it imports
-# pylab - it is instead imported by viscid/plot/vlt.py and made accessable
-# in its namespace
+# pylab. Instead, the entry point of this module is available using
+# viscid.plot.vpyplot.apply_labels(...)
 
 from __future__ import print_function, division, unicode_literals
 from itertools import count, cycle
-import re
 import sys
-import warnings
 
 from matplotlib.cbook import is_string_like
 from matplotlib.font_manager import FontProperties
@@ -23,6 +22,291 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
+
+def apply_labels(labels=None, colors=None, ax=None, magnet=(0.5, 0.75),
+                 magnetcoords="axes fraction", padding=None,
+                 paddingcoords="offset points", choices="00:02:20:22",
+                 n_candidates=32, ignore_filling=False, _debug=False, **kwargs):
+    """Apply labels directly to series in liu of a legend
+
+    The `choices` offsets are as follows::
+
+        ---------------------
+        |  02  |  12  | 22  |
+        |-------------------|
+        |  01  |  XX  | 21  |
+        |-------------------|
+        |  00  |  10  | 20  |
+        ---------------------
+
+    Args:
+        labels (sequence): Optional sequence of labels to override the
+            labels already in the data series
+        colors (str, sequence): color as hex string, list of hex
+            strings to color each label, or an Nx4 ndarray of rgba
+            values for N labels
+        ax (matplotlib.axis): axis; defaults to `plt.gca()`
+        magnet (tuple): prefer positions that are closer to the magnet
+        magnetcoords (str): 'offset pixels', 'offset points' or 'axes fraction'
+        padding (tuple): padding for text in the (x, y) directions
+        paddingcoords (str): 'offset pixels', 'offset points' or 'axes fraction'
+        choices (str): colon separated list of possible label positions
+            relative to the data values. The positions are summarized
+            above.
+        alpha (float): alpha channel (opacity) of label text. Defaults
+            to 1.0 to make text visible. Set to `None` to use the
+            underlying alpha from the handle's color.
+        n_candidates (int): number of potential label locations to
+            consider for each data series.
+        _debug (bool): Mark up all possible label locations
+        **kwargs: passed to plt.annotate
+
+    Returns:
+        List: annotation objects
+    """
+    if not ax:
+        ax = plt.gca()
+
+    if isinstance(colors, (list, tuple)):
+        pass
+
+    # choices:: "01:02:22" -> [(0, 1), (0, 2), (2, 2)]
+    choices = [(int(c[0]), int(c[1])) for c in choices.split(':')]
+
+    _size = kwargs.get('fontsize', kwargs.get('size', None))
+    _fontproperties = kwargs.get('fontproperties', None)
+    font_size_pts = text_size_points(size=_size, fontproperties=_fontproperties)
+
+    # set the default padding equal to the font size
+    if paddingcoords == 'offset pixels':
+        default_padding = font_size_pts * 72 / ax.figure.dpi
+    elif paddingcoords == 'offset points':
+        default_padding = font_size_pts
+    elif paddingcoords == 'axes fraction':
+        default_padding = 0.05
+    else:
+        raise ValueError("Bad padding coords '{0}'".format(paddingcoords))
+
+    # print("fontsize pt:", font_size_pts,
+    #       "fontsize px:", xy_as_pixels([font_size_pts, font_size_pts],
+    #                                    'offset points')[0])
+
+    if not isinstance(padding, (list, tuple)):
+        padding = [padding, padding]
+    padding = [default_padding if pd is None else pd for pd in padding]
+    # print("padding::", paddingcoords, padding)
+
+    magnet_px = xy_as_pixels(magnet, magnetcoords, ax=ax)
+    padding_px = xy_as_pixels(padding, paddingcoords, ax=ax)
+    # print("padding px::", padding_px)
+
+    annotations = []
+
+    cand_map = {}
+    for choice in choices:
+        cand_map[choice] = np.zeros([n_candidates, 2, 2], dtype='f')
+
+    # these paths are all the paths we can get our hands on so that the text
+    # doesn't overlap them. bboxes around labels are added as we go
+    paths_px = []
+    # here is a list of bounding boxes around the text boxes as we add them
+    bbox_paths_px = []
+    is_filled = []
+
+    ## how many vertices to avoid ?
+    # artist
+    # collection
+    # image
+    # line
+    # patch
+    # table
+    # container
+
+    for line in ax.lines:
+        paths_px += [ax.transData.transform_path(line.get_path())]
+        is_filled += [False]
+    for collection in ax.collections:
+        for pth in collection.get_paths():
+            paths_px += [ax.transData.transform_path(pth)]
+            is_filled += [collection.get_fill()]
+
+    if ignore_filling:
+        is_filled = [False] * len(is_filled)
+
+    hands, hand_labels = ax.get_legend_handles_labels()
+
+    colors = _cycle_colors(colors, len(hands))
+
+    # >>> debug >>>
+    if _debug:
+        import viscid
+        from matplotlib import patches as mpatches
+        from viscid.plot import vpyplot as vlt
+
+        _fig_width = int(ax.figure.bbox.width)
+        _fig_height = int(ax.figure.bbox.height)
+        fig_fld = viscid.zeros((_fig_width, _fig_height), dtype='f',
+                               center='node')
+        _X, _Y = fig_fld.get_crds(shaped=True)
+
+        _axXL, _axYL, _axXH, _axYH = ax.bbox.extents
+
+        _mask = np.bitwise_and(np.bitwise_and(_X >= _axXL, _X <= _axXH),
+                               np.bitwise_and(_Y >= _axYL, _Y <= _axYH))
+        fig_fld.data[_mask] = 1.0
+
+        dfig, dax = plt.subplots(1, 1, figsize=ax.figure.get_size_inches())
+
+        vlt.plot(fig_fld, ax=dax, cmap='ocean', colorbar=None)
+        for _, path in enumerate(paths_px):
+            dax.plot(path.vertices[:, 0], path.vertices[:, 1])
+        dfig.subplots_adjust(bottom=0.0, left=0.0, top=1.0, right=1.0)
+    else:
+        dfig, dax = None, None
+    # <<< debug <<<
+
+
+    for i, hand, label_i in zip(count(), hands, hand_labels):
+        if labels and i < len(labels):
+            label = labels[i]
+        else:
+            label = label_i
+
+        # divine color of label
+        if colors[i]:
+            color = colors[i]
+        else:
+            try:
+                color = hand.get_color()
+            except AttributeError:
+                color = hand.get_facecolor()[0]
+
+        # get path vertices to determine candidate label positions
+        try:
+            verts = hand.get_path().vertices
+        except AttributeError:
+            verts = [p.vertices for p in hand.get_paths()]
+            verts = np.concatenate(verts, axis=0)
+
+        # resample the path of the current handle to get some candidate
+        # locations for the label along the path
+        s_src = np.linspace(0, 1, verts.shape[0])
+        # shape is [i_candidate, value: [x, y]], corner: [lower left, upper right]
+        s_dest = np.linspace(0, 1, n_candidates)
+        root_dat = np.zeros([n_candidates, 2], dtype='f')
+        root_px = np.zeros([n_candidates, 2], dtype='f')
+
+        root_dat[:, 0] = np.interp(s_dest, s_src, verts[:, 0])
+        root_dat[:, 1] = np.interp(s_dest, s_src, verts[:, 1])
+
+        root_px[:, :] = ax.transData.transform(root_dat)
+
+        # estimate the width and height of the label's text
+        txt_size = np.array(estimate_text_size_px(label, fig=ax.figure,
+                                                  size=font_size_pts))
+        txt_size = txt_size.reshape([1, 2])
+
+        # this initial offset is needed to shift the center of the label
+        # to the data point
+        offset0 = -txt_size / 2
+
+        # now we can shift the label away from the data point by an amount
+        # equal to half the text width/height + the padding
+        offset1 = padding_px + txt_size / 2
+
+        for key, abs_px_arr in cand_map.items():
+            ioff = np.array(key, dtype='i').reshape(1, 2) - 1
+            total_offset = offset0 + ioff * offset1
+            # approx lower left corner of the text box in absolute pixels
+            abs_px_arr[:, :, 0] = root_px + total_offset
+            # approx upper right corner of the text box in absolute pixels
+            abs_px_arr[:, :, 1] = abs_px_arr[:, :, 0] + txt_size
+
+        # candidates_abs_px[i] has root @ root_px[i % n_candidates]
+        candidates_abs_px = np.concatenate([cand_map[c] for c in choices],
+                                           axis=0)
+
+        # find how many other things each candidate overlaps
+        n_overlaps = np.zeros_like(candidates_abs_px[:, 0, 0])
+
+        for k, candidate in enumerate(candidates_abs_px):
+            cand_bbox = Bbox(candidate.T)
+
+            # penalty for each time a box overlaps a path that's already
+            # on the plot
+            for ipth, path in enumerate(paths_px):
+                if path.intersects_bbox(cand_bbox, filled=is_filled[ipth]):
+                    n_overlaps[k] += 1
+
+            # slightly larger penalty if we intersect a text box that we
+            # just added to the plot
+            for ipth, path in enumerate(bbox_paths_px):
+                if path.intersects_bbox(cand_bbox, filled=is_filled[ipth]):
+                    n_overlaps[k] += 5
+
+            # big penalty if the candidate is out of the current view
+            if not (ax.bbox.contains(*cand_bbox.min) and
+                    ax.bbox.contains(*cand_bbox.max)):
+                n_overlaps[k] += 100
+
+        # sort candidates by distance between center of text box and magnet
+        magnet_dist = np.linalg.norm(np.mean(candidates_abs_px, axis=-1)
+                                     - magnet_px, axis=1)
+        isorted = np.argsort(magnet_dist)
+        magnet_dist = np.array(magnet_dist[isorted])
+        candidates_abs_px = np.array(candidates_abs_px[isorted, :, :])
+        n_overlaps = np.array(n_overlaps[isorted])
+        root_dat = np.array(root_dat[isorted % n_candidates, :])
+        root_px = np.array(root_px[isorted % n_candidates, :])
+
+        # sort candidates so the ones with the fewest overlaps are first
+        # but do it with a stable algorithm so among the best candidates,
+        # choose the one closest to the magnet
+        sargs = np.argsort(n_overlaps, kind='mergesort')
+
+        # >>> debug >>>
+        if dax is not None:
+            for _candidate, n_overlap in zip(candidates_abs_px, n_overlaps):
+                _cand_bbox = Bbox(_candidate.T)
+                _x0 = _cand_bbox.get_points()[0]
+                _bbox_center = np.mean(_candidate, axis=-1)
+                _ray_x = [_bbox_center[0], magnet_px[0]]
+                _ray_y = [_bbox_center[1], magnet_px[1]]
+                dax.plot(_ray_x, _ray_y, '-', alpha=0.3, color='grey')
+                _rect = mpatches.Rectangle(_x0, _cand_bbox.width,
+                                           _cand_bbox.height, fill=False)
+                dax.add_patch(_rect)
+                plt.text(_x0[0], _x0[1], label, color='gray')
+                plt.text(_x0[0], _x0[1], '{0}'.format(n_overlap))
+        # <<< debug <<<
+
+        # pick winning candidate and add its bounding box to this list of
+        # paths to avoid
+        winner_abs_px = candidates_abs_px[sargs[0], :, :]
+        xy_root_px = root_px[sargs[0], :]
+        xy_root_dat = np.array(root_dat[sargs[0], :])
+        xy_txt_offset = np.array(winner_abs_px[:, 0] - xy_root_px)
+
+        corners = Bbox(winner_abs_px.T).corners()[(0, 1, 3, 2), :]
+        bbox_paths_px += [Path(corners)]
+
+        # a = plt.annotate(label, xy=xy_root_dat, xycoords='data',
+        #                  xytext=xy_txt_offset, textcoords="offset pixels",
+        #                  color=color, **kwargs)
+        a = ax.annotate(label, xy=xy_root_dat, xycoords='data',
+                        xytext=xy_txt_offset, textcoords="offset pixels",
+                        color=color, **kwargs)
+        annotations.append(a)
+    return annotations
+
+def text_size_points(size=None, fontproperties=None):
+    if not size:
+        if fontproperties is None:
+            fontproperties = FontProperties()
+        elif is_string_like(fontproperties):
+            fontproperties = FontProperties(fontproperties)
+        size = fontproperties.get_size_in_points()
+    return size
 
 def estimate_text_size_px(txt, char_aspect_ratio=0.618, line_spacing=1.62,
                           fig=None, size=None, fontproperties=None, dpi=None):
@@ -53,12 +337,7 @@ def estimate_text_size_px(txt, char_aspect_ratio=0.618, line_spacing=1.62,
     if dpi is None:
         dpi = fig.get_dpi()
 
-    if size is None:
-        if fontproperties is None:
-            fontproperties = FontProperties()
-        elif is_string_like(fontproperties):
-            fontproperties = FontProperties(fontproperties)
-        size = fontproperties.get_size_in_points()
+    size = text_size_points(size=size, fontproperties=fontproperties)
 
     char_height_px = dpi * size / 72
     # Note: default values of golden ratio and 1/golden ratio give ~13%
@@ -74,7 +353,7 @@ def estimate_text_size_px(txt, char_aspect_ratio=0.618, line_spacing=1.62,
 
     return (char_width_px * widest_line_nchars, line_height_px * nlines)
 
-def _xy_as_pixels(xy, coords, ax=None):
+def xy_as_pixels(xy, coords, ax=None):
     """convert xy from coords to pixels"""
     # make sure xy has two elements, one for x, one for y
     try:
@@ -87,11 +366,16 @@ def _xy_as_pixels(xy, coords, ax=None):
 
     if coords == "offset pixels":
         xy_px = xy
+    elif coords == "offset points":
+        if not ax:
+            ax = plt.gca()
+        scale = ax.figure.dpi / 72
+        xy_px = [scale * xy[0], scale * xy[1]]
     elif coords == "axes fraction":
         if not ax:
             ax = plt.gca()
-        xl, xh = ax.get_xlim()
-        yl, yh = ax.get_ylim()
+        xl, yl = ax.bbox.corners()[0]
+        xh, yh = ax.bbox.corners()[-1]
         xy_px = [xl + xy[0] * (xh - xl), yl + xy[1] * (yh - yl)]
     else:
         raise ValueError("coords '{0}' not understood".format(coords))
@@ -155,7 +439,6 @@ def _cycle_colors(colors, n_hands):
                 colors = colors.reshape(1, -1)
             elif len(colors.shape) > 2:
                 raise ValueError()
-            print("???", colors.shape)
             # turn rgb -> rgba
             if colors.shape[1] == 3:
                 colors = np.append(colors, np.ones_like(colors[:, :1]), axis=1)
@@ -165,234 +448,12 @@ def _cycle_colors(colors, n_hands):
         colors = [None] * n_hands
     return colors
 
-def apply_labels(labels=None, colors=None, ax=None, magnet=(0.0, 1.0),
-                 magnetcoords="axes fraction", padding=(8, 8),
-                 paddingcoords="offset pixels", choices="00:02:20:22",
-                 n_candidates=32, alpha=1.0, _debug=False, **kwargs):
-    """Apply labels directly to series in liu of a legend
-
-    The `choices` offsets are as follows::
-
-        ---------------------
-        |  02  |  12  | 22  |
-        |-------------------|
-        |  01  |  XX  | 21  |
-        |-------------------|
-        |  00  |  10  | 20  |
-        ---------------------
-
-    Args:
-        labels (sequence): Optional sequence of labels to override the
-            labels already in the data series
-        colors (str, sequence): color as hex string, list of hex
-            strings to color each label, or an Nx4 ndarray of rgba
-            values for N labels
-        ax (matplotlib.axis): axis; defaults to `plt.gca()`
-        magnet (tuple): prefer positions that are closer to the magnet
-        magnetcoords (str): 'offset pixels' or 'axes fraction'
-        padding (tuple): padding for text in the (x, y) directions
-        paddingcoords (str): 'offset pixels' or 'axes fraction'
-        choices (str): colon separated list of possible label positions
-            relative to the data values. The positions are summarized
-            above.
-        alpha (float): alpha channel (opacity) of label text. Defaults
-            to 1.0 to make text visible. Set to `None` to use the
-            underlying alpha from the handle's color.
-        n_candidates (int): number of potential label locations to
-            consider for each data series.
-        _debug (bool): Mark up all possible label locations
-        **kwargs: passed to plt.annotate
-
-    Returns:
-        List: annotation objects
-    """
-    if not ax:
-        ax = plt.gca()
-
-    if isinstance(colors, (list, tuple)):
-        pass
-
-    # choices:: "01:02:22" -> [(0, 1), (0, 2), (2, 2)]
-    choices = [(int(c[0]), int(c[1])) for c in choices.split(':')]
-
-    magnet_px = _xy_as_pixels(magnet, magnetcoords, ax=ax)
-    padding_px = _xy_as_pixels(padding, paddingcoords, ax=ax)
-
-    annotations = []
-
-    cand_map = {}
-    for choice in choices:
-        cand_map[choice] = np.zeros([n_candidates, 2, 2], dtype='f')
-
-    # these paths are all the paths we can get out hands on so that the text
-    # doesn't overlap them. bboxes around labels are added as we go
-    # paths = []
-    paths_px = []
-    # here is a list of bounding boxes around the text boxes as we add them
-    bbox_paths_px = []
-
-    ## how many vertices to avoid ?
-    # artist
-    # collection
-    # image
-    # line
-    # patch
-    # table
-    # container
-
-    for line in ax.lines:
-        paths_px += [ax.transData.transform_path(line.get_path())]
-    for collection in ax.collections:
-        for pth in collection.get_paths():
-            paths_px += [ax.transData.transform_path(pth)]
-
-    hands, hand_labels = ax.get_legend_handles_labels()
-
-    colors = _cycle_colors(colors, len(hands))
-
-    for i, hand, label_i in zip(count(), hands, hand_labels):
-        if labels and i < len(labels):
-            label = labels[i]
-        else:
-            label = label_i
-
-        # divine color of label
-        if colors[i]:
-            color = colors[i]
-        else:
-            try:
-                color = hand.get_color()
-            except AttributeError:
-                color = hand.get_facecolor()[0]
-
-        # get path vertices to determine candidate label positions
-        try:
-            verts = hand.get_path().vertices
-        except AttributeError:
-            verts = [p.vertices for p in hand.get_paths()]
-            verts = np.concatenate(verts, axis=0)
-
-        # resample the path of the current handle to get some candidate
-        # locations for the label along the path
-        s_src = np.linspace(0, 1, verts.shape[0])
-        # shape is [i_candidate, value: [x, y]], corner: [lower left, upper right]
-        s_dest = np.linspace(0, 1, n_candidates)
-        root_dat = np.zeros([n_candidates, 2], dtype='f')
-        root_px = np.zeros([n_candidates, 2], dtype='f')
-
-        root_dat[:, 0] = np.interp(s_dest, s_src, verts[:, 0])
-        root_dat[:, 1] = np.interp(s_dest, s_src, verts[:, 1])
-
-        root_px[:, :] = ax.transData.transform(root_dat)
-
-        # estimate the width and height of the label's text
-        # txt_w, txt_h = estimate_text_size_data(label, ax=ax)
-        txt_size = np.array(estimate_text_size_px(label, fig=ax.figure))
-        txt_size = txt_size.reshape([1, 2])
-
-        # this initial offset is needed to shift the center of the label
-        # to the data point
-        offset0 = -txt_size / 2
-
-        # now we can shift the label away from the data point by an amount
-        # equal to half the text width/height + the padding
-        offset1 = padding_px + txt_size / 2
-
-        for key, abs_px_arr in cand_map.items():
-            ioff = np.array(key, dtype='i').reshape(1, 2) - 1
-            total_offset = offset0 + ioff * offset1
-            # approx lower left corner of the text box in absolute pixels
-            abs_px_arr[:, :, 0] = root_px + total_offset
-            # approx upper right corner of the text box in absolute pixels
-            abs_px_arr[:, :, 1] = abs_px_arr[:, :, 0] + txt_size
-
-        # candidates_abs_px[i] has root @ root_px[i % n_candidates]
-        candidates_abs_px = np.concatenate([cand_map[c] for c in choices],
-                                           axis=0)
-
-        # find how many other things each candidate overlaps
-        n_overlaps = np.zeros_like(candidates_abs_px[:, 0, 0])
-
-        for k, candidate in enumerate(candidates_abs_px):
-            cand_bbox = Bbox(candidate.T)
-
-            # penalty for each time a box overlaps a path that's already
-            # on the plot
-            for _, path in enumerate(paths_px):
-                if path.intersects_bbox(cand_bbox):
-                    n_overlaps[k] += 1
-
-            # slightly larger penalty if we intersect a text box that we
-            # just added to the plot
-            for _, path in enumerate(bbox_paths_px):
-                if path.intersects_bbox(cand_bbox):
-                    n_overlaps[k] += 5
-
-            # big penalty if the candidate is out of the current view
-            if not (ax.bbox.contains(*cand_bbox.min) and
-                    ax.bbox.contains(*cand_bbox.max)):
-                n_overlaps[k] += 100
-
-        # sort candidates by distance between center of text box and magnet
-        isorted = np.argsort(np.linalg.norm(0.5 * np.sum(candidates_abs_px,
-                                                         axis=2) - magnet_px,
-                                            axis=1))
-        candidates_abs_px = np.array(candidates_abs_px[isorted, :, :])
-        n_overlaps = np.array(n_overlaps[isorted])
-        root_dat = np.array(root_dat[isorted % n_candidates, :])
-        root_px = np.array(root_px[isorted % n_candidates, :])
-
-        # sort candidates so the ones with the fewest overlaps are first
-        sargs = np.argsort(n_overlaps)
-
-        # >>> debug : add all candidates to the plot >>>
-        if _debug:
-            sm = plt.cm.ScalarMappable(cmap='magma',
-                                       norm=plt.Normalize(vmin=0, vmax=4))
-            sm._A = []
-            for k, candidate in enumerate(candidates_abs_px):
-                _croot_px = root_px[k, :]
-                _croot_dat = np.array(root_dat[k, :])
-                _txt_offset_px = np.array(candidate[:, 0] - _croot_px)
-                _color = sm.to_rgba(n_overlaps[k])
-                _txt = label
-
-                plt.annotate(_txt, xy=_croot_dat, xycoords='data',
-                             xytext=_txt_offset_px, textcoords="offset pixels",
-                             color=_color, alpha=alpha,
-                             bbox=dict(alpha=0.2, fc='white'))
-                plt.plot(_croot_dat[0], _croot_dat[1], '^', color=_color)
-            if i == 0:
-                plt.colorbar(sm)
-        # <<< debug <<<
-
-        # pick winning candidate and add its bounding box to this list of
-        # paths to avoid
-        winner_abs_px = candidates_abs_px[sargs[0], :, :]
-        xy_root_px = root_px[sargs[0], :]
-        xy_root_dat = np.array(root_dat[sargs[0], :])
-        xy_txt_offset = np.array(winner_abs_px[:, 0] - xy_root_px)
-
-        corners = Bbox(winner_abs_px.T).corners()[(0, 1, 3, 2), :]
-        bbox_paths_px += [Path(corners)]
-
-        # a = plt.annotate(label, xy=xy_root_dat, xycoords='data',
-        #                  xytext=xy_txt_offset, textcoords="offset pixels",
-        #                  color=color, **kwargs)
-        a = ax.annotate(label, xy=xy_root_dat, xycoords='data',
-                        xytext=xy_txt_offset, textcoords="offset pixels",
-                        color=color, **kwargs)
-        annotations.append(a)
-    return annotations
 
 def _test0():
     _x = np.linspace(0, 5, 128)
     plt.plot(_x, np.sin(_x), label="sin wave")
 
     _txt = "some text"
-
-    print("::", estimate_text_size_px(_txt))
-    print("::", estimate_text_size_data(_txt))
 
     plt.annotate(_txt, estimate_text_size_data(_txt),
                  bbox=dict(alpha=0.2, fc='white'))
@@ -407,12 +468,15 @@ def _test1():
 
     series1 = 1.5 * _gaussian(x, 80, 20) + _gaussian(x, 60, 40)
     series2 = 1.65 * _gaussian(x, 90, 25) + 0.95 * _gaussian(x, 40, 80)
-    plt.fill_between(x, series1, 0.0, color='#028482', alpha=0.7, lw=3,
+
+    _, ax0 = plt.subplots(1, 1, figsize=(10, 6))
+    ax0.fill_between(x, series1, 0.0, color='#028482', alpha=0.7, lw=3,
                      label="Series 1")
-    plt.fill_between(x, series2, 0.0, color='#7ABA7A', alpha=0.7, lw=3,
+    ax0.fill_between(x, series2, 0.0, color='#7ABA7A', alpha=0.7, lw=3,
                      label="Series 2")
-    apply_labels(magnet=(0.5, 1.0), padding=(6, 8), choices="02", alpha=None,
-                 _debug=0)
+    # plt.plot(x, series1, color='#028482', alpha=0.7, lw=3, label="Series 1")
+    # plt.plot(x, series2, color='#7ABA7A', alpha=0.7, lw=3, label="Series 2")
+    apply_labels(choices="02", magnet=(0.5, 0.0), alpha=None, _debug=True)
     plt.show()
 
     return 0
@@ -420,7 +484,7 @@ def _test1():
 def _main():
     errcode0 = _test0()
     errcode1 = _test1()
-    return errcode0 + errcode1
+    return errcode1 + errcode0
 
 if __name__ == "__main__":
     sys.exit(_main())

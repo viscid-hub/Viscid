@@ -1,6 +1,15 @@
 Changes
 -------
 
+0.99.3
+======
+
+  - python-only install always works, even on windows
+  - only use equal axis by default if aspect ratio <= 4; this may change plot appearance unexpectedly
+  - new tightlim option for 2d plots enabled by default; this may change plot appearance unexpectedly
+  - fix amr xl / xh
+  - merge new fluid tracer
+
 0.99.2
 ======
 

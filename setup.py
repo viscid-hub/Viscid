@@ -11,6 +11,7 @@ import sys
 from glob import glob
 from subprocess import Popen, CalledProcessError, PIPE
 from distutils.command.clean import clean
+from distutils.errors import CompileError
 from distutils.command.install_lib import install_lib
 from distutils.version import LooseVersion
 from distutils import log
@@ -22,6 +23,7 @@ import shutil
 import subprocess
 
 import numpy as np
+from numpy.distutils.command.build_ext import build_ext
 from numpy.distutils.core import setup
 from numpy.distutils.exec_command import exec_command
 from numpy.distutils import fcompiler as _fcompiler
@@ -74,7 +76,10 @@ ext_mods = []
 # appended if building with cython, and .c will be appended
 # if using pre-generated c files
 # dict are kwargs that go into the Extension() constructor
-cy_ccflags = ["-Wno-unused-function"]
+if sys.platform[:5] == 'linux' or sys.platform == 'darwin':
+    cy_ccflags = ["-Wno-unused-function"]
+else:
+    cy_ccflags = [""]
 cy_ldflags = []
 cy_defs = []
 cy_defs.append(["viscid.cython.cycalc",
@@ -272,6 +277,22 @@ class Clean(clean):
 
 cmdclass["clean"] = Clean
 
+
+build_ext_ran = False
+build_ext_failed = False
+class BuildExt(build_ext):
+    def run(self, *args, **kwargs):
+        global build_ext_ran
+        build_ext_ran = True
+        try:
+            build_ext.run(self, *args, **kwargs)
+        except Exception as e:
+            global build_ext_failed
+            build_ext_failed = True
+            print(e, file=sys.stderr)
+cmdclass["build_ext"] = BuildExt
+
+
 # this is a super hack for a single py2k compatability layer for the futures
 # module. It raises an exception using an old syntax that won't byte-compile
 # on install in py3k. So, to quiet the syntax error, which looks serious even
@@ -280,7 +301,8 @@ cmdclass["clean"] = Clean
 if PY3K:
     class InstallLib(install_lib):
         def byte_compile(self, files):
-            files = [f for f in files if not f.endswith("compat/futures/_base.py")]
+            ignored_fname = os.path.join('compat', 'futures', '_base.py')
+            files = [f for f in files if not f.endswith(ignored_fname)]
             install_lib.byte_compile(self, files)
     cmdclass["install_lib"] = InstallLib
 
@@ -419,17 +441,27 @@ try:
                   for fname in fnames if not fname.startswith('.')]
         data_files += [(os.path.join('viscid', dirpath), fnames)]
 
+    version = get_viscid_version("viscid/__init__.py")
+    url = "https://github.com/KristoforMaynard/Viscid"
+    download_url = "{0}/archive/{1}.zip".format(url, version)
+
     setup(name='viscid',
-          version=get_viscid_version("viscid/__init__.py"),
-          description='Visualization in python',
+          version=version,
+          description='Visualizes gridded data in python',
           author='Kris Maynard',
           author_email='k.maynard@unh.edu',
+          license='MIT',
+          url=url,
+          download_url=download_url,
+          keywords=['visualization', 'physics'],
+          install_requires=['numpy>=1.9'],
           packages=pkgs,
           cmdclass=cmdclass,
           include_dirs=[np.get_include()],
           ext_modules=ext_mods,
           scripts=scripts,
           data_files=data_files,
+          zip_safe=False
          )
 
     # if installed, store list of installed files in a json file - this
@@ -472,13 +504,26 @@ except SystemExit as e:
     raise
 
 # warn the user at the end if the fortran code was not built
-if fc is None:
+if build_ext_ran and fc is None:
     print("\n"
           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
-          "WARNING: No fortran compiler found. Modules that depend on Fortran \n"
-          "         code will not work (eg, the jrrle reader), but this may \n"
-          "         or may not be a problem for you since most of Viscid \n"
-          "         does not depend on Fortran.\n"
+          "WARNING: No fortran compiler found!\n"
+          "\n"
+          "         Modules that depend on Fortran code will not work (eg,\n"
+          "         the jrrle reader), but this may or may not be a problem\n"
+          "         for you since most of Viscid does not depend on Fortran.\n"
+          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+          "\n", file=sys.stderr)
+
+if build_ext_ran and build_ext_failed:
+    print("\n"
+          "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
+          "WARNING: Extension compilation failed. \n"
+          "\n"
+          "         You may use all the great Python-only features of Viscid,\n"
+          "         but you will not have access to Viscid's interpolation and\n"
+          "         streamline capabilities. To use these functions, you will\n"
+          "         need a C compiler compatible with your OS / Python.\n"
           "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n"
           "\n", file=sys.stderr)
 

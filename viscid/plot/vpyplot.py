@@ -53,6 +53,8 @@ from viscid import vutil
 from viscid.plot import mpl_style  # pylint: disable=unused-import
 from viscid.plot import mpl_extra
 from viscid.plot.mpl_direct_label import apply_labels
+from viscid.plot.from_seaborn import despine
+
 from viscid.plot import vseaborn
 
 __mpl_ver__ = matplotlib.__version__
@@ -539,8 +541,48 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     # parse plot_opts
     plot_kwargs = plot_opts_to_kwargs(plot_opts, plot_kwargs)
 
+    # guess a good default value for 'axis'... i am so sorry for this logic
+    # but i'm kinda playing the stanly cup in a sandbox here
+    _xl = np.array(fld.xl[:2])
+    _xh = np.array(fld.xh[:2])
+    if 'x' in plot_kwargs:
+        _xl[0], _xh[0] = plot_kwargs['x']
+    if 'y' in plot_kwargs:
+        _xl[1], _xh[1] = plot_kwargs['y']
+    _xy_L = np.abs(_xh - _xl)
+    if any(viscid.is_time_like(_xli, conservative=True) for _xli in _xy_L):
+        _axis_def = 'none'
+    else:
+        _aspect = float(max(_xy_L)) / min(_xy_L)
+        _axis_def = 'image' if _aspect <= 4.0 else 'none'
+    # take a step back and go through any shared axes... if any of the
+    # shared axes use 'image', 'equal', or 'box', then this axis should too
+    shared_axes = set(ax.get_shared_x_axes().get_siblings(ax))
+    shared_axes |= set(ax.get_shared_x_axes().get_siblings(ax))
+    for sax in shared_axes:
+        _asp = sax.get_aspect()
+        _adj = sax.get_adjustable()
+        _anc = sax.get_anchor()
+        _aso = sax.get_autoscale_on()
+        if _asp == 'equal' and _adj == 'datalim' and _aso:
+            _axis_def = 'equal'
+            break
+        elif (_asp == 'equal' and _adj in ('box', 'box-forced') and _anc == 'C'
+              and not _aso):
+            _axis_def = 'image'
+            break
+
     _axis, using_default_viscid_axis, plot_kwargs = _pop_axis_opts(plot_kwargs,
-                                                                   default='image')
+                                                                   default=_axis_def)
+
+    tightlim = plot_kwargs.pop('tightlim', plot_kwargs.pop('tightlims', True))
+    if tightlim:
+        _xl = np.array(fld.xl[:2])
+        _xh = np.array(fld.xh[:2])
+        if 'x' not in plot_kwargs:
+            plot_kwargs['x'] = (fld.xl[0], fld.xh[0])
+        if 'y' not in plot_kwargs:
+            plot_kwargs['y'] = (fld.xl[1], fld.xh[1])
 
     actions, norm_dict = _extract_actions_and_norm(ax, plot_kwargs,
                                                    defaults={'axis': _axis})
@@ -1273,7 +1315,8 @@ def plot2d_line(line, scalars=None, **kwargs):
 def plot2d_lines(lines, scalars=None, symdir="", ax=None,
                  show=False, flip_plot=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
-                 marker=None, colors=None, marker_kwargs=None, **kwargs):
+                 marker=None, colors=None, marker_kwargs=None,
+                 axis='none', equal=False, **kwargs):
     """Plot a list of lines in 2D
 
     Args:
@@ -1329,17 +1372,7 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     verts, segments, vert_scalars, seg_scalars, vert_colors, seg_colors, _ = r
     # alpha = other['alpha']
 
-    symdir = symdir.strip().lower()
-    if segments.shape[2] == 2:
-        xind, yind, zind = 0, 1, None
-    elif symdir == 'x':
-        xind, yind, zind = 1, 2, 0
-    elif symdir == 'y':
-        xind, yind, zind = 0, 2, 1
-    elif symdir == 'z':
-        xind, yind, zind = 0, 1, 2
-    else:
-        raise ValueError("For 3d lines, symdir should be x, y, or z")
+    xind, yind, zind = _xyzind_from_symdir(segments, symdir)
 
     if flip_plot:
         xind, yind = yind, xind
@@ -1379,6 +1412,11 @@ def plot2d_lines(lines, scalars=None, symdir="", ax=None,
     else:
         _autolimit_to_vertices(ax, verts[[xind, yind], :])
 
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
+
     plt.sca(ax)
     if show:
         plt.show()
@@ -1392,7 +1430,8 @@ def plot3d_line(line, scalars=None, **kwargs):
 
 def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
                  pts_interp='linear', scalar_interp='linear',
-                 marker='', colors=None, marker_kwargs=None, **kwargs):
+                 marker='', colors=None, marker_kwargs=None,
+                 axis='none', equal=False, **kwargs):
     """Plot a list of lines in 3D
 
     Args:
@@ -1468,13 +1507,18 @@ def plot3d_lines(lines, scalars=None, ax=None, show=False, subsample=2,
     else:
         _autolimit_to_vertices(ax, verts)
 
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
+
     plt.sca(ax)
     if show:
         plt.show()
 
     return line_collection
 
-def plot2d_quiver(fld, step=1, ax=None, **kwargs):
+def plot2d_quiver(fld, step=1, ax=None, axis='none', equal=False, **kwargs):
     """Put quivers on a 2D plot
 
     The quivers will be plotted in the 2D plane of fld, so if fld
@@ -1526,10 +1570,14 @@ def plot2d_quiver(fld, step=1, ax=None, **kwargs):
         ax = plt.gca()
 
     ret = ax.quiver(xl, xm, vl, vm, **kwargs)
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
     plt.sca(ax)
     return ret
 
-def streamplot(fld, ax=None, **kwargs):
+def streamplot(fld, ax=None, axis='none', equal=False, **kwargs):
     """Plot 2D streamlines with :py:func:`matplotlib.pyplot.streamplot`
 
     Args:
@@ -1600,10 +1648,58 @@ def streamplot(fld, ax=None, **kwargs):
         ax = plt.gca()
 
     ret = ax.streamplot(xl, xm, vl.data.T, vm.data.T, **kwargs)
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
     plt.sca(ax)
     return ret
 
-def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
+def scatter_2d(points, c='k', symdir='', flip_plot=False, ax=None, show=False,
+               axis='none', equal=False, **kwargs):
+    """Plot scattered points on a matplotlib 3d plot
+
+    Parameters:
+        points: something shaped 3xN for N points, where 3 are the
+            xyz cartesian directions in that order
+        c (str, optional): color (in matplotlib format)
+        ax (matplotlib Axis, optional): axis on which to plot (should
+            be a 3d axis)
+        show (bool, optional): show
+        kwargs: passed along to :meth:`plt.statter`
+    """
+    if not ax:
+        ax = plt.gca()
+
+    xind, yind, zind = _xyzind_from_symdir(points, symdir)
+
+    if flip_plot:
+        xind, yind = yind, xind
+
+    x = points[xind, :]
+    y = points[yind, :]
+
+    if c == 'zloc':
+        if zind is None:
+            raise RuntimeError("No 3rd dimension to pull colors from")
+        c = points[zind, :]
+
+    p = ax.scatter(x, y, c=c, **kwargs)
+
+    if equal:
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
+
+    ax.set_xlabel("xyz"[xind])
+    ax.set_ylabel("xyz"[yind])
+    plt.sca(ax)
+    if show:
+        plt.show()
+    return p, None
+
+def scatter_3d(points, c='k', ax=None, show=False, axis='none', equal=False,
+               **kwargs):
     """Plot scattered points on a matplotlib 3d plot
 
     Parameters:
@@ -1623,9 +1719,13 @@ def scatter_3d(points, c='b', ax=None, show=False, equal=False, **kwargs):
     x = points[0]
     y = points[1]
     z = points[2]
+    if c == 'zloc':
+        c = z
     p = ax.scatter(x, y, z, c=c, **kwargs)
     if equal:
-        ax.axis("equal")
+        axis = 'image'
+    if axis.strip().lower() not in ('none', ''):
+        ax.axis(axis)
     ax.set_xlabel("x")
     ax.set_ylabel("y")
     plt.sca(ax)
@@ -1853,6 +1953,40 @@ def _autolimit_to_vertices(ax, verts):
                 ax.set_zlim(bottom=zmax)
             if zmin < zlim[1]:
                 ax.set_zlim(top=zmin)
+
+def _xyzind_from_symdir(arr, symdir):
+    symdir = symdir.strip().lower()
+
+    if symdir:
+        if arr.shape[0] < 3:
+            raise ValueError("specifying symdir assumes arr is 3d")
+        if symdir == 'x':
+            xind, yind, zind = 1, 2, 0
+        elif symdir == 'y':
+            xind, yind, zind = 0, 2, 1
+        elif symdir == 'z':
+            xind, yind, zind = 0, 1, 2
+        else:
+            raise ValueError("symdir '{0}' not in 'xyz'".format(symdir))
+    else:
+        xy_inds = list(range(arr.shape[0]))
+        i = arr.shape[0] - 1
+        while i >= 0 and len(xy_inds) > 2:
+            if np.allclose(arr[i, :], arr[i, 0]):
+                xy_inds.pop(i)
+            i -= 1
+
+        if len(xy_inds) > 2:
+            xy_inds = [0, 1]
+        elif len(xy_inds) < 2:
+            xy_inds = [0, 0]
+        xind, yind = xy_inds
+
+        if arr.shape[0] > 2:
+            zind = min(set(range(arr.shape[0])) - set(xy_inds))
+        else:
+            zind = None
+    return xind, yind, zind
 
 def _prep_lines(lines, scalars=None, subsample=2, pts_interp='linear',
                 scalar_interp='linear', other=None):

@@ -40,14 +40,14 @@ Quickstart
 Installing Anaconda (optional but recommended)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `Anaconda Python Distribution <https://store.continuum.io/cshop/anaconda/>`_ makes installing dependencies as easy as running one shell command.
+The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ makes installing dependencies as easy as running one shell command.
 
 .. code-block:: bash
 
     if [ "$(uname -s)" == "Linux" ]; then
-      wget -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh
+      wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
     elif [ "$(uname -s)" == "Darwin" ]; then
-      curl -o miniconda.sh https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
+      curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
     fi
     bash miniconda.sh -b -p $HOME/local/anaconda
     rm miniconda.sh
@@ -84,12 +84,16 @@ Note that in order to use Viscid, you will need to activate the virtual environm
 
     source activate viscid27  # or viscid35mayavi, etc.
 
-An alternative to activating this environment for each session is to prepend your PATH in your ~/.bashrc with
+An alternative to activating this environment for each session is to prepend PATH in your profile with
 
 .. code-block:: bash
 
-    export PATH="~/local/anaconda/envs/viscid27:${PATH}"
-    echo "export PATH=~/local/anaconda/envs/viscid27:"'${PATH}' >> ~/.bashrc
+    profile="${HOME}/.bashrc"
+    echo "export PATH=~/local/anaconda/envs/viscid27:"'${PATH}' >> ${profile}
+    echo 'export CONDA_DEFAULT_ENV="$(basename "$(cd "$(dirname "$(which python)")/.."; pwd)")"' >> ${profile}
+    echo 'export CONDA_PREFIX="$(cd "$(dirname "$(which python)")/.."; pwd)"' >> ${profile}
+    source ${profile}
+
 
 Building / Installing Viscid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -102,9 +106,11 @@ Choice 1 (installed)
 .. code-block:: bash
 
     cd Viscid
-    make
-    make install  # or, if you don't have write permission,
-                  # try `make install INSTALL_ARGS='--user'`
+    python setup.py install
+    # the above line is synonymous with `make install`
+
+    # or, if you don't have write permission, try
+    # python setup.py install --user
 
 to kick the tires, use
 
@@ -117,9 +123,10 @@ to pull updates from github in the future, use
 .. code-block:: bash
 
     git pull
-    make
-    make install  # or, if you don't have write permission,
-                  # try `make install INSTALL_ARGS='--user'`
+    python setup.py install
+
+    # or, if you don't have write permission, try
+    # python setup.py install --user
 
 Choice 2 (inplace)
 ^^^^^^^^^^^^^^^^^^
@@ -127,11 +134,14 @@ Choice 2 (inplace)
 .. code-block:: bash
 
     cd Viscid
-    make inplace
-    export PATH="${PATH}:${PWD}/Viscid/scripts"
-    export PYTHONPATH="${PYTHONPATH}:${PWD}/Viscid"
-    echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ~/.bashrc
-    echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ~/.bashrc
+    python setup.py build_ext -i
+    # the above line is synonymous with `make inplace`
+
+    # To set environment variables in Bash
+    profile="${HOME}/.bashrc"
+    echo 'export PATH="${PATH}:'"${PWD}/scripts\"" >> ${profile}
+    echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ${profile}
+    source ${profile}
 
 to kick the tires, use
 
@@ -144,7 +154,7 @@ to pull updates from github in the future, use
 .. code-block:: bash
 
     git pull
-    make inplace
+    python setup.py build_ext -i
 
 Known Workarounds
 -----------------

@@ -80,11 +80,17 @@ class AMRField(object):
 
     @property
     def xl(self):
-        return np.min(self.skeleton.xl, axis=0)
+        if self.skeleton:
+            return np.min(self.skeleton.xl, axis=0)
+        else:
+            return np.min(np.vstack([p.xl for p in self.patches]), axis=0)
 
     @property
     def xh(self):
-        return np.max(self.skeleton.xh, axis=0)
+        if self.skeleton:
+            return np.max(self.skeleton.xh, axis=0)
+        else:
+            return np.max(np.vstack([p.xh for p in self.patches]), axis=0)
 
     def get_slice_extent(self, selection):
         extent = self.patches[0]._src_crds.get_slice_extent(selection)
@@ -440,6 +446,12 @@ class AMRField(object):
         return self.wrap_field_method("argpartition", **kwargs)
     def argsort(self, **kwargs):
         return self.wrap_field_method("argsort", **kwargs)
+    def clip(self, **kwargs):
+        return self.wrap_field_method("clip", **kwargs)
+    def conj(self, **kwargs):
+        return self.wrap_field_method("conj", **kwargs)
+    def conjugate(self, **kwargs):
+        return self.wrap_field_method("conjugate", **kwargs)
     def cumprod(self, **kwargs):
         return self.wrap_field_method("cumprod", **kwargs)
     def cumsum(self, **kwargs):
@@ -450,10 +462,16 @@ class AMRField(object):
         return self.wrap_field_method("mean", **kwargs)
     def min(self, **kwargs):
         return self.wrap_field_method("min", **kwargs)
+    def nonzero(self, **kwargs):
+        return self.wrap_field_method("nonzero", **kwargs)
     def partition(self, **kwargs):
         return self.wrap_field_method("partition", **kwargs)
     def prod(self, **kwargs):
         return self.wrap_field_method("prod", **kwargs)
+    def ptp(self, **kwargs):
+        return self.wrap_field_method("ptp", **kwargs)
+    def round(self, **kwargs):
+        return self.wrap_field_method("round", **kwargs)
     def std(self, **kwargs):
         return self.wrap_field_method("std", **kwargs)
     def sum(self, **kwargs):

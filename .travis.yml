@@ -3,7 +3,6 @@ language: generic
 
 env:
   global:
-    - secure: "NArKc/MxyQCWqQcnh+qx1rPyw3te01bC8kqbMwKUyOsJNuL9faS+6VnplKhfk7Ck5xAMG5Qvta4CZvCO9lCM1q18Ntfs4KFjmoIlFpRycJqYVM8Lw8mnxGpOEdlVIFi+eWDRAfpEBKjdRnvsnnxnDFo0ROEjfmSrbi47/8h62EcWtTpEUmpLfRVZyUuUOZ4zYXV65ZDVhLWBt5zQWlYOl9CnTI4p8ktf0TffZxFKuhL6xrbEZtLhSfEkfecoWYEJ7luOxixJny3MEeW8LS4MKRA4naVwNk+lNL5yKHgMnz05r5pINXVshUsYcbbWs/odUOwwZDiV/8RMHfht1b+HHrxL8KenSbj4t8NvbgHqEB1wJbrTt3dmZTez5gxnk7g2MYSpSZJHauKQQD5fVR4paSsVEgOioZcL6ZPs8pacXEQ1T3vKd9jhLeQbJppeTR1hvny3N/rnMym2GYVL69a/eIMCoTKPZjTi0l5Ki3jhQOTnmQZJm0NASBA7Vp2f0pZBrOj92bHRkhcNu6wEY1Gzv1+3pDBJLHbp3szQzAiT5eMjoYC5wtcDdTq93jdEXhObhNUUOMOcOzEho+PZSuGrZCa7cjN0WAicQuv1wtXHhdwm5ITEnG7yGSUBfmfDoFFu5P0SkzA6n5v9YfICTQ5zvNX4tcc3dNou8y6xPl4vPsY="
     - 'deployable="^(master|dev|travis)$"'
     - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
     - QT_API=pyside
@@ -56,12 +55,20 @@ before_install:
        false;
      fi'
 
+  # setup deployment key
+  - 'mkdir -p ${HOME}/.ssh'
+  - 'chmod 700 ${HOME}/.ssh'
+  - 'if [[ -n ${encrypted_94825f2db120_key} && -n ${encrypted_94825f2db120_iv} ]]; then
+       openssl aes-256-cbc -K $encrypted_94825f2db120_key -iv $encrypted_94825f2db120_iv -in resources/.doc_deployment_key.enc -out ${HOME}/.ssh/id_rsa -d;
+     fi'
+  - 'chmod 600 ${HOME}/.ssh/id_rsa'
+
   ## Now setup the Anaconda tools
   # it saves some download time to use the same python iff 2.7
   - 'if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-       export CONDA_URL="https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh";
+       export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh";
      else
-       export CONDA_URL="https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh";
+       export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh";
      fi'
   # linux has wget, OS X has curl... such is life
   - 'if [[ "$(which wget &>/dev/null && echo $?)" == "0" ]]; then
@@ -142,7 +149,7 @@ script:
      else
        make instcheck;
      fi'
-  - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ && -n "$GH_TOKEN" ]]; then
+  - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ && -f "${HOME}/.ssh/id_rsa" ]]; then
        make deploy-summary;
      fi'
 
@@ -153,4 +160,4 @@ deploy:
     - make deploy-html
   on:
     branch: "*"
-    condition: '($TRAVIS_BRANCH =~ ${deployable}) && -n "$GH_TOKEN" && ("${DEPLOY_DOCS}" == "1")'
+    condition: '($TRAVIS_BRANCH =~ ${deployable}) && -f "${HOME}/.ssh/id_rsa" && ("${DEPLOY_DOCS}" == "1")'

@@ -19,8 +19,8 @@ Both the master and dev branches should make every attempt to be usable (thanks 
 
 Branch                                                      | Docs                                                                      | Test Status
 ------------- | ------------------------------------------------------------------------- | -----------------------
-[master](https://github.com/KristoforMaynard/Viscid)        | [html](http://kristoformaynard.github.io/Viscid/docs/master/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/master-2.7/index.html)   | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master)](https://travis-ci.org/KristoforMaynard/Viscid)
-[dev](https://github.com/KristoforMaynard/Viscid/tree/dev)  | [html](http://kristoformaynard.github.io/Viscid/docs/dev/index.html), [test summary](http://kristoformaynard.github.io/Viscid/summary/dev-2.7/index.html)      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev)](https://travis-ci.org/KristoforMaynard/Viscid)
+[master](https://github.com/KristoforMaynard/Viscid)        | [html](http://kristoformaynard.github.io/Viscid-docs/docs/master/index.html), [test summary](http://kristoformaynard.github.io/Viscid-docs/summary/master-2.7/index.html)   | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master)](https://travis-ci.org/KristoforMaynard/Viscid)
+[dev](https://github.com/KristoforMaynard/Viscid/tree/dev)  | [html](http://kristoformaynard.github.io/Viscid-docs/docs/dev/index.html), [test summary](http://kristoformaynard.github.io/Viscid-docs/summary/dev-2.7/index.html)      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev)](https://travis-ci.org/KristoforMaynard/Viscid)
 
 ## Install ##
 
@@ -32,12 +32,12 @@ Dependencies:
   + Numpy >= 1.9
 + Highly Recommended
   + H5py (if reading hdf5 files)
-  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.mpl)
+  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.vpyplot)
   + Scipy (gives Viscid special powers :))
   + Numexpr (for the calculator.necalc module)
 + Truly Optional
   + Seaborn
-  + Mayavi2 (if you want to make 3d plots using viscid.plot.mvi)
+  + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
   + PyYaml (rc file and plot options can parse using yaml)
 + Optional for developers
   + Cython > 0.17 (if you change pyx / pxd files)
@@ -51,7 +51,7 @@ installed.
 
 The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code.
 
-For explicit installation instructions, please refer to the [Quickstart Documentation](http://kristoformaynard.github.io/Viscid/docs/master/installation.html).
+For explicit installation instructions, please refer to the [Quickstart Documentation](http://kristoformaynard.github.io/Viscid-docs/docs/master/installation.html).
 
 ## Development ##
 
