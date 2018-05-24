@@ -1,10 +1,10 @@
 Changes
 -------
 
-0.99.5 dev
-==========
+0.99.5
+======
 
-
+  - more pypi metadata fixes
 
 0.99.4
 ======
