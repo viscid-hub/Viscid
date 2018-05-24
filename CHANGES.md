@@ -1,8 +1,8 @@
 Changes
 -------
 
-0.99.4 dev
-==========
+0.99.4
+======
 
   - implement `visicd --version` and `python -m viscid --version`
   - pypi metadata fixes
