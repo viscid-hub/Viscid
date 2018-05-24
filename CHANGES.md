@@ -4,7 +4,8 @@ Changes
 0.99.4 dev
 ==========
 
-
+  - implement `visicd --version` and `python -m viscid --version`
+  - pypi metadata fixes
 
 0.99.3
 ======
