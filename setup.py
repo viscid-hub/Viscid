@@ -258,6 +258,13 @@ class Clean(clean):
             so_file_list.append(os.path.abspath(fn))
         clean_other_so_files(so_file_list, self.dry_run)
 
+        for other_dir in ['dist', 'Viscid.egg-info']:
+            other_dir = os.path.join(os.path.dirname(__file__), other_dir)
+            if os.path.isdir(other_dir):
+                print("removing '{0}/'".format(other_dir))
+                if not self.dry_run:
+                    shutil.rmtree(other_dir)
+
         if self.all:
             # remove inplace extensions
             for ext in self.distribution.ext_modules:
