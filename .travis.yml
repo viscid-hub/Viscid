@@ -34,13 +34,13 @@ before_install:
   # before we build, check to see if we're in a release branch, and if
   # so, then do some 0th order validation on the viscid.__version__
   - 'if [[ ($TRAVIS_BRANCH =~ ^(.*release.*|master)$) ]]; then
-       if [ "$(grep __version__ viscid/__init__.py | grep -E "(dev|travis)")" != "" ]; then
+       if [ "$(grep -E "__version__\s*=" viscid/__init__.py | grep -E "(dev|travis)")" != "" ]; then
          echo "Oops, you are preparing a release, but you still have either";
          echo "dev or travis in the version number";
          false;
        fi
      elif [[ $TRAVIS_BRANCH =~ ${deployable} ]]; then
-       if [ "$(grep __version__ viscid/__init__.py | grep ${TRAVIS_BRANCH} )" == "" ]; then
+       if [ "$(grep -E "__version__\s*=" viscid/__init__.py | grep ${TRAVIS_BRANCH} )" == "" ]; then
          echo "Oops, You are on a deployable branch (that is not master), ";
          echo "but the branch name is not in the version number";
          false;
@@ -49,7 +49,7 @@ before_install:
 
   # make sure the version string appears in CHANGES.md
   - 'ver_re="__version__.*[\"'']+([^\"'']+)[\"'']+"'
-  - 'version=$([[ "$(grep __version__ viscid/__init__.py)" =~ ${ver_re} ]]; echo "${BASH_REMATCH[1]}")'
+  - 'version=$([[ "$(grep -E "__version__\s*=" viscid/__init__.py)" =~ ${ver_re} ]]; echo "${BASH_REMATCH[1]}")'
   - 'if [ "$(grep -E "${version}\s*$" CHANGES.md)" == "" ]; then
        echo "Oops, the version ${version} does not appear in CHANGES.md";
        false;

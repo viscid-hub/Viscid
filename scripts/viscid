@@ -46,9 +46,6 @@ remove_from_path ()
 }
 
 
-viscid_python=${viscid_python:-$(which ipython)}
-viscid_python=${viscid_python:-$(which python)}
-
 args=" ${*} "
 if [[ ${args} == *" --help "* || ${args} == *" -h"* ]]; then
   echo "Launch a python interpreter and bring viscid into the namespace." >&2
@@ -59,6 +56,15 @@ if [[ ${args} == *" --help "* || ${args} == *" -h"* ]]; then
   echo "  mode    'pylab' or 'mlab' if you want that library imported too" >&2
   echo "" >&2
   exit 0
+fi
+
+if [[ ${args} == *" --version "* || ${args} == *" version"* ]]; then
+  interact=""
+  viscid_python=${viscid_python:-$(which python)}
+else
+  interact="-i"
+  viscid_python=${viscid_python:-$(which ipython)}
+  viscid_python=${viscid_python:-$(which python)}
 fi
 
 # if running inplace, make sure that directory is 1st in PYTHONPATH,
@@ -87,7 +93,8 @@ else
   fi
 fi
 
-${viscid_python} -im viscid.__main__ ${args}
+${viscid_python} ${interact} -m viscid.__main__ ${args}
+exit $?
 
 ##
 ##  EOF

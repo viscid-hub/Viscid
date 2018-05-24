@@ -146,6 +146,52 @@ if sys.version_info[0] >= 3:
 # apply settings in the rc file
 _rc.load_rc_file("~/.viscidrc")
 
+def check_version():
+    """Check status of viscid and associated libraries and modules"""
+    print("Viscid located at:", __file__)
+    print()
+    print("Viscid version:", __version__)
+    print()
+    try:
+        import matplotlib
+        print("Matplotlib version:", matplotlib.__version__)
+    except ImportError:
+        print("Matplotlib not installed")
+    try:
+        import mayavi
+        print("Mayavi version:", mayavi.__version__)
+        try:
+            import vtk
+            print("VTK version:", vtk.VTK_VERSION)
+        except ImportError:
+            print("VTK python module not installed")
+    except ImportError:
+        print("Mayavi not installed")
+    print()
+
+    def print_err(*args, **kwargs):
+        kwargs.pop('file', '')
+        print(*args, file=sys.stderr, **kwargs)
+
+    try:
+        from viscid.readers import _jrrle
+        print("Fortran modules are correctly built.")
+    except ImportError:
+        print_err("WARNING: jrrle reader is not available. If you need this")
+        print_err("         functionality, please ensure that you have a working")
+        print_err("         fortran compiler and reinstall (or rebulid) Viscid.")
+        print_err()
+    if isinstance(cyfield, cython._dummy):
+        print_err("WARNING: cython modules (interpolation and streamlines) are not")
+        print_err("         available. To use these functions, please ensure that you")
+        print_err("         have a C compiler compatable with your version of")
+        print_err("         Python / Numpy and reinstall (or rebulid) Viscid.")
+        print_err()
+    else:
+        print("Cython modules are correctly built.")
+
+__all__.append("check_version")
+
 if hasattr(signal, 'SIGINFO'):
     # this is useful for debugging, ie, immediately do a pdb.set_trace()
     # on the SIGINFO signal
