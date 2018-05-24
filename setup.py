@@ -448,9 +448,14 @@ try:
     url = "https://github.com/KristoforMaynard/Viscid"
     download_url = "{0}/archive/{1}.zip".format(url, version)
 
+    with open("README.md", "r") as fh:
+        long_description = fh.read()
+
     setup(name='Viscid',
           version=version,
           description='Visualizes gridded data in python',
+          long_description=long_description,
+          long_description_content_type="text/markdown",
           author='Kris Maynard',
           author_email='k.maynard@unh.edu',
           license='MIT',
