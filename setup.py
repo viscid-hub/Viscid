@@ -4,23 +4,26 @@
 # extension is ignored gracefully
 
 from __future__ import print_function
+from glob import glob
 import io
+import json
 import os
 import re
-import sys
-from glob import glob
+import shutil
 from subprocess import Popen, CalledProcessError, PIPE
+import sys
+
+# try:
+#     import setuptools
+# except ImportError:
+#     pass
+
 from distutils.command.clean import clean
 from distutils.errors import CompileError
 from distutils.command.install_lib import install_lib
 from distutils.version import LooseVersion
 from distutils import log
-# from distutils.core import setup
-# from distutils.extension import Extension
 from distutils import sysconfig
-import json
-import shutil
-import subprocess
 
 import numpy as np
 from numpy.distutils.command.build_ext import build_ext
@@ -445,7 +448,7 @@ try:
     url = "https://github.com/KristoforMaynard/Viscid"
     download_url = "{0}/archive/{1}.zip".format(url, version)
 
-    setup(name='viscid',
+    setup(name='Viscid',
           version=version,
           description='Visualizes gridded data in python',
           author='Kris Maynard',
@@ -461,7 +464,22 @@ try:
           ext_modules=ext_mods,
           scripts=scripts,
           data_files=data_files,
-          zip_safe=False
+          zip_safe=False,
+          classifiers=(
+              "Programming Language :: Python :: 2.6",
+              "Programming Language :: Python :: 2.7",
+              "Programming Language :: Python :: 3",
+              "Programming Language :: Python :: 3.3",
+              "Programming Language :: Python :: 3.4",
+              "Programming Language :: Python :: 3.5",
+              "Programming Language :: Python :: 3.6",
+              "Programming Language :: Python :: 3.7",
+              "License :: OSI Approved :: MIT License",
+              "Operating System :: OS Independent",
+              "Topic :: Scientific/Engineering",
+              "Topic :: Scientific/Engineering :: Physics",
+              "Topic :: Scientific/Engineering :: Visualization",
+          ),
          )
 
     # if installed, store list of installed files in a json file - this
