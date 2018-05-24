@@ -13,10 +13,10 @@ import shutil
 from subprocess import Popen, CalledProcessError, PIPE
 import sys
 
-# try:
-#     import setuptools
-# except ImportError:
-#     pass
+try:
+    import setuptools
+except ImportError:
+    pass
 
 from distutils.command.clean import clean
 from distutils.errors import CompileError

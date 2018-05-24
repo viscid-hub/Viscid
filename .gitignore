@@ -4,6 +4,7 @@ dist
 
 MANIFEST
 .install_manifest.json
+Viscid.egg-info/
 viscid.sublime-workspace
 
 sample/test.npz
