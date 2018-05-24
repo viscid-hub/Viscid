@@ -36,13 +36,13 @@ fi
 set +e
 echo "> branch = ${branch}"
 if [ "${branch}" == "master" ]; then
-  grep "__version__" ${root_dir}/viscid/__init__.py | grep -v dev | grep -v travis
+  grep -E "__version__\s*=" ${root_dir}/viscid/__init__.py | grep -v dev | grep -v travis
   if [ $? -ne 0 ]; then
     echo "ERROR: Can only deploy to gh-pages if the branch name is in the version."
     exit 1
   fi
 else
-  grep "__version__" ${root_dir}/viscid/__init__.py | grep "${branch}"
+  grep -E "__version__\s*=" ${root_dir}/viscid/__init__.py | grep "${branch}"
   if [ $? -ne 0 ]; then
     echo "ERROR: Can only deploy to gh-pages if the branch name is in the version."
     exit 1

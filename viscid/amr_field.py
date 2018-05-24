@@ -12,13 +12,6 @@ import viscid
 # from viscid.compat import string_types
 from viscid.field import Field
 
-try:
-    from viscid.calculator import cycalc
-    _HAS_CYCALC = True
-except ImportError:
-    # in case cycalc isn't built
-    _HAS_CYCALC = False
-
 
 __all__ = ["is_list_of_fields"]
 

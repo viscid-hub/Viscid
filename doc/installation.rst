@@ -156,6 +156,16 @@ to pull updates from github in the future, use
     git pull
     python setup.py build_ext -i
 
+Verify Installation
+~~~~~~~~~~~~~~~~~~~
+
+You can always run the following to check for any installation problems,
+
+.. code-block:: bash
+
+    python -m viscid --version
+
+
 Known Workarounds
 -----------------
 
