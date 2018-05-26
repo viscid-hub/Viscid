@@ -20,7 +20,6 @@ except ImportError:
 
 from distutils.command.clean import clean
 from distutils.errors import CompileError
-from distutils.command.install_lib import install_lib
 from distutils.version import LooseVersion
 from distutils import log
 from distutils import sysconfig
@@ -301,20 +300,6 @@ class BuildExt(build_ext):
             build_ext_failed = True
             print(e, file=sys.stderr)
 cmdclass["build_ext"] = BuildExt
-
-
-# this is a super hack for a single py2k compatability layer for the futures
-# module. It raises an exception using an old syntax that won't byte-compile
-# on install in py3k. So, to quiet the syntax error, which looks serious even
-# though it's in code that's never imported in py3k, let's just not
-# byte-compile that one module
-if PY3K:
-    class InstallLib(install_lib):
-        def byte_compile(self, files):
-            ignored_fname = os.path.join('compat', 'futures', '_base.py')
-            files = [f for f in files if not f.endswith(ignored_fname)]
-            install_lib.byte_compile(self, files)
-    cmdclass["install_lib"] = InstallLib
 
 # make cython extension instances
 for d in cy_defs:

@@ -354,7 +354,9 @@ class Future(object):
 
     def __get_result(self):
         if self._exception:
-            raise type(self._exception), self._exception, self._traceback
+            # NOTE: this exec is needed b/c distutils really wants to
+            #       byte-compile this module in py3k and raise a syntax error
+            exec("raise type(self._exception), self._exception, self._traceback")
         else:
             return self._result
 
