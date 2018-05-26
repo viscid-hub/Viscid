@@ -416,6 +416,13 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
         print("I think there's a problem with your compiler ( CC =", cc,
               "), but I'll continue anyway...")
 
+# hack for gfortran / conda-build on macOS
+if sys.platform == 'darwin':
+    if 'LDFLAGS' in os.environ:
+        our_ld_flags = " -undefined dynamic_lookup -bundle"
+        os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + our_ld_flags
+
+
 def get_viscid_version(init_py):
     with io.open(init_py, 'r', encoding="utf-8") as f:
         version = None
