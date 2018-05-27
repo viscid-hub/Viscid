@@ -173,14 +173,6 @@ def check_version():
         kwargs.pop('file', '')
         print(*args, file=sys.stderr, **kwargs)
 
-    try:
-        from viscid.readers import _jrrle
-        print("Fortran modules are compiled.")
-    except ImportError:
-        print_err("WARNING: jrrle reader is not available. If you need this")
-        print_err("         functionality, please ensure that you have a working")
-        print_err("         fortran compiler and reinstall (or rebulid) Viscid.")
-        print_err()
     if isinstance(cyfield, cython._dummy):
         print_err("WARNING: cython modules (interpolation and streamlines) are not")
         print_err("         available. To use these functions, please ensure that you")
@@ -189,6 +181,16 @@ def check_version():
         print_err()
     else:
         print("Cython modules are compiled.")
+
+    try:
+        from viscid.readers import _jrrle
+        print("Fortran modules are compiled.")
+    except ImportError:
+        print_err("WARNING: jrrle reader is not available. If you need this")
+        print_err("         functionality, please ensure that you have a working")
+        print_err("         fortran compiler and reinstall (or rebulid) Viscid.")
+        print_err()
+
 
 __all__.append("check_version")
 
@@ -236,8 +238,6 @@ def check():
     except Exception as e:
         print("Fortran module has runtime errors.")
         print(str(e))
-        if sys.platform != 'win32':
-            ret += 7
     print()
 
     return ret
