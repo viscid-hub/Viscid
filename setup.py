@@ -458,7 +458,7 @@ try:
 
     setup(name='Viscid',
           version=version,
-          description='Visualizes gridded data in python',
+          description='Visualize data on structured meshes in python',
           long_description=long_description,
           long_description_content_type="text/markdown",
           author='Kris Maynard',
