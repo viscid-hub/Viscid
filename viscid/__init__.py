@@ -175,7 +175,7 @@ def check_version():
 
     try:
         from viscid.readers import _jrrle
-        print("Fortran modules are correctly built.")
+        print("Fortran modules are compiled.")
     except ImportError:
         print_err("WARNING: jrrle reader is not available. If you need this")
         print_err("         functionality, please ensure that you have a working")
@@ -188,9 +188,61 @@ def check_version():
         print_err("         Python / Numpy and reinstall (or rebulid) Viscid.")
         print_err()
     else:
-        print("Cython modules are correctly built.")
+        print("Cython modules are compiled.")
 
 __all__.append("check_version")
+
+def check():
+    """Runtime check compiled modules"""
+    import os
+    import sys
+
+    import numpy as np
+    import viscid
+
+    ret = 0
+
+    check_version()
+    print()
+
+    #####################################################
+    # run streamline calculation (checks cython modules)
+    try:
+        cotr = viscid.Cotr(dip_tilt=15.0, dip_gsm=21.0)  # pylint: disable=not-callable
+        m = cotr.get_dipole_moment(crd_system='gse')
+        seeds = viscid.seed.Sphere((0.0, 0.0, 0.0), 2.0, pole=-m, ntheta=25,
+                                   nphi=25, thetalim=(5, 90), philim=(5, 360),
+                                   phi_endpoint=False)
+        B = viscid.make_dipole(m=m, crd_system='gse', n=(32, 32, 32),
+                               l=(-25, -25, -25), h=(25, 25, 25), dtype='f8')
+        lines, _ = viscid.calc_streamlines(B, seeds, ibound=1.0)
+        for line in lines:
+            if np.any(np.isnan(line)):
+                raise ValueError("NaN in line")
+        print("Cython module ran successfully")
+    except Exception as e:
+        print("Cython module has runtime errors.")
+        print(str(e))
+        ret += 5
+    print()
+
+    ####################################
+    # load a jrrle file (checks fortran)
+    try:
+        f3d = viscid.load_file(os.path.join(viscid.sample_dir,
+                                            'sample_jrrle.3df.*'))
+        _ = np.array(f3d['pp'].data)
+        print("Fortran module ran successfully")
+    except Exception as e:
+        print("Fortran module has runtime errors.")
+        print(str(e))
+        if sys.platform != 'win32':
+            ret += 7
+    print()
+
+    return ret
+
+__all__.append("check")
 
 if hasattr(signal, 'SIGINFO'):
     # this is useful for debugging, ie, immediately do a pdb.set_trace()

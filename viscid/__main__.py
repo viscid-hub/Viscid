@@ -7,6 +7,10 @@ if '--version' in sys.argv or 'version' in sys.argv:
     import viscid
     viscid.check_version()
     sys.exit(0)
+elif '--check' in sys.argv or 'check' in sys.argv:
+    import viscid
+    exit_code = viscid.check()
+    sys.exit(exit_code)
 else:
     print("Viscid says: import numpy")
     import numpy
