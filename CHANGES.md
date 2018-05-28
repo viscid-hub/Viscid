@@ -1,10 +1,10 @@
 Changes
 -------
 
-0.99.6.dev0
-===========
+0.99.6
+======
 
-
+  - enable installation using conda / pip
 
 0.99.5
 ======
