@@ -5,8 +5,8 @@ Installation
 
     <style type="text/css">
     img {
-        padding-top: 4pt;
-        padding-bottom: 8pt;
+        padding-top: 10pt;
+        padding-bottom: 12pt;
     }
     </style>
 

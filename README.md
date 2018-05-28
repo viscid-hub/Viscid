@@ -55,7 +55,7 @@ installed.
 
 The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code.
 
-For explicit installation instructions, please refer to the [Installation Documentation](http://kristoformaynard.github.io/Viscid-docs/docs/master/installation.html).
+Detailed installation instructions are [available here](http://kristoformaynard.github.io/Viscid-docs/docs/master/installation.html).
 
 ## Development ##
 
