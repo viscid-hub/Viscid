@@ -63,10 +63,10 @@ Branch               Test Status       Docs
    <img src="https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev"
   </a>
 
-Quickstart
-----------
+Installation
+------------
 
-Please refer to the quickstart instructions in :doc:`installation`.
+Please refer to the installation instructions in :doc:`installation`.
 
 Contents
 --------
