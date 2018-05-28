@@ -135,9 +135,10 @@ install:
        export PYTHONPATH="${PWD}:${PYTHONPATH}";
      else
        rm -rf ${prefix};
-       python setup.py install --prefix=${prefix} --install-lib=${prefix};
        export PATH="${prefix}/bin:${PATH}";
        export PYTHONPATH="${prefix}:${PYTHONPATH}";
+       mkdir -p "${prefix}";
+       python setup.py install --prefix=${prefix} --install-lib=${prefix};
      fi'
 
 before_script:

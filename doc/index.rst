@@ -9,8 +9,25 @@ Viscid: Visualizing Plasma Simulations in Python
 .. raw:: html
 
     <style type="text/css">
+    td img {
+        padding: 0;
+    }
+    </style>
+
+    <style type="text/css">
+    img {
+        padding-top: 10pt;
+        padding-bottom: 12pt;
+    }
+    </style>
+
+.. raw:: html
+
+    <style type="text/css">
     div.figure img {
         border-radius: 25px;
+        padding-top: 5pt;
+        padding-bottom: 5pt;
     }
     </style>
 
@@ -63,10 +80,22 @@ Branch               Test Status       Docs
    <img src="https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev"
   </a>
 
-Quickstart
-----------
+Installation
+------------
 
-Please refer to the quickstart instructions in :doc:`installation`.
+.. image:: https://anaconda.org/kristoformaynard/viscid/badges/version.svg
+  :target: https://anaconda.org/kristoformaynard/viscid
+  :alt: Anaconda Version
+
+.. image:: https://anaconda.org/kristoformaynard/viscid/badges/platforms.svg
+  :target: https://anaconda.org/kristoformaynard/viscid
+  :alt: Anaconda Platforms
+
+.. image:: https://img.shields.io/pypi/v/Viscid.svg
+  :target: https://pypi.org/project/Viscid/
+  :alt: PyPI
+
+Detailed instructions are :doc:`available here <installation>`.
 
 Contents
 --------

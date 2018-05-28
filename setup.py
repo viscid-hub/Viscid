@@ -13,14 +13,13 @@ import shutil
 from subprocess import Popen, CalledProcessError, PIPE
 import sys
 
-# try:
-#     import setuptools
-# except ImportError:
-#     pass
+try:
+    import setuptools
+except ImportError:
+    pass
 
 from distutils.command.clean import clean
 from distutils.errors import CompileError
-from distutils.command.install_lib import install_lib
 from distutils.version import LooseVersion
 from distutils import log
 from distutils import sysconfig
@@ -258,6 +257,13 @@ class Clean(clean):
             so_file_list.append(os.path.abspath(fn))
         clean_other_so_files(so_file_list, self.dry_run)
 
+        for other_dir in ['dist', 'Viscid.egg-info']:
+            other_dir = os.path.join(os.path.dirname(__file__), other_dir)
+            if os.path.isdir(other_dir):
+                print("removing '{0}/'".format(other_dir))
+                if not self.dry_run:
+                    shutil.rmtree(other_dir)
+
         if self.all:
             # remove inplace extensions
             for ext in self.distribution.ext_modules:
@@ -294,20 +300,6 @@ class BuildExt(build_ext):
             build_ext_failed = True
             print(e, file=sys.stderr)
 cmdclass["build_ext"] = BuildExt
-
-
-# this is a super hack for a single py2k compatability layer for the futures
-# module. It raises an exception using an old syntax that won't byte-compile
-# on install in py3k. So, to quiet the syntax error, which looks serious even
-# though it's in code that's never imported in py3k, let's just not
-# byte-compile that one module
-if PY3K:
-    class InstallLib(install_lib):
-        def byte_compile(self, files):
-            ignored_fname = os.path.join('compat', 'futures', '_base.py')
-            files = [f for f in files if not f.endswith(ignored_fname)]
-            install_lib.byte_compile(self, files)
-    cmdclass["install_lib"] = InstallLib
 
 # make cython extension instances
 for d in cy_defs:
@@ -424,6 +416,19 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
         print("I think there's a problem with your compiler ( CC =", cc,
               "), but I'll continue anyway...")
 
+# hack for gfortran / conda-build on macOS
+if sys.platform == 'darwin':
+    if 'LDFLAGS' in os.environ:
+        our_ld_flags = " -undefined dynamic_lookup -bundle"
+        os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + our_ld_flags
+
+# # this totally doesn't work to fix fortran build issues in circleci
+# if sys.platform == 'linux':
+#     if 'LDFLAGS' in os.environ:
+#         our_ld_flags = " -shared"
+#         os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + our_ld_flags
+
+
 def get_viscid_version(init_py):
     with io.open(init_py, 'r', encoding="utf-8") as f:
         version = None
@@ -453,7 +458,7 @@ try:
 
     setup(name='Viscid',
           version=version,
-          description='Visualizes gridded data in python',
+          description='Visualize data on structured meshes in python',
           long_description=long_description,
           long_description_content_type="text/markdown",
           author='Kris Maynard',

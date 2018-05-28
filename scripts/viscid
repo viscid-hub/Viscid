@@ -61,6 +61,9 @@ fi
 if [[ ${args} == *" --version "* || ${args} == *" version"* ]]; then
   interact=""
   viscid_python=${viscid_python:-$(which python)}
+elif [[ ${args} == *" --check "* || ${args} == *" check"* ]]; then
+  interact=""
+  viscid_python=${viscid_python:-$(which python)}
 else
   interact="-i"
   viscid_python=${viscid_python:-$(which ipython)}

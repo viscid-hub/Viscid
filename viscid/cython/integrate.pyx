@@ -15,6 +15,18 @@ from viscid.cython.cycalc cimport _c_interp_trilin
 from viscid.cython.misc_inlines cimport real_min, real_max
 
 
+# hack for Anaconda py27 on Windows which uses MSVC2008, which doesn't
+# define libc.math.isnan
+cdef extern from *:
+    """
+    #if defined(_MSC_VER) && _MSC_VER < 1900
+    #include <float.h>
+    #define isnan(f) _isnan((f))
+    #endif
+    """
+    pass
+
+
 ##################################
 ####   non-adaptive methods   ####
 ##################################
