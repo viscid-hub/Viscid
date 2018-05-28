@@ -24,6 +24,10 @@ Branch                                                      | Docs              
 
 ## Install ##
 
+[![Anaconda-Server Badge](https://anaconda.org/kristoformaynard/viscid/badges/version.svg)](https://anaconda.org/kristoformaynard/viscid) [![Anaconda-Server Badge](https://anaconda.org/kristoformaynard/viscid/badges/platforms.svg)](https://anaconda.org/kristoformaynard/viscid)
+
+[![PyPI Version](https://img.shields.io/pypi/v/Viscid.svg)](https://pypi.org/project/Viscid/)
+
 Dependencies:
 
 + Required
@@ -31,10 +35,10 @@ Dependencies:
   + Python 2.6 + argparse
   + Numpy >= 1.9
 + Highly Recommended
-  + H5py (if reading hdf5 files)
   + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.vpyplot)
   + Scipy (gives Viscid special powers :))
   + Numexpr (for the calculator.necalc module)
+  + H5py (if reading hdf5 files)
 + Truly Optional
   + Seaborn
   + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
