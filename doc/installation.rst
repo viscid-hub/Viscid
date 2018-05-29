@@ -51,9 +51,9 @@ The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ mak
 .. code-block:: bash
 
     if [ "$(uname -s)" == "Linux" ]; then
-      wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
+      wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
     elif [ "$(uname -s)" == "Darwin" ]; then
-      curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
+      curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
     fi
     bash miniconda.sh -b -p $HOME/local/anaconda
     rm miniconda.sh
