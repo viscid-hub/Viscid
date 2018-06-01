@@ -13,7 +13,7 @@ msg="Automated Deployment"
 dest_dir=""
 files=""
 
-repo_slug=""
+repo_slug="${DEPLOY_SLUG}"
 
 # usage: abs_path="$(abspath ${relative_path} [${start}])"
 # `start` is the path that the relative path is relative to; it defaults to ${PWD}
@@ -23,7 +23,7 @@ abspath() { cd "${2:-.}"; echo "$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"; 
 # establish usage
 print_usage() {
 cat << EOF
-Usage: ${0##*/} [-hpc] [-m MSG] -d DEST file1 [file2 [file3 [...]]]
+Usage: ${0##*/} [-hpc] [-r REPO] [-m MSG] -d DEST file1 [file2 [file3 [...]]]
 
 Copy and commit a set of files to the gh-pages branch
 
@@ -31,10 +31,10 @@ Copy and commit a set of files to the gh-pages branch
     -h          help
     -p          pretend, i.e., do not actually do the commit/push
     -c          clean, i.e., remove (rm -rf) DEST
+    -r REPO     github repository slug, i.e., "user/repo"
     -m MSG      commit message
 
   Required Arguments:
-    -r REPO     github repository slug, i.e., "user/repo"
     -d DEST     Destination directory relative to root on the gh-pages
                 branch
     file*       One or more files to move to DEST and commit

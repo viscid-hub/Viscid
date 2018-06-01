@@ -60,7 +60,6 @@ make html
 
 msg="Automatic doc update ${branch}:${tags}"
 ${root_dir}/deploy_ghpages -cd "docs/${branch}"                \
-                           -r "KristoforMaynard/Viscid-docs"   \
                            -m "${msg}"                         \
                            "${html_dir}"/*
 
