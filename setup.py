@@ -450,7 +450,7 @@ try:
         data_files += [(os.path.join('viscid', dirpath), fnames)]
 
     version = get_viscid_version("viscid/__init__.py")
-    url = "https://github.com/KristoforMaynard/Viscid"
+    url = "https://github.com/viscid-hub/Viscid"
     download_url = "{0}/archive/{1}.zip".format(url, version)
 
     with open("README.md", "r") as fh:

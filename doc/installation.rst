@@ -95,19 +95,19 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
 Choice 1: `Anaconda <http://anaconda.org>`_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: https://anaconda.org/kristoformaynard/viscid/badges/version.svg
-  :target: https://anaconda.org/kristoformaynard/viscid
+.. image:: https://anaconda.org/viscid-hub/viscid/badges/version.svg
+  :target: https://anaconda.org/viscid-hub/viscid
   :alt: Anaconda Version
 
-.. image:: https://anaconda.org/kristoformaynard/viscid/badges/platforms.svg
-  :target: https://anaconda.org/kristoformaynard/viscid
+.. image:: https://anaconda.org/viscid-hub/viscid/badges/platforms.svg
+  :target: https://anaconda.org/viscid-hub/viscid
   :alt: Anaconda Platforms
 
 If you have Anaconda, then installing Viscid and all the recommended dependancies happens with one command,
 
 .. code-block:: bash
 
-    conda install -c kristoformaynard viscid
+    conda install -c viscid-hub viscid
 
 You can check that the install succeeded by running,
 
@@ -145,7 +145,7 @@ First, you'll have to clone the Viscit git repository. This should be done in wh
 
 .. code-block:: bash
 
-    git clone https://github.com/KristoforMaynard/Viscid.git
+    git clone https://github.com/viscid-hub/Viscid.git
     mkdir -p ~/.config/matplotlib
     cp Viscid/resources/viscidrc ~/.viscidrc
 

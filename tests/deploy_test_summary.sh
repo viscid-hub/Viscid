@@ -27,4 +27,4 @@ msg="Automatic summary upload ${branch}:${tags}"
 ${root_dir}/deploy_ghpages -d "summary/${name}"                               \
                            -m "${msg}"                                        \
                            ${sdir}/index.html ${sdir}/plots ${sdir}/ref_plots
-echo "Summary page uploaded to http://kristoformaynard.github.io/Viscid-docs/summary/${name}"
+echo "Summary page uploaded"
