@@ -45,7 +45,7 @@ Dependencies:
   + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
   + PyYaml (rc file and plot options can parse using yaml)
 + Optional for developers
-  + Cython > 0.17 (if you change pyx / pxd files)
+  + Cython >= 0.28 (if you change pyx / pxd files)
   + Sphinx
   + sphinx_rtd_theme
   + sphinxcontrib-napoleon (if Sphinx is <= version 1.2)

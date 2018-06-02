@@ -35,7 +35,7 @@ Dependencies
 
 + Optional for developers
 
-  + Cython > 0.17 (if you change pyx / pxd files)
+  + Cython >= 0.28 (if you change pyx / pxd files)
   + Sphinx
   + sphinx_rtd_theme
   + sphinxcontrib-napoleon (if Sphinx is <= version 1.2)
@@ -72,14 +72,14 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
   - **+**  Install with a single command
   - **+**  No compiler needed
   - **+**  Available for macOS, Linux, and Windows
-  - **+**  Automatically installs dependancies
+  - **+**  Automatically installs dependencies
   - **-**  Lacks jrrle file support
 
 + PyPI (pip)
 
   - **+**  Install with a single command
   - **+**  No compiler needed for pure python functionality
-  - **-**  Recommended dependancies must be installed by hand
+  - **-**  Recommended dependencies must be installed by hand
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
@@ -88,7 +88,7 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
   - **+**  Most flexable
   - **+**  Only way to use a development version
   - **-**  Requires a few commands and some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
-  - **-**  Recommended dependancies must be installed by hand
+  - **-**  Recommended dependencies must be installed by hand
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
@@ -103,7 +103,7 @@ Choice 1: `Anaconda <http://anaconda.org>`_
   :target: https://anaconda.org/viscid-hub/viscid
   :alt: Anaconda Platforms
 
-If you have Anaconda, then installing Viscid and all the recommended dependancies happens with one command,
+If you have Anaconda, then installing Viscid and all the recommended dependencies happens with one command,
 
 .. code-block:: bash
 
@@ -126,7 +126,7 @@ Choice 2: PyPI (pip)
   :target: https://pypi.org/project/Viscid/
   :alt: PyPI
 
-You can install from source using pip with a single command, but the functionality depends on what compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler. Also, Viscid only lists Numpy as a dependancy in pip so that installation will succeed on even the most bare-bones systems. This means you will want to install any of the recommended / optional dependancies yourself.
+You can install from source using pip with a single command, but the functionality depends on what compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler. Also, Viscid only lists Numpy as a dependency in pip so that installation will succeed on even the most bare-bones systems. This means you will want to install any of the recommended / optional dependencies yourself.
 
 .. code-block:: bash
 

@@ -35,7 +35,7 @@ class UnimportedModule(object):
 
 
 class DeferredImportError(ImportError):
-    """So lack of an optional dependancy doesn't make viscid unimportable"""
+    """So lack of an optional dependency doesn't make viscid unimportable"""
     pass
 
 
