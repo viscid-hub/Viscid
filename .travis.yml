@@ -108,6 +108,10 @@ before_install:
        mv .archive/id_rsa ${HOME}/.ssh/id_rsa;
        chmod 600 ${HOME}/.ssh/id_rsa;
      fi'
+  - 'echo "Deployment info: DEPLOY_SLUG: ${DEPLOY_SLUG}";
+     echo "Deployment info: DEPLOY_DOCS: ${DEPLOY_DOCS}";
+     echo "Deployment info: DEPLOY_TESTS: ${DEPLOY_TESTS}";
+     ls -la ${HOME}/.ssh;'
 
   ## Now setup the Anaconda tools
   # it saves some download time to use the same python iff 2.7
@@ -207,4 +211,4 @@ deploy:
     - make deploy-html
   on:
     branch: "*"
-    condition: '($TRAVIS_BRANCH =~ ${deployable}) && ("${PREPARE_DOCS}" == "1" && ("${DEPLOY_DOCS}" == "true")'
+    condition: '($TRAVIS_BRANCH =~ ${deployable}) && ("${PREPARE_DOCS}" == "1") && ("${DEPLOY_DOCS}" == "true")'
