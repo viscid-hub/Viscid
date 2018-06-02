@@ -3,8 +3,16 @@
 from __future__ import print_function
 
 import numpy as np
-from matplotlib.colors import Colormap, ListedColormap, LinearSegmentedColormap
-from matplotlib.cm import register_cmap as _register_cmap
+
+try:
+    from matplotlib.colors import Colormap, ListedColormap, LinearSegmentedColormap
+    from matplotlib.cm import register_cmap as _register_cmap
+except ImportError as e:
+    from viscid import UnimportedModule
+    Colormap = UnimportedModule(e)
+    ListedColormap = UnimportedModule(e)
+    LinearSegmentedColormap = UnimportedModule(e)
+    _register_cmap = UnimportedModule(e)
 
 
 def to_rgba(colors):

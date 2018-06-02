@@ -30,6 +30,8 @@ class UnimportedModule(object):
             self._fall_over()
     def __setattr__(self, name, value):
         self._fall_over()
+    def __call__(self):
+        self._fall_over()
 
 
 class DeferredImportError(ImportError):
