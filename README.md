@@ -35,10 +35,11 @@ Dependencies:
   + Python 2.6 + argparse
   + Numpy >= 1.9
 + Highly Recommended
+  + IPython (better interactive interpreter)
   + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.vpyplot)
-  + Scipy (gives Viscid special powers :))
-  + Numexpr (for the calculator.necalc module)
-  + H5py (if reading hdf5 files)
+  + Scipy (gives Viscid special powers)
+  + Numexpr (for faster math on large grids)
+  + H5py (enables hdf5 reader)
 + Truly Optional
   + Seaborn
   + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
@@ -50,8 +51,7 @@ Dependencies:
   + sphinxcontrib-napoleon (if Sphinx is <= version 1.2)
 
 The optional calculator modules (necalc and cycalc) are all dispatched through
-calculator.calc, and it is intelligent enough not to use a library that is not
-installed.
+calculator.calc, and it gracefully falls back to numpy implementations if more advanced libraries are not installed.
 
 The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code.
 
