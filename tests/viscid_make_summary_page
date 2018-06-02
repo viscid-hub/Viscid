@@ -188,7 +188,7 @@ def main():
         jobid = os.environ["TRAVIS_JOB_ID"]
         jobnum = os.environ["TRAVIS_JOB_NUMBER"]
         reposlug = os.environ["TRAVIS_REPO_SLUG"]
-        info["Travis-CI Job"] = ("<a href=https://travis-ci.org/{0}/jobs/{1}>{2}</a>"
+        info["Travis-CI Job"] = ("<a href=https://travis-ci.com/{0}/jobs/{1}>{2}</a>"
                                  "".format(reposlug, jobid, jobnum))
     except KeyError:
         pass

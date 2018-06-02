@@ -22,7 +22,7 @@ That all being said, there are a couple places where importing pyplot / vpyplot 
 Continuous Integration
 ----------------------
 
-This project uses `Travis-CI <http://travis-ci.org>`_ for continuous integration. By default, tests run whenever commits are pushed or pull requests are made to the main git repository on GitHub. Test summary pages are automatically uploaded to GitHub Pages in the ``summary`` directory. In addition, commits to ``master`` and ``dev`` automatically update the html documentation and push the changes to GitHub Pages.
+This project uses `Travis-CI <http://travis-ci.com>`_ for continuous integration. By default, tests run whenever commits are pushed or pull requests are made to the main git repository on GitHub. Test summary pages are automatically uploaded to GitHub Pages in the ``summary`` directory. In addition, commits to ``master`` and ``dev`` automatically update the html documentation and push the changes to GitHub Pages.
 
 Forks can use Travis-CI by enabling it for their own GitHub accounts. The caveat is that commits to ``master`` and ``dev`` from forked repositories will not update GitHub Pages.
 

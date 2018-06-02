@@ -67,8 +67,8 @@ Branch               Test Status       Docs
 .. _tests_master: http://viscid-hub.github.io/Viscid-docs/summary/master-2.7/index.html
 .. |travis-master| raw:: html
 
-  <a href="https://travis-ci.org/viscid-hub/Viscid">
-   <img src="https://travis-ci.org/viscid-hub/Viscid.svg?branch=master"
+  <a href="https://travis-ci.com/viscid-hub/Viscid">
+   <img src="https://travis-ci.com/viscid-hub/Viscid.svg?branch=master"
   </a>
 
 .. _dev: https://github.com/viscid-hub/Viscid/tree/dev
@@ -76,8 +76,8 @@ Branch               Test Status       Docs
 .. _tests_dev: http://viscid-hub.github.io/Viscid-docs/summary/dev-2.7/index.html
 .. |travis-dev| raw:: html
 
-  <a href="https://travis-ci.org/viscid-hub/Viscid">
-   <img src="https://travis-ci.org/viscid-hub/Viscid.svg?branch=dev"
+  <a href="https://travis-ci.com/viscid-hub/Viscid">
+   <img src="https://travis-ci.com/viscid-hub/Viscid.svg?branch=dev"
   </a>
 
 Installation
