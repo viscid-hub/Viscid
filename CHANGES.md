@@ -1,10 +1,10 @@
 Changes
 -------
 
-0.99.7.dev0
-===========
+0.99.7
+======
 
-
+  - migrate main repository to https://github.com/viscid-hub
 
 0.99.6
 ======
