@@ -40,7 +40,6 @@ import os
 import tempfile
 import re
 
-import matplotlib
 from viscid import logger
 from viscid.compat import unicode  # pylint: disable=redefined-builtin
 from viscid.plot import _cm_cubehelix  # pylint: disable=unused-import
@@ -61,13 +60,6 @@ viscid_mpl_rc_params = {
     u"viscid.minorloc": [u"", unicode],
     u"viscid.symmetric_cmap": [u"", unicode]
 }
-for key, default_converter in viscid_mpl_rc_params.items():
-    matplotlib.defaultParams[key] = default_converter
-    matplotlib.rcParams.validate[key] = default_converter[1]
-    matplotlib.rcParamsDefault.validate[key] = default_converter[1]
-    matplotlib.rcParams[key] = default_converter[0]
-    matplotlib.rcParamsOrig[key] = default_converter[0]
-    matplotlib.rcParamsDefault[key] = default_converter[0]
 
 
 def _cycler2prop_cycle(txt):
@@ -78,61 +70,77 @@ def _cycler2prop_cycle(txt):
     txt = txt.replace("'", "").replace('"', "")
     return txt
 
-def inject_viscid_styles(show_warning=True):
-    try:
-        from matplotlib import rc_params_from_file, style
 
-        styl_dir = os.path.realpath(os.path.dirname(__file__))
-        styl_dir = os.path.abspath(os.path.join(styl_dir, "styles"))
-        style_sheets = glob(os.path.join(styl_dir, "*.mplstyle"))
+try:
+    import matplotlib
 
-        if LooseVersion(matplotlib.__version__) < LooseVersion("1.5.0"):
-            tmpfname = tempfile.mkstemp()[1]
-        else:
-            tmpfname = None
+    for key, default_converter in viscid_mpl_rc_params.items():
+        matplotlib.defaultParams[key] = default_converter
+        matplotlib.rcParams.validate[key] = default_converter[1]
+        matplotlib.rcParamsDefault.validate[key] = default_converter[1]
+        matplotlib.rcParams[key] = default_converter[0]
+        matplotlib.rcParamsOrig[key] = default_converter[0]
+        matplotlib.rcParamsDefault[key] = default_converter[0]
 
-        for styl_fname in style_sheets:
-            styl_name = os.path.splitext(os.path.basename(styl_fname))[0]
+
+    def inject_viscid_styles(show_warning=True):
+        try:
+            from matplotlib import rc_params_from_file, style
+
+            styl_dir = os.path.realpath(os.path.dirname(__file__))
+            styl_dir = os.path.abspath(os.path.join(styl_dir, "styles"))
+            style_sheets = glob(os.path.join(styl_dir, "*.mplstyle"))
+
+            if LooseVersion(matplotlib.__version__) < LooseVersion("1.5.0"):
+                tmpfname = tempfile.mkstemp()[1]
+            else:
+                tmpfname = None
+
+            for styl_fname in style_sheets:
+                styl_name = os.path.splitext(os.path.basename(styl_fname))[0]
+
+                if tmpfname:
+                    # hack the cycler stuff back to the pre-1.5.0 syntax
+                    with open(styl_fname, 'r') as fin:
+                        with open(tmpfname, 'w') as fout:
+                            fout.write(_cycler2prop_cycle(fin.read()))
+                    styl_fname = tmpfname
+                params = rc_params_from_file(styl_fname, use_default_template=False)
+                style.library[styl_name] = params
 
             if tmpfname:
-                # hack the cycler stuff back to the pre-1.5.0 syntax
-                with open(styl_fname, 'r') as fin:
-                    with open(tmpfname, 'w') as fout:
-                        fout.write(_cycler2prop_cycle(fin.read()))
-                styl_fname = tmpfname
-            params = rc_params_from_file(styl_fname, use_default_template=False)
-            style.library[styl_name] = params
+                os.unlink(tmpfname)
+            style.reload_library()
 
-        if tmpfname:
-            os.unlink(tmpfname)
-        style.reload_library()
+        except ImportError:
+            if show_warning:
+                logger.debug("Upgrade to matplotlib >= 1.5.0 to use style sheets")
 
-    except ImportError:
-        if show_warning:
-            logger.debug("Upgrade to matplotlib >= 1.5.0 to use style sheets")
+    def post_rc_actions(show_warning=True):
+        try:
+            from matplotlib import style
 
-def post_rc_actions(show_warning=True):
-    try:
-        from matplotlib import style
+            if u"viscid-default" not in use_styles:
+                use_styles.insert(0, u"viscid-default")
 
-        if u"viscid-default" not in use_styles:
-            use_styles.insert(0, u"viscid-default")
+            for s in use_styles:
+                try:
+                    style.use(s)
+                except ValueError as e:
+                    logger.warning(str(e))
+        except ImportError:
+            if show_warning and use_styles:
+                logger.warning("Upgrade to matplotlib >= 1.5.0 to use style sheets")
 
-        for s in use_styles:
-            try:
-                style.use(s)
-            except ValueError as e:
-                logger.warning(str(e))
-    except ImportError:
-        if show_warning and use_styles:
-            logger.warning("Upgrade to matplotlib >= 1.5.0 to use style sheets")
+        matplotlib.rcParams.update(rc_params)
+        for group, params in rc.items():
+            matplotlib.rc(group, **params)
 
-    matplotlib.rcParams.update(rc_params)
-    for group, params in rc.items():
-        matplotlib.rc(group, **params)
+    inject_viscid_styles()
+    post_rc_actions(show_warning=False)
 
-inject_viscid_styles()
-post_rc_actions(show_warning=False)
+except ImportError:
+    pass
 
 ##
 ## EOF

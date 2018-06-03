@@ -10,10 +10,8 @@ from viscid.readers import vfile
 
 try:
     import h5py
-    HAS_H5PY = True
-except ImportError:
-    HAS_H5PY = False
-    logger.warning("h5py library not found, no hdf5 support.")
+except ImportError as e:
+    h5py = viscid.UnimportedModule(e)
 
 
 class H5pyDataWrapper(vfile.DataWrapper):
@@ -31,7 +29,6 @@ class H5pyDataWrapper(vfile.DataWrapper):
 
     def __init__(self, fname, loc, comp_dim=None, comp_idx=None,
                  transpose=False):
-        assert HAS_H5PY
         super(H5pyDataWrapper, self).__init__()
         self.fname = fname
         self.loc = loc
@@ -141,7 +138,6 @@ class FileLazyHDF5(vfile.VFile):
     _detector = None
 
     def __init__(self, fname, **kwargs):
-        assert HAS_H5PY
         super(FileLazyHDF5, self).__init__(fname, **kwargs)
 
     def _parse(self):
@@ -214,7 +210,6 @@ class FileHDF5(vfile.VFile):
 """
 
     def __init__(self, fname, **kwargs):
-        assert HAS_H5PY
         super(FileHDF5, self).__init__(fname, **kwargs)
 
     def _parse(self):

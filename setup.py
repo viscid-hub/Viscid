@@ -450,7 +450,7 @@ try:
         data_files += [(os.path.join('viscid', dirpath), fnames)]
 
     version = get_viscid_version("viscid/__init__.py")
-    url = "https://github.com/KristoforMaynard/Viscid"
+    url = "https://github.com/viscid-hub/Viscid"
     download_url = "{0}/archive/{1}.zip".format(url, version)
 
     with open("README.md", "r") as fh:
@@ -461,7 +461,7 @@ try:
           description='Visualize data on structured meshes in python',
           long_description=long_description,
           long_description_content_type="text/markdown",
-          author='Kris Maynard',
+          author='Kristofor Maynard',
           author_email='k.maynard@unh.edu',
           license='MIT',
           url=url,

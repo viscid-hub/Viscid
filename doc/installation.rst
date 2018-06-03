@@ -21,10 +21,11 @@ Dependencies
 
 + Highly Recommended
 
+  + IPython (better interactive interpreter)
   + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.vpyplot)
-  + Scipy (gives Viscid special powers :))
-  + Numexpr (for the calculator.necalc module)
-  + H5py (if reading hdf5 files)
+  + Scipy (gives Viscid special powers)
+  + Numexpr (for faster math on large grids)
+  + H5py (enables hdf5 reader)
 
 + Truly Optional
 
@@ -34,14 +35,13 @@ Dependencies
 
 + Optional for developers
 
-  + Cython > 0.17 (if you change pyx / pxd files)
+  + Cython >= 0.28 (if you change pyx / pxd files)
   + Sphinx
   + sphinx_rtd_theme
   + sphinxcontrib-napoleon (if Sphinx is <= version 1.2)
 
 The optional calculator modules (necalc and cycalc) are all dispatched through
-calculator.calc, and it is intelligent enough not to use a library that is not
-installed.
+calculator.calc, and it gracefully falls back to numpy implementations if more advanced libraries are not installed.
 
 Installing Anaconda (optional but recommended)
 ----------------------------------------------
@@ -51,9 +51,9 @@ The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ mak
 .. code-block:: bash
 
     if [ "$(uname -s)" == "Linux" ]; then
-      wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh
+      wget -O miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
     elif [ "$(uname -s)" == "Darwin" ]; then
-      curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda2-latest-MacOSX-x86_64.sh
+      curl -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
     fi
     bash miniconda.sh -b -p $HOME/local/anaconda
     rm miniconda.sh
@@ -72,14 +72,14 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
   - **+**  Install with a single command
   - **+**  No compiler needed
   - **+**  Available for macOS, Linux, and Windows
-  - **+**  Automatically installs dependancies
+  - **+**  Automatically installs dependencies
   - **-**  Lacks jrrle file support
 
 + PyPI (pip)
 
   - **+**  Install with a single command
   - **+**  No compiler needed for pure python functionality
-  - **-**  Recommended dependancies must be installed by hand
+  - **-**  Recommended dependencies must be installed by hand
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
@@ -88,26 +88,26 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
   - **+**  Most flexable
   - **+**  Only way to use a development version
   - **-**  Requires a few commands and some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
-  - **-**  Recommended dependancies must be installed by hand
+  - **-**  Recommended dependencies must be installed by hand
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
 Choice 1: `Anaconda <http://anaconda.org>`_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. image:: https://anaconda.org/kristoformaynard/viscid/badges/version.svg
-  :target: https://anaconda.org/kristoformaynard/viscid
+.. image:: https://anaconda.org/viscid-hub/viscid/badges/version.svg
+  :target: https://anaconda.org/viscid-hub/viscid
   :alt: Anaconda Version
 
-.. image:: https://anaconda.org/kristoformaynard/viscid/badges/platforms.svg
-  :target: https://anaconda.org/kristoformaynard/viscid
+.. image:: https://anaconda.org/viscid-hub/viscid/badges/platforms.svg
+  :target: https://anaconda.org/viscid-hub/viscid
   :alt: Anaconda Platforms
 
-If you have Anaconda, then installing Viscid and all the recommended dependancies happens with one command,
+If you have Anaconda, then installing Viscid and all the recommended dependencies happens with one command,
 
 .. code-block:: bash
 
-    conda install -c kristoformaynard viscid
+    conda install -c viscid-hub viscid
 
 You can check that the install succeeded by running,
 
@@ -126,7 +126,7 @@ Choice 2: PyPI (pip)
   :target: https://pypi.org/project/Viscid/
   :alt: PyPI
 
-You can install from source using pip with a single command, but the functionality depends on what compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler. Also, Viscid only lists Numpy as a dependancy in pip so that installation will succeed on even the most bare-bones systems. This means you will want to install any of the recommended / optional dependancies yourself.
+You can install from source using pip with a single command, but the functionality depends on what compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler. Also, Viscid only lists Numpy as a dependency in pip so that installation will succeed on even the most bare-bones systems. This means you will want to install any of the recommended / optional dependencies yourself.
 
 .. code-block:: bash
 
@@ -145,7 +145,7 @@ First, you'll have to clone the Viscit git repository. This should be done in wh
 
 .. code-block:: bash
 
-    git clone https://github.com/KristoforMaynard/Viscid.git
+    git clone https://github.com/viscid-hub/Viscid.git
     mkdir -p ~/.config/matplotlib
     cp Viscid/resources/viscidrc ~/.viscidrc
 

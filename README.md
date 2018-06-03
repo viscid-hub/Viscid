@@ -19,12 +19,12 @@ Both the master and dev branches should make every attempt to be usable (thanks 
 
 Branch                                                      | Docs                                                                      | Test Status
 ------------- | ------------------------------------------------------------------------- | -----------------------
-[master](https://github.com/KristoforMaynard/Viscid)        | [html](http://kristoformaynard.github.io/Viscid-docs/docs/master/index.html), [test summary](http://kristoformaynard.github.io/Viscid-docs/summary/master-2.7/index.html)   | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master)](https://travis-ci.org/KristoforMaynard/Viscid)
-[dev](https://github.com/KristoforMaynard/Viscid/tree/dev)  | [html](http://kristoformaynard.github.io/Viscid-docs/docs/dev/index.html), [test summary](http://kristoformaynard.github.io/Viscid-docs/summary/dev-2.7/index.html)      | [![Build Status](https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev)](https://travis-ci.org/KristoforMaynard/Viscid)
+[master](https://github.com/viscid-hub/Viscid)        | [html](http://viscid-hub.github.io/Viscid-docs/docs/master/index.html), [test summary](http://viscid-hub.github.io/Viscid-docs/summary/master-2.7/index.html)   | [![Build Status](https://travis-ci.com/viscid-hub/Viscid.svg?branch=master)](https://travis-ci.com/viscid-hub/Viscid)
+[dev](https://github.com/viscid-hub/Viscid/tree/dev)  | [html](http://viscid-hub.github.io/Viscid-docs/docs/dev/index.html), [test summary](http://viscid-hub.github.io/Viscid-docs/summary/dev-2.7/index.html)      | [![Build Status](https://travis-ci.com/viscid-hub/Viscid.svg?branch=dev)](https://travis-ci.com/viscid-hub/Viscid)
 
 ## Install ##
 
-[![Anaconda-Server Badge](https://anaconda.org/kristoformaynard/viscid/badges/version.svg)](https://anaconda.org/kristoformaynard/viscid) [![Anaconda-Server Badge](https://anaconda.org/kristoformaynard/viscid/badges/platforms.svg)](https://anaconda.org/kristoformaynard/viscid)
+[![Anaconda-Server Badge](https://anaconda.org/viscid-hub/viscid/badges/version.svg)](https://anaconda.org/viscid-hub/viscid) [![Anaconda-Server Badge](https://anaconda.org/viscid-hub/viscid/badges/platforms.svg)](https://anaconda.org/viscid-hub/viscid)
 
 [![PyPI Version](https://img.shields.io/pypi/v/Viscid.svg)](https://pypi.org/project/Viscid/)
 
@@ -35,27 +35,27 @@ Dependencies:
   + Python 2.6 + argparse
   + Numpy >= 1.9
 + Highly Recommended
+  + IPython (better interactive interpreter)
   + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.vpyplot)
-  + Scipy (gives Viscid special powers :))
-  + Numexpr (for the calculator.necalc module)
-  + H5py (if reading hdf5 files)
+  + Scipy (gives Viscid special powers)
+  + Numexpr (for faster math on large grids)
+  + H5py (enables hdf5 reader)
 + Truly Optional
   + Seaborn
   + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
   + PyYaml (rc file and plot options can parse using yaml)
 + Optional for developers
-  + Cython > 0.17 (if you change pyx / pxd files)
+  + Cython >= 0.28 (if you change pyx / pxd files)
   + Sphinx
   + sphinx_rtd_theme
   + sphinxcontrib-napoleon (if Sphinx is <= version 1.2)
 
 The optional calculator modules (necalc and cycalc) are all dispatched through
-calculator.calc, and it is intelligent enough not to use a library that is not
-installed.
+calculator.calc, and it gracefully falls back to numpy implementations if more advanced libraries are not installed.
 
 The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code.
 
-Detailed installation instructions are [available here](http://kristoformaynard.github.io/Viscid-docs/docs/master/installation.html).
+Detailed installation instructions are [available here](http://viscid-hub.github.io/Viscid-docs/docs/master/installation.html).
 
 ## Development ##
 

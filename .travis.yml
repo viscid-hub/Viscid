@@ -8,10 +8,11 @@ env:
     - QT_API=pyside
   matrix:
     - PYTHON=2.6 DEPS="minimal"
-    - PYTHON=2.7 DEPS="" FLAKE=1 DEPLOY_DOCS=1
+    - PYTHON=2.7 DEPS="" FLAKE=1 PREPARE_DOCS=1
     - PYTHON=3.3 DEPS=""
-    # - PYTHON=3.4 DEPS=full  # is this necessary if 3.3 and 3.5 are tested?
-    - PYTHON=3.5 DEPS="" FLAKE=1
+    # - PYTHON=3.4 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
+    # - PYTHON=3.5 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
+    - PYTHON=3.6 DEPS="" FLAKE=1
 
 git:
   submodules: false
@@ -56,12 +57,62 @@ before_install:
      fi'
 
   # setup deployment key
+  # make the encrypted archives with the following...
+  #
+  # > export GH_USER="viscid-hub"
+  # > export TRAVIS_ENDPOINT="--pro"
+  # > mkdir archive
+  # > ssh-keygen -P '' -f ./archive/id_rsa
+  # > mv ./archive/id_rsa.pub ./.key.${GH_USER}.pub
+  #
+  # > # !!!  STOP AND ADD ANY OTHER FILES TO THE ./archive  !!!
+  #
+  # > tar -czf .archive.${GH_USER}.tar.gz -C archive .
+  # > travis login ${TRAVIS_ENDPOINT} -u ${GH_USER} --auto
+  #
+  # > travis encrypt-file ${TRAVIS_ENDPOINT} -r ${GH_USER}/Viscid .archive.${GH_USER}.tar.gz
+  #
+  # > rm -rf archive .archive.${GH_USER}.tar.gz
+  # > git add .archive.${GH_USER}.tar.gz.enc .key.${GH_USER}.pub
+  #
+  # then...
+  # Add a block below this comment to decrypt based on the special
+  # variables that travis-ci created... Note that we use a slightly
+  # different command they travis suggests, i.e., we specify
+  # `-out ./.archive.tar.gz`
+  #
+  # then...
+  # Add the public key to the github project ${HG_USER}/Viscid-docs
+  # as a "Deploy key" with write access
   - 'mkdir -p ${HOME}/.ssh'
   - 'chmod 700 ${HOME}/.ssh'
-  - 'if [[ -n ${encrypted_94825f2db120_key} && -n ${encrypted_94825f2db120_iv} ]]; then
-       openssl aes-256-cbc -K $encrypted_94825f2db120_key -iv $encrypted_94825f2db120_iv -in resources/.doc_deployment_key.enc -out ${HOME}/.ssh/id_rsa -d;
+  - 'if [ "${TRAVIS_REPO_SLUG}" == "viscid-hub/Viscid" ]; then
+       openssl aes-256-cbc -K $encrypted_0b3ef9041727_key -iv $encrypted_0b3ef9041727_iv -in resources/.archive.viscid-hub.tar.gz.enc -out ./.archive.tar.gz -d;
+       export DEPLOY_SLUG="${TRAVIS_REPO_SLUG}-docs";
+       export DEPLOY_DOCS="true";
+       export DEPLOY_TESTS="true";
+     elif [ "${TRAVIS_REPO_SLUG}" == "KristoforMaynard/Viscid" ]; then
+       openssl aes-256-cbc -K $encrypted_0b3ef9041727_key -iv $encrypted_0b3ef9041727_iv -in resources/.archive.KristoforMaynard.tar.gz.enc -out ./.archive.tar.gz -d;
+       export DEPLOY_SLUG="${TRAVIS_REPO_SLUG}-docs";
+       export DEPLOY_DOCS="false";
+       export DEPLOY_TESTS="true";
+     else
+       export DEPLOY_SLUG="";
+       export DEPLOY_DOCS="false";
+       export DEPLOY_TESTS="false";
      fi'
-  - 'chmod 600 ${HOME}/.ssh/id_rsa'
+  - 'if [ -f ./.archive.tar.gz ]; then
+       mkdir .archive;
+       tar -xf .archive.tar.gz -C .archive;
+       mkdir -p ${HOME}/.ssh;
+       chmod 700 ${HOME}/.ssh;
+       mv .archive/id_rsa ${HOME}/.ssh/id_rsa;
+       chmod 600 ${HOME}/.ssh/id_rsa;
+     fi'
+  - 'echo "Deployment info: DEPLOY_SLUG: ${DEPLOY_SLUG}";
+     echo "Deployment info: DEPLOY_DOCS: ${DEPLOY_DOCS}";
+     echo "Deployment info: DEPLOY_TESTS: ${DEPLOY_TESTS}";
+     ls -la ${HOME}/.ssh;'
 
   ## Now setup the Anaconda tools
   # it saves some download time to use the same python iff 2.7
@@ -129,7 +180,7 @@ install:
 
   # if deplying docs, run tests inplace, this makes preparing the docs
   # faster since cython's fused types makes 8 times too much code, ug!
-  - 'if [ "${DEPLOY_DOCS}" == "1" ]; then
+  - 'if [ "${PREPARE_DOCS}" == "1" ]; then
        make inplace;
        export PATH="${PWD}/scripts:${PATH}";
        export PYTHONPATH="${PWD}:${PYTHONPATH}";
@@ -145,12 +196,12 @@ before_script:
   - 'if [ "${FLAKE}" == "1" ]; then make flake8; fi'
 
 script:
-  - 'if [ "${DEPLOY_DOCS}" == "1" ]; then
+  - 'if [ "${PREPARE_DOCS}" == "1" ]; then
        make check;
      else
        make instcheck;
      fi'
-  - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ && -f "${HOME}/.ssh/id_rsa" ]]; then
+  - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ && "${DEPLOY_TESTS}" == "true" ]]; then
        make deploy-summary;
      fi'
 
@@ -161,4 +212,4 @@ deploy:
     - make deploy-html
   on:
     branch: "*"
-    condition: '($TRAVIS_BRANCH =~ ${deployable}) && -f "${HOME}/.ssh/id_rsa" && ("${DEPLOY_DOCS}" == "1")'
+    condition: '($TRAVIS_BRANCH =~ ${deployable}) && ("${PREPARE_DOCS}" == "1") && ("${DEPLOY_DOCS}" == "true")'

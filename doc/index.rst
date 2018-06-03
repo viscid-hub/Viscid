@@ -62,33 +62,33 @@ Branch               Test Status       Docs
 `dev <dev_>`_        |travis-dev|      `html <html_dev_>`_, `test summary <tests_dev_>`_
 ===================  ================  ========================================================
 
-.. _master: https://github.com/KristoforMaynard/Viscid
-.. _html_master: http://kristoformaynard.github.io/Viscid-docs/docs/master/index.html
-.. _tests_master: http://kristoformaynard.github.io/Viscid-docs/summary/master-2.7/index.html
+.. _master: https://github.com/viscid-hub/Viscid
+.. _html_master: http://viscid-hub.github.io/Viscid-docs/docs/master/index.html
+.. _tests_master: http://viscid-hub.github.io/Viscid-docs/summary/master-2.7/index.html
 .. |travis-master| raw:: html
 
-  <a href="https://travis-ci.org/KristoforMaynard/Viscid">
-   <img src="https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=master"
+  <a href="https://travis-ci.com/viscid-hub/Viscid">
+   <img src="https://travis-ci.com/viscid-hub/Viscid.svg?branch=master"
   </a>
 
-.. _dev: https://github.com/KristoforMaynard/Viscid/tree/dev
-.. _html_dev: http://kristoformaynard.github.io/Viscid-docs/docs/dev/index.html
-.. _tests_dev: http://kristoformaynard.github.io/Viscid-docs/summary/dev-2.7/index.html
+.. _dev: https://github.com/viscid-hub/Viscid/tree/dev
+.. _html_dev: http://viscid-hub.github.io/Viscid-docs/docs/dev/index.html
+.. _tests_dev: http://viscid-hub.github.io/Viscid-docs/summary/dev-2.7/index.html
 .. |travis-dev| raw:: html
 
-  <a href="https://travis-ci.org/KristoforMaynard/Viscid">
-   <img src="https://travis-ci.org/KristoforMaynard/Viscid.svg?branch=dev"
+  <a href="https://travis-ci.com/viscid-hub/Viscid">
+   <img src="https://travis-ci.com/viscid-hub/Viscid.svg?branch=dev"
   </a>
 
 Installation
 ------------
 
-.. image:: https://anaconda.org/kristoformaynard/viscid/badges/version.svg
-  :target: https://anaconda.org/kristoformaynard/viscid
+.. image:: https://anaconda.org/viscid-hub/viscid/badges/version.svg
+  :target: https://anaconda.org/viscid-hub/viscid
   :alt: Anaconda Version
 
-.. image:: https://anaconda.org/kristoformaynard/viscid/badges/platforms.svg
-  :target: https://anaconda.org/kristoformaynard/viscid
+.. image:: https://anaconda.org/viscid-hub/viscid/badges/platforms.svg
+  :target: https://anaconda.org/viscid-hub/viscid
   :alt: Anaconda Platforms
 
 .. image:: https://img.shields.io/pypi/v/Viscid.svg
