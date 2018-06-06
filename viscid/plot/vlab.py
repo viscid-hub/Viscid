@@ -112,7 +112,7 @@ def lines2source(lines, scalars=None, name="NoName"):
     r = viscid.vutil.prepare_lines(lines, scalars, do_connections=True)
     lines, scalars, connections, other = r
 
-    src = mlab.pipeline.scalar_scatter(lines[0], lines[1], lines[2])
+    src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
     if scalars is not None:
         if scalars.dtype == np.dtype('u1'):
             sc = tvtk.UnsignedCharArray()
