@@ -7,6 +7,7 @@
 # platform: osx-64 linux-64
 name: viscid35mayavi
 channels:
+- viscid-hub
 - defaults
 dependencies:
 - python=3.5
@@ -18,19 +19,10 @@ dependencies:
 - numexpr
 - numba
 - pyyaml
-- pyqt
 - flake8
 - sphinx
 - sphinx_rtd_theme
 - ipython
-- jupyter
-- pip:
-  - apptools==4.4.0
-  - configobj==5.0.6
-  - envisage==4.6.0
-  - mayavi==4.6.0
-  - pyface==6.0.0
-  - pyqt5==5.10.1
-  - traits==4.6.0
-  - traitsui==6.0.0
-  - vtk==8.1.0
+- jupyterlab
+- pyqt
+- mayavi

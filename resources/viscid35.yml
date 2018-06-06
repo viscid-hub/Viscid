@@ -12,9 +12,8 @@ dependencies:
 - numexpr
 - numba
 - pyyaml
-- pyqt=4
+- pyqt
 - flake8
 - sphinx
 - sphinx_rtd_theme
 - ipython
-- jupyter
