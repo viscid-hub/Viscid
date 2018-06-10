@@ -272,7 +272,7 @@ subroutine write_jrrle1d(iu,a1,nx,l1,l2,it)
   !f2py intent(in) iu
   character*80 l1,l2        !l1 variable name, l2: ascii time string
   !f2py intent(in) l1,l2
-  real a1(*)                !array to write
+  real a1(nx)                !array to write
   !f2py intent(in) a1
   integer nx,it             !nx: dimension of array, it: integer time
   !f2py intent(in) nx,it
@@ -293,7 +293,7 @@ subroutine write_jrrle2d(iu,a1,nx,ny,l1,l2,it)
   !f2py intent(in) iu
   character*80 l1,l2        !l1 variable name, l2: ascii time string
   !f2py intent(in) l1,l2
-  real a1(*)                !array to write
+  real a1(nx*ny)                !array to write
   !f2py intent(in) a1
   integer nx,ny,it          !nx: dimension of array, it: integer time
   !f2py intent(in) nx,ny,it
@@ -314,7 +314,7 @@ subroutine write_jrrle3d(iu,a1,nx,ny,nz,l1,l2,it)
   !f2py intent(in) iu
   character*80 l1,l2        !l1 variable name, l2: ascii time string
   !f2py intent(in) l1,l2
-  real a1(*)                !array to write
+  real a1(nx*ny*nz)                !array to write
   !f2py intent(in) a1
   integer nx,ny,nz,it          !nx: dimension of array, it: integer time
   !f2py intent(in) nx,ny,nz,it
@@ -371,8 +371,10 @@ subroutine rdn2( fileNo,a,n,cid,it,rid )
   !
   ! character decoding
   !.---------------------------------------
-  real a(*)
+  real a(n)
   integer n
+  integer it
+  real rid
   character*8 cid
   character*4 did
   character*8 nid
@@ -679,6 +681,8 @@ end subroutine wrn2
 !.---------------------------------------
 subroutine wrnenc(iu,i1,n)
   !.---------------------------------------
+  integer iu
+  integer n
   integer i1(0:63)
   integer i2(-1:63)
   character c*72
