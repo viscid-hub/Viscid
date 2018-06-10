@@ -419,14 +419,18 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
 # hack for gfortran / conda-build on macOS
 if sys.platform == 'darwin':
     if 'LDFLAGS' in os.environ:
-        our_ld_flags = " -undefined dynamic_lookup -bundle"
-        os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + our_ld_flags
+        mandatory_flags = ['-undefined dynamic_lookup', '-bundle']
+        for flag in mandatory_flags:
+            if flag not in os.environ['LDFLAGS']:
+                os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + ' ' + flag
 
-# # this totally doesn't work to fix fortran build issues in circleci
-# if sys.platform == 'linux':
-#     if 'LDFLAGS' in os.environ:
-#         our_ld_flags = " -shared"
-#         os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + our_ld_flags
+# fix fortran build on linux with conda's gfortran
+if sys.platform == 'linux':
+    if 'LDFLAGS' in os.environ:
+        mandatory_flags = ['-shared']
+        for flag in mandatory_flags:
+            if flag not in os.environ['LDFLAGS']:
+                os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + ' ' + flag
 
 
 def get_viscid_version(init_py):
