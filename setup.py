@@ -460,7 +460,7 @@ try:
     with open("README.md", "r") as fh:
         long_description = fh.read()
 
-    setup(name='Viscid',
+    setup(name='viscid',
           version=version,
           description='Visualize data on structured meshes in python',
           long_description=long_description,
