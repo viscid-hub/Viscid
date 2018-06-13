@@ -3,11 +3,11 @@
 from threading import Lock
 
 try:
-    from viscid.readers import _fortfile
+    from viscid.readers import _jrrle
 except ImportError as e:
     from viscid.verror import UnimportedModule
     msg = "Fortran readers not available since they were not built correctly"
-    _fortfile = UnimportedModule(e, msg=msg)
+    _jrrle = UnimportedModule(e, msg=msg)
 
 
 # this lock is to prevent multiple threads from grabbing the same
@@ -40,7 +40,7 @@ class FortranFile(object):
                                "".format(self.filename))
 
         with fortfile_open_lock:
-            self._unit = _fortfile.fopen(self.filename, uu=-1, debug=self.debug)
+            self._unit = _jrrle.fopen(self.filename, uu=-1, debug=self.debug)
 
         if self._unit < 0:
             raise RuntimeError("Fortran open error ({0}) on '{1}'"
@@ -48,26 +48,26 @@ class FortranFile(object):
 
     def close(self):
         if self.isopen:
-            _fortfile.fclose(self._unit, debug=self.debug)
+            _jrrle.fclose(self._unit, debug=self.debug)
             self._unit = -1
 
     def seek(self, offset, whence=0):
         assert self.isopen
-        status = _fortfile.seek(self._unit, offset, whence)
+        status = _jrrle.seek(self._unit, offset, whence)
         if status != 0:
             raise AssertionError("status != 0: {0}".format(status))
         return status
 
     def tell(self):
         assert self.isopen
-        pos = _fortfile.tell(self._unit)
+        pos = _jrrle.tell(self._unit)
         assert pos >= 0
         return pos
 
     @property
     def isopen(self):
         if self._unit > 0:
-            if bool(_fortfile.fisopen(self._unit)):
+            if bool(_jrrle.fisopen(self._unit)):
                 return True
             else:
                 raise RuntimeError("File has a valid unit, but fortran says "
@@ -79,13 +79,13 @@ class FortranFile(object):
         return self._unit
 
     def rewind(self):
-        _fortfile.frewind(self._unit, debug=self.debug)
+        _jrrle.frewind(self._unit, debug=self.debug)
 
     def advance_one_line(self):
-        return _fortfile.fadvance_one_line(self._unit, debug=self.debug)
+        return _jrrle.fadvance_one_line(self._unit, debug=self.debug)
 
     def backspace(self):
-        _fortfile.fbackspace(self._unit, debug=self.debug)
+        _jrrle.fbackspace(self._unit, debug=self.debug)
 
     def __enter__(self):
         if not self.isopen:

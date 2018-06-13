@@ -112,12 +112,11 @@ cy_defs.append(["viscid.cython.cyamr",
 fort_fcflags = []
 fort_ldflags = []
 fort_defs = []
-fort_defs.append(["viscid.readers._fortfile",
-                  ["viscid/readers/_fortfile.F90"],
-                  dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
-                 ])
+# These have to be compiled into the same python module because they
+# pass an open file unit back and forth. This doesn't seem to work
+# on windows.
 fort_defs.append(["viscid.readers._jrrle",
-                  ["viscid/readers/_jrrle.f90"],
+                  ["viscid/readers/_fortfile.F90", "viscid/readers/_jrrle.f90"],
                   dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
                  ])
 
