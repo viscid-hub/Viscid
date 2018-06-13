@@ -43,6 +43,8 @@ Dependencies
 The optional calculator modules (necalc and cycalc) are all dispatched through
 calculator.calc, and it gracefully falls back to numpy implementations if more advanced libraries are not installed.
 
+.. include:: _mayavi_install_note.rst
+
 Installing Anaconda (optional but recommended)
 ----------------------------------------------
 
