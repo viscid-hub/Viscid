@@ -111,10 +111,11 @@ cy_defs.append(["viscid.cython.cyamr",
 
 fort_fcflags = []
 fort_ldflags = []
+
 fort_defs = []
-# These have to be compiled into the same python module because they
-# pass an open file unit back and forth. This doesn't seem to work
-# on windows.
+# These fortran sources are compiled into the same python module since
+# they pass an open file unit back and forth. This doesn't seem to work
+# between python modules on windows.
 fort_defs.append(["viscid.readers._jrrle",
                   ["viscid/readers/_fortfile.F90", "viscid/readers/_jrrle.f90"],
                   dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
@@ -229,7 +230,7 @@ def clean_other_so_files(valid_so_list, dry_run=False):
         for root, _, files in os.walk(cwd, topdown=False):
             for name in files:
                 name = os.path.join(root, name)
-                if name.endswith('.so') and name not in valid_so_list:
+                if name.endswith(('.so', '.pyd')) and name not in valid_so_list:
                     if os.path.isfile(name):
                         print('removing other: %s' % name)
                         if not dry_run:
@@ -256,7 +257,8 @@ class Clean(clean):
             so_file_list.append(os.path.abspath(fn))
         clean_other_so_files(so_file_list, self.dry_run)
 
-        for other_dir in ['dist', 'Viscid.egg-info']:
+        _libs_dir = os.path.join('viscid', '.libs')
+        for other_dir in ['dist', 'Viscid.egg-info', _libs_dir]:
             other_dir = os.path.join(os.path.dirname(__file__), other_dir)
             if os.path.isdir(other_dir):
                 print("removing '{0}/'".format(other_dir))
@@ -294,6 +296,11 @@ class BuildExt(build_ext):
         build_ext_ran = True
         try:
             build_ext.run(self, *args, **kwargs)
+            # copy the weird extra dll dir on windows (fortran)
+            flibdll_dir = os.path.join(self.build_lib, 'viscid', '.libs')
+            if os.path.isdir(flibdll_dir):
+                self.copy_tree(flibdll_dir, os.path.join(os.path.dirname(__file__),
+                                                         'viscid', '.libs'))
         except Exception as e:
             global build_ext_failed
             build_ext_failed = True

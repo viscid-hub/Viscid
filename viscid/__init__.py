@@ -59,6 +59,10 @@ __all__ = ['amr_field',
            'readers',
           ]
 
+# weird windows fortran build artifact that has to be in the path
+extra_dll_dir = os.path.join(os.path.dirname(__file__), ".libs")
+if os.path.isdir(extra_dll_dir):
+    os.environ["PATH"] += os.pathsep + extra_dll_dir
 
 #########################################
 # setup logger for use throughout viscid
