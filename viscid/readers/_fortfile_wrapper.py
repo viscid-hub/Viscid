@@ -1,5 +1,7 @@
 # mostly stolen from pyggcm... thanks Matt
 
+from threading import Lock
+
 try:
     from viscid.readers import _fortfile
 except ImportError as e:
@@ -8,9 +10,12 @@ except ImportError as e:
     _fortfile = UnimportedModule(e, msg=msg)
 
 
-# FIXME: this my not play nicely in a multiprocessing environment
-_available_units = list(range(10, 50))
-_units_in_use = {}
+# this lock is to prevent multiple threads from grabbing the same
+# fortran file unit since checking for available units and opening
+# the file may not be atomic. this should not be an issue for multiple
+# processes
+fortfile_open_lock = Lock()
+
 
 class FortranFile(object):
     """
@@ -30,18 +35,20 @@ class FortranFile(object):
         self.close()
 
     def open(self):
-        self._unit = _available_units.pop()
-        unit = _fortfile.fopen(self.filename, uu=self._unit, debug=self.debug)
-        if unit == self._unit:
-            _units_in_use[unit] = True
-        else:
-            raise RuntimeError("Fortran open file didn't return corretly")
+        if self.isopen:
+            raise RuntimeError("Fortran file '{0}' already open"
+                               "".format(self.filename))
+
+        with fortfile_open_lock:
+            self._unit = _fortfile.fopen(self.filename, uu=-1, debug=self.debug)
+
+        if self._unit < 0:
+            raise RuntimeError("Fortran open error ({0}) on '{1}'"
+                               "".format(self._unit, self.filename))
 
     def close(self):
         if self.isopen:
             _fortfile.fclose(self._unit, debug=self.debug)
-            del _units_in_use[self._unit]
-            _available_units.append(self._unit)
             self._unit = -1
 
     def seek(self, offset, whence=0):
