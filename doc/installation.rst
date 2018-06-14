@@ -67,7 +67,7 @@ The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ mak
 Installing Viscid
 -----------------
 
-You have a few choices for installing Viscid. Here is a quick breakdown of why you might choose one method over the another. Notice that installing from anaconda has no cons.
+You have a few choices for installing Viscid. Here is a quick breakdown of why you might choose one method over the another.
 
 + :ref:`Anaconda <choice1-conda>`
 
@@ -167,19 +167,28 @@ Note that in order to use Viscid, you will need to activate the virtual environm
 
 .. code-block:: bash
 
-    source activate viscid36mayavi  # or viscid27, etc.
+    conda activate viscid36mayavi  # or viscid27, etc.
 
-An alternative to activating this environment for each session is to prepend PATH in your profile with
+If you don't want to run ``conda activate ...`` for every virtual terminal, you can place the following in your bashrc or profile,
 
 .. code-block:: bash
 
-    profile="${HOME}/.bashrc"
-    echo "export PATH=~/local/anaconda/envs/viscid27:"'${PATH}' >> ${profile}
-    echo 'export CONDA_DEFAULT_ENV="$(basename "$(cd "$(dirname "$(which python)")/.."; pwd)")"' >> ${profile}
-    echo 'export CONDA_PREFIX="$(cd "$(dirname "$(which python)")/.."; pwd)"' >> ${profile}
-    source ${profile}
+    export _CONDA_ROOT_PREFIX=${HOME}/local/anaconda  # <- point to anaconda install location
+    export CONDA_DEFAULT_ENV=base  # <- edit this to taste
+    # there is no need to edit the following conda stuff directly
+    source ${_CONDA_ROOT_PREFIX}/etc/profile.d/conda.sh
+    export CONDA_SHLVL=1
+    export CONDA_EXE=${_CONDA_ROOT_PREFIX}/bin/conda
+    if [ "${CONDA_DEFAULT_ENV}" = "base" ]; then
+      export CONDA_PREFIX="${_CONDA_ROOT_PREFIX}"
+    else
+      export CONDA_PREFIX="${_CONDA_ROOT_PREFIX}/envs/${CONDA_DEFAULT_ENV}"
+    fi
+    export CONDA_PROMPT_MODIFIER=""
+    export CONDA_PYTHON_EXE="${_CONDA_ROOT_PREFIX}/bin/python"
+    export PATH="${CONDA_PREFIX}/bin:${PATH}"
 
-Now you have two choices about how you want to use Viscid. If you intend to edit viscid then I recommend using it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
+Now you have a choice about how you want to use Viscid. If you intend to edit viscid then I recommend using it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
 
 Choice 3a: installed
 ^^^^^^^^^^^^^^^^^^^^

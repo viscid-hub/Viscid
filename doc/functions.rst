@@ -236,11 +236,11 @@ Function                                         Description
 Mayavi
 ------
 
-Mayavi is the preferred library for making 3D plots with Viscid. It's a little unwieldy, but for the moment, it's still the best Python interface to VTK. Mayavi has two ways to learn how to change details about the objects in a given scene (the documentation reads like somebody was shooting buckshot). The first is to make the change interactively while using the record feature. The other is to throw `import IPython; IPython.embed()` into your script and go spunking. Most Mayavi objects come from Traited VTK, which means they have a `print_traits()` method. This method will print out all the attributes that you may want to tweak, and then some.
+Mayavi is the preferred library for making 3D plots with Viscid. It's a little unwieldy, but for the moment, it's still the best Python interface to VTK. Mayavi has two ways to learn how to change details about the objects in a given scene (the documentation reads like somebody was shooting buckshot). The first is to make the change interactively while using the record feature. The other is to throw `import IPython; IPython.embed()` into your script and go spunking. Most Mayavi objects come from Traited VTK, which means they have a `print_traits()` method. This method will print out all the attributes that you may want to tweak.
 
 .. include:: _mayavi_install_note.rst
 
-Between the :doc:`tutorial/mayavi`, and the functions you see below, you should be able figure out most things without too much hassle.
+Between the :doc:`example <tutorial/mayavi>` and the functions you see below, you should be able figure out most things without too much hassle.
 
 Mayavi Wrappers
 ~~~~~~~~~~~~~~~
