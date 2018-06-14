@@ -1,10 +1,11 @@
 3D Plots (Mayavi)
 =================
 
-This best way to explain how to use Mayavi is by example, so here is the plot
-made by `test_mvi.py` along with some code. If Mayavi is not working for you, check out :doc:`/functions` for a collection of workarounds.
+This best way to explain how to use Mayavi is by example, so here is the Mayavi part of the test suite ``tests/test_mvi.py``. :ref:`Check here <functions-mayavi>` for a discussion of Viscid's wrapper functions and workarounds.
 
-.. include:: ../_mayavi_install_note.rst
+.. note::
+
+    Installing Mayavi can be tricky. Please :ref:`read this <installing-mayavi>` before attempting to install it.
 
 .. image:: ../../tests/ref_plots/mvi-000.png
   :align: center

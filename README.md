@@ -42,7 +42,7 @@ Dependencies:
   + H5py *(enables hdf5 reader)*
 + Optional
   + Seaborn
-  + Mayavi2 *(if you want to make 3d plots using viscid.plot.vlab)*
+  + Mayavi2 <sup id="a1">[[1]](#f1)</sup> *(if you want to make 3d plots using viscid.plot.vlab)*
   + PyYaml *(rc file and plot options can parse using yaml)*
 + Optional for developers
   + Cython >= 0.28 *(if you change pyx / pxd files)*
@@ -50,12 +50,9 @@ Dependencies:
   + sphinx_rtd_theme
   + sphinxcontrib-napoleon *(if Sphinx is <= version 1.2)*
 
-The optional calculator modules (necalc and cycalc) are all dispatched through
-calculator.calc, and it gracefully falls back to numpy implementations if more advanced libraries are not installed.
-
-The jrrle and fortbin readers depend on compiled Fortran code, and the interpolation and streamline functions depend on compiled Cython (C) code.
-
 Detailed installation instructions are [available here](http://viscid-hub.github.io/Viscid-docs/docs/master/installation.html).
+
+<span id="f1">[[1]](#a1)</span> Installing Mayavi can be tricky. Please [read this](http://viscid-hub.github.io/Viscid-docs/docs/master/installation.html#installing-mayavi) before you try to install it.
 
 ## Development ##
 

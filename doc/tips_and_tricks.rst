@@ -1,6 +1,14 @@
 Tips & Tricks
 =============
 
+.. raw:: html
+
+    <style type="text/css">
+    div.topic {
+        border-style: none;
+    }
+    </style>
+
 .. contents::
   :local:
 

@@ -10,6 +10,17 @@ Installation
     }
     </style>
 
+.. raw:: html
+
+    <style type="text/css">
+    div.topic {
+        border-style: none;
+    }
+    </style>
+
+.. contents::
+  :local:
+
 Dependencies
 ------------
 
@@ -30,7 +41,7 @@ Dependencies
 + Optional
 
   + Seaborn
-  + Mayavi2 *(if you want to make 3d plots using viscid.plot.vlab)*
+  + Mayavi2 [#f1]_ *(if you want to make 3d plots using viscid.plot.vlab)*
   + PyYaml *(rc file and plot options can parse using yaml)*
 
 + Optional for developers
@@ -40,13 +51,10 @@ Dependencies
   + sphinx_rtd_theme
   + sphinxcontrib-napoleon *(if Sphinx is <= version 1.2)*
 
-The optional calculator modules (necalc and cycalc) are all dispatched through
-calculator.calc. This dispatch gracefully falls back to numpy implementations if more advanced libraries are not installed.
+.. [#f1] Installing Mayavi can be tricky. Please :ref:`read this section <installing-mayavi>` before attempting to install it.
 
-.. include:: _mayavi_install_note.rst
-
-Installing Anaconda (optional but recommended)
-----------------------------------------------
+Installing Anaconda (optional)
+------------------------------
 
 The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ makes managing dependencies and virtual environments wicked straight forward (and almost pleasant). You can download the full distribution, but it's laden with packages you probably don't need. Also, since ``conda install`` is so easy to use, I recommend the lightweight miniconda:
 
@@ -59,10 +67,31 @@ The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ mak
     fi
     bash miniconda.sh -b -p $HOME/local/anaconda
     rm miniconda.sh
-    source ~/.bashrc
-    hash -r
+    source $HOME/local/anaconda/etc/profile.d/conda.sh
+    conda activate
     conda config --set changeps1 no
     conda update -q conda
+
+You can now add something like this to your bashrc or profile,
+
+.. _conda_bashrc_blurb:
+
+.. code-block:: bash
+
+    export _CONDA_ROOT_PREFIX=${HOME}/local/anaconda  # <- point to anaconda
+    export CONDA_DEFAULT_ENV=base  # <- edit this to taste
+    # there is no need to edit the following lines directly
+    source ${_CONDA_ROOT_PREFIX}/etc/profile.d/conda.sh
+    export CONDA_SHLVL=1
+    export CONDA_EXE=${_CONDA_ROOT_PREFIX}/bin/conda
+    if [ "${CONDA_DEFAULT_ENV}" = "base" ]; then
+      export CONDA_PREFIX="${_CONDA_ROOT_PREFIX}"
+    else
+      export CONDA_PREFIX="${_CONDA_ROOT_PREFIX}/envs/${CONDA_DEFAULT_ENV}"
+    fi
+    export CONDA_PROMPT_MODIFIER=""
+    export CONDA_PYTHON_EXE="${_CONDA_ROOT_PREFIX}/bin/python"
+    export PATH="${CONDA_PREFIX}/bin:${PATH}"
 
 Installing Viscid
 -----------------
@@ -82,16 +111,16 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
 
   - **+**  Install with a single command
   - **+**  No compiler needed for pure python functionality
-  - **-**  Recommended dependencies must be installed by hand
+  - **-**  Recommended dependencies must be explicitly installed
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
 + :ref:`Source <choice3-source>`
 
   - **+**  Most flexible
-  - **+**  Only way to use a development version
-  - **-**  Requires a few commands and some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
-  - **-**  Recommended dependencies must be installed by hand
+  - **+**  Only method that lets you edit Viscid's source code
+  - **-**  Requires some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
+  - **-**  Dependencies must be explicitly installed
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
@@ -129,7 +158,7 @@ Choice 2: `PyPI <http://pypi.org/project/viscid/>`_ (pip)
   :target: https://pypi.org/project/Viscid/
   :alt: PyPI
 
-You can install from source using pip with a single command, but the runtime functionality depends on which compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler. Also, Viscid only lists Numpy as a dependency in pip so that installation will succeed on even the most bare-bones systems. This means you will want to install any of the recommended / optional dependencies yourself.
+You can install from source using pip, but the runtime functionality depends on which compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler.
 
 .. code-block:: bash
 
@@ -151,7 +180,12 @@ First, you'll have to clone the Viscid git repository. This should be done in wh
 .. code-block:: bash
 
     git clone https://github.com/viscid-hub/Viscid.git
+
+    # Optional: set qt5 as the default matplotlib backend
     mkdir -p ~/.config/matplotlib
+    echo "backend: Qt5Agg" >> ~/.config/matplotlib/matplotlibrc
+
+    # Optional: copy the default viscidrc file
     cp Viscid/resources/viscidrc ~/.viscidrc
 
 If you are using Anaconda to manage your dependencies, you can use the default Viscid environment to automatically install all Viscid's dependencies,
@@ -163,32 +197,12 @@ If you are using Anaconda to manage your dependencies, you can use the default V
     # if you need mayavi, but don't have OpenGL 3.2, you
     # will have to use python2.7 (Viscid/resources/viscid27.yml)
 
-Note that in order to use Viscid, you will need to activate the virtual environment that we just created (this needs to be done for each new terminal session),
-
-.. code-block:: bash
-
+    # this activation must be done for each new command prompt
     conda activate viscid36mayavi  # or viscid27, etc.
 
-If you don't want to run ``conda activate ...`` for every virtual terminal, you can place the following in your bashrc or profile,
+:ref:`Read this <conda_bashrc_blurb>` if you need help editing your bashrc or profile to set the default anaconda environment.
 
-.. code-block:: bash
-
-    export _CONDA_ROOT_PREFIX=${HOME}/local/anaconda  # <- point to anaconda install location
-    export CONDA_DEFAULT_ENV=base  # <- edit this to taste
-    # there is no need to edit the following conda stuff directly
-    source ${_CONDA_ROOT_PREFIX}/etc/profile.d/conda.sh
-    export CONDA_SHLVL=1
-    export CONDA_EXE=${_CONDA_ROOT_PREFIX}/bin/conda
-    if [ "${CONDA_DEFAULT_ENV}" = "base" ]; then
-      export CONDA_PREFIX="${_CONDA_ROOT_PREFIX}"
-    else
-      export CONDA_PREFIX="${_CONDA_ROOT_PREFIX}/envs/${CONDA_DEFAULT_ENV}"
-    fi
-    export CONDA_PROMPT_MODIFIER=""
-    export CONDA_PYTHON_EXE="${_CONDA_ROOT_PREFIX}/bin/python"
-    export PATH="${CONDA_PREFIX}/bin:${PATH}"
-
-Now you have a choice about how you want to use Viscid. If you intend to edit viscid then I recommend using it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
+Now you have a choice about how you want to use Viscid. If you intend to edit viscid then I recommend building it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
 
 Choice 3a: installed
 ^^^^^^^^^^^^^^^^^^^^
@@ -233,7 +247,7 @@ Choice 3b: inplace
     echo 'export PYTHONPATH="${PYTHONPATH}:'"${PWD}\"" >> ${profile}
     source ${profile}
 
-To see if the bulid succeeded, try
+To see if the build succeeded, try
 
 .. code-block:: bash
 
@@ -258,8 +272,54 @@ You can always run the following to check for any installation warnings. It is m
 
     python -m viscid --check
 
-Known Workarounds
------------------
+.. _installing-mayavi:
+
+Installing Mayavi (optional)
+----------------------------
+
+.. warning::
+
+    Do **not** install Mayavi using pip into an anaconda environment. This will break your conda environment in a way that requires you to reinstall anaconda. The issue is that pip happily clobbers some parts of pyqt that are hard linked to a cache in conda. You have been warned.
+
+.. note::
+
+    I do not recommend using the ``conda-forge`` channel for VTK or Mayavi because these binaries frequently have runtime problems caused by qt.
+
+Installing Mayavi can be a mine field of incompatible dependencies. To help, here is a table to help you choose your poison. If your environment is not in the table, then it is likely not supported by Mayavi / VTK.
+
+.. cssclass:: table-striped
+
+=============  ==============  ========================  =================================================
+OS             Python Version  OpenGL / MESA             Installation Command
+=============  ==============  ========================  =================================================
+MacOS          3.5+            OpenGL 3.2+               ``conda install -c viscid-hub mayavi``
+MacOS          2.7             OpenGL 3.2+               ``conda install -c viscid-hub mayavi``
+MacOS          2.7             Any                       ``conda install mayavi vtk=6``
+Linux          3.5+            OpenGL 3.2+, MESA 11.2+   ``conda install -c viscid-hub mayavi``
+Linux          2.7             OpenGL 3.2+, MESA 11.2+   ``conda install -c viscid-hub mayavi``
+Linux          2.7             Any                       ``conda install mayavi vtk=6``
+Windows        3.5+            OpenGL 3.2+               ``conda install -c viscid-hub mayavi``
+Windows        2.7             Any                       ``conda install mayavi vtk=6``
+=============  ==============  ========================  =================================================
+
+The Enthought Tool Suite requires some confusing environment variables. Effectively you can just cycle through these options until you find a combination that works.
+
+.. code-block:: bash
+
+    export ETS_TOOLKIT='qt'  # or "qt4" or "wx" for older versions of pyface
+    export QT_API="pyqt5"  # or "pyqt" or "pyside"
+
+Also, if you are using MESA to emulate the new OpenGL API for VTK 7+, you may need the following environment variables,
+
+.. code-block:: bash
+
+    export MESA_GL_VERSION_OVERRIDE=3.2
+    export MESA_GLSL_VERSION_OVERRIDE=150
+
+:ref:`Check here <functions-mayavi>` for a discussion of Viscid's wrapper functions and workarounds, :doc:`and here <tutorial/mayavi>` for an example of Mayavi in action.
+
+Workarounds
+-----------
 
 Ubuntu
 ~~~~~~
@@ -269,8 +329,6 @@ All Linux workarounds are currently incorporated in ``setup.py``.
 OS X
 ~~~~
 
-If you get an abort trap that says ``PyThreadState_Get: no current thread`` when trying to use mayavi, then this is probably yet another anaconda packaging issue. The solution is to roll back to a different sub-release of python. running this did the trick for me: ``conda install python=3.5.3 pyqt=4``.
-
-If you see a link error that says `-lgcc_s.10.5` can't be found, try running::
+If you see a link error that says ``-lgcc_s.10.5`` can't be found, try running::
 
     sudo su root -c "mkdir -p /usr/local/lib && ln -s /usr/lib/libSystem.B.dylib /usr/local/lib/libgcc_s.10.5.dylib"

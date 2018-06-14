@@ -1,6 +1,14 @@
 Useful Functions
 ================
 
+.. raw:: html
+
+    <style type="text/css">
+    div.topic {
+        border-style: none;
+    }
+    </style>
+
 .. contents::
   :local:
 
@@ -233,14 +241,34 @@ Function                                         Description
 :py:func:`viscid.plot.vpyplot.scatter_3d`        Plot a glyphs on 3D axes
 ===============================================  =============================================================
 
+.. _functions-mayavi:
+
 Mayavi
 ------
 
-Mayavi is the preferred library for making 3D plots with Viscid. It's a little unwieldy, but for the moment, it's still the best Python interface to VTK. Mayavi has two ways to learn how to change details about the objects in a given scene (the documentation reads like somebody was shooting buckshot). The first is to make the change interactively while using the record feature. The other is to throw `import IPython; IPython.embed()` into your script and go spunking. Most Mayavi objects come from Traited VTK, which means they have a `print_traits()` method. This method will print out all the attributes that you may want to tweak.
-
-.. include:: _mayavi_install_note.rst
+Mayavi is the preferred library for making 3D plots with Viscid. It's a little unwieldy, but for the moment, it's still the best Python interface to VTK. Mayavi has two ways to discover its API (the documentation is only marginally helpful). The first is to make the change interactively while using the record feature. The other is to throw ``import IPython; IPython.embed()`` into your script and go spelunking. Most Mayavi objects come from Traited VTK, which means they have a ``print_traits()`` method. This method will print out all the attributes that you may want to tweak.
 
 Between the :doc:`example <tutorial/mayavi>` and the functions you see below, you should be able figure out most things without too much hassle.
+
+.. note::
+
+    Installing Mayavi can be tricky. Please :ref:`read this <installing-mayavi>` before attempting to install it.
+
+Mayavi Workarounds
+~~~~~~~~~~~~~~~~~~
+
+Mayavi has various platform specific bugs. The following functions will try to apply workarounds so that they always give the expected result.
+
+.. cssclass:: table-striped
+
+===============================================  =================================================================
+Function                                         Description
+===============================================  =================================================================
+:py:func:`viscid.plot.vlab.clf`                  Uses some hacks to clear a figure and make sure memory is freed
+:py:func:`viscid.plot.vlab.remove_source`        Safely remove a specific vtk source (and its memory)
+:py:func:`viscid.plot.vlab.resize`               default resize is unreliable on OS X / Linux
+:py:func:`viscid.plot.vlab.savefig`              offscreen rendering hack
+===============================================  =================================================================
 
 Mayavi Wrappers
 ~~~~~~~~~~~~~~~
@@ -298,24 +326,6 @@ Function                                         Description
 :py:func:`viscid.plot.vlab.plot_ionosphere`      Plot an ionospheric Field in 3D on the surface of a sphere
 :py:func:`viscid.plot.vlab.plot_blue_marble`     Plot an Earth using the blue marble NASA image
 :py:func:`viscid.plot.vlab.plot_earth_3d`        Plot an Earth with black for nightside and white for dayside
-===============================================  =================================================================
-
-Mayavi Workarounds
-~~~~~~~~~~~~~~~~~~
-
-Mayavi has various platform specific bugs. These will try to apply workarounds so that they always give the expected result. If you see an error at runtime about QT API versions, you may need to set an environment variable::
-
-    export QT_API="pyside"
-
-.. cssclass:: table-striped
-
-===============================================  =================================================================
-Function                                         Description
-===============================================  =================================================================
-:py:func:`viscid.plot.vlab.clf`                  Uses some hacks to clear a figure and make sure memory is freed
-:py:func:`viscid.plot.vlab.remove_source`        Safely remove a specific vtk source (and its memory)
-:py:func:`viscid.plot.vlab.resize`               default resize is unreliable on OS X / Linux
-:py:func:`viscid.plot.vlab.savefig`              offscreen rendering hack
 ===============================================  =================================================================
 
 Mayavi Pipeline
