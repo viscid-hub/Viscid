@@ -19,29 +19,29 @@ Dependencies
   + Python 2.6 and argparse
   + Numpy >= 1.9
 
-+ Highly Recommended
++ Recommended
 
-  + IPython (better interactive interpreter)
-  + Matplotlib >= 1.4 (if you want to make 2d plots using viscid.plot.vpyplot)
-  + Scipy (gives Viscid special powers)
-  + Numexpr (for faster math on large grids)
-  + H5py (enables hdf5 reader)
+  + IPython *(better interactive interpreter)*
+  + Matplotlib >= 1.4 *(if you want to make 2d plots using viscid.plot.vpyplot)*
+  + Scipy *(enables nonlinear interpolation and curve fitting)*
+  + Numexpr *(for faster math on large grids)*
+  + H5py *(enables hdf5 reader)*
 
-+ Truly Optional
++ Optional
 
   + Seaborn
-  + Mayavi2 (if you want to make 3d plots using viscid.plot.vlab)
-  + PyYaml (rc file and plot options can parse using yaml)
+  + Mayavi2 *(if you want to make 3d plots using viscid.plot.vlab)*
+  + PyYaml *(rc file and plot options can parse using yaml)*
 
 + Optional for developers
 
-  + Cython >= 0.28 (if you change pyx / pxd files)
+  + Cython >= 0.28 *(if you change pyx / pxd files)*
   + Sphinx
   + sphinx_rtd_theme
-  + sphinxcontrib-napoleon (if Sphinx is <= version 1.2)
+  + sphinxcontrib-napoleon *(if Sphinx is <= version 1.2)*
 
 The optional calculator modules (necalc and cycalc) are all dispatched through
-calculator.calc, and it gracefully falls back to numpy implementations if more advanced libraries are not installed.
+calculator.calc. This dispatch gracefully falls back to numpy implementations if more advanced libraries are not installed.
 
 .. include:: _mayavi_install_note.rst
 
@@ -67,17 +67,18 @@ The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ mak
 Installing Viscid
 -----------------
 
-You have a few choices for installing Viscid. Here is a quick breakdown of why you might choose one method over the another,
+You have a few choices for installing Viscid. Here is a quick breakdown of why you might choose one method over the another. Notice that installing from anaconda has no cons.
 
-+ `Anaconda <http://anaconda.org>`_
++ :ref:`Anaconda <choice1-conda>`
 
   - **+**  Install with a single command
   - **+**  No compiler needed
   - **+**  Available for macOS, Linux, and Windows
-  - **+**  Automatically installs dependencies
-  - **-**  Lacks jrrle file support
+  - **+**  Automatically installs recommended dependencies
+  - **+**  Optional dependencies are equally easy to install
+  - **-**  You won't be able to edit Viscid's source code. You might naively edit the modules in site-packages, but this will confuse the conda package manager beyond repair.
 
-+ PyPI (pip)
++ :ref:`PyPI (pip) <choice2-pypi>`
 
   - **+**  Install with a single command
   - **+**  No compiler needed for pure python functionality
@@ -85,17 +86,19 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
-+ Source
++ :ref:`Source <choice3-source>`
 
-  - **+**  Most flexable
+  - **+**  Most flexible
   - **+**  Only way to use a development version
   - **-**  Requires a few commands and some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
   - **-**  Recommended dependencies must be installed by hand
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
-Choice 1: `Anaconda <http://anaconda.org>`_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _choice1-conda:
+
+Choice 1: `Anaconda <http://anaconda.org/viscid-hub/viscid>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: https://anaconda.org/viscid-hub/viscid/badges/version.svg
   :target: https://anaconda.org/viscid-hub/viscid
@@ -117,18 +120,16 @@ You can check that the install succeeded by running,
 
     python -m viscid --check
 
-.. attention::
+.. _choice2-pypi:
 
-    The binaries unloaded to anaconda lack support for reading jrrle files. If you need this, you will need to install from source (using pip or otherwise) and have a Fortran compiler.
-
-Choice 2: PyPI (pip)
-~~~~~~~~~~~~~~~~~~~~
+Choice 2: `PyPI <http://pypi.org/project/viscid/>`_ (pip)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. image:: https://img.shields.io/pypi/v/Viscid.svg
   :target: https://pypi.org/project/Viscid/
   :alt: PyPI
 
-You can install from source using pip with a single command, but the functionality depends on what compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler. Also, Viscid only lists Numpy as a dependency in pip so that installation will succeed on even the most bare-bones systems. This means you will want to install any of the recommended / optional dependencies yourself.
+You can install from source using pip with a single command, but the runtime functionality depends on which compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler. Also, Viscid only lists Numpy as a dependency in pip so that installation will succeed on even the most bare-bones systems. This means you will want to install any of the recommended / optional dependencies yourself.
 
 .. code-block:: bash
 
@@ -140,10 +141,12 @@ Compile errors will not cause Viscid's pip install to fail, and pip hides warnin
 
     python -m viscid --check
 
+.. _choice3-source:
+
 Choice 3: Source
 ~~~~~~~~~~~~~~~~
 
-First, you'll have to clone the Viscit git repository. This should be done in whatever directory you want to store the Viscid source code. I use ``~/src`` myself.
+First, you'll have to clone the Viscid git repository. This should be done in whatever directory you want to store the Viscid source code. I use ``~/src`` myself.
 
 .. code-block:: bash
 
@@ -155,15 +158,16 @@ If you are using Anaconda to manage your dependencies, you can use the default V
 
 .. code-block:: bash
 
-    conda env create -f Viscid/resources/viscid27.yml
-    # for the more adventurous, you can try python 3.5
-    conda env create -f Viscid/resources/viscid35mayavi.yml
+    conda env create -f Viscid/resources/viscid36mayavi.yml
+
+    # if you need mayavi, but don't have OpenGL 3.2, you
+    # will have to use python2.7 (Viscid/resources/viscid27.yml)
 
 Note that in order to use Viscid, you will need to activate the virtual environment that we just created (this needs to be done for each new terminal session),
 
 .. code-block:: bash
 
-    source activate viscid27  # or viscid35mayavi, etc.
+    source activate viscid36mayavi  # or viscid27, etc.
 
 An alternative to activating this environment for each session is to prepend PATH in your profile with
 
