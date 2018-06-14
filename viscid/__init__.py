@@ -156,6 +156,7 @@ def check_version():
     print()
     print("Viscid version:", __version__)
     print()
+    print("Python version:", sys.version)
     try:
         import matplotlib
         print("Matplotlib version:", matplotlib.__version__)
