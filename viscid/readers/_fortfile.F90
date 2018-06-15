@@ -12,7 +12,7 @@
     integer status
     !f2py intent(in) unit
     !f2py intent(in) offset
-    !f2py intent(in),optional whence=0
+    !f2py integer optional, intent(in) :: whence=0
     !f2py intent(out) status
     !Non-zero exit status on exit if this routine fails
     status = -1
