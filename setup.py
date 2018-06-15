@@ -124,6 +124,22 @@ fort_defs.append(["viscid.readers._jrrle",
 ############################################################################
 # below this line shouldn't need to be changed except for version and stuff
 
+# hack for gfortran / conda-build on macOS
+if sys.platform == 'darwin':
+    if 'LDFLAGS' in os.environ or 'CONDA_BUILD_STATE' in os.environ:
+        mandatory_flags = ['-undefined dynamic_lookup', '-bundle']
+        for flag in mandatory_flags:
+            if flag not in os.environ.get('LDFLAGS', ''):
+                fort_ldflags.append(flag)
+
+# fix fortran build on linux with conda's gfortran
+if sys.platform[:5] == 'linux':
+    if 'LDFLAGS' in os.environ or 'CONDA_BUILD_STATE' in os.environ:
+        mandatory_flags = ['-shared']
+        for flag in mandatory_flags:
+            if flag not in os.environ.get('LDFLAGS', ''):
+                fort_ldflags.append(flag)
+
 # FIXME: these should be distutils commands, but they're not
 try:
     i = sys.argv.index("dev")
@@ -421,22 +437,6 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
     except (CalledProcessError, OSError):
         print("I think there's a problem with your compiler ( CC =", cc,
               "), but I'll continue anyway...")
-
-# hack for gfortran / conda-build on macOS
-if sys.platform == 'darwin':
-    if 'LDFLAGS' in os.environ:
-        mandatory_flags = ['-undefined dynamic_lookup', '-bundle']
-        for flag in mandatory_flags:
-            if flag not in os.environ['LDFLAGS']:
-                os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + ' ' + flag
-
-# fix fortran build on linux with conda's gfortran
-if sys.platform == 'linux':
-    if 'LDFLAGS' in os.environ:
-        mandatory_flags = ['-shared']
-        for flag in mandatory_flags:
-            if flag not in os.environ['LDFLAGS']:
-                os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + ' ' + flag
 
 
 def get_viscid_version(init_py):

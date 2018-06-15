@@ -230,7 +230,7 @@ def check():
     except Exception as e:
         print("Cython module has runtime errors.")
         print(str(e))
-        ret += 5
+        ret |= (1 << 0)
     print()
 
     ####################################
@@ -243,6 +243,7 @@ def check():
     except Exception as e:
         print("Fortran module has runtime errors.")
         print(str(e))
+        ret |= (1 << 1)
     print()
 
     return ret
