@@ -140,6 +140,25 @@ if sys.platform[:5] == 'linux':
             if flag not in os.environ.get('LDFLAGS', ''):
                 fort_ldflags.append(flag)
 
+# hack to use proper flags for python2.7 / numpy 1.11 windows conda-forge build
+if (sys.platform[:3] == 'win' and sys.version_info[:2] == (2, 7)
+    and 'CONDA_BUILD_STATE' in os.environ):
+    mandatory_fcflags = ['-O3', '-funroll-loops']
+    for flag in mandatory_fcflags:
+        fort_fcflags.append(flag)
+    mandatory_fflags = ['-Wl,--allow-multiple-definition',
+                        '-Wl,--export-all-symbols',
+                        '-static', '-mlong-double-64']
+    for flag in mandatory_fflags:
+        fort_ldflags.append(flag)
+
+# hack to remove bad path for python2.7 / numpy 1.11 linux conda-forge build
+if sys.platform[:5] == 'linux' and 'CONDA_BUILD_STATE' in os.environ:
+    bad_path = os.path.join('opt', 'rh', 'devtoolset-2', 'root', 'usr', 'bin')
+    split_path = os.environ.get("PATH", "").split(os.pathsep)
+    split_path = [pth for pth in split_path if bad_path not in pth]
+    os.environ["PATH"] = os.pathsep.join(split_path)
+
 # FIXME: these should be distutils commands, but they're not
 try:
     i = sys.argv.index("dev")
