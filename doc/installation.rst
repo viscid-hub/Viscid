@@ -68,9 +68,9 @@ The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ mak
     bash miniconda.sh -b -p $HOME/local/anaconda
     rm miniconda.sh
     source $HOME/local/anaconda/etc/profile.d/conda.sh
-    conda activate
     conda config --set changeps1 no
     conda update -q conda
+    conda activate
 
 You can now add something like this to your bashrc or profile,
 
