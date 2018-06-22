@@ -58,6 +58,8 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.5, 0.75),
             underlying alpha from the handle's color.
         n_candidates (int): number of potential label locations to
             consider for each data series.
+        ignore_filling (bool): if True, then assume it's ok to place
+            labels inside paths that are filled with color
         _debug (bool): Mark up all possible label locations
         **kwargs: passed to plt.annotate
 
