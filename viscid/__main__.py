@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # pylint: disable=unused-import,wildcard-import,unused-wildcard-import
 from __future__ import print_function
+import os
 import sys
 
 if '--version' in sys.argv or 'version' in sys.argv:

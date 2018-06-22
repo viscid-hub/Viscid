@@ -12,7 +12,7 @@
     integer status
     !f2py intent(in) unit
     !f2py intent(in) offset
-    !f2py intent(in),optional whence=0
+    !f2py integer optional, intent(in) :: whence=0
     !f2py intent(out) status
     !Non-zero exit status on exit if this routine fails
     status = -1
@@ -23,7 +23,7 @@
     read(unit,'()',ADVANCE='NO',POS=offset,IOSTAT=status)
 #endif
     return
-    
+
   end subroutine seek
 
   subroutine tell(unit,offset)
@@ -34,7 +34,7 @@
     !f2py intent(out) offset
     offset = -1
 
-#ifdef HAVE_FTELL    
+#ifdef HAVE_FTELL
     call ftell(unit,offset)
 #else
     inquire(UNIT=unit,POS=offset)
@@ -64,7 +64,7 @@
 
     !look for a free file unit
     do i=10,10000
-       if((i.ge.100) .and. (i.le.102))then 
+       if((i.ge.100) .and. (i.le.102))then
           !some implementations reserve these units
           cycle
        endif
@@ -74,7 +74,7 @@
           exit
        endif
     enddo
-    
+
   end subroutine freefileunit
 
   subroutine frewind(funit,debug)
@@ -113,6 +113,7 @@
     integer debug
     !f2py integer optional debug=0
     logical isopen
+    integer openstat
     character*10 access_method
 
 #ifdef HAVE_STREAM
@@ -129,7 +130,12 @@
     endif
 
     call freefileunit(uu,funit)
-    open(unit=funit,file=fname,status='UNKNOWN',form='FORMATTED',access=access_method)
+    open(unit=funit,file=fname,status='UNKNOWN',form='FORMATTED',access=access_method,IOSTAT=openstat)
+
+    if (openstat.ne.0) then
+      funit = -1 * openstat
+    endif
+
     if(debug.gt.0) print*,"opened file:",fname
     if(debug.gt.0) print*,"associated unit:",funit
     if(debug.gt.0) print*,"access method:",access_method

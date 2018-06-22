@@ -3,6 +3,15 @@ Plot Options
 
 Plot options are given to :py:func:`viscid.plot.vpyplot.plot` as either keyword arguments, or as a string called `plot_opts`. For the various plot types, what follows should be a comprehensive list of the available options.
 
+.. raw:: html
+
+    <style type="text/css">
+    div.topic {
+        border-style: none;
+        padding-bottom: 6pt;
+    }
+    </style>
+
 .. contents::
   :local:
 
@@ -37,7 +46,7 @@ All options can be passed as strings with one of two formats. First, the string 
 Known Issues
 ------------
 
-Since Viscid switched to using image axes by default, it has exposed some undesired behavior in matplotlib. Namely, if you call tight_layout, tighten, or auto_adjust_subplots more than once for a figure, then some of the subplots dissapear. The solution is to only call tight_layout once per figure.
+Since Viscid switched to using image axes by default, it has exposed some undesired behavior in matplotlib. Namely, if you call :py:func:`pyplot.tight_layout`, :py:func:`viscid.plot.vpyplot.tighten`, or :py:func:`viscid.plot.vpyplot.auto_adjust_subplots` more than once for a figure, then some of the subplots dissapear. The solution is to **only call these functions once per figure**.
 
 Universal
 ---------

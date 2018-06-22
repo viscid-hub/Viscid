@@ -112,7 +112,7 @@ def lines2source(lines, scalars=None, name="NoName"):
     r = viscid.vutil.prepare_lines(lines, scalars, do_connections=True)
     lines, scalars, connections, other = r
 
-    src = mlab.pipeline.scalar_scatter(lines[0], lines[1], lines[2])
+    src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
     if scalars is not None:
         if scalars.dtype == np.dtype('u1'):
             sc = tvtk.UnsignedCharArray()
@@ -1338,9 +1338,13 @@ def resize(size, figure=None):
                                   "creating the figure with viscid.plot.vlab."
                                   "figure(size=(w, h), offscreen=True)")
         else:
-            toolkit = mayavi.ETSConfig.toolkit
+            try:
+                _ets_config = mayavi.ETSConfig
+            except AttributeError:
+                from traits.etsconfig.api import ETSConfig as _ets_config
+            toolkit = _ets_config.toolkit
 
-            if toolkit == 'qt4':
+            if toolkit in ('qt', 'qt4'):
                 sc = figure.scene
                 window_height = sc.control.parent().size().height()
                 render_height = sc.render_window.size[1]

@@ -26,7 +26,8 @@ from matplotlib import pyplot as plt
 def apply_labels(labels=None, colors=None, ax=None, magnet=(0.5, 0.75),
                  magnetcoords="axes fraction", padding=None,
                  paddingcoords="offset points", choices="00:02:20:22",
-                 n_candidates=32, ignore_filling=False, _debug=False, **kwargs):
+                 n_candidates=32, ignore_filling=False, spacing='linear',
+                 _debug=False, **kwargs):
     """Apply labels directly to series in liu of a legend
 
     The `choices` offsets are as follows::
@@ -58,6 +59,10 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.5, 0.75),
             underlying alpha from the handle's color.
         n_candidates (int): number of potential label locations to
             consider for each data series.
+        ignore_filling (bool): if True, then assume it's ok to place
+            labels inside paths that are filled with color
+        spacing (str): one of 'linear' or 'random' to specify how far
+            apart candidate locations are spaced along path segments
         _debug (bool): Mark up all possible label locations
         **kwargs: passed to plt.annotate
 
@@ -69,6 +74,20 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.5, 0.75),
 
     if isinstance(colors, (list, tuple)):
         pass
+
+    spacing = spacing.strip().lower()
+    if spacing not in ('linear', 'random'):
+        raise ValueError("Spacing '{0}' not understood".format(spacing))
+    rand_state = np.random.get_state() if spacing == 'random' else None
+    if rand_state is not None:
+        # save the RNG state to restore it later so that plotting functions
+        # don't change the results of scripts that use random numbers
+        np.random.seed(1)
+
+    _xl, _xh = ax.get_xlim()
+    _yl, _yh = ax.get_ylim()
+    axbb0 = np.array([_xl, _yl]).reshape(1, 2)
+    axbb1 = np.array([_xh, _yh]).reshape(1, 2)
 
     # choices:: "01:02:22" -> [(0, 1), (0, 2), (2, 2)]
     choices = [(int(c[0]), int(c[1])) for c in choices.split(':')]
@@ -188,18 +207,51 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.5, 0.75),
             verts = [p.vertices for p in hand.get_paths()]
             verts = np.concatenate(verts, axis=0)
 
-        # resample the path of the current handle to get some candidate
-        # locations for the label along the path
-        s_src = np.linspace(0, 1, verts.shape[0])
-        # shape is [i_candidate, value: [x, y]], corner: [lower left, upper right]
-        s_dest = np.linspace(0, 1, n_candidates)
-        root_dat = np.zeros([n_candidates, 2], dtype='f')
-        root_px = np.zeros([n_candidates, 2], dtype='f')
+        segl_dat = verts[:-1, :]
+        segh_dat = verts[1:, :]
 
-        root_dat[:, 0] = np.interp(s_dest, s_src, verts[:, 0])
-        root_dat[:, 1] = np.interp(s_dest, s_src, verts[:, 1])
+        # take out path segments that have one vertex outside the view
+        _seg_mask = np.all(np.bitwise_and(segl_dat >= axbb0, segl_dat <= axbb1)
+                           & np.bitwise_and(segh_dat >= axbb0, segh_dat <= axbb1),
+                           axis=1)
+        segl_dat = segl_dat[_seg_mask, :]
+        segh_dat = segh_dat[_seg_mask, :]
 
-        root_px[:, :] = ax.transData.transform(root_dat)
+        if np.prod(segl_dat.shape) == 0:
+            print("no full segments are visible, skipping path", i, hand)
+            continue
+
+        segl_px = ax.transData.transform(segl_dat)
+        segh_px = ax.transData.transform(segh_dat)
+        seglen_px = np.linalg.norm(segh_px - segl_px, axis=1)
+
+        # take out path segments that are 0 pixels in length
+        _non0_seg_mask = seglen_px > 0
+        segl_dat = segl_dat[_non0_seg_mask, :]
+        segh_dat = segh_dat[_non0_seg_mask, :]
+        segl_px = segl_px[_non0_seg_mask, :]
+        segh_px = segh_px[_non0_seg_mask, :]
+        seglen_px = seglen_px[_non0_seg_mask]
+
+        if np.prod(segl_dat.shape) == 0:
+            print("no non-0 segments are visible, skipping path", i, hand)
+            continue
+
+        # i deeply appologize for how convoluted this got, but the punchline
+        # is that each line segment gets candidates proportinal to their
+        # length in pixels on the figure
+        s_src = np.concatenate([[0], np.cumsum(seglen_px)])
+        if rand_state is not None:
+            s_dest = s_src[-1] * np.sort(np.random.rand(n_candidates))
+        else:
+            s_dest = np.linspace(0, s_src[-1], n_candidates)
+        _diff = s_dest.reshape(1, -1) - s_src.reshape(-1, 1)
+        iseg = np.argmin(np.ma.masked_where(_diff <= 0, _diff), axis=0)
+        frac = (s_dest - s_src[iseg]) / seglen_px[iseg]
+
+        root_dat = (segl_dat[iseg]
+                    + frac.reshape(-1, 1) * (segh_dat[iseg] - segl_dat[iseg]))
+        root_px = ax.transData.transform(root_dat)
 
         # estimate the width and height of the label's text
         txt_size = np.array(estimate_text_size_px(label, fig=ax.figure,
@@ -297,6 +349,10 @@ def apply_labels(labels=None, colors=None, ax=None, magnet=(0.5, 0.75),
                         xytext=xy_txt_offset, textcoords="offset pixels",
                         color=color, **kwargs)
         annotations.append(a)
+
+    if rand_state is not None:
+        np.random.set_state(rand_state)
+
     return annotations
 
 def text_size_points(size=None, fontproperties=None):
@@ -478,13 +534,45 @@ def _test1():
     # plt.plot(x, series2, color='#7ABA7A', alpha=0.7, lw=3, label="Series 2")
     apply_labels(choices="02", magnet=(0.5, 0.0), alpha=None, _debug=True)
     plt.show()
+    return 0
 
+def _test2():
+    t = np.linspace(20, 40, 128)
+    y = np.cos(2 * np.pi * t / 3)
+    plt.plot(t, y, '.-', label='wave')
+    plt.gca().set_xlim(27, 33)
+    plt.gca().set_ylim(-0.8, 0.8)
+    apply_labels(n_candidates=40, choices="02", _debug=True)
+    plt.show()
+    return 0
+
+def _test3():
+    t = np.logspace(np.log10(1e0), np.log10(1e4), 128)
+    y = np.cos(2 * np.pi * np.sqrt(t) / 3)
+    plt.plot(t, y, '.-', label='wave')
+    # plt.gca().set_ylim(-0.8, 0.8)
+    plt.gca().set_xscale('log')
+    apply_labels(n_candidates=40, choices="02", _debug=True)
+    plt.show()
+    return 0
+
+def _test4():
+    t = np.logspace(np.log10(1e0), np.log10(1e4), 32)
+    y = np.cos(2 * np.pi * np.sqrt(t) / 3)
+    plt.plot(t, y, '.-', label='wave')
+    # plt.gca().set_ylim(-0.8, 0.8)
+    plt.gca().set_xscale('log')
+    apply_labels(n_candidates=40, choices="02", spacing='random', _debug=True)
+    plt.show()
     return 0
 
 def _main():
     errcode0 = _test0()
     errcode1 = _test1()
-    return errcode1 + errcode0
+    errcode2 = _test2()
+    errcode3 = _test3()
+    errcode4 = _test4()
+    return errcode0 + errcode1 + errcode2 + errcode3 + errcode4
 
 if __name__ == "__main__":
     sys.exit(_main())

@@ -111,18 +111,53 @@ cy_defs.append(["viscid.cython.cyamr",
 
 fort_fcflags = []
 fort_ldflags = []
+
 fort_defs = []
-fort_defs.append(["viscid.readers._fortfile",
-                  ["viscid/readers/_fortfile.F90"],
-                  dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
-                 ])
+# These fortran sources are compiled into the same python module since
+# they pass an open file unit back and forth. This doesn't seem to work
+# between python modules on windows.
 fort_defs.append(["viscid.readers._jrrle",
-                  ["viscid/readers/_jrrle.f90"],
+                  ["viscid/readers/_fortfile.F90", "viscid/readers/_jrrle.f90"],
                   dict(define_macros=[("FSEEKABLE", 1), ("HAVE_STREAM", 1)])
                  ])
 
 ############################################################################
 # below this line shouldn't need to be changed except for version and stuff
+
+# hack for gfortran / conda-build on macOS
+if sys.platform == 'darwin':
+    if 'LDFLAGS' in os.environ or 'CONDA_BUILD_STATE' in os.environ:
+        mandatory_flags = ['-undefined dynamic_lookup', '-bundle']
+        for flag in mandatory_flags:
+            if flag not in os.environ.get('LDFLAGS', ''):
+                fort_ldflags.append(flag)
+
+# fix fortran build on linux with conda's gfortran
+if sys.platform[:5] == 'linux':
+    if 'LDFLAGS' in os.environ or 'CONDA_BUILD_STATE' in os.environ:
+        mandatory_flags = ['-shared']
+        for flag in mandatory_flags:
+            if flag not in os.environ.get('LDFLAGS', ''):
+                fort_ldflags.append(flag)
+
+# hack to use proper flags for python2.7 / numpy 1.11 windows conda-forge build
+if (sys.platform[:3] == 'win' and sys.version_info[:2] == (2, 7)
+    and 'CONDA_BUILD_STATE' in os.environ):
+    mandatory_fcflags = ['-O3', '-funroll-loops']
+    for flag in mandatory_fcflags:
+        fort_fcflags.append(flag)
+    mandatory_fflags = ['-Wl,--allow-multiple-definition',
+                        '-Wl,--export-all-symbols',
+                        '-static', '-mlong-double-64']
+    for flag in mandatory_fflags:
+        fort_ldflags.append(flag)
+
+# hack to remove bad path for python2.7 / numpy 1.11 linux conda-forge build
+if sys.platform[:5] == 'linux' and 'CONDA_BUILD_STATE' in os.environ:
+    bad_path = os.path.join('opt', 'rh', 'devtoolset-2', 'root', 'usr', 'bin')
+    split_path = os.environ.get("PATH", "").split(os.pathsep)
+    split_path = [pth for pth in split_path if bad_path not in pth]
+    os.environ["PATH"] = os.pathsep.join(split_path)
 
 # FIXME: these should be distutils commands, but they're not
 try:
@@ -230,7 +265,7 @@ def clean_other_so_files(valid_so_list, dry_run=False):
         for root, _, files in os.walk(cwd, topdown=False):
             for name in files:
                 name = os.path.join(root, name)
-                if name.endswith('.so') and name not in valid_so_list:
+                if name.endswith(('.so', '.pyd')) and name not in valid_so_list:
                     if os.path.isfile(name):
                         print('removing other: %s' % name)
                         if not dry_run:
@@ -257,7 +292,8 @@ class Clean(clean):
             so_file_list.append(os.path.abspath(fn))
         clean_other_so_files(so_file_list, self.dry_run)
 
-        for other_dir in ['dist', 'Viscid.egg-info']:
+        _libs_dir = os.path.join('viscid', '.libs')
+        for other_dir in ['dist', 'Viscid.egg-info', _libs_dir]:
             other_dir = os.path.join(os.path.dirname(__file__), other_dir)
             if os.path.isdir(other_dir):
                 print("removing '{0}/'".format(other_dir))
@@ -295,6 +331,11 @@ class BuildExt(build_ext):
         build_ext_ran = True
         try:
             build_ext.run(self, *args, **kwargs)
+            # copy the weird extra dll dir on windows (fortran)
+            flibdll_dir = os.path.join(self.build_lib, 'viscid', '.libs')
+            if os.path.isdir(flibdll_dir):
+                self.copy_tree(flibdll_dir, os.path.join(os.path.dirname(__file__),
+                                                         'viscid', '.libs'))
         except Exception as e:
             global build_ext_failed
             build_ext_failed = True
@@ -416,18 +457,6 @@ if sys.platform == "darwin" and "-arch" in sysconfig.get_config_var("CFLAGS"):
         print("I think there's a problem with your compiler ( CC =", cc,
               "), but I'll continue anyway...")
 
-# hack for gfortran / conda-build on macOS
-if sys.platform == 'darwin':
-    if 'LDFLAGS' in os.environ:
-        our_ld_flags = " -undefined dynamic_lookup -bundle"
-        os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + our_ld_flags
-
-# # this totally doesn't work to fix fortran build issues in circleci
-# if sys.platform == 'linux':
-#     if 'LDFLAGS' in os.environ:
-#         our_ld_flags = " -shared"
-#         os.environ['LDFLAGS'] = os.environ['LDFLAGS'] + our_ld_flags
-
 
 def get_viscid_version(init_py):
     with io.open(init_py, 'r', encoding="utf-8") as f:
@@ -456,7 +485,7 @@ try:
     with open("README.md", "r") as fh:
         long_description = fh.read()
 
-    setup(name='Viscid',
+    setup(name='viscid',
           version=version,
           description='Visualize data on structured meshes in python',
           long_description=long_description,

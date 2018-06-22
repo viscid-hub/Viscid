@@ -28,7 +28,7 @@ from viscid import _rc
 from viscid.compat.vimportlib import import_module
 
 
-__version__ = """0.99.7"""
+__version__ = """0.99.8"""
 
 __all__ = ['amr_field',
            'amr_grid',
@@ -59,6 +59,10 @@ __all__ = ['amr_field',
            'readers',
           ]
 
+# weird windows fortran build artifact that has to be in the path
+extra_dll_dir = os.path.join(os.path.dirname(__file__), ".libs")
+if os.path.isdir(extra_dll_dir):
+    os.environ["PATH"] += os.pathsep + extra_dll_dir
 
 #########################################
 # setup logger for use throughout viscid
@@ -152,6 +156,7 @@ def check_version():
     print()
     print("Viscid version:", __version__)
     print()
+    print("Python version:", sys.version)
     try:
         import matplotlib
         print("Matplotlib version:", matplotlib.__version__)
@@ -225,7 +230,7 @@ def check():
     except Exception as e:
         print("Cython module has runtime errors.")
         print(str(e))
-        ret += 5
+        ret |= (1 << 0)
     print()
 
     ####################################
@@ -238,6 +243,7 @@ def check():
     except Exception as e:
         print("Fortran module has runtime errors.")
         print(str(e))
+        ret |= (1 << 1)
     print()
 
     return ret
