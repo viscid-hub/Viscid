@@ -283,7 +283,7 @@ Installing Mayavi (optional)
 
 .. note::
 
-    I do not recommend using the ``conda-forge`` channel for VTK or Mayavi because these binaries frequently have runtime problems caused by qt.
+    I do not recommend using the ``conda-forge`` channel for VTK or Mayavi. These binaries frequently have runtime problems caused by interactions with specific versions of vtk / pyqt.
 
 Installing Mayavi can be a mine field of incompatible dependencies. To help, here is a table to help you choose your poison. If your environment is not in the table, then it is likely not supported by Mayavi / VTK.
 
