@@ -199,9 +199,9 @@ If you are using Anaconda to manage your dependencies, you can use the default V
 
 :ref:`Read this <conda_bashrc_blurb>` if you need help editing your bashrc or profile to set the default Anaconda environment.
 
-Viscid should work with native compiler toolchains, but in case you don't have access to native compilers, the Anaconda toolchains should work too. `Check here <https://conda.io/docs/user-guide/tasks/build-packages/compiler-tools.html>`_ to find the appropriate packages for your platform. On Windows, you should use the MSVC compiler and Anaconda's ``m2w64-gcc-fortran``. `Read this <https://wiki.python.org/moin/WindowsCompilers>`_ for more information about acquiring the correct Microsoft compiler. If you are using CPython 3.5 or 3.6, you probably need MSVC 14 compiler, `available here <https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017>`_. You do **not** need to install visual studio to get the build tools.
+Viscid should work with native compiler toolchains, but in case you don't have access to native compilers, the Anaconda toolchains should work too. `Check here <https://conda.io/docs/user-guide/tasks/build-packages/compiler-tools.html>`_ to find the appropriate packages for your platform. On Windows, you should use the MSVC compiler and Anaconda's ``m2w64-gcc-fortran``. `Read this <https://wiki.python.org/moin/WindowsCompilers>`_ for more information about acquiring the correct Microsoft compiler. If you are using CPython 3.5 or 3.6, you probably need the MSVC 14 compiler `available here <https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017>`_. You do **not** need to install visual studio to get the build tools.
 
-Now you have a choice about how you want to use Viscid. If you intend to edit viscid then I recommend building it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
+Now you have a choice about how you want to use Viscid. If you intend to edit Viscid's source code, then I recommend building it inplace. Otherwise, it probably makes more sense to simply install Viscid into your python distribution.
 
 Choice 3a: installed
 ^^^^^^^^^^^^^^^^^^^^

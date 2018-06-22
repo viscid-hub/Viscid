@@ -1,10 +1,13 @@
 Changes
 -------
 
-0.99.8.dev0
-===========
+0.99.8
+======
 
-
+  - apply_labels works if parts of paths are not visible
+  - apply_labels candidate locations are governed by path segment length in pixels
+  - mayavi 4.6.0 fixes
+  - conda install now includes jrrle reader on all platforms
 
 0.99.7
 ======
