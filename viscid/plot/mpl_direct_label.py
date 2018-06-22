@@ -534,13 +534,45 @@ def _test1():
     # plt.plot(x, series2, color='#7ABA7A', alpha=0.7, lw=3, label="Series 2")
     apply_labels(choices="02", magnet=(0.5, 0.0), alpha=None, _debug=True)
     plt.show()
+    return 0
 
+def _test2():
+    t = np.linspace(20, 40, 128)
+    y = np.cos(2 * np.pi * t / 3)
+    plt.plot(t, y, '.-', label='wave')
+    plt.gca().set_xlim(27, 33)
+    plt.gca().set_ylim(-0.8, 0.8)
+    apply_labels(n_candidates=40, choices="02", _debug=True)
+    plt.show()
+    return 0
+
+def _test3():
+    t = np.logspace(np.log10(1e0), np.log10(1e4), 128)
+    y = np.cos(2 * np.pi * np.sqrt(t) / 3)
+    plt.plot(t, y, '.-', label='wave')
+    # plt.gca().set_ylim(-0.8, 0.8)
+    plt.gca().set_xscale('log')
+    apply_labels(n_candidates=40, choices="02", _debug=True)
+    plt.show()
+    return 0
+
+def _test4():
+    t = np.logspace(np.log10(1e0), np.log10(1e4), 32)
+    y = np.cos(2 * np.pi * np.sqrt(t) / 3)
+    plt.plot(t, y, '.-', label='wave')
+    # plt.gca().set_ylim(-0.8, 0.8)
+    plt.gca().set_xscale('log')
+    apply_labels(n_candidates=40, choices="02", spacing='random', _debug=True)
+    plt.show()
     return 0
 
 def _main():
     errcode0 = _test0()
     errcode1 = _test1()
-    return errcode1 + errcode0
+    errcode2 = _test2()
+    errcode3 = _test3()
+    errcode4 = _test4()
+    return errcode0 + errcode1 + errcode2 + errcode3 + errcode4
 
 if __name__ == "__main__":
     sys.exit(_main())
