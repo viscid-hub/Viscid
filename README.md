@@ -52,7 +52,7 @@ Dependencies:
 
 Detailed installation instructions are [available here](http://viscid-hub.github.io/Viscid-docs/docs/master/installation.html).
 
-<span id="f1">[[1]](#a1)</span> Installing Mayavi can be tricky. Please [read this](http://viscid-hub.github.io/Viscid-docs/docs/master/installation.html#installing-mayavi) before you try to install it.
+<a id="f1">[[1]](#a1)</a> Installing Mayavi can be tricky. Please [read this](http://viscid-hub.github.io/Viscid-docs/docs/master/installation.html#installing-mayavi) before you try to install it.
 
 ## Development ##
 
