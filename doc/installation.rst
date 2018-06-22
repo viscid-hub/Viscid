@@ -26,14 +26,14 @@ Dependencies
 
 + Required
 
-  + Python 2.7+ or 3.3+
-  + Python 2.6 and argparse
-  + Numpy >= 1.9
+  + Python 2.6, 2.7, or 3.3+
+  + Numpy 1.9+
+  + Argparse (Python 2.6 only)
 
 + Recommended
 
   + IPython *(better interactive interpreter)*
-  + Matplotlib >= 1.4 *(if you want to make 2d plots using viscid.plot.vpyplot)*
+  + Matplotlib 1.4+ *(if you want to make 2d plots using viscid.plot.vpyplot)*
   + Scipy *(enables nonlinear interpolation and curve fitting)*
   + Numexpr *(for faster math on large grids)*
   + H5py *(enables hdf5 reader)*
@@ -46,10 +46,8 @@ Dependencies
 
 + Optional for developers
 
-  + Cython >= 0.28 *(if you change pyx / pxd files)*
-  + Sphinx
-  + sphinx_rtd_theme
-  + sphinxcontrib-napoleon *(if Sphinx is <= version 1.2)*
+  + Cython 0.28+ *(if you change pyx / pxd files)*
+  + Sphinx 1.3+
 
 .. [#f1] Installing Mayavi can be tricky. Please :ref:`read this section <installing-mayavi>` before attempting to install it.
 
@@ -96,11 +94,11 @@ You can now add something like this to your bashrc or profile,
 Installing Viscid
 -----------------
 
-You have a few choices for installing Viscid. Here is a quick breakdown of why you might choose one method over the another.
+You have a few choices for installing Viscid. Here is a quick breakdown of why you might choose one method over another.
 
 + :ref:`Anaconda <choice1-conda>`
 
-  - **+**  Install with a single command
+  - **+**  Installs with a single command
   - **+**  No compiler needed
   - **+**  Available for macOS, Linux, and Windows
   - **+**  Automatically installs recommended dependencies
@@ -109,15 +107,14 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
 
 + :ref:`PyPI (pip) <choice2-pypi>`
 
-  - **+**  Install with a single command
+  - **+**  Installs with a single command
   - **+**  No compiler needed for pure python functionality
   - **-**  Recommended dependencies must be explicitly installed
-  - **-**  Requires a C compiler for interpolation and streamline functions
+  - **-**  Requires a C compiler for interpolation and streamline support
   - **-**  Requires a Fortran compiler for jrrle file support
 
 + :ref:`Source <choice3-source>`
 
-  - **+**  Most flexible
   - **+**  Only method that lets you edit Viscid's source code
   - **-**  Requires some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
   - **-**  Dependencies must be explicitly installed
@@ -200,7 +197,9 @@ If you are using Anaconda to manage your dependencies, you can use the default V
     # this activation must be done for each new command prompt
     conda activate viscid36mayavi  # or viscid27, etc.
 
-:ref:`Read this <conda_bashrc_blurb>` if you need help editing your bashrc or profile to set the default anaconda environment.
+:ref:`Read this <conda_bashrc_blurb>` if you need help editing your bashrc or profile to set the default Anaconda environment.
+
+Viscid should work with native compiler toolchains, but in case you don't have access to native compilers, the Anaconda toolchains should work too. `Check here <https://conda.io/docs/user-guide/tasks/build-packages/compiler-tools.html>`_ to find the appropriate packages for your platform. On Windows, you should use the MSVC compiler and Anaconda's ``m2w64-gcc-fortran``. `Read this <https://wiki.python.org/moin/WindowsCompilers>`_ for more information about acquiring the correct Microsoft compiler. If you are using CPython 3.5 or 3.6, you probably need MSVC 14 compiler, `available here <https://www.visualstudio.com/downloads/#build-tools-for-visual-studio-2017>`_. You do **not** need to install visual studio to get the build tools.
 
 Now you have a choice about how you want to use Viscid. If you intend to edit viscid then I recommend building it inplace. Otherwise, it probably makes more sense to simply install viscid into your python distribution.
 
@@ -279,7 +278,7 @@ Installing Mayavi (optional)
 
 .. warning::
 
-    Do **not** install Mayavi using pip into an anaconda environment. This will break your conda environment in a way that requires you to reinstall anaconda. The issue is that pip happily clobbers some parts of pyqt that are hard linked to a cache in conda. You have been warned.
+    Do **not** install Mayavi using pip into an Anaconda environment. This will break your conda environment in a way that requires you to reinstall Anaconda. The issue is that pip happily clobbers some parts of pyqt that are hard linked to a cache in conda. You have been warned.
 
 .. note::
 

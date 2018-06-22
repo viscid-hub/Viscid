@@ -31,12 +31,12 @@ Branch                                                      | Docs              
 Dependencies:
 
 + Required
-  + Python 2.7+ or 3.3+
-  + Python 2.6 and argparse
-  + Numpy >= 1.9
+  + Python 2.6, 2.7, or 3.3+
+  + Numpy 1.9+
+  + Argparse (Python 2.6 only)
 + Recommended
   + IPython *(better interactive interpreter)*
-  + Matplotlib >= 1.4 *(if you want to make 2d plots using viscid.plot.vpyplot)*
+  + Matplotlib 1.4+ *(if you want to make 2d plots using viscid.plot.vpyplot)*
   + Scipy *(enables nonlinear interpolation and curve fitting)*
   + Numexpr *(for faster math on large grids)*
   + H5py *(enables hdf5 reader)*
@@ -45,10 +45,8 @@ Dependencies:
   + Mayavi2 <sup id="a1">[[1]](#f1)</sup> *(if you want to make 3d plots using viscid.plot.vlab)*
   + PyYaml *(rc file and plot options can parse using yaml)*
 + Optional for developers
-  + Cython >= 0.28 *(if you change pyx / pxd files)*
-  + Sphinx
-  + sphinx_rtd_theme
-  + sphinxcontrib-napoleon *(if Sphinx is <= version 1.2)*
+  + Cython 0.28+ *(if you change pyx / pxd files)*
+  + Sphinx 1.3+
 
 Detailed installation instructions are [available here](http://viscid-hub.github.io/Viscid-docs/docs/master/installation.html).
 
