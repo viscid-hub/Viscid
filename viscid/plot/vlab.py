@@ -675,6 +675,8 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
     m = mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, figure=figure,
                   **kwargs)
 
+    m.parent.parent.filter.splitting = 0
+
     if bounding_lat:
         rp = 1.5 * radius
         z = radius * np.cos((np.pi / 180.0) * bounding_lat)
