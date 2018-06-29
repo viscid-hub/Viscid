@@ -1348,11 +1348,15 @@ def resize(size, figure=None):
 
             if toolkit in ('qt', 'qt4'):
                 sc = figure.scene
-                window_height = sc.control.parent().size().height()
-                render_height = sc.render_window.size[1]
-                h = window_height - render_height
-                sc.control.parent().resize(size[0], size[1] + h)
-
+                widget11 = sc.control.childAt(1, 1)
+                if 'toolbar' in widget11.__class__.__name__.lower():
+                    toolbar_height = widget11.size().height()
+                else:
+                    # window_size = sc.control.parent().size()
+                    # render_size = sc.control.centralWidget().size()
+                    # toolbar_height = window_size.height() - render_size.height()
+                    toolbar_height = 0
+                sc.control.parent().resize(size[0], size[1] + toolbar_height)
             elif toolkit == 'wx':
                 w, h = size[0], size[1]
                 figure.scene.control.Parent.Parent.SetClientSizeWH(w, h)
