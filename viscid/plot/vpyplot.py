@@ -579,7 +579,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     flip_plot = plot_kwargs.pop("flip_plot", flip_plot)
 
     tightlim = plot_kwargs.pop('tightlim', plot_kwargs.pop('tightlims', True))
-    if tightlim:
+    _proj = getattr(ax, "transProjection", None)
+    if tightlim and (_proj is None or 'identity' in _proj.__class__.__name__.lower()):
         _xl = np.array(fld.xl[:2])
         _xh = np.array(fld.xh[:2])
         if 'x' not in plot_kwargs:
