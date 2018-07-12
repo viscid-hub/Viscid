@@ -43,8 +43,9 @@ def str2value(s):
 
 def _warn_deprecated_float(val, varname='value'):
     s = ("DEPRECATION...\n"
-         "Slicing by float is deprecated. The slice by value syntax is \n"
-         "now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
+         "Slicing by float is deprecated. The slice by value is now performed \n"
+         "with an imaginary number, or a string that has a trailing 'f',\n"
+         "as in 0j, 'x=0j', or 'x=0f' [{0} = {1}]"
          "".format(varname, val))
     logger.warning(s)
 
@@ -55,22 +56,24 @@ def _standardize_slcval(val, epoch=None, tdunit='s'):
         One of the following,
          - None
          - np.newaxis
-         - int
-         - '{flt}f'.format(flt=val)
+         - int (slice by index)
+         - imaginary (slice by value)
 
         Datetime-like and timedelta-like values are converted
         to floats using epoch and tdunit.
 
         Deprecation warnings arise when trying to convert bare floats
-        or floats in strings that don't end if 'f'.
+        or floats in strings that don't end if 'f' of 'j'.
     """
     if is_timedelta_like(val, conservative=True):
-        ret = "{0}f".format(as_timedelta64(val) / np.timedelta64(1, tdunit))
+        # ret = "{0}f".format(as_timedelta64(val) / np.timedelta64(1, tdunit))
+        ret = 1j * (as_timedelta64(val) / np.timedelta64(1, tdunit))
     elif is_datetime_like(val, conservative=True):
         if epoch is None:
             epoch = np.datetime64(0, 'us')
         tflt = time_diff(val, epoch, most_precise=True) / np.timedelta64(1, tdunit)
-        ret = "{0}f".format(tflt)
+        # ret = "{0}f".format(tflt)
+        ret = 1j * tflt
     elif isinstance(val, (int, np.integer)):
         ret = val
     elif val in [None, "None", "none"]:
@@ -81,17 +84,20 @@ def _standardize_slcval(val, epoch=None, tdunit='s'):
         ret = np.newaxis
     elif isinstance(val, (float, np.floating)):
         _warn_deprecated_float(val)
-        ret = "{0}f".format(val)
+        ret = 1j * val
+    elif isinstance(val, (complex, np.complex)):
+        assert val.real == 0.0
+        ret = val
     elif isinstance(val, string_types):
-        if val[-1] == 'f':
+        if val[-1] in 'fjFJ':
             # gymnastics to validate the contents
-            ret = "{0}f".format(float(val[:-1]))
+            ret = 1j * float(val[:-1])
         else:
             try:
                 ret = int(val)
             except ValueError:
                 try:
-                    ret = '{0}f'.format(float(val))
+                    ret = 1j * float(val)
                     _warn_deprecated_float(val)
                 except ValueError:
                     raise
@@ -131,16 +137,16 @@ def parse_time_slice_str(slc_str):
 
     Note:
         Individual elements of the slice can look like an int,
-        float with trailing 'f', or they can have the form
+        imaginary, float with trailing 'f', or they can have the form
         [A-Z]+[\d:]+\.\d*. This last one is a datetime-like
         representation with some preceding letters. The preceding
-        letters are
+        letters are necessary to avoid ambiguity.
     """
     # regex parse the sting into a list of datetime-like strings,
     # integers, floats, and bare colons that mark the slices
     # Note: for datetime-like strings, the letters preceeding a datetime
     # are necessary, otherwise 02:20:30.01 would have more than one meaning
-    rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:T]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+f?)\s*|"
+    rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:T]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+[fjFJ]?)\s*|"
             r"[-+]?[0-9]+")
     r = re.compile(rstr, re.I)
 
@@ -321,37 +327,13 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     second_slc = [np.newaxis if s == "NEWAXIS" else s for s in second_slc]
     return first_slc, second_slc
 
-def _resolve_float(value, epoch=None, tdunit='s'):
-    value = _standardize_slcval(value, epoch=epoch, tdunit=tdunit)
-
-    try:
-        value = value.rstrip()
-        if len(value) == 0:
-            raise ValueError("Can't slice with nothing")
-        elif value[-1] == 'f':
-            ret = float(value[:-1])
-        else:
-            ret = int(value)  # pylint: disable=redefined-variable-type
-
-    except AttributeError:
-        ret = value.__index__()
-
-    return ret
-
 def _closest_index(arr, value, epoch=None, tdunit='s'):
     value = _standardize_slcval(value, epoch=epoch, tdunit=tdunit)
 
-    try:
-        value = value.rstrip()
-        if len(value) == 0:
-            raise ValueError("Can't slice with nothing")
-        elif value[-1] == 'f':
-            arr, epoch = _arr2float(arr, epoch=epoch, tdunit=tdunit)
-            index = int(np.argmin(np.abs(arr - float(value[:-1]))))
-        else:
-            index = int(value)
-
-    except AttributeError:
+    if isinstance(value, (complex, np.complex)):
+        arr, epoch = _arr2float(arr, epoch=epoch, tdunit=tdunit)
+        index = int(np.argmin(np.abs(arr - value.imag)))
+    else:
         index = value.__index__()
 
     return index
@@ -361,10 +343,13 @@ def extract_index(arr, start=None, stop=None, step=None, val_endpoint=True,
     """Get integer indices for slice parts
 
     If start, stop, or step are strings, they are either cast to
-    integers or used for a float lookup if they have a trailing 'f'.
+    integers or used for a value lookup. Value lookup happens for
+    values that are imaginary or are strings with a trailing 'f'.
 
     An example float lookup is::
         >>> [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]['0.2f:0.6f:2']
+        [0.2, 0.4, 0.6]
+        >>> [0.1, 0.2, 0.3, 0.4, 0.5, 0.6][0.2j:0.6j:2]
         [0.2, 0.4, 0.6]
 
     Normally (val_endpoint=True, interior=False), the rules for float
@@ -439,10 +424,10 @@ def extract_index(arr, start=None, stop=None, step=None, val_endpoint=True,
         s = startstop[i]
         _epsilon_step = epsilon_step
 
-        # s is a string if and only if it's slice by float value
-        if isinstance(s, string_types):
-            assert len(s) != 0  # startstop[0] = None ???
-            byval[i] = float(s[:-1])
+        # s is imaginary if and only if it's slice by float value
+        if isinstance(s, (complex, np.complex)):
+            assert s.real == 0.0
+            byval[i] = s.imag
             # print("byval[", i, "]", s, byval[i])
 
             if _epsilon_step:
@@ -504,8 +489,6 @@ def extract_index(arr, start=None, stop=None, step=None, val_endpoint=True,
     for i, s in enumerate(sss):
         if s is None:
             pass
-        elif isinstance(s, string_types):
-            sss[i] = int(s)
         else:
             sss[i] = s.__index__()
 
@@ -621,9 +604,9 @@ def to_slice(arr, selection, val_endpoint=True, interior=False, epoch=None,
         selection (int, str, slice): Something that can be turned into
             a slice. Ints are returned as-is. Slices and strings are
             parsed to see if they contain indices, or values. Values
-            are strings that contain a number followed by an 'f'. Refer
-            to :py:func:`extract_index` for the slice-by-value
-            semantics.
+            are imaginary numbers or strings that contain a number
+            followed by an 'f'. Refer to :py:func:`extract_index` for
+            the slice-by-value semantics.
         val_endpoint (bool): passed to :py:func:`extract_index` if needed
         interior (bool): passed to :py:func:`extract_index` if needed
         epoch (datetime64-like): Epoch for to go datetime64 <-> float
@@ -863,8 +846,8 @@ def slice2values(arr, start, stop, step=None, epoch=None, tdunit='s'):
     # start/stop are strings if and only if they are slice by float value
     ss = [start, stop]
     for i, s in enumerate(ss):
-        if isinstance(s, string_types):
-            ss[i] = float(s[:-1])
+        if isinstance(s, (complex, np.complex)):
+            ss[i] = s.imag
         elif s is None:
             ss[i] = arr_extents[i]
         elif hasattr(s, '__index__'):

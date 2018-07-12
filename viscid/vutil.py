@@ -555,7 +555,7 @@ def slice_globbed_filenames(glob_pattern):
 
     # construct a regex to match the results
     # verify glob pattern has only one
-    number_re = r"(?:[-+]?[0-9]*\.?[0-9]+f?|[-+]?[0-9+])"
+    number_re = r"(?:[-+]?[0-9]*\.?[0-9]+[fjFJ]?|[-+]?[0-9+])"
     slc_re = r"\[({0})?(:({0})?){{0,2}}\]".format(number_re)
     n_slices = len(re.findall(slc_re, glob_pattern))
 

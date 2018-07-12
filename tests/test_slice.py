@@ -93,6 +93,44 @@ def _main():
     test_slice(arr, np.s_['2.1f':'2.5f'], arr[1:1], val_endpoint=False)
     test_slice(arr, np.s_['2.3f':'2.5f'], arr[1:3], interior=True)
 
+    ################
+    # slice by imag
+    test_slice(arr, np.s_[4.0j], arr[2])
+    test_slice(arr, np.s_[4.0j:], arr[3:])
+    test_slice(arr, np.s_[4.0j::2], arr[3::2])
+    test_slice(arr, np.s_[:4.0j:2], arr[:3:2])
+    test_slice(arr, np.s_[2.0j:7.8j], arr[1:6])
+    test_slice(arr, np.s_[2.0j:7.8j:2], arr[1:6:2])
+    test_slice(arr, np.s_[7.8j:2.0j:-1], arr[5:0:-1])
+    test_slice(arr, np.s_[7.8j:2.0j:-1], arr[5:1:-1], val_endpoint=False)
+    test_slice(arr, np.s_[7.8j:2.0j:-2], arr[5:0:-2])
+    test_slice(arr, np.s_[7.8j:2.0j:-2], arr[5:1:-2], val_endpoint=False)
+    test_slice(arr, np.s_[3.4j:7.3j], arr[2:5])
+    test_slice(arr, np.s_[3.4j:7.3j], arr[1:6], interior=True)
+    test_slice(arr, np.s_[2.4j:2.5j], arr[2:2])
+    test_slice(arr, np.s_[2.1j:2.5j], arr[1:2])
+    test_slice(arr, np.s_[2.1j:2.5j], arr[1:1], val_endpoint=False)
+    test_slice(arr, np.s_[2.3j:2.5j], arr[1:3], interior=True)
+
+    ####################
+    # slice by imag str
+    test_slice(arr, np.s_['4.0j'], arr[2])
+    test_slice(arr, np.s_['4.0j':], arr[3:])
+    test_slice(arr, np.s_['4.0j'::2], arr[3::2])
+    test_slice(arr, np.s_[:'4.0j':2], arr[:3:2])
+    test_slice(arr, np.s_['2.0j':'7.8j'], arr[1:6])
+    test_slice(arr, np.s_['2.0j':'7.8j':2], arr[1:6:2])
+    test_slice(arr, np.s_['7.8j':'2.0j':-1], arr[5:0:-1])
+    test_slice(arr, np.s_['7.8j':'2.0j':-1], arr[5:1:-1], val_endpoint=False)
+    test_slice(arr, np.s_['7.8j':'2.0j':-2], arr[5:0:-2])
+    test_slice(arr, np.s_['7.8j':'2.0j':-2], arr[5:1:-2], val_endpoint=False)
+    test_slice(arr, np.s_['3.4j':'7.3j'], arr[2:5])
+    test_slice(arr, np.s_['3.4j':'7.3j'], arr[1:6], interior=True)
+    test_slice(arr, np.s_['2.4j':'2.5j'], arr[2:2])
+    test_slice(arr, np.s_['2.1j':'2.5j'], arr[1:2])
+    test_slice(arr, np.s_['2.1j':'2.5j'], arr[1:1], val_endpoint=False)
+    test_slice(arr, np.s_['2.3j':'2.5j'], arr[1:3], interior=True)
+
     ############################
     # slice by deprecated float
     viscid.logger.info("testing deprecated slice-by-value")
