@@ -591,7 +591,7 @@ class StructuredCrds(Coordinates):
             * *selection*: something almost usable by
                 :py:func:`numpy.ndarray.__getitem__`. The catch is the
                 selection could contain etries that look like "0" or
-                "5.0f". These strings are resolved by
+                "5.0j". These strings are resolved by
                 :py:func:`viscid.sliceutil.to_slices`.
         """
         # SIDE-EFFECT: selection won't have any whitespace
@@ -833,7 +833,7 @@ class StructuredCrds(Coordinates):
         does document the slice string syntax.
 
         In practice, selection can be a string like
-        "y = 3:6:2, z = 0.0f" where integers indicate an index as
+        "y = 3:6:2, z = 0.0j" where integers indicate an index as
         opposed to floats followed by an 'f' which slice by crd value.
         The example slice would be the 3rd and 5th crds in y, and the
         z = 0.0 plane. Selection can also be the usual tuple of slice

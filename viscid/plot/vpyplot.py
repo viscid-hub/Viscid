@@ -1176,9 +1176,9 @@ def plot_iono(fld, *args, **kwargs):
             hem = 'north'
 
     if hem in ('north', 'n'):
-        fldH = fld["lat=10f:"]
+        fldH = fld["lat=10j:"]
     elif hem in ('south', 's'):
-        fldH = fld['theta=:-10f']
+        fldH = fld['theta=:-10j']
     else:
         raise ValueError("Unknown hemisphere: {0}".format(hem))
 

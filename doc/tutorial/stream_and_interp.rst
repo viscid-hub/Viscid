@@ -51,7 +51,7 @@ Interpolating Onto a Volume
 
     seeds = viscid.Volume((-20, 1, -20), (30, 1, 20), n=(64, 5, 64))
     b = viscid.interp_trilin(f3d['b'], seeds)
-    vlt.plot(viscid.magnitude(b)['y=0f'], logscale=True, earth=True)
+    vlt.plot(viscid.magnitude(b)['y=0j'], logscale=True, earth=True)
 
     vlt.show()
 
@@ -101,7 +101,7 @@ Interpolating Vectors Onto a Plane
     p0 = (9.0, 0.0, 1.5)
     plane = viscid.Plane(p0, pN=[0, -1, 0], pL=[1, 0, 0.05], len_l=[-3, 3],
                          len_m=6.0, nl=64, nm=64)
-    slc = "x=6f:11f, y=-1f:1f, z=-10f:10f"
+    slc = "x=6j:11j, y=-1j:1j, z=-10j:10j"
     b = viscid.interp_trilin(f3d['b'][slc], plane)
     j = viscid.interp_trilin(f3d['j'][slc], plane)
 

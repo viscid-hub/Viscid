@@ -43,7 +43,7 @@ def run_div_test(fld, exact, title='', show=False, ignore_inexact=False):
     logger.info("min/max(abs(numexpr - exact)): %g / %g",
                 np.min(result_diff.data), np.max(result_diff.data))
 
-    planes = ["y=0f", "z=0f"]
+    planes = ["y=0j", "z=0j"]
     nrows = 2
     ncols = len(planes)
     _, axes = plt.subplots(nrows, ncols, squeeze=False)

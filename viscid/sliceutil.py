@@ -66,13 +66,11 @@ def _standardize_slcval(val, epoch=None, tdunit='s'):
         or floats in strings that don't end if 'f' of 'j'.
     """
     if is_timedelta_like(val, conservative=True):
-        # ret = "{0}f".format(as_timedelta64(val) / np.timedelta64(1, tdunit))
         ret = 1j * (as_timedelta64(val) / np.timedelta64(1, tdunit))
     elif is_datetime_like(val, conservative=True):
         if epoch is None:
             epoch = np.datetime64(0, 'us')
         tflt = time_diff(val, epoch, most_precise=True) / np.timedelta64(1, tdunit)
-        # ret = "{0}f".format(tflt)
         ret = 1j * tflt
     elif isinstance(val, (int, np.integer)):
         ret = val

@@ -34,7 +34,7 @@ class MyGGCMGrid(openggcm.GGCMGrid):
 
 def run_test_3d(f, main__file__, show=False):
     vlt.clf()
-    slc = "x=-20f:12f, y=0f"
+    slc = "x=-20j:12j, y=0j"
     plot_kwargs = dict(title=True, earth=True)
     vlt.subplot(141)
     vlt.plot(f['pp'], slc, logscale=True, **plot_kwargs)
@@ -46,7 +46,7 @@ def run_test_3d(f, main__file__, show=False):
     vlt.plot(f['jy'], slc, clim=(-0.005, 0.005), **plot_kwargs)
     vlt.streamplot(f['v'][slc], linewidth=0.3)
     vlt.subplot(144)
-    vlt.plot(f['jy'], "x=7f:12f, y=0f, z=0f")
+    vlt.plot(f['jy'], "x=7j:12j, y=0j, z=0j")
 
     plt.suptitle("3D File")
     vlt.auto_adjust_subplots(subplot_params=dict(top=0.9, wspace=1.3))
@@ -58,7 +58,7 @@ def run_test_3d(f, main__file__, show=False):
 
 def run_test_2d(f, main__file__, show=False):
     vlt.clf()
-    slc = "x=-20f:12f, y=0f"
+    slc = "x=-20j:12j, y=0j"
     plot_kwargs = dict(title=True, earth=True)
     vlt.subplot(141)
     vlt.plot(f['pp'], slc, logscale=True, **plot_kwargs)
@@ -73,7 +73,7 @@ def run_test_2d(f, main__file__, show=False):
     vlt.plot(f['jy'], slc, clim=[-0.005, 0.005], **plot_kwargs)
     vlt.streamplot(f['v'][slc], linewidth=0.3)
     vlt.subplot(144)
-    vlt.plot(f['jy'], "x=7f:12f, y=0f, z=0f")
+    vlt.plot(f['jy'], "x=7j:12j, y=0j, z=0j")
 
     plt.suptitle("2D File")
     vlt.auto_adjust_subplots(subplot_params=dict(top=0.9, wspace=1.3))
@@ -92,7 +92,7 @@ def run_test_timeseries(f, main__file__, show=False):
 
     for i, grid in enumerate(f.iter_times()):
         t[i] = grid.time_as_datetime()
-        pressure[i] = grid['pp']['x=10.0f, y=0.0f, z=0.0f']
+        pressure[i] = grid['pp']['x=10.0j, y=0.0j, z=0.0j']
     plt.plot(t, pressure)
     plt.ylabel('Pressure')
 

@@ -41,7 +41,7 @@ def main():
 
     do_fill_dipole = True
 
-    gslc = "x=-21.2f:12f, y=-11f:11f, z=-11f:11f"
+    gslc = "x=-21.2j:12j, y=-11j:11j, z=-11j:11j"
     b = f['b_cc'][gslc]
     b1 = f['b_fc'][gslc]
     e_cc = f['e_cc'][gslc]

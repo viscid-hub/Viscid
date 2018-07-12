@@ -119,7 +119,7 @@ class AMRField(object):
 
         # detect dimensions that only have one cell (or node) and allow any
         # slice in that direction, this helps cases where a field mab be
-        # defined or y = [-0.01], but the user tries to slice by 'y=0f'
+        # defined or y = [-0.01], but the user tries to slice by 'y=0j'
         all_xl_nc = np.array([patch.crds.xl_nc for patch in self.patches])
         all_xh_nc = np.array([patch.crds.xh_nc for patch in self.patches])
         dim_is_2d = np.all(all_xl_nc == all_xh_nc, axis=0)

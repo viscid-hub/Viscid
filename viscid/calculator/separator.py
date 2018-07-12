@@ -17,7 +17,7 @@ __all__ = ["trace_separator", "topology_bitor_clusters", "get_sep_pts_bitor",
            "get_sep_pts_bisect"]
 
 
-def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
+def trace_separator(grid, b_slcstr="x=-25j:15j, y=-30j:30j, z=-15j:15j",
                     r=1.0, plot=False, trace_opts=None, cache=True,
                     cache_dir=None):
     """Trace a separator line from most dawnward null
@@ -62,7 +62,7 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
     except IOError:
         _b = grid['b'][b_slcstr]
 
-        _, nulls = viscid.find_nulls(_b['x=-30f:15f'], ibound=5.0)
+        _, nulls = viscid.find_nulls(_b['x=-30j:15j'], ibound=5.0)
 
         # get most dawnward null, nulls2 is all nulls except p0
         nullind = np.argmin(nulls[1, :])

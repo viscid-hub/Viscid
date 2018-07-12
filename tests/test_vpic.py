@@ -34,18 +34,18 @@ def _main():
 
     # some slices that are good to check
     vlt.clf()
-    vlt.plot(f['bx']['x=:32.01f'])
+    vlt.plot(f['bx']['x=:32.01j'])
     plt.close()
     vlt.clf()
-    vlt.plot(f['bx']['x=:33.0f'])
+    vlt.plot(f['bx']['x=:33.0j'])
     plt.close()
 
     _, axes = vlt.subplots(2, 2, figsize=(8, 4))
 
     for i, ti in enumerate([0, -1]):
         f.activate_time(ti)
-        vlt.plot(f['n_e']['y=0f'], symmetric=False, ax=axes[0, i])
-        vlt.plot(f['bx']['y=0f'], symmetric=True, ax=axes[1, i])
+        vlt.plot(f['n_e']['y=0j'], symmetric=False, ax=axes[0, i])
+        vlt.plot(f['bx']['y=0j'], symmetric=True, ax=axes[1, i])
         axes[0, i].set_title(f.get_grid().time)
 
     vlt.auto_adjust_subplots()

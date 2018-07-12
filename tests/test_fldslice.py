@@ -87,7 +87,7 @@ def _main():
     test_slice(selection, fld_i, (40, 50, 1), nc_shape=(41, 51, 2), cc_shape=(40, 50, 1))
 
     #### SLICE 4
-    selection = "x=5f, ..., t=None, 2"
+    selection = "x=5j, ..., t=None, 2"
     test_slice(selection, fld, (40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
     test_slice(selection, fld_f, (3, 40, 1), nc_shape=(41, 2), cc_shape=(40, 1))
     test_slice(selection, fld_i, (40, 50, 1), nc_shape=(41, 51, 2), cc_shape=(40, 50, 1))
@@ -148,22 +148,22 @@ def _main():
     test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 0))
 
     #### SLICE 4
-    selection = "x=5f, ..., t=None, 2"
+    selection = "x=5j, ..., t=None, 2"
     test_slice(selection, fld, (41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
     test_slice(selection, fld_f, (3, 41, 1), nc_shape=(41, 1), cc_shape=(40, 0))
     test_slice(selection, fld_i, (41, 51, 1), nc_shape=(41, 51, 1), cc_shape=(40, 50, 0))
 
     ################################################################
     #### test newaxes with slice_and_keep dims (None == newaxis)
-    fld_A = fld.slice_and_keep(np.s_[None, :, '0f', ..., None])
+    fld_A = fld.slice_and_keep(np.s_[None, :, '0j', ..., None])
     assert fld_A.crds.axes == ['new-x0', 'x', 'y', 'z', 'new-x1']
     assert fld_A.shape == [1, 31, 1, 51, 1]
 
-    fld_A = fld.slice_and_keep(np.s_[None, ..., '0f', None])
+    fld_A = fld.slice_and_keep(np.s_[None, ..., '0j', None])
     assert fld_A.crds.axes == ['new-x0', 'x', 'y', 'z', 'new-x1']
     assert fld_A.shape == [1, 31, 41, 1, 1]
 
-    fld_A = fld.slice_and_keep(np.s_[None, :, '0f', None])
+    fld_A = fld.slice_and_keep(np.s_[None, :, '0j', None])
     assert fld_A.crds.axes == ['new-x0', 'x', 'y', 'new-x1', 'z']
     assert fld_A.shape == [1, 31, 1, 1, 51]
 
@@ -175,7 +175,7 @@ def _main():
     assert fld_A.crds.axes == ['new-x0', 'x', 'new-x1', 'y', 'z']
     assert fld_A.shape == [1, 31, 1, 41, 51]
 
-    fld_A = fld.slice_and_keep(np.s_[None, :, '0f', None, ...])
+    fld_A = fld.slice_and_keep(np.s_[None, :, '0j', None, ...])
     assert fld_A.crds.axes == ['new-x0', 'x', 'y', 'new-x1', 'z']
     assert fld_A.shape == [1, 31, 1, 1, 51]
 
@@ -190,13 +190,13 @@ def _main():
         assert slcfld.shape == shape
 
     _quick_test1(fld, ':', ['x', 'y', 'z'], [31, 41, 51])
-    _quick_test1(fld, ':, w=newaxis, z=0.0f:0.3f', ['x', 'w', 'y', 'z'],
+    _quick_test1(fld, ':, w=newaxis, z=0.0j:0.3j', ['x', 'w', 'y', 'z'],
                  [31, 1, 41, 1])
-    _quick_test1(fld, ':, w=newaxis, 0.0f, v=newaxis, z=0.0f:0.3f',
+    _quick_test1(fld, ':, w=newaxis, 0.0j, v=newaxis, z=0.0j:0.3j',
                  ['x', 'w', 'v', 'z'], [31, 1, 1, 1])
-    _quick_test1(fld, ':, w=newaxis, ..., 0.0f:0.3f', ['x', 'w', 'y', 'z'],
+    _quick_test1(fld, ':, w=newaxis, ..., 0.0j:0.3j', ['x', 'w', 'y', 'z'],
                  [31, 1, 41, 1])
-    _quick_test1(fld, '..., :, w=newaxis, 0.0f:0.3f', ['x', 'y', 'w', 'z'],
+    _quick_test1(fld, '..., :, w=newaxis, 0.0j:0.3j', ['x', 'y', 'w', 'z'],
                  [31, 41, 1, 1])
     _quick_test1(fld, 'u=newaxis, ..., w=newaxis', ['u', 'x', 'y', 'z', 'w'],
                  [1, 31, 41, 51, 1])
@@ -208,15 +208,15 @@ def _main():
     # -
     #       implied x
 
-    fld_A = fld.slice_and_keep('u=newaxis, y=0f, ..., w=newaxis')
+    fld_A = fld.slice_and_keep('u=newaxis, y=0j, ..., w=newaxis')
     assert fld_A.crds.axes == ['u', 'x', 'y', 'z', 'w']
     assert fld_A.shape == [1, 31, 1, 51, 1]
 
-    fld_A = fld.slice_and_keep('u=newaxis, y=0f, w=newaxis')
+    fld_A = fld.slice_and_keep('u=newaxis, y=0j, w=newaxis')
     assert fld_A.crds.axes == ['u', 'x', 'y', 'w', 'z']
     assert fld_A.shape == [1, 31, 1, 1, 51]
 
-    fld_A = fld.slice_and_keep('u=newaxis, y=0f, w=newaxis, ...')
+    fld_A = fld.slice_and_keep('u=newaxis, y=0j, w=newaxis, ...')
     assert fld_A.crds.axes == ['u', 'x', 'y', 'w', 'z']
     assert fld_A.shape == [1, 31, 1, 1, 51]
 
@@ -226,14 +226,14 @@ def _main():
                            center='node')
     fld_A = fld.interpolated_slice(np.s_[:, 10.5])
     fld_A = fld.interpolated_slice('y=10.5')
-    fld_A = fld.interpolated_slice('..., 10.5f')
+    fld_A = fld.interpolated_slice('..., 10.5j')
 
     shape = [30, 40, 50]
     fld = viscid.dat2field(np.arange(np.prod(shape)).astype('f4').reshape(shape),
                            center='cell')
     fld_A = fld.interpolated_slice(np.s_[:, 10.5])
     fld_A = fld.interpolated_slice('y=10.5')
-    fld_A = fld.interpolated_slice('..., 10.5f')
+    fld_A = fld.interpolated_slice('..., 10.5j')
 
     return 0
 

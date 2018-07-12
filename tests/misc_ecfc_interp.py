@@ -41,11 +41,11 @@ def compare_vectors(orig_fld, cmp_fld, catol=1e-8, rtol=2e-6,
         if make_plots:
             plt.clf()
             ax1 = plt.subplot(311)
-            vlt.plot(orig_fld[d]['y=0f'], symmetric=True, earth=True)
+            vlt.plot(orig_fld[d]['y=0j'], symmetric=True, earth=True)
             plt.subplot(312, sharex=ax1, sharey=ax1)
-            vlt.plot(cmp_fld[d]['y=0f'], symmetric=True, earth=True)
+            vlt.plot(cmp_fld[d]['y=0j'], symmetric=True, earth=True)
             plt.subplot(313, sharex=ax1, sharey=ax1)
-            vlt.plot(reldiff[d]['y=0f'], symmetric=True, earth=True)
+            vlt.plot(reldiff[d]['y=0j'], symmetric=True, earth=True)
             vlt.show()
 
     # if any(comp_beyond_limit):
@@ -105,11 +105,11 @@ def main():
         # plt.clf()
         # dkwargs = dict(symmetric=True, earth=True, clim=(-1e2, 1e2))
         # ax1 = plt.subplot(311)
-        # vlt.plot(viscid.div(b1)['y=0f'], **dkwargs)
+        # vlt.plot(viscid.div(b1)['y=0j'], **dkwargs)
         # plt.subplot(312, sharex=ax1, sharey=ax1)
-        # vlt.plot(viscid.div(b)['y=0f'], **dkwargs)
+        # vlt.plot(viscid.div(b)['y=0j'], **dkwargs)
         # plt.subplot(313, sharex=ax1, sharey=ax1)
-        # vlt.plot(viscid.div(b1D)['y=0f'], **dkwargs)
+        # vlt.plot(viscid.div(b1D)['y=0j'], **dkwargs)
         # vlt.show()
 
         bD = b1D = mask5 = mask1_5 = None
@@ -148,12 +148,12 @@ def main():
 
         plt.clf()
         ax1 = vlt.subplot(311)
-        vlt.plot(div_b['y=0f'], symmetric=True, earth=True)
+        vlt.plot(div_b['y=0j'], symmetric=True, earth=True)
         vlt.subplot(312, sharex=ax1, sharey=ax1)
-        # vlt.plot(div_b1['y=0f'], symmetric=True, earth=True)
-        vlt.plot(div_b2['y=0f'], symmetric=True, earth=True)
+        # vlt.plot(div_b1['y=0j'], symmetric=True, earth=True)
+        vlt.plot(div_b2['y=0j'], symmetric=True, earth=True)
         vlt.subplot(313, sharex=ax1, sharey=ax1)
-        vlt.plot(divb['y=0f'], symmetric=True, earth=True)
+        vlt.plot(divb['y=0j'], symmetric=True, earth=True)
 
         vlt.show()
 

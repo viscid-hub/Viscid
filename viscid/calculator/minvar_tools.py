@@ -231,14 +231,14 @@ def _main():
     print("pn", pn)
 
     vlt.subplot(211)
-    vlt.plot2d_quiver(B['z=0f'])
+    vlt.plot2d_quiver(B['z=0j'])
     plt.plot([p0[0], pl[0]], [p0[1], pl[1]], color='r', ls='-')
     plt.plot([p0[0], pm[0]], [p0[1], pm[1]], color='c', ls='-')
     plt.plot([p0[0], pn[0]], [p0[1], pn[1]], color='b', ls='-')
     plt.ylabel("Y")
 
     vlt.subplot(212)
-    vlt.plot2d_quiver(B['y=0f'])
+    vlt.plot2d_quiver(B['y=0j'])
     plt.plot([p0[0], pl[0]], [p0[2], pl[2]], color='r', ls='-')
     plt.plot([p0[0], pm[0]], [p0[2], pm[2]], color='c', ls='-')
     plt.plot([p0[0], pn[0]], [p0[2], pn[2]], color='b', ls='-')

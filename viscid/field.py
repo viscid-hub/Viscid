@@ -415,7 +415,7 @@ class _FldSlcProxy(object):
             item = None
         else:
             if self.do_floatify:
-                item = "{0}f".format(item)
+                item = "{0}j".format(item)
             else:
                 item = int(item)
         return item
@@ -1403,7 +1403,7 @@ class Field(tree.Leaf):
         """Easily slice by value (flaot), like in pandas
 
         Eample:
-            >>> subset1 = field["13f", "14f":]
+            >>> subset1 = field["13j", "14j":]
             >>> subset2 = field.loc[13, 14.0:]
             >>> # subset1 and subset2 should be identical
         """
@@ -1414,7 +1414,7 @@ class Field(tree.Leaf):
         """Easily slice by value (flaot), like in pandas
 
         Eample:
-            >>> subset1 = field["13f", "14f":]
+            >>> subset1 = field["13j", "14j":]
             >>> subset2 = field.loc[13, 14.0:]
             >>> # subset1 and subset2 should be identical
         """
@@ -1802,7 +1802,7 @@ class Field(tree.Leaf):
                 break
 
         while len(self.sshape) - len(slc) > n:
-            slc.append('{0}=0f'.format(remaining_axes[-1]))
+            slc.append('{0}=0j'.format(remaining_axes[-1]))
             removed_axes.append(remaining_axes[-1])
             remaining_axes.pop(-1)
 

@@ -16,7 +16,7 @@ viscid_2d
     -p '^tmp=abs(psi)' -o log,style_contour,levels_30,linewidths=0.8,colors=grey,linestyles_solid \
     -p 'B$^2$=bx**2+by**2+bz**2' -o log \
     -p '$\rho v^2$=rr*(vx**2+vy**2+vz**2)' -o log \
-    --slice x=-20.0f:15.0f,y=0.0f,z=-10.0f:10.0f -t T1:00:00.0 -s 7,15 --tighten \
+    --slice x=-20.0j:15.0j,y=0.0j,z=-10.0j:10.0j -t T1:00:00.0 -s 7,15 --tighten \
     $DEV/src/Viscid/sample/*.py_0.xdmf
 
 .. image:: ../images/sample_2d.png
@@ -29,7 +29,7 @@ viscid_ts
 ``viscid_ts`` is a script for quickly generating time series plots::
 
     viscid_ts -p 'P=pp' -o log -p 'B$_x$=bx' -p '|V|=sqrt(vx**2+vy**2+vz**2)' \
-    --slice x=9.5,y=0.0f,z=0.0f --timeformat hms --rl -t T1:00:00.0:T1:20:00.0 \
+    --slice x=9.5,y=0.0j,z=0.0j --timeformat hms --rl -t T1:00:00.0:T1:20:00.0 \
     --nofname $MNT/trillian/scratch/da*e3/target/*.py_0.xdmf
 
 .. image:: ../images/sample_ts.png

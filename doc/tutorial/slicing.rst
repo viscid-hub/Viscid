@@ -22,8 +22,8 @@ The best way to show the utility of this extended syntax is by example, so here 
     # snip off the first 5 and last 25 cells in x, and grab every other cell
     # in z between z = -8.0 and z = 10.0 (in space, not index).
     # Notice that slices by location are done by appending an 'f' to the
-    # slice. This means "y=0" is not the same as "y=0f".
-    pp = f3d["pp"]["x = 5:-25, y = 0.0f, z = -8.0f:10.0f:2"]
+    # slice. This means "y=0" is not the same as "y=0j".
+    pp = f3d["pp"]["x = 5:-25, y = 0.0j, z = -8.0j:10.0j:2"]
     vlt.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
 
     vlt.show()
@@ -78,13 +78,13 @@ Single Time Slice
 
     # notice y=0.0, this is different from y=0; y=0 is the 0th index in
     # y, which is this case will be y=-50.0
-    vlt.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+    vlt.plot(f3d["vz"]["x = -20.0j:20.0j, y = 0.0j, z = -10.0j:10.0j"],
              style="contourf", levels=50, plot_opts="lin_0,earth", ax=axes[0])
     plt.title(f3d.get_grid().format_time("UT"))
 
     # share axes so this plot pans/zooms with the first
     f3d.activate_time(-1)
-    vlt.plot(f3d["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+    vlt.plot(f3d["vz"]["x = -20.0j:20.0j, y = 0.0j, z = -10.0j:10.0j"],
              style="contourf", levels=50, plot_opts="lin_0,earth", ax=axes[1])
     plt.title(f3d.get_grid().format_time("hms"))
 
@@ -115,7 +115,7 @@ Or, if you need to iterate over all time slices, you can do that too. The advant
     _, axes = plt.subplots(nr_times, 1)
 
     for i, grid in enumerate(f2d.iter_times(":2")):
-        vlt.plot(grid["vz"]["x = -20.0f:20.0f, y = 0.0f, z = -10.0f:10.0f"],
+        vlt.plot(grid["vz"]["x = -20.0j:20.0j, y = 0.0j, z = -10.0j:10.0j"],
                  plot_opts="lin_0,earth", ax=axes[i])
         plt.title(grid.format_time(".01f"))
 

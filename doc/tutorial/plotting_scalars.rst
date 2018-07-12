@@ -32,7 +32,7 @@ Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log 
     T = fac * f3d["pp"] / f3d["rr"]
     T.name = "T"
     T.pretty_name = "T (K)"
-    vlt.plot(T['y=0f'], logscale=True, earth=True)
+    vlt.plot(T['y=0j'], logscale=True, earth=True)
 
     vlt.show()
 
@@ -54,12 +54,12 @@ Two Plots, One Figure
     fig, axes = plt.subplots(1, 2, sharex=True, sharey=True)
 
     # plot pressure with 64 contours on a logscale
-    vlt.plot(f3d["pp"]["y=0.0f"], style="contourf", levels=64,
+    vlt.plot(f3d["pp"]["y=0.0j"], style="contourf", levels=64,
              plot_opts="log, earth", ax=axes[0])
 
     # plot velocity in x with a colorbar symmetric about 0
     # also, share axes so this plot pans/zooms with the first
-    vlt.plot(f3d["vx"]["y=0.0f"], style="contourf", levels=64,
+    vlt.plot(f3d["vx"]["y=0.0j"], style="contourf", levels=64,
              lin=0, earth=True, ax=axes[1])
 
     plt.xlim((-20, 20))

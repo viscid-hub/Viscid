@@ -544,10 +544,10 @@ def slice_globbed_filenames(glob_pattern):
         >>> expand_glob_slice("f*.[:2].txt")
         ["file.010.txt", "file.020.txt"]
 
-        >>> expand_glob_slice("f*.[10.0f::2].txt")
+        >>> expand_glob_slice("f*.[10.0j::2].txt")
         ["file.010.txt", "file.030.txt"]
 
-        >>> expand_glob_slice("f*.[20f:2].txt")
+        >>> expand_glob_slice("f*.[20j:2].txt")
         ["file.020.txt", "file.040.txt"]
     """
     glob_pattern = os.path.expanduser(os.path.expandvars(glob_pattern))

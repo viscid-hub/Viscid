@@ -29,7 +29,7 @@ This algorithm takes a 2d map in the uv space of a seed generator and iterativel
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
-    B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
+    B = f3d['b']['x=-40j:15j, y=-20j:20j, z=-20j:20j']
 
     # for this method, seeds must be a SeedGen subclass, not a field subset
     seeds = viscid.Volume(xl=(-40, 0, -20), xh=(15, 0, 20), n=(64, 1, 128))
@@ -50,7 +50,7 @@ This algorithm takes a 2d map in the uv space of a seed generator and iterativel
     plt.ylim(topo.xl[2], topo.xh[2])
 
     # since seeds is a Field, we can use it to determine mhd|gse
-    vlt.plot_earth(B['y=0f'])
+    vlt.plot_earth(B['y=0j'])
 
     vlt.show()
 
@@ -76,7 +76,7 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
-    B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
+    B = f3d['b']['x=-40j:15j, y=-20j:20j, z=-20j:20j']
 
     # for this method, seeds must be a SeedGen subclass, not a field subset
     seeds = viscid.Volume(xl=(-40, 0, -20), xh=(15, 0, 20), n=(64, 1, 128))
@@ -109,7 +109,7 @@ This algorithm takes a 2d map in the uv space of a seed generator and performs a
     plt.ylim(topo.xl[2], topo.xh[2])
 
     # since seeds is a Field, we can use it to determine mhd|gse
-    vlt.plot_earth(B['y=0f'])
+    vlt.plot_earth(B['y=0j'])
 
     vlt.show()
 
@@ -131,13 +131,13 @@ The bit-or algorithm can has another interface that just takes a topology field.
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
-    B = f3d['b']['x=-40f:15f, y=-20f:20f, z=-20f:20f']
+    B = f3d['b']['x=-40j:15j, y=-20j:20j, z=-20j:20j']
 
     # Fields can be used as seeds to get one seed per grid point
-    seeds = B.slice_keep('y=0f')
+    seeds = B.slice_keep('y=0j')
     lines, topo = viscid.calc_streamlines(B, seeds, ibound=2.5,
                                           output=viscid.OUTPUT_BOTH)
-    xpts_night = viscid.topology_bitor_clusters(topo['x=:0f, y=0f'])
+    xpts_night = viscid.topology_bitor_clusters(topo['x=:0j, y=0j'])
 
     # The dayside is done separately here because the sample data is at such
     # low resolution. Super-sampling the grid with the seeds can sometimes help

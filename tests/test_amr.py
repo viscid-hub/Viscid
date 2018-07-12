@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 def run_test(show=False):
     f = viscid.load_file(os.path.join(viscid.sample_dir, "amr.xdmf"))
     plot_kwargs = dict(patchec='y')
-    vlt.plot(f['f'], "z=0.0f", **plot_kwargs)
+    vlt.plot(f['f'], "z=0.0j", **plot_kwargs)
 
     plt.savefig(next_plot_fname(__file__))
     if show:
