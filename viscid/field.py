@@ -32,6 +32,7 @@ LAYOUT_OTHER = "other"
 
 __all__ = ['arrays2field', 'dat2field', 'full', 'empty', 'zeros', 'ones',
            'full_like', 'empty_like', 'zeros_like', 'ones_like',
+           'mfield', 'mfield_cell', 'mfield_node',
            'scalar_fields_to_vector', 'wrap_field']
 
 
@@ -284,6 +285,22 @@ def ones_like(fld, **kwargs):
     See Also: :meth:`full_like`
     """
     return full_like(fld, 1.0, **kwargs)
+
+
+class _mfield_factory(object):
+    """This mimics Numpy's mgrid and ogrid functionality"""
+    def __init__(self, center='node', dtype=np.float64):
+        self.center = center
+        self.dtype = dtype
+
+    def __getitem__(self, slc):
+        crd_arrs = [arr.reshape(-1) for arr in np.ogrid[slc]]
+        return zeros(crd_arrs, center=self.center, dtype=self.dtype)
+
+
+mfield_cell = _mfield_factory(center='cell', dtype=np.float64)
+mfield_node = _mfield_factory(center='node', dtype=np.float64)
+mfield = mfield_node
 
 def scalar_fields_to_vector(fldlist, name="NoName", **kwargs):
     """Convert scalar fields to a vector field
