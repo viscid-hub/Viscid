@@ -4,7 +4,8 @@ Changes
 0.99.9.dev0
 ===========
 
-
+  - add `viscid.mfield` that mimics `numpy.mgrid`
+  - slice-by-value should now be done with imaginary numbers instead of strings encoded like '0.0f'. The string-'f' format will continue to be supported, but imaginary numbers are cleaner for this purpose.
 
 0.99.8
 ======
