@@ -1259,7 +1259,8 @@ class SphericalCap(Sphere):
     meshes to remove the last theta value so that the cap isn't
     closed at the bottom.
     """
-    def __init__(self, angle0=0.0, angle=90.0, **kwargs):
+    def __init__(self, angle0=0.0, angle=90.0, theta_endpoint=[True, False],
+                 **kwargs):
         """Make a spherical cap with an optional hole in the middle
 
         Args:
@@ -1277,6 +1278,13 @@ class SphericalCap(Sphere):
     @property
     def angle(self):
         return self.thetalim[1]
+
+    def _resolve_theta_endpoints(self):
+        if self.theta_endpoint == 'auto':
+            ret = [True, False]
+        else:
+            ret = super(SphericalCap, self)._resolve_theta_endpoints()
+        return ret
 
     def to_local(self, pts_3d):
         raise NotImplementedError()
