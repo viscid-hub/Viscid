@@ -959,15 +959,16 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     drawcoastlines = plot_kwargs.pop("drawcoastlines", False)
     lon_0 = plot_kwargs.pop("lon_0", 0.0)
     lat_0 = plot_kwargs.pop("lat_0", None)
-    bounding_lat = plot_kwargs.pop("bounding_lat", 40.0)
+    bounding_lat = plot_kwargs.pop("bounding_lat", None)
+    bounding_lat_specified = bounding_lat is not None
     title = plot_kwargs.pop("title", True)
     label_lat = plot_kwargs.pop("label_lat", True)
     label_mlt = plot_kwargs.pop("label_mlt", True)
 
     # try to autodiscover hemisphere if ALL the thetas are either above
     # or below the equator
+    lat = viscid.as_mapfield(fld, units='deg').get_crd('lat')
     if hemisphere == "none":
-        lat = viscid.as_mapfield(fld, units='deg').get_crd('lat')
         if np.all(lat >= 0.0):
             hemisphere = "north"
         elif np.all(lat <= 0.0):
@@ -978,18 +979,21 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                   "north or south (defaulting to North)."
                                   "".format(fld.name))
             hemisphere = 'north'
-    # now that we know hemisphere is useful, setup the latlabel array
+
+    # set a sensible default for bounding_lat... full spheres get cut off
+    # at 40 deg, but hemispheres or smaller are shown in full
+    if bounding_lat is None:
+        if abs(lat[-1] - lat[0]) >= 90.01:
+            bounding_lat = 40.0
+        else:
+            bounding_lat = 90.0
+
     if hemisphere in ("north", 'n'):
         # def_projection = "nplaea"
-        # def_boundinglat = 40.0
-        latlabel_arr = np.linspace(50.0, 80.0, 4)
+        pass
     elif hemisphere in ("south", 's'):
         # def_projection = "splaea"
-        # def_boundinglat = -40.0
-        # FIXME: should I be doing this?
-        if bounding_lat > 0.0:
-            bounding_lat *= -1.0
-        latlabel_arr = -1.0 * np.linspace(50.0, 80.0, 4)
+        bounding_lat = -1 * np.abs(bounding_lat)
     else:
         raise ValueError("hemisphere is either 'north' or 'south'")
 
@@ -997,6 +1001,12 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     # lon_0 = kwargs.pop("lon_0", 0.0)
     # lat_0 = kwargs.pop("lat_0", None)
     # drawcoastlines = kwargs.pop("drawcoastlines", False)
+
+    make_periodic = plot_kwargs.get('style', None) in ("contour", "contourf")
+    new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
+                                       hemisphere=hemisphere,
+                                       make_periodic=make_periodic)
+
 
     if projection != "polar" and not _HAS_BASEMAP:
         viscid.logger.error("NOTE: install the basemap for the desired "
@@ -1012,10 +1022,6 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         ax = _get_polar_axis(ax=ax)
 
-        make_periodic = plot_kwargs.get('style', None) in ("contour", "contourf")
-        new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
-                                           hemisphere=hemisphere,
-                                           make_periodic=make_periodic)
         show = plot_kwargs.pop('show', False)
         plot_kwargs['nolabels'] = True
         plot_kwargs['axis'] = 'none'
@@ -1023,6 +1029,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         plot_kwargs = _set_default_cbar_pad(plot_kwargs, pad=0.2)
 
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
+        if bounding_lat_specified:
+            abslatlim = np.abs(bounding_lat)
+        else:
+            abslatlim = np.rad2deg(np.abs(new_fld.xh[1]))
         ax.set_theta_offset(-90 * np.pi / 180.0)
 
         if title:
@@ -1036,11 +1046,14 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 mlt_labels = ()
             ax.set_thetagrids(mlt_grid_pos, mlt_labels)
 
-            abs_grid_dr = 10
+            grid_label_origin = 10
+            if abslatlim > 50:
+                grid_label_dr = 20
+            else:
+                grid_label_dr = 10
             # grid_dr = abs_grid_dr * np.sign(bounding_lat)
-            absboundinglat = np.abs(bounding_lat)
-            lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
-            lat_labels = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
+            lat_grid_pos = np.arange(grid_label_origin, abslatlim, grid_label_dr)
+            lat_labels = np.arange(grid_label_origin, abslatlim, grid_label_dr)
             if label_lat == "from_pole":
                 lat_labels = ["{0:g}".format(l) for l in lat_labels]
             elif label_lat:
@@ -1052,7 +1065,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             else:
                 lat_labels = []
             ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
-            ax.set_rmax(np.deg2rad(absboundinglat))
+            ax.set_rmax(np.deg2rad(abslatlim))
             ax.grid(True, color=axgridec, linestyle=axgridls,
                     linewidth=axgridlw)
             ax.set_axisbelow(False)
@@ -1080,6 +1093,15 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 lat_lables = [1, 1, 1, 1]
             else:
                 lat_lables = [0, 0, 0, 0]
+
+            if np.abs(bounding_lat) > 50.0:
+                latlabel_arr = np.linspace(20.0, 80.0, 4)
+            else:
+                latlabel_arr = np.linspace(50.0, 80.0, 4)
+
+            if hemisphere in ("south", 's'):
+                latlabel_arr *= -1
+
             m.drawparallels(latlabel_arr, labels=lat_lables,
                             color=axgridec, linestyle=axgridls,
                             linewidth=axgridlw)

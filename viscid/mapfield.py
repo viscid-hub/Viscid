@@ -219,7 +219,7 @@ def as_spherefield(fld, order=('phi', 'theta'), units=''):
     ret = convert_coordinates(fld, order, mapping, units=units)
     return ret
 
-def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
+def as_polar_mapfield(fld, bounding_lat=None, hemisphere='north',
                       make_periodic=False):
     """Prepare a theta/phi or lat/lon field for polar projection
 
@@ -237,10 +237,19 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
         ValueError: on bad hemisphere
     """
     hemisphere = hemisphere.strip().lower()
-    bounding_lat = (np.pi / 180.0) * bounding_lat
-    abs_bounding_lat = abs(bounding_lat)
 
     mfld = as_mapfield(fld, order=('lon', 'lat'), units='rad')
+
+    # set a sensible default for bounding_lat... full spheres get cut off
+    # at 40 deg, but hemispheres or smaller are shown in full
+    if bounding_lat is None:
+        if abs(mfld.xh[1] - mfld.xl[1]) >= 1.01 * np.pi:
+            bounding_lat = 40.0
+        else:
+            bounding_lat = 90.0
+
+    bounding_lat = (np.pi / 180.0) * bounding_lat
+    abs_bounding_lat = abs(bounding_lat)
 
     if hemisphere in ("north", 'n'):
         if np.all(mfld.get_crd('lat') < abs_bounding_lat):
