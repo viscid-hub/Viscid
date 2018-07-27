@@ -33,6 +33,7 @@ Submodules
    viscid.npdatetime
    viscid.parallel
    viscid.pyeval
+   viscid.rotation
    viscid.seed
    viscid.sliceutil
    viscid.tree
