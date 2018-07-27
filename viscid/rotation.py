@@ -1819,19 +1819,19 @@ def _check_quat2axang(quick=False):
     axang0 = rotm2axang(R0)
     q1 = axang2quat(axang0)
     axang1 = quat2axang(q1)
-    assert np.allclose(R0, quat2rotm(q1), atol=2e-8, rtol=2e-8)
+    assert np.allclose(R0, quat2rotm(q1), atol=1e-7, rtol=1e-7)
     assert np.allclose(axang2rotm(axang0), quat2rotm(q1))
     assert np.allclose(axang2rotm(axang0), axang2rotm(axang1),
-                       atol=2e-8, rtol=2e-8)
+                       atol=1e-7, rtol=1e-7)
 
     R0 = eul2rotm(angs3)
     w0, xyz0 = rotm2wxyz(R0)
     q1 = wxyz2quat(w0, xyz0)
     w1, xyz1 = quat2wxyz(q1)
-    assert np.allclose(R0, quat2rotm(q1), atol=2e-8, rtol=2e-8)
+    assert np.allclose(R0, quat2rotm(q1), atol=1e-7, rtol=1e-7)
     assert np.allclose(wxyz2rotm(w0, xyz0), quat2rotm(q1))
     assert np.allclose(wxyz2rotm(w0, xyz0), wxyz2rotm(w1, xyz1),
-                       atol=2e-8, rtol=2e-8)
+                       atol=1e-7, rtol=1e-7)
 
     return 0
 
