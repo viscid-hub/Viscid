@@ -505,7 +505,7 @@ def great_circle(p1, p2, origin=(0, 0, 0), n=32):
         if np.isclose(np.linalg.norm(np.cross(pole, p1)), 0.0):
             pole = np.array([0, 0, -1])
 
-    matBtoA = viscid.make_rotation_matrix([0, 0, 0], [0, 0, 1], pole, new_x=p1)
+    matBtoA = viscid.a2b_rot([0, 0, 1], pole, new_x=p1)
 
     # this is some code to validate rotation matrix
     _xrot = np.dot(matBtoA, [1, 0, 0])

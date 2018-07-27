@@ -210,7 +210,7 @@ def _main():
     B['z'] = np.sin(1.0 * np.pi * X / (xh - xl) - 1.0 * np.pi)
     B += 0.33 * np.random.random_sample(B.shape)
 
-    # R = viscid.make_rotation_matrix((0, 0, 0), (1, 0, 0), (1, 0, 1))
+    # R = viscid.a2b_rotm((1, 0, 0), (1, 0, 1))
     # B[...] = np.einsum("ij,lmnj->lmni", R, B)
 
     lmn = find_minvar_lmn(B, (xl, ym, zm), (xh, ym, zm), l_basis=None)

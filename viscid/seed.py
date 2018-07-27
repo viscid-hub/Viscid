@@ -9,7 +9,7 @@ import numpy as np
 import viscid
 from viscid.compat import izip
 
-__all__ = ['make_rotation_matrix', 'to_seeds', 'SeedGen', 'Point',
+__all__ = ['to_seeds', 'SeedGen', 'Point',
            'MeshPoints', 'RectilinearMeshPoints', 'Line', 'Spline',
            'Plane', 'Volume', 'Sphere', 'SphericalCap', 'Circle',
            'SphericalPatch', 'PolarIonosphere']
@@ -27,76 +27,6 @@ def to_seeds(pts):
         return pts
     else:
         return Point(pts)
-
-def make_rotation_matrix(origin, p1, p2, roll=0.0, new_x=None):
-    """Make a matrix that rotates origin-p2 to origin-p1
-
-    Note:
-        If you want `p1` and `p2` to be vectors, just set `origin` to
-        `[0, 0, 0]`.
-
-    Args:
-        origin (ndarray): Origin of the rotation in 3D
-        p1 (ndarray): Some point in 3D
-        p2 (ndarray): A point in 3D such that p1 will be rotated
-            around the origin so that it lies along the origin-p2
-            line
-        roll (float): Angle (in degrees) of roll around the
-            origin-p2 vector
-        new_x (ndarray): If given, then roll is set such that
-            the `x` axis (phi = 0) new_x projected in the plane
-            perpendicular to origin-p1
-
-    Returns:
-        ndarray: 3x3 orthonormal rotation matrix
-    """
-    origin = np.asarray(origin).reshape(-1)
-    p1 = np.asarray(p1).reshape(-1)
-    p2 = np.asarray(p2).reshape(-1)
-
-    # normalize the origin-p1 and origin-p2 vectors as `a` and `b`
-    a = (p1 - origin) / np.linalg.norm(p1 - origin).reshape(-1)
-    b = (p2 - origin) / np.linalg.norm(p2 - origin).reshape(-1)
-
-    # Use Rodrigues' Rotation Formula to rotate theta degrees around the
-    # cross prodect of a and b. Here, K is the skew-symmetric cross-product
-    # matrix
-    theta = np.arctan2(np.linalg.norm(np.cross(a, b)), np.dot(a, b))
-    k = np.cross(a, b)
-    if np.allclose(k, [0, 0, 0]):
-        k = np.cross(a, [1, 0, 0])
-        if np.allclose(k, [0, 0, 0]):
-            k = np.cross(a, [0, 1, 0])
-    k = k / np.linalg.norm(k)
-    K = np.array([[0    , -k[2],  k[1]],  # pylint: disable=bad-whitespace
-                  [k[2] ,     0, -k[0]],  # pylint: disable=bad-whitespace
-                  [-k[1],  k[0],     0]])  # pylint: disable=bad-whitespace
-    R = np.eye(3) + np.sin(theta) * K + (1 - np.cos(theta)) * np.dot(K, K)
-
-    # if new_x is given, use it to set roll
-    if new_x is not None:
-        new_x = np.asarray(new_x)
-        # project new_x into the plane perpendicular to b
-        new_x = new_x - np.dot(new_x, b) * b
-        new_x_norm = np.linalg.norm(new_x)
-        if np.isclose(new_x_norm, 0):
-            roll = 0.0
-        else:
-            current_x = np.dot(R, [1, 0, 0])
-            new_x /= new_x_norm
-            current_x /= np.linalg.norm(current_x)
-            roll = np.arctan2(np.linalg.norm(np.cross(current_x, new_x)),
-                              np.dot(current_x, new_x)) * (180.0 / np.pi)
-            roll *= np.sign(np.dot(np.cross(current_x, new_x), b))
-
-    # now use the same formula to roll around the the origin-p2 axis
-    phi = (np.pi / 180.0) * roll
-    K = np.array([[0    , -b[2],  b[1]],  # pylint: disable=bad-whitespace
-                  [b[2] ,     0, -b[0]],  # pylint: disable=bad-whitespace
-                  [-b[1],  b[0],     0]])  # pylint: disable=bad-whitespace
-    Rroll = np.eye(3) + np.sin(phi) * K + (1 - np.cos(phi)) * np.dot(K, K)
-
-    return np.dot(Rroll, R)
 
 
 class SeedGen(object):
@@ -1157,8 +1087,8 @@ class Sphere(SeedGen):
         return r, theta, phi
 
     def get_rotation(self):
-        return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.pole,
-                                    roll=self.roll + self.crd_system_roll)
+        return viscid.a2b_rot([0, 0, 1], self.pole,
+                              roll=self.roll + self.crd_system_roll, unit='deg')
 
     def as_uv_coordinates(self):
         theta, phi = self._make_uv_axes()
@@ -1397,8 +1327,7 @@ class SphericalPatch(SeedGen):
         return self._make_uv_axes()
 
     def get_rotation(self):
-        return make_rotation_matrix([0, 0, 0], [0, 0, 1], self.p1,
-                                    roll=self.roll)
+        return viscid.a2b_rot([0, 0, 1], self.p1, roll=self.roll, unit='deg')
 
     def as_uv_coordinates(self):
         alpha, beta = self._make_uv_axes()
