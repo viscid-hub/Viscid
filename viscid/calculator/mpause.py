@@ -263,7 +263,7 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
 
         # cache new fields to disk
         if mp_fname:
-            viscid.save_fields(mp_fname + ".h5", mp_info.values())
+            viscid.save_fields(mp_fname + ".h5", list(mp_info.values()))
 
     try:
         _paraboloid_params = fit_paraboloid(mp_info[fit], p0=fit_p0)

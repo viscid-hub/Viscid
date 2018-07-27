@@ -102,7 +102,7 @@ class FileNumpyNPZ(vfile.VFile):
         g = self._make_grid(self, **self._grid_opts)
 
         with np.load(self.fname) as f:
-            fld_names = f.keys()
+            fld_names = list(f.keys())
 
             crd_names = []
             # try to get crds names from an array of strings called _KEY_CRDS
