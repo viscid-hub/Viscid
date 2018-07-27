@@ -278,13 +278,13 @@ Installing Mayavi (optional)
 
 .. warning::
 
-    Do **not** install Mayavi using pip into an Anaconda environment. This will break your conda environment in a way that requires you to reinstall Anaconda. The issue is that pip happily clobbers some parts of pyqt that are hard linked to a cache in conda. You have been warned.
+    Do **not** install Mayavi using pip into an Anaconda environment. This will break your environment in a way that requires you to reinstall Anaconda. The issue is that pip happily clobbers some parts of pyqt that are hard linked to a cache. You have been warned.
 
 .. note::
 
     I do not recommend using the ``conda-forge`` channel for VTK or Mayavi. These binaries frequently have runtime problems caused by interactions with specific versions of vtk / pyqt.
 
-Installing Mayavi can be a mine field of incompatible dependencies. To help, here is a table to help you choose your poison. If your environment is not in the table, then it is likely not supported by Mayavi / VTK.
+Installing Mayavi can be a mine field of incompatible dependencies. Here is a table to help you choose your poison. If your environment is not in the table, then it is likely not supported by Mayavi / VTK.
 
 .. cssclass:: table-striped
 
