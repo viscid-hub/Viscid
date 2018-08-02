@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-"""Rotation matrix <-> Euler angle <-> quaternion conversions
+"""Euler angle <-> Rotation matrix <-> quaternion conversions
 
 This module is designed to work with Numpy versions 1.9+
 
