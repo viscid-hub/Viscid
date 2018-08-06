@@ -1231,11 +1231,11 @@ class Field(tree.Leaf):
                 # this may not work as advertised since slices may
                 # not be complete?
                 # using xyz slices because it's calling Field.__getitem__
-                slced_dat = self._src_data[comp_slc][slices]
+                slced_dat = self._src_data[comp_slc][tuple(slices)]
             else:
                 comps = self._src_data[comp_slc]
                 # using xyz slices because it's calling Field.__getitem__
-                slced_dat = [c[slices] for c in comps]
+                slced_dat = [c[tuple(slices)] for c in comps]
         elif self._cache is None and hypersliceable:
             # we have to flip the slice, meaning: if the array looks like
             # ind     : 0    1     2    3    4    5    6

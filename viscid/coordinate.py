@@ -539,7 +539,7 @@ class StructuredCrds(Coordinates):
     def _sm1(a):
         n = a.shape
         slices = [slice(None) if ni <= 1 else slice(None, -1) for ni in n]
-        return a[slices]
+        return a[tuple(slices)]
 
     def _ogrid_single(self, axis, arr):
         """ returns (flat array, open array) """
