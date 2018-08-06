@@ -17,20 +17,22 @@ import viscid
 from viscid import vutil
 
 
-def test_slice(arr, slc, ref, **kwargs):
-    result = arr[viscid.to_slice(arr, slc, **kwargs)]
+def test_slice(arr, sel, ref, **kwargs):
+    # result = arr[viscid.to_slice(arr, slc, **kwargs)]
+    std_sel = viscid.standardize_sel(sel)
+    result = arr[viscid.std_sel2index(std_sel, arr, **kwargs)]
 
     if isinstance(ref, np.ndarray):
         failed = len(result) != len(ref) or np.any(result != ref)
     else:
         failed = result != ref
 
-    viscid.logger.debug("{0}: {1}".format(slc, result))
+    viscid.logger.debug("{0}: {1}".format(sel, result))
     if failed:
         s = ("Slice doesn't match reference\n"
              "  SLICE:     {0}\n"
              "  RESULT:    {1}\n"
-             "  REFERENCE: {2}\n".format(slc, result, ref))
+             "  REFERENCE: {2}\n".format(sel, result, ref))
         raise RuntimeError(s)
 
 def _main():

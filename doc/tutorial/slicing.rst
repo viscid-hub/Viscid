@@ -1,6 +1,8 @@
 Slicing Fields
 ==============
 
+See :doc:`../indexing` for more information on field indexing.
+
 Spatial Slices
 --------------
 

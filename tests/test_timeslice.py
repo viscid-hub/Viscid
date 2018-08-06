@@ -161,8 +161,6 @@ def _main():
     # slice by datetime
     test_slice(dset, np.s_['1980-01-01T00:00:03.0':'1980-01-01T00:00:07.8'],
                times[2:6])
-    test_slice(dset, np.s_['1980-01-01T00:00:03.0:1980-01-01T00:00:07.8'],
-               times[2:6])
     test_slice(dset, np.s_['UT1980-01-01T00:00:03.0:UT1980-01-01T00:00:07.8'],
                times[2:6])
     test_slice(dset, np.s_['T1980-01-01T00:00:03.0:T1980-01-01T00:00:07.8'],
@@ -187,6 +185,20 @@ def _main():
     assert dset.tslc_range('2.3f:2.5f') == (2.3, 2.5)
     assert dset.tslc_range('UT1980-01-01T00:00:03.0:'
                            'UT1980-01-01T00:00:07.8') == (3.0, 7.8)
+
+
+    t = viscid.linspace_datetime64('2010-01-01T12:00:00',
+                                   '2010-01-01T15:00:00', 8)
+    x = np.linspace(-1, 1, 12)
+    fld = viscid.zeros([t, x], crd_names='tx', center='node')
+    assert fld[:'2010-01-01T13:30:00'].shape == (4, 12)
+
+    t = viscid.linspace_datetime64('2010-01-01T12:00:00',
+                                   '2010-01-01T15:00:00', 8)
+    t = t - t[0]
+    x = np.linspace(-1, 1, 12)
+    fld = viscid.zeros([t, x], crd_names='tx', center='node')
+    assert fld[:'01:30:00'].shape == (4, 12)
 
     return 0
 

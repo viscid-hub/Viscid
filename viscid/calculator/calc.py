@@ -677,7 +677,7 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
 
     v = np.zeros(target_shape, dtype=arr.dtype)
 
-    v[s0] = arr[...]
+    v[tuple(s0)] = arr[...]
 
     for _, axi in enumerate(axes):
         ni = shape[axi] + nl
@@ -689,40 +689,40 @@ def extend_boundaries_ndarr(arr, nl=1, nh=1, axes='all', nr_comp=None,
             for j in range(nl):
                 dest_slc[axi] = slice(nl - 1 - j, nl - 1 - j + 1)
                 src_slc[axi] = slice(nl - j, nl - j + 1)
-                v[dest_slc] = v[src_slc] - invarient_dx
+                v[tuple(dest_slc)] = v[tuple(src_slc)] - invarient_dx
             for j in range(nh):
                 dest_slc[axi] = slice(ni + j, ni + j + 1)
                 src_slc[axi] = slice(ni - 1 + j, ni - 1 + j + 1)
-                v[dest_slc] = v[src_slc] + invarient_dx
+                v[tuple(dest_slc)] = v[tuple(src_slc)] + invarient_dx
         elif order == 0:
             if nl:
                 dest_slc[axi] = slice(None, nl)
                 src_slc[axi] = slice(nl, nl + 1)
-                v[dest_slc] = v[src_slc]
+                v[tuple(dest_slc)] = v[tuple(src_slc)]
             if nh:
                 dest_slc[axi] = slice(ni, None)
                 src_slc[axi] = slice(ni - 1, ni)
-                v[dest_slc] = v[src_slc]
+                v[tuple(dest_slc)] = v[tuple(src_slc)]
         elif arr.shape[axi] < 2:
             for j in range(nl):
                 dest_slc[axi] = slice(nl - 1 - j, nl - 1 - j + 1)
                 src_slc[axi] = slice(nl - j, nl - j + 1)
-                v[dest_slc] = v[src_slc] - invarient_dx
+                v[tuple(dest_slc)] = v[tuple(src_slc)] - invarient_dx
             for j in range(nh):
                 dest_slc[axi] = slice(ni + j, ni + j + 1)
                 src_slc[axi] = slice(ni - 1 + j, ni - 1 + j + 1)
-                v[dest_slc] = v[src_slc] + invarient_dx
+                v[tuple(dest_slc)] = v[tuple(src_slc)] + invarient_dx
         elif order == 1:
             for j in range(nl):
                 dest_slc[axi] = slice(nl - j - 1, nl - j)
                 src_slc[axi] = slice(nl - j, nl - j + 1)
                 src_slcR[axi] = slice(nl - j + 1, nl - j + 2)
-                v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
+                v[tuple(dest_slc)] = 2 * v[tuple(src_slc)] - v[tuple(src_slcR)]
             for j in range(nh):
                 dest_slc[axi] = slice(ni + j, ni + j + 1)
                 src_slc[axi] = slice(ni + j - 1, ni + j)
                 src_slcR[axi] = slice(ni + j -2, ni + j - 1)
-                v[dest_slc] = 2 * v[src_slc] - v[src_slcR]
+                v[tuple(dest_slc)] = 2 * v[tuple(src_slc)] - v[tuple(src_slcR)]
             # src_slc[i] = slice(-1, None)
             # dest_slc[i] = slice(-nh, None)
             # v[dest_slc] = arr[src_slc]

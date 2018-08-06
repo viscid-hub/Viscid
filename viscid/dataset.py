@@ -15,7 +15,7 @@ from viscid.bucket import Bucket
 from viscid import tree
 from viscid import vutil
 from viscid.vutil import tree_prefix
-from viscid.sliceutil import to_slice, selection2values
+from viscid.sliceutil import standardize_sel, std_sel2index, selection2values
 
 
 class DeferredChild(object):
@@ -119,28 +119,28 @@ class Dataset(tree.Node):
             except AttributeError:
                 pass
 
-    def nr_times(self, slc=slice(None), val_endpoint=True, interior=False,
+    def nr_times(self, sel=slice(None), val_endpoint=True, interior=False,
                  tdunit='s', tol=100):
         for child in self.children:
             try:
-                return child.nr_times(slc=slc, val_endpoint=val_endpoint,
+                return child.nr_times(sel=sel, val_endpoint=val_endpoint,
                                       interior=interior, tdunit=tdunit, tol=tol)
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
 
-    def iter_times(self, slc=slice(None), val_endpoint=True, interior=False,
+    def iter_times(self, sel=slice(None), val_endpoint=True, interior=False,
                    tdunit='s', tol=100, resolved=True):
         for child in self.iter_resolved_children():
             try:
-                return child.iter_times(slc=slc, val_endpoint=val_endpoint,
+                return child.iter_times(sel=sel, val_endpoint=val_endpoint,
                                         interior=interior, tdunit=tdunit, tol=tol,
                                         resolved=resolved)
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
 
-    def tslc_range(self, selection=slice(None), tdunit='s'):
+    def tslc_range(self, sel=slice(None), tdunit='s'):
         """Find endpoints for a time slice selection
 
         Note:
@@ -151,21 +151,21 @@ class Dataset(tree.Node):
         """
         for child in self.children:
             try:
-                return child.tslc_range(selection=selection, tdunit=tdunit)
+                return child.tslc_range(sel=sel, tdunit=tdunit)
             except AttributeError:
                 pass
         raise RuntimeError("I find no temporal datasets")
 
-    def get_times(self, slc=slice(None), val_endpoint=True, interior=False,
+    def get_times(self, sel=slice(None), val_endpoint=True, interior=False,
                   tdunit='s', tol=100):
-        return list(self.iter_times(slc=slc, val_endpoint=val_endpoint,
+        return list(self.iter_times(sel=sel, val_endpoint=val_endpoint,
                                     interior=interior, tdunit=tdunit, tol=tol,
                                     resolved=False))
 
-    def get_time(self, slc=slice(None), val_endpoint=True, interior=False,
+    def get_time(self, sel=slice(None), val_endpoint=True, interior=False,
                  tdunit='s', tol=100):
         try:
-            return next(self.iter_times(slc=slc, val_endpoint=val_endpoint,
+            return next(self.iter_times(sel=sel, val_endpoint=val_endpoint,
                                         interior=interior, tdunit=tdunit, tol=tol))
         except StopIteration:
             raise RuntimeError("Dataset has no time slices")
@@ -334,7 +334,7 @@ class DatasetTemporal(Dataset):
     #############################################################################
     ## here begins a slew of functions that make specifying a time / time slice
     ## super general
-    def _slice_time(self, slc=slice(None), val_endpoint=True, interior=False,
+    def _slice_time(self, sel=slice(None), val_endpoint=True, interior=False,
                     tdunit='s', tol=100):
         """
         Args:
@@ -345,21 +345,6 @@ class DatasetTemporal(Dataset):
         Returns:
             list of slices (containing integers only) or ints
         """
-        # print("SLC::", slc)
-        if not isinstance(slc, (list, tuple)):
-            slc = [slc]
-
-        # expand strings that are comma separated lists of strings
-        _slc = []
-        for s in slc:
-            if isinstance(s, string_types):
-                for _ in s.split(','):
-                    _slc.append(_)
-            else:
-                _slc.append(s)
-        slc = _slc
-
-        ret = []
         times = np.array([child[0] for child in self.children])
 
         try:
@@ -367,12 +352,10 @@ class DatasetTemporal(Dataset):
         except viscid.NoBasetimeError:
             basetime = None
 
-        for s in slc:
-            ret.append(to_slice(times, s, val_endpoint=val_endpoint,
-                                interior=interior, epoch=basetime, tdunit=tdunit,
-                                tol=tol))
-
-        return ret
+        std_sel = standardize_sel(sel)
+        idx_sel = std_sel2index(std_sel, times, val_endpoint=val_endpoint,
+                                interior=interior, tdunit=tdunit, epoch=basetime)
+        return idx_sel
 
     def _time_slice_to_iterator(self, slc):
         """
@@ -383,29 +366,21 @@ class DatasetTemporal(Dataset):
         Returns:
             a flat iterator of self.children of all the slices chained
         """
-        if not isinstance(slc, (list, tuple)):
-            slc = [slc]
+        inds = np.arange(len(self.children))[slc]
+        if not isinstance(inds, np.ndarray):
+            inds = np.asarray(inds).reshape(-1)
+        return (self.children[i] for i in inds)
 
-        child_iter_lst = []
-        for s in slc:
-            if isinstance(s, slice):
-                inds = range(len(self.children))[s]
-                it = (self.children[i] for i in inds)
-                child_iter_lst.append(it)
-            else:
-                child_iter_lst.append([self.children[s]])
-        return chain(*child_iter_lst)
-
-    def nr_times(self, slc=slice(None), val_endpoint=True, interior=False,
+    def nr_times(self, sel=slice(None), val_endpoint=True, interior=False,
                  tdunit='s', tol=100):
-        slc = self._slice_time(slc=slc, val_endpoint=val_endpoint,
+        slc = self._slice_time(sel=sel, val_endpoint=val_endpoint,
                                interior=interior, tdunit=tdunit, tol=tol)
         child_iterator = self._time_slice_to_iterator(slc)
         return len(list(child_iterator))
 
-    def iter_times(self, slc=slice(None), val_endpoint=True, interior=False,
+    def iter_times(self, sel=slice(None), val_endpoint=True, interior=False,
                    tdunit='s', tol=100, resolved=True):
-        slc = self._slice_time(slc=slc, val_endpoint=val_endpoint,
+        slc = self._slice_time(sel=sel, val_endpoint=val_endpoint,
                                interior=interior, tdunit=tdunit, tol=tol)
         child_iterator = self._time_slice_to_iterator(slc)
 
@@ -422,18 +397,18 @@ class DatasetTemporal(Dataset):
             with what as target:
                 yield target
 
-    def get_times(self, slc=slice(None), val_endpoint=True, interior=False,
+    def get_times(self, sel=slice(None), val_endpoint=True, interior=False,
                   tdunit='s', tol=100):
-        return list(self.iter_times(slc=slc, val_endpoint=val_endpoint,
+        return list(self.iter_times(sel=sel, val_endpoint=val_endpoint,
                                     interior=interior, tdunit=tdunit, tol=tol,
                                     resolved=False))
 
-    def get_time(self, slc=slice(None), val_endpoint=True, interior=False,
+    def get_time(self, sel=slice(None), val_endpoint=True, interior=False,
                  tdunit='s', tol=100):
-        return self.get_times(slc=slc, val_endpoint=val_endpoint,
+        return self.get_times(sel=sel, val_endpoint=val_endpoint,
                               interior=interior, tdunit=tdunit, tol=tol)[0]
 
-    def tslc_range(self, selection=slice(None), tdunit='s'):
+    def tslc_range(self, sel=slice(None), tdunit='s'):
         """Find endpoints for a time slice selection
 
         Note:
@@ -449,7 +424,7 @@ class DatasetTemporal(Dataset):
         except viscid.NoBasetimeError:
             basetime = None
 
-        return selection2values(times, selection, epoch=basetime, tdunit=tdunit)
+        return selection2values(times, sel, epoch=basetime, tdunit=tdunit)
 
     ## ok, that's enough for the time stuff
     ########################################
@@ -513,7 +488,7 @@ class DatasetTemporal(Dataset):
         # print(">> get_child:", item)
         # print(">> slice is:", self._slice_time(item))
         # always just return the first slice's child... is this wrong?
-        child = self.children[self._slice_time(item)[0]][1].resolve()
+        child = self.children[self._slice_time(item)][1].resolve()
         return child
 
     def __contains__(self, item):

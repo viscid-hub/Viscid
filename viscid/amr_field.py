@@ -103,7 +103,7 @@ class AMRField(object):
         # print("??", len(self.patches))
         if len(self.patches) == 0:
             raise ValueError("AMR field must contain patches to be slicable")
-        selection, _ = self.patches[0]._prepare_slice(selection)
+        sel_list, _ = self.patches[0]._prepare_slice(selection)
         try:
             extent = self.patches[0]._src_crds.get_slice_extent(selection)
         except RuntimeError:

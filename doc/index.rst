@@ -110,6 +110,7 @@ Contents
 
   installation
   philosophy
+  indexing
   tutorial/index
   tips_and_tricks
   functions

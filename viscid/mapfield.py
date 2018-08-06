@@ -114,7 +114,7 @@ def fld_theta2lat(fld, base='theta', target='lat', unit='deg'):
     crd_xform = lambda x: theta2lat(x, unit=unit)[::-1]
     dslc = [slice(None)] * fld.nr_dims
     dslc[ddat] = slice(None, None, -1)
-    dat_xform = lambda a: a[dslc]
+    dat_xform = lambda a: a[tuple(dslc)]
     return _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
 
 def fld_lon2phi(fld, base='lon', target='phi', unit='deg'):
@@ -127,7 +127,7 @@ def fld_lat2theta(fld, base='lat', target='theta', unit='deg'):
     crd_xform = lambda x: lat2theta(x, unit=unit)[::-1]
     dslc = [slice(None)] * fld.nr_dims
     dslc[ddat] = slice(None, None, -1)
-    dat_xform = lambda a: a[dslc]
+    dat_xform = lambda a: a[tuple(dslc)]
     ret = _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
     if ret.xh[dcrd] - ret.xl[dcrd] < 0:
         p90 = np.pi / 2 if unit == 'rad' else 90.0
