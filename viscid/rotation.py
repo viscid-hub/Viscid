@@ -5,35 +5,68 @@ This module is designed to work with Numpy versions 1.9+
 
 Quaternion functions will work with vanilla Numpy, but they can also
 make use of `this quaternion library <https://github.com/moble/quaternion>`_.
-It is probably to your benifit to use a library that explicitly
+It is probably to your benefit to use a library that explicitly
 implements quaternion algebra.
 
 Note:
-    Functions with "eul" in their name use multiplication-order
-    for their axes, while functions with "angle" in their name
-    use transformation-order. This mirrors the different
-    conventions used in Matlab's Aerospace and Robotics System
-    Toolboxes. In this context, transformation-order (Aerospace
-    Toolkit / "angle") means the first axis specified is the first
-    transformation applied, which is the right-most matrix.
-    Multiplication-order (Robotics System / "eul") means the last
-    axis given is the first transformation applied.
+    If a function in this module has the same name as one in Matlab,
+    the conventions used for the functions are the same.
 
-Attributes:
-    - angle2rot: Euler angles -> rotation matrix (rotates vectors)
-    - eul2rot: same as :py:func:`angle2rot`, but in multiplication-order
-    - angle2dcm: Euler angles -> direction cosine matrix (rotates axes)
-    - eul2dcm: same as :py:func:`angle2dcm`, but in multiplication-order
+Conventions:
+    Rotation matrices and Euler angles are notoriously ambiguous due to
+    competing conventions for order and meaning. Hopefully this section
+    makes it clear which conventions are used in which functions.
 
-    - rot2angles: rotation matrix (rotates vectors) -> Euler angles
-    - rot2eul: same as :py:func:`rot2angle`, but in multiplication-order
-    - dcm2angles: direction cosine matrix (rotates axes) -> Euler angles
-    - dcm2eul: same as :py:func:`dcm2angle`, but in multiplication-order
+    - **What is rotating**
+        Rotations always follow the right hand rule, but can mean two
+        things depending what is rotating.
 
-    - rot2quat: rotation matrix (rotates vectors) -> quaternion
-    - dcm2quat: direction cosine matrix (rotates axes) -> quaternion
-    - quat2rot: quaternion -> rotation matrix (rotates vectors)
-    - quat2dcm: quaternion -> direction cosine matrix (rotates axes)
+        * **Extrinsic rotations** ``*rot*``
+            Axes remain fixed, and matrices rotate vectors. This
+            convention is used in functions with ``rot`` in their names
+            to mirror Matlab's Robotics System toolkit. For example::
+
+            >>> e_rot(numpy.pi / 2, 'z') @ [1, 0, 0] = [0, 1, 0]
+
+        * **Intrinsic rotations** ``*dcm*``
+            Vectors remain fixed, but matrices rotate axes. This
+            convention is used in functions with ``dcm`` in their names
+            to mirror Matlab's Aerospace toolkit. For example::
+
+            >>> e_dcm(numpy.pi / 2, 'z') @ [1, 0, 0] = [0, -1, 0]
+
+    - **Axis Order**
+        For functions that deal with Euler angles, their order can be
+        specified in two ways
+
+        * **Multiplication order** ``*eul*``
+            Axes are specified in the same order as the multiplication
+            of the elementary matrices. In other words, the last axis
+            specified is the first rotation applied. This convention is
+            used in functions with ``eul`` in their names to mirror
+            Matlab's Robotics System toolkit.
+
+        * **Transformation order** ``*angle*``
+            Axes are specified in the order that they are applied. In
+            other words, the first axis is the first rotation, or the
+            right-most matrix. This convention is used in functions with
+            ``angle`` in their names to mirror Matlab's Aerospace toolkit.
+
+Functions:
+    - angle2rot: Euler angles (transform-order) -> rotation matrix (extrinsic)
+    - eul2rot: Euler angles (multiplication-order) -> rotation matrix (extrinsic)
+    - angle2dcm: Euler angles (transform-order) -> rotation matrix (intrinsic)
+    - eul2dcm: Euler angles (multiplication-order) -> rotation matrix (intrinsic)
+
+    - rot2angle: Rotation matrix (extrinsic) -> Euler angles (transform-order)
+    - rot2eul: Rotation matrix (extrinsic) -> Euler angles (multiplication-order)
+    - dcm2angle: Rotation matrix (intrinsic) -> Euler angles (transform-order)
+    - dcm2eul: Rotation matrix (intrinsic) -> Euler angles (multiplication-order)
+
+    - rot2quat: Rotation matrix (extrinsic) -> quaternion
+    - dcm2quat: Rotation matrix (intrinsic) -> quaternion
+    - quat2rot: Quaternion -> rotation matrix (extrinsic)
+    - quat2dcm: Quaternion -> rotation matrix (intrinsic)
 
     - rotmul: Multiply rotation matrices together
     - rotate: Rotate R3 vector(s) by one or more matrices
@@ -54,8 +87,8 @@ Attributes:
     - convert_angle: deg <-> rad conversion
     - check_orthonormality: checks that determinant is +1
 
-    - e_rot: elementary rotation matrix (rotates vectors)
-    - e_dcm: elementary direction cosine matrix (rotates axes)
+    - e_rot: elementary rotation matrix (extrinsic)
+    - e_dcm: elementary direction cosine matrix (intrinsic)
 
     - angle_between: angle between two vectors
     - a2b_rot: make rotation matrix that rotates vector a to vector b
@@ -195,11 +228,9 @@ def check_orthonormality(mat, bad_matrix='warn'):
     return is_valid
 
 def e_rot(theta, axis='z', unit='rad'):
-    """Make elementary rotation matrices of theta around axis
+    """Make elementary rotation matrices (extrinsic) of theta around axis
 
-    These matrices are right-handed in that they rotate vectors (not
-    axes) counter-clockwise when looking at the origin from the
-    positive axis. For example::
+    Example:
 
         >>> e_rot(numpy.pi / 2, 'z') @ [1, 0, 0] = [0, 1, 0]
 
@@ -257,13 +288,11 @@ def e_rot(theta, axis='z', unit='rad'):
     return rotations
 
 def e_dcm(theta, axis='z', unit='rad'):
-    """Make elementary rotation matrices of theta around axis
+    """Make elementary rotation matrices (intrinsic) of theta around axis
 
-    These matrices are right-handed in that they rotate axes (not
-    vectors) counter-clockwise when looking at the origin from the
-    positive axis. For example::
+    Example:
 
-        >>> e_rot(numpy.pi / 2, 'z') @ [1, 0, 0] = [0, -1, 0]
+        >>> e_dcm(numpy.pi / 2, 'z') @ [1, 0, 0] = [0, -1, 0]
 
     Args:
         theta (float, sequence): angle or angles
@@ -280,12 +309,7 @@ def e_dcm(theta, axis='z', unit='rad'):
     return e_rot(-np.asarray(theta, dtype=np.double), axis=axis, unit=unit)
 
 def angle2rot(angles, axes='zyx', unit='rad'):
-    """Euler angles -> Rotation matrix for vectors; transform-order
-
-    The resulting matrix is right-handed and rotates vectors (as
-    opposed to axes). For instance::
-
-        >>> angle2rot([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, 1, 0]
+    """Euler angles (transform-order) -> rotation matrix (extrinsic)
 
     Rotations are applied in transform-order, which means the first
     axis given is the first transform applied. In other words, the
@@ -294,6 +318,10 @@ def angle2rot(angles, axes='zyx', unit='rad'):
         >>> R = (R(angles[..., 2], axis[..., 2]) @
         >>>      R(angles[..., 1], axis[..., 1]) @
         >>>      R(angles[..., 0], axis[..., 0]))
+
+    Example:
+
+        >>> angle2rot([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, 1, 0]
 
     Args:
         angles (sequence): Euler angles in transform-order; can
@@ -334,12 +362,7 @@ def angle2rot(angles, axes='zyx', unit='rad'):
     return R
 
 def eul2rot(angles, axes='zyx', unit='rad'):
-    """Euler angles -> Rotation matrix for vectors; multiplication-order
-
-    The resulting matrix is right-handed and rotates vectors (as
-    opposed to axes). For instance::
-
-        >>> eul2rot([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, 1, 0]
+    """Euler angles (multiplication-order) -> rotation matrix (extrinsic)
 
     Rotations are applied in multiplication-order, which means the last
     axis given is the first transform applied. In other words::
@@ -350,6 +373,10 @@ def eul2rot(angles, axes='zyx', unit='rad'):
 
     This function is equivalent (up to a few machine epsilon) to
     Matlab's ``eul2rotm``.
+
+    Example:
+
+        >>> eul2rot([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, 1, 0]
 
     Args:
         angles (sequence): Euler angles in multiplication-order; can
@@ -371,12 +398,7 @@ def eul2rot(angles, axes='zyx', unit='rad'):
     return R
 
 def angle2dcm(angles, axes='zyx', unit='rad'):
-    """Euler angles -> Direction cosine matrix for axes; transform-order
-
-    The resulting matrix is right-handed and rotates axes (as
-    opposed to vectors). For instance::
-
-        >>> angle2dcm([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, -1, 0]
+    """Euler angles (transform-order) -> rotation matrix (intrinsic)
 
     Rotations are applied in transform-order, which means the first
     axis given is the first transform applied. In other words, the
@@ -388,6 +410,10 @@ def angle2dcm(angles, axes='zyx', unit='rad'):
 
     This function is equivalent (up to a few machine epsilon) to
     Matlab's ``angle2dcm``.
+
+    Example:
+
+        >>> angle2dcm([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, -1, 0]
 
     Args:
         angles (sequence): Euler angles in transform-order; can
@@ -403,12 +429,7 @@ def angle2dcm(angles, axes='zyx', unit='rad'):
     return angle2rot(-1 * np.asarray(angles, dtype=np.double), axes=axes, unit=unit)
 
 def eul2dcm(angles, axes='zyx', unit='rad'):
-    """Euler angles -> Direction cosine matrix for axes; multiplication-order
-
-    The resulting matrix is right-handed and rotates axes (as
-    opposed to vectors). For instance::
-
-        >>> eul2dcm([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, -1, 0]
+    """Euler angles (multiplication-order) -> rotation matrix (intrinsic)
 
     Rotations are applied in multiplication-order, which means the last
     axis given is the first transform applied. In other words::
@@ -416,6 +437,10 @@ def eul2dcm(angles, axes='zyx', unit='rad'):
         >>> R = (R(angles[..., 0], axis[..., 0]) @
         >>>      R(angles[..., 1], axis[..., 1]) @
         >>>      R(angles[..., 2], axis[..., 2]))
+
+    Example:
+
+        >>> eul2dcm([numpy.pi / 2, 0, 0], 'zyx') @ [1, 0, 0] = [0, -1, 0]
 
     Args:
         angles (sequence): Euler angles in multiplication-order; can
@@ -437,7 +462,7 @@ def eul2dcm(angles, axes='zyx', unit='rad'):
     return R
 
 def rot2angle(R, axes='zyx', unit='rad', bad_matrix='warn'):
-    """Rotation matrix (vectors) -> Euler angles; transform-order
+    """Rotation matrix (extrinsic) -> Euler angles (transform-order)
 
     Args:
         R (ndarray): A rotation matrix with shape [Ndim, Ndim] or a
@@ -573,7 +598,7 @@ def rot2angle(R, axes='zyx', unit='rad', bad_matrix='warn'):
     return convert_angle(angles, 'rad', unit)
 
 def rot2eul(R, axes='zyx', unit='rad', bad_matrix='warn'):
-    """Rotation matrix (vectors) -> Euler angles; multiplication-order
+    """Rotation matrix (extrinsic) -> Euler angles (multiplication-order)
 
     Args:
         R (ndarray): A rotation matrix with shape [Ndim, Ndim] or a
@@ -596,7 +621,7 @@ def rot2eul(R, axes='zyx', unit='rad', bad_matrix='warn'):
     return angles
 
 def dcm2angle(R, axes='zyx', unit='rad', bad_matrix='warn'):
-    """Direction cosine matrix (axes) -> Euler angles; transform-order
+    """Rotation matrix (intrinsic) -> Euler angles (transform-order)
 
     Args:
         R (ndarray): A rotation matrix with shape [Ndim, Ndim] or a
@@ -631,7 +656,7 @@ def dcm2angle(R, axes='zyx', unit='rad', bad_matrix='warn'):
     return angles
 
 def dcm2eul(R, axes='zyx', unit='rad', bad_matrix='warn'):
-    """Direction cosine matrix (axes) -> Euler angles; multiplication-order
+    """Rotation matrix (intrinsic) -> Euler angles (multiplication-order)
 
     Args:
         R (ndarray): A rotation matrix with shape [Ndim, Ndim] or a
@@ -654,7 +679,7 @@ def dcm2eul(R, axes='zyx', unit='rad', bad_matrix='warn'):
     return angles
 
 def rot2quat(R):
-    """Rotation matrix (rotates vectors) -> quaternion
+    """Rotation matrix (extrinsic) -> quaternion
 
     If `this quaternion library <https://github.com/moble/quaternion>`_
     is imported, then the results are presented with dtype quaternion,
@@ -715,7 +740,7 @@ def rot2quat(R):
     return q
 
 def dcm2quat(R):
-    """Direction cosine matrix (rotates axes) -> quaternion
+    """Rotation matrix (intrinsic) -> quaternion
 
     If `this quaternion library <https://github.com/moble/quaternion>`_
     is imported, then the results are presented with dtype quaternion,
@@ -734,7 +759,7 @@ def dcm2quat(R):
     return rot2quat(np.swapaxes(R, -2, -1))
 
 def quat2rot(q):
-    """Quaternion -> rotation matrix (rotates vectors)
+    """Quaternion -> rotation matrix (extrinsic)
 
     Args:
         q (ndarray): quaternions with dtype quaternion and shape
@@ -777,7 +802,7 @@ def quat2rot(q):
     return R
 
 def quat2dcm(q):
-    """Quaternion -> direction cosine matrix (rotates axes)
+    """Quaternion -> rotation matrix (intrinsic)
 
     Args:
         q (ndarray): quaternions with dtype quaternion and shape
