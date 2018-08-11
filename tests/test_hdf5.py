@@ -38,7 +38,7 @@ def _main():
     b['z'] = -Zcc
 
     # save an hdf5 file with companion xdmf file
-    h5_fname = os.path.join(viscid.sample_dir, "test.h5")
+    h5_fname = os.path.join(".", "test.h5")
     viscid.save_fields(h5_fname, [psi, b])
 
     # load the companion xdmf file
