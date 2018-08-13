@@ -268,7 +268,7 @@ def _warn_deprecated_float(val, varname='value'):
              "'f', as in 0j, 'x=0j', or 'x=0f'. This warning comes from:\n"
              "    {0}:{1}\n"
              "    >>> {2}"
-             "".format(frame.filename, frame.lineno, frame.code_context[0].strip()))
+             "".format(frame[1], frame[2], frame[4][0].strip()))
         logger.warning(s)
         _emit_deprecated_float_warning = False
 
@@ -989,7 +989,7 @@ def _user_written_stack_frame():
     stack = inspect.stack()
     frame_info = None
     for frame_info in stack:
-        if 'viscid' not in os.path.normpath(frame_info.filename):
+        if 'viscid' not in os.path.normpath(frame_info[1]):
             break
     return frame_info
 
