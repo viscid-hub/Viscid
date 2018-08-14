@@ -472,11 +472,10 @@ try:
     data_files = []
     data_files += [('viscid/plot/images', glob("viscid/plot/images/*.jpg"))]
     data_files += [('viscid/plot/styles', glob('viscid/plot/styles/*.mplstyle'))]
-    data_files += [('viscid/sample', glob("viscid/sample/*"))]
-    for dirpath, _, fnames in os.walk('viscid/sample/vpic_sample'):
+    for dirpath, _, fnames in os.walk('viscid/sample'):
         fnames = [os.path.join(dirpath, fname)
                   for fname in fnames if not fname.startswith('.')]
-        data_files += [(os.path.join('viscid', dirpath), fnames)]
+        data_files += [(os.path.join(dirpath), fnames)]
 
     version = get_viscid_version("viscid/__init__.py")
     url = "https://github.com/viscid-hub/Viscid"
