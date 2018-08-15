@@ -182,7 +182,7 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
         # bitwise_or an entire bounary if all points are neighbors, like
         # at the poles of a sphere
         for bnd in pt_bnds:
-            slc = [slice(None), slice(None)]
+            slc = (slice(None), slice(None))
             slc[int(bnd[0])] = -1 if bnd[1] == "+" else 0
             a[slc] = np.bitwise_or.reduce(a[slc])
 
