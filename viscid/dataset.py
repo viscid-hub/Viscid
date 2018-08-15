@@ -144,7 +144,7 @@ class Dataset(tree.Node):
         """Find endpoints for a time slice selection
 
         Note:
-            If the selection is slice-by-value, the values are not
+            If the selection is slice-by-location, the values are not
             adjusted to the nearest frame. For this functionality,
             you will want to use :py:func:`get_times` and pull out the
             first and last values.
@@ -412,7 +412,7 @@ class DatasetTemporal(Dataset):
         """Find endpoints for a time slice selection
 
         Note:
-            If the selection is slice-by-value, the values are not
+            If the selection is slice-by-location, the values are not
             adjusted to the nearest frame. For this functionality,
             you will want to use :py:func:`get_times` and pull out the
             first and last values.

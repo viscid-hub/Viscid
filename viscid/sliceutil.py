@@ -467,7 +467,7 @@ def std_sel2index(std_sel, crd_arr, val_endpoint=True, interior=False,
             [0.1, 0.2, 0.3][:0.25]. If you think this should include
             0.2, then leave keep val_endpoint=True.
         interior (bool): if True, then extend both ends of the slice
-            such that slice-by-value endpoints are interior to the
+            such that slice-by-location endpoints are interior to the
             slice
         epoch (datetime64-like): Epoch for to go datetime64 <-> float
         tdunit (str): Presumed time unit for floats
@@ -612,7 +612,7 @@ def _unify_sbv_types(std_val, crd_arr, tdunit='s', epoch=None):
                 uval = as_timedelta64(std_val, unit=tdunit)
             elif isinstance(std_val[0, 0], np.datetime64):
                 if epoch is None:
-                    raise NotImplementedError("Can't slice-by-value a timedelta64 "
+                    raise NotImplementedError("Can't slice-by-location a timedelta64 "
                                               "axis using datetime64 value without "
                                               "epoch")
                 else:
@@ -628,7 +628,7 @@ def _unify_sbv_types(std_val, crd_arr, tdunit='s', epoch=None):
                 uval = std_val / as_timedelta64(1, unit=tdunit)
             elif isinstance(std_val[0, 0], np.datetime64):
                 if epoch is None:
-                    raise NotImplementedError("Can't slice-by-value a floating pt. "
+                    raise NotImplementedError("Can't slice-by-location a floating pt. "
                                               "axis using datetime64 value without "
                                               "epoch")
                 else:

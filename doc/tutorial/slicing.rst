@@ -1,14 +1,19 @@
 Slicing Fields
 ==============
 
-See :doc:`../indexing` for more information on field indexing.
+The syntax and semantics for indexing are almost equivalent to Numpy's
+basic indexing. The key difference is Viscid supports slice-by-location
+(complex numbers, see below). Also, Viscid supports indexing by arrays (like Numpy's
+advanced indexing), but these arrays must be one-dimensional.
+Unfortunately, true advanced indexing is poorly defined when the result has
+to be on a grid.
+
+See :doc:`../indexing` for a complete enumeration of slicing rules.
 
 Spatial Slices
 --------------
 
-Fields can be sliced just like Numpy ndarrays, but you can also use an extended syntax to ask for a physical location instead of an index in the array. This extended syntax is to provide a string with a number followed by an 'f' in place of an integer that is usually found in slices. For even further convenience, you can specify the entire slice as a string and specify the slice dimension by component name.
-
-The best way to show the utility of this extended syntax is by example, so here goes. This example snips off the fist 5 cells and last 25 cells in x and extracts the :code:`y = 0.0` plane. In the z-direction, the field is sliced every other grid cell between :code:`z = -8` and :code:`z = 10.0`. Here, x, y, and z are coordinate names, so in ionosphere grids, one would use 'lat' and 'lon'.
+The following example shows how to slice the x axis by index, and the {y, z} axes by location,
 
 .. plot::
     :include-source:
@@ -23,10 +28,57 @@ The best way to show the utility of this extended syntax is by example, so here 
 
     # snip off the first 5 and last 25 cells in x, and grab every other cell
     # in z between z = -8.0 and z = 10.0 (in space, not index).
-    # Notice that slices by location are done by appending an 'f' to the
+    # Notice that slices by location are done by appending an 'j' to the
     # slice. This means "y=0" is not the same as "y=0j".
-    pp = f3d["pp"]["x = 5:-25, y = 0.0j, z = -8.0j:10.0j:2"]
+    pp = f3d["pp"][5:-25, 0.0j, -8.0j:10.0j:2]
     vlt.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
+
+    vlt.show()
+
+Additionally, the same slice could have been given as a single string or group of strings. Using strings enables you to be explicit about which axis you want sliced.
+
+.. plot::
+    :include-source:
+
+    from os import path
+
+    import viscid
+    from viscid.plot import vpyplot as vlt
+
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
+
+    pp = f3d["pp"]["x = 5:-25, y = 0.0j, z = -8.0j:10.0j:2"]
+
+    # this slice is also equivalent to...
+    # >>> pp = f3d["pp"]["x = 5:-25", "y = 0.0j", "z = -8.0j:10.0j:2"]
+
+    vlt.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
+
+    vlt.show()
+
+Vector Component Slices
+-----------------------
+
+Slices of vector fields are spatial slices that are invariant of the data layout. Single components can be extracted by the component name (usually one of "xyz").
+
+.. plot::
+    :include-source:
+
+    from os import path
+
+    import viscid
+    from viscid.plot import vpyplot as vlt
+
+
+    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
+
+    vx = f3d["v"]["x, x = 5:-25, y = 0.0j, z = -8.0j:10.0j:2"]
+
+    # this slice is also equivalent to...
+    # >>> vx = f3d["vx"]["x = 5:-25", "y = 0.0j", "z = -8.0j:10.0j:2"]
+
+    vlt.plot(vx, style="contourf", levels=50, plot_opts="earth")
 
     vlt.show()
 

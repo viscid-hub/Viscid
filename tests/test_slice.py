@@ -135,7 +135,7 @@ def _main():
 
     ############################
     # slice by deprecated float
-    viscid.logger.info("testing deprecated slice-by-value")
+    viscid.logger.info("testing deprecated slice-by-location")
     test_slice(arr, np.s_['4.0'], arr[2])
     test_slice(arr, np.s_['4.0':], arr[3:])
     test_slice(arr, np.s_['4.0'::2], arr[3::2])
@@ -152,7 +152,7 @@ def _main():
     test_slice(arr, np.s_['2.1':'2.5'], arr[1:2])
     test_slice(arr, np.s_['2.1':'2.5'], arr[1:1], val_endpoint=False)
     test_slice(arr, np.s_['2.3':'2.5'], arr[1:3], interior=True)
-    viscid.logger.info("done testing deprecated slice-by-value")
+    viscid.logger.info("done testing deprecated slice-by-location")
 
     assert viscid.selection2values(arr, np.s_[2:5]) == (3.5714285714285716,
                                                         7.4285714285714288)
