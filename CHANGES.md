@@ -1,7 +1,7 @@
 Changes
 -------
 
-0.99.9.dev2
+0.99.9.dev3
 ===========
 
   - add `viscid.mfield` that mimics `numpy.mgrid`
