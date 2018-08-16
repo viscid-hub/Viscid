@@ -193,7 +193,7 @@ def _main():
     fld = viscid.zeros([t, x], crd_names='tx', center='node')
     assert fld[:'2010-01-01T13:30:00'].shape == (4, 12)
     fld = viscid.zeros([t, x], crd_names='tx', center='cell')
-    assert fld[:'2010-01-01T13:30:00'].shape == (4, 12)
+    assert fld[:'2010-01-01T13:30:00'].shape == (4, 11)
 
     t = viscid.linspace_datetime64('2010-01-01T12:00:00',
                                    '2010-01-01T15:00:00', 8)
@@ -202,7 +202,7 @@ def _main():
     fld = viscid.zeros([t, x], crd_names='tx', center='node')
     assert fld[:'01:30:00'].shape == (4, 12)
     fld = viscid.zeros([t, x], crd_names='tx', center='cell')
-    assert fld[:'01:30:00'].shape == (4, 12)
+    assert fld[:'01:30:00'].shape == (4, 11)
 
     return 0
 
