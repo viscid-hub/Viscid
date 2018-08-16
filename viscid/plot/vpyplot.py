@@ -205,9 +205,23 @@ def _are_xy_shared(axis):
     return x_is_shared, y_is_shared
 
 def _ax_on_edge(axis):
-    rc_spec = axis.get_axes_locator().get_subplotspec().get_rows_columns()
-    bottom_most = rc_spec[3] >= rc_spec[0] - 1
-    left_most = rc_spec[5] == 0
+    try:
+        rc_spec = axis.get_axes_locator().get_subplotspec().get_rows_columns()
+        nrows, ncols, row_start, row_stop, col_start, col_stop = rc_spec
+    except AttributeError:
+        subplot_spec = axis.get_axes_locator().get_subplotspec()
+        gridspec = subplot_spec.get_gridspec()
+        nrows, ncols = gridspec.get_geometry()
+        row_start, col_start = divmod(subplot_spec.num1, ncols)
+        if subplot_spec.num2 is not None:
+            row_stop, col_stop = divmod(subplot_spec.num2, ncols)
+        else:
+            row_stop = row_start
+            col_stop = col_start
+
+    bottom_most = row_stop >= nrows - 1
+    left_most = col_start == 0
+
     return bottom_most, left_most
 
 def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
