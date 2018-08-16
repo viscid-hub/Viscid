@@ -56,7 +56,7 @@ Slice-by-mask
 
 Slices can be a mask, just like in Numpy,
 
-    - ``fld[[True, False, True]]`` first and last elements
+    - ``fld[[True, False, True]]`` 0th and 2nd elements
 
 Named slices
 ------------

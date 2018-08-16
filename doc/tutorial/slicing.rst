@@ -13,7 +13,7 @@ See :doc:`../indexing` for a complete enumeration of slicing rules.
 Spatial Slices
 --------------
 
-The following example shows how to slice the x axis by index, and the {y, z} axes by location,
+The following example shows how to slice the x axis by index, and the {y, z} axes by location. Note that slices can be given as strings to be explicit about which axes you want sliced.
 
 .. plot::
     :include-source:
@@ -22,6 +22,7 @@ The following example shows how to slice the x axis by index, and the {y, z} axe
 
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
@@ -30,29 +31,14 @@ The following example shows how to slice the x axis by index, and the {y, z} axe
     # in z between z = -8.0 and z = 10.0 (in space, not index).
     # Notice that slices by location are done by appending an 'j' to the
     # slice. This means "y=0" is not the same as "y=0j".
+
     pp = f3d["pp"][5:-25, 0.0j, -8.0j:10.0j:2]
-    vlt.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
-
-    vlt.show()
-
-Additionally, the same slice could have been given as a single string or group of strings. Using strings enables you to be explicit about which axis you want sliced.
-
-.. plot::
-    :include-source:
-
-    from os import path
-
-    import viscid
-    from viscid.plot import vpyplot as vlt
-
-
-    f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
-
-    pp = f3d["pp"]["x = 5:-25, y = 0.0j, z = -8.0j:10.0j:2"]
 
     # this slice is also equivalent to...
     # >>> pp = f3d["pp"]["x = 5:-25", "y = 0.0j", "z = -8.0j:10.0j:2"]
+    # >>> pp = f3d["pp"]["x = 5:-25, y = 0.0j, z = -8.0j:10.0j:2"]
 
+    plt.subplots(1, 1, figsize=(10, 5))
     vlt.plot(pp, style="contourf", levels=50, plot_opts="log,earth")
 
     vlt.show()
@@ -69,6 +55,7 @@ Slices of vector fields are spatial slices that are invariant of the data layout
 
     import viscid
     from viscid.plot import vpyplot as vlt
+    from matplotlib import pyplot as plt
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
@@ -78,6 +65,7 @@ Slices of vector fields are spatial slices that are invariant of the data layout
     # this slice is also equivalent to...
     # >>> vx = f3d["vx"]["x = 5:-25", "y = 0.0j", "z = -8.0j:10.0j:2"]
 
+    plt.subplots(1, 1, figsize=(10, 5))
     vlt.plot(vx, style="contourf", levels=50, plot_opts="earth")
 
     vlt.show()
