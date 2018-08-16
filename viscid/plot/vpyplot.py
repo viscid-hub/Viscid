@@ -199,6 +199,17 @@ def _pop_axis_opts(plot_kwargs, default='none'):
     # print('_axis =', _axis)
     return _axis, using_default_viscid_axis, plot_kwargs
 
+def _are_xy_shared(axis):
+    x_is_shared = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
+    y_is_shared = len(axis.get_shared_y_axes().get_siblings(axis)) > 1
+    return x_is_shared, y_is_shared
+
+def _ax_on_edge(axis):
+    rc_spec = axis.get_axes_locator().get_subplotspec().get_rows_columns()
+    bottom_most = rc_spec[3] >= rc_spec[0] - 1
+    left_most = rc_spec[5] == 0
+    return bottom_most, left_most
+
 def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     """
     Some plot options will want to call a function after the plot is
@@ -238,12 +249,11 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
                 # the x/y axes
                 actions.append((axis.autoscale_view, [], dict(tight=True)))
                 actions.append((axis.set_autoscale_on, False))
-                has_shared_x = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
-                has_shared_y = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
-                if has_shared_x ^ has_shared_y:
+                x_is_shared, y_is_shared = _are_xy_shared(axis)
+                if x_is_shared ^ y_is_shared:
                     adjustable = 'datalim'
                 elif (LooseVersion(__mpl_ver__) < LooseVersion("2.2")
-                      and (has_shared_x or has_shared_y)):
+                      and (x_is_shared or y_is_shared)):
                     adjustable = 'box-forced'
                 else:
                     adjustable = 'box'
@@ -829,8 +839,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             if not isinstance(title, string_types):
                 title = patch0.pretty_name
             ax.set_title(title)
-        ax.set_xlabel(namex)
-        ax.set_ylabel(namey)
+
+        x_is_shared, y_is_shared = _are_xy_shared(ax)
+        bottom_most, left_most = _ax_on_edge(ax)
+        if not x_is_shared or (x_is_shared and bottom_most):
+            ax.set_xlabel(namex)
+        if not y_is_shared or (y_is_shared and left_most):
+            ax.set_ylabel(namey)
 
     _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
                  majorloc=majorloc, minorloc=minorloc)
