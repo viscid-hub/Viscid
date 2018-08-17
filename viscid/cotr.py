@@ -890,7 +890,8 @@ def dipole_moment2cotr(m, crd_system='gse'):
     Returns:
         Cotr instance
     """
-    assert as_crd_system(crd_system) in ('gse', 'mhd')
+    if as_crd_system(crd_system) not in ('gse', 'mhd'):
+        raise ValueError('bad crd_system: {0}'.format(crd_system))
     m = Cotr(dip_tilt=0.0, dip_gsm=0.0).transform(crd_system, 'gse', m)
     gsm = np.rad2deg(np.arctan2(m[1], m[2]))
     tilt = np.rad2deg(np.arctan2(m[0], np.linalg.norm(m[1:])))
