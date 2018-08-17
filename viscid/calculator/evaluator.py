@@ -29,7 +29,7 @@ enabled = False
 __all__ = ["evaluate"]
 
 
-def evaluate(grid, result_name, eqn, try_numexpr=True, slc=None):
+def evaluate(grid, result_name, eqn, try_numexpr=True, slc=Ellipsis):
     """Evaluate an equation on a grid
 
     Examples:
@@ -76,7 +76,7 @@ def evaluate(grid, result_name, eqn, try_numexpr=True, slc=None):
                            "".format(eqn))
     return _evaluate_numpy(grid, result_name, eqn, slc=slc)
 
-def _evaluate_numexpr(grid, result_name, eqn, slc=None):
+def _evaluate_numexpr(grid, result_name, eqn, slc=Ellipsis):
     """
     Returns:
         Field
@@ -127,7 +127,7 @@ def _evaluate_numexpr(grid, result_name, eqn, slc=None):
         logger.warning("Strange input to numexpr evaluator: %s", eqn)
         return field.wrap_field(arr, grid.crds, name=result_name)
 
-def _evaluate_numpy(grid, result_name, eqn, slc=None):
+def _evaluate_numpy(grid, result_name, eqn, slc=Ellipsis):
     """
     Returns:
         Field

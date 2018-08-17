@@ -12,10 +12,145 @@ import viscid
 from viscid import logger
 from viscid.compat import string_types
 from viscid.bucket import Bucket
+from viscid.grid import Grid
 from viscid import tree
 from viscid import vutil
 from viscid.vutil import tree_prefix
 from viscid.sliceutil import standardize_sel, std_sel2index, selection2values
+
+
+__all__ = ['to_dataframe', 'from_dataframe']
+
+
+def to_dataframe(collection, fld_names=None, selection=Ellipsis,
+                 time_sel=slice(None), time_col='time', datetime_col='datetime'):
+    """Consolidate field collection into pandas dataframe
+
+    Args:
+        collection (sequence): Can be one of (Field, List[Field],
+            Dataset, Grid)
+        fld_names (sequence, None): grab specific fields by name,
+            or None to grab all fields
+        selection (selection): optional spatial selection
+        time (selection): optional time selection
+
+    Returns:
+        pandas.DataFrame
+    """
+    if not hasattr(collection, 'to_dataframe'):
+        if not isinstance(collection, (list, tuple)):
+            collection = [collection]
+
+        collection_dict = {}
+        for fld in collection:
+            if fld.time in collection_dict:
+                collection_dict[fld.time].append(fld)
+            else:
+                collection_dict[fld.time] = [fld]
+
+        dset = DatasetTemporal()
+        for t in sorted(list(collection_dict.keys())):
+            fld_list = collection_dict[t]
+            grid = Grid()
+            grid.crds = fld_list[0].crds
+            grid.time = t
+            grid.basetime = fld_list[0].basetime
+            grid.add_field(*fld_list)
+            dset.add(grid)
+
+        if len(collection_dict) == 1:
+            collection = dset.get_grid()
+        else:
+            collection = dset
+
+    frame = collection.to_dataframe(fld_names=fld_names, selection=selection,
+                                    time_sel=time_sel, time_col=time_col,
+                                    datetime_col=datetime_col)
+    return frame
+
+def from_dataframe(frame, crd_cols=None, time_col='time', datetime_col='datetime'):
+    """Make either a DatasetTemporal or Grid from pandas dataframe
+
+    Args:
+        frame (pandas.DataFrame): frame to parse
+        crd_cols (List[Str], None): list of column names for coordinates
+        time_col (str): column name of times
+        datetime_col (str): column name of datetimes
+
+    Returns:
+        DatasetTemporal or Grid
+
+    Raises:
+        ValueError: if only 1 row given and crd_cols is None
+    """
+    import pandas
+
+    # discover times and possible basetime
+    try:
+        unique_times = frame[time_col].drop_duplicates()
+        if 'datetime' in frame:
+            unique_datetimes = frame[datetime_col].drop_duplicates()
+            if len(unique_times) > 1:
+                dt_datetime = unique_datetimes.iloc[1] - unique_datetimes.iloc[0]
+                dt_time = unique_times.iloc[1] - unique_times.iloc[0]
+                t0_timedelta = unique_times.iloc[0] * (dt_datetime / dt_time)
+            else:
+                t0_timedelta = viscid.as_timedelta64(1e6 * unique_times.iloc[0], 'us')
+            basetime = unique_datetimes.iloc[0] - t0_timedelta
+        else:
+            basetime = None
+        frame0 = frame[frame[time_col] == unique_times[0]]
+    except KeyError:
+        unique_times = np.array([0.0])
+        basetime = None
+        frame0 = frame
+
+    # discover crd_cols if not given
+    if crd_cols is None:
+        frame1 = frame0.drop([time_col, datetime_col], axis=1, errors='ignore')
+        if len(frame1) <= 1:
+            raise ValueError("With only 1 row, crd_cols must be specified.")
+        for icol in range(frame1.shape[1]):
+            diff = frame1.iloc[1, icol] - frame1.iloc[0, icol]
+            if diff != np.zeros((1,), dtype=diff.dtype):
+                break
+        crd_cols = frame1.columns[:icol + 1]
+
+    # discover field shape and make coordinates
+    crd_arrs = [frame[col].drop_duplicates() for col in crd_cols]
+    shape = [len(arr) for arr in crd_arrs]
+    crds = viscid.arrays2crds(crd_arrs, crd_names=crd_cols)
+
+    fld_names = list(frame.columns)
+    for _col in [time_col, datetime_col] + list(crd_cols):
+        if _col in fld_names:
+            fld_names.remove(_col)
+
+    # wrap everything up into grids
+    grids = []
+    for time in unique_times:
+        grid = Grid()
+        grid.time = time
+        grid.basetime = basetime
+        try:
+            frame1 = frame[frame[time_col] == time]
+        except KeyError:
+            frame1 = frame
+        for name in fld_names:
+            arr = frame1[name].values.reshape(shape)
+            fld = viscid.wrap_field(arr, crds, name=name, center='node')
+            grid.add_field(fld)
+        grids.append(grid)
+
+    if len(grids) > 1:
+        ret = DatasetTemporal()
+        for grid in grids:
+            ret.add(grid)
+        ret.basetime = basetime
+    else:
+        ret = grids[0]
+
+    return ret
 
 
 class DeferredChild(object):
@@ -170,7 +305,33 @@ class Dataset(tree.Node):
         except StopIteration:
             raise RuntimeError("Dataset has no time slices")
 
-    def iter_fields(self, time=None, named=None):
+    def to_dataframe(self, fld_names=None, selection=Ellipsis,
+                     time_sel=slice(None), time_col='time',
+                     datetime_col='datetime'):
+        """Consolidate grid's field data into pandas dataframe
+
+        Args:
+            fld_names (sequence, None): grab specific fields by name,
+                or None to grab all fields
+            selection (selection): optional spatial selection
+            time (selection): optional time selection
+
+        Returns:
+            pandas.DataFrame
+        """
+        # deferred import so that viscid does not depend on pandas
+        import pandas
+        frames = [child.to_dataframe(fld_names=fld_names, selection=selection,
+                                     time_sel=time_sel, time_col=time_col,
+                                    datetime_col=datetime_col)
+                  for child in self.children]
+        frame = pandas.concat(frames, ignore_index=True, sort=False)
+        # make sure crds are all at the beginning, since concat can reorder them
+        col0 = list(frames[0].columns)
+        frame = frame[col0 + list(set(frame.columns) - set(col0))]
+        return frame
+
+    def iter_fields(self, time=None, fld_names=None):
         """ generator for fields in the active dataset,
         this will recurse down to a grid """
         child = self.active_child
@@ -179,9 +340,9 @@ class Dataset(tree.Node):
             logger.error("Could not get appropriate child...")
             return None
         else:
-            return child.iter_fields(time=time, named=named)
+            return child.iter_fields(time=time, fld_names=fld_names)
 
-    def iter_field_items(self, time=None, named=None):
+    def iter_field_items(self, time=None, fld_names=None):
         """ generator for (name, field) in the active dataset,
         this will recurse down to a grid """
         child = self.active_child
@@ -190,7 +351,7 @@ class Dataset(tree.Node):
             logger.error("Could not get appropriate child...")
             return None
         else:
-            return child.iter_field_items(time=time, named=named)
+            return child.iter_field_items(time=time, fld_names=fld_names)
 
     def field_dict(self, time=None, fld_names=None, **kwargs):
         """ fields as dict of {name: field} """
@@ -200,7 +361,7 @@ class Dataset(tree.Node):
             logger.error("Could not get appropriate child...")
             return None
         else:
-            return child.field_dict(fld_names=fld_names)
+            return child.field_dict(time=time, fld_names=fld_names)
 
     def print_tree(self, depth=-1, prefix=""):
         if prefix == "":
@@ -223,7 +384,7 @@ class Dataset(tree.Node):
     #     else:
     #         return self.active_grid
 
-    def get_field(self, fldname, time=None, slc=None):
+    def get_field(self, fldname, time=None, slc=Ellipsis):
         """ recurse down active children to get a field """
         child = self.active_child
 
@@ -450,7 +611,33 @@ class DatasetTemporal(Dataset):
     ## ok, that's enough for the time stuff
     ########################################
 
-    def iter_fields(self, time=None, named=None):
+    def to_dataframe(self, fld_names=None, selection=Ellipsis,
+                     time_sel=slice(None), time_col='time',
+                     datetime_col='datetime'):
+        """Consolidate grid's field data into pandas dataframe
+
+        Args:
+            fld_names (sequence, None): grab specific fields by name,
+                or None to grab all fields
+            selection (selection): optional spatial selection
+            time (selection): optional time selection
+
+        Returns:
+            pandas.DataFrame
+        """
+        # deferred import so that viscid does not depend on pandas
+        import pandas
+        frames = [child.to_dataframe(fld_names=fld_names, selection=selection,
+                                     time_sel=time_sel, time_col=time_col,
+                                     datetime_col=datetime_col)
+                  for child in self.iter_times(sel=time_sel)]
+        frame = pandas.concat(frames, ignore_index=True, sort=False)
+        # make sure crds are all at the beginning, since concat can reorder them
+        col0 = list(frames[0].columns)
+        frame = frame[col0 + list(set(frame.columns) - set(col0))]
+        return frame
+
+    def iter_fields(self, time=None, fld_names=None):
         """ generator for fields in the active dataset,
         this will recurse down to a grid """
         if time is not None:
@@ -462,9 +649,9 @@ class DatasetTemporal(Dataset):
             logger.error("Could not get appropriate child...")
             return None
         else:
-            return child.iter_fields(time=time, named=named)
+            return child.iter_fields(time=time, fld_names=fld_names)
 
-    def iter_field_items(self, time=None, named=None):
+    def iter_field_items(self, time=None, fld_names=None):
         """ generator for (name, field) in the active dataset,
         this will recurse down to a grid """
         if time is not None:
@@ -476,7 +663,7 @@ class DatasetTemporal(Dataset):
             logger.error("Could not get appropriate child...")
             return None
         else:
-            return child.iter_field_items(time=time, named=named)
+            return child.iter_field_items(time=time, fld_names=fld_names)
 
     def field_dict(self, time=None, fld_names=None):
         """ fields as dict of {name: field} """
@@ -504,7 +691,7 @@ class DatasetTemporal(Dataset):
             if depth != 0:
                 child[1].print_tree(depth=depth - 1, prefix=prefix + tree_prefix)
 
-    def get_field(self, fldname, time=None, slc=None):
+    def get_field(self, fldname, time=None, slc=Ellipsis):
         """ recurse down active children to get a field """
         if time is not None:
             child = self.get_child(time)
@@ -515,7 +702,7 @@ class DatasetTemporal(Dataset):
             logger.error("Could not get appropriate child...")
             return None
         else:
-            return child.get_field(fldname, time=time, slc=None)
+            return child.get_field(fldname, time=time, slc=slc)
 
     def get_grid(self, time=None):
         """ recurse down active children to get a field """

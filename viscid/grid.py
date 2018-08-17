@@ -3,6 +3,9 @@
 
 from __future__ import print_function
 
+import numpy as np
+
+import viscid
 from viscid import field
 from viscid.bucket import Bucket
 from viscid.compat import OrderedDict
@@ -135,27 +138,71 @@ class Grid(tree.Node):
     def get_time(self, *args, **kwargs):
         return self.get_times(*args, **kwargs)[0]
 
-    def iter_fields(self, named=None, **kwargs):  # pylint: disable=W0613
-        """ iterate over fields in a grid, if named is given, it should be a
-        list of field names to iterate over
+    def to_dataframe(self, fld_names=None, selection=Ellipsis,
+                     time_sel=slice(None), time_col='time',
+                     datetime_col='datetime'):
+        """Consolidate grid's field data into pandas dataframe
+
+        Args:
+            fld_names (sequence, None): grab specific fields by name,
+                or None to grab all fields
+            selection (selection): for selecting only parts of fields
+
+        Returns:
+            pandas.DataFrame
+        """
+        assert time_sel == slice(None)
+
+        import pandas
+
+        frame = pandas.DataFrame()
+
+        if fld_names is None:
+            fld_names = self.field_names
+        fld_list = list(self.iter_fields(fld_names=fld_names))
+
+        if fld_list:
+            fld0 = fld_list[0][selection]
+
+            # add coordinates as series
+            mesh = np.meshgrid(*fld0.get_crds(), indexing='ij')
+            for ax_name, ax_arr in zip(fld0.crds.axes, mesh):
+                frame[ax_name] = ax_arr.reshape(-1)
+
+            # add time as series
+            frame.insert(0, time_col, fld0.time)
+            try:
+                frame.insert(1, datetime_col, fld0.time_as_datetime64())
+            except viscid.NoBasetimeError:
+                pass
+
+            # add fields
+            for fld_name, fld in zip(fld_names, fld_list):
+                frame[fld_name] = fld[selection].data.reshape(-1)
+
+        return frame
+
+    def iter_fields(self, fld_names=None, **kwargs):  # pylint: disable=W0613
+        """ iterate over fields in a grid, if fld_names is given, it should
+        be a list of field names to iterate over
         """
         # Note: using 'with' here is better than making a shell copy
-        if named is not None:
-            named = self.field_names
+        if fld_names is None:
+            fld_names = self.field_names
 
-        for name in named:
+        for name in fld_names:
             with self._fields[name] as f:
                 yield f
 
-    def iter_field_items(self, named=None, **kwargs):  # pylint: disable=W0613
-        """ iterate over fields in a grid, if named is given, it should be a
-        list of field names to iterate over
+    def iter_field_items(self, fld_names=None, **kwargs):  # pylint: disable=W0613
+        """ iterate over fields in a grid, if fld_names is given, it should
+        be a list of field names to iterate over
         """
         # Note: using 'with' here is better than making a shell copy
-        if named is not None:
-            named = self.field_names
+        if fld_names is None:
+            fld_names = self.field_names
 
-        for name in named:
+        for name in fld_names:
             with self._fields[name] as f:
                 yield (name, f)
 
@@ -222,7 +269,7 @@ class Grid(tree.Node):
 
     ##
     def get_field(self, fldname, time=None, force_longterm_caches=False,
-                  slc=None):  # pylint: disable=unused-argument
+                  slc=Ellipsis):  # pylint: disable=unused-argument
         ret = None
         try_final_slice = True
 
@@ -249,7 +296,7 @@ class Grid(tree.Node):
         if hasattr(self, "_processALL"):
             ret = getattr(self, "_processALL")(ret)
 
-        if slc is not None and try_final_slice:
+        if slc != Ellipsis and try_final_slice:
             ret = ret.slice_and_keep(slc)
         return ret
 

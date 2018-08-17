@@ -140,6 +140,15 @@ def raw_sel2sel_list(sel):
 
 def fill_nd_sel_list(sel_list, ax_names):
     """fully determine a sparsely selected sel_list"""
+
+    if (len(sel_list) == 1 and not isinstance(sel_list[0], np.ndarray)
+        and sel_list in ([Ellipsis], ['...'], ['Ellipsis'], ['ellipsis'])):
+        # short circuit all logic if sel_list == [Ellipsis]
+        full_sel_list = [slice(None) for _ in ax_names]
+        full_ax_names = [name for name in ax_names]
+        full_newdim_flags = [False for _ in ax_names]
+        return full_sel_list, full_ax_names, full_newdim_flags
+
     sel_list0 = tuple(sel_list)
 
     sel_names = [None] * len(sel_list)

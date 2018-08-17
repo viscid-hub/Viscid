@@ -984,7 +984,7 @@ class StructuredCrds(Coordinates):
         """
         return [name for name in self.axes if len(self[name]) > ignore]
 
-    def get_clist(self, axes=None, slc=None, full_arrays=True, center='node'):
+    def get_clist(self, axes=None, slc=Ellipsis, full_arrays=True, center='node'):
         """??
 
         Returns:
@@ -995,17 +995,16 @@ class StructuredCrds(Coordinates):
         """
         if not full_arrays:
             raise NotImplementedError("you need uniform crds for this")
-        if slc is None:
-            slc = slice(None)
         if axes is None:
             axes = self.axes
 
         ret = [[axis, self.get_crd(axis, center=center)[slc].copy()] for axis in axes]
 
-        if slc is None and full_arrays and center == 'node' and self._src_crds_cc:
-            for i, axis in enumerate(axes):
-                if axis in self._src_crds_cc:
-                    ret[i].append(self._src_crds_cc[axis].copy())
+        # # slc was never None, what was this for?
+        # if slc is None and full_arrays and center == 'node' and self._src_crds_cc:
+        #     for i, axis in enumerate(axes):
+        #         if axis in self._src_crds_cc:
+        #             ret[i].append(self._src_crds_cc[axis].copy())
         return ret
 
     ## These methods just return one crd axis
@@ -1373,12 +1372,12 @@ class UniformCrds(StructuredCrds):
             x0 = 0.5 * (xl + xh)
             return [x0, x0, 1]
 
-    def get_clist(self, axes=None, slc=None, full_arrays=False, center="node"):
+    def get_clist(self, axes=None, slc=Ellipsis, full_arrays=False, center="node"):
         if full_arrays:
             return super(UniformCrds, self).get_clist(axes=axes, slc=slc,
                                                       center=center)
-        if slc is not None:
-            raise NotImplementedError("use full_arrays=True with slice != None"
+        if slc != Ellipsis:
+            raise NotImplementedError("use full_arrays=True with slice != Ellipsis"
                                       "for now")
         if axes is None:
             axes = self.axes
@@ -1420,7 +1419,7 @@ class NonuniformCrds(StructuredCrds):
         else:
             return np.array([0.5 * (xl + xh)], dtype=self.dtype)
 
-    def get_clist(self, axes=None, slc=None, full_arrays=True, center="node"):
+    def get_clist(self, axes=None, slc=Ellipsis, full_arrays=True, center="node"):
         """??
 
         Returns:

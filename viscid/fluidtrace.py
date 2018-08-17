@@ -156,7 +156,7 @@ def follow_fluid(dset, initial_seeds, time_slice=slice(None),
                  curator=None, callback=default_fluid_callback,
                  speed_scale=1.0, dt=None, tstart=None, tstop=None,
                  duration=None, dt_interp=None,
-                 v_key='v', anc_keys=(), fld_slc=slice(None),
+                 v_key='v', anc_keys=(), fld_slc=Ellipsis,
                  stream_opts={}, callback_kwargs={}):
     """Trace fluid elements
 

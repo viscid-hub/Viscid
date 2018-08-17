@@ -61,7 +61,7 @@ __mpl_ver__ = matplotlib.__version__
 vseaborn.activate_from_viscid()
 
 
-def plot(fld, selection=":", force_cartesian=False, **kwargs):
+def plot(fld, selection=Ellipsis, force_cartesian=False, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
 
     * If fld has 1 spatial dimensions, call
