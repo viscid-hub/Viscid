@@ -192,6 +192,16 @@ class Dataset(tree.Node):
         else:
             return child.iter_field_items(time=time, named=named)
 
+    def field_dict(self, time=None, fld_names=None, **kwargs):
+        """ fields as dict of {name: field} """
+        child = self.active_child
+
+        if child is None:
+            logger.error("Could not get appropriate child...")
+            return None
+        else:
+            return child.field_dict(fld_names=fld_names)
+
     def print_tree(self, depth=-1, prefix=""):
         if prefix == "":
             print(self)
@@ -467,6 +477,19 @@ class DatasetTemporal(Dataset):
             return None
         else:
             return child.iter_field_items(time=time, named=named)
+
+    def field_dict(self, time=None, fld_names=None):
+        """ fields as dict of {name: field} """
+        if time is not None:
+            child = self.get_child(time)
+        else:
+            child = self.active_child
+
+        if child is None:
+            logger.error("Could not get appropriate child...")
+            return None
+        else:
+            return child.field_dict(fld_names=fld_names)
 
     def print_tree(self, depth=-1, prefix=""):
         if prefix == "":

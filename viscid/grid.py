@@ -5,6 +5,7 @@ from __future__ import print_function
 
 from viscid import field
 from viscid.bucket import Bucket
+from viscid.compat import OrderedDict
 from viscid import tree
 from viscid.vutil import tree_prefix
 from viscid.calculator.evaluator import evaluate
@@ -157,6 +158,10 @@ class Grid(tree.Node):
         for name in named:
             with self._fields[name] as f:
                 yield (name, f)
+
+    def field_dict(self, fld_names=None, **kwargs):
+        """ fields as dict of {name: field} """
+        return OrderedDict(list(self.iter_field_items(fld_names=fld_names)))
 
     def print_tree(self, depth=-1, prefix=""):  # pylint: disable=W0613
         self._fields.print_tree(prefix=prefix + tree_prefix)
