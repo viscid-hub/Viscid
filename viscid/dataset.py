@@ -181,6 +181,17 @@ class Dataset(tree.Node):
         else:
             return child.iter_fields(time=time, named=named)
 
+    def iter_field_items(self, time=None, named=None):
+        """ generator for (name, field) in the active dataset,
+        this will recurse down to a grid """
+        child = self.active_child
+
+        if child is None:
+            logger.error("Could not get appropriate child...")
+            return None
+        else:
+            return child.iter_field_items(time=time, named=named)
+
     def print_tree(self, depth=-1, prefix=""):
         if prefix == "":
             print(self)
@@ -442,6 +453,20 @@ class DatasetTemporal(Dataset):
             return None
         else:
             return child.iter_fields(time=time, named=named)
+
+    def iter_field_items(self, time=None, named=None):
+        """ generator for (name, field) in the active dataset,
+        this will recurse down to a grid """
+        if time is not None:
+            child = self.get_child(time)
+        else:
+            child = self.active_child
+
+        if child is None:
+            logger.error("Could not get appropriate child...")
+            return None
+        else:
+            return child.iter_field_items(time=time, named=named)
 
     def print_tree(self, depth=-1, prefix=""):
         if prefix == "":

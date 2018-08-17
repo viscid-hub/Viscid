@@ -140,13 +140,23 @@ class Grid(tree.Node):
         """
         # Note: using 'with' here is better than making a shell copy
         if named is not None:
-            for name in named:
-                with self._fields[name] as f:
-                    yield f
-        else:
-            for fld in self._fields:
-                with fld as f:
-                    yield f
+            named = self.field_names
+
+        for name in named:
+            with self._fields[name] as f:
+                yield f
+
+    def iter_field_items(self, named=None, **kwargs):  # pylint: disable=W0613
+        """ iterate over fields in a grid, if named is given, it should be a
+        list of field names to iterate over
+        """
+        # Note: using 'with' here is better than making a shell copy
+        if named is not None:
+            named = self.field_names
+
+        for name in named:
+            with self._fields[name] as f:
+                yield (name, f)
 
     def print_tree(self, depth=-1, prefix=""):  # pylint: disable=W0613
         self._fields.print_tree(prefix=prefix + tree_prefix)
