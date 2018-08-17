@@ -10,6 +10,7 @@ import os
 
 import numpy as np
 
+from viscid.compat import OrderedDict
 from viscid import logger
 from viscid.readers import vfile
 from viscid import coordinate
@@ -148,20 +149,27 @@ class FileNumpyNPZ(vfile.VFile):
     def save(self, fname=None, **kwargs):
         if fname is None:
             fname = self.fname
-        flds = list(self.iter_fields())
-        self.save_fields(fname, flds)
+        self.save_fields(fname, self.field_dict())
 
     @classmethod
     def save_fields(cls, fname, flds, **kwargs):
         assert len(flds) > 0
         fname = os.path.expanduser(os.path.expandvars(fname))
+
+        if isinstance(flds, list):
+            if isinstance(flds[0], (list, tuple)):
+                flds = OrderedDict(flds)
+            else:
+                flds = OrderedDict([(fld.name, fld) for fld in flds])
+
         fld_dict = {}
 
         # setup crds
         # FIXME: all coordinates are saved as non-uniform, the proper
         #        way to do this is to have let coordinate format its own
         #        hdf5 / xdmf / numpy binary output
-        clist = flds[0].crds.get_clist(full_arrays=True)
+        fld0 = next(iter(flds.values()))
+        clist = fld0.crds.get_clist(full_arrays=True)
         axis_names = []
         for axis_name, crdarr in clist:
             fld_dict[axis_name] = crdarr
@@ -175,9 +183,9 @@ class FileNumpyNPZ(vfile.VFile):
         for key in cls._KEY_FLDS.keys():
             fld_names[key.lower()] = []
 
-        for fld in flds:
-            fld_names[fld.center.lower()].append(fld.name)
-            fld_dict[fld.name] = fld.data
+        for name, fld in flds.items():
+            fld_names[fld.center.lower()].append(name)
+            fld_dict[name] = fld.data
 
         for center, names_lst in fld_names.items():
             fld_dict[cls._KEY_FLDS[center.lower()]] = np.array(names_lst)

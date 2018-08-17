@@ -4,6 +4,7 @@ import os
 import numpy as np
 
 import viscid
+from viscid.compat import OrderedDict
 from viscid import logger
 from viscid.readers import vfile
 
@@ -220,8 +221,7 @@ class FileHDF5(vfile.VFile):
         of the file object as read """
         if fname is None:
             fname = self.fname
-        flds = list(self.iter_fields)
-        self.save_fields(fname, flds)
+        self.save_fields(fname, self.field_dict())
 
     @classmethod
     def save_fields(cls, fname, flds, **kwargs):
@@ -231,16 +231,23 @@ class FileHDF5(vfile.VFile):
         assert len(flds) > 0
         fname = os.path.expanduser(os.path.expandvars(fname))
 
+        if isinstance(flds, list):
+            if isinstance(flds[0], (list, tuple)):
+                flds = OrderedDict(flds)
+            else:
+                flds = OrderedDict([(fld.name, fld) for fld in flds])
+
         # FIXME: all coordinates are saved as non-uniform, the proper
         #        way to do this is to have let coordinate format its own
         #        hdf5 / xdmf / numpy binary output
-        clist = flds[0].crds.get_clist(full_arrays=True)
+        fld0 = next(iter(flds.values()))
+        clist = fld0.crds.get_clist(full_arrays=True)
         crd_arrs = [np.array([0.0])] * 3
         crd_names = ["x", "y", "z"]
         for i, c in enumerate(clist):
             crd_arrs[i] = c[1]
         crd_shape = [len(arr) for arr in crd_arrs]
-        time = flds[0].time
+        time = fld0.time
 
         # write arrays to the hdf5 file
         with h5py.File(fname, 'w') as f:
@@ -248,13 +255,13 @@ class FileHDF5(vfile.VFile):
                 loc = cls._CRDS_GROUP + '/' + axis_name
                 f[loc] = arr
 
-            for fld in flds:
-                loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + fld.name
+            for name, fld in flds.items():
+                loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + name
                 # xdmf files use kji ordering
                 f[loc] = fld.data.T
 
             # big bad openggcm time_str hack to put basetime into hdf5 file
-            for fld in flds:
+            for fld in flds.values():
                 try:
                     tfmt = "%Y:%m:%d:%H:%M:%S.%f"
                     sec_td = viscid.as_timedelta64(fld.time, 's')
@@ -284,21 +291,21 @@ class FileHDF5(vfile.VFile):
                 xloc=xloc, yloc=yloc, zloc=zloc)
             f.write(s)
 
-            for fld in flds:
+            for fld in flds.values():
                 _crd_system = viscid.as_crd_system(fld, None)
                 if _crd_system:
                     f.write(cls._XDMF_INFO_TEMPLATE.format(name="crd_system",
                                                            value=_crd_system))
                     break
 
-            for fld in flds:
+            for name, fld in flds.items():
                 fld = fld.as_flat().T
                 dt = fld.dtype.name.rstrip("0123456789").title()
                 precision = fld.dtype.itemsize
                 fld_dim_str = " ".join([str(l) for l in fld.shape])
-                loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + fld.name
+                loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + name
                 s = cls._XDMF_TEMPLATE_ATTRIBUTE.format(
-                    fld_name=fld.name,
+                    fld_name=name,
                     fld_type=fld.fldtype, center=fld.center.title(),
                     dtype=dt, precision=precision, fld_dims=fld_dim_str,
                     h5fname=relh5fname, fld_loc=loc)
