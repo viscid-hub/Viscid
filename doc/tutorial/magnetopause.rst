@@ -22,7 +22,7 @@ Viscid has the ability to extract magnetopause information using :py:func:`visci
 
   f = viscid.load_file("$WORK/xi_fte_001/*.3d.[4050f].xdmf")
   mp = viscid.get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
-                          slc="x=6.5f:10.5f, y=-4f:4f, z=-4.8f:3f",
+                          slc="x=6.5j:10.5j, y=-4j:4j, z=-4.8j:3j",
                           cache=False)
 
   y, z = mp['pp_max_xloc'].meshgrid_flat(prune=True)

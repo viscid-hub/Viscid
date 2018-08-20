@@ -32,11 +32,11 @@ def run_mpl_testA(show=False):
 
     _, axes = plt.subplots(4, 1, squeeze=False)
 
-    vlt.plot(fld_s, "y=20f", ax=axes[0, 0], show=False, plot_opts="lin_0")
-    vlt.plot(fld_s, "x=0f:20f,y=0f:5f", ax=axes[1, 0], earth=True, show=False,
+    vlt.plot(fld_s, "y=20j", ax=axes[0, 0], show=False, plot_opts="lin_0")
+    vlt.plot(fld_s, "x=0j:20j,y=0j:5j", ax=axes[1, 0], earth=True, show=False,
              plot_opts="x_-10_0,y_0_7")
-    vlt.plot(fld_s, "y=0f", ax=axes[2, 0], show=False, plot_opts="lin_-1_1")
-    vlt.plot(fld_s, "z=0f,x=-20f:0f", ax=axes[3, 0], earth=True, show=False,
+    vlt.plot(fld_s, "y=0j", ax=axes[2, 0], show=False, plot_opts="lin_-1_1")
+    vlt.plot(fld_s, "z=0j,x=-20j:0j", ax=axes[3, 0], earth=True, show=False,
              plot_opts="lin_-5_5")
 
     plt.suptitle("2d cell centered")
@@ -61,9 +61,9 @@ def run_mpl_testB(show=False):
     _, axes = plt.subplots(4, 1, squeeze=False)
 
     vlt.plot(fld_s, "z=0,x=:30", ax=axes[0, 0], earth=True, plot_opts="lin_0")
-    vlt.plot(fld_s, "z=0.75f,x=-4:-1,y=-3f:3f", ax=axes[1, 0], earth=True)
-    vlt.plot(fld_s, "x=-0.5f:,y=-3f:3f,z=0f", ax=axes[2, 0], earth=True)
-    vlt.plot(fld_s, "x=0.0f,y=-5.0f:5.0f", ax=axes[3, 0], earth=True,
+    vlt.plot(fld_s, "z=0.75j,x=-4:-1,y=-3j:3j", ax=axes[1, 0], earth=True)
+    vlt.plot(fld_s, "x=-0.5j:,y=-3j:3j,z=0j", ax=axes[2, 0], earth=True)
+    vlt.plot(fld_s, "x=0.0j,y=-5.0j:5.0j", ax=axes[3, 0], earth=True,
              plot_opts="log,g")
 
     plt.suptitle("3d node centered")

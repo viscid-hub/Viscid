@@ -217,14 +217,14 @@ class AMRGrid(Grid):
     #     fld = AMRField()
 
     def get_field(self, fldname, time=None, force_longterm_caches=False,
-                  slc=None):  # pylint: disable=unused-argument
+                  slc=Ellipsis):  # pylint: disable=unused-argument
         fld_list = []
         assert force_longterm_caches is False  # FIXME
         selected_patches = list(range(len(self._src_grids)))
         patches = [self._src_grids[i] for i in selected_patches]
         fld_list = [p.get_field(fldname) for p in patches]
         amr_fld = AMRField(fld_list, self.skeleton)
-        if slc:
+        if slc != Ellipsis:
             amr_fld = amr_fld.slice_and_keep(slc)
         return amr_fld
 

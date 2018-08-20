@@ -62,12 +62,12 @@ Sometimes you might have a single XDMF file that points to multiple XDMF files t
     [5.0, 15.0]
 
     >>> # let's load files after and including t = 10
-    >>> f = viscid.load_file("*.3d.[10f:].xdmf")
+    >>> f = viscid.load_file("*.3d.[10j:].xdmf")
     >>> [grid.time for grid in f.iter_times()]
     [10.0, 15.0, 20.0]
 
     >>> # every other file after and including t = 10
-    >>> f = viscid.load_file("*.3d.[10f::2].xdmf")
+    >>> f = viscid.load_file("*.3d.[10j::2].xdmf")
     >>> [grid.time for grid in f.iter_times()]
     [10.0, 20.0]
 

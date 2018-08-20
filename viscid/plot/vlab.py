@@ -675,6 +675,8 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
     m = mlab.mesh(verts[0], verts[1], verts[2], scalars=arr, figure=figure,
                   **kwargs)
 
+    m.parent.parent.filter.splitting = 0
+
     if bounding_lat:
         rp = 1.5 * radius
         z = radius * np.cos((np.pi / 180.0) * bounding_lat)
@@ -1346,11 +1348,15 @@ def resize(size, figure=None):
 
             if toolkit in ('qt', 'qt4'):
                 sc = figure.scene
-                window_height = sc.control.parent().size().height()
-                render_height = sc.render_window.size[1]
-                h = window_height - render_height
-                sc.control.parent().resize(size[0], size[1] + h)
-
+                widget11 = sc.control.childAt(1, 1)
+                if 'toolbar' in widget11.__class__.__name__.lower():
+                    toolbar_height = widget11.size().height()
+                else:
+                    # window_size = sc.control.parent().size()
+                    # render_size = sc.control.centralWidget().size()
+                    # toolbar_height = window_size.height() - render_size.height()
+                    toolbar_height = 0
+                sc.control.parent().resize(size[0], size[1] + toolbar_height)
             elif toolkit == 'wx':
                 w, h = size[0], size[1]
                 figure.scene.control.Parent.Parent.SetClientSizeWH(w, h)

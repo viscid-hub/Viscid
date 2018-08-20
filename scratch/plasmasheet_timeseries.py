@@ -29,7 +29,7 @@ def _main():
     z_sat_psc = np.linspace(-2, 2, 5)  # Z in PSC (z=0 is the plasma sheet)
 
     # the GSE z location of the virtual satelites in the warped plasma sheet
-    # coordinates, so sat_z_gse_ts['x=5f, y=1f, z=0f'] would give the
+    # coordinates, so sat_z_gse_ts['x=5j, y=1j, z=0j'] would give the
     # plasma sheet location at x=5.0, y=1.0
     # These fields depend on time because the plasma sheet moves in time
     sat_z_gse_ts = viscid.zeros([times, x_sat_psc, y_sat_psc, z_sat_psc],
@@ -41,7 +41,7 @@ def _main():
     for itime, grid in enumerate(f.iter_times(time_slice)):
         print("Processing time slice", itime, grid.time)
 
-        gse_slice = 'x=-35f:0f, y=-15f:15f, z=-6f:6f'
+        gse_slice = 'x=-35j:0j, y=-15j:15j, z=-6j:6j'
         bx = grid['bx'][gse_slice]
         bx_argmin = np.argmin(bx**2, axis=2)
         z_gse = bx.get_crd('z')
@@ -102,7 +102,7 @@ def _main():
             # Note: points closer to x = 0 are unsightly since the plasma
             #       sheet criteria starts to fall apart on the flanks, so
             #       just remove the first few rows
-            ps_z_gse_tail = ps_z_gse['x=:-2.25f']
+            ps_z_gse_tail = ps_z_gse['x=:-2.25j']
             ps_mesh_shape = [3, ps_z_gse_tail.shape[0], ps_z_gse_tail.shape[1]]
             ps_pts = ps_z_gse_tail.get_points().reshape(ps_mesh_shape)
             ps_pts[2, :, :] = ps_z_gse_tail[:, :, 0]
@@ -141,7 +141,7 @@ def _main():
     fig, axes = vlt.subplots(4, 4, figsize=(12, 12))
     for ax_row, yloc in zip(axes, np.linspace(-5, 5, len(axes))[::-1]):
         for ax, xloc in zip(ax_row, np.linspace(4, 7, len(ax_row))):
-            vlt.plot(vx_ts['x={0}f, y={1}f, z=0f'.format(xloc, yloc)], ax=ax)
+            vlt.plot(vx_ts['x={0}j, y={1}j, z=0j'.format(xloc, yloc)], ax=ax)
             ax.set_ylabel('')
             vlt.plt.title('x = {0:g}, y = {1:g}'.format(xloc, yloc))
     vlt.plt.suptitle('Vx [km/s]')

@@ -98,9 +98,47 @@ def _main():
     test_slice(dset, np.s_['2.1f':'2.5f'], times[1:1], val_endpoint=False)
     test_slice(dset, np.s_['2.3f':'2.5f'], times[1:3], interior=True)
 
+    ################
+    # slice by imag
+    test_slice(dset, np.s_[4.0j], times[2])
+    test_slice(dset, np.s_[4.0j:], times[3:])
+    test_slice(dset, np.s_[4.0j::2], times[3::2])
+    test_slice(dset, np.s_[:4.0j:2], times[:3:2])
+    test_slice(dset, np.s_[2.0j:7.8j], times[1:6])
+    test_slice(dset, np.s_[2.0j:7.8j:2], times[1:6:2])
+    test_slice(dset, np.s_[7.8j:2.0j:-1], times[5:0:-1])
+    test_slice(dset, np.s_[7.8j:2.0j:-1], times[5:1:-1], val_endpoint=False)
+    test_slice(dset, np.s_[7.8j:2.0j:-2], times[5:0:-2])
+    test_slice(dset, np.s_[7.8j:2.0j:-2], times[5:1:-2], val_endpoint=False)
+    test_slice(dset, np.s_[3.4j:7.3j], times[2:5])
+    test_slice(dset, np.s_[3.4j:7.3j], times[1:6], interior=True)
+    test_slice(dset, np.s_[2.4j:2.5j], times[2:2])
+    test_slice(dset, np.s_[2.1j:2.5j], times[1:2])
+    test_slice(dset, np.s_[2.1j:2.5j], times[1:1], val_endpoint=False)
+    test_slice(dset, np.s_[2.3j:2.5j], times[1:3], interior=True)
+
+    ####################
+    # slice by imag str
+    test_slice(dset, np.s_['4.0j'], times[2])
+    test_slice(dset, np.s_['4.0j':], times[3:])
+    test_slice(dset, np.s_['4.0j'::2], times[3::2])
+    test_slice(dset, np.s_[:'4.0j':2], times[:3:2])
+    test_slice(dset, np.s_['2.0j':'7.8j'], times[1:6])
+    test_slice(dset, np.s_['2.0j':'7.8j':2], times[1:6:2])
+    test_slice(dset, np.s_['7.8j':'2.0j':-1], times[5:0:-1])
+    test_slice(dset, np.s_['7.8j':'2.0j':-1], times[5:1:-1], val_endpoint=False)
+    test_slice(dset, np.s_['7.8j':'2.0j':-2], times[5:0:-2])
+    test_slice(dset, np.s_['7.8j':'2.0j':-2], times[5:1:-2], val_endpoint=False)
+    test_slice(dset, np.s_['3.4j':'7.3j'], times[2:5])
+    test_slice(dset, np.s_['3.4j':'7.3j'], times[1:6], interior=True)
+    test_slice(dset, np.s_['2.4j':'2.5j'], times[2:2])
+    test_slice(dset, np.s_['2.1j':'2.5j'], times[1:2])
+    test_slice(dset, np.s_['2.1j':'2.5j'], times[1:1], val_endpoint=False)
+    test_slice(dset, np.s_['2.3j':'2.5j'], times[1:3], interior=True)
+
     ############################
     # slice by deprecated float
-    viscid.logger.info("testing deprecated slice-by-value")
+    viscid.logger.info("testing deprecated slice-by-location")
     test_slice(dset, np.s_['4.0'], times[2])
     test_slice(dset, np.s_['4.0':], times[3:])
     test_slice(dset, np.s_['4.0'::2], times[3::2])
@@ -117,13 +155,11 @@ def _main():
     test_slice(dset, np.s_['2.1':'2.5'], times[1:2])
     test_slice(dset, np.s_['2.1':'2.5'], times[1:1], val_endpoint=False)
     test_slice(dset, np.s_['2.3':'2.5'], times[1:3], interior=True)
-    viscid.logger.info("done testing deprecated slice-by-value")
+    viscid.logger.info("done testing deprecated slice-by-location")
 
     ####################
     # slice by datetime
     test_slice(dset, np.s_['1980-01-01T00:00:03.0':'1980-01-01T00:00:07.8'],
-               times[2:6])
-    test_slice(dset, np.s_['1980-01-01T00:00:03.0:1980-01-01T00:00:07.8'],
                times[2:6])
     test_slice(dset, np.s_['UT1980-01-01T00:00:03.0:UT1980-01-01T00:00:07.8'],
                times[2:6])
@@ -149,6 +185,24 @@ def _main():
     assert dset.tslc_range('2.3f:2.5f') == (2.3, 2.5)
     assert dset.tslc_range('UT1980-01-01T00:00:03.0:'
                            'UT1980-01-01T00:00:07.8') == (3.0, 7.8)
+
+
+    t = viscid.linspace_datetime64('2010-01-01T12:00:00',
+                                   '2010-01-01T15:00:00', 8)
+    x = np.linspace(-1, 1, 12)
+    fld = viscid.zeros([t, x], crd_names='tx', center='node')
+    assert fld[:'2010-01-01T13:30:00'].shape == (4, 12)
+    fld = viscid.zeros([t, x], crd_names='tx', center='cell')
+    assert fld[:'2010-01-01T13:30:00'].shape == (4, 11)
+
+    t = viscid.linspace_datetime64('2010-01-01T12:00:00',
+                                   '2010-01-01T15:00:00', 8)
+    t = t - t[0]
+    x = np.linspace(-1, 1, 12)
+    fld = viscid.zeros([t, x], crd_names='tx', center='node')
+    assert fld[:'01:30:00'].shape == (4, 12)
+    fld = viscid.zeros([t, x], crd_names='tx', center='cell')
+    assert fld[:'01:30:00'].shape == (4, 11)
 
     return 0
 

@@ -11,8 +11,8 @@ def main():
     f = viscid.load_file("~/dev/work/tmedium/*.3d.[-1].xdmf")
     grid = f.get_grid()
 
-    gslc = "x=-26f:12.5f, y=-15f:15f, z=-15f:15f"
-    # gslc = "x=-12.5f:26f, y=-15f:15f, z=-15f:15f"
+    gslc = "x=-26j:12.5j, y=-15j:15j, z=-15j:15j"
+    # gslc = "x=-12.5j:26j, y=-15j:15j, z=-15j:15j"
 
     b_cc = f['b_cc'][gslc]
     b_cc.name = "b_cc"
@@ -31,11 +31,11 @@ def main():
 
     # vlt.clf()
     # ax1 = vlt.subplot(211)
-    # vlt.plot(f['pp']['y=0f'], **pargs)
-    # # vlt.plot(viscid.magnitude(f['b_cc']['y=0f']), **pargs)
+    # vlt.plot(f['pp']['y=0j'], **pargs)
+    # # vlt.plot(viscid.magnitude(f['b_cc']['y=0j']), **pargs)
     # # vlt.show()
     # vlt.subplot(212, sharex=ax1, sharey=ax1)
-    # vlt.plot(viscid.magnitude(viscid.fc2cc(f['b_fc'])['y=0f']), **pargs)
+    # vlt.plot(viscid.magnitude(viscid.fc2cc(f['b_fc'])['y=0j']), **pargs)
     # vlt.show()
 
     basename = './tmediumR.3d.{0:06d}'.format(int(grid.time))
@@ -47,11 +47,11 @@ def main():
 
     vlt.clf()
     ax1 = vlt.subplot(211)
-    vlt.plot(f2['pp']['y=0f'], style='contour', levels=5, colorbar=None,
+    vlt.plot(f2['pp']['y=0j'], style='contour', levels=5, colorbar=None,
              colors='k', **pargs)
-    vlt.plot(viscid.magnitude(f2['b_cc']['y=0f']), **pargs)
+    vlt.plot(viscid.magnitude(f2['b_cc']['y=0j']), **pargs)
     vlt.subplot(212, sharex=ax1, sharey=ax1)
-    vlt.plot(viscid.magnitude(viscid.fc2cc(f2['b_fc'])['y=0f']), **pargs)
+    vlt.plot(viscid.magnitude(viscid.fc2cc(f2['b_fc'])['y=0j']), **pargs)
     vlt.show()
 
     os.remove(basename + '.h5')

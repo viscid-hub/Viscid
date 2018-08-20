@@ -17,20 +17,22 @@ import viscid
 from viscid import vutil
 
 
-def test_slice(arr, slc, ref, **kwargs):
-    result = arr[viscid.to_slice(arr, slc, **kwargs)]
+def test_slice(arr, sel, ref, **kwargs):
+    # result = arr[viscid.to_slice(arr, slc, **kwargs)]
+    std_sel = viscid.standardize_sel(sel)
+    result = arr[viscid.std_sel2index(std_sel, arr, **kwargs)]
 
     if isinstance(ref, np.ndarray):
         failed = len(result) != len(ref) or np.any(result != ref)
     else:
         failed = result != ref
 
-    viscid.logger.debug("{0}: {1}".format(slc, result))
+    viscid.logger.debug("{0}: {1}".format(sel, result))
     if failed:
         s = ("Slice doesn't match reference\n"
              "  SLICE:     {0}\n"
              "  RESULT:    {1}\n"
-             "  REFERENCE: {2}\n".format(slc, result, ref))
+             "  REFERENCE: {2}\n".format(sel, result, ref))
         raise RuntimeError(s)
 
 def _main():
@@ -93,9 +95,47 @@ def _main():
     test_slice(arr, np.s_['2.1f':'2.5f'], arr[1:1], val_endpoint=False)
     test_slice(arr, np.s_['2.3f':'2.5f'], arr[1:3], interior=True)
 
+    ################
+    # slice by imag
+    test_slice(arr, np.s_[4.0j], arr[2])
+    test_slice(arr, np.s_[4.0j:], arr[3:])
+    test_slice(arr, np.s_[4.0j::2], arr[3::2])
+    test_slice(arr, np.s_[:4.0j:2], arr[:3:2])
+    test_slice(arr, np.s_[2.0j:7.8j], arr[1:6])
+    test_slice(arr, np.s_[2.0j:7.8j:2], arr[1:6:2])
+    test_slice(arr, np.s_[7.8j:2.0j:-1], arr[5:0:-1])
+    test_slice(arr, np.s_[7.8j:2.0j:-1], arr[5:1:-1], val_endpoint=False)
+    test_slice(arr, np.s_[7.8j:2.0j:-2], arr[5:0:-2])
+    test_slice(arr, np.s_[7.8j:2.0j:-2], arr[5:1:-2], val_endpoint=False)
+    test_slice(arr, np.s_[3.4j:7.3j], arr[2:5])
+    test_slice(arr, np.s_[3.4j:7.3j], arr[1:6], interior=True)
+    test_slice(arr, np.s_[2.4j:2.5j], arr[2:2])
+    test_slice(arr, np.s_[2.1j:2.5j], arr[1:2])
+    test_slice(arr, np.s_[2.1j:2.5j], arr[1:1], val_endpoint=False)
+    test_slice(arr, np.s_[2.3j:2.5j], arr[1:3], interior=True)
+
+    ####################
+    # slice by imag str
+    test_slice(arr, np.s_['4.0j'], arr[2])
+    test_slice(arr, np.s_['4.0j':], arr[3:])
+    test_slice(arr, np.s_['4.0j'::2], arr[3::2])
+    test_slice(arr, np.s_[:'4.0j':2], arr[:3:2])
+    test_slice(arr, np.s_['2.0j':'7.8j'], arr[1:6])
+    test_slice(arr, np.s_['2.0j':'7.8j':2], arr[1:6:2])
+    test_slice(arr, np.s_['7.8j':'2.0j':-1], arr[5:0:-1])
+    test_slice(arr, np.s_['7.8j':'2.0j':-1], arr[5:1:-1], val_endpoint=False)
+    test_slice(arr, np.s_['7.8j':'2.0j':-2], arr[5:0:-2])
+    test_slice(arr, np.s_['7.8j':'2.0j':-2], arr[5:1:-2], val_endpoint=False)
+    test_slice(arr, np.s_['3.4j':'7.3j'], arr[2:5])
+    test_slice(arr, np.s_['3.4j':'7.3j'], arr[1:6], interior=True)
+    test_slice(arr, np.s_['2.4j':'2.5j'], arr[2:2])
+    test_slice(arr, np.s_['2.1j':'2.5j'], arr[1:2])
+    test_slice(arr, np.s_['2.1j':'2.5j'], arr[1:1], val_endpoint=False)
+    test_slice(arr, np.s_['2.3j':'2.5j'], arr[1:3], interior=True)
+
     ############################
     # slice by deprecated float
-    viscid.logger.info("testing deprecated slice-by-value")
+    viscid.logger.info("testing deprecated slice-by-location")
     test_slice(arr, np.s_['4.0'], arr[2])
     test_slice(arr, np.s_['4.0':], arr[3:])
     test_slice(arr, np.s_['4.0'::2], arr[3::2])
@@ -112,7 +152,7 @@ def _main():
     test_slice(arr, np.s_['2.1':'2.5'], arr[1:2])
     test_slice(arr, np.s_['2.1':'2.5'], arr[1:1], val_endpoint=False)
     test_slice(arr, np.s_['2.3':'2.5'], arr[1:3], interior=True)
-    viscid.logger.info("done testing deprecated slice-by-value")
+    viscid.logger.info("done testing deprecated slice-by-location")
 
     assert viscid.selection2values(arr, np.s_[2:5]) == (3.5714285714285716,
                                                         7.4285714285714288)

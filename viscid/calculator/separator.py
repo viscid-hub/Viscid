@@ -17,7 +17,7 @@ __all__ = ["trace_separator", "topology_bitor_clusters", "get_sep_pts_bitor",
            "get_sep_pts_bisect"]
 
 
-def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
+def trace_separator(grid, b_slcstr="x=-25j:15j, y=-30j:30j, z=-15j:15j",
                     r=1.0, plot=False, trace_opts=None, cache=True,
                     cache_dir=None):
     """Trace a separator line from most dawnward null
@@ -62,7 +62,7 @@ def trace_separator(grid, b_slcstr="x=-25f:15f, y=-30f:30f, z=-15f:15f",
     except IOError:
         _b = grid['b'][b_slcstr]
 
-        _, nulls = viscid.find_nulls(_b['x=-30f:15f'], ibound=5.0)
+        _, nulls = viscid.find_nulls(_b['x=-30j:15j'], ibound=5.0)
 
         # get most dawnward null, nulls2 is all nulls except p0
         nullind = np.argmin(nulls[1, :])
@@ -182,7 +182,7 @@ def topology_bitor_clusters(fld, min_depth=1, max_depth=10, multiple=True,
         # bitwise_or an entire bounary if all points are neighbors, like
         # at the poles of a sphere
         for bnd in pt_bnds:
-            slc = [slice(None), slice(None)]
+            slc = (slice(None), slice(None))
             slc[int(bnd[0])] = -1 if bnd[1] == "+" else 0
             a[slc] = np.bitwise_or.reduce(a[slc])
 

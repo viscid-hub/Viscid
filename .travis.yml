@@ -34,27 +34,29 @@ before_install:
 
   # before we build, check to see if we're in a release branch, and if
   # so, then do some 0th order validation on the viscid.__version__
-  - 'if [[ ($TRAVIS_BRANCH =~ ^(.*release.*|master)$) ]]; then
-       if [ "$(grep -E "__version__\s*=" viscid/__init__.py | grep -E "(dev|travis)")" != "" ]; then
-         echo "Oops, you are preparing a release, but you still have either";
-         echo "dev or travis in the version number";
-         false;
-       fi
-     elif [[ $TRAVIS_BRANCH =~ ${deployable} ]]; then
-       if [ "$(grep -E "__version__\s*=" viscid/__init__.py | grep ${TRAVIS_BRANCH} )" == "" ]; then
-         echo "Oops, You are on a deployable branch (that is not master), ";
-         echo "but the branch name is not in the version number";
-         false;
-       fi
-     fi'
+  - |
+    if [[ ($TRAVIS_BRANCH =~ ^(.*release.*|master)$) ]]; then
+      if [ "$(grep -E "__version__\s*=" viscid/__init__.py | grep -E "(dev|travis)")" != "" ]; then
+        echo "Oops, you are preparing a release, but you still have either"
+        echo "dev or travis in the version number"
+        false
+      fi
+    elif [[ $TRAVIS_BRANCH =~ ${deployable} ]]; then
+      if [ "$(grep -E "__version__\s*=" viscid/__init__.py | grep ${TRAVIS_BRANCH} )" == "" ]; then
+        echo "Oops, You are on a deployable branch (that is not master), "
+        echo "but the branch name is not in the version number"
+        false
+      fi
+    fi
 
   # make sure the version string appears in CHANGES.md
-  - 'ver_re="__version__.*[\"'']+([^\"'']+)[\"'']+"'
-  - 'version=$([[ "$(grep -E "__version__\s*=" viscid/__init__.py)" =~ ${ver_re} ]]; echo "${BASH_REMATCH[1]}")'
-  - 'if [ "$(grep -E "${version}\s*$" CHANGES.md)" == "" ]; then
-       echo "Oops, the version ${version} does not appear in CHANGES.md";
-       false;
-     fi'
+  - |
+    ver_re="__version__.*[\"'']+([^\"'']+)[\"'']+"
+    version=$([[ "$(grep -E "__version__\s*=" viscid/__init__.py)" =~ ${ver_re} ]]; echo "${BASH_REMATCH[1]}")
+    if [ "$(grep -E "${version}\s*$" CHANGES.md)" == "" ]; then
+      echo "Oops, the version ${version} does not appear in CHANGES.md"
+      false
+    fi
 
   # setup deployment key
   # make the encrypted archives with the following...
@@ -84,56 +86,66 @@ before_install:
   # then...
   # Add the public key to the github project ${HG_USER}/Viscid-docs
   # as a "Deploy key" with write access
-  - 'mkdir -p ${HOME}/.ssh'
-  - 'chmod 700 ${HOME}/.ssh'
-  - 'if [ "${TRAVIS_REPO_SLUG}" == "viscid-hub/Viscid" ]; then
-       openssl aes-256-cbc -K $encrypted_0b3ef9041727_key -iv $encrypted_0b3ef9041727_iv -in resources/.archive.viscid-hub.tar.gz.enc -out ./.archive.tar.gz -d;
-       export DEPLOY_SLUG="${TRAVIS_REPO_SLUG}-docs";
-       export DEPLOY_DOCS="true";
-       export DEPLOY_TESTS="true";
-     elif [ "${TRAVIS_REPO_SLUG}" == "KristoforMaynard/Viscid" ]; then
-       openssl aes-256-cbc -K $encrypted_0b3ef9041727_key -iv $encrypted_0b3ef9041727_iv -in resources/.archive.KristoforMaynard.tar.gz.enc -out ./.archive.tar.gz -d;
-       export DEPLOY_SLUG="${TRAVIS_REPO_SLUG}-docs";
-       export DEPLOY_DOCS="false";
-       export DEPLOY_TESTS="true";
-     else
-       export DEPLOY_SLUG="";
-       export DEPLOY_DOCS="false";
-       export DEPLOY_TESTS="false";
-     fi'
-  - 'if [ -f ./.archive.tar.gz ]; then
-       mkdir .archive;
-       tar -xf .archive.tar.gz -C .archive;
-       mkdir -p ${HOME}/.ssh;
-       chmod 700 ${HOME}/.ssh;
-       mv .archive/id_rsa ${HOME}/.ssh/id_rsa;
-       chmod 600 ${HOME}/.ssh/id_rsa;
-     fi'
-  - 'echo "Deployment info: DEPLOY_SLUG: ${DEPLOY_SLUG}";
-     echo "Deployment info: DEPLOY_DOCS: ${DEPLOY_DOCS}";
-     echo "Deployment info: DEPLOY_TESTS: ${DEPLOY_TESTS}";
-     ls -la ${HOME}/.ssh;'
+  - |
+    mkdir -p ${HOME}/.ssh
+    chmod 700 ${HOME}/.ssh
+
+  - |
+    if [ "${TRAVIS_REPO_SLUG}" == "viscid-hub/Viscid" ]; then
+      openssl aes-256-cbc -K $encrypted_0b3ef9041727_key -iv $encrypted_0b3ef9041727_iv -in resources/.archive.viscid-hub.tar.gz.enc -out ./.archive.tar.gz -d
+      export DEPLOY_SLUG="${TRAVIS_REPO_SLUG}-docs"
+      export DEPLOY_DOCS="true"
+      export DEPLOY_TESTS="true"
+    elif [ "${TRAVIS_REPO_SLUG}" == "KristoforMaynard/Viscid" ]; then
+      openssl aes-256-cbc -K $encrypted_0b3ef9041727_key -iv $encrypted_0b3ef9041727_iv -in resources/.archive.KristoforMaynard.tar.gz.enc -out ./.archive.tar.gz -d
+      export DEPLOY_SLUG="${TRAVIS_REPO_SLUG}-docs"
+      export DEPLOY_DOCS="false"
+      export DEPLOY_TESTS="true"
+    else
+      export DEPLOY_SLUG=""
+      export DEPLOY_DOCS="false"
+      export DEPLOY_TESTS="false"
+    fi
+
+  - |
+    if [ -f ./.archive.tar.gz ]; then
+      mkdir .archive
+      tar -xf .archive.tar.gz -C .archive
+      mkdir -p ${HOME}/.ssh
+      chmod 700 ${HOME}/.ssh
+      mv .archive/id_rsa ${HOME}/.ssh/id_rsa
+      chmod 600 ${HOME}/.ssh/id_rsa
+    fi
+
+  - |
+    echo "Deployment info: DEPLOY_SLUG: ${DEPLOY_SLUG}"
+    echo "Deployment info: DEPLOY_DOCS: ${DEPLOY_DOCS}"
+    echo "Deployment info: DEPLOY_TESTS: ${DEPLOY_TESTS}"
+    ls -la ${HOME}/.ssh
 
   ## Now setup the Anaconda tools
   # it saves some download time to use the same python iff 2.7
-  - 'if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-       export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh";
-     else
-       export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh";
-     fi'
+  - |
+    if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda2-latest-Linux-x86_64.sh"
+    else
+      export CONDA_URL="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
+    fi
+
   # linux has wget, OS X has curl... such is life
-  - 'if [[ "$(which wget &>/dev/null && echo $?)" == "0" ]]; then
-       wget "${CONDA_URL}" -O miniconda.sh;
-     else
-       curl "${CONDA_URL}" > miniconda.sh;
-     fi'
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  # updating conda always causes weird bugs
-  # - conda update -q conda
-  # Useful for debugging any issues with conda
+  - |
+    if [[ "$(which wget &>/dev/null && echo $?)" == "0" ]]; then
+      wget "${CONDA_URL}" -O miniconda.sh
+    else
+      curl "${CONDA_URL}" > miniconda.sh
+    fi
+
+  - |
+    bash miniconda.sh -b -p $HOME/miniconda
+    export PATH="$HOME/miniconda/bin:$PATH"
+    hash -r
+    conda config --set always_yes yes --set changeps1 no
+
   - conda info -a
 
   ## Now setup some Viscid specific things, like rc files and make sure
@@ -158,52 +170,58 @@ install:
 
   # if conda package list doesn't match the cached one, just blast
   # the cached conda environment
-  - 'if [ -f ${cached_env_spec} ]; then
-       if [ "$(diff -qw ${env_spec} ${cached_env_spec})" != "" ]; then
-         echo "Package Lists Differed, killing current venv";
-         echo "$(diff -w ${env_spec} ${cached_env_spec})";
-         rm ${cached_env_spec};
-         rm -rf ${envpath};
-       fi
-     fi'
+  - |
+    if [ -f ${cached_env_spec} ]; then
+      if [ "$(diff -qw ${env_spec} ${cached_env_spec})" != "" ]; then
+        echo "Package Lists Differed, killing current venv";
+        echo "$(diff -w ${env_spec} ${cached_env_spec})";
+        rm ${cached_env_spec};
+        rm -rf ${envpath};
+      fi
+    fi
 
   # if the conda envronment we need isn't cached, create it, otherwise
   # do an update
-  - 'if [ ! -d "${envpath}" ]; then
-       conda env create -qf ${env_spec};
-       source activate ${env_name};
-       cp ${env_spec} ${cached_env_spec};
-     else
-       source activate ${env_name};
-       conda update --all --yes;
-     fi'
+  - |
+    if [ ! -d "${envpath}" ]; then
+      conda env create -qf ${env_spec};
+      source activate ${env_name};
+      cp ${env_spec} ${cached_env_spec};
+    else
+      source activate ${env_name};
+      conda update --all --yes;
+    fi
 
   # if deplying docs, run tests inplace, this makes preparing the docs
   # faster since cython's fused types makes 8 times too much code, ug!
-  - 'if [ "${PREPARE_DOCS}" == "1" ]; then
-       make inplace;
-       export PATH="${PWD}/scripts:${PATH}";
-       export PYTHONPATH="${PWD}:${PYTHONPATH}";
-     else
-       rm -rf ${prefix};
-       export PATH="${prefix}/bin:${PATH}";
-       export PYTHONPATH="${prefix}:${PYTHONPATH}";
-       mkdir -p "${prefix}";
-       python setup.py install --prefix=${prefix} --install-lib=${prefix};
-     fi'
+  - |
+    if [ "${PREPARE_DOCS}" == "1" ]; then
+      make inplace;
+      export PATH="${PWD}/scripts:${PATH}";
+      export PYTHONPATH="${PWD}:${PYTHONPATH}";
+    else
+      rm -rf ${prefix};
+      export PATH="${prefix}/bin:${PATH}";
+      export PYTHONPATH="${prefix}:${PYTHONPATH}";
+      mkdir -p "${prefix}";
+      python setup.py install --prefix=${prefix} --install-lib=${prefix};
+    fi
 
 before_script:
   - 'if [ "${FLAKE}" == "1" ]; then make flake8; fi'
 
 script:
-  - 'if [ "${PREPARE_DOCS}" == "1" ]; then
-       make check;
-     else
-       make instcheck;
-     fi'
-  - 'if [[ $TRAVIS_BRANCH =~ ${deployable}$ && "${DEPLOY_TESTS}" == "true" ]]; then
-       make deploy-summary;
-     fi'
+  - |
+    if [ "${PREPARE_DOCS}" == "1" ]; then
+      make check;
+    else
+      make instcheck;
+    fi
+
+  - |
+    if [[ $TRAVIS_BRANCH =~ ${deployable}$ && "${DEPLOY_TESTS}" == "true" ]]; then
+      make deploy-summary;
+    fi
 
 deploy:
   provider: "script"

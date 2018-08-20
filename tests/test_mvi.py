@@ -40,11 +40,11 @@ def _main():
     pp = f3d["pp"]
     e = f3d["e_cc"]
 
-    vlab.figure(size=(1200, 800), offscreen=not args.show)
+    vlab.figure(size=(1280, 800), offscreen=not args.show)
 
     ##########################################################
     # make b a dipole inside 3.1Re and set e = 0 inside 4.0Re
-    cotr = viscid.Cotr(dip_tilt=0.0)  # pylint: disable=not-callable
+    cotr = viscid.Cotr(time='1990-03-21T14:48', dip_tilt=0.0)  # pylint: disable=not-callable
     moment = cotr.get_dipole_moment(crd_system=b)
     isphere_mask = viscid.make_spherical_mask(b, rmax=3.1)
     viscid.fill_dipole(b, m=moment, mask=isphere_mask)
@@ -59,7 +59,12 @@ def _main():
                                 cmap="inferno", logscale=True)
     scp.implicit_plane.normal = [0, 0, -1]
     scp.implicit_plane.origin = [0, 0, 0]
+    scp.enable_contours = True
+    scp.contour.filled_contours = True
+    scp.contour.number_of_contours = 64
     cbar = vlab.colorbar(scp, title=pp.name, orientation='vertical')
+    cbar.scalar_bar_representation.position = (0.01, 0.13)
+    cbar.scalar_bar_representation.position2 = (0.08, 0.76)
 
     ######################################
     # plot a vector cut plane of the flow
@@ -71,12 +76,16 @@ def _main():
 
     ##############################
     # plot very faint isosurfaces
-    iso = vlab.iso_surface(pp_src, contours=5, opacity=0.1, cmap=False)
+    vx_src = vlab.field2source(v['x'], center='node')
+    iso = vlab.iso_surface(vx_src, contours=[0.0], opacity=0.008, cmap='Pastel1')
 
     ##############################################################
     # calculate B field lines && topology in Viscid and plot them
-    seeds = viscid.SphericalPatch([0, 0, 0], [2, 0, 1], 30, 15, r=5.0,
-                                  nalpha=5, nbeta=5)
+    seedsA = viscid.SphericalPatch([0, 0, 0], [2, 0, 1], 30, 15, r=5.0,
+                                   nalpha=5, nbeta=5)
+    seedsB = viscid.SphericalPatch([0, 0, 0], [1.9, 0, -20], 30, 15, r=5.0,
+                                   nalpha=1, nbeta=5)
+    seeds = np.concatenate([seedsA, seedsB], axis=1)
     b_lines, topo = viscid.calc_streamlines(b, seeds, ibound=3.5,
                                             obound0=[-25, -20, -20],
                                             obound1=[15, 20, 20], wrap=True)
@@ -96,22 +105,24 @@ def _main():
     # These field lines are colored by E parallel
     epar = viscid.project(e, b)
     epar.name = "Epar"
-    bsl2 = vlab.streamline(b, epar, seedtype='sphere', seed_resolution=4,
+    bsl2 = vlab.streamline(b, epar, seedtype='plane', seed_resolution=4,
                            integration_direction='both', clim=(-0.05, 0.05))
 
     # now tweak the VTK streamlines
     bsl2.stream_tracer.maximum_propagation = 20.
-    bsl2.seed.widget.center = [-11, 0, 0]
-    bsl2.seed.widget.radius = 1.0
+    bsl2.seed.widget.origin = [-11, -5.0, -2.0]
+    bsl2.seed.widget.point1 = [-11, 5.0, -2.0]
+    bsl2.seed.widget.point2 = [-11.0, -5.0, 2.0]
     bsl2.streamline_type = 'tube'
     bsl2.tube_filter.radius = 0.03
     bsl2.stop()  # this stop/start was a hack to get something to update
     bsl2.start()
     bsl2.seed.widget.enabled = False
 
-    cbar = vlab.colorbar(bsl2, title=epar.name, orientation='horizontal')
-    cbar.scalar_bar_representation.position = (0.2, 0.01)
-    cbar.scalar_bar_representation.position2 = (0.6, 0.14)
+    cbar = vlab.colorbar(bsl2, title=epar.name, label_fmt='%.3f',
+                         orientation='horizontal')
+    cbar.scalar_bar_representation.position = (0.15, 0.01)
+    cbar.scalar_bar_representation.position2 = (0.72, 0.10)
 
     ###############################################################
     # Make a contour at the open-closed boundary in the ionosphere
@@ -125,6 +136,8 @@ def _main():
     m = vlab.mesh_from_seeds(seeds_iono, scalars=topo_iono, opacity=1.0,
                              clim=(0, 3), color=(0.992, 0.445, 0.0))
     m.enable_contours = True
+    m.actor.property.line_width = 4.0
+    m.contour.number_of_contours = 4
 
     ####################################################################
     # Plot the ionosphere, note that the sample data has the ionosphere

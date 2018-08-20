@@ -61,7 +61,7 @@ __mpl_ver__ = matplotlib.__version__
 vseaborn.activate_from_viscid()
 
 
-def plot(fld, selection=":", force_cartesian=False, **kwargs):
+def plot(fld, selection=Ellipsis, force_cartesian=False, **kwargs):
     """Plot a field by dispatching to the most appropiate funciton
 
     * If fld has 1 spatial dimensions, call
@@ -199,6 +199,31 @@ def _pop_axis_opts(plot_kwargs, default='none'):
     # print('_axis =', _axis)
     return _axis, using_default_viscid_axis, plot_kwargs
 
+def _are_xy_shared(axis):
+    x_is_shared = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
+    y_is_shared = len(axis.get_shared_y_axes().get_siblings(axis)) > 1
+    return x_is_shared, y_is_shared
+
+def _ax_on_edge(axis):
+    try:
+        rc_spec = axis.get_axes_locator().get_subplotspec().get_rows_columns()
+        nrows, ncols, row_start, row_stop, col_start, col_stop = rc_spec
+    except AttributeError:
+        subplot_spec = axis.get_axes_locator().get_subplotspec()
+        gridspec = subplot_spec.get_gridspec()
+        nrows, ncols = gridspec.get_geometry()
+        row_start, col_start = divmod(subplot_spec.num1, ncols)
+        if subplot_spec.num2 is not None:
+            row_stop, col_stop = divmod(subplot_spec.num2, ncols)
+        else:
+            row_stop = row_start
+            col_stop = col_start
+
+    bottom_most = row_stop >= nrows - 1
+    left_most = col_start == 0
+
+    return bottom_most, left_most
+
 def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
     """
     Some plot options will want to call a function after the plot is
@@ -238,12 +263,11 @@ def _extract_actions_and_norm(axis, plot_kwargs, defaults=None):
                 # the x/y axes
                 actions.append((axis.autoscale_view, [], dict(tight=True)))
                 actions.append((axis.set_autoscale_on, False))
-                has_shared_x = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
-                has_shared_y = len(axis.get_shared_x_axes().get_siblings(axis)) > 1
-                if has_shared_x ^ has_shared_y:
+                x_is_shared, y_is_shared = _are_xy_shared(axis)
+                if x_is_shared ^ y_is_shared:
                     adjustable = 'datalim'
                 elif (LooseVersion(__mpl_ver__) < LooseVersion("2.2")
-                      and (has_shared_x or has_shared_y)):
+                      and (x_is_shared or y_is_shared)):
                     adjustable = 'box-forced'
                 else:
                     adjustable = 'box'
@@ -579,7 +603,8 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     flip_plot = plot_kwargs.pop("flip_plot", flip_plot)
 
     tightlim = plot_kwargs.pop('tightlim', plot_kwargs.pop('tightlims', True))
-    if tightlim:
+    _proj = getattr(ax, "transProjection", None)
+    if tightlim and (_proj is None or 'identity' in _proj.__class__.__name__.lower()):
         _xl = np.array(fld.xl[:2])
         _xh = np.array(fld.xh[:2])
         if 'x' not in plot_kwargs:
@@ -828,8 +853,13 @@ def plot2d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
             if not isinstance(title, string_types):
                 title = patch0.pretty_name
             ax.set_title(title)
-        ax.set_xlabel(namex)
-        ax.set_ylabel(namey)
+
+        x_is_shared, y_is_shared = _are_xy_shared(ax)
+        bottom_most, left_most = _ax_on_edge(ax)
+        if not x_is_shared or (x_is_shared and bottom_most):
+            ax.set_xlabel(namex)
+        if not y_is_shared or (y_is_shared and left_most):
+            ax.set_ylabel(namey)
 
     _apply_axfmt(ax, majorfmt=majorfmt, minorfmt=minorfmt,
                  majorloc=majorloc, minorloc=minorloc)
@@ -958,15 +988,16 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     drawcoastlines = plot_kwargs.pop("drawcoastlines", False)
     lon_0 = plot_kwargs.pop("lon_0", 0.0)
     lat_0 = plot_kwargs.pop("lat_0", None)
-    bounding_lat = plot_kwargs.pop("bounding_lat", 40.0)
+    bounding_lat = plot_kwargs.pop("bounding_lat", None)
+    bounding_lat_specified = bounding_lat is not None
     title = plot_kwargs.pop("title", True)
     label_lat = plot_kwargs.pop("label_lat", True)
     label_mlt = plot_kwargs.pop("label_mlt", True)
 
     # try to autodiscover hemisphere if ALL the thetas are either above
     # or below the equator
+    lat = viscid.as_mapfield(fld, units='deg').get_crd('lat')
     if hemisphere == "none":
-        lat = viscid.as_mapfield(fld, units='deg').get_crd('lat')
         if np.all(lat >= 0.0):
             hemisphere = "north"
         elif np.all(lat <= 0.0):
@@ -977,18 +1008,21 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                                   "north or south (defaulting to North)."
                                   "".format(fld.name))
             hemisphere = 'north'
-    # now that we know hemisphere is useful, setup the latlabel array
+
+    # set a sensible default for bounding_lat... full spheres get cut off
+    # at 40 deg, but hemispheres or smaller are shown in full
+    if bounding_lat is None:
+        if abs(lat[-1] - lat[0]) >= 90.01:
+            bounding_lat = 40.0
+        else:
+            bounding_lat = 90.0
+
     if hemisphere in ("north", 'n'):
         # def_projection = "nplaea"
-        # def_boundinglat = 40.0
-        latlabel_arr = np.linspace(50.0, 80.0, 4)
+        pass
     elif hemisphere in ("south", 's'):
         # def_projection = "splaea"
-        # def_boundinglat = -40.0
-        # FIXME: should I be doing this?
-        if bounding_lat > 0.0:
-            bounding_lat *= -1.0
-        latlabel_arr = -1.0 * np.linspace(50.0, 80.0, 4)
+        bounding_lat = -1 * np.abs(bounding_lat)
     else:
         raise ValueError("hemisphere is either 'north' or 'south'")
 
@@ -996,6 +1030,12 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
     # lon_0 = kwargs.pop("lon_0", 0.0)
     # lat_0 = kwargs.pop("lat_0", None)
     # drawcoastlines = kwargs.pop("drawcoastlines", False)
+
+    make_periodic = plot_kwargs.get('style', None) in ("contour", "contourf")
+    new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
+                                       hemisphere=hemisphere,
+                                       make_periodic=make_periodic)
+
 
     if projection != "polar" and not _HAS_BASEMAP:
         viscid.logger.error("NOTE: install the basemap for the desired "
@@ -1011,10 +1051,6 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
 
         ax = _get_polar_axis(ax=ax)
 
-        make_periodic = plot_kwargs.get('style', None) in ("contour", "contourf")
-        new_fld = viscid.as_polar_mapfield(fld, bounding_lat=bounding_lat,
-                                           hemisphere=hemisphere,
-                                           make_periodic=make_periodic)
         show = plot_kwargs.pop('show', False)
         plot_kwargs['nolabels'] = True
         plot_kwargs['axis'] = 'none'
@@ -1022,6 +1058,10 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
         plot_kwargs = _set_default_cbar_pad(plot_kwargs, pad=0.2)
 
         ret = plot2d_field(new_fld, ax=ax, **plot_kwargs)
+        if bounding_lat_specified:
+            abslatlim = np.abs(bounding_lat)
+        else:
+            abslatlim = np.rad2deg(np.abs(new_fld.xh[1]))
         ax.set_theta_offset(-90 * np.pi / 180.0)
 
         if title:
@@ -1035,11 +1075,14 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 mlt_labels = ()
             ax.set_thetagrids(mlt_grid_pos, mlt_labels)
 
-            abs_grid_dr = 10
+            grid_label_origin = 10
+            if abslatlim > 50:
+                grid_label_dr = 20
+            else:
+                grid_label_dr = 10
             # grid_dr = abs_grid_dr * np.sign(bounding_lat)
-            absboundinglat = np.abs(bounding_lat)
-            lat_grid_pos = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
-            lat_labels = np.arange(abs_grid_dr, absboundinglat, abs_grid_dr)
+            lat_grid_pos = np.arange(grid_label_origin, abslatlim, grid_label_dr)
+            lat_labels = np.arange(grid_label_origin, abslatlim, grid_label_dr)
             if label_lat == "from_pole":
                 lat_labels = ["{0:g}".format(l) for l in lat_labels]
             elif label_lat:
@@ -1051,7 +1094,7 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
             else:
                 lat_labels = []
             ax.set_rgrids((np.pi / 180.0) * lat_grid_pos, lat_labels)
-            ax.set_rmax(np.deg2rad(absboundinglat))
+            ax.set_rmax(np.deg2rad(abslatlim))
             ax.grid(True, color=axgridec, linestyle=axgridls,
                     linewidth=axgridlw)
             ax.set_axisbelow(False)
@@ -1079,6 +1122,15 @@ def plot2d_mapfield(fld, ax=None, plot_opts=None, **plot_kwargs):
                 lat_lables = [1, 1, 1, 1]
             else:
                 lat_lables = [0, 0, 0, 0]
+
+            if np.abs(bounding_lat) > 50.0:
+                latlabel_arr = np.linspace(20.0, 80.0, 4)
+            else:
+                latlabel_arr = np.linspace(50.0, 80.0, 4)
+
+            if hemisphere in ("south", 's'):
+                latlabel_arr *= -1
+
             m.drawparallels(latlabel_arr, labels=lat_lables,
                             color=axgridec, linestyle=axgridls,
                             linewidth=axgridlw)
@@ -1175,9 +1227,9 @@ def plot_iono(fld, *args, **kwargs):
             hem = 'north'
 
     if hem in ('north', 'n'):
-        fldH = fld["lat=10f:"]
+        fldH = fld["lat=10j:"]
     elif hem in ('south', 's'):
-        fldH = fld['theta=:-10f']
+        fldH = fld['theta=:-10j']
     else:
         raise ValueError("Unknown hemisphere: {0}".format(hem))
 

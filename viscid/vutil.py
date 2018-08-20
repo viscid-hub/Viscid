@@ -235,8 +235,6 @@ def find_items(dset, loc):
     """Shortcut for :py:func:`resolve_path`, items only"""
     return resolve_path(dset, loc)[0]
 
-str_to_value = sliceutil.str2value
-
 def _hexchar2int(arr):
     # this np.char.decode(..., 'hex') doesn't work for py3k; kinda silly
     try:
@@ -544,10 +542,10 @@ def slice_globbed_filenames(glob_pattern):
         >>> expand_glob_slice("f*.[:2].txt")
         ["file.010.txt", "file.020.txt"]
 
-        >>> expand_glob_slice("f*.[10.0f::2].txt")
+        >>> expand_glob_slice("f*.[10.0j::2].txt")
         ["file.010.txt", "file.030.txt"]
 
-        >>> expand_glob_slice("f*.[20f:2].txt")
+        >>> expand_glob_slice("f*.[20j:2].txt")
         ["file.020.txt", "file.040.txt"]
     """
     glob_pattern = os.path.expanduser(os.path.expandvars(glob_pattern))
@@ -555,8 +553,10 @@ def slice_globbed_filenames(glob_pattern):
 
     # construct a regex to match the results
     # verify glob pattern has only one
-    number_re = r"(?:[-+]?[0-9]*\.?[0-9]+f?|[-+]?[0-9+])"
-    slc_re = r"\[({0})?(:({0})?){{0,2}}\]".format(number_re)
+    dtime_re = sliceutil.RE_DTIME_SLC_GROUP
+    number_re = r"[-+]?[0-9]*\.?[0-9]+[fjFJ]?|[-+]?[0-9+]"
+    el_re = r"(?:{0}|{1})".format(dtime_re, number_re)
+    slc_re = r"\[({0})?(:({0}))?(:[-+]?[0-9]*)?\]".format(el_re)
     n_slices = len(re.findall(slc_re, glob_pattern))
 
     if n_slices > 1:
@@ -592,12 +592,18 @@ def slice_globbed_filenames(glob_pattern):
         times = [float(re.match(res_re, fn).group('TSLICE')) for fn in fnames]
         fnames = [fn for fn, t in sorted(zip(fnames, times), key=itemgetter(1))]
         times.sort()
-        slc = sliceutil.to_slice(times, slcstr)
+
+        std_sel = sliceutil.standardize_sel(slcstr)
+        slc = sliceutil.std_sel2index(std_sel, times, tdunit='s', epoch=None)
     else:
         times = [None] * len(fnames)
         slc = slice(None)
 
-    return fnames[slc]
+    idx_whitelist = np.asarray(np.arange(len(fnames))[slc]).reshape(-1)
+    culled_fnames = [s for i, s in enumerate(fnames)
+                     if i in idx_whitelist]
+
+    return culled_fnames
 
 
 def glob2(glob_pattern, *args, **kwargs):

@@ -699,7 +699,7 @@ def _main():
     logger.setLevel(viscid.logging.DEBUG)
 
     f = viscid.load_file(os.path.join(sample_dir, 'vpic_sample', 'global.vpc'))
-    vlt.plot(-f['n_e']['y=0f'], logscale=True, show=True)
+    vlt.plot(-f['n_e']['y=0j'], logscale=True, show=True)
 
 if __name__ == "__main__":
     sys.exit(_main())

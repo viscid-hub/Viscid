@@ -43,11 +43,11 @@ def compare_vectors(cc_fld, ecfc_fld, to_cc_fn, catol=1e-8, rtol=2.2e-6,
         # plot differences?
         if make_plots:
             ax1 = plt.subplot(311)
-            vlt.plot(cc_fld[d]['y=0f'], symmetric=True, earth=True)
+            vlt.plot(cc_fld[d]['y=0j'], symmetric=True, earth=True)
             plt.subplot(312, sharex=ax1, sharey=ax1)
-            vlt.plot(cc[d]['y=0f'], symmetric=True, earth=True)
+            vlt.plot(cc[d]['y=0j'], symmetric=True, earth=True)
             plt.subplot(313, sharex=ax1, sharey=ax1)
-            vlt.plot(reldiff[d]['y=0f'], symmetric=True, earth=True)
+            vlt.plot(reldiff[d]['y=0j'], symmetric=True, earth=True)
             vlt.show()
 
     if any(comp_beyond_limit):
@@ -80,7 +80,7 @@ def main():
         raise ValueError()
 
     ISLICE = slice(None)
-    # ISLICE = 'y=0f:0.15f'
+    # ISLICE = 'y=0j:0.15j'
 
     # #################
     # # test out fc2cc
@@ -141,11 +141,11 @@ def main():
             # plot differences?
             if make_plots:
                 ax1 = plt.subplot(311)
-                vlt.plot(divb['y=0f'], symmetric=True, earth=True)
+                vlt.plot(divb['y=0j'], symmetric=True, earth=True)
                 plt.subplot(312, sharex=ax1, sharey=ax1)
-                vlt.plot(divb1['y=0f'], symmetric=True, earth=True)
+                vlt.plot(divb1['y=0j'], symmetric=True, earth=True)
                 plt.subplot(313, sharex=ax1, sharey=ax1)
-                vlt.plot(reldiff['y=0f'], symmetric=True, earth=True)
+                vlt.plot(reldiff['y=0j'], symmetric=True, earth=True)
                 vlt.show()
 
             # Since the coordinates will be different by order dx^2 (i think),
@@ -159,8 +159,8 @@ def main():
             #     raise RuntimeError("Tolerance exceeded on divB calculation")
 
     if test_streamline:
-        b_cc = f['b_cc']['x=-40f:12f, y=-15f:15f, z=-15f:15f']
-        b_fc = f['b_fc']['x=-40f:12f, y=-15f:15f, z=-15f:15f']
+        b_cc = f['b_cc']['x=-40j:12j, y=-15j:15j, z=-15j:15j']
+        b_fc = f['b_fc']['x=-40j:12j, y=-15j:15j, z=-15j:15j']
 
         cotr = viscid.cotr.Cotr()
         r_mask = 3.0
@@ -183,12 +183,12 @@ def main():
 
             ax0 = plt.subplot(211)
             topo_cc_colors = viscid.topology2color(topo_cc)
-            vlt.plot(f['pp']['y=0f'], logscale=True, earth=True, cmap='plasma')
+            vlt.plot(f['pp']['y=0j'], logscale=True, earth=True, cmap='plasma')
             vlt.plot2d_lines(lines_cc, topo_cc_colors, symdir='y')
 
             ax0 = plt.subplot(212, sharex=ax0, sharey=ax0)
             topo_fc_colors = viscid.topology2color(topo_fc)
-            vlt.plot(f['pp']['y=0f'], logscale=True, earth=True, cmap='plasma')
+            vlt.plot(f['pp']['y=0j'], logscale=True, earth=True, cmap='plasma')
             vlt.plot2d_lines(lines_fc, topo_fc_colors, symdir='y')
 
             plt.xlim(-20, 10)
@@ -234,18 +234,18 @@ def main():
         if make_plots:
             # plt.figure()
             # ax0 = plt.subplot(121)
-            # vlt.plot(b_cc['x']['y=0f'], clim=(-40, 40))
+            # vlt.plot(b_cc['x']['y=0j'], clim=(-40, 40))
             # plt.subplot(122, sharex=ax0, sharey=ax0)
-            # vlt.plot(b_fc['x']['y=0f'], clim=(-40, 40))
+            # vlt.plot(b_fc['x']['y=0j'], clim=(-40, 40))
             # vlt.show()
 
             plt.figure(figsize=(14, 5))
             ax0 = plt.subplot(131)
-            vlt.plot(epar_cc['y=0f'], symmetric=True, cbarlabel="Epar CC")
+            vlt.plot(epar_cc['y=0j'], symmetric=True, cbarlabel="Epar CC")
             plt.subplot(132, sharex=ax0, sharey=ax0)
-            vlt.plot(epar_ecfc['y=0f'], symmetric=True, cbarlabel="Epar ECFC")
+            vlt.plot(epar_ecfc['y=0j'], symmetric=True, cbarlabel="Epar ECFC")
             plt.subplot(133, sharex=ax0, sharey=ax0)
-            vlt.plot(((epar_cc - epar_ecfc) / epar_cc)['y=0f'], clim=(-10, 10),
+            vlt.plot(((epar_cc - epar_ecfc) / epar_cc)['y=0j'], clim=(-10, 10),
                      cbarlabel="Rel Diff")
             vlt.auto_adjust_subplots()
             vlt.show()

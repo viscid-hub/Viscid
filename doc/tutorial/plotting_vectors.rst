@@ -23,12 +23,12 @@ Plotting 2D streamlines. Note that using matplotlib to make streamlines from a 2
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    vlt.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
+    vlt.plot(f3d['Pressure = pp']['z=0j'], logscale=True, earth=True)
 
     v = f3d['v']
     speed = viscid.magnitude(v)
     lw = 4 * speed / speed.max()
-    slc = 'z=0f'
+    slc = 'z=0j'
     vlt.streamplot(v[slc], arrowsize=2, density=2, linewidth=lw[slc], color='k')
 
     plt.xlim(-20, 20)
@@ -53,8 +53,8 @@ Quivers are another way to show vector fields, but in many cases, it will be use
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    vlt.plot(f3d['pp']['z=0f'], cbarlabel="Pressure", logscale=True, earth=True)
-    Q = vlt.plot2d_quiver(f3d['v']['x=::2, y=::2, z=0f'])
+    vlt.plot(f3d['pp']['z=0j'], cbarlabel="Pressure", logscale=True, earth=True)
+    Q = vlt.plot2d_quiver(f3d['v']['x=::2, y=::2, z=0j'])
     plt.quiverkey(Q, X=1.1, Y=1.07, U=400, label=r"400 $\frac{km}{s}$",
                   labelpos='N')
 
@@ -83,10 +83,10 @@ If your data has a very nonuniform grid, it may be useful to interpolate your da
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    vlt.plot(f3d['Pressure = pp']['z=0f'], logscale=True, earth=True)
+    vlt.plot(f3d['Pressure = pp']['z=0j'], logscale=True, earth=True)
     new_grid = viscid.Volume((-20, -20, 0), (20, 20, 0), n=(16, 16, 1))
     v = viscid.interp_trilin(f3d['v'], new_grid)
-    Q = vlt.plot2d_quiver(v['z=0f'])
+    Q = vlt.plot2d_quiver(v['z=0j'])
     plt.quiverkey(Q, X=1.1, Y=1.07, U=400, label=r"400 $\frac{km}{s}$",
                   labelpos='N')
 

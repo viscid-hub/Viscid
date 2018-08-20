@@ -37,7 +37,7 @@ def _main():
 
     f = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[0].xdmf'))
     mp = viscid.get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
-                            slc="x=7f:12.0f, y=-6f:6f, z=-6f:6f",
+                            slc="x=7j:12.0j, y=-6j:6j, z=-6j:6j",
                             cache=False)
 
     Y, Z = mp['pp_max_xloc'].meshgrid(prune=True)

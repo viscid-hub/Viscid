@@ -132,7 +132,7 @@ def _do_multiplot(tind, grid, plot_vars=None, global_popts=None, kwopts=None,
             else:
                 fld_slc = selection
         if fld_slc.strip() == "":
-            fld_slc = None
+            fld_slc = Ellipsis
 
         # print("fld_time:", fld.time)
         if this_row < 0:

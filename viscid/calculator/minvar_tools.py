@@ -210,7 +210,7 @@ def _main():
     B['z'] = np.sin(1.0 * np.pi * X / (xh - xl) - 1.0 * np.pi)
     B += 0.33 * np.random.random_sample(B.shape)
 
-    # R = viscid.make_rotation_matrix((0, 0, 0), (1, 0, 0), (1, 0, 1))
+    # R = viscid.a2b_rotm((1, 0, 0), (1, 0, 1))
     # B[...] = np.einsum("ij,lmnj->lmni", R, B)
 
     lmn = find_minvar_lmn(B, (xl, ym, zm), (xh, ym, zm), l_basis=None)
@@ -231,14 +231,14 @@ def _main():
     print("pn", pn)
 
     vlt.subplot(211)
-    vlt.plot2d_quiver(B['z=0f'])
+    vlt.plot2d_quiver(B['z=0j'])
     plt.plot([p0[0], pl[0]], [p0[1], pl[1]], color='r', ls='-')
     plt.plot([p0[0], pm[0]], [p0[1], pm[1]], color='c', ls='-')
     plt.plot([p0[0], pn[0]], [p0[1], pn[1]], color='b', ls='-')
     plt.ylabel("Y")
 
     vlt.subplot(212)
-    vlt.plot2d_quiver(B['y=0f'])
+    vlt.plot2d_quiver(B['y=0j'])
     plt.plot([p0[0], pl[0]], [p0[2], pl[2]], color='r', ls='-')
     plt.plot([p0[0], pm[0]], [p0[2], pm[2]], color='c', ls='-')
     plt.plot([p0[0], pn[0]], [p0[2], pn[2]], color='b', ls='-')

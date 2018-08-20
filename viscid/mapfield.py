@@ -114,7 +114,7 @@ def fld_theta2lat(fld, base='theta', target='lat', unit='deg'):
     crd_xform = lambda x: theta2lat(x, unit=unit)[::-1]
     dslc = [slice(None)] * fld.nr_dims
     dslc[ddat] = slice(None, None, -1)
-    dat_xform = lambda a: a[dslc]
+    dat_xform = lambda a: a[tuple(dslc)]
     return _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
 
 def fld_lon2phi(fld, base='lon', target='phi', unit='deg'):
@@ -127,7 +127,7 @@ def fld_lat2theta(fld, base='lat', target='theta', unit='deg'):
     crd_xform = lambda x: lat2theta(x, unit=unit)[::-1]
     dslc = [slice(None)] * fld.nr_dims
     dslc[ddat] = slice(None, None, -1)
-    dat_xform = lambda a: a[dslc]
+    dat_xform = lambda a: a[tuple(dslc)]
     ret = _fld_xform_common(fld, base, target, unit, crd_xform, dat_xform)
     if ret.xh[dcrd] - ret.xl[dcrd] < 0:
         p90 = np.pi / 2 if unit == 'rad' else 90.0
@@ -219,7 +219,7 @@ def as_spherefield(fld, order=('phi', 'theta'), units=''):
     ret = convert_coordinates(fld, order, mapping, units=units)
     return ret
 
-def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
+def as_polar_mapfield(fld, bounding_lat=None, hemisphere='north',
                       make_periodic=False):
     """Prepare a theta/phi or lat/lon field for polar projection
 
@@ -237,24 +237,33 @@ def as_polar_mapfield(fld, bounding_lat=40.0, hemisphere='north',
         ValueError: on bad hemisphere
     """
     hemisphere = hemisphere.strip().lower()
-    bounding_lat = (np.pi / 180.0) * bounding_lat
-    abs_bounding_lat = abs(bounding_lat)
 
     mfld = as_mapfield(fld, order=('lon', 'lat'), units='rad')
+
+    # set a sensible default for bounding_lat... full spheres get cut off
+    # at 40 deg, but hemispheres or smaller are shown in full
+    if bounding_lat is None:
+        if abs(mfld.xh[1] - mfld.xl[1]) >= 1.01 * np.pi:
+            bounding_lat = 40.0
+        else:
+            bounding_lat = 90.0
+
+    bounding_lat = (np.pi / 180.0) * bounding_lat
+    abs_bounding_lat = abs(bounding_lat)
 
     if hemisphere in ("north", 'n'):
         if np.all(mfld.get_crd('lat') < abs_bounding_lat):
             raise ValueError("fld {0} contains no values north of bounding lat "
                              "{1:g} deg"
                              "".format(fld.name, bounding_lat * 180 / np.pi))
-        # mfld = mfld["lat=:{0}f:-1".format(abs_bounding_lat)]
+        # mfld = mfld["lat=:{0}j:-1".format(abs_bounding_lat)]
         mfld = mfld.loc[:, :np.pi / 2 - abs_bounding_lat:-1]
     elif hemisphere in ("south", 's'):
         if np.all(mfld.get_crd('lat') > -abs_bounding_lat):
             raise ValueError("fld {0} contains no values south of bounding lat "
                              "{1:g} deg"
                              "".format(fld.name, bounding_lat * 180 / np.pi))
-        # mfld = mfld["lat=:{0}f".format(-abs_bounding_lat)]
+        # mfld = mfld["lat=:{0}j".format(-abs_bounding_lat)]
         mfld = mfld.loc[:, :-np.pi / 2 + abs_bounding_lat]
     else:
         raise ValueError("hemisphere should be either north or south")
@@ -496,7 +505,7 @@ def great_circle(p1, p2, origin=(0, 0, 0), n=32):
         if np.isclose(np.linalg.norm(np.cross(pole, p1)), 0.0):
             pole = np.array([0, 0, -1])
 
-    matBtoA = viscid.make_rotation_matrix([0, 0, 0], [0, 0, 1], pole, new_x=p1)
+    matBtoA = viscid.a2b_rot([0, 0, 1], pole, new_x=p1)
 
     # this is some code to validate rotation matrix
     _xrot = np.dot(matBtoA, [1, 0, 0])

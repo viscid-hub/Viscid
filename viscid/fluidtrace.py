@@ -50,10 +50,18 @@ class SeedCurator(object):
             self.obound0[_invar_dim_mask] = -np.inf
             self.obound1[_invar_dim_mask] = np.inf
 
-            crds = viscid.arrays2crds(np.vstack([self.obound0, self.obound1]).T,
-                                      crd_names=v_field.crds.axes).atleast_3d(cc=True)
-            self.obound_xl = crds.xl_nc
-            self.obound_xh = crds.xh_nc
+            if (np.any(np.isinf(self.obound0)) or np.any(np.isinf(self.obound1))
+                or np.any(np.isnan(self.obound0)) or np.any(np.isnan(self.obound1))):
+                np_err_state = {'invalid': 'ignore'}
+            else:
+                np_err_state = {}
+
+            with np.errstate(**np_err_state):
+                _axes = v_field.crds.axes
+                crds = viscid.arrays2crds(np.vstack([self.obound0, self.obound1]).T,
+                                          crd_names=_axes).atleast_3d(cc=True)
+                self.obound_xl = crds.xl_nc
+                self.obound_xh = crds.xh_nc
         else:
             assert self.obound_xh is not None
 
@@ -148,7 +156,7 @@ def follow_fluid(dset, initial_seeds, time_slice=slice(None),
                  curator=None, callback=default_fluid_callback,
                  speed_scale=1.0, dt=None, tstart=None, tstop=None,
                  duration=None, dt_interp=None,
-                 v_key='v', anc_keys=(), fld_slc=slice(None),
+                 v_key='v', anc_keys=(), fld_slc=Ellipsis,
                  stream_opts={}, callback_kwargs={}):
     """Trace fluid elements
 

@@ -273,7 +273,7 @@ Function                                         Description
 Mayavi Wrappers
 ~~~~~~~~~~~~~~~
 
-Chances are that you want to use these functions. They let you make most Mayavi objects from Viscid data structures (i.e., Fields and SeedGens). In addition, all of these functions allow you to specify a Matplotlib colormap for the data, and it picks up the default colormaps from Matplotlib's rcParams and viscidrc files. How cool is that?
+Chances are that you want to use these functions. They let you make most Mayavi objects from Viscid data structures (i.e., Fields and SeedGens). In addition, all of these functions allow you to specify a Matplotlib colormap for the data, and it picks up the default colormaps from Matplotlib's rcParams and viscidrc files. How cool is that‽
 
 .. cssclass:: table-striped
 

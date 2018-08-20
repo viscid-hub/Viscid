@@ -139,8 +139,8 @@ Vector Field
     fld['z'] = 0.1 * (X * Y)
 
     plt.figure(figsize=(8, 5))
-    vlt.plot(fld['z']['z=0f'], cbarlabel="V$_z$ [m/s]")
-    vlt.streamplot(fld['z=0f'])
+    vlt.plot(fld['z']['z=0j'], cbarlabel="V$_z$ [m/s]")
+    vlt.streamplot(fld['z=0j'])
     vlt.auto_adjust_subplots()
     plt.show()
 

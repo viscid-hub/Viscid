@@ -1,4 +1,4 @@
 include viscid/calculator/*.c
 include viscid/plot/images/*.jpg
 include viscid/plot/styles/*.mplstyle
-include sample/*
+include viscid/sample/*

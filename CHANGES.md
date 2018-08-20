@@ -1,6 +1,16 @@
 Changes
 -------
 
+0.99.9
+======
+
+  - add `viscid.mfield` that mimics `numpy.mgrid`
+  - slice-by-value should now be done with imaginary numbers instead of strings encoded like '0.0f'. The string-'f' format will continue to be supported, but imaginary numbers are cleaner for this purpose.
+  - slice-by-array and slice-by-mask (bool array) are now allowed
+  - indexing rules got their own page in the docs
+  - add `viscid.rotation` module for rotation matrix <-> euler angle <-> quaternion conversions
+  - add `viscid.to_dataframe` and `viscid.from_dataframe` to go between datasets and Pandas DataFrame objects
+
 0.99.8
 ======
 

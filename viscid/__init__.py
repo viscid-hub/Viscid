@@ -28,7 +28,7 @@ from viscid import _rc
 from viscid.compat.vimportlib import import_module
 
 
-__version__ = """0.99.8"""
+__version__ = """0.99.9"""
 
 __all__ = ['amr_field',
            'amr_grid',
@@ -46,6 +46,7 @@ __all__ = ['amr_field',
            'npdatetime',
            'parallel',
            'pyeval',
+           'rotation',
            'seed',
            'sliceutil',
            'tree',

@@ -266,7 +266,7 @@ def _main():
     if 1:
         viscid.logger.info('Testing RectilinearMeshPoints...')
         f = viscid.load_file(os.path.join(sample_dir, 'sample_xdmf.3d.[-1].xdmf'))
-        slc = 'x=-40f:12f, y=-10f:10f, z=-10f:10f'
+        slc = 'x=-40j:12j, y=-10j:10j, z=-10j:10j'
         b = f['b'][slc]
         z = b.get_crd('z')
         sheet_iz = np.argmin(b['x']**2, axis=2)

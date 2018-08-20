@@ -36,7 +36,7 @@ def main():
     b['y'] = Ycc
     b['z'] = -Zcc
 
-    fname = os.path.join(viscid.sample_dir, 'test.npz')
+    fname = os.path.join('.', 'test.npz')
     viscid.save_fields(fname, [psi, b])
 
     f = viscid.load_file(fname)

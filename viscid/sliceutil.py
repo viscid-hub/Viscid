@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-"""Convenience functions for slicing by value"""
+"""Handle slice by index / location (value)"""
 
 from __future__ import print_function
+from datetime import datetime, timedelta
 from itertools import count
 import re
 
@@ -13,159 +14,820 @@ from viscid.npdatetime import (is_datetime_like, is_timedelta_like,
                                as_datetime64, as_timedelta64, time_diff)
 
 
-__all__ = ["str2value", "parse_time_slice_str", "make_fwd_slice",
-           "to_slices", "to_slice", "make_slice_inclusive",
-           "selections2values", "selection2values", "slice2values"]
+_R_MULTILEVEL_BRACKETS = r"\[[^\]]*\[[^\]]*\]"
+_R_IN_BRACKS = r"\[[^\[\]]+\]"
+_R_DATE = r"[0-9]{4}-[0-9]{2}-[0-9]{2}"
+_R_TIME02 = r"[0-9]{2}(?::[0-9]{2}){0,2}(?:\.[0-9]+)?"
+_R_TIME12 = r"[0-9]{2}(?::[0-9]{2}){1,2}(?:\.[0-9]+)?"
+RE_DTIME_GROUP = (r"(?:[utUT]*{date}(?:[tT]{time02})?|[utUT]+{time02}|"
+                  r"[utUT]*{time12})".format(date=_R_DATE, time02=_R_TIME02,
+                                             time12=_R_TIME12))
+_R_DTIME = re.compile(r"(\s*{0}\s*)".format(RE_DTIME_GROUP))
+# _R_DTIME_SLC is _R_DTIME that must begin with r'[ut]+'
+RE_DTIME_SLC_GROUP = (r"[utUT]+(?:{date}(?:[tT]{time})?|{time})"
+                      r"".format(date=_R_DATE, time=_R_TIME02))
+_R_DTIME_SLC = re.compile(r"(\s*{0}\s*)".format(RE_DTIME_SLC_GROUP))
+
+_emit_deprecated_float_warning = True
 
 
-def str2value(s):
-    """try to parse things like none, true, false, ints, floats, etc."""
-    ret = s
-    s_clean = s.strip().lower()
+__all__ = ["prune_comp_sel", "raw_sel2sel_list", "fill_nd_sel_list",
+           "standardize_sel_list", "standardize_sel", "standardize_value",
+           "std_sel_list2index", "std_sel2index",
+           "sel_list2values", "sel2values", "selection2values",
+           "make_fwd_slice", "all_slices_none"
+           ]
 
-    if len(s_clean) == 0 or s_clean == "none":
-        ret = None
-    elif s_clean == "true":
-        ret = True
-    elif s_clean == "false":
-        ret = True
-    elif s_clean == "True":
-        ret = True
-    else:
+
+def prune_comp_sel(sel_list, comp_names):
+    """Discover and remove vector component from selection list"""
+    comp_slc = slice(None)
+    comp_idx = None
+
+    # discover sel_names and rip out any vector-component slices if given
+    for i, s in enumerate(sel_list):
         try:
-            ret = int(s_clean)
-        except ValueError:
-            try:
-                ret = float(s_clean)
-            except ValueError:
-                pass
-    return ret
+            s = s.strip().lower()
+            if s in comp_names:
+                if comp_idx is not None:
+                    raise IndexError("Multiple vector component slices given, {0}"
+                                     "".format(tuple(sel_list)))
+                comp_slc = comp_names.index(s)
+                comp_idx = i
+        except (TypeError, AttributeError):
+            pass
+
+    if comp_idx is not None:
+        sel_list.pop(comp_idx)
+        comp_idx = None
+
+    return sel_list, comp_slc
+
+def raw_sel2sel_list(sel):
+    """Turn generic selection into something standard we can work with
+
+    Args:
+        sel (object): some slice selection
+
+    Returns:
+        (sel_list, input_type): items in sel_list are guarenteed to be
+            of type {slice, int, complex, string, numpy.ndarray}
+
+    Raises:
+        TypeError: slice-by-array invalid dtype
+        ValueError: slice-by-array not 1D
+    """
+    # type(None) includes np.newaxis
+    valid_types = (slice, int, np.integer, float, np.floating, complex, np.complex,
+                   np.complexfloating, datetime, np.datetime64, timedelta,
+                   np.timedelta64, type(Ellipsis), type(None))
+
+    if isinstance(sel, tuple):
+        sel_list = list(sel)
+        # input_type = 'tuple'
+    elif isinstance(sel, list):
+        # DANGER, this is different behavior from tuple since sel
+        #         will become an ndarray before we return... maybe
+        #         supply a warning like numpy 1.15 does?
+        sel_list = [sel]
+        # input_type = 'list'
+    elif isinstance(sel, valid_types):
+        sel_list = [sel]
+        # input_type = 'single-value'
+    elif isinstance(sel, string_types):
+        sel = sel.replace('_', ',')
+        # mutate commas between brackets (they indicate strings)
+        if re.search(_R_MULTILEVEL_BRACKETS, sel) is not None:
+            raise IndexError("Slice-by-array in Viscid is limited to 1D "
+                             "arrays since coordinate arrays become "
+                             "ambiguous otherwise.")
+        sel = re.sub(_R_IN_BRACKS, lambda x: x.group(0).replace(",", "@"), sel)
+        sel_list = [s for s in sel.split(",")]
+        # put the commas back into the arrays
+        sel_list = [s.replace('@', ',') for s in sel_list]
+        # input_type = 'string'
+    else:
+        sel_list = [sel]
+        # input_type = 'other'
+
+    for i, s in enumerate(sel_list):
+        if not isinstance(s, valid_types + string_types):
+            sel_list[i] = np.asarray(s)
+
+    for _, s in enumerate(sel_list):
+        if isinstance(s, np.ndarray):
+            is_valid_dtype = (np.issubdtype(s.dtype, np.integer)
+                              or np.issubdtype(s.dtype, np.complexfloating)
+                              or np.issubdtype(s.dtype, np.bool_))
+            if not is_valid_dtype:
+                if s.dtype == np.object:
+                    raise IndexError("Slice interpreted as slice-by-array of "
+                                     "object dtype. If you did\nnot intend to "
+                                     "slice-by-array, then you probably gave "
+                                     "an n-dimensional slice\nas a list instead "
+                                     "of a tuple... oops.")
+                raise IndexError("Slice-by-array with invalid dtype '{0}' (must "
+                                 "be (int, bool, complex, timedeta64, datetime64)."
+                                 "".format(s.dtype))
+
+            is_valid_shape = len(s.shape) == 1
+            if not is_valid_shape:
+                # print("what is s??", type(s), s.shape, s)
+                raise IndexError("Slice-by-array in Viscid is limited to 1D "
+                                 "arrays since coordinate arrays become "
+                                 "ambiguous otherwise.")
+    return sel_list
+
+def fill_nd_sel_list(sel_list, ax_names):
+    """fully determine a sparsely selected sel_list"""
+
+    if (len(sel_list) == 1 and not isinstance(sel_list[0], np.ndarray)
+        and sel_list in ([Ellipsis], ['...'], ['Ellipsis'], ['ellipsis'])):
+        # short circuit all logic if sel_list == [Ellipsis]
+        full_sel_list = [slice(None) for _ in ax_names]
+        full_ax_names = [name for name in ax_names]
+        full_newdim_flags = [False for _ in ax_names]
+        return full_sel_list, full_ax_names, full_newdim_flags
+
+    sel_list0 = tuple(sel_list)
+
+    sel_names = [None] * len(sel_list)
+
+    # discover sel_names
+    for i, s in enumerate(sel_list):
+        if isinstance(s, string_types) and '=' in s:
+            sel_names[i], sel_list[i] = [ss.strip() for ss in s.split('=', 1)]
+
+    # discover which items in sel_list are ellipsis or newaxis
+    pre_elip_newax_idxs = []
+    post_elip_newax_idxs = []
+    ellipsis_idx = -1
+
+    for i, s in enumerate(sel_list):
+        if isinstance(s, (list, np.ndarray)):
+            pass
+        elif s in (Ellipsis, ) or (isinstance(s, string_types)
+                                 and s.strip().lower() in ('ellipsis', '...')):
+            sel_list[i] = Ellipsis
+            if ellipsis_idx < 0:
+                ellipsis_idx = i
+            else:
+                raise IndexError("Only one ellipsis per slice please, {0}"
+                                 "".format(sel_list0))
+        elif s in (None, np.newaxis) or (isinstance(s, string_types)
+                                         and s.strip().lower() in ('none',
+                                                                   'newaxis')):
+            sel_list[i] = np.newaxis
+            if ellipsis_idx < 0:
+                pre_elip_newax_idxs.append(i)
+            else:
+                post_elip_newax_idxs.append(i)
+    newax_idxs = pre_elip_newax_idxs + post_elip_newax_idxs
+    n_newax = len(newax_idxs)
+
+    n_named_axes = len([None for name in sel_names if name is not None])
+    n_named_newaxes = len([None for sel, name in zip(sel_list, sel_names)
+                           if name is not None and sel == np.newaxis])
+
+    # replace ellipsis with some number of slice(None)
+    if ellipsis_idx >= 0:
+        if n_named_axes > n_named_newaxes:
+            raise IndexError("Field indexing with Ellipsis can only be used "
+                             "with named axes if those named axes are "
+                             "numpy.newaxis, sel = {0}".format(sel_list0))
+        n_fill = len(ax_names) + n_newax - (len(sel_list) - 1)
+        idx = ellipsis_idx
+        sel_list = sel_list[:idx] + [slice(None)] * n_fill + sel_list[idx + 1:]
+        sel_names = sel_names[:idx] + [None] * n_fill + sel_names[idx + 1:]
+        newax_idxs = [i if i < idx else i + n_fill - 1 for i in newax_idxs]
+
+    # now let's assemble the final full slice list / ax names...
+    full_ax_names = []
+    full_sel_list = []
+    full_newdim_flags = []
+
+    remaining_ax_names = list(ax_names)
+    n_newax_seen = 0
+    n_unnamed_newax_seen = 0
+    for i, name, sel in zip(count(), sel_names, sel_list):
+        if name is None:
+            if i in newax_idxs:
+                name = 'new-x{0:d}'.format(n_unnamed_newax_seen)
+                n_unnamed_newax_seen += 1
+                n_newax_seen += 1
+            else:
+                name = remaining_ax_names.pop(0)
+        else:  # named selection
+            if i in newax_idxs:
+                n_newax_seen += 1
+                if name in full_ax_names or name in ax_names:
+                    raise IndexError("New axis duplicates name, {0}"
+                                     "".format(sel_list0))
+            else:  # named selection that is not newaxis
+                if name in full_ax_names:
+                    j = full_ax_names.index(name)
+                    if full_sel_list[j] != slice(None):
+                        raise IndexError("Axis '{0}' is repeated in slice {1}"
+                                         "".format(name, sel_list0))
+                    full_ax_names[j] = name
+                    full_sel_list[j] = sel
+                    full_newdim_flags[j] = False
+                    continue  # <- poor style, sorry
+                else:
+                    n_skipped = remaining_ax_names.index(name)
+                    full_ax_names += remaining_ax_names[:n_skipped]
+                    full_sel_list += [slice(None)] * n_skipped
+                    full_newdim_flags += [False] * n_skipped
+                    remaining_ax_names = remaining_ax_names[n_skipped + 1:]
+
+        full_ax_names.append(name)
+        full_sel_list.append(sel)
+        full_newdim_flags.append(i in newax_idxs)
+
+    if remaining_ax_names:
+        full_ax_names += remaining_ax_names
+        full_sel_list += [slice(None)] * len(remaining_ax_names)
+        full_newdim_flags += [False] * len(remaining_ax_names)
+
+    # print("sel0: ", sel_list0, '\n',
+    #       "sel_list: ", sel_list, '\n',
+    #       "full_ax_names: ", full_ax_names, '\n',
+    #       "full_sel_list: ", full_sel_list, '\n',
+    #       "full_newdim_flags: ", full_newdim_flags, '\n',
+    #       "----\n",
+    #       "len(full_ax_names): ", len(full_ax_names), '\n',
+    #       "len(ax_names): ", len(ax_names), '\n',
+    #       "n_newax: ", n_newax, '\n',
+    #       sep='')
+
+    assert len(full_ax_names) == len(ax_names) + n_newax
+    assert len(full_sel_list) == len(ax_names) + n_newax
+
+    return full_sel_list, full_ax_names, full_newdim_flags
+
+#######################################################################
 
 def _warn_deprecated_float(val, varname='value'):
-    s = ("DEPRECATION...\n"
-         "Slicing by float is deprecated. The slice by value syntax is \n"
-         "now a string that has a trailing 'f', as in 'x=0f' [{0} = {1}]"
-         "".format(varname, val))
-    logger.warning(s)
+    global _emit_deprecated_float_warning  # pylint: disable=global-statement
+    if _emit_deprecated_float_warning:
+        frame = _user_written_stack_frame()
+        s = ("DEPRECATION...\n"
+             "Slicing by float is deprecated. Slicing by location is now \n"
+             "performed with an imaginary number, or a string with a trailing \n"
+             "'f', as in 0j, 'x=0j', or 'x=0f'. This warning comes from:\n"
+             "    {0}:{1}\n"
+             "    >>> {2}"
+             "".format(frame[1], frame[2], frame[4][0].strip()))
+        logger.warning(s)
+        _emit_deprecated_float_warning = False
 
-def _standardize_slcval(val, epoch=None, tdunit='s'):
-    """Standardize things that can appear in a slice
+def _is_time_str(s):
+    m = re.match(_R_DTIME, s)
+    return m is not None and m.end() - m.start() == len(s)
+
+def _split_slice_str(sel):
+    all_times = re.findall(_R_DTIME_SLC, sel)
+    at_sel = re.sub(_R_DTIME_SLC, '@', sel)
+    split_sel = [s.strip() for s in at_sel.split(':')]
+    for s in all_times:
+        split_sel[split_sel.index('@')] = s
+    return split_sel
+
+#######################################################################
+
+def standardize_sel_list(sel_list):
+    """turn all selection list elements into fundamental python types"""
+    for i, sel in enumerate(sel_list):
+        sel_list[i] = standardize_sel(sel)
+    return sel_list
+
+def standardize_sel(sel):
+    """turn selection list element into fundamental python types"""
+    if isinstance(sel, string_types):
+        sel = sel.strip().lower()
+
+        if sel[0] == '[' and sel[-1] == ']':
+            sel = standardize_value(sel, bool_argwhere=True)
+        elif ':' in sel:
+            sel = slice(*[standardize_value(s, bool_argwhere=True)
+                          for s in _split_slice_str(sel)])
+            assert isinstance(sel.step, (type(None), int, np.integer))
+            assert not isinstance(sel.step, (np.datetime64, np.timedelta64))
+        else:
+            sel = standardize_value(sel, bool_argwhere=True)
+    elif isinstance(sel, slice):
+        sel = slice(*[standardize_value(s, bool_argwhere=True)
+                      for s in [sel.start, sel.stop, sel.step]])
+        if sel.step is None:
+            sel = slice(sel.start, sel.stop, 1)
+    else:
+        sel = standardize_value(sel, bool_argwhere=True)
+    return sel
+
+def standardize_value(sel, bool_argwhere=False):
+    """Turn a value element to fundamental type or array
 
     Returns:
-        One of the following,
-         - None
-         - np.newaxis
-         - int
-         - '{flt}f'.format(flt=val)
-
-        Datetime-like and timedelta-like values are converted
-        to floats using epoch and tdunit.
-
-        Deprecation warnings arise when trying to convert bare floats
-        or floats in strings that don't end if 'f'.
+        One of the following::
+            - None
+            - np.newaxis
+            - Ellipsis
+            - bool
+            - int
+            - complex (slice by value)
+            - numpy.datetime64
+            - numpy.timedelta64
+            - ndarray
+                - numpy.integer
+                - numpy.bool\_
+                - numpy.timedelta64
+                - numpy.datetime64
+                - numpy.complex
     """
-    if is_timedelta_like(val, conservative=True):
-        ret = "{0}f".format(as_timedelta64(val) / np.timedelta64(1, tdunit))
-    elif is_datetime_like(val, conservative=True):
-        if epoch is None:
-            epoch = np.datetime64(0, 'us')
-        tflt = time_diff(val, epoch, most_precise=True) / np.timedelta64(1, tdunit)
-        ret = "{0}f".format(tflt)
-    elif isinstance(val, (int, np.integer)):
-        ret = val
-    elif val in [None, "None", "none"]:
-        ret = None
-    elif val in [np.newaxis, "newaxis"]:
-        # note, np.newaxis is None, so this probably dosen't happen, but
-        # in case it changes in the future...
-        ret = np.newaxis
-    elif isinstance(val, (float, np.floating)):
-        _warn_deprecated_float(val)
-        ret = "{0}f".format(val)
-    elif isinstance(val, string_types):
-        if val[-1] == 'f':
-            # gymnastics to validate the contents
-            ret = "{0}f".format(float(val[:-1]))
+    if isinstance(sel, (np.datetime64, np.timedelta64)):
+        pass
+    elif isinstance(sel, (int, np.integer)):
+        pass
+    elif isinstance(sel, (complex, np.complex, np.complexfloating)):
+        assert sel.real == 0.0
+    elif isinstance(sel, (float, np.floating)):
+        _warn_deprecated_float(sel)
+        sel = 1j * sel
+    elif isinstance(sel, (list, np.ndarray)):
+        assert len(sel.shape) == 1
+        assert isinstance(sel[0], (int, bool, np.integer, np.complex,
+                                   np.complexfloating, np.bool_))
+        if bool_argwhere and isinstance(sel[0], (bool, np.bool_)):
+            sel = np.argwhere(sel).reshape(-1)
+    elif sel in (np.newaxis, None, True, False, Ellipsis):
+        pass
+    elif isinstance(sel, string_types):
+        sel = sel.strip().lower()
+        if sel in ('newaxis', 'numpy.newaxis', 'np.newaxis'):
+            sel = np.newaxis
+        elif sel in ('none', ''):
+            sel = None
+        elif sel == 'true':
+            sel = True
+        elif sel == 'false':
+            sel = False
+        elif sel in ('...', 'ellipsis'):
+            sel = Ellipsis
+        elif sel[0] == '[' and sel[-1] == ']':
+            sel = sel[1:-1].replace(',', ' ')
+            if 'true' in sel or 'false' in sel:
+                sel = sel.lower()
+                sel = sel.replace('true', '1')
+                sel = sel.replace('false', '0')
+                _orig_sel = sel
+                sel = np.fromstring(sel, dtype='i', sep=' ')
+                if bool_argwhere:
+                    sel = np.argwhere(sel).reshape(-1)
+                else:
+                    sel = sel.astype(np.bool_)
+                if sel.shape == ():
+                    raise ValueError("bool array as string did not parse: [{0}]"
+                                     "".format(_orig_sel))
+            else:
+                sel = sel.replace('f', 'j')
+                n_js = sel.count('j')
+                if n_js > 0:
+                    _orig_sel = sel
+                    sel = np.array(sel.split()).astype(np.complex)
+                    assert np.allclose(sel.real, 0.0)
+                    sel = sel.imag
+                    if sel.shape == ():
+                        raise ValueError("float array as string did not parse: "
+                                         "[{0}]".format(_orig_sel))
+                    if n_js != len(sel):
+                        _warn_deprecated_float(_orig_sel)
+                    sel = 1j * sel
+                elif all(_is_time_str(s) for s in sel.split()):
+                    try:
+                        sel = as_timedelta64([s.lstrip('ut') for s in sel.split()])
+                    except ValueError:
+                        sel = as_datetime64([s.lstrip('ut') for s in sel.split()])
+                else:
+                    sel = np.fromstring(sel, dtype=np.integer, sep=' ')
+        elif _is_time_str(sel):
+            try:
+                sel = as_timedelta64(sel.lstrip('ut'))
+            except ValueError:
+                sel = as_datetime64(sel.lstrip('ut'))
         else:
             try:
-                ret = int(val)
+                sel = int(sel)
             except ValueError:
                 try:
-                    ret = '{0}f'.format(float(val))
-                    _warn_deprecated_float(val)
+                    if 'j' in sel or 'f' in sel:
+                        sel = sel.replace('f', 'j')
+                        sel = complex(sel)
+                    else:
+                        sel = float(sel)
+                        _warn_deprecated_float(sel)
+                        sel = 1j * sel
                 except ValueError:
-                    raise
+                    raise ValueError("Unexpected std type '{0}'".format(sel))
+    elif is_timedelta_like(sel, conservative=True):
+        sel = as_timedelta64(sel)
+    elif is_datetime_like(sel, conservative=True):
+        sel = as_datetime64(sel)
     else:
-        raise TypeError("I'm not sure what to do with {0} (type = {1})"
-                        "".format(val, type(val)))
-    return ret
+        raise ValueError("Unexpected std type '{0}' ({1})"
+                         "".format(sel, type(sel)))
+    return sel
 
-def _arr2float(arr, epoch=None, tdunit='s', dtype='f8'):
-    # If arr is a datetime64, then turn it into a float with
-    # units of tdunit since the given epoch. if no epoch is given
-    # then epoch = arr[0]. From this point forward, arr is treated
-    # like a float array, and slices should be converted to floats
-    # using the same epoch and tdunit.
+#######################################################################
 
-    # arr = np.asarray(arr)
-    if is_timedelta_like(arr, conservative=True):
-        arr = as_timedelta64(arr) / np.timedelta64(1, tdunit)
-    elif is_datetime_like(arr, conservative=True):
-        arr = as_datetime64(arr)
-        if epoch is None:
-            epoch = arr[0]
-        arr = time_diff(arr, epoch, most_precise=True) / np.timedelta64(1, tdunit)
-    else:
-        arr = np.asarray(arr)
-    return arr.astype(dtype), epoch
+def std_sel_list2index(std_sel_list, crd_arrs, val_endpoint=True, interior=False,
+                       tdunit='s', epoch=None, tol=100):
+    """turn standardized selection list into index slice"""
+    return [std_sel2index(std_sel, crd_arr, val_endpoint=val_endpoint,
+                          interior=interior, tdunit=tdunit, epoch=epoch)
+            for std_sel, crd_arr in zip(std_sel_list, crd_arrs)
+            ]
 
-def parse_time_slice_str(slc_str):
-    r"""
+def std_sel2index(std_sel, crd_arr, val_endpoint=True, interior=False,
+                  tdunit='s', epoch=None):
+    """Turn single standardized selection into slice (by int or None)
+
+    Normally (val_endpoint=True, interior=False), the rules for float
+    lookup val_endpoints are::
+
+        - The slice will never include an element whose value in arr
+          is < start (or > if the slice is backward)
+        - The slice will never include an element whose value in arr
+          is > stop (or < if the slice is backward)
+        - !! The slice WILL INCLUDE stop if you don't change
+          val_endpoint. This is different from normal slicing, but
+          it's more natural when specifying a slice as a float.
+
+    If interior=True, then the slice is expanded such that start and
+    stop are interior to the sliced array.
+
     Args:
-        slc_str (str): must be a single string containing a single
-            time slice
+        std_sel: single standardized selection
+        arr (ndarray): filled with floats to do the lookup
+        val_endpoint (bool): iff True then include stop in the slice when
+            slicing-by-value (DOES NOT EFFECT SLICE-BY-INDEX).
+            Set to False to get python slicing symantics when it
+            comes to excluding stop, but fair warning, python
+            symantics feel awkward here. Consider the case
+            [0.1, 0.2, 0.3][:0.25]. If you think this should include
+            0.2, then leave keep val_endpoint=True.
+        interior (bool): if True, then extend both ends of the slice
+            such that slice-by-location endpoints are interior to the
+            slice
+        epoch (datetime64-like): Epoch for to go datetime64 <-> float
+        tdunit (str): Presumed time unit for floats
+        tol (int): number of machine epsilons to consider
+            "close enough"
+    """
+    idx = None
+
+    if interior and not val_endpoint:
+        logger.warning("For interior slices, val_endpoint must be True, I'll "
+                       "change that for you.")
+        val_endpoint = True
+
+    if isinstance(std_sel, slice):
+        assert isinstance(std_sel.step, (int, np.integer, type(None)))
+        start_val = None
+        stop_val = None
+
+        orig_step = std_sel.step
+        ustep = 1 if std_sel.step is None else int(std_sel.step)
+        sgn = np.sign(ustep)
+
+        if (isinstance(std_sel.start, (int, np.integer, type(None)))
+            and not isinstance(std_sel.start, (np.datetime64, np.timedelta64))):
+            ustart = std_sel.start
+        else:
+            ustart, tol = _unify_sbv_types(std_sel.start, crd_arr, tdunit='s',
+                                           epoch=epoch)
+            start_val = ustart
+            diff = crd_arr - ustart + (tol * sgn)
+            zero = np.array([0]).astype(diff.dtype)[0]
+
+            if ustep > 0:
+                diff = np.ma.masked_less(diff, zero)
+            else:
+                diff = np.ma.masked_greater(diff, zero)
+
+            if np.ma.count(diff) == 0:
+                # start value is past the wrong end of the array
+                if ustep > 0:
+                    ustart = len(crd_arr)
+                else:
+                    # start = -len(arr) - 1
+                    # having a value < -len(arr) won't play
+                    # nice with make_fwd_slice, but in this
+                    # case, the slice will have no data, so...
+                    return slice(0, 0, ustep)
+            else:
+                ustart = np.argmin(np.abs(diff))
+
+        if (isinstance(std_sel.stop, (int, np.integer, type(None)))
+            and not isinstance(std_sel.stop, (np.datetime64, np.timedelta64))):
+            ustop = std_sel.stop
+        else:
+            ustop, tol = _unify_sbv_types(std_sel.stop, crd_arr, tdunit='s',
+                                          epoch=epoch)
+            stop_val = ustop
+            diff = crd_arr - ustop - (tol * sgn)
+            zero = np.array([0]).astype(diff.dtype)[0]
+
+            if ustep > 0:
+                diff = np.ma.masked_greater(diff, zero)
+            else:
+                diff = np.ma.masked_less(diff, zero)
+
+            if ustep > 0:
+                if ustop < crd_arr[0]:
+                    # stop value is past the wong end of the array
+                    ustop = 0
+                else:
+                    ustop = int(np.argmin(np.abs(diff)))
+                    if val_endpoint:
+                        ustop += 1
+            else:
+                if ustop > crd_arr[-1]:
+                    # stop value is past the wrong end of the array
+                    ustop = len(crd_arr)
+                else:
+                    ustop = int(np.argmin(np.abs(diff)))
+                    if val_endpoint:
+                        if ustop > 0:
+                            ustop -= 1
+                        else:
+                            # 0 - 1 == -1 which would wrap to the end of
+                            # of the array... instead, just make it None
+                            ustop = None
+        idx = slice(ustart, ustop, orig_step)
+
+        if interior:
+            _a, _b, _c = _interiorize_slice(crd_arr, start_val, stop_val,
+                                            idx.start, idx.stop, idx.step)
+            idx = slice(_a, _b, _c)
+
+    else:
+        # slice by single value or ndarray of single values (int, float, times)
+        usel, _ = _unify_sbv_types(std_sel, crd_arr, tdunit='s', epoch=epoch)
+        if (isinstance(usel, (int, np.integer, type(None)))
+            and not isinstance(usel, (np.datetime64, np.timedelta64))):
+            idx = usel
+        elif isinstance(usel, np.ndarray):
+            if isinstance(usel[0, 0], np.integer):
+                idx = usel.reshape(-1)
+            else:
+                idx = np.argmin(np.abs(crd_arr.reshape(-1, 1) - usel), axis=0)
+        else:
+            idx = np.argmin(np.abs(crd_arr - usel))
+
+    return idx
+
+def _unify_sbv_types(std_val, crd_arr, tdunit='s', epoch=None):
+    uval = None
+    tol = None
+
+    if std_val is None:
+        pass
+    elif (isinstance(std_val, (int, np.integer))
+          and not isinstance(std_val, (np.datetime64, np.timedelta64))):
+        uval, tol = std_val, 0
+    elif (isinstance(std_val, np.ndarray) and isinstance(std_val[0], np.integer)
+          and not isinstance(std_val[0], (np.datetime64, np.timedelta64))):
+        uval, tol = std_val.reshape(1, -1), 0
+    else:
+        ndarray_slice = isinstance(std_val, np.ndarray)
+        std_val = np.asarray(std_val)
+        len_std_val = 1 if std_val.shape == () else len(std_val)
+        std_val = std_val.reshape(1, len_std_val)
+
+        if isinstance(std_val[0, 0], (np.complex, np.complexfloating)):
+            assert np.all(std_val.real == 0)
+            std_val = std_val.imag
+
+        if crd_arr is None:
+            crd_arr = np.array([0], dtype=std_val.dtype)
+        else:
+            crd_arr = np.asarray(crd_arr)
+
+        # ----
+        if isinstance(crd_arr[0], type(std_val[0, 0])):
+            uval = std_val
+        elif isinstance(crd_arr[0], np.timedelta64):
+            if isinstance(std_val[0, 0], np.floating):
+                uval = as_timedelta64(std_val, unit=tdunit)
+            elif isinstance(std_val[0, 0], np.datetime64):
+                if epoch is None:
+                    raise NotImplementedError("Can't slice-by-location a timedelta64 "
+                                              "axis using datetime64 value without "
+                                              "epoch")
+                else:
+                    uval = time_diff(std_val, epoch, most_precise=True)
+        elif isinstance(crd_arr[0], np.datetime64):
+            if isinstance(std_val[0, 0], np.floating):
+                std_val = as_timedelta64(std_val, unit=tdunit)
+                uval = crd_arr[0] + std_val
+            elif isinstance(std_val[0, 0], np.timedelta64):
+                uval = crd_arr[0] + std_val
+        elif isinstance(crd_arr[0], np.floating):
+            if isinstance(std_val[0, 0], np.timedelta64):
+                uval = std_val / as_timedelta64(1, unit=tdunit)
+            elif isinstance(std_val[0, 0], np.datetime64):
+                if epoch is None:
+                    raise NotImplementedError("Can't slice-by-location a floating pt. "
+                                              "axis using datetime64 value without "
+                                              "epoch")
+                else:
+                    uval = time_diff(std_val, epoch, most_precise=True)
+                    uval = uval / as_timedelta64(1, unit=tdunit)
+            elif isinstance(std_val[0, 0], np.floating):
+                uval = std_val.astype(crd_arr.dtype)
+        else:
+            raise NotImplementedError("coordinates dtype {0} can not be "
+                                      "sliced by value".format(type(crd_arr[0])))
+
+        # ----
+        if uval is None:
+            tol = None
+        elif isinstance(uval[0, 0], np.floating):
+            if len(crd_arr) > 1:
+                tol = 0.0001 * np.min(np.diff(crd_arr))
+            else:
+                tol = 1.0
+        elif isinstance(uval[0, 0], np.datetime64):
+            tol = as_timedelta64(0, 's')
+        elif isinstance(uval[0, 0], np.timedelta64):
+            tol = as_timedelta64(0, 's')
+
+        if uval is not None and not ndarray_slice:
+            uval = uval[0, 0]
+
+    return uval, tol
+
+def _interiorize_slice(arr, start_val, stop_val, start, stop, step,
+                       verify=True):
+    """Ensure start_val and stop_val interior to the sliced array
+
+    Args:
+        arr (sequence): sequence being sliced
+        start_val (None, float): Value used to find start index, or
+            None to not adjust start
+        stop_val (None, float): Value used to find stop index, or
+            None to net adjust stop
+        start (int): start of slice
+        stop (int): stop of slice
+        step (int): step of slice
+        verify (bool): verify that start_val and stop_val are interior
+            to the resulting sequence
 
     Returns:
-        one of {int, string, or slice (can contain ints,
-        floats, or strings)}
-
-    Note:
-        Individual elements of the slice can look like an int,
-        float with trailing 'f', or they can have the form
-        [A-Z]+[\d:]+\.\d*. This last one is a datetime-like
-        representation with some preceding letters. The preceding
-        letters are
+        (start, stop, step), adusted sliced start:stop:step indices
     """
-    # regex parse the sting into a list of datetime-like strings,
-    # integers, floats, and bare colons that mark the slices
-    # Note: for datetime-like strings, the letters preceeding a datetime
-    # are necessary, otherwise 02:20:30.01 would have more than one meaning
-    rstr = (r"\s*(?:(?!:)[A-Z]+[-\d:T]+\.\d*|:|[-+]?[0-9]*\.?[0-9]+f?)\s*|"
-            r"[-+]?[0-9]+")
-    r = re.compile(rstr, re.I)
+    step = 1 if step is None else step
 
-    all_times = r.findall(slc_str)
-    if len(all_times) == 1 and all_times[0] != ":":
-        return str2value(all_times[0])
+    if start_val is not None and start is not None:
+        start_slcval = arr[start]
 
-    # fill in implied slice colons, then replace them with something
-    # unique... like !!
-    all_times += [':'] * (2 - all_times.count(':'))
-    all_times = [s if s != ":" else "!!" for s in all_times]
-    # this is kinda silly, but turn all times back into a string,
-    # then split it again, this is the easiest way to parse something
-    # like '1::2'
-    ret = "".join(all_times).split("!!")
-    # convert empty -> None, ints -> ints and floats->floats
-    for i, val in enumerate(ret):
-        ret[i] = str2value(val)
-    if len(ret) > 3:
-        raise ValueError("Could not decipher slice: '{0}'. Perhaps you're "
-                         "missing some letters in front of a time "
-                         "string?".format(slc_str))
-    # trim trailing dots
-    ret = [r.rstrip('.') if hasattr(r, 'rstrip') else r for r in ret]
-    return slice(*ret)
+        if step > 0 and start_slcval > start_val:
+            # print("ADJUSTING start fwd")
+            if start == 0:
+                start = None
+            else:
+                start -= 1
+        elif step < 0 and start_slcval < start_val:
+            # print("ADJUSTING start rev")
+            if start == -1:
+                start = None
+            else:
+                start += 1
+
+    if stop_val is not None and stop is not None:
+        if step > 0:
+            stop_slcval = arr[0] if stop == 0 else arr[stop - 1]
+            if stop_slcval < stop_val:
+                # print("ADJUSTING stop fwd")
+                if stop == -1:
+                    stop = None
+                else:
+                    stop += 1
+        elif step < 0:
+            stop_slcval = arr[-1] if stop in (-1, len(arr)) else arr[stop + 1]
+            if stop_slcval > stop_val:
+                # print("ADJUSTING stop rev")
+                if stop == 0:
+                    stop = None
+                else:
+                    stop -= 1
+
+    # for debug, check that interior does what it says
+    if verify:
+        subarr = arr[start:stop:step]
+        ends = [v for v in sorted([subarr[0], subarr[-1]])]
+        for v in [start_val, stop_val]:
+            if v is not None:
+                if v < ends[0] or v > ends[-1]:
+                    raise RuntimeError("Logic issue in interiorize, "
+                                       "v: {0} ends: {1}".format(v, ends))
+
+    return start, stop, step
+
+#######################################################################
+
+def raw_sel2values(arrs, selection, epoch=None, tdunit='s'):
+    return sel_list2values(arrs, raw_sel2sel_list(selection),
+                           epoch=epoch, tdunit=tdunit)
+
+def sel_list2values(arrs, sel_list, epoch=None, tdunit='s'):
+    """find the extrema values for a given sel list"""
+    if arrs is None:
+        arrs = [None] * len(sel_list)
+    return [sel2values(arr, sel, epoch=epoch, tdunit=tdunit)
+            for arr, sel in zip(arrs, sel_list)]
+
+def sel2values(arr, sel, epoch=None, tdunit='s'):
+    """find the extrema values for a given selection
+
+    Args:
+        arr (None, sequence): array that is being selected, if this is
+            None, then the output will contain np.nan where it can not
+            infer values.
+        selection (slice, str): a single selection that could be given
+            to :py:func:`to_slice`
+        epoch (datetime64-like): Epoch for to go datetime64 <-> float
+        tdunit (str): Presumed time unit for floats
+
+    Returns:
+        (start_val, stop_val) as floats
+
+        - If arr is None and start/stop are None, then they will become
+          +/- inf depending on the sign of step.
+        - If arr is None and start/stop are slice-by-index, they will
+          become NaN.
+    """
+    ret = None
+
+    std_sel = standardize_sel(sel)
+
+    if isinstance(std_sel, slice):
+        if std_sel.start is None or hasattr(std_sel.start, '__index__'):
+            if arr is None:
+                if std_sel.start is None and std_sel.step > 0:
+                    ustart = -np.inf
+                elif std_sel.start is None and std_sel.step < 0:
+                    ustart = np.inf
+                else:
+                    ustart = np.nan
+            else:
+                if std_sel.start is None:
+                    idx = 0 if std_sel.step > 0 else -1
+                else:
+                    idx = int(std_sel.start)
+                ustart = arr[idx]
+        else:
+            ustart, _ = _unify_sbv_types(std_sel.start, arr, tdunit=tdunit,
+                                         epoch=epoch)
+
+        if std_sel.stop is None or hasattr(std_sel.stop, '__index__'):
+            if arr is None:
+                if std_sel.stop is None and std_sel.step > 0:
+                    ustop = np.inf
+                elif std_sel.stop is None and std_sel.step < 0:
+                    ustop = -np.inf
+                else:
+                    ustop = np.nan
+            else:
+                if std_sel.stop is None:
+                    idx = -1 if std_sel.step > 0 else 0
+                else:
+                    idx = int(std_sel.stop)
+                ustop = arr[idx]
+        else:
+            ustop, _ = _unify_sbv_types(std_sel.stop, arr, tdunit=tdunit,
+                                        epoch=epoch)
+
+        ret = (ustart, ustop)
+    else:
+        if std_sel in (None, np.newaxis):
+            ret = (-np.inf, np.inf)
+        elif hasattr(std_sel, "__index__"):
+            if arr is None:
+                ret = (np.nan, np.nan)
+            else:
+                ret = tuple([arr[std_sel]] * 2)
+        else:
+            uval, _ = _unify_sbv_types(std_sel, arr, tdunit=tdunit, epoch=epoch)
+            ret = tuple([uval] * 2)
+
+    return ret
+
+selection2values = sel2values
+
+#######################################################################
+
+# FIXME: is this graceful on slice-by-ndarray?
 
 def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     """Make sure slices go forward
@@ -321,562 +983,24 @@ def make_fwd_slice(shape, slices, reverse=None, cull_second=True):
     second_slc = [np.newaxis if s == "NEWAXIS" else s for s in second_slc]
     return first_slc, second_slc
 
-def _resolve_float(value, epoch=None, tdunit='s'):
-    value = _standardize_slcval(value, epoch=epoch, tdunit=tdunit)
-
-    try:
-        value = value.rstrip()
-        if len(value) == 0:
-            raise ValueError("Can't slice with nothing")
-        elif value[-1] == 'f':
-            ret = float(value[:-1])
-        else:
-            ret = int(value)  # pylint: disable=redefined-variable-type
-
-    except AttributeError:
-        ret = value.__index__()
-
-    return ret
-
-def _closest_index(arr, value, epoch=None, tdunit='s'):
-    value = _standardize_slcval(value, epoch=epoch, tdunit=tdunit)
-
-    try:
-        value = value.rstrip()
-        if len(value) == 0:
-            raise ValueError("Can't slice with nothing")
-        elif value[-1] == 'f':
-            arr, epoch = _arr2float(arr, epoch=epoch, tdunit=tdunit)
-            index = int(np.argmin(np.abs(arr - float(value[:-1]))))
-        else:
-            index = int(value)
-
-    except AttributeError:
-        index = value.__index__()
-
-    return index
-
-def extract_index(arr, start=None, stop=None, step=None, val_endpoint=True,
-                  interior=False, epoch=None, tdunit='s', tol=100):
-    """Get integer indices for slice parts
-
-    If start, stop, or step are strings, they are either cast to
-    integers or used for a float lookup if they have a trailing 'f'.
-
-    An example float lookup is::
-        >>> [0.1, 0.2, 0.3, 0.4, 0.5, 0.6]['0.2f:0.6f:2']
-        [0.2, 0.4, 0.6]
-
-    Normally (val_endpoint=True, interior=False), the rules for float
-    lookup val_endpoints are,
-        - The slice will never include an element whose value in arr
-          is < start (or > if the slice is backward)
-        - The slice will never include an element whose value in arr
-          is > stop (or < if the slice is backward)
-        - !! The slice WILL INCLUDE stop if you don't change
-          val_endpoint. This is different from normal slicing, but
-          it's more natural when specifying a slice as a float.
-          To this end, an epsilon tolerance can be given to
-          determine what's close enough.
-        - TODO: implement floating point steps, this is tricky
-          since arr need not be uniformly spaced, so step is
-          ambiguous in this case
-
-    If interior=True, then the slice is expanded such that start and
-    stop are interior to the sliced array.
-
-    Args:
-        arr (ndarray): filled with floats to do the lookup
-        start (None, int, str): like slice().start
-        stop (None, int, str): like slice().stop
-        step (None, int): like slice().step
-        val_endpoint (bool): iff True then include stop in the slice when
-            slicing-by-value (DOES NOT EFFECT SLICE-BY-INDEX).
-            Set to False to get python slicing symantics when it
-            comes to excluding stop, but fair warning, python
-            symantics feel awkward here. Consider the case
-            [0.1, 0.2, 0.3][:0.25]. If you think this should include
-            0.2, then leave keep val_endpoint=True.
-        interior (bool): if True, then extend both ends of the slice
-            such that slice-by-value endpoints are interior to the
-            slice
-        epoch (datetime64-like): Epoch for to go datetime64 <-> float
-        tdunit (str): Presumed time unit for floats
-        tol (int): number of machine epsilons to consider
-            "close enough"
-
-    Returns:
-        start, stop, step after floating point vals have been
-        converted to integers
-    """
-    arr, epoch = _arr2float(arr, epoch=epoch, tdunit=tdunit)
-
-    start = _standardize_slcval(start, epoch=epoch, tdunit=tdunit)
-    stop = _standardize_slcval(stop, epoch=epoch, tdunit=tdunit)
-
-    if interior and not val_endpoint:
-        logger.warning("For interior slices, val_endpoint must be True, I'll "
-                       "change that for you.")
-        val_endpoint = True
-
-    try:
-        epsilon = tol * np.finfo(arr.dtype).eps
-    except ValueError:
-        # array is probably of type numpy.int*
-        epsilon = 0.01
-
-    _step = 1 if step is None else int(step)
-    epsilon_step = epsilon if _step > 0 else -epsilon
-
-    # print("?!? |{0}|  |{1}|".format(start, stop))
-
-    startstop = [start, stop]
-    eps_sign = [1, -1]
-
-    # if start or stop is not an int, try to make it one
-    byval = [None] * 2
-    for i in range(2):
-        s = startstop[i]
-        _epsilon_step = epsilon_step
-
-        # s is a string if and only if it's slice by float value
-        if isinstance(s, string_types):
-            assert len(s) != 0  # startstop[0] = None ???
-            byval[i] = float(s[:-1])
-            # print("byval[", i, "]", s, byval[i])
-
-            if _epsilon_step:
-                diff = arr - byval[i] + (eps_sign[i] * _epsilon_step)
-            else:
-                diff = arr - byval[i]
-            zero = np.array([0]).astype(diff.dtype)[0]
-
-            # FIXME: there is far too much decision making here
-            if i == 0:
-                # start
-                if _step > 0:
-                    diff = np.ma.masked_less(diff, zero)
-                else:
-                    diff = np.ma.masked_greater(diff, zero)
-
-                if np.ma.count(diff) == 0:
-                    # start value is past the wrong end of the array
-                    if _step > 0:
-                        startstop[i] = len(arr)
-                    else:
-                        # start = -len(arr) - 1
-                        # having a value < -len(arr) won't play
-                        # nice with make_fwd_slice, but in this
-                        # case, the slice will have no data, so...
-                        return 0, 0, step
-                else:
-                    startstop[i] = int(np.argmin(np.abs(diff)))
-            else:
-                # stop
-                if _step > 0:
-                    diff = np.ma.masked_greater(diff, zero)
-                    if np.ma.count(diff) == 0:
-                        # stop value is past the wong end of the array
-                        startstop[i] = 0
-                    else:
-                        startstop[i] = int(np.argmin(np.abs(diff)))
-                        if val_endpoint:
-                            startstop[i] += 1
-                else:
-                    diff = np.ma.masked_less(diff, zero)
-                    if np.ma.count(diff) == 0:
-                        # stop value is past the wrong end of the array
-                        startstop[i] = len(arr)
-                    else:
-                        startstop[i] = int(np.argmin(np.abs(diff)))
-                        if val_endpoint:
-                            if startstop[i] > 0:
-                                startstop[i] -= 1
-                            else:
-                                # 0 - 1 == -1 which would wrap to the end of
-                                # of the array... instead, just make it None
-                                startstop[i] = None
-            # print("startstop[", i, "]", startstop[i])
-
-    # turn start, stop, step into indices
-    start, stop = startstop
-    sss = [start, stop, step]
-    for i, s in enumerate(sss):
-        if s is None:
-            pass
-        elif isinstance(s, string_types):
-            sss[i] = int(s)
-        else:
-            sss[i] = s.__index__()
-
-    # start stop and step are now all integers... yay
-    start, stop, step = sss
-    if interior:
-        start, stop, step = _interiorize_slice(arr, byval[0], byval[1],
-                                               start, stop, step)
-    return (start, stop, step)
-
-def _expand_newaxis(arrs, slices):
-    for i, sl in enumerate(slices):
-        if sl in [None, np.newaxis, "None", "newaxis"]:
-            if len(arrs) < len(slices):
-                arrs.insert(i, None)
-            slices[i] = np.newaxis
-    return arrs, slices
-
-def _prepare_selections(arrs, selections):
-    """make arrs and selections something that can be zipped together"""
-    if isinstance(selections, string_types):
-        selections = "".join(selections.split())
-        selections = selections.split(",")
-
-    if not isinstance(selections, (list, tuple)):
-        raise TypeError("To wrap a single slice use vutil.to_slice(...)")
-
-    if arrs is None:
-        arrs = [None] * len(selections)
-
-    arrs, selections = _expand_newaxis(arrs, selections)
-
-    if len(arrs) != len(selections):
-        raise RuntimeError("len(arrs) must == len(slices):: {0} {1}"
-                           "".format(len(arrs), len(selections)))
-
-    return arrs, selections
-
-def _standardize_selection(selection):
-    std_selection = None
-    is_slice_list = None
-
-    if isinstance(selection, string_types):
-        selection = "".join(selection.split())
-        selection = parse_time_slice_str(selection)
-
-    if hasattr(selection, "__index__"):
-        std_selection = selection
-        is_slice_list = False
-    elif selection in [None, np.newaxis, "newaxis", "None", "none"]:
-        std_selection = None
-        is_slice_list = False
-    else:
-        is_slice_list = True
-
-        if isinstance(selection, slice):
-            std_selection = [selection.start, selection.stop, selection.step]
-        elif isinstance(selection, string_types):
-            # kill whitespace
-            std_selection = [v.strip() for v in selection.split(":")]
-        else:
-            if not isinstance(selection, list):
-                try:
-                    selection = list(selection)
-                except TypeError:
-                    selection = [selection]
-            std_selection = selection
-
-        if len(std_selection) > 3:
-            raise ValueError("slices can have at most start, stop, step:"
-                             "{0}".format(selection))
-
-    return std_selection, is_slice_list
-
-def to_slices(arrs, selections, val_endpoint=True, interior=False, epoch=None,
-              tdunit='s', tol=100):
-    """Wraps :py:func:`to_slice` for multiple arrays / slices
-
-    Args:
-        arrs (list, None): list of arrays for float lookups, must be
-            the same length as s.split(','). If all slices are by
-            index, then `arrs` can be `None`.
-        selections (list, str): list of things that :py:func:`to_slice`
-            understands, or a comma separated string of slices
-        val_endpoint (bool): passed to :py:func:`extract_index` if needed
-        interior (bool): passed to :py:func:`extract_index` if needed
-        epoch (datetime64-like): Epoch for to go datetime64 <-> float
-        tdunit (str): Presumed time unit for floats
-        tol (int): passed to :py:func:`extract_index` if needed
-
-    Returns:
-        tuple of slice objects
-
-    See Also:
-        * :py:func:`to_slice`
-        * :py:func:`extract_index`
-    """
-    arrs, selections = _prepare_selections(arrs, selections)
-    ret = []
-    for arr, slc in izip(arrs, selections):
-        ret.append(to_slice(arr, slc, val_endpoint=val_endpoint, interior=interior,
-                            epoch=epoch, tdunit=tdunit, tol=tol))
-    return tuple(ret)
-
-def to_slice(arr, selection, val_endpoint=True, interior=False, epoch=None,
-             tdunit='s', tol=100):
-    """Convert anything describing a slice to a slice object
-
-    Args:
-        arr (array): Array that you're going to slice if you specify any
-            parts of the slice by value. If all slices are by index,
-            `arr` can be `None`.
-        selection (int, str, slice): Something that can be turned into
-            a slice. Ints are returned as-is. Slices and strings are
-            parsed to see if they contain indices, or values. Values
-            are strings that contain a number followed by an 'f'. Refer
-            to :py:func:`extract_index` for the slice-by-value
-            semantics.
-        val_endpoint (bool): passed to :py:func:`extract_index` if needed
-        interior (bool): passed to :py:func:`extract_index` if needed
-        epoch (datetime64-like): Epoch for to go datetime64 <-> float
-        tdunit (str): Presumed time unit for floats
-        tol (int): passed to :py:func:`extract_index` if needed
-
-    Returns:
-        slice object or int
-
-    Raises:
-        ValueError: Description
-
-    See Also:
-        * :py:func:`extract_index`
-    """
-    std_selection, is_slice_list = _standardize_selection(selection)
-
-    if is_slice_list:
-        slclst = std_selection
-        if arr is None:
-            if len(slclst) == 1:
-                # FIXME: i'm not sure if this is guarded for cases where
-                #        slclst[0] is something like '0.0'
-                if isinstance(slclst[0], string_types) and '.' in slclst[0]:
-                    raise RuntimeError("Fell through a crack.")
-                ret = int(slclst[0])
-            else:
-                ret = slice(*[None if a is None else int(a) for a in slclst])
-        elif len(slclst) == 1:
-            ret = _closest_index(arr, slclst[0], epoch=epoch, tdunit=tdunit)
-        else:
-            # sss -> start step step
-            sss = extract_index(arr, *slclst, val_endpoint=val_endpoint,
-                                interior=interior, epoch=epoch, tdunit=tdunit,
-                                tol=tol)
-            ret = slice(*sss)
-    else:
-        ret = std_selection
-
-    return ret
-
-def _interiorize_slice(arr, start_val, stop_val, start, stop, step,
-                       verify=True):
-    """Ensure start_val and stop_val interior to the sliced array
-
-    Args:
-        arr (sequence): sequence being sliced
-        start_val (None, float): Value used to find start index, or
-            None to not adjust start
-        stop_val (None, float): Value used to find stop index, or
-            None to net adjust stop
-        start (int): start of slice
-        stop (int): stop of slice
-        step (int): step of slice
-        verify (bool): verify that start_val and stop_val are interior
-            to the resulting sequence
-
-    Returns:
-        (start, stop, step), adusted sliced start:stop:step indices
-    """
-    step = 1 if step is None else step
-
-    if start_val is not None and start is not None:
-        start_slcval = arr[start]
-
-        if step > 0 and start_slcval > start_val:
-            # print("ADJUSTING start fwd")
-            if start == 0:
-                start = None
-            else:
-                start -= 1
-        elif step < 0 and start_slcval < start_val:
-            # print("ADJUSTING start rev")
-            if start == -1:
-                start = None
-            else:
-                start += 1
-
-    if stop_val is not None and stop is not None:
-        if step > 0:
-            stop_slcval = arr[0] if stop == 0 else arr[stop - 1]
-            if stop_slcval < stop_val:
-                # print("ADJUSTING stop fwd")
-                if stop == -1:
-                    stop = None
-                else:
-                    stop += 1
-        elif step < 0:
-            stop_slcval = arr[-1] if stop in (-1, len(arr)) else arr[stop + 1]
-            if stop_slcval > stop_val:
-                # print("ADJUSTING stop rev")
-                if stop == 0:
-                    stop = None
-                else:
-                    stop -= 1
-
-    # for debug, check that interior does what it says
-    if verify:
-        subarr = arr[start:stop:step]
-        ends = [v for v in sorted([subarr[0], subarr[-1]])]
-        for v in [start_val, stop_val]:
-            if v is not None:
-                if v < ends[0] or v > ends[-1]:
-                    raise RuntimeError("Logic issue in interiorize, "
-                                       "v: {0} ends: {1}".format(v, ends))
-
-    return start, stop, step
-
-def make_slice_inclusive(start, stop=None, step=None):
-    """Extend the end of a slice by 1 element
-
-    Chances are you don't want to use this function.
-
-    Args:
-        start (int, None): same as a slice.start
-        stop (int, None): same as a slice.stop
-        step (int, None): same as a slice.step
-
-    Returns:
-        (start, stop, step) To be given to slice()
-    """
-    if stop is None:
-        return start, stop, step
-
-    if step is None or step > 0:
-        if stop == -1:
-            stop = None
-        else:
-            stop += 1
-    else:
-        if stop == 0:
-            stop = None
-        else:
-            stop -= 1
-    return start, stop, step
-
-def selections2values(arrs, selections, nr_dims, epoch=None, tdunit='s'):
-    """find the extrema values for a given selection
-
-    Args:
-        arrs (None, sequence): array that is being selected, if this is
-            None, then the output will contain np.nan where it can not
-            infer values.
-        selections (slice, str): selections that could be given to
-            :py:func:`to_slices`
-        nr_dims (int): arrs and selections are expanded to this length
-        epoch (datetime64-like): Epoch for to go datetime64 <-> float
-        tdunit (str): Presumed time unit for floats
-
-    Returns:
-        ndarray with shape (nr_dims, 2) of extents as floats
-
-        - If arr is None and start/stop are None, then they will become
-          +/- inf depending on the sign of step.
-        - If arr is None and start/stop are slice-by-index, they will
-          become NaN.
-    """
-    arrs, selections = _prepare_selections(arrs, selections)
-    n_new = max(nr_dims - len(arrs), 0)
-    arrs += [None] * n_new
-    selections += [slice(None)] * n_new
-
-    ret = []
-    for arr, sel in izip(arrs, selections):
-        ret.append(selection2values(arr, sel, epoch=epoch, tdunit=tdunit))
-    return np.vstack(ret)
-
-def selection2values(arr, selection, epoch=None, tdunit='s'):
-    """find the extrema values for a given selection
-
-    Args:
-        arr (None, sequence): array that is being selected, if this is
-            None, then the output will contain np.nan where it can not
-            infer values.
-        selection (slice, str): a single selection that could be given
-            to :py:func:`to_slice`
-        epoch (datetime64-like): Epoch for to go datetime64 <-> float
-        tdunit (str): Presumed time unit for floats
-
-    Returns:
-        (start_val, stop_val) as floats
-
-        - If arr is None and start/stop are None, then they will become
-          +/- inf depending on the sign of step.
-        - If arr is None and start/stop are slice-by-index, they will
-          become NaN.
-    """
-    std_selection, is_slice_list = _standardize_selection(selection)
-
-    if is_slice_list:
-        slclst = std_selection
-        if len(slclst) == 1:
-            # FIXME: i'm not sure if this is guarded for cases where
-            #        slclst[0] is something like '0.0', but i think it's ok
-            #        since this goes through slice2values, which does guard this
-            slclst += [slclst[0], 1]
-        ret = slice2values(arr, slclst[0], slclst[1], slclst[2], epoch=epoch,
-                           tdunit=tdunit)
-    else:
-        if hasattr(std_selection, "__index__"):
-            if arr is None:
-                ret = (np.nan, np.nan)
-            else:
-                ret = tuple([arr[std_selection]] * 2)
-        elif std_selection is None:
-            ret = (-np.inf, np.inf)
-        else:
-            raise RuntimeError("Not sure how we got here")
-
-    return ret
-
-def slice2values(arr, start, stop, step=None, epoch=None, tdunit='s'):
-    """Find the values that correspond with start and stop
-
-    Returns:
-        (start_val, stop_val) as floats
-
-        - If arr is None and start/stop are None, then they will become
-          +/- inf depending on the sign of step.
-        - If arr is None and start/stop are slice-by-index, they will
-          become NaN.
-    """
-    step = 1 if step is None else step
-    if arr is None:
-        arr_flt = None
-        arr_extents = [-np.inf, np.inf]
-    else:
-        arr_flt, epoch = _arr2float(arr, epoch=epoch, tdunit=tdunit)
-        arr_extents = [arr_flt[0], arr_flt[-1]]
-
-    if step < 0:
-        arr_extents = arr_extents[::-1]
-
-    start = _standardize_slcval(start, epoch=epoch, tdunit=tdunit)
-    stop = _standardize_slcval(stop, epoch=epoch, tdunit=tdunit)
-
-    # start/stop are strings if and only if they are slice by float value
-    ss = [start, stop]
-    for i, s in enumerate(ss):
-        if isinstance(s, string_types):
-            ss[i] = float(s[:-1])
-        elif s is None:
-            ss[i] = arr_extents[i]
-        elif hasattr(s, '__index__'):
-            if arr_flt is None:
-                ss[i] = np.nan
-            else:
-                ss[i] = arr_flt[ss[i]]
-        else:
-            raise TypeError("Not sure what to do with {0} [type = {1}]"
-                            "".format(s, type(s)))
-    start, stop = ss
-    return start, stop
+#######################################################################
+
+def all_slices_none(slices):
+    '''true iff all slices have no effect'''
+    return all(not isinstance(s, (list, np.ndarray))
+               and s in (slice(None), slice(None, None, 1))
+               for s in slices)
+
+def _user_written_stack_frame():
+    """get the frame of first stack frame outside Viscid"""
+    import inspect
+    import os
+    stack = inspect.stack()
+    frame_info = None
+    for frame_info in stack:
+        if 'viscid' not in os.path.normpath(frame_info[1]):
+            break
+    return frame_info
 
 ##
 ## EOF

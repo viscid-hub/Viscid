@@ -12,7 +12,7 @@ Various shims for plotting fields using matplotlib are provided by :py:mod:`visc
 Plotting Temperature
 --------------------
 
-Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log scale. For a better idea of the different plotting options, refer to :meth:`viscid.plot.vpyplot.plot2d_field`.
+Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log scale. For a better idea of the different plotting options, refer to :doc:`../plot_options`.
 
 .. plot::
     :include-source:
@@ -24,15 +24,16 @@ Here, we just open up an OpenGGCM xdmf file and plot the Temperature with a log 
 
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
-    # notice y=0.0, this is different from y=0; y=0 is the 0th index in
-    # y, which is this case will be y=-50.0
+
     pPa_to_dyne_per_cm2 = 1e-11
     erg_to_K = (1.380e-16)**-1
     fac = (2.0 / 3.0) * erg_to_K * pPa_to_dyne_per_cm2
+
     T = fac * f3d["pp"] / f3d["rr"]
     T.name = "T"
     T.pretty_name = "T (K)"
-    vlt.plot(T['y=0f'], logscale=True, earth=True)
+
+    vlt.plot(T['y=0j'], logscale=True, earth=True)
 
     vlt.show()
 
@@ -51,15 +52,15 @@ Two Plots, One Figure
 
     f3d = viscid.load_file(path.join(viscid.sample_dir, 'sample_xdmf.3d.xdmf'))
 
-    fig, axes = plt.subplots(1, 2, sharex=True, sharey=True)
+    fig, axes = plt.subplots(2, 1, sharex=True, sharey=True)
 
     # plot pressure with 64 contours on a logscale
-    vlt.plot(f3d["pp"]["y=0.0f"], style="contourf", levels=64,
+    vlt.plot(f3d["pp"]["y=0.0j"], style="contourf", levels=64,
              plot_opts="log, earth", ax=axes[0])
 
     # plot velocity in x with a colorbar symmetric about 0
     # also, share axes so this plot pans/zooms with the first
-    vlt.plot(f3d["vx"]["y=0.0f"], style="contourf", levels=64,
+    vlt.plot(f3d["vx"]["y=0.0j"], style="contourf", levels=64,
              lin=0, earth=True, ax=axes[1])
 
     plt.xlim((-20, 20))

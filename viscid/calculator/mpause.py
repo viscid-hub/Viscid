@@ -71,7 +71,7 @@ def fit_paraboloid(fld, p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0), tolerance=0.0):
     return parab
 
 def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
-                slc="x=5.5f:11.0f, y=-4.0f:4.0f, z=-3.6f:3.6f",
+                slc="x=5.5j:11.0j, y=-4.0j:4.0j, z=-3.6j:3.6j",
                 fit="mp_xloc", fit_p0=(9.0, 0.0, 0.0, 1.0, -1.0, -1.0)):
     """Get info about m-pause as flattened fields
 
@@ -263,7 +263,7 @@ def get_mp_info(pp, b, j, e, cache=True, cache_dir=None,
 
         # cache new fields to disk
         if mp_fname:
-            viscid.save_fields(mp_fname + ".h5", mp_info.values())
+            viscid.save_fields(mp_fname + ".h5", list(mp_info.values()))
 
     try:
         _paraboloid_params = fit_paraboloid(mp_info[fit], p0=fit_p0)
@@ -356,7 +356,7 @@ def find_mp_edges(j_block, msphere_thresh=0.1, sheath_thresh=0.1,
 def _main():
     f = viscid.load_file("$WORK/xi_fte_001/*.3d.[4050f].xdmf")
     mp = get_mp_info(f['pp'], f['b'], f['j'], f['e_cc'], fit='mp_xloc',
-                     slc="x=6.5f:10.5f, y=-4f:4f, z=-4.8f:3f", cache=False)
+                     slc="x=6.5j:10.5j, y=-4j:4j, z=-4.8j:3j", cache=False)
 
     y, z = mp['pp_max_xloc'].meshgrid_flat(prune=True)
     x = mp['pp_max_xloc'].data.reshape(-1)
