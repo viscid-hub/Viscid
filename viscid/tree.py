@@ -240,7 +240,7 @@ class Node(object):
             self.set_info('time', float(val))
 
     def time_as_timedelta64(self):
-        return viscid.as_timedelta64(1e9 * self.time, 'us')
+        return viscid.as_timedelta64(1e6 * self.time, 'us')
 
     def time_as_timedelta(self):
         return viscid.as_timedelta(self.time_as_timedelta64())
