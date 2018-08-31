@@ -110,7 +110,7 @@ cy_defs.append(["viscid.cython.cyamr",
                ])
 
 fort_fcflags = []
-fort_ldflags = []
+fort_ldflags = os.environ.get('F_LDFLAGS', '').split()
 
 fort_defs = []
 # These fortran sources are compiled into the same python module since
@@ -130,7 +130,8 @@ if sys.platform == 'darwin':
         mandatory_flags = ['-undefined dynamic_lookup', '-bundle']
         for flag in mandatory_flags:
             if flag not in os.environ.get('LDFLAGS', ''):
-                fort_ldflags.append(flag)
+                if flag not in fort_ldflags:
+                    fort_ldflags.append(flag)
 
 # fix fortran build on linux with conda's gfortran
 if sys.platform[:5] == 'linux':
@@ -138,7 +139,8 @@ if sys.platform[:5] == 'linux':
         mandatory_flags = ['-shared']
         for flag in mandatory_flags:
             if flag not in os.environ.get('LDFLAGS', ''):
-                fort_ldflags.append(flag)
+                if flag not in fort_ldflags:
+                    fort_ldflags.append(flag)
 
 # hack to use proper flags for python2.7 / numpy 1.11 windows conda-forge build
 if (sys.platform[:3] == 'win' and sys.version_info[:2] == (2, 7)
