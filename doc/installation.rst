@@ -108,14 +108,14 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
 + :ref:`PyPI (pip) <choice2-pypi>`
 
   - **+**  Installs with a single command
-  - **+**  No compiler needed for pure python functionality
-  - **-**  Recommended dependencies must be explicitly installed
-  - **-**  Requires a C compiler for interpolation and streamline support
-  - **-**  Requires a Fortran compiler for jrrle file support
+  - **+**  No compiler needed
+  - **+**  Available for macOS, Linux, and Windows
+  - **-**  Dependencies must be explicitly installed
+  - **-**  Requires Numpy 1.14+ on Windows
 
 + :ref:`Source <choice3-source>`
 
-  - **+**  Only method that lets you edit Viscid's source code
+  - **+**  Most flexible
   - **-**  Requires some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
   - **-**  Dependencies must be explicitly installed
   - **-**  Requires a C compiler for interpolation and streamline functions
@@ -155,11 +155,17 @@ Choice 2: `PyPI <http://pypi.org/project/viscid/>`_ (pip)
   :target: https://pypi.org/project/Viscid/
   :alt: PyPI
 
-You can install from source using pip, but the runtime functionality depends on which compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler.
+Binary wheels are available on PyPI for Python 2.7, 3.5, 3.6, and 3.7 on MacOS, Linux, and Windows.
 
 .. code-block:: bash
 
     pip install viscid
+
+If these wheels don't work for you, pip can also install from source (optionally requires a C compiler for interpolation and streamline support, and a Fortran compiler for Jrrle file support).
+
+.. code-block:: bash
+
+    pip install --no-binary :all: viscid
 
 Compile errors will not cause Viscid's pip install to fail, and pip hides warning messages unless you use the ``-v`` flag. To check the functionality of your install, run
 
