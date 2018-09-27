@@ -5,6 +5,7 @@ Changes
 ==========
 
   - Binary wheels now uploaded to PyPI via CI services
+  - add Field.trapz and Field.cumtrapz
 
 0.99.9
 ======

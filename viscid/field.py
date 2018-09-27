@@ -2006,6 +2006,94 @@ class Field(tree.Leaf):
     def sum(self, **kwargs):
         return self.wrap(self.data.sum(**kwargs), npkwargs=kwargs)
 
+    def trapz(self, axis=-1, fudge_factor=None):
+        """Integrate field over a single axis
+
+        Args:
+            axis (str, int): axis name or index
+            fudge_factor (callable): function that is called with
+                func(data, crd_arr), where crd_arr is shaped. This is
+                useful for including parts of the jacobian, like
+                sin(theta) dtheta.
+
+        Returns:
+            Field or float
+        """
+        if axis in self.crds.axes:
+            axis = self.crds.axes.index(axis)
+        assert isinstance(axis, (int, np.integer))
+        crd_arr = self.get_crd(axis, shaped=True)
+
+        try:
+            crd_arr = np.expand_dims(crd_arr, axis=self.nr_comp)
+            if self.nr_comp > axis:
+                fld_axis = axis
+            else:
+                fld_axis = axis + 1
+        except TypeError:
+            fld_axis = axis
+
+        if fudge_factor is None:
+            arr = self.data
+        else:
+            arr = self.data * fudge_factor(self.data, crd_arr)
+
+        if self.nr_sdims > 1:
+            slc = [slice(None) for _ in self.sshape]
+            slc[axis] = 0
+            ret = viscid.empty_like(self[tuple(slc)])
+            ret.data = np.trapz(arr, crd_arr.reshape(-1), axis=fld_axis)
+        else:
+            ret = np.trapz(arr, crd_arr.reshape(-1), axis=fld_axis)
+        return ret
+
+    def cumtrapz(self, axis=-1, fudge_factor=None, initial=0):
+        """Cumulatively integrate field over a single axis
+
+        Args:
+            axis (str, int): axis name or index
+            fudge_factor (callable): function that is called with
+                func(data, crd_arr), where crd_arr is shaped. This is
+                useful for including parts of the jacobian, like
+                sin(theta) dtheta.
+            initial (float): Initial value
+
+        Returns:
+            Field
+        """
+        ret = None
+
+        try:
+            from scipy.integrate import cumtrapz as _sp_cumtrapz
+
+            if axis in self.crds.axes:
+                axis = self.crds.axes.index(axis)
+            assert isinstance(axis, (int, np.integer))
+            crd_arr = self.get_crd(axis, shaped=True)
+
+            try:
+                crd_arr = np.expand_dims(crd_arr, axis=self.nr_comp)
+                if self.nr_comp > axis:
+                    fld_axis = axis
+                else:
+                    fld_axis = axis + 1
+            except TypeError:
+                fld_axis = axis
+
+            if fudge_factor is None:
+                arr = self.data
+            else:
+                arr = self.data * fudge_factor(self.data, crd_arr)
+
+            ret = viscid.empty_like(self)
+            ret.data = _sp_cumtrapz(arr, crd_arr.reshape(-1), axis=fld_axis,
+                                    initial=initial)
+        except ImportError:
+            viscid.logger.error("Scipy is required to perform cumtrapz")
+            raise
+
+        return ret
+
     @property
     def real(self):
         ret = self

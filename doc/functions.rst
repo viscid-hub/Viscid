@@ -111,6 +111,8 @@ Function                                             Description
                                                      interpolation that :py:func:`scipy.interpolate.interp1d`
                                                      understands.
 :py:func:`viscid.integrate_along_lines`              Integrate a field along streamlines
+:py:func:`viscid.field.Field.trapz`                  2nd order integration of field
+:py:func:`viscid.field.Field.cumtrapz`               2nd order indefinite integration of field
 :py:func:`viscid.calc_psi`                           Calculate a 2D flux function
 :py:func:`viscid.calc_beta`                          Calculate plasma beta
 ===================================================  ===========================================================
