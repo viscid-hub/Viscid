@@ -10,6 +10,7 @@ convenience functions for creating fields similar to `Numpy`.
 from __future__ import print_function
 from itertools import count, islice
 from inspect import isclass
+import re
 
 import numpy as np
 
@@ -407,17 +408,37 @@ class _FldSlcProxy(object):
     def _floatify(self, item):
         if isinstance(item, string_types):
             item = item.strip().lower()
+            dt_re = r"(\s*{0}\s*)".format(viscid.sliceutil.RE_DTIME_SLC_GROUP)
+            datetimes = re.findall(dt_re, item)
+            item = re.sub(dt_re, '__DATETIME__', item)
+            item = re.sub(r'([\d\.e]+(?![\d\.FfJj]))', r'\1j', item)
+            item_split = item.split('__DATETIME__')
+            item = [None] * (len(item_split) + len(datetimes))
+            item[0::2] = item_split
+            item[1::2] = datetimes
+            item = ''.join(item)
+
         if item in (Ellipsis, '...'):
             item = Ellipsis
         elif item in (np.newaxis, ):
             item = np.newaxis
         elif item in (None, 'none'):
             item = None
+        elif isinstance(item, (np.ndarray,)):
+            if self.do_floatify:
+                item = 1j * item
+        elif isinstance(item, string_types):
+            pass
+        elif isinstance(item, (list,)):
+            for i, _ in enumerate(item):
+                # try:
+                if self.do_floatify:
+                    item[i] = 1j * float(item[i])
+                # except (ValueError, TypeError):
+                #     pass
         else:
             if self.do_floatify:
                 item = 1j * float(item)
-            else:
-                item = int(item)
         return item
 
     def _xform(self, item):
