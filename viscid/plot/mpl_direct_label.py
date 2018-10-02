@@ -14,7 +14,6 @@ from __future__ import print_function, division, unicode_literals
 from itertools import count, cycle
 import sys
 
-from matplotlib.cbook import is_string_like
 from matplotlib.font_manager import FontProperties
 from matplotlib.path import Path
 from matplotlib.transforms import Bbox
@@ -359,8 +358,8 @@ def text_size_points(size=None, fontproperties=None):
     if not size:
         if fontproperties is None:
             fontproperties = FontProperties()
-        elif is_string_like(fontproperties):
-            fontproperties = FontProperties(fontproperties)
+        elif isinstance(fontproperties, dict):
+            fontproperties = FontProperties(**fontproperties)
         size = fontproperties.get_size_in_points()
     return size
 
