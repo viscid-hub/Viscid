@@ -99,6 +99,9 @@ try:
             for styl_fname in style_sheets:
                 styl_name = os.path.splitext(os.path.basename(styl_fname))[0]
 
+                if styl_name in style.available:
+                    continue
+
                 if tmpfname:
                     # hack the cycler stuff back to the pre-1.5.0 syntax
                     with open(styl_fname, 'r') as fin:
