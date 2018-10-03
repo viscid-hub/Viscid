@@ -4,12 +4,17 @@ Changes
 1.0.0.dev3
 ==========
 
+Changes:
   - Binary wheels now uploaded to PyPI via CI services
   - add Field.trapz and Field.cumtrapz
+
+Bugfixes:
+  - matplotlib 3.0 fixes
 
 0.99.9
 ======
 
+Changes:
   - add `viscid.mfield` that mimics `numpy.mgrid`
   - slice-by-value should now be done with imaginary numbers instead of strings encoded like '0.0f'. The string-'f' format will continue to be supported, but imaginary numbers are cleaner for this purpose.
   - slice-by-array and slice-by-mask (bool array) are now allowed
@@ -20,6 +25,7 @@ Changes
 0.99.8
 ======
 
+Bugfixes:
   - apply_labels works if parts of paths are not visible
   - apply_labels candidate locations are governed by path segment length in pixels
   - mayavi 4.6.0 fixes
@@ -28,36 +34,48 @@ Changes
 0.99.7
 ======
 
+Changes:
   - migrate main repository to https://github.com/viscid-hub
 
 0.99.6
 ======
 
+Changes:
   - enable installation using conda / pip
 
 0.99.5
 ======
 
+Bugfixes:
   - more pypi metadata fixes
 
 0.99.4
 ======
 
+Changes:
   - implement `visicd --version` and `python -m viscid --version`
+
+Bugfixes:
   - pypi metadata fixes
 
 0.99.3
 ======
 
+Changes:
+  - merge new fluid tracer
+
+Backward Incompatible Changes:
+  - new tightlim option for 2d plots enabled by default; this may change plot appearance unexpectedly
+
+Bugfixes:
   - python-only install always works, even on windows
   - only use equal axis by default if aspect ratio <= 4; this may change plot appearance unexpectedly
-  - new tightlim option for 2d plots enabled by default; this may change plot appearance unexpectedly
   - fix amr xl / xh
-  - merge new fluid tracer
 
 0.99.2
 ======
 
+Bugfixes:
   - Bugfixes and matplotlib workarounds
 
 0.99.1
