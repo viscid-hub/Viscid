@@ -1527,7 +1527,7 @@ class Field(tree.Leaf):
         return [a.reshape(-1) for a in arrs]
 
     ######################
-    def shell_copy(self, force=False, **kwargs):
+    def shell_copy(self, force=False, crds=None, **kwargs):
         """Get a field just like this one with a new cache
 
         So, fields that belong to files are kept around for the
@@ -1552,15 +1552,18 @@ class Field(tree.Leaf):
         Returns:
             a field as described above (could be self)
         """
-        if self._cache is not None and not force:
+        if crds is None and self._cache is not None and not force:
             return self
+
+        if crds is None:
+            crds = self._src_crds
 
         # Note: this is fragile if a subclass takes additional parameters
         # in an overridden __init__; in that case, the developer MUST
         # override shell_copy and pass the extra kwargs in to here.
         # note, zyx_native of the child should be the same as self since we're
         # passing src_data here
-        f = type(self)(self.name, self._src_crds, self._src_data, center=self.center,
+        f = type(self)(self.name, crds, self._src_data, center=self.center,
                        time=self.time, meta=self.meta, deep_meta=self.deep_meta,
                        forget_source=False,
                        pretty_name=self.pretty_name,
@@ -1733,6 +1736,56 @@ class Field(tree.Leaf):
             return self
         else:
             return self[','.join(slc)]
+
+    def adjust_crds(self, adjustments, name_map=None):
+        """Return shell copy with adjusted coordinates
+
+        Args:
+            adjustments (dict, number): Value to scale all coordinates
+                by, or dict of numbers or functions to adjust specific
+                axes separately. Functions should take a single argument,
+                the coordinates as a :py:class:`numpy.ndarray`.
+            name_map (dict, None): map to change crd names
+
+        Returns:
+            Field: Shell copy of self with adjusted coordinates
+
+        Example:
+            >>> fld = viscid.zeros([16, 24])
+            >>> fld.adjust_crds({'x': 2.0, 'y': lambda x: 0.5 * x})
+        """
+        if not isinstance(adjustments, dict):
+            adj = adjustments
+            adjustments = {}
+            for ax in self.crds.axes:
+                adjustments[ax] = adj
+
+        axes = self.crds.axes
+        crd_arrs_nc = self.get_crds_nc()
+        # crd_arrs_cc = self.get_crds_cc()
+
+        for i, ax, arr_nc in zip(count(), axes, crd_arrs_nc):
+            if ax in adjustments:
+                adj = adjustments[ax]
+                if hasattr(adj, '__call__'):
+                    crd_arrs_nc[i] = adj(arr_nc)
+                    # crd_arrs_cc[i] = adj(arr_cc)
+                else:
+                    crd_arrs_nc[i] = adj * arr_nc
+                    # crd_arrs_cc[i] = adj * arr_cc
+
+        if name_map:
+            for _a, _b in name_map.items():
+                if _a in axes:
+                    axes[axes.index(_a)] = _b
+
+        crd_type = self.crds._TYPE
+        crd_type = crd_type.replace('nonuniform', 'AUTO')
+        crd_type = crd_type.replace('uniform', 'AUTO')
+        new_crds = viscid.arrays2crds(crd_arrs_nc, crd_type=crd_type, crd_names=axes)
+        ret = self.shell_copy(crds=new_crds)
+
+        return ret
 
     #######################
     ## emulate a container

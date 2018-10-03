@@ -41,7 +41,7 @@ class NonuniformFullArrayError(ValueError):
     pass
 
 
-def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
+def arrays2crds(crd_arrs, crd_type='AUTO', crd_names="xyzuvw", **kwargs):
     """make either uniform or nonuniform coordnates given full arrays
 
     Args:
@@ -86,17 +86,15 @@ def arrays2crds(crd_arrs, crd_type=None, crd_names="xyzuvw", **kwargs):
     if any(viscid.is_time_like(arr, conservative=True) for arr in crd_arrs):
         is_uniform = False
 
-    if crd_type:
-        if 'uniform' in crd_type and 'nonuniform' not in crd_type:
-            assert is_uniform
-            crds = wrap_crds(crd_type, uniform_clist, **kwargs)
-        else:
-            # TODO: warn if is_uniform?
-            crds = wrap_crds(crd_type, clist, **kwargs)
-    elif is_uniform:
-        crds = wrap_crds("uniform", uniform_clist, **kwargs)
-    else:
-        crds = wrap_crds("nonuniform", clist, **kwargs)
+    if not crd_type:
+        crd_type = 'AUTO'
+
+    if crd_type.startswith('AUTO'):
+        prefix = 'uniform' if is_uniform else 'nonuniform'
+        crd_type = crd_type.replace('AUTO', prefix)
+    cl = uniform_clist if crd_type.startswith('uniform') else clist
+    crds = wrap_crds(crd_type, cl, **kwargs)
+
     return crds
 
 def lookup_crds_type(type_name):
