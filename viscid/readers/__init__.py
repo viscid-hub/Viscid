@@ -117,12 +117,12 @@ def get_file(handle):
 def save_grid(fname, grd, **kwargs):
     """ save a grid, filetype is inferred from fname
     """
-    ftype = VFile.detect_type(fname)
+    ftype = VFile.detect_type(fname, mode='w')
     ftype.save_grid(fname, grd, **kwargs)
 
 def save_field(fname, fld, **kwargs):
     """ save a field, filetype is inferred from fname"""
-    ftype = VFile.detect_type(fname)
+    ftype = VFile.detect_type(fname, mode='w')
     ftype.save_field(fname, fld, **kwargs)
 
 def save_fields(fname, flds, **kwargs):
