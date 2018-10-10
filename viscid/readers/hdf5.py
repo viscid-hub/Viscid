@@ -224,12 +224,18 @@ class FileHDF5(vfile.VFile):
         self.save_fields(fname, self.field_dict())
 
     @classmethod
-    def save_fields(cls, fname, flds, **kwargs):
+    def save_fields(cls, fname, flds, complevel=0, compression='gzip',
+                    compression_opts=None, **kwargs):
         """ save some fields using the format given by the class """
         # FIXME: this is only good for writing cartesian rectilnear flds
         # FIXME: axes are renamed if flds[0] is 1D or 2D
         assert len(flds) > 0
         fname = os.path.expanduser(os.path.expandvars(fname))
+
+        if complevel and compression == 'gzip' and compression_opts is None:
+            compression_opts = complevel
+        # TODO: what if compression != 'gzip'
+        do_compression = compression_opts is not None
 
         if isinstance(flds, list):
             if isinstance(flds[0], (list, tuple)):
@@ -253,12 +259,20 @@ class FileHDF5(vfile.VFile):
         with h5py.File(fname, 'w') as f:
             for axis_name, arr in zip(crd_names, crd_arrs):
                 loc = cls._CRDS_GROUP + '/' + axis_name
-                f[loc] = arr
+                if do_compression:
+                    f.create_dataset(loc, data=arr, compression=compression,
+                                     compression_opts=compression_opts)
+                else:
+                    f[loc] = arr
 
             for name, fld in flds.items():
                 loc = cls._FLD_GROUPS[fld.center.lower()] + '/' + name
                 # xdmf files use kji ordering
-                f[loc] = fld.data.T
+                if do_compression:
+                    f.create_dataset(loc, data=fld.data.T, compression=compression,
+                                     compression_opts=compression_opts)
+                else:
+                    f[loc] = fld.data.T
 
             # big bad openggcm time_str hack to put basetime into hdf5 file
             for fld in flds.values():

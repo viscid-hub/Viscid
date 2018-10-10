@@ -4,7 +4,7 @@ Saving Datasets
 HDF5 + XDMF
 -----------
 
-Grids (or lists of Fields) can be saved to an HDF5 + XDMF pair of files.
+Grids (or lists of Fields) can be saved to an HDF5 + XDMF pair of files. Setting complevel greater than 0 enables gzip compression.
 
 .. code-block:: python
 
@@ -15,7 +15,7 @@ Grids (or lists of Fields) can be saved to an HDF5 + XDMF pair of files.
    f = viscid.load_file(os.path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'))
 
    grid = f.get_grid(time=0)
-   viscid.save_grid('example.h5', grid)
+   viscid.save_grid('example.h5', grid, complevel=9)
 
    # or, use ``viscid.save_fields('example.h5', [f['bx'], f['by']])``
 
