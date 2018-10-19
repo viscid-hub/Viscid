@@ -282,7 +282,7 @@ class SeedGen(object):
 
 class Point(SeedGen):
     """Collection of points"""
-    def __init__(self, pts, cache=False, dtype=None, local_crds=None):
+    def __init__(self, pts, local_crds=None, cache=False, dtype=None, **kwargs):
         """Seed with an explicit set of points
 
         Args:
@@ -294,7 +294,7 @@ class Point(SeedGen):
                 of pts. For example, user can provide an array of type
                 datetime.datetime to represent the time of each point.
         """
-        super(Point, self).__init__(cache=cache, dtype=dtype)
+        super(Point, self).__init__(cache=cache, dtype=dtype, **kwargs)
         self.pts = pts
         self.local_crds = local_crds
 
@@ -346,14 +346,14 @@ class MeshPoints(SeedGen):
 
 
     """
-    def __init__(self, pts, cache=False, dtype=None):
+    def __init__(self, pts, cache=False, dtype=None, **kwargs):
         """Generic set of 2d points
 
         Args:
             pts (ndarray): must have shape 3xNUxNV for the uv mesh
                 directions
         """
-        super(MeshPoints, self).__init__(cache=cache, dtype=dtype)
+        super(MeshPoints, self).__init__(cache=cache, dtype=dtype, **kwargs)
         if pts.shape[0] != 3:
             raise ValueError("First index of pts must be xyz")
         self.pts = pts
@@ -404,7 +404,7 @@ class MeshPoints(SeedGen):
 
 class RectilinearMeshPoints(MeshPoints):
     """Generic seeds with 2d rect mesh topology"""
-    def __init__(self, pts, mesh_axes="xy", cache=False, dtype=None):
+    def __init__(self, pts, mesh_axes="xy", cache=False, dtype=None, **kwargs):
         """Generic seeds with 2d rect mesh topology
 
         Args:
@@ -415,7 +415,7 @@ class RectilinearMeshPoints(MeshPoints):
         _lookup = {0: 0, 1: 1, 'x': 0, 'y': 1}
         self.mesh_axes = [_lookup[ax] for ax in mesh_axes]
         super(RectilinearMeshPoints, self).__init__(pts, cache=cache,
-                                                    dtype=dtype)
+                                                    dtype=dtype, **kwargs)
 
     def _make_uv_axes(self):
         u = self.pts[self.mesh_axes[0], :, 0]
@@ -426,7 +426,7 @@ class RectilinearMeshPoints(MeshPoints):
 class Line(SeedGen):
     """A line of seed points"""
     def __init__(self, p0=(0, 0, 0), p1=(1, 0, 0), n=20,
-                 cache=False, dtype=None):
+                 cache=False, dtype=None, **kwargs):
         """p0 & p1 are `(x, y, z)` points as
 
         Args:
@@ -434,7 +434,7 @@ class Line(SeedGen):
             p1 (list, tuple, or ndarray): ending point `(x, y, z)`
             n (int): number of points on the line
         """
-        super(Line, self).__init__(cache=cache, dtype=dtype)
+        super(Line, self).__init__(cache=cache, dtype=dtype, **kwargs)
         self.p0 = np.asarray(p0, dtype=self.dtype)
         self.p1 = np.asarray(p1, dtype=self.dtype)
         self.n = n
@@ -485,7 +485,8 @@ class Line(SeedGen):
 
 class Spline(SeedGen):
     """A spline of seed points"""
-    def __init__(self, knots, n=-5, cache=False, dtype=None, **kwargs):
+    def __init__(self, knots, n=-5, splprep_kw=None, cache=False, dtype=None,
+                 **kwargs):
         """
         Args:
             knots (sequence, ndarray): `[x, y, z]`, 3xN for N knots
@@ -493,7 +494,7 @@ class Spline(SeedGen):
                 `n = abs(n) * n_knots`
             **kwargs: Arguments to be used by scipy.interpolate.splprep
         """
-        super(Spline, self).__init__(cache=cache, dtype=dtype)
+        super(Spline, self).__init__(cache=cache, dtype=dtype, **kwargs)
         self.knots = np.asarray(knots, dtype=self.dtype)
         if self.knots.shape[0] < 3:
             raise ValueError("Knots should have shape 3xN for N knots")
@@ -503,7 +504,7 @@ class Spline(SeedGen):
         if n < 0:
             n = -n * self.knots.shape[1]
         self.n = n
-        self.splprep_opts = kwargs
+        self.splprep_opts = splprep_kw if splprep_kw else {}
 
     def get_nr_points(self, **kwargs):
         return self.n
@@ -559,7 +560,7 @@ class Plane(SeedGen):
 
     def __init__(self, p0=(0, 0, 0), pN=(0, 0, 1), pL=(1, 0, 0),
                  len_l=2, len_m=2, nl=20, nm=20, NL_are_vectors=True,
-                 cache=False, dtype=None):
+                 cache=False, dtype=None, **kwargs):
         """Make a plane in L,M,N coordinates.
 
         Args:
@@ -587,7 +588,7 @@ class Plane(SeedGen):
             RuntimeError: if Ndir == Ldir, can't determine a plane
         """
 
-        super(Plane, self).__init__(cache=cache, dtype=dtype)
+        super(Plane, self).__init__(cache=cache, dtype=dtype, **kwargs)
 
         p0 = np.array(p0, dtype=self.dtype).reshape(-1)
         pN = np.array(pN, dtype=self.dtype).reshape(-1)
@@ -767,7 +768,7 @@ class Volume(SeedGen):
     Defined by two opposite corners of a box in 3D
     """
     def __init__(self, xl=(-1, -1, -1), xh=(1, 1, 1), n=(20, 20, 20),
-                 cache=False, dtype=None):
+                 cache=False, dtype=None, **kwargs):
         """Make a volume
 
         Args:
@@ -776,7 +777,7 @@ class Volume(SeedGen):
             n (list, tuple, or ndarray): number of points (nx, ny, nz)
                 defaults to (20, 20, 20)
         """
-        super(Volume, self).__init__(cache=cache, dtype=dtype)
+        super(Volume, self).__init__(cache=cache, dtype=dtype, **kwargs)
 
         self.xl = np.asarray(xl, dtype=self.dtype)
         self.xh = np.asarray(xh, dtype=self.dtype)
@@ -861,7 +862,7 @@ class Sphere(SeedGen):
     def __init__(self, p0=(0, 0, 0), r=0.0, pole=(0, 0, 1), ntheta=20, nphi=20,
                  thetalim=(0, 180.0), philim=(0, 360.0), roll=0.0, crd_system=None,
                  theta_endpoint='auto', phi_endpoint='auto', pole_is_vector=True,
-                 theta_phi=False, cache=False, dtype=None):
+                 theta_phi=False, cache=False, dtype=None, **kwargs):
         """Make seeds on the surface of a sphere
 
         Note:
@@ -901,7 +902,7 @@ class Sphere(SeedGen):
         Raises:
             ValueError: if thetalim or philim don't have 2 values each
         """
-        super(Sphere, self).__init__(cache=cache, dtype=dtype)
+        super(Sphere, self).__init__(cache=cache, dtype=dtype, **kwargs)
 
         self.p0 = np.asarray(p0, dtype=self.dtype)
 
@@ -1255,8 +1256,8 @@ class SphericalPatch(SeedGen):
     """Make a rectangular (in theta and phi) patch on a sphere"""
     def __init__(self, p0=(0, 0, 0), p1=(0, 0, 1), max_alpha=45, max_beta=45,
                  nalpha=20, nbeta=20, roll=0.0, r=0.0, p1_is_vector=True,
-                 cache=False, dtype=None):
-        super(SphericalPatch, self).__init__(cache=cache, dtype=dtype)
+                 cache=False, dtype=None, **kwargs):
+        super(SphericalPatch, self).__init__(cache=cache, dtype=dtype, **kwargs)
 
         max_alpha = (np.pi / 180.0) * max_alpha
         max_beta = (np.pi / 180.0) * max_beta
