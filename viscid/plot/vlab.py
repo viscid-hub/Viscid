@@ -16,6 +16,7 @@ from mayavi.sources.vtk_data_source import VTKDataSource
 from traits.trait_errors import TraitError
 from tvtk.api import tvtk
 import viscid
+from viscid import NOT_SPECIFIED
 from viscid import field
 
 
@@ -329,7 +330,7 @@ def vector_cut_plane(v_src, scalars=None, color_mode='vector', **kwargs):
 
     return vcp
 
-def mesh_from_seeds(seeds, scalars=None, **kwargs):
+def mesh_from_seeds(seeds, scalars=None, fill_holes=NOT_SPECIFIED, **kwargs):
     """Wraps `mayavi.mlab.mesh` for Viscid seed generators
 
     Note:
@@ -354,9 +355,9 @@ def mesh_from_seeds(seeds, scalars=None, **kwargs):
         `mayavi.modules.surface.Surface`
     """
     if scalars is not None:
-        vertices, scalars = seeds.wrap_mesh(scalars)
+        vertices, scalars = seeds.wrap_mesh(scalars, fill_holes=fill_holes)
     else:
-        vertices, = seeds.wrap_mesh()
+        vertices, = seeds.wrap_mesh(fill_holes=fill_holes)
 
     return mesh(vertices[0], vertices[1], vertices[2], scalars=scalars,
                 **kwargs)
@@ -667,7 +668,7 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
     sphere = viscid.Sphere([0, 0, 0], r=radius, ntheta=ntheta, nphi=nphi,
                            thetalim=(thetal, thetah), philim=(phil, phih),
                            theta_phi=False)
-    verts, arr = sphere.wrap_mesh(fld.data)
+    verts, arr = sphere.wrap_mesh(fld.data, fill_holes=True)
 
     kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     if 'name' not in kwargs:

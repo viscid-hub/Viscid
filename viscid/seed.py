@@ -7,12 +7,14 @@ import itertools
 import numpy as np
 
 import viscid
+from viscid import NOT_SPECIFIED
 from viscid.compat import izip
 
 __all__ = ['to_seeds', 'SeedGen', 'Point',
            'MeshPoints', 'RectilinearMeshPoints', 'Line', 'Spline',
            'Plane', 'Volume', 'Sphere', 'SphericalCap', 'Circle',
            'SphericalPatch', 'PolarIonosphere']
+
 
 def to_seeds(pts):
     """Try to turn anything into a set of seeds
@@ -113,10 +115,12 @@ class SeedGen(object):
     _cache = None
     _points = None
     dtype = None
+    fill_holes = None
 
-    def __init__(self, cache=False, dtype=None):
+    def __init__(self, cache=False, dtype=None, fill_holes=True):
         self._cache = cache
         self.dtype = dtype
+        self.fill_holes = fill_holes
 
     @property
     def nr_points(self):
@@ -264,19 +268,20 @@ class SeedGen(object):
         return viscid.wrap_field(data, crds, name=name, fldtype=fldtype,
                                  **kwargs)
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):  # pylint: disable=unused-argument
         """Make a 3xUxV array that describes a 3D mesh surface"""
         raise RuntimeError("{0} does not define as_mesh"
                            "".format(type(self).__name__))
 
-    def arr2mesh(self, arr):  # pylint: disable=unused-argument
+    def arr2mesh(self, arr, fill_holes=NOT_SPECIFIED):  # pylint: disable=unused-argument
         raise RuntimeError("{0} does not define arr2mesh"
                            "".format(type(self).__name__))
 
-    def wrap_mesh(self, *arrs):
+    def wrap_mesh(self, *arrs, fill_holes=NOT_SPECIFIED):
         arrs = [a.data if isinstance(a, viscid.field.Field) else a for a in arrs]
-        vertices = self.as_mesh()
-        arrs = [self.arr2mesh(arr).astype(arr.dtype) for arr in arrs]
+        vertices = self.as_mesh(fill_holes=fill_holes)
+        arrs = [self.arr2mesh(arr, fill_holes=fill_holes).astype(arr.dtype)
+                for arr in arrs]
         return [vertices] + arrs
 
 
@@ -395,10 +400,10 @@ class MeshPoints(SeedGen):
     def as_local_coordinates(self):
         return self.as_uv_coordinates()
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):
         return self.get_points().reshape([3] + list(self.uv_shape))
 
-    def arr2mesh(self, arr):
+    def arr2mesh(self, arr, fill_holes=NOT_SPECIFIED):
         return arr.reshape(self.uv_shape)
 
 
@@ -480,7 +485,7 @@ class Line(SeedGen):
         crd = viscid.wrap_crds("nonuniform_cartesian", (('x', x),))
         return crd
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):
         return self.get_points().reshape([3] + list(self.uv_shape))
 
 class Spline(SeedGen):
@@ -552,7 +557,7 @@ class Spline(SeedGen):
         crd = viscid.wrap_crds("nonuniform_cartesian", (('s', s),))
         return crd
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):
         return self.get_points().reshape([3] + list(self.uv_shape))
 
 class Plane(SeedGen):
@@ -755,10 +760,10 @@ class Plane(SeedGen):
                                                          ('z', n)))
         return crds
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):
         return self.get_points().reshape([3] + list(self.uv_shape))
 
-    def arr2mesh(self, arr):
+    def arr2mesh(self, arr, fill_holes=NOT_SPECIFIED):
         return arr.reshape(self.uv_shape)
 
 
@@ -849,10 +854,10 @@ class Volume(SeedGen):
                                (('x', x), ('y', y), ('z', z)))
         return crd
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):
         return self.get_points().reshape([3] + list(self.uv_shape))
 
-    def arr2mesh(self, arr):
+    def arr2mesh(self, arr, fill_holes=NOT_SPECIFIED):
         return arr.reshape(self.uv_shape)
 
 
@@ -1106,9 +1111,14 @@ class Sphere(SeedGen):
     def as_local_coordinates(self):
         return self.as_uv_coordinates()
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):
         new_shape = [3] + list(self.uv_shape)
         pts = self.get_points().reshape(new_shape)
+
+        if fill_holes is NOT_SPECIFIED:
+            fill_holes = self.fill_holes
+        if not fill_holes:
+            return pts
 
         # If the 'top' pole is in thetalim but not included in pts, then
         # extend the pts to include the pole so there aren't holes in the pole
@@ -1144,8 +1154,13 @@ class Sphere(SeedGen):
 
         return pts
 
-    def arr2mesh(self, arr):
+    def arr2mesh(self, arr, fill_holes=NOT_SPECIFIED):
         arr = arr.reshape(self.uv_shape)
+
+        if fill_holes is NOT_SPECIFIED:
+            fill_holes = self.fill_holes
+        if not fill_holes:
+            return arr
 
         # average values around a pole for the new mesh vertex @ the pole so
         # that there's no gap in the mesh
@@ -1339,10 +1354,10 @@ class SphericalPatch(SeedGen):
     def as_local_coordinates(self):
         return self.as_uv_coordinates()
 
-    def as_mesh(self):
+    def as_mesh(self, fill_holes=NOT_SPECIFIED):
         return self.get_points().reshape(3, self.nalpha, self.nbeta)
 
-    def arr2mesh(self, arr):
+    def arr2mesh(self, arr, fill_holes=NOT_SPECIFIED):
         return arr.reshape(self.uv_shape)
 
 
