@@ -65,6 +65,13 @@ extra_dll_dir = os.path.join(os.path.dirname(__file__), ".libs")
 if os.path.isdir(extra_dll_dir):
     os.environ["PATH"] += os.pathsep + extra_dll_dir
 
+# cute default value that's useful in some instances
+class NOT_SPECIFIED(object):
+    """default value; never instantiate and test with `is`"""
+    pass
+__all__.append('NOT_SPECIFIED')
+
+
 #########################################
 # setup logger for use throughout viscid
 logger = logging.getLogger("viscid")
