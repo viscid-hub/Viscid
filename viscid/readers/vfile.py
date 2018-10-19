@@ -231,6 +231,27 @@ class VFile(Dataset):
         return None
 
     @classmethod
+    def resolve_type(cls, ftype):
+        ftype = ftype.replace(' ', '').replace('_', '').replace('-', '').lower()
+        _idx = ftype.find('file')
+        if _idx >= 0:
+            ftype = ftype[:_idx] + ftype[_idx + len('file'):]
+
+        for filetype in reversed(cls.__subclasses__()):  # pylint: disable=E1101
+            td = filetype.resolve_type(ftype)
+            if td:
+                return td
+
+        cls_name = cls.__name__.lower()
+        _idx = cls_name.find('file')
+        if _idx >= 0:
+            cls_name = cls_name[:_idx] + cls_name[_idx + len('file'):]
+
+        if ftype in cls_name:
+            return cls
+        return None
+
+    @classmethod
     def group_fnames(cls, fnames):
         """Group File names
 

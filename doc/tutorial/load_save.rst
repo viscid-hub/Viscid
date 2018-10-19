@@ -1,10 +1,51 @@
+Loading Datasets
+================
+
+Automatic Type Discovery
+------------------------
+
+In most cases, Viscid can automatically detect the file type based on the filename. For these cases, loading a file is as easy as,
+
+.. code-block:: python
+
+   import os
+
+   import viscid
+
+   f = viscid.load_file(os.path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'))
+
+Specifying File Type
+--------------------
+
+You can manually specify the file type using the ``file_type`` keyword argument to ``viscid.load_file``
+
+.. code-block:: python
+
+   import os
+
+   import viscid
+
+   f = viscid.load_file(os.path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'),
+                        file_type=viscid.readers.ggcm_xdmf.GGCMFileXDMF)
+
+You can also specify the class name as a string,
+
+.. code-block:: python
+
+   import os
+
+   import viscid
+
+   f = viscid.load_file(os.path.join(viscid.sample_dir, 'sample_xdmf.py_0.xdmf'),
+                        file_type='ggcm-xdmf')
+
 Saving Datasets
 ===============
 
 HDF5 + XDMF
 -----------
 
-Grids (or lists of Fields) can be saved to an HDF5 + XDMF pair of files. Setting complevel greater than 0 enables gzip compression.
+Grids (or lists of Fields) can be saved to an HDF5 + XDMF pair of files. Setting ``complevel`` greater than 0 enables gzip compression.
 
 .. code-block:: python
 

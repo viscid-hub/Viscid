@@ -88,6 +88,8 @@ class VFileBucket(Bucket):
             _ftype = None
             if file_type is None:
                 _ftype = VFile.detect_type(fname)
+            elif isinstance(file_type, string_types):
+                _ftype = VFile.resolve_type(file_type)
             else:
                 _ftype = file_type
             if not _ftype:

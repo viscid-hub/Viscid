@@ -145,8 +145,8 @@ html_theme_options = {
     # 'navbar_links': [],
     'navbar_dropdown_links':
         [("Tutorial", [("Installation", "installation"),
+                       ("Loading & Saving", "tutorial/load_save"),
                        ("Creating Fields", "tutorial/creating_fields"),
-                       ("Saving Datasets", "tutorial/saving"),
                        ("Slicing Fields", "tutorial/slicing"),
                        ("Plotting Scalars", "tutorial/plotting_scalars"),
                        ("Plotting Vectors", "tutorial/plotting_vectors"),
