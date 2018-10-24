@@ -277,7 +277,9 @@ class SeedGen(object):
         raise RuntimeError("{0} does not define arr2mesh"
                            "".format(type(self).__name__))
 
-    def wrap_mesh(self, *arrs, fill_holes=NOT_SPECIFIED):
+    def wrap_mesh(self, *arrs, **kwargs):
+        fill_holes = kwargs.pop('fill_holes', NOT_SPECIFIED)
+        assert not kwargs
         arrs = [a.data if isinstance(a, viscid.field.Field) else a for a in arrs]
         vertices = self.as_mesh(fill_holes=fill_holes)
         arrs = [self.arr2mesh(arr, fill_holes=fill_holes).astype(arr.dtype)
