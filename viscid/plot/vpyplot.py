@@ -205,22 +205,27 @@ def _are_xy_shared(axis):
     return x_is_shared, y_is_shared
 
 def _ax_on_edge(axis):
-    try:
-        rc_spec = axis.get_axes_locator().get_subplotspec().get_rows_columns()
-        nrows, ncols, row_start, row_stop, col_start, col_stop = rc_spec
-    except AttributeError:
-        subplot_spec = axis.get_axes_locator().get_subplotspec()
-        gridspec = subplot_spec.get_gridspec()
-        nrows, ncols = gridspec.get_geometry()
-        row_start, col_start = divmod(subplot_spec.num1, ncols)
-        if subplot_spec.num2 is not None:
-            row_stop, col_stop = divmod(subplot_spec.num2, ncols)
-        else:
-            row_stop = row_start
-            col_stop = col_start
+    axes_locator = axis.get_axes_locator()
+    if axes_locator is None:
+        bottom_most = axis.is_last_row()
+        left_most = axis.is_first_col()
+    else:
+        try:
+            rc_spec = axes_locator.get_subplotspec().get_rows_columns()
+            nrows, ncols, row_start, row_stop, col_start, col_stop = rc_spec
+        except AttributeError:
+            subplot_spec = axes_locator.get_subplotspec()
+            gridspec = subplot_spec.get_gridspec()
+            nrows, ncols = gridspec.get_geometry()
+            row_start, col_start = divmod(subplot_spec.num1, ncols)
+            if subplot_spec.num2 is not None:
+                row_stop, col_stop = divmod(subplot_spec.num2, ncols)
+            else:
+                row_stop = row_start
+                col_stop = col_start
 
-    bottom_most = row_stop >= nrows - 1
-    left_most = col_start == 0
+        bottom_most = row_stop >= nrows - 1
+        left_most = col_start == 0
 
     return bottom_most, left_most
 
