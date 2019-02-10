@@ -1,12 +1,13 @@
 Changes
 -------
 
-1.0.0.dev9
-==========
+1.0.0.dev10
+===========
 
 Changes:
   - Binary wheels now uploaded to PyPI via CI services
   - add Field.trapz and Field.cumtrapz
+  - more expressive file type detection
 
 Bugfixes:
   - matplotlib 3.0 fixes
