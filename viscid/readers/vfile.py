@@ -6,6 +6,7 @@
 
 from __future__ import print_function
 # import sys
+from operator import attrgetter
 import os
 import re
 from time import time
@@ -15,6 +16,18 @@ from viscid.dataset import Dataset, DatasetTemporal
 from viscid import grid
 from viscid import field
 from viscid.compat import string_types
+
+
+def serialize_subclasses(root, _lst=None):
+    if _lst is None:
+        _lst = list()
+
+    for kls in reversed(root.__subclasses__()):
+        serialize_subclasses(kls, _lst=_lst)
+    _lst += [root]
+
+    return _lst
+
 
 class DataWrapper(object):
     _hypersliceable = False  # can read slices from disk
@@ -62,6 +75,7 @@ class VFile(Dataset):
     """
     # _detector is a regex string used for file type detection
     _detector = None
+    _priority = 0
     # _gc_warn = True  # i dont think this is used... it should go away?
     _grid_type = grid.Grid
     _dataset_type = Dataset
@@ -209,26 +223,52 @@ class VFile(Dataset):
         raise NotImplementedError("override _parse to read a file")
 
     @classmethod
-    def detect_type(cls, fname, mode='r'):
-        """ recursively detect a filetype using _detector regex string.
-        this is called recursively for all subclasses and results
+    def _detector_func(cls, fname):
+        return True
+
+    @classmethod
+    def detect_type(cls, fname, mode='r', prefer=None):
+        """recursively detect a filetype using _detector regex string.
+
+        This is called recursively for all subclasses and results
         further down the tree are given precedence.
-        NOTE: THIS WILL ONLY WORK FOR CLASSES THAT HAVE ALREADY BEEN IMPORTED.
-        THIS IS A FRAGILE MECHANISM IN THAT SENSE.
+
         TODO: move this functionality into a more robust/extendable factory
-        class... that can also take care of the bucket / circular reference
-        problem maybe
+            class... that can also take care of the bucket / circular
+            reference problem maybe
+
+        Args:
+            fname (str): Filename
+            mode (str): 'r' or 'w'
+            prefer (str): If multiple file types match, give some
+                part of the class name for the reader that you prefer
+
+        Note: THIS WILL ONLY WORK FOR CLASSES THAT HAVE ALREADY BEEN
+            IMPORTED. THIS IS A FRAGILE MECHANISM IN THAT SENSE.
+
+        Returns:
+            VFile subclass: Some reader that matches fname
         """
-        # reversed gives precedence to the more recently declared classes
-        for filetype in reversed(cls.__subclasses__()):  # pylint: disable=E1101
-            td = filetype.detect_type(fname, mode=mode)
-            if td:
-                return td
-        if cls._detector and re.match(cls._detector, fname):
-            if 'r' in mode and cls.SAVE_ONLY:
-                return None
-            return cls
-        return None
+        matched_classes = []
+        for kls in serialize_subclasses(cls):
+            if (kls._detector
+                and re.match(kls._detector, fname)
+                and kls._detector_func(fname)
+                ):
+                matched_classes.append(kls)
+
+        # sort by reader priority
+        matched_classes.sort(key=attrgetter('_priority'), reverse=True)
+
+        ret = None
+        if matched_classes:
+            ret = matched_classes[0]
+            if prefer:
+                for kls in reversed(matched_classes):
+                    if prefer.lower() in kls.__name__.lower():
+                        ret = kls
+
+        return ret
 
     @classmethod
     def resolve_type(cls, ftype):

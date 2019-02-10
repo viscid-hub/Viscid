@@ -36,7 +36,7 @@ class VFileBucket(Bucket):
                                "load_files()?", fname)
             return fls[0]
 
-    def load_files(self, fnames, index_handle=True, file_type=None,
+    def load_files(self, fnames, index_handle=True, file_type=None, prefer=None,
                    force_reload=False, _add_ref=False, **kwargs):
         """Load files, and add them to the bucket
 
@@ -87,7 +87,7 @@ class VFileBucket(Bucket):
         for i, fname in enumerate(fnames):
             _ftype = None
             if file_type is None:
-                _ftype = VFile.detect_type(fname)
+                _ftype = VFile.detect_type(fname, prefer=prefer)
             elif isinstance(file_type, string_types):
                 _ftype = VFile.resolve_type(file_type)
             else:
