@@ -30,6 +30,8 @@ LAYOUT_FLAT = "flat"
 LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
 
+_DEFAULT_COMPONENT_NAMES = "xyzuvw"
+
 
 __all__ = ['arrays2field', 'dat2field', 'full', 'empty', 'zeros', 'ones',
            'full_like', 'empty_like', 'zeros_like', 'ones_like',
@@ -469,7 +471,6 @@ class _FldSlcProxy(object):
 class Field(tree.Leaf):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
-    _COMPONENT_NAMES = ""
 
     # set on __init__
     # NOTE: _src_data is allowed by be a list to support creating vectors from
@@ -534,6 +535,8 @@ class Field(tree.Leaf):
         self.center = center
         self._src_crds = crds
         self.data = data
+
+        self.comp_names = ''
 
         if pretty_name is None:
             self.pretty_name = self.name
@@ -676,10 +679,6 @@ class Field(tree.Leaf):
                 raise RuntimeError("Could not detect data layout; "
                                    "can't give nr_comp")
         return self._nr_comp
-
-    @property
-    def comp_names(self):
-        return self._COMPONENT_NAMES
 
     @property
     def shape(self):
@@ -1265,7 +1264,7 @@ class Field(tree.Leaf):
             if self.nr_comps:
                 if single_comp_slc:
                     ############
-                    comp_name = self._COMPONENT_NAMES[comp_slc]
+                    comp_name = self.comp_names[comp_slc]
                     ctx['name'] = self.name + comp_name
                     ctx['pretty_name'] = (self.pretty_name +
                                           "$_{0}$".format(comp_name))
@@ -2300,7 +2299,23 @@ class ScalarField(Field):
 
 class VectorField(Field):
     _TYPE = "vector"
-    _COMPONENT_NAMES = "xyzuvw"
+
+    def __init__(self, *args, **kwargs):
+        """
+        Keyword Arguments:
+            comp_names (sequence): sequence of component names
+
+        See Also:
+            :py:class:`viscid.Field`
+        """
+        if 'comp_names' in kwargs:
+            comp_names = kwargs.pop('comp_names')
+        else:
+            comp_names = _DEFAULT_COMPONENT_NAMES
+
+        super(VectorField, self).__init__(*args, **kwargs)
+
+        self.comp_names = comp_names
 
     def component_views(self):
         """ return numpy views to components individually, memory layout
