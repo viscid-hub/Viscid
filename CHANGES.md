@@ -1,13 +1,15 @@
 Changes
 -------
 
-1.0.0.dev10
+1.0.0.dev11
 ===========
 
 Changes:
   - Binary wheels now uploaded to PyPI via CI services
   - add Field.trapz and Field.cumtrapz
   - more expressive file type detection
+  - customizable vector component names
+  - stop eagerly calling set_ylim in plot1d_field (fixes hidden lines on multiple calls on the same axis)
 
 Bugfixes:
   - matplotlib 3.0 fixes
