@@ -2158,6 +2158,10 @@ class Field(tree.Leaf):
     def imag(self):
         return self.wrap(self.data.imag)
 
+    def angle(self, deg=False):
+        # hack: np.angle casts to ndarray... that's annoying
+        return self.wrap(np.angle(self.data, deg=deg))
+
     def transpose(self, *axes):
         """ same behavior as numpy transpose, alse accessable
         using np.transpose(fld) """
