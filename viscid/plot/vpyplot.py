@@ -1343,10 +1343,11 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     if norm_dict['symmetric']:
         if norm_dict['vscale'] == 'log':
             raise ValueError("log scale can't be symmetric about 0")
-        maxval = max(abs(max(dat)), abs(min(dat)))
+        maxval = max(abs(max(dat)), abs(min(dat))) + 0.05 * (max(dat) - min(dat))
         vmin, vmax = -maxval, maxval
     if norm_dict['vscale'] is not None:
-        ax.set_ylim((vmin, vmax))
+        if vmin is not None or vmax is not None:
+            ax.set_ylim((vmin, vmax))
 
     ########################
     # apply labels and such
