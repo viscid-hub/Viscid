@@ -405,8 +405,13 @@ class StructuredCrds(Coordinates):
             if axis not in self._axes:
                 raise KeyError()
 
+            if ci[1] is not None and len(ci[1].shape) != 1:
+                raise ValueError("Coordinates created with mangled nc input")
             self._src_crds_nc[axis.lower()] = ci[1]
+
             if len(ci) > 2:
+                if ci[2] is not None and len(ci[2].shape) != 1:
+                    raise ValueError("Coordinates created with mangled cc input")
                 self._src_crds_cc[axis.lower()] = ci[2]
 
     def apply_reflections(self):
