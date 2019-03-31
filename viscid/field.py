@@ -1256,7 +1256,7 @@ class Field(tree.Leaf):
         if len(reduced) == len(slices) or getattr(slced_dat, 'size', 0) == 1:
             # if we sliced the hell out of the array, just
             # return the value that's left, ndarrays have the same behavior
-            ret = slced_dat
+            ret = slced_dat.item()
         else:
             ctx = dict(crds=crds, zyx_native=False)
             fldtype = None
