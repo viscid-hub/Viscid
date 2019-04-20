@@ -534,10 +534,8 @@ try:
         with open(RECORD_FNAME) as fin:
             file_list = [line.strip() for line in fin]
 
-        for fname in file_list:
-            if "__main__.py" in fname:
-                pkg_instdir = os.path.dirname(fname)
-                break
+        init_pys = [s for s in file_list if '__init__.py' in s or s.endswith('.egg')]
+        pkg_instdir = os.path.dirname(min(init_pys, key=len))
 
         inst_manifest[sys.executable] = dict(pkg_instdir=pkg_instdir,
                                              file_list=file_list)
