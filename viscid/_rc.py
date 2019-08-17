@@ -68,7 +68,7 @@ def load_rc_file(fname):
         with open(os.path.expanduser(os.path.expandvars(fname)), 'r') as f:
             try:
                 import yaml
-                rc_obj = yaml.load(f)
+                rc_obj = yaml.safe_load(f)
             except ImportError:
                 try:
                     rc_obj = vjson.load(f)

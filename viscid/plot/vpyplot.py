@@ -142,7 +142,7 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     if plot_opts[0] == '{' and plot_opts[-1] == '}':
         try:
             import yaml
-            d = yaml.load(plot_opts)
+            d = yaml.safe_load(plot_opts)
             # if an option is given without a value, Yaml defaults to
             # None, but it was probably a flag, so turn None -> True
             for k in list(d.keys()):
