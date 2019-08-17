@@ -6,7 +6,7 @@ dist: bionic
 env:
   global:
     - 'deployable="^(master|dev|travis)$"'
-    - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
+    # - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
     - QT_API=pyside
   matrix:
     - PYTHON=2.6 DEPS="minimal"
