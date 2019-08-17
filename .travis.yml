@@ -24,6 +24,9 @@ addons:
     packages:
     - gfortran
 
+services:
+  - xvfb
+
 # cache:
 #   directories:
 #     - $HOME/miniconda
@@ -153,8 +156,6 @@ before_install:
   - mkdir -p ~/.config/matplotlib
   - cp resources/matplotlibrc ~/.config/matplotlib/
   - cp resources/viscidrc ~/.viscidrc
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
 
 install:
   - mkdir -p ${HOME}/mycache
