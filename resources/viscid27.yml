@@ -5,6 +5,7 @@ name: viscid27
 channels:
 - menpo
 - defaults
+- anaconda
 dependencies:
 - python=2.7
 - numpy>=1.9
