@@ -1,6 +1,8 @@
 
 language: generic
 
+dist: bionic
+
 env:
   global:
     - 'deployable="^(master|dev|travis)$"'
@@ -19,13 +21,21 @@ git:
 
 sudo: false
 
+services:
+  - xvfb
+
 addons:
   apt:
     packages:
     - gfortran
-
-services:
-  - xvfb
+    - mesa-utils
+    - libgl1-mesa-dri
+    - libglapi-mesa
+    - libosmesa6
+    # - libegl1-mesa
+    # - libglu1-mesa-dev
+    # - libgl1-mesa-dev
+    # - libglu1-mesa-dev
 
 # cache:
 #   directories:
