@@ -83,8 +83,8 @@ try:
             self.max_sigfigs = max_sigfigs
             self.sigfigs = max_sigfigs
 
-        def _set_format(self, vmin, vmax):
-            super(SteveScalarFormatter, self)._set_format(vmin, vmax)
+        def _set_format(self, *args, **kwargs):
+            super(SteveScalarFormatter, self)._set_format(*args, **kwargs)
             dot_loc = self.format.rfind('.')
             f_loc = self.format.rfind('f', dot_loc)
             sigfigs = int(self.format[dot_loc + 1:f_loc])
