@@ -14,7 +14,7 @@ env:
     - PYTHON=3.3 DEPS=""
     # - PYTHON=3.4 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
     # - PYTHON=3.5 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
-    - PYTHON=3.6 DEPS="" FLAKE=1
+    - PYTHON=3.6 DEPS="mayavi" FLAKE=1
 
 git:
   submodules: false
