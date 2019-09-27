@@ -8,13 +8,15 @@ env:
     - 'deployable="^(master|dev|travis)$"'
     # - LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgfortran.so.3.0.0
     - QT_API=pyside
+    # - MESA_GL_VERSION_OVERRIDE=3.2
+    # - MESA_GLSL_VERSION_OVERRIDE=150
   matrix:
     - PYTHON=2.6 DEPS="minimal"
     - PYTHON=2.7 DEPS="" FLAKE=1 PREPARE_DOCS=1
     - PYTHON=3.3 DEPS=""
     # - PYTHON=3.4 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
     # - PYTHON=3.5 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
-    - PYTHON=3.6 DEPS="" FLAKE=1
+    - PYTHON=3.7 DEPS="mayavi" FLAKE=1 ETS_TOOLKIT='qt' QT_API='pyqt5'
 
 git:
   submodules: false
@@ -32,10 +34,11 @@ addons:
     - libgl1-mesa-dri
     - libglapi-mesa
     - libosmesa6
-    # - libegl1-mesa
-    # - libglu1-mesa-dev
-    # - libgl1-mesa-dev
-    # - libglu1-mesa-dev
+    ##
+    - libglu1-mesa
+    - libxi-dev
+    - libxmu-dev
+    - libglu1-mesa-dev
 
 # cache:
 #   directories:
@@ -183,6 +186,7 @@ install:
   # the cached conda environment
   - |
     if [ -f ${cached_env_spec} ]; then
+      echo "Cached env spec file exists: ${cached_env_spec}";
       if [ "$(diff -qw ${env_spec} ${cached_env_spec})" != "" ]; then
         echo "Package Lists Differed, killing current venv";
         echo "$(diff -w ${env_spec} ${cached_env_spec})";
@@ -195,13 +199,16 @@ install:
   # do an update
   - |
     if [ ! -d "${envpath}" ]; then
+      echo "Env path does not exist: ${envpath}"
       conda env create -qf ${env_spec};
       source activate ${env_name};
       cp ${env_spec} ${cached_env_spec};
     else
+      echo "Env path does exist: ${envpath}"
       source activate ${env_name};
       conda update --all --yes;
     fi
+    conda list
 
   # if deplying docs, run tests inplace, this makes preparing the docs
   # faster since cython's fused types makes 8 times too much code, ug!
