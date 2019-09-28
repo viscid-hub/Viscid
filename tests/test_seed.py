@@ -13,6 +13,7 @@ import viscid
 from viscid import sample_dir
 
 
+offscreen_vlab = None
 _global_ns = dict()
 
 
@@ -23,15 +24,19 @@ viscid.readers.openggcm.GGCMFile.read_log_file = True
 viscid.readers.openggcm.GGCMGrid.mhd_to_gse_on_read = "auto"
 
 
-def get_mvi_fig(offscreen=False):
+def get_mvi_fig():
     from viscid.plot import vlab
     try:
         fig = _global_ns['figure']
         vlab.clf()
     except KeyError:
-        fig = vlab.figure(size=[1200, 800], offscreen=offscreen)
+        if offscreen_vlab is None:
+            raise RuntimeError("offscreen_vlab must be set before calling "
+                               "get_mvi_fig(...)")
+        vlab.mlab.options.offscreen = offscreen_vlab
+        fig = vlab.figure(size=[1200, 800])
         _global_ns['figure'] = fig
-    return fig
+    return vlab, fig
 
 def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
              view_kwargs=None, show=False, scatter_mpl=False, mesh_mvi=True):
@@ -69,9 +74,8 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
     try:
         if not plot3d:
             raise ImportError
-        from viscid.plot import vlab
 
-        _ = get_mvi_fig(offscreen=not show)
+        vlab, _ = get_mvi_fig()
 
         try:
             if mesh_mvi:
@@ -96,6 +100,8 @@ def run_test(fld, seeds, plot2d=True, plot3d=True, add_title="",
 
 
 def _main():
+    global offscreen_vlab
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--notwo", dest='notwo', action="store_true")
     parser.add_argument("--nothree", dest='nothree', action="store_true")
@@ -108,6 +114,8 @@ def _main():
     # plot2d = True
     # plot3d = True
     # args.show = True
+
+    offscreen_vlab = not args.show
 
     img = np.load(os.path.join(sample_dir, "logo.npy"))
     x = np.linspace(-1, 1, img.shape[0])
@@ -244,8 +252,7 @@ def _main():
                     pass
             if plot3d:
                 try:
-                    from viscid.plot import vlab
-                    _ = get_mvi_fig(offscreen=not args.show)
+                    vlab, _ = get_mvi_fig()
                     vlab.points3d(knots[0], knots[1], knots[2],
                                   color=(1.0, 1.0, 0), scale_mode='none',
                                   scale_factor=0.04)
@@ -296,8 +303,7 @@ def _main():
         try:
             if not plot3d:
                 raise ImportError
-            from viscid.plot import vlab
-            _ = get_mvi_fig(offscreen=not args.show)
+            vlab, _ = get_mvi_fig()
             mesh = vlab.mesh_from_seeds(sheet_seed, scalars=vx_sheet,
                                         clim=(-400, 400))
             vlab.plot_earth_3d(crd_system=b)

@@ -1204,6 +1204,13 @@ def figure(*args, **kwargs):
     if size:
         kwargs['size'] = size
 
+    if offscreen:
+        viscid.logger.warning("Since some backends are more picky than others,\n"
+                              "it is recomended that you rather use\n"
+                              "    vlab.mlab.options.offscreen = True\n"
+                              "near the top of __main__ to create an offscreen "
+                              "figure.")
+
     fig = None
 
     if global_fig:
@@ -1336,10 +1343,11 @@ def resize(size, figure=None):
         if mlab.options.offscreen:
             figure.scene.set_size(size)
         elif figure.scene.off_screen_rendering:
-            viscid.logger.warning("viscid.plot.vlab.resize doesn't work for "
-                                  "figures that are off-screened this way. Try "
-                                  "creating the figure with viscid.plot.vlab."
-                                  "figure(size=(w, h), offscreen=True)")
+            viscid.logger.warning("viscid.plot.vlab.resize doesn't work for\n"
+                                  "figures that are off-screened this way. I\n"
+                                  "suggest you use\n"
+                                  "    mayavi.mlab.options.offscreen = True\n"
+                                  "near the beginning of __main__")
         else:
             try:
                 _ets_config = mayavi.ETSConfig

@@ -16,8 +16,23 @@ from viscid_test_common import next_plot_fname
 import viscid
 
 
+offscreen_vlab = None
 _global_ns = dict()
 
+
+def get_mvi_fig():
+    from viscid.plot import vlab
+    try:
+        fig = _global_ns['figure']
+        vlab.clf()
+    except KeyError:
+        if offscreen_vlab is None:
+            raise RuntimeError("offscreen_vlab must be set before calling "
+                               "get_mvi_fig(...)")
+        vlab.mlab.options.offscreen = offscreen_vlab
+        fig = vlab.figure(size=[1200, 800])
+        _global_ns['figure'] = fig
+    return vlab, fig
 
 def do_test(lines, scalars, show=False, txt=""):
     viscid.logger.info('--> ' + txt)
@@ -39,15 +54,7 @@ def do_test(lines, scalars, show=False, txt=""):
 
     try:
         from mayavi import mlab
-        from viscid.plot import vlab
-
-        try:
-            fig = _global_ns['figure']
-            vlab.clf()
-        except KeyError:
-            fig = vlab.figure(size=[1200, 800], offscreen=not show,
-                              bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
-            _global_ns['figure'] = fig
+        vlab, _ = get_mvi_fig()
 
         vlab.clf()
         vlab.plot_lines3d(lines, scalars=scalars)
@@ -60,12 +67,16 @@ def do_test(lines, scalars, show=False, txt=""):
         pass
 
 def _main():
+    global offscreen_vlab
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--show", "--plot", action="store_true")
     args = viscid.vutil.common_argparse(parser, default_verb=0)
 
     viscid.logger.setLevel(viscid.logging.DEBUG)
     args.show = False
+
+    offscreen_vlab = not args.show
 
     cotr = viscid.Cotr(dip_tilt=20.0, dip_gsm=15.0)  # pylint: disable=not-callable
     b = viscid.make_dipole(m=cotr.get_dipole_moment(), n=(32, 32, 32))

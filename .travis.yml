@@ -14,8 +14,9 @@ env:
     - PYTHON=2.6 DEPS="minimal"
     - PYTHON=2.7 DEPS="" FLAKE=1 PREPARE_DOCS=1
     - PYTHON=3.3 DEPS=""
-    # - PYTHON=3.4 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
-    # - PYTHON=3.5 DEPS=""  # is this necessary if 3.3 and 3.6 are tested?
+    # - PYTHON=3.4 DEPS=""  # is this necessary if 3.3 and 3.7 are tested?
+    # - PYTHON=3.5 DEPS=""  # is this necessary if 3.3 and 3.7 are tested?
+    # - PYTHON=3.6 DEPS=""  # is this necessary if 3.3 and 3.7 are tested?
     - PYTHON=3.7 DEPS="mayavi" FLAKE=1 ETS_TOOLKIT='qt' QT_API='pyqt5'
 
 git:
@@ -230,11 +231,19 @@ before_script:
 
 script:
   - |
+    echo "ETS_TOOLKIT> ${ETS_TOOLKIT}"
+    echo "QT_API> ${QT_API}"
     if [ "${PREPARE_DOCS}" == "1" ]; then
       make check;
     else
       make instcheck;
     fi
+
+  - |
+    du -hs tests/plots/mvi-*.png
+    # if [ -f tests/plots/mvi-000.png ]; then
+    #   curl --upload-file tests/plots/mvi-000.png https://transfer.sh/mvi-000.png
+    # fi
 
   - |
     if [[ $TRAVIS_BRANCH =~ ${deployable}$ && "${DEPLOY_TESTS}" == "true" ]]; then

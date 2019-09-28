@@ -996,8 +996,8 @@ def _main():
         import viscid
         from viscid.plot import vlab
 
-        vlab.figure(size=(768, 768), fgcolor=(0, 0, 0), bgcolor=(1, 1, 1),
-                    offscreen=True)
+        vlab.mlab.options.offscreen = True
+        vlab.figure(size=(768, 768), fgcolor=(0, 0, 0), bgcolor=(1, 1, 1))
 
         def _plot_time_range(times, figname):
             for i, t in enumerate(times):

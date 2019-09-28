@@ -74,7 +74,8 @@ def _main():
     except ImportError:
         xfail("Mayavi not installed")
 
-    vlab.figure(size=[1200, 800], offscreen=not args.show)
+    vlab.mlab.options.offscreen = not args.show
+    vlab.figure(size=[1200, 800])
 
     inds = np.argsort(xi_dat)[-64:]
     inds = np.concatenate([inds, np.arange(len(xi_dat))[::71]])

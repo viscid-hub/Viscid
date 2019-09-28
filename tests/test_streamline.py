@@ -13,8 +13,23 @@ from viscid_test_common import next_plot_fname
 import viscid
 
 
+offscreen_vlab = None
 _global_ns = dict()
 
+
+def get_mvi_fig():
+    from viscid.plot import vlab
+    try:
+        fig = _global_ns['figure']
+        vlab.clf()
+    except KeyError:
+        if offscreen_vlab is None:
+            raise RuntimeError("offscreen_vlab must be set before calling "
+                               "get_mvi_fig(...)")
+        vlab.mlab.options.offscreen = offscreen_vlab
+        fig = vlab.figure(size=[1200, 800])
+        _global_ns['figure'] = fig
+    return vlab, fig
 
 def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
              **kwargs):
@@ -44,15 +59,7 @@ def run_test(_fld, _seeds, plot2d=True, plot3d=True, title='', show=False,
     try:
         if not plot3d:
             raise ImportError
-        from viscid.plot import vlab
-
-        try:
-            fig = _global_ns['figure']
-            vlab.clf()
-        except KeyError:
-            fig = vlab.figure(size=[1200, 800], offscreen=not show,
-                             bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
-            _global_ns['figure'] = fig
+        vlab, _ = get_mvi_fig()
 
         fld_mag = np.log(viscid.magnitude(_fld))
         try:
@@ -113,6 +120,8 @@ def set_violin_colors(v):
 
 
 def _main():
+    global offscreen_vlab
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--notwo", dest='notwo', action="store_true")
     parser.add_argument("--nothree", dest='nothree', action="store_true")
@@ -121,6 +130,8 @@ def _main():
 
     plot2d = not args.notwo
     plot3d = not args.nothree
+
+    offscreen_vlab = not args.show
 
     # #################################################
     # viscid.logger.info("Testing field lines on 2d field...")
@@ -410,15 +421,7 @@ def _main():
     try:
         if not plot3d:
             raise ImportError
-        from viscid.plot import vlab
-
-        try:
-            fig = _global_ns['figure']
-            vlab.clf()
-        except KeyError:
-            fig = vlab.figure(size=[1200, 800], offscreen=not args.show,
-                              bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
-            _global_ns['figure'] = fig
+        vlab, _ = get_mvi_fig()
 
         for i, method in zip(count(), methods):
             # if i in (3, 4):
