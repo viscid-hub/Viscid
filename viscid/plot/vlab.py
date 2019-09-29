@@ -113,14 +113,28 @@ def lines2source(lines, scalars=None, name="NoName"):
     r = viscid.vutil.prepare_lines(lines, scalars, do_connections=True)
     lines, scalars, connections, other = r
 
-    src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
-    if scalars is not None:
-        if scalars.dtype == np.dtype('u1'):
-            sc = tvtk.UnsignedCharArray()
-            sc.from_array(scalars.T)
-            scalars = sc
+    # FIXME: the following branch is a workaround for Mayavi >= 4.7.0
+    # For some reason, setting scalar point data after source creation
+    # now has an issue where mayavi doesn't autoscale the lut correctly.
+    # This has something to do with changes in supporting composite data in
+    # Mayavi commit:
+    # https://github.com/enthought/mayavi/commit/fd9a515a9563d81a42b84514c1fb4ce5f81ac9a0
+    #
+    # So... if scalars are color values (set by hex or rgb), then we have to
+    # set the point data by hand. This is ok since the lut range won't be
+    # needed. Otherwise, just pass the scalars on source creation.
+    if scalars is not None and scalars.dtype == np.dtype('u1'):
+        src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
+        sc = tvtk.UnsignedCharArray()
+        sc.from_array(scalars.T)
+        scalars = sc
         src.mlab_source.dataset.point_data.scalars = scalars
         src.mlab_source.dataset.modified()
+    elif scalars is not None:
+        src = mlab.pipeline.line_source(lines[0], lines[1], lines[2], scalars)
+    else:
+        src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
+
     src.mlab_source.dataset.lines = connections
     src.name = name
     return src
