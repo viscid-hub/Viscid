@@ -240,7 +240,7 @@ script:
     fi
 
   - |
-    du -hs tests/plots/mvi-*.png
+    du -hs tests/plots/mvi-*.png || true
     # if [ -f tests/plots/mvi-000.png ]; then
     #   curl --upload-file tests/plots/mvi-000.png https://transfer.sh/mvi-000.png
     # fi
