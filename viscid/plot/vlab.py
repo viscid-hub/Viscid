@@ -137,6 +137,7 @@ def lines2source(lines, scalars=None, name="NoName"):
 
     src.mlab_source.dataset.lines = connections
     src.name = name
+    src.update()
     return src
 
 def field2source(fld, center=None, name=None):

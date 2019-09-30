@@ -27,7 +27,7 @@ def get_mvi_fig():
             raise RuntimeError("offscreen_vlab must be set before calling "
                                "get_mvi_fig(...)")
         vlab.mlab.options.offscreen = offscreen_vlab
-        fig = vlab.figure(size=[1200, 800])
+        fig = vlab.figure(size=[1200, 800], bgcolor=(1, 1, 1), fgcolor=(0, 0, 0))
         _global_ns['figure'] = fig
     return vlab, fig
 
