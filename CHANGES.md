@@ -1,7 +1,7 @@
 Changes
 -------
 
-1.0.0.dev11
+1.0.0.dev14
 ===========
 
 Changes:
@@ -10,9 +10,11 @@ Changes:
   - more expressive file type detection
   - customizable vector component names
   - stop eagerly calling set_ylim in plot1d_field (fixes hidden lines on multiple calls on the same axis)
+  - mayavi tests now work on travis-ci with py3k
 
 Bugfixes:
   - matplotlib 3.0 fixes
+  - mayavi 4.7.0 / 4.7.1 fixes
 
 0.99.9
 ======
