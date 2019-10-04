@@ -1,8 +1,8 @@
 Changes
 -------
 
-1.0.0.dev14
-===========
+1.0.0
+=====
 
 Changes:
   - Binary wheels now uploaded to PyPI via CI services
