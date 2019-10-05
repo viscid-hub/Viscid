@@ -22,7 +22,7 @@ build:
 	python ./setup.py build_ext ${BUILD_ARGS}
 
 install: uninstall build
-	python ./setup.py install ${INSTALL_ARGS}
+	python ./setup.py install --user ${INSTALL_ARGS}
 
 clean:
 	python ./setup.py clean -a ${BUILD_ARGS}
