@@ -39,8 +39,8 @@ it makes slice-by-location feel more natural.
 
     - ``fld[1.0j]`` access element closest to x = 1.0
     - ``fld[:0.0j]`` all elements where x <= 0.0
-    - ``fld[0.0j::2]`` every other element where x > 0.0
-    - ``fld[0.0j:, 0.0j:]`` region x > 0 and y > 0
+    - ``fld[0.0j::2]`` every other element where x >= 0.0
+    - ``fld[0.0j:, 0.0j:]`` region x >= 0 and y >= 0
     - ``fld[[-1j, 0j, 1j]]`` elements closest to x = [-1, 0, 1]
 
 Note that these slices don't necessarily take the closest grid points.
@@ -79,8 +79,8 @@ data layout (array-of-struct, struct-of-array).
     - ``fld['x']`` extracts the x-component from a vector field
     - ``fld['x, y = 0j']`` x-component, y = 0.0 plane
     - ``fld['y = 0j', 'x']`` x-component, y = 0.0 plane
-    - ``fld['x', 0j:, 0j]`` x-component, y = 0.0 plane, x > 0.0
-    - ``fld[0j:, 0j, 'x']`` x-component, y = 0.0 plane, x > 0.0
+    - ``fld['x', 0j:, 0j]`` x-component, y = 0.0 plane, x >= 0.0
+    - ``fld[0j:, 0j, 'x']`` x-component, y = 0.0 plane, x >= 0.0
 
 Datetime64 / timedelta64 slices
 -------------------------------
@@ -110,16 +110,6 @@ be ambiguous.
     >>> fld[':T01:30:00'].shape
     (4, 12)
 
-Ellipsis
---------
-
-The ellipsis can be used in the standard way, but it can not be used
-with named axes. The exception to this is that the ellipsis can be used
-with named newaxes.
-
-    - ``fld[0j:, ..., 0j:]`` select x > 0.0 and z > 0.0
-    - ``fld[..., 'u = newaxis']`` new axis in the last dimension named u
-
 Newaxis
 -------
 
@@ -128,3 +118,13 @@ Newaxis
     - ``fld[:, numpy.newaxis]`` new axis in dimension 1
     - ``fld['y=:', numpy.newaxis]`` new axis after the y-axis
     - ``fld[..., numpy.newaxis]`` new axis in the last dimension
+
+Ellipsis
+--------
+
+The ellipsis can be used in the standard way, but it can not be used
+with named axes. The exception to this is that the ellipsis can be used
+with named newaxes.
+
+    - ``fld[0j:, ..., 0j:]`` select x >= 0.0 and z >= 0.0
+    - ``fld[..., 'u = newaxis']`` new axis in the last dimension named u

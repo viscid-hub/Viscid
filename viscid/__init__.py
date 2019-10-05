@@ -28,7 +28,7 @@ from viscid import _rc
 from viscid.compat.vimportlib import import_module
 
 
-__version__ = """0.99.9"""
+__version__ = """1.0.0"""
 
 __all__ = ['amr_field',
            'amr_grid',
@@ -64,6 +64,13 @@ __all__ = ['amr_field',
 extra_dll_dir = os.path.join(os.path.dirname(__file__), ".libs")
 if os.path.isdir(extra_dll_dir):
     os.environ["PATH"] += os.pathsep + extra_dll_dir
+
+# cute default value that's useful in some instances
+class NOT_SPECIFIED(object):
+    """default value; never instantiate and test with `is`"""
+    pass
+__all__.append('NOT_SPECIFIED')
+
 
 #########################################
 # setup logger for use throughout viscid

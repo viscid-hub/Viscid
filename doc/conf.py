@@ -19,8 +19,10 @@ import sys, os
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-sys.path.insert(0, os.path.abspath('sphinxext'))
 sys.path.insert(0, os.path.abspath('..'))
+
+import style_gallery_generator
+style_gallery_generator.main()
 
 # -- General configuration -----------------------------------------------------
 
@@ -31,7 +33,6 @@ sys.path.insert(0, os.path.abspath('..'))
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['matplotlib.sphinxext.plot_directive',
               'sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.viewcode',
-              'style_gallery_generator',
               # 'matplotlib.sphinxext.mathmpl',
               ]
 
@@ -145,6 +146,7 @@ html_theme_options = {
     # 'navbar_links': [],
     'navbar_dropdown_links':
         [("Tutorial", [("Installation", "installation"),
+                       ("Loading & Saving", "tutorial/load_save"),
                        ("Creating Fields", "tutorial/creating_fields"),
                        ("Slicing Fields", "tutorial/slicing"),
                        ("Plotting Scalars", "tutorial/plotting_scalars"),

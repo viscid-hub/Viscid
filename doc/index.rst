@@ -55,6 +55,8 @@ Source Code
 
 Both the master and dev branches make every attempt to be usable (thanks to continuous integration), but the obvious caveats exist, i.e. the dev branch has more cool new features but it isn't *as* tested.
 
+.. cssclass:: align-left
+
 ===================  ================  ========================================================
 Branch               Test Status       Docs
 ===================  ================  ========================================================
@@ -101,29 +103,28 @@ Contents
 --------
 
 .. toctree::
-  :maxdepth: 1
-
-  ChangeLog<changes>
-
-.. toctree::
   :maxdepth: 2
 
   installation
   philosophy
   indexing
   tutorial/index
-  tips_and_tricks
   functions
   plot_options
-  mpl_style_gallery
+  tips_and_tricks
   custom_behavior
+  mpl_style_gallery
   dev_guide
-  extending_readers
 
 .. toctree::
   :maxdepth: 1
 
   API<api/viscid>
+
+.. toctree::
+  :maxdepth: 1
+
+  ChangeLog<changes>
 
 Indices and tables
 ==================

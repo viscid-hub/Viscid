@@ -40,7 +40,8 @@ def _main():
     pp = f3d["pp"]
     e = f3d["e_cc"]
 
-    vlab.figure(size=(1280, 800), offscreen=not args.show)
+    vlab.mlab.options.offscreen = not args.show
+    vlab.figure(size=(1280, 800))
 
     ##########################################################
     # make b a dipole inside 3.1Re and set e = 0 inside 4.0Re

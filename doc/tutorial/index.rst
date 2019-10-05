@@ -4,6 +4,7 @@ Tutorial
 .. toctree::
   :maxdepth: 2
 
+  load_save
   creating_fields
   slicing
   plotting_scalars

@@ -10,6 +10,7 @@ convenience functions for creating fields similar to `Numpy`.
 from __future__ import print_function
 from itertools import count, islice
 from inspect import isclass
+import re
 
 import numpy as np
 
@@ -28,6 +29,8 @@ LAYOUT_INTERLACED = "interlaced"
 LAYOUT_FLAT = "flat"
 LAYOUT_SCALAR = "scalar"
 LAYOUT_OTHER = "other"
+
+_DEFAULT_COMPONENT_NAMES = "xyzuvw"
 
 
 __all__ = ['arrays2field', 'dat2field', 'full', 'empty', 'zeros', 'ones',
@@ -407,17 +410,37 @@ class _FldSlcProxy(object):
     def _floatify(self, item):
         if isinstance(item, string_types):
             item = item.strip().lower()
+            dt_re = r"(\s*{0}\s*)".format(viscid.sliceutil.RE_DTIME_SLC_GROUP)
+            datetimes = re.findall(dt_re, item)
+            item = re.sub(dt_re, '__DATETIME__', item)
+            item = re.sub(r'([\d\.e]+(?![\d\.FfJj]))', r'\1j', item)
+            item_split = item.split('__DATETIME__')
+            item = [None] * (len(item_split) + len(datetimes))
+            item[0::2] = item_split
+            item[1::2] = datetimes
+            item = ''.join(item)
+
         if item in (Ellipsis, '...'):
             item = Ellipsis
         elif item in (np.newaxis, ):
             item = np.newaxis
         elif item in (None, 'none'):
             item = None
+        elif isinstance(item, (np.ndarray,)):
+            if self.do_floatify:
+                item = 1j * item
+        elif isinstance(item, string_types):
+            pass
+        elif isinstance(item, (list,)):
+            for i, _ in enumerate(item):
+                # try:
+                if self.do_floatify:
+                    item[i] = 1j * float(item[i])
+                # except (ValueError, TypeError):
+                #     pass
         else:
             if self.do_floatify:
                 item = 1j * float(item)
-            else:
-                item = int(item)
         return item
 
     def _xform(self, item):
@@ -448,7 +471,6 @@ class _FldSlcProxy(object):
 class Field(tree.Leaf):
     _TYPE = "none"
     _CENTERING = ['node', 'cell', 'grid', 'face', 'edge']
-    _COMPONENT_NAMES = ""
 
     # set on __init__
     # NOTE: _src_data is allowed by be a list to support creating vectors from
@@ -513,6 +535,8 @@ class Field(tree.Leaf):
         self.center = center
         self._src_crds = crds
         self.data = data
+
+        self.comp_names = ''
 
         if pretty_name is None:
             self.pretty_name = self.name
@@ -655,10 +679,6 @@ class Field(tree.Leaf):
                 raise RuntimeError("Could not detect data layout; "
                                    "can't give nr_comp")
         return self._nr_comp
-
-    @property
-    def comp_names(self):
-        return self._COMPONENT_NAMES
 
     @property
     def shape(self):
@@ -1236,7 +1256,7 @@ class Field(tree.Leaf):
         if len(reduced) == len(slices) or getattr(slced_dat, 'size', 0) == 1:
             # if we sliced the hell out of the array, just
             # return the value that's left, ndarrays have the same behavior
-            ret = slced_dat
+            ret = slced_dat.item()
         else:
             ctx = dict(crds=crds, zyx_native=False)
             fldtype = None
@@ -1244,7 +1264,7 @@ class Field(tree.Leaf):
             if self.nr_comps:
                 if single_comp_slc:
                     ############
-                    comp_name = self._COMPONENT_NAMES[comp_slc]
+                    comp_name = self.comp_names[comp_slc]
                     ctx['name'] = self.name + comp_name
                     ctx['pretty_name'] = (self.pretty_name +
                                           "$_{0}$".format(comp_name))
@@ -1506,7 +1526,7 @@ class Field(tree.Leaf):
         return [a.reshape(-1) for a in arrs]
 
     ######################
-    def shell_copy(self, force=False, **kwargs):
+    def shell_copy(self, force=False, crds=None, **kwargs):
         """Get a field just like this one with a new cache
 
         So, fields that belong to files are kept around for the
@@ -1531,15 +1551,18 @@ class Field(tree.Leaf):
         Returns:
             a field as described above (could be self)
         """
-        if self._cache is not None and not force:
+        if crds is None and self._cache is not None and not force:
             return self
+
+        if crds is None:
+            crds = self._src_crds
 
         # Note: this is fragile if a subclass takes additional parameters
         # in an overridden __init__; in that case, the developer MUST
         # override shell_copy and pass the extra kwargs in to here.
         # note, zyx_native of the child should be the same as self since we're
         # passing src_data here
-        f = type(self)(self.name, self._src_crds, self._src_data, center=self.center,
+        f = type(self)(self.name, crds, self._src_data, center=self.center,
                        time=self.time, meta=self.meta, deep_meta=self.deep_meta,
                        forget_source=False,
                        pretty_name=self.pretty_name,
@@ -1712,6 +1735,56 @@ class Field(tree.Leaf):
             return self
         else:
             return self[','.join(slc)]
+
+    def adjust_crds(self, adjustments, name_map=None):
+        """Return shell copy with adjusted coordinates
+
+        Args:
+            adjustments (dict, number): Value to scale all coordinates
+                by, or dict of numbers or functions to adjust specific
+                axes separately. Functions should take a single argument,
+                the coordinates as a :py:class:`numpy.ndarray`.
+            name_map (dict, None): map to change crd names
+
+        Returns:
+            Field: Shell copy of self with adjusted coordinates
+
+        Example:
+            >>> fld = viscid.zeros([16, 24])
+            >>> fld.adjust_crds({'x': 2.0, 'y': lambda x: 0.5 * x})
+        """
+        if not isinstance(adjustments, dict):
+            adj = adjustments
+            adjustments = {}
+            for ax in self.crds.axes:
+                adjustments[ax] = adj
+
+        axes = self.crds.axes
+        crd_arrs_nc = self.get_crds_nc()
+        # crd_arrs_cc = self.get_crds_cc()
+
+        for i, ax, arr_nc in zip(count(), axes, crd_arrs_nc):
+            if ax in adjustments:
+                adj = adjustments[ax]
+                if hasattr(adj, '__call__'):
+                    crd_arrs_nc[i] = adj(arr_nc)
+                    # crd_arrs_cc[i] = adj(arr_cc)
+                else:
+                    crd_arrs_nc[i] = adj * arr_nc
+                    # crd_arrs_cc[i] = adj * arr_cc
+
+        if name_map:
+            for _a, _b in name_map.items():
+                if _a in axes:
+                    axes[axes.index(_a)] = _b
+
+        crd_type = self.crds._TYPE
+        crd_type = crd_type.replace('nonuniform', 'AUTO')
+        crd_type = crd_type.replace('uniform', 'AUTO')
+        new_crds = viscid.arrays2crds(crd_arrs_nc, crd_type=crd_type, crd_names=axes)
+        ret = self.shell_copy(crds=new_crds)
+
+        return ret
 
     #######################
     ## emulate a container
@@ -1985,6 +2058,94 @@ class Field(tree.Leaf):
     def sum(self, **kwargs):
         return self.wrap(self.data.sum(**kwargs), npkwargs=kwargs)
 
+    def trapz(self, axis=-1, fudge_factor=None):
+        """Integrate field over a single axis
+
+        Args:
+            axis (str, int): axis name or index
+            fudge_factor (callable): function that is called with
+                func(data, crd_arr), where crd_arr is shaped. This is
+                useful for including parts of the jacobian, like
+                sin(theta) dtheta.
+
+        Returns:
+            Field or float
+        """
+        if axis in self.crds.axes:
+            axis = self.crds.axes.index(axis)
+        assert isinstance(axis, (int, np.integer))
+        crd_arr = self.get_crd(axis, shaped=True)
+
+        try:
+            crd_arr = np.expand_dims(crd_arr, axis=self.nr_comp)
+            if self.nr_comp > axis:
+                fld_axis = axis
+            else:
+                fld_axis = axis + 1
+        except TypeError:
+            fld_axis = axis
+
+        if fudge_factor is None:
+            arr = self.data
+        else:
+            arr = self.data * fudge_factor(self.data, crd_arr)
+
+        if self.nr_sdims > 1:
+            slc = [slice(None) for _ in self.sshape]
+            slc[axis] = 0
+            ret = viscid.empty_like(self[tuple(slc)])
+            ret.data = np.trapz(arr, crd_arr.reshape(-1), axis=fld_axis)
+        else:
+            ret = np.trapz(arr, crd_arr.reshape(-1), axis=fld_axis)
+        return ret
+
+    def cumtrapz(self, axis=-1, fudge_factor=None, initial=0):
+        """Cumulatively integrate field over a single axis
+
+        Args:
+            axis (str, int): axis name or index
+            fudge_factor (callable): function that is called with
+                func(data, crd_arr), where crd_arr is shaped. This is
+                useful for including parts of the jacobian, like
+                sin(theta) dtheta.
+            initial (float): Initial value
+
+        Returns:
+            Field
+        """
+        ret = None
+
+        try:
+            from scipy.integrate import cumtrapz as _sp_cumtrapz
+
+            if axis in self.crds.axes:
+                axis = self.crds.axes.index(axis)
+            assert isinstance(axis, (int, np.integer))
+            crd_arr = self.get_crd(axis, shaped=True)
+
+            try:
+                crd_arr = np.expand_dims(crd_arr, axis=self.nr_comp)
+                if self.nr_comp > axis:
+                    fld_axis = axis
+                else:
+                    fld_axis = axis + 1
+            except TypeError:
+                fld_axis = axis
+
+            if fudge_factor is None:
+                arr = self.data
+            else:
+                arr = self.data * fudge_factor(self.data, crd_arr)
+
+            ret = viscid.empty_like(self)
+            ret.data = _sp_cumtrapz(arr, crd_arr.reshape(-1), axis=fld_axis,
+                                    initial=initial)
+        except ImportError:
+            viscid.logger.error("Scipy is required to perform cumtrapz")
+            raise
+
+        return ret
+
     @property
     def real(self):
         ret = self
@@ -1995,6 +2156,10 @@ class Field(tree.Leaf):
     @property
     def imag(self):
         return self.wrap(self.data.imag)
+
+    def angle(self, deg=False):
+        # hack: np.angle casts to ndarray... that's annoying
+        return self.wrap(np.angle(self.data, deg=deg))
 
     def transpose(self, *axes):
         """ same behavior as numpy transpose, alse accessable
@@ -2134,7 +2299,23 @@ class ScalarField(Field):
 
 class VectorField(Field):
     _TYPE = "vector"
-    _COMPONENT_NAMES = "xyzuvw"
+
+    def __init__(self, *args, **kwargs):
+        """
+        Keyword Arguments:
+            comp_names (sequence): sequence of component names
+
+        See Also:
+            :py:class:`viscid.Field`
+        """
+        if 'comp_names' in kwargs:
+            comp_names = kwargs.pop('comp_names')
+        else:
+            comp_names = _DEFAULT_COMPONENT_NAMES
+
+        super(VectorField, self).__init__(*args, **kwargs)
+
+        self.comp_names = comp_names
 
     def component_views(self):
         """ return numpy views to components individually, memory layout

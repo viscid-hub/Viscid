@@ -1,7 +1,7 @@
 Creating Fields
 ===============
 
-There are a few ways to easily get the benefits of using :py:class:`viscid.Field` (coordinate aware ndarrays). The easiest is to use readers built into Viscid (through :py:func:`viscid.load_file`). If there is no reader for your data format, you can easily wrap arrays in a number of ways...
+There are a few ways to get the benefits of using :py:class:`viscid.Field` (coordinate aware ndarrays). The easiest is to use the readers built into Viscid (through :py:func:`viscid.load_file`). If there is no reader for your data format, you can wrap arrays in a number of ways...
 
 .. raw:: html
 

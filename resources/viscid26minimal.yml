@@ -2,6 +2,7 @@
 name: viscid26minimal
 channels:
 - defaults
+- anaconda
 dependencies:
 - python=2.6
 - argparse

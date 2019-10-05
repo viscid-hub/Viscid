@@ -4,13 +4,30 @@ from __future__ import print_function
 import os
 import sys
 
+
+do_exit = False
+
+if {'--doc', '--docs', '--html', 'doc', 'docs', 'html'}.intersection(set(sys.argv)):
+    import webbrowser
+    import viscid
+    branch = 'dev' if 'dev' in viscid.__version__ else 'master'
+    url = 'https://viscid-hub.github.io/Viscid-docs/docs/{0}/index.html'.format(branch)
+    webbrowser.open(url, new=2)
+    exit_code = 0
+    do_exit = True
+
 if '--version' in sys.argv or 'version' in sys.argv:
     import viscid
     viscid.check_version()
-    sys.exit(0)
-elif '--check' in sys.argv or 'check' in sys.argv:
+    exit_code = 0
+    do_exit = True
+
+if '--check' in sys.argv or 'check' in sys.argv:
     import viscid
     exit_code = viscid.check()
+    do_exit = True
+
+if do_exit:
     sys.exit(exit_code)
 else:
     print("Viscid says: import numpy")

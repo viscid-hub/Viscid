@@ -64,6 +64,15 @@ if [[ ${args} == *" --version "* || ${args} == *" version"* ]]; then
 elif [[ ${args} == *" --check "* || ${args} == *" check"* ]]; then
   interact=""
   viscid_python=${viscid_python:-$(which python)}
+elif [[ ${args} == *" --docs "* || ${args} == *" docs"* ]]; then
+  interact=""
+  viscid_python=${viscid_python:-$(which python)}
+elif [[ ${args} == *" --doc "* || ${args} == *" doc"* ]]; then
+  interact=""
+  viscid_python=${viscid_python:-$(which python)}
+elif [[ ${args} == *" --html "* || ${args} == *" html"* ]]; then
+  interact=""
+  viscid_python=${viscid_python:-$(which python)}
 else
   interact="-i"
   viscid_python=${viscid_python:-$(which ipython)}

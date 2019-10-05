@@ -142,7 +142,7 @@ def plot_opts_to_kwargs(plot_opts, plot_kwargs):
     if plot_opts[0] == '{' and plot_opts[-1] == '}':
         try:
             import yaml
-            d = yaml.load(plot_opts)
+            d = yaml.safe_load(plot_opts)
             # if an option is given without a value, Yaml defaults to
             # None, but it was probably a flag, so turn None -> True
             for k in list(d.keys()):
@@ -205,22 +205,27 @@ def _are_xy_shared(axis):
     return x_is_shared, y_is_shared
 
 def _ax_on_edge(axis):
-    try:
-        rc_spec = axis.get_axes_locator().get_subplotspec().get_rows_columns()
-        nrows, ncols, row_start, row_stop, col_start, col_stop = rc_spec
-    except AttributeError:
-        subplot_spec = axis.get_axes_locator().get_subplotspec()
-        gridspec = subplot_spec.get_gridspec()
-        nrows, ncols = gridspec.get_geometry()
-        row_start, col_start = divmod(subplot_spec.num1, ncols)
-        if subplot_spec.num2 is not None:
-            row_stop, col_stop = divmod(subplot_spec.num2, ncols)
-        else:
-            row_stop = row_start
-            col_stop = col_start
+    axes_locator = axis.get_axes_locator()
+    if axes_locator is None:
+        bottom_most = axis.is_last_row()
+        left_most = axis.is_first_col()
+    else:
+        try:
+            rc_spec = axes_locator.get_subplotspec().get_rows_columns()
+            nrows, ncols, row_start, row_stop, col_start, col_stop = rc_spec
+        except AttributeError:
+            subplot_spec = axes_locator.get_subplotspec()
+            gridspec = subplot_spec.get_gridspec()
+            nrows, ncols = gridspec.get_geometry()
+            row_start, col_start = divmod(subplot_spec.num1, ncols)
+            if subplot_spec.num2 is not None:
+                row_stop, col_stop = divmod(subplot_spec.num2, ncols)
+            else:
+                row_stop = row_start
+                col_stop = col_start
 
-    bottom_most = row_stop >= nrows - 1
-    left_most = col_start == 0
+        bottom_most = row_stop >= nrows - 1
+        left_most = col_start == 0
 
     return bottom_most, left_most
 
@@ -1338,10 +1343,11 @@ def plot1d_field(fld, ax=None, plot_opts=None, **plot_kwargs):
     if norm_dict['symmetric']:
         if norm_dict['vscale'] == 'log':
             raise ValueError("log scale can't be symmetric about 0")
-        maxval = max(abs(max(dat)), abs(min(dat)))
+        maxval = max(abs(max(dat)), abs(min(dat))) + 0.05 * (max(dat) - min(dat))
         vmin, vmax = -maxval, maxval
     if norm_dict['vscale'] is not None:
-        ax.set_ylim((vmin, vmax))
+        if vmin is not None or vmax is not None:
+            ax.set_ylim((vmin, vmax))
 
     ########################
     # apply labels and such

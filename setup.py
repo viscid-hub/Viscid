@@ -110,7 +110,7 @@ cy_defs.append(["viscid.cython.cyamr",
                ])
 
 fort_fcflags = []
-fort_ldflags = []
+fort_ldflags = os.environ.get('F_LDFLAGS', '').split()
 
 fort_defs = []
 # These fortran sources are compiled into the same python module since
@@ -130,7 +130,8 @@ if sys.platform == 'darwin':
         mandatory_flags = ['-undefined dynamic_lookup', '-bundle']
         for flag in mandatory_flags:
             if flag not in os.environ.get('LDFLAGS', ''):
-                fort_ldflags.append(flag)
+                if flag not in fort_ldflags:
+                    fort_ldflags.append(flag)
 
 # fix fortran build on linux with conda's gfortran
 if sys.platform[:5] == 'linux':
@@ -138,7 +139,8 @@ if sys.platform[:5] == 'linux':
         mandatory_flags = ['-shared']
         for flag in mandatory_flags:
             if flag not in os.environ.get('LDFLAGS', ''):
-                fort_ldflags.append(flag)
+                if flag not in fort_ldflags:
+                    fort_ldflags.append(flag)
 
 # hack to use proper flags for python2.7 / numpy 1.11 windows conda-forge build
 if (sys.platform[:3] == 'win' and sys.version_info[:2] == (2, 7)
@@ -532,10 +534,8 @@ try:
         with open(RECORD_FNAME) as fin:
             file_list = [line.strip() for line in fin]
 
-        for fname in file_list:
-            if "__main__.py" in fname:
-                pkg_instdir = os.path.dirname(fname)
-                break
+        init_pys = [s for s in file_list if '__init__.py' in s or s.endswith('.egg')]
+        pkg_instdir = os.path.dirname(min(init_pys, key=len))
 
         inst_manifest[sys.executable] = dict(pkg_instdir=pkg_instdir,
                                              file_list=file_list)

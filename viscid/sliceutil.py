@@ -407,6 +407,9 @@ def standardize_value(sel, bool_argwhere=False):
                         sel = as_timedelta64([s.lstrip('ut') for s in sel.split()])
                     except ValueError:
                         sel = as_datetime64([s.lstrip('ut') for s in sel.split()])
+                elif 'e' in sel or 'E' in sel:
+                    _warn_deprecated_float(sel)
+                    sel = np.fromstring(sel, dtype=np.float, sep=' ')
                 else:
                     sel = np.fromstring(sel, dtype=np.integer, sep=' ')
         elif _is_time_str(sel):

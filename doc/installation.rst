@@ -54,7 +54,7 @@ Dependencies
 Installing Anaconda (optional)
 ------------------------------
 
-The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ makes managing dependencies and virtual environments wicked straight forward (and almost pleasant). You can download the full distribution, but it's laden with packages you probably don't need. Also, since ``conda install`` is so easy to use, I recommend the lightweight miniconda:
+The `Anaconda Python Distribution <https://www.anaconda.com/distribution/>`_ makes managing dependencies and virtual environments straight forward (and almost pleasant). You can download the full distribution, but it's laden with packages you probably don't need. Also, since ``conda install`` is so easy to use, I recommend the lightweight miniconda:
 
 .. code-block:: bash
 
@@ -102,22 +102,20 @@ You have a few choices for installing Viscid. Here is a quick breakdown of why y
   - **+**  No compiler needed
   - **+**  Available for macOS, Linux, and Windows
   - **+**  Automatically installs recommended dependencies
-  - **+**  Optional dependencies are equally easy to install
+  - **+**  Optional dependencies are easy to manage using ``conda``
   - **-**  You won't be able to edit Viscid's source code. You might naively edit the modules in site-packages, but this will confuse the conda package manager beyond repair.
 
 + :ref:`PyPI (pip) <choice2-pypi>`
 
   - **+**  Installs with a single command
-  - **+**  No compiler needed for pure python functionality
-  - **-**  Recommended dependencies must be explicitly installed
-  - **-**  Requires a C compiler for interpolation and streamline support
-  - **-**  Requires a Fortran compiler for jrrle file support
+  - **+**  No compiler needed
+  - **+**  Available for macOS, Linux, and Windows
+  - **~**  Dependencies can be managed using ``pipenv`` (or plain ``pip``)
 
 + :ref:`Source <choice3-source>`
 
-  - **+**  Only method that lets you edit Viscid's source code
-  - **-**  Requires some knowledge about PATH and PYTHONPATH (but don't let this scare you, it's fairly straight forward)
-  - **-**  Dependencies must be explicitly installed
+  - **+**  Most flexible
+  - **~**  Dependencies can be managed using ``pipenv`` (or plain ``pip``)
   - **-**  Requires a C compiler for interpolation and streamline functions
   - **-**  Requires a Fortran compiler for jrrle file support
 
@@ -155,11 +153,17 @@ Choice 2: `PyPI <http://pypi.org/project/viscid/>`_ (pip)
   :target: https://pypi.org/project/Viscid/
   :alt: PyPI
 
-You can install from source using pip, but the runtime functionality depends on which compilers are available. Most of Viscid is pure python, but interpolation and streamline calculation requires a C compiler, and the jrrle reader requires a Fortran compiler.
+Binary wheels are available on PyPI for Python 2.7, 3.5, 3.6, and 3.7 on MacOS, Linux, and Windows.
 
 .. code-block:: bash
 
     pip install viscid
+
+If these wheels don't work for you, pip can also install from source (optionally requires a C compiler for interpolation and streamline support, and a Fortran compiler for Jrrle file support).
+
+.. code-block:: bash
+
+    pip install --no-binary :all: viscid
 
 Compile errors will not cause Viscid's pip install to fail, and pip hides warning messages unless you use the ``-v`` flag. To check the functionality of your install, run
 
@@ -189,13 +193,13 @@ If you are using Anaconda to manage your dependencies, you can use the default V
 
 .. code-block:: bash
 
-    conda env create -f Viscid/resources/viscid36mayavi.yml
+    conda env create -f Viscid/resources/viscid37mayavi.yml
 
     # if you need mayavi, but don't have OpenGL 3.2, you
     # will have to use python2.7 (Viscid/resources/viscid27.yml)
 
     # this activation must be done for each new command prompt
-    conda activate viscid36mayavi  # or viscid27, etc.
+    conda activate viscid37mayavi  # or viscid27, etc.
 
 :ref:`Read this <conda_bashrc_blurb>` if you need help editing your bashrc or profile to set the default Anaconda environment.
 
@@ -209,11 +213,8 @@ Choice 3a: installed
 .. code-block:: bash
 
     cd Viscid
-    python setup.py install
-    # the above line is synonymous with `make install`
-
-    # or, if you don't have write permission, try
-    # python setup.py install --user
+    make install
+    # the above is synonymous with `python setup.py install --user`
 
 To see if the install succeeded, try
 
@@ -229,7 +230,7 @@ To pull updates from github in the future, use
 .. code-block:: bash
 
     git pull
-    python setup.py install
+    python setup.py install --user
 
 Choice 3b: inplace
 ^^^^^^^^^^^^^^^^^^
@@ -237,8 +238,8 @@ Choice 3b: inplace
 .. code-block:: bash
 
     cd Viscid
-    python setup.py build_ext -i
-    # the above line is synonymous with `make inplace`
+    make inplace
+    # the above line is synonymous with `python setup.py build_ext -i`
 
     # To set environment variables in Bash
     profile="${HOME}/.bashrc"
@@ -286,7 +287,9 @@ Installing Mayavi (optional)
 
 Installing Mayavi can be a mine field of incompatible dependencies. Here is a table to help you choose your poison. If your environment is not in the table, then it is likely not supported by Mayavi / VTK.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 =============  ==============  ========================  =================================================
 OS             Python Version  OpenGL / MESA             Installation Command

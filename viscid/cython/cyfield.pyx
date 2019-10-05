@@ -21,7 +21,7 @@ cdef inline int _c_int_max(int a, int b):
 cdef _init_cyfield(FusedField fld, vfield, fld_dtype, crd_dtype):
     dat = vfield.data
     while len(dat.shape) < 4:
-        dat = np.expand_dims(dat, axis=4)
+        dat = np.expand_dims(dat, axis=len(dat.shape))
     fld.data = dat
 
     fld.center = vfield.center

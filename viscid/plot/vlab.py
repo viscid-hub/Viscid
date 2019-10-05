@@ -16,6 +16,7 @@ from mayavi.sources.vtk_data_source import VTKDataSource
 from traits.trait_errors import TraitError
 from tvtk.api import tvtk
 import viscid
+from viscid import NOT_SPECIFIED
 from viscid import field
 
 
@@ -112,16 +113,31 @@ def lines2source(lines, scalars=None, name="NoName"):
     r = viscid.vutil.prepare_lines(lines, scalars, do_connections=True)
     lines, scalars, connections, other = r
 
-    src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
-    if scalars is not None:
-        if scalars.dtype == np.dtype('u1'):
-            sc = tvtk.UnsignedCharArray()
-            sc.from_array(scalars.T)
-            scalars = sc
+    # FIXME: the following branch is a workaround for Mayavi >= 4.7.0
+    # For some reason, setting scalar point data after source creation
+    # now has an issue where mayavi doesn't autoscale the lut correctly.
+    # This has something to do with changes in supporting composite data in
+    # Mayavi commit:
+    # https://github.com/enthought/mayavi/commit/fd9a515a9563d81a42b84514c1fb4ce5f81ac9a0
+    #
+    # So... if scalars are color values (set by hex or rgb), then we have to
+    # set the point data by hand. This is ok since the lut range won't be
+    # needed. Otherwise, just pass the scalars on source creation.
+    if scalars is not None and scalars.dtype == np.dtype('u1'):
+        src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
+        sc = tvtk.UnsignedCharArray()
+        sc.from_array(scalars.T)
+        scalars = sc
         src.mlab_source.dataset.point_data.scalars = scalars
         src.mlab_source.dataset.modified()
+    elif scalars is not None:
+        src = mlab.pipeline.line_source(lines[0], lines[1], lines[2], scalars)
+    else:
+        src = mlab.pipeline.line_source(lines[0], lines[1], lines[2])
+
     src.mlab_source.dataset.lines = connections
     src.name = name
+    src.update()
     return src
 
 def field2source(fld, center=None, name=None):
@@ -329,7 +345,7 @@ def vector_cut_plane(v_src, scalars=None, color_mode='vector', **kwargs):
 
     return vcp
 
-def mesh_from_seeds(seeds, scalars=None, **kwargs):
+def mesh_from_seeds(seeds, scalars=None, fill_holes=NOT_SPECIFIED, **kwargs):
     """Wraps `mayavi.mlab.mesh` for Viscid seed generators
 
     Note:
@@ -354,9 +370,9 @@ def mesh_from_seeds(seeds, scalars=None, **kwargs):
         `mayavi.modules.surface.Surface`
     """
     if scalars is not None:
-        vertices, scalars = seeds.wrap_mesh(scalars)
+        vertices, scalars = seeds.wrap_mesh(scalars, fill_holes=fill_holes)
     else:
-        vertices, = seeds.wrap_mesh()
+        vertices, = seeds.wrap_mesh(fill_holes=fill_holes)
 
     return mesh(vertices[0], vertices[1], vertices[2], scalars=scalars,
                 **kwargs)
@@ -667,7 +683,7 @@ def plot_ionosphere(fld, radius=1.063, figure=None, bounding_lat=0.0,
     sphere = viscid.Sphere([0, 0, 0], r=radius, ntheta=ntheta, nphi=nphi,
                            thetalim=(thetal, thetah), philim=(phil, phih),
                            theta_phi=False)
-    verts, arr = sphere.wrap_mesh(fld.data)
+    verts, arr = sphere.wrap_mesh(fld.data, fill_holes=True)
 
     kwargs, cmap_kwargs = _extract_cmap_kwargs(kwargs)
     if 'name' not in kwargs:
@@ -1203,6 +1219,13 @@ def figure(*args, **kwargs):
     if size:
         kwargs['size'] = size
 
+    if offscreen:
+        viscid.logger.warning("Since some backends are more picky than others,\n"
+                              "it is recomended that you rather use\n"
+                              "    vlab.mlab.options.offscreen = True\n"
+                              "near the top of __main__ to create an offscreen "
+                              "figure.")
+
     fig = None
 
     if global_fig:
@@ -1335,10 +1358,11 @@ def resize(size, figure=None):
         if mlab.options.offscreen:
             figure.scene.set_size(size)
         elif figure.scene.off_screen_rendering:
-            viscid.logger.warning("viscid.plot.vlab.resize doesn't work for "
-                                  "figures that are off-screened this way. Try "
-                                  "creating the figure with viscid.plot.vlab."
-                                  "figure(size=(w, h), offscreen=True)")
+            viscid.logger.warning("viscid.plot.vlab.resize doesn't work for\n"
+                                  "figures that are off-screened this way. I\n"
+                                  "suggest you use\n"
+                                  "    mayavi.mlab.options.offscreen = True\n"
+                                  "near the beginning of __main__")
         else:
             try:
                 _ets_config = mayavi.ETSConfig
