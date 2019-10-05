@@ -15,6 +15,10 @@ Useful Functions
 Utility Functions
 -----------------
 
+.. cssclass:: align-left
+.. cssclass:: table-striped
+.. cssclass:: table-hover
+
 ===================================  ===============================================
 Function                             Description
 ===================================  ===============================================
@@ -31,7 +35,9 @@ Fields
 
 For easy field creation.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ===================================  ===========================================================
 Function                             Description
@@ -54,7 +60,9 @@ Calculations
 Streamlines and Interpolation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ========================================  ==================================================
 Class                                     Description
@@ -79,7 +87,9 @@ Math
 
 These functions will by accelerated by Numexpr if it is installed. All functions below are also available from the `viscid` namespace.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ===================================================  ===========================================================
 Function                                             Description
@@ -122,7 +132,9 @@ Geospace Tools
 
 These functions allow for transforming between geophysical coordinate systems, and adding a magnetic dipole to a field.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ================================================  ============================================================
 Function                                          Description
@@ -148,7 +160,9 @@ Magnetosphere Tools
 
 Some tools for dealing with magnetospheric specific things. Refer to :doc:`../tutorial/magnetopause` for an example
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 =============================================  ============================================================
 Function                                       Description
@@ -162,7 +176,9 @@ Magnetic Topology and Separator Tools
 
 For using the separator tools, you may want to refer to :doc:`../tutorial/magnetic_topology`.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 =============================================  ============================================================
 Function                                       Description
@@ -186,7 +202,9 @@ General Matplotlib Functions
 
 These functions wrap Matplotlib with useful boilerplate type hacks.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ====================================================  ===========================================================
 Function                                              Description
@@ -205,7 +223,9 @@ Function                                              Description
 
 These functions wrap Matplotlib with useful boilerplate type hacks.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ================================================  =============================================================
 Function                                          Description
@@ -234,7 +254,9 @@ Function                                          Description
 
 These functions wrap Matplotlib in 3D with useful boilerplate type hacks.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ===============================================  =============================================================
 Function                                         Description
@@ -261,7 +283,9 @@ Mayavi Workarounds
 
 Mayavi has various platform specific bugs. The following functions will try to apply workarounds so that they always give the expected result.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ===============================================  =================================================================
 Function                                         Description
@@ -277,7 +301,9 @@ Mayavi Wrappers
 
 Chances are that you want to use these functions. They let you make most Mayavi objects from Viscid data structures (i.e., Fields and SeedGens). In addition, all of these functions allow you to specify a Matplotlib colormap for the data, and it picks up the default colormaps from Matplotlib's rcParams and viscidrc files. How cool is that‽
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ===============================================  =================================================================
 Function                                         Description
@@ -320,7 +346,9 @@ Mayavi Plots
 
 These functions make some commonly used objects.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ===============================================  =================================================================
 Function                                         Description
@@ -335,7 +363,9 @@ Mayavi Pipeline
 
 Here are some functions to quickly bring Viscid datastructures into the Mayavi pipeline.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ===============================================  =================================================================
 Function                                         Description

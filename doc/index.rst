@@ -55,6 +55,8 @@ Source Code
 
 Both the master and dev branches make every attempt to be usable (thanks to continuous integration), but the obvious caveats exist, i.e. the dev branch has more cool new features but it isn't *as* tested.
 
+.. cssclass:: align-left
+
 ===================  ================  ========================================================
 Branch               Test Status       Docs
 ===================  ================  ========================================================

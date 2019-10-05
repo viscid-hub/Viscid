@@ -51,7 +51,9 @@ Since Viscid switched to using image axes by default, it has exposed some undesi
 Universal
 ---------
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 =============  ================  ==================================================
 Option         Arguments         Description
@@ -104,7 +106,9 @@ show           [bool]            Call :py:func:`pyplot.show` before returning
 2-D Plots
 ---------
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ============  ===============   ==================================================
 Option        Arguments         Description
@@ -141,7 +145,9 @@ earth         [bool]            Plot a black and white circle for Earth
 
 All options for normal 2-D plots work for map plots too.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ==============  ===============   ==================================================
 Option          Arguments         Description
@@ -177,7 +183,9 @@ label_mlt       [bool]            label magnetic local time
 
 All options for normal 2-D and map plots apply too.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ==============  ===============   ==================================================
 Option          Arguments         Description
@@ -193,7 +201,9 @@ titlescale      float             now much larger to make the title as a fractio
 1-D Color Plots
 ---------------
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 ==========  ===============   ==================================================
 Option      Arguments         Description

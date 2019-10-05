@@ -292,7 +292,9 @@ Installing Mayavi (optional)
 
 Installing Mayavi can be a mine field of incompatible dependencies. Here is a table to help you choose your poison. If your environment is not in the table, then it is likely not supported by Mayavi / VTK.
 
+.. cssclass:: align-left
 .. cssclass:: table-striped
+.. cssclass:: table-hover
 
 =============  ==============  ========================  =================================================
 OS             Python Version  OpenGL / MESA             Installation Command
