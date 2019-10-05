@@ -144,23 +144,23 @@ html_theme_options = {
     'navbar_sidebarrel': False,
     'bootstrap_version': "3",
     # 'navbar_links': [],
-    # 'navbar_dropdown_links':
-    #     [("Tutorial", [("Installation", "installation"),
-    #                    ("Loading & Saving", "tutorial/load_save"),
-    #                    ("Creating Fields", "tutorial/creating_fields"),
-    #                    ("Slicing Fields", "tutorial/slicing"),
-    #                    ("Plotting Scalars", "tutorial/plotting_scalars"),
-    #                    ("Plotting Vectors", "tutorial/plotting_vectors"),
-    #                    ("3D Plots (Mayavi)", "tutorial/mayavi"),
-    #                    ("OpenGGCM Specific", "tutorial/openggcm"),
-    #                    ("Ionosphere", "tutorial/ionosphere"),
-    #                    ("Streamline and Interpolation", "tutorial/stream_and_interp"),
-    #                    ("Magnetic Topology", "tutorial/magnetic_topology"),
-    #                    ("Magnetopause", "tutorial/magnetopause"),
-    #                    ("Quasi Potential", "tutorial/quasi_potential"),
-    #                   ]
-    #      )
-    #     ]
+    'navbar_dropdown_links':
+        [("Tutorial", [("Installation", "installation"),
+                       ("Loading & Saving", "tutorial/load_save"),
+                       ("Creating Fields", "tutorial/creating_fields"),
+                       ("Slicing Fields", "tutorial/slicing"),
+                       ("Plotting Scalars", "tutorial/plotting_scalars"),
+                       ("Plotting Vectors", "tutorial/plotting_vectors"),
+                       ("3D Plots (Mayavi)", "tutorial/mayavi"),
+                       ("OpenGGCM Specific", "tutorial/openggcm"),
+                       ("Ionosphere", "tutorial/ionosphere"),
+                       ("Streamline and Interpolation", "tutorial/stream_and_interp"),
+                       ("Magnetic Topology", "tutorial/magnetic_topology"),
+                       ("Magnetopause", "tutorial/magnetopause"),
+                       ("Quasi Potential", "tutorial/quasi_potential"),
+                      ]
+         )
+        ]
     }
 
 # Add any paths that contain custom themes here, relative to this directory.
