@@ -74,6 +74,7 @@ Class                                     Description
 :py:class:`viscid.RectilinearMeshPoints`  Points that can be 2d plotted using [u, :, 0] and
                                           [v, 0, :] slices of pts as coordinate arrays
 :py:class:`viscid.Line`                   A line between 2 points
+:py:class:`viscid.Spline`                 A spline given a series of knots
 :py:class:`viscid.Plane`                  A plane defined by an origin and a normal vector
 :py:class:`viscid.Volume`                 A Volume of points on a uniform cartesian grid
 :py:class:`viscid.Sphere`                 Points on the surface of a sphere
