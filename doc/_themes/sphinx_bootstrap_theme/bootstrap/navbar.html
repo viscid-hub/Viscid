@@ -23,7 +23,6 @@
                 <li><a href="{{ pathto(*link[1:]) }}">{{ link[0] }}</a></li>
               {%- endfor %}
             {% endif %}
-            {% include "navbar_dropdown_links.html" %}
             {% block navbartoc %}
               {% include "globaltoc.html" %}
               {% if theme_navbar_pagenav %}
