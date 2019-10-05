@@ -297,7 +297,9 @@ def indent(s, N=4):
     """indent a string"""
     return s.replace('\n', '\n' + N * ' ')
 
-def main(app):
+def main(*args, **kwargs):
+    print("Generating style gallery...")
+
     target_dir = 'styles'
     image_dir = op.join('styles', '_images')
     thumb_dir = op.join('styles', '_thumbs')
@@ -360,6 +362,3 @@ def main(app):
         index.write(INDEX_TEMPLATE.format(sphinx_tag="style_examples",
                                           toctree=toctree,
                                           contents=contents))
-
-def setup(app):
-    app.connect('builder-inited', main)
