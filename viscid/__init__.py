@@ -28,7 +28,7 @@ from viscid import _rc
 from viscid.compat.vimportlib import import_module
 
 
-__version__ = """1.0.0.dev14"""
+__version__ = """1.0.0"""
 
 __all__ = ['amr_field',
            'amr_grid',
