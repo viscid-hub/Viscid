@@ -115,7 +115,6 @@ Contents
   custom_behavior
   mpl_style_gallery
   dev_guide
-  extending_readers
 
 .. toctree::
   :maxdepth: 1
